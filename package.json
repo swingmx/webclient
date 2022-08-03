@@ -1,0 +1,31 @@
+{
+  "name": "musicx-v",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "serve": "vite preview",
+    "build": "vite build",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
+  },
+  "dependencies": {
+    "@vueuse/core": "^8.5.0",
+    "axios": "^0.26.1",
+    "pinia": "^2.0.11",
+    "sass": "^1.49.0",
+    "sass-loader": "^10",
+    "vite-svg-loader": "^3.4.0",
+    "vue": "^3.2.37",
+    "vue-debounce": "^3.0.2",
+    "vue-router": "^4.1.3",
+    "webpack": "^5.74.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.0.1",
+    "eslint": "^8.7.0",
+    "eslint-plugin-vue": "^8.3.0",
+    "vite": "^3.0.4",
+    "vue-svg-loader": "^0.16.0"
+  },
+  "packageManager": "yarn@3.1.1"
+}
