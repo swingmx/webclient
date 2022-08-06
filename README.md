@@ -47,17 +47,23 @@ git clone https://github.com/geoffrey45/alice.git
 git clone git@github.com:geoffrey45/alice.git
 ```
 
-Now cd into the project directory and make the start script executable.
+Now cd into the project directory and install dependencies.
+
+```sh
+cd alice
+
+poetry install
+```
+
+Make the start script executable and run it.
 
 ```sh
 chmod a+x ./start.sh
+
+./start.sh -s
 ```
 
-Now run the start script.
-
-```sh
-./start.sh
-```
+The `-s` flag is used to start the image server. Sometimes when you are killing the script, the image server might not be killed. In that case, you might need to start the music server alone using `./start.sh`.
 
 That's it. The server should be running on [`localhost:1970`](https://localhost:1970). Reload Alice client and enjoy.
 
