@@ -23,31 +23,27 @@ class Mongo:
 
 
 class MongoAlbums(Mongo, AlbumMethods):
-
     def __init__(self):
-        super(MongoAlbums, self).__init__("ALICE_ALBUMS")
-        self.collection = self.db["ALL_ALBUMS"]
+        super(MongoAlbums, self).__init__("ALICE_SERVER")
+        self.collection = self.db["ALBUMS"]
 
 
 class MongoArtists(Mongo, ArtistMethods):
-
     def __init__(self):
-        super(MongoArtists, self).__init__("ALICE_ARTISTS")
-        self.collection = self.db["ALL_ARTISTS"]
+        super(MongoArtists, self).__init__("ALICE_SERVER")
+        self.collection = self.db["ARTISTS"]
 
 
 class MongoPlaylists(Mongo, PlaylistMethods):
-
     def __init__(self):
-        super(MongoPlaylists, self).__init__("ALICE_PLAYLISTS")
-        self.collection = self.db["ALL_PLAYLISTS"]
+        super(MongoPlaylists, self).__init__("ALICE_SERVER")
+        self.collection = self.db["PLAYLISTS"]
 
 
 class MongoTracks(Mongo, TrackMethods):
-
     def __init__(self):
-        super(MongoTracks, self).__init__("ALICE_MUSIC_TRACKS")
-        self.collection = self.db["ALL_TRACKS"]
+        super(MongoTracks, self).__init__("ALICE_SERVER")
+        self.collection = self.db["TRACKS"]
 
 
 # ====================================================================== #
