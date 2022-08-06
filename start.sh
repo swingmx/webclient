@@ -5,7 +5,7 @@ while getopts ':s' opt; do
     s)
       echo "Starting image server"
       cd "./app"
-      "$gpath" -b 0.0.0.0:9877 -w 4 --threads=2 "imgserver:app" &
+      "$gpath" -b 0.0.0.0:1971 -w 4 --threads=2 "imgserver:app" &
       cd ../
       echo "Done ✅"
       ;;
@@ -16,4 +16,4 @@ while getopts ':s' opt; do
 done
 
 echo "Starting alice server"
-"$gpath" -b 0.0.0.0:9876 -w 1 --threads=4 "manage:create_app()"
+"$gpath" -b 0.0.0.0:1970 -w 1 --threads=4 "manage:create_app()"

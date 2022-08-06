@@ -2,7 +2,6 @@
 This module contains mini functions for the server.
 """
 import os
-from pprint import pprint
 import threading
 from datetime import datetime
 from typing import Dict, List, Set
@@ -128,7 +127,7 @@ class UseBisection:
 
     def __call__(self) -> List:
         if len(self.source_list) == 0:
-            print("🚀🚀🚀🚀🚀🚀🚀")
+            print("empty source list")
             return [None]
 
         return [self.find(query) for query in self.queries_list]
