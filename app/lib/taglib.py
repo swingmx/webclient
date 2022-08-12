@@ -5,7 +5,7 @@ import mutagen
 from app import settings
 from mutagen.flac import FLAC, MutagenError
 from mutagen.id3 import ID3
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 
 def parse_album_art(filepath: str):
@@ -43,7 +43,10 @@ def extract_thumb(filepath: str, webp_path: str) -> bool:
     album_art = parse_album_art(filepath)
 
     if album_art is not None:
-        img = Image.open(BytesIO(album_art))
+        try:
+            img = Image.open(BytesIO(album_art))
+        except UnidentifiedImageError:
+            return False
 
         try:
             small_img = img.resize((tsize, tsize), Image.ANTIALIAS)
