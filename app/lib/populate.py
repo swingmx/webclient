@@ -51,8 +51,6 @@ class Populate:
         tags = get_tags(file)
 
         if tags is not None:
-            hash = create_hash(tags["album"], tags["albumartist"])
-            tags["albumhash"] = hash
             self.tagged_tracks.append(tags)
 
     def tag_untagged(self):
@@ -78,7 +76,6 @@ class PreAlbum:
 
 
 class CreateAlbums:
-
     def __init__(self) -> None:
         self.db_tracks = Get.get_all_tracks()
         self.db_albums = Get.get_all_albums()
@@ -122,8 +119,7 @@ class CreateAlbums:
         return prealbums
 
     @staticmethod
-    def filter_processed(albums: List[Album],
-                         prealbums: List[PreAlbum]) -> List[dict]:
+    def filter_processed(albums: List[Album], prealbums: List[PreAlbum]) -> List[dict]:
         to_process = []
 
         for p in tqdm(prealbums, desc="Filtering processed albums"):

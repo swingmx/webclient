@@ -1,5 +1,7 @@
+from concurrent.futures import ThreadPoolExecutor
 import os
 from io import BytesIO
+from pprint import pprint
 
 import mutagen
 from app import settings
@@ -8,6 +10,7 @@ from mutagen.id3 import ID3
 from PIL import Image, UnidentifiedImageError
 
 from app.helpers import create_hash
+from ..models import Track
 
 
 def parse_album_art(filepath: str):
@@ -66,111 +69,6 @@ def extract_thumb(filepath: str, webp_path: str) -> bool:
         return False
 
 
-def parse_artist_tag(tags):
-    """
-    Parses the artist tag from an audio file.
-    """
-    try:
-        artists = tags["artist"][0]
-    except (KeyError, IndexError):
-        artists = "Unknown"
-
-    return artists
-
-
-def parse_title_tag(tags, full_path: str):
-    """
-    Parses the title tag from an audio file.
-    """
-    try:
-        title = tags["title"][0]
-    except (KeyError, IndexError):
-        title = full_path.split("/")[-1]
-
-    return title
-
-
-def parse_album_artist_tag(tags):
-    """
-    Parses the album artist tag from an audio file.
-    """
-    try:
-        albumartist = tags["albumartist"][0]
-    except (KeyError, IndexError):
-        albumartist = "Unknown"
-
-    return albumartist
-
-
-def parse_album_tag(tags, full_path: str):
-    """
-    Parses the album tag from an audio file.
-    """
-    try:
-        album = tags["album"][0]
-    except (KeyError, IndexError):
-        album = full_path.split("/")[-1]
-
-    return album
-
-
-def parse_genre_tag(tags):
-    """
-    Parses the genre tag from an audio file.
-    """
-    try:
-        genre = tags["genre"][0]
-    except (KeyError, IndexError):
-        genre = "Unknown"
-
-    return genre
-
-
-def parse_date_tag(tags):
-    """
-    Parses the date tag from an audio file.
-    """
-    try:
-        date = tags["date"][0]
-    except (KeyError, IndexError):
-        date = "Unknown"
-
-    return date
-
-
-def parse_track_number(tags):
-    """
-    Parses the track number from an audio file.
-    """
-    try:
-        track_number = int(tags["tracknumber"][0])
-    except (KeyError, IndexError, ValueError):
-        track_number = 1
-
-    return track_number
-
-
-def parse_disc_number(tags):
-    """
-    Parses the disc number from an audio file.
-    """
-    try:
-        disc_number = int(tags["discnumber"][0])
-    except (KeyError, IndexError, ValueError):
-        disc_number = 1
-
-    return disc_number
-
-
-def parse_copyright(tags):
-    try:
-        copyright = str(tags["copyright"][0])
-    except (KeyError, IndexError, ValueError):
-        copyright = None
-
-    return copyright
-
-
 def get_tags(fullpath: str) -> dict | None:
     """
     Returns a dictionary of tags for a given file.
@@ -180,27 +78,57 @@ def get_tags(fullpath: str) -> dict | None:
     except MutagenError:
         return None
 
-    artists = parse_artist_tag(tags)
-    album = parse_album_tag(tags, fullpath)
-    title = parse_title_tag(tags, fullpath)
+    def parse_tag(data: list[str | int]):
+        [tag, default] = data[:2]
 
-    hash = create_hash("".join(artists), album, title)
+        try:
+            is_int = data[2]
+        except IndexError:
+            is_int = False
 
-    tags = {
-        "artists": artists,
-        "title": title,
-        "album": album,
-        "hash": hash,
-        "filepath": fullpath,
-        "albumartist": parse_album_artist_tag(tags),
-        "genre": parse_genre_tag(tags),
-        "date": parse_date_tag(tags)[:4],
-        "tracknumber": parse_track_number(tags),
-        "discnumber": parse_disc_number(tags),
-        "copyright": parse_copyright(tags),
-        "length": round(tags.info.length),
-        "bitrate": round(int(tags.info.bitrate) / 1000),
-        "folder": os.path.dirname(fullpath),
-    }
+        try:
+            data = str(tags[tag][0])
 
-    return tags
+            if is_int:
+                data = int(data)
+        except (KeyError, IndexError, ValueError):
+            data = default
+
+        return {tag: data}
+
+    props = [
+        ["artist", None],
+        ["title", None],
+        ["album", None],
+        ["albumartist", None],
+        ["genre", None],
+        ["date", None],
+        ["tracknumber", 1, True],
+        ["discnumber", 1, True],
+        ["copyright", None],
+    ]
+
+    data = {}
+
+    with ThreadPoolExecutor() as pool:
+        iter = pool.map(parse_tag, props)
+        for i in iter:
+            data = {**data, **i}
+
+    hash = create_hash(data["artist"], data["album"], data["title"])
+    data["hash"] = hash
+    data["filepath"] = fullpath
+    data["length"] = round(tags.info.length)
+    data["bitrate"] = round(int(tags.info.bitrate) / 1000)
+    data["folder"] = os.path.dirname(fullpath)
+    data["albumhash"] = create_hash(data["album"], data["albumartist"])
+
+    try:
+        data["discnumber"] = int(data["discnumber"])
+    except ValueError:
+        data["discnumber"]
+
+    if data["artist"] == "":
+        data["artist"] = data["albumartist"]
+
+    return data

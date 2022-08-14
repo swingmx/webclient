@@ -44,7 +44,7 @@ class Track:
             self.folder,
             self.filepath,
             self.copyright,
-            self.hash
+            self.hash,
         ) = itemgetter(
             "title",
             "album",
@@ -55,26 +55,17 @@ class Track:
             "folder",
             "filepath",
             "copyright",
-            "hash"
+            "hash",
         )(
             tags
         )
         self.trackid = tags["_id"]["$oid"]
-        self.artists = tags["artists"].split(", ")
+        self.artists = tags["artist"].split(", ")
         self.bitrate = int(tags["bitrate"])
         self.length = int(tags["length"])
         self.discnumber = int(tags["discnumber"])
         self.image = tags["albumhash"] + ".webp"
         self.tracknumber = int(tags["tracknumber"])
-
-        self.hash = helpers.create_hash(
-            "".join(self.artists), self.album, self.title
-        )
-
-    @staticmethod
-    def create_unique_hash(*args):
-        string = "".join(str(a) for a in args).replace(" ", "")
-        return "".join([i for i in string if i.isalnum()]).lower()
 
 
 @dataclass(slots=True)
