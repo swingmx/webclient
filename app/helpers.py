@@ -53,13 +53,13 @@ class RemoveDuplicates:
         self.tracklist = tracklist
 
     def __call__(self) -> List[models.Track]:
-        uniq_hashes = []
+        hashes = []
         [
-            uniq_hashes.append(t.uniq_hash)
+            hashes.append(t.hash)
             for t in self.tracklist
-            if t.uniq_hash not in uniq_hashes
+            if t.hash not in hashes
         ]
-        tracks = UseBisection(self.tracklist, "uniq_hash", uniq_hashes)()
+        tracks = UseBisection(self.tracklist, "hash", hashes)()
 
         return tracks
 

@@ -201,7 +201,7 @@ class TrackMethods:
         """
         pass
 
-    def find_tracks_by_hash():
+    def find_tracks_by_albumhash():
         """
         Returns all the tracks matching the passed hash.
         """

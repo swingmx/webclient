@@ -3,6 +3,7 @@ This module creates and initiliazes a MongoDB instance. It also contains the
 `convert_one()` and `conver_many()` methods for converting MongoDB cursors to Python dicts.
 """
 import json
+from typing import List
 
 import pymongo
 from app.db import AlbumMethods
@@ -10,6 +11,8 @@ from app.db import ArtistMethods
 from app.db import PlaylistMethods
 from app.db import TrackMethods
 from bson import json_util
+
+from ...models import Track
 
 
 class Mongo:
@@ -54,10 +57,10 @@ def convert_one(song):
     """
     Converts a single mongodb cursor to a json object.
     """
-    json_song = json.dumps(song, default=json_util.default)
-    loaded_song = json.loads(json_song)
+    t = json.dumps(song, default=json_util.default)
+    track: Track = json.loads(t)
 
-    return loaded_song
+    return track
 
 
 def convert_many(array):
@@ -65,12 +68,12 @@ def convert_many(array):
     Converts a list of mongodb cursors to a list of json objects.
     """
 
-    songs = []
+    songs: List[Track] = []
 
     for song in array:
-        json_song = json.dumps(song, default=json_util.default)
-        loaded_song = json.loads(json_song)
+        t = json.dumps(song, default=json_util.default)
+        track: Track = json.loads(t)
 
-        songs.append(loaded_song)
+        songs.append(track)
 
     return songs

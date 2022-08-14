@@ -20,6 +20,5 @@ def validate_tracks() -> None:
             instances.tracks_instance.remove_song_by_id(track["_id"]["$oid"])
 
 
-def get_p_track(ptrack):
-    return instances.tracks_instance.find_track_by_title_artists_album(
-        ptrack["title"], ptrack["artists"], ptrack["album"])
+def get_p_track(trackhash: str):
+    return instances.tracks_instance.find_track_by_hash(trackhash)

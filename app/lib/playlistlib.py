@@ -17,6 +17,7 @@ from app.logger import get_logger
 from PIL import Image
 from PIL import ImageSequence
 from werkzeug import datastructures
+from concurrent.futures import ThreadPoolExecutor
 
 
 TrackExistsInPlaylist = exceptions.TrackExistsInPlaylistError
@@ -37,15 +38,12 @@ def add_track(playlistid: str, trackid: str):
 
     playlist = instances.playlist_instance.get_playlist_by_id(playlistid)
 
-    track = {
-        "title": track.title,
-        "artists": tt["artists"],
-        "album": track.album,
-    }
-    if track in playlist["pre_tracks"]:
+    track_hash = track.hash
+
+    if track_hash in playlist["pre_tracks"]:
         raise TrackExistsInPlaylist
 
-    instances.playlist_instance.add_track_to_playlist(playlistid, track)
+    instances.playlist_instance.add_track_to_playlist(playlistid, track_hash)
 
 
 def create_thumbnail(image: any, img_path: str) -> str:
@@ -125,17 +123,15 @@ def create_new_date():
     return datetime.now()
 
 
-def create_playlist_tracks(playlist_tracks: List) -> List[models.Track]:
+def create_playlist_tracks(playlist_tracks: List[str]) -> List[models.Track]:
     """
     Creates a list of model.Track objects from a list of playlist track dicts.
     """
     tracks: List[models.Track] = []
 
-    for t in playlist_tracks:
-        track = trackslib.get_p_track(t)
-
-        if track is not None:
-            tracks.append(models.Track(track))
+    with ThreadPoolExecutor() as pool:
+        tracks_iter = pool.map(trackslib.get_p_track, playlist_tracks)
+        [tracks.append(models.Track(t)) for t in tracks_iter if t is not None]
 
     return tracks
 

@@ -30,7 +30,7 @@ class Track:
     albumhash: str
     date: str
     image: str
-    uniq_hash: str
+    hash: str
     copyright: str
 
     def __init__(self, tags):
@@ -44,6 +44,7 @@ class Track:
             self.folder,
             self.filepath,
             self.copyright,
+            self.hash
         ) = itemgetter(
             "title",
             "album",
@@ -54,6 +55,7 @@ class Track:
             "folder",
             "filepath",
             "copyright",
+            "hash"
         )(
             tags
         )
@@ -65,7 +67,7 @@ class Track:
         self.image = tags["albumhash"] + ".webp"
         self.tracknumber = int(tags["tracknumber"])
 
-        self.uniq_hash = helpers.create_hash(
+        self.hash = helpers.create_hash(
             "".join(self.artists), self.album, self.title
         )
 

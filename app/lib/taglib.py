@@ -7,6 +7,8 @@ from mutagen.flac import FLAC, MutagenError
 from mutagen.id3 import ID3
 from PIL import Image, UnidentifiedImageError
 
+from app.helpers import create_hash
+
 
 def parse_album_art(filepath: str):
     """
@@ -178,11 +180,19 @@ def get_tags(fullpath: str) -> dict | None:
     except MutagenError:
         return None
 
+    artists = parse_artist_tag(tags)
+    album = parse_album_tag(tags, fullpath)
+    title = parse_title_tag(tags, fullpath)
+
+    hash = create_hash("".join(artists), album, title)
+
     tags = {
-        "artists": parse_artist_tag(tags),
-        "title": parse_title_tag(tags, fullpath),
+        "artists": artists,
+        "title": title,
+        "album": album,
+        "hash": hash,
+        "filepath": fullpath,
         "albumartist": parse_album_artist_tag(tags),
-        "album": parse_album_tag(tags, fullpath),
         "genre": parse_genre_tag(tags),
         "date": parse_date_tag(tags)[:4],
         "tracknumber": parse_track_number(tags),
@@ -190,7 +200,6 @@ def get_tags(fullpath: str) -> dict | None:
         "copyright": parse_copyright(tags),
         "length": round(tags.info.length),
         "bitrate": round(int(tags.info.bitrate) / 1000),
-        "filepath": fullpath,
         "folder": os.path.dirname(fullpath),
     }
 

@@ -1,15 +1,12 @@
 """
 Contains all the album routes.
 """
-from pprint import pprint
-from typing import List
 
 from app import api
 from app import helpers
 from app import instances
 from app import models
 from app.functions import FetchAlbumBio
-from app.lib import albumslib
 from flask import Blueprint
 from flask import request
 
@@ -43,7 +40,7 @@ def get_album():
     albumhash = data["hash"]
     error_msg = {"error": "Album not created yet."}
 
-    tracks = instances.tracks_instance.find_tracks_by_hash(albumhash)
+    tracks = instances.tracks_instance.find_tracks_by_albumhash(albumhash)
 
     if len(tracks) == 0:
         return error_msg, 204
@@ -104,7 +101,7 @@ def get_albumartists():
     data = request.get_json()
     albumhash = data["hash"]
 
-    tracks = instances.tracks_instance.find_tracks_by_hash(albumhash)
+    tracks = instances.tracks_instance.find_tracks_by_albumhash(albumhash)
     tracks = [models.Track(t) for t in tracks]
 
     artists = [a for t in tracks for a in t.artists]
