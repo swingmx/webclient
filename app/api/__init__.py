@@ -4,12 +4,12 @@ that are used through-out the app. It handles the initialization of the watchdog
 checking and creating config dirs and starting the re-indexing process using a background thread.
 """
 from app import functions
-from app import helpers
+from app import utils
 from app import prep
 # from ..lib.folderslib import test_dir_images
 
 
-@helpers.background
+@utils.background
 def initialize() -> None:
     """
     Runs all the necessary setup functions.

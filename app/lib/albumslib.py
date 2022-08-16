@@ -3,16 +3,16 @@ This library contains all the functions related to albums.
 """
 import os
 import random
+from tqdm import tqdm
 from dataclasses import dataclass
 from typing import List
 
-from app import helpers
+from app import utils
 from app import instances
 from app import models
 from app.lib import taglib
 from app.logger import logg
 from app.settings import THUMBS_PATH
-from tqdm import tqdm
 
 
 @dataclass
@@ -45,11 +45,11 @@ class ValidateAlbumThumbs:
         entries = os.scandir(THUMBS_PATH)
         entries = [entry for entry in entries if entry.is_file()]
 
-        albums = helpers.Get.get_all_albums()
+        albums = utils.Get.get_all_albums()
         thumbs = [Thumbnail(album.hash + ".webp") for album in albums]
 
         for entry in tqdm(entries, desc="Validating thumbnails"):
-            e = helpers.UseBisection(thumbs, "filename", [entry.name])()
+            e = utils.UseBisection(thumbs, "filename", [entry.name])()
 
             if e is None:
                 os.remove(entry.path)
@@ -66,11 +66,11 @@ class ValidateAlbumThumbs:
         entries = os.scandir(THUMBS_PATH)
         entries = [Thumbnail(entry.name) for entry in entries if entry.is_file()]
 
-        albums = helpers.Get.get_all_albums()
+        albums = utils.Get.get_all_albums()
         thumbs = [(album.hash + ".webp") for album in albums]
 
         def rip_image(t_hash: str):
-            e = helpers.UseBisection(entries, "filename", [t_hash])()[0]
+            e = utils.UseBisection(entries, "filename", [t_hash])()[0]
 
             if e is None:
                 hash = t_hash.replace(".webp", "")
@@ -81,6 +81,7 @@ class ValidateAlbumThumbs:
         #     i = pool.map(rip_image, thumbs)
         #     [a for a in i]
         # ⚠️ empty lists are sent to the useBisection function as the source list.
+        # ask on stack overflow
         for thumb in thumbs:
             rip_image(thumb)
 
@@ -126,7 +127,7 @@ class GetAlbumTracks:
         self.tracks.sort(key=lambda x: x.albumhash)
 
     def __call__(self):
-        tracks = helpers.UseBisection(self.tracks, "albumhash", [self.hash])()
+        tracks = utils.UseBisection(self.tracks, "albumhash", [self.hash])()
 
         return tracks
 

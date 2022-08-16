@@ -4,7 +4,7 @@ This library contains all the functions related to the search functionality.
 from typing import List
 
 from app import api
-from app import helpers
+from app import utils
 from app import models
 from app.lib import albumslib
 from rapidfuzz import fuzz
@@ -77,7 +77,7 @@ class SearchArtists:
         )
 
         artists = [a[0] for a in results]
-        return helpers.get_normalized_artists(artists)
+        return utils.get_normalized_artists(artists)
 
 
 class SearchAlbums:

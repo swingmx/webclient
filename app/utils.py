@@ -1,10 +1,11 @@
 """
 This module contains mini functions for the server.
 """
+from concurrent.futures import ThreadPoolExecutor
 import os
 import threading
 from datetime import datetime
-from typing import Dict, List, Set
+from typing import Callable, Dict, List, Set
 
 import requests
 
@@ -54,11 +55,7 @@ class RemoveDuplicates:
 
     def __call__(self) -> List[models.Track]:
         hashes = []
-        [
-            hashes.append(t.hash)
-            for t in self.tracklist
-            if t.hash not in hashes
-        ]
+        [hashes.append(t.hash) for t in self.tracklist if t.hash not in hashes]
         tracks = UseBisection(self.tracklist, "hash", hashes)()
 
         return tracks
@@ -223,3 +220,9 @@ def get_normalized_artists(names: List[str]) -> List[models.Artist]:
     names = [get_normal_artist_name(a) for a in names]
 
     return [models.Artist(a) for a in names]
+
+
+def use_threads(list: list, fn: Callable):
+    with ThreadPoolExecutor() as pool:
+        iter = pool.map(fn, list)
+        return [i for i in iter]

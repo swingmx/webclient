@@ -6,7 +6,7 @@ from dataclasses import field
 from operator import itemgetter
 from typing import List
 
-from app import helpers
+from app import utils
 
 
 @dataclass(slots=True)
@@ -79,7 +79,7 @@ class Artist:
 
     def __init__(self, name: str):
         self.name = name
-        self.image = helpers.create_safe_name(name) + ".webp"
+        self.image = utils.create_safe_name(name) + ".webp"
 
 
 @dataclass

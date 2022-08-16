@@ -5,10 +5,10 @@ from typing import List
 
 from app import instances
 from app import settings
-from app.helpers import create_hash
-from app.helpers import Get
-from app.helpers import run_fast_scandir
-from app.helpers import UseBisection
+from app.utils import create_hash
+from app.utils import Get
+from app.utils import run_fast_scandir
+from app.utils import UseBisection
 from app.instances import tracks_instance
 from app.lib.albumslib import create_album
 from app.lib.taglib import get_tags

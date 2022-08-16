@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 
 import requests
-from app import helpers
+from app import utils
 from app import settings
 from app.lib import trackslib
 from app.lib import watchdoge
@@ -22,7 +22,7 @@ from PIL import Image
 log = get_logger()
 
 
-@helpers.background
+@utils.background
 def run_checks():
     """
     Checks for new songs every 5 minutes.
@@ -37,13 +37,13 @@ def run_checks():
         CreateAlbums()
         ProcessAlbumColors()
 
-        if helpers.Ping()():
+        if utils.Ping()():
             CheckArtistImages()()
 
         time.sleep(300)
 
 
-@helpers.background
+@utils.background
 def start_watchdog():
     """
     Starts the file watcher.
@@ -116,7 +116,7 @@ class CheckArtistImages:
         img_path = (
             settings.APP_DIR
             + "/images/artists/"
-            + helpers.create_safe_name(artistname)
+            + utils.create_safe_name(artistname)
             + ".webp"
         )
 
@@ -131,11 +131,14 @@ class CheckArtistImages:
         return useImageDownloader(url, img_path)()
 
     def __call__(self):
-        self.artists = helpers.Get.get_all_artists()
+        self.artists = utils.Get.get_all_artists()
 
-        with ThreadPoolExecutor() as pool:
-            iter = pool.map(self.download_image, self.artists)
-            [i for i in iter]
+        for a in self.artists:
+            self.download_image(a)
+
+        # with ThreadPoolExecutor() as pool:
+        #     iter = pool.map(self.download_image, self.artists)
+        #     [i for i in iter]
 
         print("Done fetching images")
 

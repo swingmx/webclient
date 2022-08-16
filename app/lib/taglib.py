@@ -9,7 +9,7 @@ from mutagen.flac import FLAC, MutagenError
 from mutagen.id3 import ID3
 from PIL import Image, UnidentifiedImageError
 
-from app.helpers import create_hash
+from app.utils import create_hash
 from ..models import Track
 
 

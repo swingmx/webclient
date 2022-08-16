@@ -4,7 +4,7 @@ Contains all the search routes.
 from pprint import pprint
 from typing import List
 
-from app import helpers
+from app import utils
 from app import models
 from app import serializer
 from app.lib import searchlib
@@ -46,9 +46,9 @@ class DoSearch:
         """Calls :class:`SearchTracks` which returns the tracks that fuzzily match
         the search terms. Then adds them to the `SearchResults` store.
         """
-        self.tracks = helpers.Get.get_all_tracks()
+        self.tracks = utils.Get.get_all_tracks()
         tracks = searchlib.SearchTracks(self.tracks, self.query)()
-        tracks = helpers.RemoveDuplicates(tracks)()
+        tracks = utils.RemoveDuplicates(tracks)()
         SearchResults.tracks = tracks
 
         return tracks
@@ -57,7 +57,7 @@ class DoSearch:
         """Calls :class:`SearchArtists` which returns the artists that fuzzily match
         the search term. Then adds them to the `SearchResults` store.
         """
-        self.artists = helpers.Get.get_all_artists()
+        self.artists = utils.Get.get_all_artists()
         artists = searchlib.SearchArtists(self.artists, self.query)()
         SearchResults.artists = artists
 
@@ -67,7 +67,7 @@ class DoSearch:
         """Calls :class:`SearchAlbums` which returns the albums that fuzzily match
         the search term. Then adds them to the `SearchResults` store.
         """
-        albums = helpers.Get.get_all_albums()
+        albums = utils.Get.get_all_albums()
         albums = searchlib.SearchAlbums(albums, self.query)()
         SearchResults.albums = albums
 
@@ -77,7 +77,7 @@ class DoSearch:
         """Calls :class:`SearchPlaylists` which returns the playlists that fuzzily match
         the search term. Then adds them to the `SearchResults` store.
         """
-        playlists = helpers.Get.get_all_playlists()
+        playlists = utils.Get.get_all_playlists()
         playlists = [serializer.Playlist(playlist) for playlist in playlists]
 
         playlists = searchlib.SearchPlaylists(playlists, self.query)()

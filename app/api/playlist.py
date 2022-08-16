@@ -7,9 +7,9 @@ from app import exceptions
 from app import instances
 from app import models
 from app import serializer
-from app.helpers import create_new_date
-from app.helpers import Get
-from app.helpers import UseBisection
+from app.utils import create_new_date
+from app.utils import Get
+from app.utils import UseBisection
 from app.lib import playlistlib
 from flask import Blueprint
 from flask import request

@@ -4,7 +4,7 @@ Contains all the artist(s) routes.
 import urllib
 
 from app import cache
-from app import helpers
+from app import utils
 from app import instances
 from flask import Blueprint
 
@@ -23,7 +23,7 @@ artist_bp = Blueprint("artist", __name__, url_prefix="/")
 #         return songs
 
 #     artist_songs = get_artist_tracks()
-#     songs = helpers.remove_duplicates(artist_songs)
+#     songs = utils.remove_duplicates(artist_songs)
 
 #     def get_artist_albums():
 #         artist_albums = []

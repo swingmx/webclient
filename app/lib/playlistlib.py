@@ -11,7 +11,7 @@ from app import exceptions
 from app import instances
 from app import models
 from app import settings
-from app.helpers import Get, get_normalized_artists
+from app.utils import Get, get_normalized_artists
 from app.lib import trackslib
 from app.logger import get_logger
 from PIL import Image

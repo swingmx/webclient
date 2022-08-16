@@ -3,7 +3,7 @@ Contains all the album routes.
 """
 
 from app import api
-from app import helpers
+from app import utils
 from app import instances
 from app import models
 from app.functions import FetchAlbumBio
@@ -46,7 +46,7 @@ def get_album():
         return error_msg, 204
 
     tracks = [models.Track(t) for t in tracks]
-    tracks = helpers.RemoveDuplicates(tracks)()
+    tracks = utils.RemoveDuplicates(tracks)()
 
     album = instances.album_instance.find_album_by_hash(albumhash)
 
@@ -105,6 +105,6 @@ def get_albumartists():
     tracks = [models.Track(t) for t in tracks]
 
     artists = [a for t in tracks for a in t.artists]
-    artists = helpers.get_normalized_artists(artists)
+    artists = utils.get_normalized_artists(artists)
 
     return {"artists": artists}
