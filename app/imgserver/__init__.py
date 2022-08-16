@@ -26,14 +26,14 @@ def hello():
     return "Hello mf"
 
 
-def send_fallback_img():
-    img = join(ASSETS_PATH, "default.webp")
+def send_fallback_img(filename: str = "default.webp"):
+    img = join(ASSETS_PATH, filename)
     exists = path.exists(img)
 
     if not exists:
         return "", 404
 
-    return send_from_directory(ASSETS_PATH, "default.webp")
+    return send_from_directory(ASSETS_PATH, filename)
 
 
 @app.route("/t/<imgpath>")
@@ -55,7 +55,7 @@ def send_artist_image(imgpath: str):
     if exists:
         return send_from_directory(ARTIST_PATH, imgpath)
 
-    return send_fallback_img()
+    return send_fallback_img("artist.webp")
 
 
 @app.route("/p/<imgpath>")

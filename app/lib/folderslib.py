@@ -1,3 +1,4 @@
+from genericpath import isfile
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
@@ -7,6 +8,7 @@ from typing import Tuple
 from app import instances
 from app.models import Folder
 from app.models import Track
+from ..settings import SUPPORTED_IMAGES
 
 
 @dataclass
@@ -71,3 +73,18 @@ class getFnF:
         folders = filter(lambda f: f.trackcount > 0, folders)
 
         return tracks, folders
+
+
+class FolderLib:
+    def get_dir_images(fullpath: str):
+        files = scandir(fullpath)
+
+        for entry in files:
+            if entry.is_file() and entry.name.endswith(SUPPORTED_IMAGES):
+                print(entry.name)
+
+
+def test_dir_images():
+    FolderLib.get_dir_images(
+        "/home/cwilvx/Downloads/Telegram Desktop/Mac Miller - Self Care"
+    )

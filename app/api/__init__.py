@@ -6,6 +6,7 @@ checking and creating config dirs and starting the re-indexing process using a b
 from app import functions
 from app import helpers
 from app import prep
+# from ..lib.folderslib import test_dir_images
 
 
 @helpers.background
@@ -16,6 +17,7 @@ def initialize() -> None:
     functions.start_watchdog()
     prep.create_config_dir()
     functions.run_checks()
+    # test_dir_images()
 
 
 initialize()

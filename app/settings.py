@@ -34,3 +34,4 @@ The size of extracted in pixels
 """
 
 LOGGER_ENABLE: bool = True
+SUPPORTED_IMAGES = (".jpg", ".png")
