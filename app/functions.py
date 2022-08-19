@@ -65,7 +65,7 @@ class getArtistImage:
             response = requests.get(url)
             data = response.json()
 
-            return data["data"][0]["picture_medium"]
+            return data["data"][0]["picture_big"]
         except requests.exceptions.ConnectionError:
             time.sleep(5)
             return None
