@@ -93,6 +93,7 @@ class Album:
     hash: str
     date: int
     image: str
+    artistimg: str
     count: int = 0
     duration: int = 0
     copyright: str = field(default="")
@@ -109,7 +110,12 @@ class Album:
             self.image,
             self.hash,
             self.copyright,
-        ) = itemgetter("title", "artist", "date", "image", "hash", "copyright")(tags)
+            self.artistimg,
+        ) = itemgetter(
+            "title", "artist", "date", "image", "hash", "copyright", "artistimg"
+        )(
+            tags
+        )
 
         try:
             self.colors = tags["colors"]
@@ -141,14 +147,12 @@ class Playlist:
     lastUpdated: int
     image: str
     thumb: str
-    description: str = ""
     count: int = 0
     """A list of track objects in the playlist"""
 
     def __init__(self, data):
         self.playlistid = data["_id"]["$oid"]
         self.name = data["name"]
-        self.description = data["description"]
         self.image = self.create_img_link(data["image"])
         self.thumb = self.create_img_link(data["thumb"])
         self.pretracks = data["pre_tracks"]
@@ -164,7 +168,6 @@ class Playlist:
 
     def update_playlist(self, data: dict):
         self.name = data["name"]
-        self.description = data["description"]
         self.lastUpdated = data["lastUpdated"]
 
         if data["image"]:

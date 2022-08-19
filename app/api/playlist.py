@@ -42,7 +42,6 @@ def create_playlist():
 
     data = {
         "name": data["name"],
-        "description": "",
         "pre_tracks": [],
         "lastUpdated": create_new_date(),
         "image": "",
@@ -103,7 +102,6 @@ def update_playlist(playlistid: str):
 
     playlist = {
         "name": str(data.get("name")).strip(),
-        "description": str(data.get("description").strip()),
         "lastUpdated": create_new_date(),
         "image": None,
         "thumb": None,

@@ -147,6 +147,8 @@ def create_album(track: models.Track) -> dict:
         "copyright": track.copyright,
     }
 
+    artistimg = utils.create_safe_name(track.albumartist) + ".webp"
+    album["artistimg"] = artistimg
     album["date"] = track.date
 
     img_p = get_album_image(track)

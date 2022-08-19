@@ -57,7 +57,6 @@ class Playlist:
     image: str
     thumb: str
     lastUpdated: int
-    description: str
     count: int = 0
     duration: int = 0
 
@@ -69,7 +68,6 @@ class Playlist:
         self.image = p.image
         self.thumb = p.thumb
         self.lastUpdated = p.lastUpdated
-        self.description = p.description
         self.count = p.count
 
         if construct_last_updated:

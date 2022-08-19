@@ -5,7 +5,6 @@ from typing import List
 
 from app import instances
 from app import settings
-from app.utils import create_hash
 from app.utils import Get
 from app.utils import run_fast_scandir
 from app.utils import UseBisection
@@ -132,7 +131,7 @@ class CreateAlbums:
 
     def create_album(self, album: PreAlbum) -> Album:
         hash = album.hash
-
+        
         album = {"image": None}
         iter = 0
 
