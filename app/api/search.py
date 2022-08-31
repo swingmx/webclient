@@ -13,12 +13,9 @@ from flask import request
 
 search_bp = Blueprint("search", __name__, url_prefix="/")
 
-SEARCH_RESULTS = {
-    "tracks": [],
-    "albums": [],
-    "artists": [],
-}
 
+SEARCH_COUNT = 6
+"""The max amount of items to return per request"""
 
 class SearchResults:
     """
@@ -110,8 +107,8 @@ def search_tracks():
     tracks = DoSearch(query).search_tracks()
 
     return {
-        "tracks": tracks[:6],
-        "more": len(tracks) > 6,
+        "tracks": tracks[:SEARCH_COUNT],
+        "more": len(tracks) > SEARCH_COUNT,
     }, 200
 
 
@@ -128,8 +125,8 @@ def search_albums():
     tracks = DoSearch(query).search_albums()
 
     return {
-        "albums": tracks[:6],
-        "more": len(tracks) > 6,
+        "albums": tracks[:SEARCH_COUNT],
+        "more": len(tracks) > SEARCH_COUNT,
     }, 200
 
 
@@ -146,8 +143,8 @@ def search_artists():
     artists = DoSearch(query).search_artists()
 
     return {
-        "artists": artists[:6],
-        "more": len(artists) > 6,
+        "artists": artists[:SEARCH_COUNT],
+        "more": len(artists) > SEARCH_COUNT,
     }, 200
 
 
@@ -164,8 +161,8 @@ def search_playlists():
     playlists = DoSearch(query).search_playlists()
 
     return {
-        "playlists": playlists[:6],
-        "more": len(playlists) > 6,
+        "playlists": playlists[:SEARCH_COUNT],
+        "more": len(playlists) > SEARCH_COUNT,
     }, 200
 
 
@@ -201,20 +198,20 @@ def search_load_more():
     if type == "tracks":
         t = SearchResults.tracks
         return {
-            "tracks": t[index : index + 5],
-            "more": len(t) > index + 5,
+            "tracks": t[index : index + SEARCH_COUNT],
+            "more": len(t) > index + SEARCH_COUNT,
         }
 
     elif type == "albums":
         a = SearchResults.albums
         return {
-            "albums": a[index : index + 6],
-            "more": len(a) > index + 6,
+            "albums": a[index : index + SEARCH_COUNT],
+            "more": len(a) > index + SEARCH_COUNT,
         }
 
     elif type == "artists":
         a = SearchResults.artists
         return {
-            "artists": a[index : index + 6],
-            "more": len(a) > index + 6,
+            "artists": a[index : index + SEARCH_COUNT],
+            "more": len(a) > index + SEARCH_COUNT,
         }
