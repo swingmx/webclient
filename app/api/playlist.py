@@ -114,12 +114,11 @@ def update_playlist(playlistid: str):
 
     if playlist is not None:
         if image:
-            image_, thumb_ = playlistlib.save_p_image(image, playlistid)
-            playlist["image"] = image_
-            playlist["thumb"] = thumb_
-        else:
-            playlist["image"] = p.image.split("/")[-1]
-            playlist["thumb"] = p.thumb.split("/")[-1]
+            playlist["image"], playlist["thumb"] = playlistlib.save_p_image(
+                image, playlistid
+            )
+        elif p.image:
+            [playlist["image"], playlist["thumb"]] = [p.image, p.thumb]
 
         p.update_playlist(playlist)
         instances.playlist_instance.update_playlist(playlistid, playlist)
