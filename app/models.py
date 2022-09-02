@@ -152,27 +152,22 @@ class Playlist:
 
     def __init__(self, data):
         self.playlistid = data["_id"]["$oid"]
-        self.name = data["name"]
-        self.image = self.create_img_link(data["image"])
-        self.thumb = self.create_img_link(data["thumb"])
-        self.pretracks = data["pre_tracks"]
         self.tracks = []
-        self.lastUpdated = data["lastUpdated"]
+        self.pretracks = data["pre_tracks"]
         self.count = len(self.pretracks)
-
-    def create_img_link(self, image: str):
-        if image:
-            return image
-
-        return "default.webp"
+        self.write_props(data)
 
     def update_playlist(self, data: dict):
-        self.name = data["name"]
-        self.lastUpdated = data["lastUpdated"]
+        self.write_props(data)
 
-        if data["image"]:
-            self.image = self.create_img_link(data["image"])
-            self.thumb = self.create_img_link(data["thumb"])
+    # TODO: Find a better name for this method
+    def write_props(self, data: dict):
+        (self.name, self.image, self.thumb, self.lastUpdated,) = itemgetter(
+            "name",
+            "image",
+            "thumb",
+            "lastUpdated",
+        )(data)
 
 
 @dataclass

@@ -66,7 +66,7 @@ def send_playlist_image(imgpath: str):
     if exists:
         return send_from_directory(PLAYLIST_PATH, imgpath)
 
-    return send_fallback_img()
+    return send_fallback_img("playlist.svg")
 
 
 if __name__ == "__main__":

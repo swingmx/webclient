@@ -44,13 +44,13 @@ def create_playlist():
         "name": data["name"],
         "pre_tracks": [],
         "lastUpdated": create_new_date(),
-        "image": "",
-        "thumb": "",
+        "image": None,
+        "thumb": None,
     }
 
-    dbp = instances.playlist_instance.get_playlist_by_name(data["name"])
+    db_p = instances.playlist_instance.get_playlist_by_name(data["name"])
 
-    if dbp is not None:
+    if db_p is not None:
         return {"message": "Playlist already exists."}, 409
 
     upsert_id = instances.playlist_instance.insert_playlist(data)
