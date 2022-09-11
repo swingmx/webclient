@@ -1,12 +1,10 @@
 import os
 from io import BytesIO
-from tinytag import TinyTag
 
-from app import settings
-from mutagen.flac import FLAC
-from mutagen.id3 import ID3
+from tinytag import TinyTag
 from PIL import Image, UnidentifiedImageError
 
+from app import settings
 from app.utils import create_hash
 
 
@@ -15,18 +13,11 @@ def parse_album_art(filepath: str):
     Returns the album art for a given audio file.
     """
 
-    if filepath.endswith(".flac"):
-        try:
-            audio = FLAC(filepath)
-            return audio.pictures[0].data
-        except:
-            return None
-    elif filepath.endswith(".mp3"):
-        try:
-            audio = ID3(filepath)
-            return audio.getall("APIC")[0].data
-        except:
-            return None
+    try:
+        tags = TinyTag.get(filepath, image=True)
+        return tags.get_image()
+    except:
+        return None
 
 
 def extract_thumb(filepath: str, webp_path: str) -> bool:
@@ -47,7 +38,7 @@ def extract_thumb(filepath: str, webp_path: str) -> bool:
     if album_art is not None:
         try:
             img = Image.open(BytesIO(album_art))
-        except UnidentifiedImageError:
+        except (UnidentifiedImageError, OSError):
             return False
 
         try:
