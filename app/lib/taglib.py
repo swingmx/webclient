@@ -1,16 +1,13 @@
-from concurrent.futures import ThreadPoolExecutor
 import os
 from io import BytesIO
-from pprint import pprint
+from tinytag import TinyTag
 
-import mutagen
 from app import settings
-from mutagen.flac import FLAC, MutagenError
+from mutagen.flac import FLAC
 from mutagen.id3 import ID3
 from PIL import Image, UnidentifiedImageError
 
 from app.utils import create_hash
-from ..models import Track
 
 
 def parse_album_art(filepath: str):
@@ -69,66 +66,76 @@ def extract_thumb(filepath: str, webp_path: str) -> bool:
         return False
 
 
-def get_tags(fullpath: str) -> dict | None:
-    """
-    Returns a dictionary of tags for a given file.
-    """
+def get_tags(filepath: str):
+    filetype = filepath.split(".")[-1]
+    filename = (filepath.split("/")[-1]).replace(f".{filetype}", "")
+
     try:
-        tags = mutagen.File(fullpath, easy=True)
-    except MutagenError:
+        tags = TinyTag.get(filepath)
+    except:
         return None
 
-    def parse_tag(data: list[str | int]):
-        [tag, default] = data[:2]
+    if tags.artist == "":
+        tags.artist = tags.albumartist
 
+    if (tags.title == "") or (tags.title is None):
+        tags.title = filename
+
+    to_check = ["album", "artist", "albumartist", "year"]
+    for prop in to_check:
+        p = getattr(tags, prop)
+        if (p is None) or (p == ""):
+            setattr(tags, prop, "Unknown")
+
+    to_round = ["bitrate", "duration"]
+    for prop in to_round:
         try:
-            is_int = data[2]
-        except IndexError:
-            is_int = False
+            setattr(tags, prop, round(getattr(tags, prop)))
+        except TypeError:
+            setattr(tags, prop, 0)
 
+    to_int = ["track", "disc"]
+    for prop in to_int:
         try:
-            data = str(tags[tag][0])
-
-            if is_int:
-                data = int(data)
-        except (KeyError, IndexError, ValueError):
-            data = default
-
-        return {tag: data}
-
-    props = [
-        ["artist", None],
-        ["title", None],
-        ["album", None],
-        ["albumartist", None],
-        ["genre", None],
-        ["date", None],
-        ["tracknumber", 1, True],
-        ["discnumber", 1, True],
-        ["copyright", None],
-    ]
-
-    data = {}
-
-    with ThreadPoolExecutor() as pool:
-        iter = pool.map(parse_tag, props)
-        for i in iter:
-            data = {**data, **i}
-
-    hash = create_hash(data["artist"], data["album"], data["title"])
-    data["hash"] = hash
-    data["filepath"] = fullpath
-    data["length"] = round(tags.info.length)
-    data["bitrate"] = round(int(tags.info.bitrate) / 1000)
-    data["folder"] = os.path.dirname(fullpath)
-    data["albumhash"] = create_hash(data["album"], data["albumartist"])
+            setattr(tags, prop, int(getattr(tags, prop)))
+        except (ValueError, TypeError):
+            setattr(tags, prop, 1)
 
     try:
-        data["discnumber"] = int(data["discnumber"])
-    except ValueError:
-        data["discnumber"]
+        tags.copyright = tags.extra["copyright"]
+    except KeyError:
+        tags.copyright = None
 
-    if data["artist"] == "":
-        data["artist"] = data["albumartist"]
+    tags.albumhash = create_hash(tags.album, tags.albumartist)
+    tags.hash = create_hash(tags.artist, tags.album, tags.title)
+    tags.image = f"{tags.albumhash}.webp"
+    tags.folder = os.path.dirname(filepath)
 
-    return data
+    tags.date = tags.year
+    tags.filepath = filepath
+    tags.filetype = filetype
+
+    tags = tags.__dict__
+
+    # delete all tag properties that start with _ (tinytag internals)
+    for tag in list(tags):
+        if tag.startswith("_"):
+            del tags[tag]
+
+    to_delete = [
+        "filesize",
+        "audio_offset",
+        "channels",
+        "comment",
+        "composer",
+        "disc_total",
+        "extra",
+        "samplerate",
+        "track_total",
+        "year",
+    ]
+
+    for tag in to_delete:
+        del tags[tag]
+
+    return tags

@@ -1,7 +1,6 @@
 """
 Contains all the track routes.
 """
-from app import api
 from app import instances
 from app import models
 from flask import Blueprint
@@ -21,7 +20,7 @@ def send_track_file(trackhash):
     if track is None:
         return msg, 404
 
-    track = models.Track(track)
+    track = models.Track(**track)
     type = track.filepath.split(".")[-1]
 
     try:

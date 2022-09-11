@@ -16,4 +16,4 @@ while getopts ':s' opt; do
 done
 
 echo "Starting alice server"
-"$gpath" -b 0.0.0.0:1970 -w 1 --threads=4 "manage:create_app()"
+"$gpath" -b 0.0.0.0:1970 --threads=10 "manage:create_app()"

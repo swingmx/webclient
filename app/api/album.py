@@ -45,7 +45,7 @@ def get_album():
     if len(tracks) == 0:
         return error_msg, 204
 
-    tracks = [models.Track(t) for t in tracks]
+    tracks = [models.Track(**t) for t in tracks]
     tracks = utils.RemoveDuplicates(tracks)()
 
     album = instances.album_instance.find_album_by_hash(albumhash)
@@ -57,15 +57,15 @@ def get_album():
 
     album.count = len(tracks)
     try:
-        album.duration = sum([t.length for t in tracks])
+        album.duration = sum([t.duration for t in tracks])
     except AttributeError:
         album.duration = 0
 
     if (
         album.count == 1
         and tracks[0].title == album.title
-        and tracks[0].tracknumber == 1
-        and tracks[0].discnumber == 1
+        and tracks[0].track == 1
+        and tracks[0].disc == 1
     ):
         album.is_single = True
 
@@ -102,7 +102,7 @@ def get_albumartists():
     albumhash = data["hash"]
 
     tracks = instances.tracks_instance.find_tracks_by_albumhash(albumhash)
-    tracks = [models.Track(t) for t in tracks]
+    tracks = [models.Track(**t) for t in tracks]
 
     artists = [a for t in tracks for a in t.artists]
     artists = utils.get_normalized_artists(artists)

@@ -3,7 +3,6 @@ This module contains functions for the server
 """
 import os
 import time
-from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 
 import requests

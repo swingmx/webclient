@@ -84,7 +84,7 @@ def get_playlist(playlistid: str):
 
     tracks = playlistlib.create_playlist_tracks(playlist.pretracks)
 
-    duration = sum([t.length for t in tracks])
+    duration = sum([t.duration for t in tracks])
     playlist = serializer.Playlist(playlist)
     playlist.duration = duration
 

@@ -64,8 +64,6 @@ def add_track(filepath: str) -> None:
     tags = get_tags(filepath)
 
     if tags is not None:
-        hash = create_hash(tags["album"], tags["albumartist"])
-        tags["albumhash"] = hash
         instances.tracks_instance.insert_song(tags)
 
 

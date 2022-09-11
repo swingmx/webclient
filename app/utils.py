@@ -1,15 +1,16 @@
 """
 This module contains mini functions for the server.
 """
-from concurrent.futures import ThreadPoolExecutor
 import os
 import threading
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from typing import Callable, Dict, List, Set
 
 import requests
 
 from app import instances, models
+from app.settings import SUPPORTED_FILES
 
 
 def background(func):
@@ -31,13 +32,13 @@ def run_fast_scandir(__dir: str, full=False) -> Dict[List[str], List[str]]:
 
     subfolders = []
     files = []
-    ext = [".flac", ".mp3"]
 
     for f in os.scandir(__dir):
         if f.is_dir() and not f.name.startswith("."):
             subfolders.append(f.path)
         if f.is_file():
-            if os.path.splitext(f.name)[1].lower() in ext:
+            ext = os.path.splitext(f.name)[1].lower()
+            if ext in SUPPORTED_FILES:
                 files.append(f.path)
 
     if full or len(files) == 0:
@@ -76,7 +77,7 @@ def create_hash(*args: List[str]) -> str:
     """
     Creates a simple hash for an album
     """
-    string = "".join(a for a in args).replace(" ", "")
+    string = "".join(str(a) for a in args).replace(" ", "")
     return "".join([i for i in string if i.isalnum()]).lower()
 
 
@@ -90,7 +91,10 @@ def create_safe_name(name: str) -> str:
     """
     Creates a url-safe name from a name.
     """
-    return "".join([i for i in name if i.isalnum()]).lower()
+    if name is None:
+        return "None"
+
+    return "".join([str(i) for i in name if i.isalnum()]).lower()
 
 
 class UseBisection:
@@ -137,7 +141,7 @@ class Get:
         Returns all tracks
         """
         t = instances.tracks_instance.get_all_tracks()
-        return [models.Track(t) for t in t]
+        return [models.Track(**t) for t in t]
 
     def get_all_albums() -> List[models.Album]:
         """
@@ -152,7 +156,7 @@ class Get:
         artists: Set[str] = set()
 
         for track in tracks:
-            for artist in track.artists:
+            for artist in track.artist:
                 artists.add(artist)
 
         return artists

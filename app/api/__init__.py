@@ -14,7 +14,7 @@ def initialize() -> None:
     """
     Runs all the necessary setup functions.
     """
-    functions.start_watchdog()
+    # functions.start_watchdog()
     prep.create_config_dir()
     functions.run_checks()
     # test_dir_images()

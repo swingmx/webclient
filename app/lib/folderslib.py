@@ -1,4 +1,5 @@
 from genericpath import isfile
+import os
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
@@ -8,7 +9,7 @@ from typing import Tuple
 from app import instances
 from app.models import Folder
 from app.models import Track
-from ..settings import SUPPORTED_IMAGES
+from ..settings import SUPPORTED_FILES, SUPPORTED_IMAGES
 
 
 @dataclass
@@ -54,17 +55,19 @@ class getFnF:
         dirs, files = [], []
 
         for entry in all:
+            ext = os.path.splitext(entry.name)[1].lower()
+
             if entry.is_dir() and not entry.name.startswith("."):
                 dir = {
                     "path": entry.path,
                     "is_sym": entry.is_symlink(),
                 }
                 dirs.append(Dir(**dir))
-            elif entry.is_file() and entry.name.endswith((".mp3", ".flac")):
+            elif entry.is_file() and ext in SUPPORTED_FILES:
                 files.append(entry.path)
 
         tracks = instances.tracks_instance.find_songs_by_filenames(files)
-        tracks = [Track(track) for track in tracks]
+        tracks = [Track(**track) for track in tracks]
 
         with ThreadPoolExecutor() as pool:
             iter = pool.map(create_folder, dirs)

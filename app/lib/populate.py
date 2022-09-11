@@ -58,8 +58,9 @@ class Populate:
         """
 
         logg.info("Tagging untagged tracks...")
-        with ThreadPoolExecutor() as executor:
-            executor.map(self.get_tags, self.files)
+
+        for file in self.files:
+            self.get_tags(file)
 
         if len(self.tagged_tracks) > 0:
             tracks_instance.insert_many(self.tagged_tracks)
@@ -82,6 +83,9 @@ class CreateAlbums:
         prealbums = self.create_pre_albums(self.db_tracks)
         prealbums = self.filter_processed(self.db_albums, prealbums)
 
+        if len(prealbums) == 0:
+            return
+
         albums = []
 
         for album in tqdm(prealbums, desc="Creating albums"):
@@ -89,64 +93,50 @@ class CreateAlbums:
             if a is not None:
                 albums.append(a)
 
-        # with ThreadPoolExecutor() as pool:
-        #     iterator = pool.map(self.create_album, prealbums)
-
-        #     for i in iterator:
-        #         if i is not None:
-        #             albums.append(i)
-
         if len(albums) > 0:
             instances.album_instance.insert_many(albums)
 
     @staticmethod
     def create_pre_albums(tracks: List[Track]) -> List[PreAlbum]:
-        prealbums = []
+        all_hashes = []
 
         for track in tqdm(tracks, desc="Creating prealbums"):
-            album = {
-                "title": track.album,
-                "artist": track.albumartist,
-                "hash": track.albumhash,
-            }
+            hash = track.albumhash
 
-            album = PreAlbum(**album)
+            if hash not in all_hashes:
+                all_hashes.append(hash)
 
-            if album not in prealbums:
-                prealbums.append(album)
+        return all_hashes
 
-        return prealbums
-
-    @staticmethod
-    def filter_processed(albums: List[Album], prealbums: List[PreAlbum]) -> List[dict]:
+    def filter_processed(
+        self, albums: List[Album], all_album_hashes: List[str]
+    ) -> List[dict]:
         to_process = []
 
-        for p in tqdm(prealbums, desc="Filtering processed albums"):
-            album = UseBisection(albums, "hash", [p.hash])()[0]
+        for hash in tqdm(all_album_hashes, desc="Filtering processed albums"):
+            album = UseBisection(albums, "hash", [hash])()[0]
 
             if album is None:
-                to_process.append(p)
+                to_process.append(hash)
 
         return to_process
 
-    def create_album(self, album: PreAlbum) -> Album:
-        hash = album.hash
-        
+    def create_album(self, album_hash: str) -> Album:
+
         album = {"image": None}
-        iter = 0
 
         while album["image"] is None:
-            track = UseBisection(self.db_tracks, "albumhash", [hash])()[0]
+            track = UseBisection(self.db_tracks, "albumhash", [album_hash])()[0]
 
             if track is not None:
-                iter += 1
                 album = create_album(track)
                 self.db_tracks.remove(track)
             else:
-                album["image"] = hash + ".webp"
+                album["image"] = album_hash + ".webp"
+
         try:
             album = Album(album)
             return album
         except KeyError:
-            print(f"📌 {iter}")
+            print("KeyError when creating album")
             print(album)

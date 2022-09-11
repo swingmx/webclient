@@ -1,10 +1,9 @@
 """
 Contains all the models for objects generation and typing.
 """
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 from operator import itemgetter
-from typing import List
+from typing import Any, List
 
 from app import utils
 
@@ -15,57 +14,31 @@ class Track:
     Track class
     """
 
-    trackid: str
-    title: str
-    artists: list[str]
-    albumartist: str
+    _id: Any
     album: str
-    folder: str
-    filepath: str
-    length: int
-    genre: str
-    bitrate: int
-    tracknumber: int
-    discnumber: int
+    albumartist: str
     albumhash: str
-    date: str
-    image: str
-    hash: str
+    artist: list[str]
+    bitrate: int
     copyright: str
+    date: str
+    disc: int
+    filepath: str
+    folder: str
+    genre: str
+    hash: str
+    image: str
+    duration: int
+    title: str
+    track: int
+    filetype: str
+    trackid: str = None
 
-    def __init__(self, tags):
-        (
-            self.title,
-            self.album,
-            self.albumartist,
-            self.genre,
-            self.albumhash,
-            self.date,
-            self.folder,
-            self.filepath,
-            self.copyright,
-            self.hash,
-        ) = itemgetter(
-            "title",
-            "album",
-            "albumartist",
-            "genre",
-            "albumhash",
-            "date",
-            "folder",
-            "filepath",
-            "copyright",
-            "hash",
-        )(
-            tags
-        )
-        self.trackid = tags["_id"]["$oid"]
-        self.artists = tags["artist"].split(", ")
-        self.bitrate = int(tags["bitrate"])
-        self.length = int(tags["length"])
-        self.discnumber = int(tags["discnumber"])
-        self.image = tags["albumhash"] + ".webp"
-        self.tracknumber = int(tags["tracknumber"])
+    def __post_init__(self):
+        self.trackid = self._id["$oid"]
+
+        if self.artist is not None:
+            self.artist = self.artist.split(", ")
 
 
 @dataclass(slots=True)

@@ -310,6 +310,17 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
+name = "tinytag"
+version = "1.8.1"
+description = "Read music meta data and length of MP3, OGG, OPUS, MP4, M4A, FLAC, WMA and Wave files"
+category = "main"
+optional = false
+python-versions = ">=2.7"
+
+[package.extras]
+tests = ["pytest", "pytest-cov", "flake8"]
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -392,7 +403,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "cf01e67da98541ec5204f5529e71e5dc785fe6ae5b5192c1f6f2b18369783350"
+content-hash = "12d6360f6894b82ca0cb5b25fd83d8ee3c9e273e5f9b8d5ddd0c9c87286dba8f"
 
 [metadata.files]
 black = [
@@ -819,6 +830,9 @@ requests = [
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
+]
+tinytag = [
+    {file = "tinytag-1.8.1.tar.gz", hash = "sha256:363ab3107831a5598b68aaa061aba915fb1c7b4254d770232e65d5db8487636d"},
 ]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},

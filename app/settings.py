@@ -12,7 +12,7 @@ APP_DIR = os.path.join(HOME_DIR, CONFIG_FOLDER)
 IMG_PATH = os.path.join(APP_DIR, "images")
 
 THUMBS_PATH = os.path.join(IMG_PATH, "thumbnails")
-TEST_DIR = "/home/cwilvx/Music/Link to Music/Chill/Wolftyla Radio"
+TEST_DIR = "/home/cwilvx/Music/Link to Music/Classics"
 # HOME_DIR = TEST_DIR
 
 # URLS
@@ -28,10 +28,14 @@ LAST_FM_API_KEY = "762db7a44a9e6fb5585661f5f2bdf23a"
 
 CPU_COUNT = multiprocessing.cpu_count()
 
-THUMB_SIZE: int = 400
+THUMB_SIZE = 400
 """
 The size of extracted in pixels
 """
 
 LOGGER_ENABLE: bool = True
+
+FILES = ["flac", "mp3", "wav", "m4a"]
+SUPPORTED_FILES = tuple(f".{file}" for file in FILES)
+
 SUPPORTED_IMAGES = (".jpg", ".png")

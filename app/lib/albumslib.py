@@ -27,7 +27,7 @@ class RipAlbumImage:
 
     def __init__(self, hash: str) -> None:
         tracks = instances.tracks_instance.find_tracks_by_albumhash(hash)
-        tracks = [models.Track(track) for track in tracks]
+        tracks = [models.Track(**track) for track in tracks]
 
         for track in tracks:
             ripped = taglib.extract_thumb(track.filepath, hash + ".webp")

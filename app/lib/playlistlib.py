@@ -34,7 +34,7 @@ def add_track(playlistid: str, trackid: str):
     if tt is None:
         return
 
-    track = models.Track(tt)
+    track = models.Track(**tt)
 
     playlist = instances.playlist_instance.get_playlist_by_id(playlistid)
 
@@ -131,7 +131,7 @@ def create_playlist_tracks(playlist_tracks: List[str]) -> List[models.Track]:
 
     with ThreadPoolExecutor() as pool:
         tracks_iter = pool.map(trackslib.get_p_track, playlist_tracks)
-        [tracks.append(models.Track(t)) for t in tracks_iter if t is not None]
+        [tracks.append(models.Track(**t)) for t in tracks_iter if t is not None]
 
     return tracks
 

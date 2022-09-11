@@ -1,7 +1,7 @@
 """
 Contains all the search routes.
 """
-from pprint import pprint
+import datetime
 from typing import List
 
 from app import utils
@@ -16,6 +16,7 @@ search_bp = Blueprint("search", __name__, url_prefix="/")
 
 SEARCH_COUNT = 6
 """The max amount of items to return per request"""
+
 
 class SearchResults:
     """
