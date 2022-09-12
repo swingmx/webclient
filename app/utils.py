@@ -10,7 +10,7 @@ from typing import Callable, Dict, List, Set
 import requests
 
 from app import instances, models
-from app.settings import SUPPORTED_FILES
+from app.settings import SUPPORTED_DIR_IMAGES, SUPPORTED_FILES
 
 
 def background(func):
@@ -230,3 +230,13 @@ def use_threads(list: list, fn: Callable):
     with ThreadPoolExecutor() as pool:
         iter = pool.map(fn, list)
         return [i for i in iter]
+
+
+def find_best_image(filepaths: List[str]) -> str:
+    """
+    Finds the best folder image in a list of images.
+    """
+    for entry in SUPPORTED_DIR_IMAGES:
+        for f in filepaths:
+            if entry in f.lower():
+                return f

@@ -19,10 +19,10 @@ class Cutoff:
     Holds all the default cutoff values.
     """
 
-    tracks: int = 80
-    albums: int = 80
-    artists: int = 80
-    playlists: int = 80
+    tracks: int = 60
+    albums: int = 60
+    artists: int = 60
+    playlists: int = 60
 
 
 class Limit:

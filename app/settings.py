@@ -38,4 +38,11 @@ LOGGER_ENABLE: bool = True
 FILES = ["flac", "mp3", "wav", "m4a"]
 SUPPORTED_FILES = tuple(f".{file}" for file in FILES)
 
-SUPPORTED_IMAGES = (".jpg", ".png")
+SUPPORTED_IMAGES = (".jpg", ".png", ".webp", ".jpeg")
+
+SUPPORTED_DIR_IMAGES = [
+    "folder",
+    "cover",
+    "album",
+    "front",
+]

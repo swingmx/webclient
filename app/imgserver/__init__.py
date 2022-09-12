@@ -1,8 +1,8 @@
 from os import path
 from typing import Tuple
 
-from flask import Flask
-from flask import send_from_directory
+from flask import Flask, request, send_from_directory
+
 
 app = Flask(__name__)
 
@@ -19,11 +19,12 @@ ASSETS_PATH = join(APP_DIR, "assets")
 THUMB_PATH = join(IMG_PATH, "thumbnails")
 ARTIST_PATH = join(IMG_PATH, "artists")
 PLAYLIST_PATH = join(IMG_PATH, "playlists")
+SUPPORTED_IMAGES = (".jpg", ".png", ".webp", ".jpeg")
 
 
 @app.route("/")
 def hello():
-    return "Hello mf"
+    return "Holla"
 
 
 def send_fallback_img(filename: str = "default.webp"):
@@ -67,6 +68,29 @@ def send_playlist_image(imgpath: str):
         return send_from_directory(PLAYLIST_PATH, imgpath)
 
     return send_fallback_img("playlist.svg")
+
+
+@app.route("/raw")
+@app.route("/raw/<path:imgpath>")
+def send_from_filepath(imgpath: str = ""):
+    imgpath = "/" + imgpath
+    filename = path.basename(imgpath)
+
+    def verify_is_image():
+        _, ext = path.splitext(filename)
+        return ext in SUPPORTED_IMAGES
+
+    verified = verify_is_image()
+
+    if not verified:
+        return imgpath, 404
+
+    exists = path.exists(imgpath)
+
+    if verified and exists:
+        return send_from_directory(path.dirname(imgpath), filename)
+
+    return imgpath, 404
 
 
 if __name__ == "__main__":

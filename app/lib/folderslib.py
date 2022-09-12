@@ -1,6 +1,4 @@
-from genericpath import isfile
 import os
-import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from os import scandir
