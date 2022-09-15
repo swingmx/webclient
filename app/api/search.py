@@ -14,7 +14,7 @@ from flask import request
 search_bp = Blueprint("search", __name__, url_prefix="/")
 
 
-SEARCH_COUNT = 6
+SEARCH_COUNT = 10
 """The max amount of items to return per request"""
 
 

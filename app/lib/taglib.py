@@ -66,7 +66,13 @@ def get_tags(filepath: str):
     except:
         return None
 
-    if tags.artist == "":
+    no_albumartist:bool = tags.albumartist == "" or tags.albumartist is None
+    no_artist:bool = tags.artist == "" or tags.artist is None
+
+    if no_albumartist and no_artist is False:
+        tags.albumartist = tags.artist
+
+    if no_artist and no_albumartist is False:
         tags.artist = tags.albumartist
 
     to_filename = ["title", "album"]
@@ -75,7 +81,7 @@ def get_tags(filepath: str):
         if p == "" or p is None:
             setattr(tags, tag, filename)
 
-    to_check = ["album", "artist", "albumartist", "year"]
+    to_check = ["album", "artist", "year"]
     for prop in to_check:
         p = getattr(tags, prop)
         if (p is None) or (p == ""):
