@@ -24,8 +24,17 @@ def extract_thumb(filepath: str, webp_path: str) -> bool:
     """
     Extracts the thumbnail from an audio file. Returns the path to the thumbnail.
     """
-    img_path = os.path.join(settings.THUMBS_PATH, webp_path)
+    img_path = os.path.join(settings.LG_THUMBS_PATH, webp_path)
+    sm_img_path = os.path.join(settings.SM_THUMB_PATH, webp_path)
+
     tsize = settings.THUMB_SIZE
+    sm_tsize = settings.SM_THUMB_SIZE
+
+    def save_image(img: Image.Image, small: bool = False):
+        if small:
+            img.resize((sm_tsize, sm_tsize), Image.ANTIALIAS).save(sm_img_path, "webp")
+        else:
+            img.resize((tsize, tsize), Image.ANTIALIAS).save(img_path, "webp")
 
     if os.path.exists(img_path):
         img_size = os.path.getsize(filepath)
@@ -42,13 +51,13 @@ def extract_thumb(filepath: str, webp_path: str) -> bool:
             return False
 
         try:
-            small_img = img.resize((tsize, tsize), Image.ANTIALIAS)
-            small_img.save(img_path, format="webp")
+            save_image(img)
+            save_image(img, small=True)
         except OSError:
             try:
                 png = img.convert("RGB")
-                small_img = png.resize((tsize, tsize), Image.ANTIALIAS)
-                small_img.save(webp_path, format="webp")
+                save_image(png)
+                save_image(png, small=True)
             except:
                 return False
 
@@ -66,8 +75,8 @@ def get_tags(filepath: str):
     except:
         return None
 
-    no_albumartist:bool = tags.albumartist == "" or tags.albumartist is None
-    no_artist:bool = tags.artist == "" or tags.artist is None
+    no_albumartist: bool = tags.albumartist == "" or tags.albumartist is None
+    no_artist: bool = tags.artist == "" or tags.artist is None
 
     if no_albumartist and no_artist is False:
         tags.albumartist = tags.artist

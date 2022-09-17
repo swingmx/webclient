@@ -12,7 +12,7 @@ from app import instances
 from app import models
 from app.lib import taglib
 from app.logger import logg
-from app.settings import THUMBS_PATH
+from app.settings import LG_THUMBS_PATH
 
 
 @dataclass
@@ -42,7 +42,7 @@ class ValidateAlbumThumbs:
         """
         Removes unreferenced thumbnails from the thumbnails folder.
         """
-        entries = os.scandir(THUMBS_PATH)
+        entries = os.scandir(LG_THUMBS_PATH)
         entries = [entry for entry in entries if entry.is_file()]
 
         albums = utils.Get.get_all_albums()
@@ -63,7 +63,7 @@ class ValidateAlbumThumbs:
         """
         Re-rip lost album thumbnails
         """
-        entries = os.scandir(THUMBS_PATH)
+        entries = os.scandir(LG_THUMBS_PATH)
         entries = [Thumbnail(entry.name) for entry in entries if entry.is_file()]
 
         albums = utils.Get.get_all_albums()
@@ -107,9 +107,9 @@ def get_album_image(track: models.Track) -> str:
 
     img_p = track.albumhash + ".webp"
 
-    success = taglib.extract_thumb(track.filepath, webp_path=img_p)
+    ripped = taglib.extract_thumb(track.filepath, webp_path=img_p)
 
-    if success:
+    if ripped:
         return img_p
 
     return None

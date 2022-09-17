@@ -12,6 +12,9 @@ APP_DIR = os.path.join(HOME_DIR, CONFIG_FOLDER)
 IMG_PATH = os.path.join(APP_DIR, "images")
 
 THUMBS_PATH = os.path.join(IMG_PATH, "thumbnails")
+SM_THUMB_PATH = os.path.join(THUMBS_PATH, "small")
+LG_THUMBS_PATH = os.path.join(THUMBS_PATH, "large")
+
 TEST_DIR = "/home/cwilvx/Music/Link to Music/Classics"
 # HOME_DIR = TEST_DIR
 
@@ -29,8 +32,9 @@ LAST_FM_API_KEY = "762db7a44a9e6fb5585661f5f2bdf23a"
 CPU_COUNT = multiprocessing.cpu_count()
 
 THUMB_SIZE = 400
+SM_THUMB_SIZE = 60
 """
-The size of extracted in pixels
+The size of extracted images in pixels
 """
 
 LOGGER_ENABLE: bool = True

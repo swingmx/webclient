@@ -16,7 +16,11 @@ APP_DIR = join(HOME, ".alice")
 IMG_PATH = path.join(APP_DIR, "images")
 
 ASSETS_PATH = join(APP_DIR, "assets")
+
 THUMB_PATH = join(IMG_PATH, "thumbnails")
+LG_THUMB_PATH = join(THUMB_PATH, "large")
+SM_THUMB_PATH = join(THUMB_PATH, "small")
+
 ARTIST_PATH = join(IMG_PATH, "artists")
 PLAYLIST_PATH = join(IMG_PATH, "playlists")
 SUPPORTED_IMAGES = (".jpg", ".png", ".webp", ".jpeg")
@@ -38,12 +42,23 @@ def send_fallback_img(filename: str = "default.webp"):
 
 
 @app.route("/t/<imgpath>")
-def send_thumbnail(imgpath: str):
-    fpath = join(THUMB_PATH, imgpath)
+def send_lg_thumbnail(imgpath: str):
+    fpath = join(LG_THUMB_PATH, imgpath)
     exists = path.exists(fpath)
 
     if exists:
-        return send_from_directory(THUMB_PATH, imgpath)
+        return send_from_directory(LG_THUMB_PATH, imgpath)
+
+    return send_fallback_img()
+
+
+@app.route("/t/s/<imgpath>")
+def send_sm_thumbnail(imgpath: str):
+    fpath = join(SM_THUMB_PATH, imgpath)
+    exists = path.exists(fpath)
+
+    if exists:
+        return send_from_directory(SM_THUMB_PATH, imgpath)
 
     return send_fallback_img()
 

@@ -11,11 +11,13 @@ class CopyFiles:
     """Copies assets to the app directory."""
 
     def __init__(self) -> None:
-        files = [{
-            "src": "assets",
-            "dest": os.path.join(settings.APP_DIR, "assets"),
-            "is_dir": True,
-        }]
+        files = [
+            {
+                "src": "assets",
+                "dest": os.path.join(settings.APP_DIR, "assets"),
+                "is_dir": True,
+            }
+        ]
 
         for entry in files:
             src = os.path.join(os.getcwd(), entry["src"])
@@ -24,7 +26,9 @@ class CopyFiles:
                 shutil.copytree(
                     src,
                     entry["dest"],
-                    ignore=shutil.ignore_patterns("*.pyc", ),
+                    ignore=shutil.ignore_patterns(
+                        "*.pyc",
+                    ),
                     copy_function=shutil.copy2,
                     dirs_exist_ok=True,
                 )
@@ -41,11 +45,17 @@ def create_config_dir() -> None:
     _home_dir = os.path.expanduser("~")
     config_folder = os.path.join(_home_dir, settings.CONFIG_FOLDER)
 
+    thumb_path = os.path.join("images", "thumbnails")
+    small_thumb_path = os.path.join(thumb_path, "small")
+    large_thumb_path = os.path.join(thumb_path, "large")
+
     dirs = [
-        "",
+        "", # creates the config folder
         "images",
         os.path.join("images", "artists"),
-        os.path.join("images", "thumbnails"),
+        thumb_path,
+        small_thumb_path,
+        large_thumb_path,
         os.path.join("images", "playlists"),
     ]
 
