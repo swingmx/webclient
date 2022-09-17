@@ -18,7 +18,7 @@ class Track:
     album: str
     albumartist: str
     albumhash: str
-    artist: list[str]
+    artist: str | list[str]
     bitrate: int
     copyright: str
     date: str
