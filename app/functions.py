@@ -175,8 +175,3 @@ class FetchAlbumBio:
 
     def __call__(self):
         return fetch_album_bio(self.title, self.albumartist)
-
-
-# TODO
-# - Move the populate function to a new file and probably into a new class
-# - Start movement from functional programming to OOP to OOP

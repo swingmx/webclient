@@ -39,7 +39,7 @@ class ProcessAlbumColors:
 
     @staticmethod
     def process_color(album: Album):
-        img = settings.THUMBS_PATH + "/" + album.image
+        img = settings.SM_THUMB_PATH + "/" + album.image
 
         colors = get_image_colors(img)
 
