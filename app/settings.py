@@ -15,8 +15,8 @@ THUMBS_PATH = os.path.join(IMG_PATH, "thumbnails")
 SM_THUMB_PATH = os.path.join(THUMBS_PATH, "small")
 LG_THUMBS_PATH = os.path.join(THUMBS_PATH, "large")
 
-TEST_DIR = "/home/cwilvx/Music/Link to Music/Classics"
-# HOME_DIR = TEST_DIR
+TEST_DIR = "/home/cwilvx/Music/Link to Music/Classics/This is .../ABBA"
+HOME_DIR = TEST_DIR
 
 # URLS
 IMG_BASE_URI = "http://127.0.0.1:8900/images/"
@@ -50,3 +50,12 @@ SUPPORTED_DIR_IMAGES = [
     "album",
     "front",
 ]
+
+# ===== DB =========
+USE_SQLITE = True
+USE_MONGO = False
+
+
+# ===== SQLite =====
+DB_NAME = "alice.db"
+DB_PATH = os.path.join(APP_DIR, DB_NAME)

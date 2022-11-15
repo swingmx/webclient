@@ -1,11 +1,16 @@
+#!/bin/zsh
+
 gpath=$(poetry run which gunicorn)
+# pytest=$(poetry run which pytest)
+
+# $pytest # -q
 
 while getopts ':s' opt; do
   case $opt in
     s)
       echo "Starting image server"
       cd "./app"
-      "$gpath" -b 0.0.0.0:1971 -w 4 --threads=2 "imgserver:app" &
+      "$gpath" -b 0.0.0.0:1971 -w 1 --threads=1 "imgserver:app" &
       cd ../
       echo "Done ✅"
       ;;
@@ -15,5 +20,6 @@ while getopts ':s' opt; do
   esac
 done
 
+
 echo "Starting alice server"
-"$gpath" -b 0.0.0.0:1970 --threads=10 "manage:create_app()"
+"$gpath" -b 0.0.0.0:1970 --threads=2 "manage:create_api()"

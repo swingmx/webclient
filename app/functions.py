@@ -22,22 +22,22 @@ log = get_logger()
 
 
 @utils.background
-def run_checks():
+def run_secondary_checks():
     """
     Checks for new songs every 5 minutes.
     """
-    ValidateAlbumThumbs()
-    ValidatePlaylistThumbs()
+    # ValidateAlbumThumbs()
+    # ValidatePlaylistThumbs()
 
     while True:
         trackslib.validate_tracks()
 
         Populate()
         CreateAlbums()
-        ProcessAlbumColors()
+        # ProcessAlbumColors()
 
-        if utils.Ping()():
-            CheckArtistImages()()
+        # if utils.Ping()():
+        #     CheckArtistImages()()
 
         time.sleep(300)
 

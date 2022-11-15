@@ -116,7 +116,7 @@ def get_tags(filepath: str):
         tags.copyright = None
 
     tags.albumhash = create_hash(tags.album, tags.albumartist)
-    tags.hash = create_hash(tags.artist, tags.album, tags.title)
+    tags.trackhash = create_hash(tags.artist, tags.album, tags.title)
     tags.image = f"{tags.albumhash}.webp"
     tags.folder = os.path.dirname(filepath)
 

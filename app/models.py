@@ -14,24 +14,26 @@ class Track:
     Track class
     """
 
-    _id: Any
+    id: int
     album: str
     albumartist: str
     albumhash: str
+    albumid: int
     artist: str | list[str]
     bitrate: int
     copyright: str
     date: str
     disc: int
+    duration: int
     filepath: str
     folder: str
     genre: str
-    hash: str
     image: str
-    duration: int
     title: str
     track: int
-    filetype: str
+    trackhash: str
+
+    filetype: str = ""
     trackid: str = None
 
     def __post_init__(self):
@@ -39,6 +41,8 @@ class Track:
 
         if self.artist is not None:
             self.artist = self.artist.split(", ")
+
+        self.filetype = self.filepath.split(".")[-1]
 
 
 @dataclass(slots=True)

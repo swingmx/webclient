@@ -6,13 +6,12 @@ import json
 from typing import List
 
 import pymongo
-from app.db import AlbumMethods
-from app.db import ArtistMethods
-from app.db import PlaylistMethods
-from app.db import TrackMethods
 from bson import json_util
 
-from ...models import Track
+from app.db import AlbumMethods, ArtistMethods, PlaylistMethods, TrackMethods
+from app.models import Track
+
+db_name = "ALICE_SERVER"
 
 
 class Mongo:
@@ -27,25 +26,25 @@ class Mongo:
 
 class MongoAlbums(Mongo, AlbumMethods):
     def __init__(self):
-        super(MongoAlbums, self).__init__("ALICE_SERVER")
+        super(MongoAlbums, self).__init__(db_name)
         self.collection = self.db["ALBUMS"]
 
 
 class MongoArtists(Mongo, ArtistMethods):
     def __init__(self):
-        super(MongoArtists, self).__init__("ALICE_SERVER")
+        super(MongoArtists, self).__init__(db_name)
         self.collection = self.db["ARTISTS"]
 
 
 class MongoPlaylists(Mongo, PlaylistMethods):
     def __init__(self):
-        super(MongoPlaylists, self).__init__("ALICE_SERVER")
+        super(MongoPlaylists, self).__init__(db_name)
         self.collection = self.db["PLAYLISTS"]
 
 
 class MongoTracks(Mongo, TrackMethods):
     def __init__(self):
-        super(MongoTracks, self).__init__("ALICE_SERVER")
+        super(MongoTracks, self).__init__(db_name)
         self.collection = self.db["TRACKS"]
 
 
