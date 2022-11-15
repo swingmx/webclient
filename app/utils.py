@@ -82,6 +82,10 @@ def create_hash(*args: List[str]) -> str:
 
 
 def create_new_date():
+    """
+    It creates a new date and time string in the format of "YYYY-MM-DD HH:MM:SS"
+    :return: A string of the current date and time.
+    """
     now = datetime.now()
     str = now.strftime("%Y-%m-%d %H:%M:%S")
     return str
@@ -217,7 +221,11 @@ def get_artist_lists(artists: List[str]) -> List[str]:
 
 def get_normalized_artists(names: List[str]) -> List[models.Artist]:
     """
-    Takes in a list of artists and returns a list of models.Artist objects with normalized names.
+    Takes a list of artist names, normalizes them, and returns a list of `Artist` objects
+
+    :param names: List[str]
+    :type names: List[str]
+    :return: A list of Artist objects.
     """
     names = [n.strip() for n in names]
     names = get_artist_lists(names)
@@ -227,6 +235,22 @@ def get_normalized_artists(names: List[str]) -> List[models.Artist]:
 
 
 def use_threads(list: list, fn: Callable):
+    """
+    "Use threads to execute a function on a list of items."
+
+    The function takes two arguments:
+
+    - list: a list of items to execute the function on
+    - fn: the function to execute
+
+    The function returns a list of the results of executing the function on each item in the list
+
+    :param list: list - the list of items to be processed
+    :type list: list
+    :param fn: The function to be called
+    :type fn: Callable
+    :return: A list of the results of the function fn applied to each element of the list.
+    """
     with ThreadPoolExecutor() as pool:
         iter = pool.map(fn, list)
         return [i for i in iter]

@@ -3,8 +3,11 @@ Contains the functions to prepare the server for use.
 """
 import os
 import shutil
+from pathlib import Path
 
 from app import settings
+from app.db.sqlite import create_connection, create_tables
+from app.settings import DB_PATH
 
 
 class CopyFiles:
@@ -42,15 +45,15 @@ def create_config_dir() -> None:
     Creates the config directory if it doesn't exist.
     """
 
-    _home_dir = os.path.expanduser("~")
-    config_folder = os.path.join(_home_dir, settings.CONFIG_FOLDER)
+    home_dir = os.path.expanduser("~")
+    config_folder = os.path.join(home_dir, settings.CONFIG_FOLDER)
 
     thumb_path = os.path.join("images", "thumbnails")
     small_thumb_path = os.path.join(thumb_path, "small")
     large_thumb_path = os.path.join(thumb_path, "large")
 
     dirs = [
-        "", # creates the config folder
+        "",  # creates the config folder
         "images",
         os.path.join("images", "artists"),
         thumb_path,
@@ -68,3 +71,24 @@ def create_config_dir() -> None:
             os.chmod(path, 0o755)
 
     CopyFiles()
+
+
+def setup_sqlite():
+    if not settings.USE_SQLITE:
+        return
+
+    if os.path.exists(DB_PATH):
+        os.remove(DB_PATH)
+
+    conn = create_connection(DB_PATH)
+    current_path = Path(__file__).parent.resolve()
+    sql_path = "db/sqlite/queries/create_tables.sql"
+    sql_path = current_path.joinpath(sql_path)
+
+    create_tables(conn, sql_path)
+    conn.close()
+
+
+def run_checks():
+    create_config_dir()
+    setup_sqlite()

@@ -2,12 +2,16 @@ from flask import Flask
 from flask_caching import Cache
 from flask_cors import CORS
 
+from app import functions
+from app.utils import background
+
+
 config = {"CACHE_TYPE": "SimpleCache", "CACHE_DEFAULT_TIMEOUT": 300}
 
 cache = Cache(config=config)
 
 
-def create_app():
+def create_api():
     """
     Creates the Flask instance, registers modules and registers all the API blueprints.
     """
@@ -28,3 +32,11 @@ def create_app():
         app.register_blueprint(playlist.playlist_bp, url_prefix="/")
 
         return app
+
+
+@background
+def watch_files():
+    """
+    Starts the watchdog to watch for file changes.
+    """
+    functions.start_watchdog()

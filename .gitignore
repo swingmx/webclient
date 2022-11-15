@@ -13,3 +13,7 @@
 *.sw?
 
 __pycache__
+.hypothesis
+sqllib.py
+encoderx.py
+tests
