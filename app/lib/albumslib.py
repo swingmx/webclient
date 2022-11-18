@@ -6,6 +6,7 @@ import random
 from tqdm import tqdm
 from dataclasses import dataclass
 from typing import List
+from collections import OrderedDict
 
 from app import utils
 from app import instances
@@ -142,13 +143,13 @@ def create_album(track: models.Track) -> dict:
     """
     album = {
         "title": track.album,
-        "artist": track.albumartist,
-        "hash": track.albumhash,
+        "albumartist": track.albumartist,
+        "albumhash": track.albumhash,
         "copyright": track.copyright,
+        "colors": "",
+        "albumartistid": 1,
     }
 
-    artistimg = utils.create_safe_name(track.albumartist) + ".webp"
-    album["artistimg"] = artistimg
     album["date"] = track.date
 
     img_p = get_album_image(track)
@@ -158,4 +159,5 @@ def create_album(track: models.Track) -> dict:
         return album
 
     album["image"] = None
-    return album
+
+    return OrderedDict(sorted(album.items()))

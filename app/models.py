@@ -28,21 +28,19 @@ class Track:
     filepath: str
     folder: str
     genre: str
-    image: str
     title: str
     track: int
     trackhash: str
 
-    filetype: str = ""
-    trackid: str = None
+    filetype: str = None
+    image: str = None
 
     def __post_init__(self):
-        self.trackid = self._id["$oid"]
-
         if self.artist is not None:
             self.artist = self.artist.split(", ")
 
         self.filetype = self.filepath.split(".")[-1]
+        self.image = self.trackhash + ".webp"
 
 
 @dataclass(slots=True)
@@ -65,52 +63,58 @@ class Album:
     Creates an album object
     """
 
-    title: str
-    artist: str
-    hash: str
+    albumartist: str
+    albumartistid: int
+    albumhash: str
+    colors: str | list[str]
+    copyright: str
     date: int
-    image: str
-    artistimg: str
+    title: str
+
+    albumartisthash: str = None
+    image: str = None
+    artistimg: str = None
     count: int = 0
     duration: int = 0
-    copyright: str = field(default="")
     is_soundtrack: bool = False
     is_compilation: bool = False
     is_single: bool = False
-    colors: List[str] = field(default_factory=list)
 
-    def __init__(self, tags):
-        (
-            self.title,
-            self.artist,
-            self.date,
-            self.image,
-            self.hash,
-            self.copyright,
-            self.artistimg,
-        ) = itemgetter(
-            "title", "artist", "date", "image", "hash", "copyright", "artistimg"
-        )(
-            tags
-        )
+    def __post_init__(self):
+        self.image = self.albumhash + ".webp"
+        self.albumartisthash = utils.create_safe_name(self.albumartist)
+        self.artistimg = self.albumartisthash + ".webp"
+        # (
+        #     self.title,
+        #     self.artist,
+        #     self.date,
+        #     self.image,
+        #     self.hash,
+        #     self.copyright,
+        #     self.artistimg,
+        # ) = itemgetter(
+        #     "title", "artist", "date", "image", "hash", "copyright", "artistimg"
+        # )(
+        #     tags
+        # )
 
-        try:
-            self.colors = tags["colors"]
-        except KeyError:
-            self.colors = []
+        # try:
+        #     self.colors = tags["colors"]
+        # except KeyError:
+        #     self.colors = []
 
-    @property
-    def is_soundtrack(self) -> bool:
-        keywords = ["motion picture", "soundtrack"]
-        for keyword in keywords:
-            if keyword in self.title.lower():
-                return True
+    # @property
+    # def is_soundtrack(self) -> bool:
+    #     keywords = ["motion picture", "soundtrack"]
+    #     for keyword in keywords:
+    #         if keyword in self.title.lower():
+    #             return True
 
-        return False
+    #     return False
 
-    @property
-    def is_compilation(self) -> bool:
-        return self.artist.lower() == "various artists"
+    # @property
+    # def is_compilation(self) -> bool:
+    #     return "various artists" in self.albumartist.lower()
 
 
 @dataclass

@@ -1,39 +1,32 @@
 from pprint import pprint
 from sqlite3 import Cursor
+from typing import Generator
+from collections import OrderedDict
 
 from app.db.sqlite import get_sqlite_conn
 
 
 def insert_one_album(cur: Cursor, album: dict):
     sql = """INSERT INTO albums(
-        title,
         albumartist,
-        albumhash,
         albumartistid,
-        date,
+        albumhash,
+        colors,
         copyright,
-        colors
+        date,
+        title
         ) VALUES(?,?,?,?,?,?,?)
         """
-
-    cur.execute(
-        sql,
-        (
-            album["title"],
-            album["albumartist"],
-            album["albumhash"],
-            1,
-            album["date"],
-            album["copyright"],
-            album["colors"],
-        ),
-    )
+    album = OrderedDict(sorted(album.items()))
+    params = (*album.values(),)
+    cur.execute(sql, params)
 
 
-def save_albums(albums: list):
+def save_albums(albums: Generator):
     conn = get_sqlite_conn()
     cur = conn.cursor()
-    pprint(albums[0])
+
+    pprint(next(albums))
 
     for album in albums:
         insert_one_album(cur, album)

@@ -23,13 +23,13 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS albums (
         id integer PRIMARY KEY,
-        title text NOT NULL,
         albumartist text NOT NULL,
-        albumhash text NOT NULL,
         albumartistid text NOT NULL,
-        date text NOT NULL,
-        copyright text,
+        albumhash text NOT NULL,
         colors text,
+        copyright text,
+        date text NOT NULL,
+        title text NOT NULL,
         FOREIGN KEY (albumartistid) REFERENCES artists (id)
     );
 

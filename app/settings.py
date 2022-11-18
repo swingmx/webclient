@@ -15,7 +15,7 @@ THUMBS_PATH = os.path.join(IMG_PATH, "thumbnails")
 SM_THUMB_PATH = os.path.join(THUMBS_PATH, "small")
 LG_THUMBS_PATH = os.path.join(THUMBS_PATH, "large")
 
-TEST_DIR = "/home/cwilvx/Music/Link to Music/Classics/This is .../ABBA"
+TEST_DIR = "/home/cwilvx/Downloads/Telegram Desktop/Mahalia"
 HOME_DIR = TEST_DIR
 
 # URLS
