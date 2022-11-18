@@ -1,3 +1,4 @@
+from pprint import pprint
 from tqdm import tqdm
 from typing import List
 from dataclasses import dataclass
@@ -83,57 +84,65 @@ class PreAlbum:
 
 class CreateAlbums:
     def __init__(self) -> None:
-        fetch_all_tracks()
-        self.db_tracks = Get.get_all_tracks()
-        self.db_albums = Get.get_all_albums()
+        tracks = fetch_all_tracks()
+        self.db_tracks = [t for t in tracks]
 
-        prealbums = self.create_pre_albums(self.db_tracks)
-        prealbums = self.filter_processed(self.db_albums, prealbums)
+        albums = self.create_albums()
+        save_albums(albums)
 
-        if len(prealbums) == 0:
-            return
+    def create_albums(self):
+        for t in self.db_tracks:
+            yield self.create_album(t.albumhash)
 
-        albums = []
+        # self.db_tracks = Get.get_all_tracks()
+        # self.db_albums = Get.get_all_albums()
 
-        for album in tqdm(prealbums, desc="Creating albums"):
-            a = self.create_album(album)
+        # prealbums = self.create_pre_albums(self.db_tracks)
+        # prealbums = self.filter_processed(self.db_albums, prealbums)
 
-            if a is not None:
-                albums.append(a)
+        # if len(prealbums) == 0:
+        #     return
 
-        print(len(albums))
-        if len(albums) > 0:
-            if settings.USE_SQLITE:
-                save_albums(albums)
-            # instances.album_instance.insert_many(albums)
+        # albums = []
 
-    @staticmethod
-    def create_pre_albums(tracks: List[Track]) -> List[PreAlbum]:
-        all_hashes = []
+        # for album in tqdm(prealbums, desc="Creating albums"):
+        #     a = self.create_album(album)
 
-        for track in tqdm(tracks, desc="Creating prealbums"):
-            hash = track.albumhash
+        #     if a is not None:
+        #         albums.append(a)
 
-            if hash not in all_hashes:
-                all_hashes.append(hash)
+        # print(len(albums))
+        # if len(albums) > 0:
+        #     if settings.USE_SQLITE:
+        #         save_albums(albums)
+        # instances.album_instance.insert_many(albums)
 
-        return all_hashes
+    # @staticmethod
+    # def create_pre_albums(tracks: List[Track]) -> List[PreAlbum]:
+    #     all_hashes = []
 
-    def filter_processed(
-        self, albums: List[Album], all_album_hashes: List[str]
-    ) -> List[dict]:
-        to_process = []
+    #     for track in tqdm(tracks, desc="Creating prealbums"):
+    #         hash = track.albumhash
 
-        for hash in tqdm(all_album_hashes, desc="Filtering processed albums"):
-            album = UseBisection(albums, "hash", [hash])()[0]
+    #         if hash not in all_hashes:
+    #             all_hashes.append(hash)
 
-            if album is None:
-                to_process.append(hash)
+    #     return all_hashes
 
-        return to_process
+    # def filter_processed(
+    #     self, albums: List[Album], all_album_hashes: List[str]
+    # ) -> List[dict]:
+    #     to_process = []
 
-    def create_album(self, album_hash: str) -> Album:
-        print("wtf")
+    #     for hash in tqdm(all_album_hashes, desc="Filtering processed albums"):
+    #         album = UseBisection(albums, "hash", [hash])()[0]
+
+    #         if album is None:
+    #             to_process.append(hash)
+
+    #     return to_process
+
+    def create_album(self, album_hash: str) -> dict:
 
         album = {"image": None}
 
@@ -142,12 +151,13 @@ class CreateAlbums:
 
             if track is not None:
                 album = create_album(track)
-                self.db_tracks.remove(track)
+                # self.db_tracks.remove(track)
             else:
                 album["image"] = album_hash + ".webp"
 
         try:
-            album = Album(album)
+            del album['image']
+            a = Album(**album)  # test if album dict is valid
             return album
         except KeyError:
             print("KeyError when creating album")

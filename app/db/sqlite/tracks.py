@@ -2,6 +2,7 @@ from pprint import pprint
 from sqlite3 import Cursor
 
 from app.db.sqlite import get_sqlite_conn
+from .utils import tuples_to_tracks
 
 
 def insert_one_track(cur: Cursor, track: dict):
@@ -66,9 +67,10 @@ def fetch_all_tracks():
 
     cur.execute("SELECT * FROM tracks")
     rows = cur.fetchall()
-
-    pprint(rows)
-
     conn.close()
 
-    return rows
+    # for t in tuples_to_tracks(rows):
+    #     pprint(t)
+    # pprint(next(tuples_to_tracks(rows)))
+
+    return tuples_to_tracks(rows)

@@ -30,7 +30,7 @@ def run_secondary_checks():
     # ValidatePlaylistThumbs()
 
     while True:
-        trackslib.validate_tracks()
+        # trackslib.validate_tracks()
 
         Populate()
         CreateAlbums()
