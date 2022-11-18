@@ -264,3 +264,25 @@ def find_best_image(filepaths: List[str]) -> str:
         for f in filepaths:
             if entry in f.lower():
                 return f
+
+
+def str_bisection(src: list[str], query: str):
+    """
+    Uses bisection to find a string in a list of strings.
+
+    returns a list of found items with `None` items being not found
+    items.
+    """
+    left = 0
+    right = len(src) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if src[mid] == query:
+            return src[mid]
+        elif src[mid] > query:
+            right = mid - 1
+        else:
+            left = mid + 1
+
+    return None

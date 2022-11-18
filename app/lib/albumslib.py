@@ -3,16 +3,15 @@ This library contains all the functions related to albums.
 """
 import os
 import random
-from tqdm import tqdm
+from collections import OrderedDict
 from dataclasses import dataclass
 from typing import List
-from collections import OrderedDict
 
-from app import utils
-from app import instances
-from app import models
+from tqdm import tqdm
+
+from app import instances, models, utils
 from app.lib import taglib
-from app.logger import logg
+from app.logger import log
 from app.settings import LG_THUMBS_PATH
 
 
@@ -77,7 +76,7 @@ class ValidateAlbumThumbs:
                 hash = t_hash.replace(".webp", "")
                 RipAlbumImage(hash)
 
-        logg.info("Ripping lost album thumbnails")
+        log.info("Ripping lost album thumbnails")
         # with ThreadPoolExecutor() as pool:
         #     i = pool.map(rip_image, thumbs)
         #     [a for a in i]
@@ -86,7 +85,7 @@ class ValidateAlbumThumbs:
         for thumb in thumbs:
             rip_image(thumb)
 
-        logg.info("Ripping lost album thumbnails ... ✅")
+        log.info("Ripping lost album thumbnails ... ✅")
 
     def __init__(self) -> None:
         self.remove_obsolete()
@@ -142,6 +141,7 @@ def create_album(track: models.Track) -> dict:
     Generates and returns an album object from a track object.
     """
     album = {
+        "id": 0,
         "title": track.album,
         "albumartist": track.albumartist,
         "albumhash": track.albumhash,

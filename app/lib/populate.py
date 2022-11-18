@@ -1,163 +1,119 @@
-from pprint import pprint
-from tqdm import tqdm
-from typing import List
 from dataclasses import dataclass
 
 from app import settings
-
-from app.lib.taglib import get_tags
-from app.lib.albumslib import create_album
-
-from app.db.sqlite.albums import save_albums
+from app.db.sqlite.albums import fetch_all_albums, save_albums
 from app.db.sqlite.tracks import fetch_all_tracks, save_tracks
-
-from app.instances import tracks_instance
-from app.logger import logg
+from app.lib.albumslib import create_album
+from app.lib.taglib import get_tags
+from app.logger import log
 from app.models import Album, Track
-from app.utils import Get, UseBisection, run_fast_scandir
+from app.utils import UseBisection, run_fast_scandir
 
 
 class Populate:
     """
-    Populate the database with all songs in the music directory
+    Populates the database with all songs in the music directory
 
     checks if the song is in the database, if not, it adds it
-    also checks if the album art exists in the image path, if not tries to
-    extract it.
+    also checks if the album art exists in the image path, if not tries to extract it.
     """
 
     def __init__(self) -> None:
-        self.db_tracks = []
-        # self.tagged_tracks = []
+        tracks = fetch_all_tracks()
+        tracks = [t for t in tracks]
 
-        self.files = run_fast_scandir(settings.HOME_DIR, full=True)[1]
-        self.db_tracks = tracks_instance.get_all_tracks()
+        files = run_fast_scandir(settings.HOME_DIR, full=True)[1]
 
-        self.filter_untagged()
-        self.tag_untagged()
+        untagged = self.filter_untagged(tracks, files)
 
-    def filter_untagged(self):
-        """
-        Loops through all the tracks in db tracks removing each
-        from the list of tagged tracks if it exists.
-        We will now only have untagged tracks left in `files`.
-        """
-        for track in tqdm(self.db_tracks, desc="Checking untagged"):
-            if track["filepath"] in self.files:
-                self.files.remove(track["filepath"])
+        if len(untagged) == 0:
+            log.info("All clear, no untagged files.")
+            return
 
-    def tag_untagged(self):
-        """
-        Loops through all the untagged files and tags them.
-        """
+        self.tag_untagged(untagged)
 
-        logg.info("Tagging untagged tracks...")
+    @staticmethod
+    def filter_untagged(tracks: list[Track], files: list[str]):
+        tagged_files = [t.filepath for t in tracks]
+        return set(files) - set(tagged_files)
+
+    @staticmethod
+    def tag_untagged(untagged: list[str]):
+        log.info("Tagging untagged tracks...")
 
         tagged_tracks = []
         tagged_count = 0
 
-        for file in self.files:
+        for file in untagged:
             tags = get_tags(file)
 
             if tags is not None:
                 tagged_tracks.append(tags)
                 tagged_count += 1
             else:
-                logg.warning(f"Could not read: {file}")
+                log.warning(f"Could not read: {file}")
 
-        logg.info(f"Found {len(tagged_tracks)} untagged tracks.")
+        log.info(f"Found {len(tagged_tracks)} untagged tracks.")
 
         if len(tagged_tracks) > 0:
             if settings.USE_SQLITE:
                 save_tracks(tagged_tracks)
-            # tracks_instance.insert_many(tagged_tracks)
 
-        logg.info(f"Tagged {tagged_count}/{len(tagged_tracks)} tracks.")
-
-
-@dataclass
-class PreAlbum:
-    title: str
-    artist: str
-    hash: str
+        log.info(f"Tagged {tagged_count}/{len(tagged_tracks)} tracks.")
 
 
 class CreateAlbums:
     def __init__(self) -> None:
         tracks = fetch_all_tracks()
-        self.db_tracks = [t for t in tracks]
+        albums = fetch_all_albums()
 
-        albums = self.create_albums()
+        tracks = [t for t in tracks]
+        albums = [a for a in albums]
+
+        log.info("Processing albums ...")
+
+        unprocessed_hashes = self.get_unprocessed(albums, tracks)
+        log.info(f"Found {len(unprocessed_hashes)} unprocessed albums.")
+
+        if len(unprocessed_hashes) == 0:
+            return
+
+        self.hashes = unprocessed_hashes
+
+        albums = self.create_albums(tracks)
         save_albums(albums)
+        log.info("Albums processed.")
 
-    def create_albums(self):
-        for t in self.db_tracks:
-            yield self.create_album(t.albumhash)
+    def create_albums(self, tracks: list[Track]):
+        for h in self.hashes:
+            yield self.create_album(tracks, h)
 
-        # self.db_tracks = Get.get_all_tracks()
-        # self.db_albums = Get.get_all_albums()
+    @staticmethod
+    def get_unprocessed(albums: list[Album], tracks: list[Track]) -> list[str]:
+        track_album_hashes = set(t.albumhash for t in tracks)
+        processed_hashes = set(a.albumhash for a in albums)
 
-        # prealbums = self.create_pre_albums(self.db_tracks)
-        # prealbums = self.filter_processed(self.db_albums, prealbums)
+        unprocessed_hashes = list(track_album_hashes - processed_hashes)
 
-        # if len(prealbums) == 0:
-        #     return
+        return unprocessed_hashes
 
-        # albums = []
-
-        # for album in tqdm(prealbums, desc="Creating albums"):
-        #     a = self.create_album(album)
-
-        #     if a is not None:
-        #         albums.append(a)
-
-        # print(len(albums))
-        # if len(albums) > 0:
-        #     if settings.USE_SQLITE:
-        #         save_albums(albums)
-        # instances.album_instance.insert_many(albums)
-
-    # @staticmethod
-    # def create_pre_albums(tracks: List[Track]) -> List[PreAlbum]:
-    #     all_hashes = []
-
-    #     for track in tqdm(tracks, desc="Creating prealbums"):
-    #         hash = track.albumhash
-
-    #         if hash not in all_hashes:
-    #             all_hashes.append(hash)
-
-    #     return all_hashes
-
-    # def filter_processed(
-    #     self, albums: List[Album], all_album_hashes: List[str]
-    # ) -> List[dict]:
-    #     to_process = []
-
-    #     for hash in tqdm(all_album_hashes, desc="Filtering processed albums"):
-    #         album = UseBisection(albums, "hash", [hash])()[0]
-
-    #         if album is None:
-    #             to_process.append(hash)
-
-    #     return to_process
-
-    def create_album(self, album_hash: str) -> dict:
+    @staticmethod
+    def create_album(tracks: list[Track], album_hash: str) -> dict:
 
         album = {"image": None}
 
         while album["image"] is None:
-            track = UseBisection(self.db_tracks, "albumhash", [album_hash])()[0]
+            track = UseBisection(tracks, "albumhash", [album_hash])()[0]
 
             if track is not None:
                 album = create_album(track)
-                # self.db_tracks.remove(track)
             else:
                 album["image"] = album_hash + ".webp"
 
         try:
-            del album['image']
+            del album["image"]
             a = Album(**album)  # test if album dict is valid
+            del album["id"]
             return album
         except KeyError:
             print("KeyError when creating album")
