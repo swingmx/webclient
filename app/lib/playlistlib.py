@@ -4,25 +4,21 @@ This library contains all the functions related to playlists.
 import os
 import random
 import string
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from typing import List
 
-from app import exceptions
-from app import instances
-from app import models
-from app import settings
-from app.utils import Get, get_normalized_artists
+from PIL import Image, ImageSequence
+from werkzeug import datastructures
+
+from app import exceptions, instances, models, settings
 from app.lib import trackslib
 from app.logger import get_logger
-from PIL import Image
-from PIL import ImageSequence
-from werkzeug import datastructures
-from concurrent.futures import ThreadPoolExecutor
-
+from app.utils import Get, get_normalized_artists
 
 TrackExistsInPlaylist = exceptions.TrackExistsInPlaylistError
 
-logg = get_logger()
+log = get_logger()
 
 
 def add_track(playlistid: str, trackid: str):
@@ -101,7 +97,7 @@ class ValidatePlaylistThumbs:
         images = []
         playlists = Get.get_all_playlists()
 
-        logg.info("Validating playlist thumbnails")
+        log.info("Validating playlist thumbnails")
         for playlist in playlists:
             if playlist.image:
                 img_path = playlist.image.split("/")[-1]
@@ -116,7 +112,7 @@ class ValidatePlaylistThumbs:
             if image not in images:
                 os.remove(os.path.join(p_path, image))
 
-        logg.info("Validating playlist thumbnails ... ✅")
+        log.info("Validating playlist thumbnails ... ✅")
 
 
 def create_new_date():

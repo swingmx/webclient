@@ -11,7 +11,7 @@ class CustomFormatter(logging.Formatter):
     # format = (
     #     "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
     # )
-    format = "[%(asctime)s] [%(levelname)s] [@%(name)s]ℹ️ %(message)s"
+    format = "[%(asctime)s]@%(name)s • %(message)s"
 
     FORMATS = {
         logging.DEBUG: grey + format + reset,
@@ -27,8 +27,8 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-logg = logging.getLogger("ALICE_MUSIC_SERVER")
-logg.setLevel(logging.DEBUG)
+log = logging.getLogger("alice")
+log.setLevel(logging.DEBUG)
 
 # create console handler with a higher log level
 ch = logging.StreamHandler()
@@ -36,13 +36,13 @@ ch.setLevel(logging.DEBUG)
 
 ch.setFormatter(CustomFormatter())
 
-logg.addHandler(ch)
+log.addHandler(ch)
 
 
 def get_logger():
-    return logg
+    return log
 
 
-logg = get_logger()
+log = get_logger()
 
 # copied from: https://stackoverflow.com/a/56944256:

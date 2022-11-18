@@ -63,6 +63,7 @@ class Album:
     Creates an album object
     """
 
+    id: int
     albumartist: str
     albumartistid: int
     albumhash: str

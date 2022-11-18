@@ -77,8 +77,8 @@ def setup_sqlite():
     if not settings.USE_SQLITE:
         return
 
-    if os.path.exists(DB_PATH):
-        os.remove(DB_PATH)
+    # if os.path.exists(DB_PATH):
+    #     os.remove(DB_PATH)
 
     conn = create_connection(DB_PATH)
     current_path = Path(__file__).parent.resolve()
