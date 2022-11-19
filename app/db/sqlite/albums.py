@@ -1,45 +1,62 @@
-from sqlite3 import Cursor
+from sqlite3 import Connection, Error as SqlError
 from typing import Generator
 from collections import OrderedDict
-
+from app.db import AlbumMethods
 from app.db.sqlite import get_sqlite_conn
+
 from .utils import tuples_to_albums
 
 
-def insert_one_album(cur: Cursor, album: dict):
-    sql = """INSERT INTO albums(
-        albumartist,
-        albumartistid,
-        albumhash,
-        colors,
-        copyright,
-        date,
-        title
-        ) VALUES(?,?,?,?,?,?,?)
-        """
-    album = OrderedDict(sorted(album.items()))
-    params = (*album.values(),)
-    cur.execute(sql, params)
+class SQLiteAlbumMethods(AlbumMethods):
+    @classmethod
+    def insert_one_album(
+        cls, album: dict, conn: Connection = get_sqlite_conn(), commit=True
+    ):
+        cur = conn.cursor()
 
+        sql = """INSERT INTO albums(
+            albumartist,
+            albumartistid,
+            albumhash,
+            colors,
+            copyright,
+            date,
+            title
+            ) VALUES(?,?,?,?,?,?,?)
+            """
+        album = OrderedDict(sorted(album.items()))
+        params = (*album.values(),)
 
-def save_albums(albums: Generator):
-    conn = get_sqlite_conn()
-    cur = conn.cursor()
+        try:
+            cur.execute(sql, params)
+        except SqlError:
+            return None
 
-    for album in albums:
-        insert_one_album(cur, album)
+        if not commit:
+            return cur.lastrowid
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
+        return cur.lastrowid
 
+    @classmethod
+    def insert_many_albums(cls, albums: Generator):
+        conn = get_sqlite_conn()
 
-def fetch_all_albums():
-    conn = get_sqlite_conn()
-    cur = conn.cursor()
+        for album in albums:
+            cls.insert_one_album(album, conn, commit=False)
 
-    cur.execute("SELECT * FROM albums")
-    albums = cur.fetchall()
+        conn.commit()
+        conn.close()
 
-    conn.close()
+    @classmethod
+    def get_all_albums(cls):
+        conn = get_sqlite_conn()
+        cur = conn.cursor()
 
-    return tuples_to_albums(albums)
+        cur.execute("SELECT * FROM albums")
+        albums = cur.fetchall()
+
+        conn.close()
+
+        return tuples_to_albums(albums)

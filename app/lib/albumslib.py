@@ -159,5 +159,6 @@ def create_album(track: models.Track) -> dict:
         return album
 
     album["image"] = None
+    print(album)
 
     return OrderedDict(sorted(album.items()))

@@ -111,7 +111,7 @@ class TrackMethods:
     Lists all the methods that can be found in the Tracks class.
     """
 
-    def insert_track():
+    def insert_one_track():
         """
         Inserts a new track object into the database.
         """

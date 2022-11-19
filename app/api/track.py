@@ -15,11 +15,11 @@ def send_track_file(id_and_hash: str):
     Returns an audio file that matches the passed id to the client.
     Falls back to track hash if id is not found.
     """
-    [trackid, hash] = id_and_hash.split("-")
+    [trackid, track_hash] = id_and_hash.split("-")
     track = instances.tracks_instance.get_track_by_id(trackid)
 
     if track is None:
-        track = instances.tracks_instance.find_track_by_hash(hash)
+        track = instances.tracks_instance.find_track_by_hash(track_hash)
 
     msg = {"msg": "File Not Found"}
 
@@ -27,10 +27,10 @@ def send_track_file(id_and_hash: str):
         return msg, 404
 
     track = models.Track(**track)
-    type = track.filepath.split(".")[-1]
+    audio_type = track.filepath.rsplit(".", maxsplit=1)[-1]
 
     try:
-        return send_file(track.filepath, mimetype=f"audio/{type}")
+        return send_file(track.filepath, mimetype=f"audio/{audio_type}")
     except FileNotFoundError:
         return msg, 404
 
