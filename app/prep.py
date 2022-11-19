@@ -85,8 +85,9 @@ def setup_sqlite():
     sql_path = "db/sqlite/queries/create_tables.sql"
     sql_path = current_path.joinpath(sql_path)
 
-    create_tables(conn, sql_path)
+    create_tables(conn, str(sql_path))
     conn.close()
+
 
 
 def run_checks():

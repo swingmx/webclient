@@ -1,10 +1,11 @@
 """
 Contains all the folder routes.
 """
+from flask import request
+from flask import Blueprint
+
 from app import settings
 from app.lib.folderslib import getFnF
-from flask import Blueprint
-from flask import request
 
 folder_bp = Blueprint("folder", __name__, url_prefix="/")
 
@@ -15,7 +16,11 @@ def get_folder_tree():
     Returns a list of all the folders and tracks in the given folder.
     """
     data = request.get_json()
-    req_dir: str = data["folder"]
+
+    if data is not None:
+        req_dir: str = data["folder"]
+    else:
+        req_dir = settings.HOME_DIR
 
     if req_dir == "$home":
         req_dir = settings.HOME_DIR

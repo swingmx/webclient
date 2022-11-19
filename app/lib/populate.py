@@ -1,13 +1,20 @@
-from dataclasses import dataclass
-
 from app import settings
-from app.db.sqlite.albums import fetch_all_albums, save_albums
-from app.db.sqlite.tracks import fetch_all_tracks, save_tracks
 from app.lib.albumslib import create_album
 from app.lib.taglib import get_tags
 from app.logger import log
 from app.models import Album, Track
 from app.utils import UseBisection, run_fast_scandir
+
+from app.db.sqlite.albums import SQLiteAlbumMethods
+from app.db.sqlite.tracks import SQLiteTrackMethods
+
+from app.db.sqlite import get_sqlite_conn
+
+get_all_tracks = SQLiteTrackMethods.get_all_tracks
+insert_many_tracks = SQLiteTrackMethods.insert_many_tracks
+
+get_all_albums = SQLiteAlbumMethods.get_all_albums
+insert_many_albums = SQLiteAlbumMethods.insert_many_albums
 
 
 class Populate:
@@ -19,8 +26,8 @@ class Populate:
     """
 
     def __init__(self) -> None:
-        tracks = fetch_all_tracks()
-        tracks = [t for t in tracks]
+        tracks = get_all_tracks()
+        tracks = list(tracks)
 
         files = run_fast_scandir(settings.HOME_DIR, full=True)[1]
 
@@ -51,29 +58,29 @@ class Populate:
                 tagged_tracks.append(tags)
                 tagged_count += 1
             else:
-                log.warning(f"Could not read: {file}")
+                log.warning("Could not tag file: %s", file)
 
-        log.info(f"Found {len(tagged_tracks)} untagged tracks.")
+        log.info("Found %s untagged tracks", tagged_count)
 
         if len(tagged_tracks) > 0:
             if settings.USE_SQLITE:
-                save_tracks(tagged_tracks)
+                insert_many_tracks(tagged_tracks)
 
-        log.info(f"Tagged {tagged_count}/{len(tagged_tracks)} tracks.")
+        log.info("Tagged %s/%s untagged tracks", tagged_count, len(untagged))
 
 
 class CreateAlbums:
     def __init__(self) -> None:
-        tracks = fetch_all_tracks()
-        albums = fetch_all_albums()
+        tracks = get_all_tracks()
+        albums = get_all_albums()
 
-        tracks = [t for t in tracks]
-        albums = [a for a in albums]
+        tracks = list(tracks)
+        albums = list(albums)
 
         log.info("Processing albums ...")
 
         unprocessed_hashes = self.get_unprocessed(albums, tracks)
-        log.info(f"Found {len(unprocessed_hashes)} unprocessed albums.")
+        log.info("Found %s unprocessed albums", len(unprocessed_hashes))
 
         if len(unprocessed_hashes) == 0:
             return
@@ -81,7 +88,8 @@ class CreateAlbums:
         self.hashes = unprocessed_hashes
 
         albums = self.create_albums(tracks)
-        save_albums(albums)
+        insert_many_albums(albums)
+
         log.info("Albums processed.")
 
     def create_albums(self, tracks: list[Track]):
@@ -99,7 +107,7 @@ class CreateAlbums:
 
     @staticmethod
     def create_album(tracks: list[Track], album_hash: str) -> dict:
-
+        print(album_hash)
         album = {"image": None}
 
         while album["image"] is None:
@@ -107,12 +115,13 @@ class CreateAlbums:
 
             if track is not None:
                 album = create_album(track)
+                tracks.remove(track)
             else:
                 album["image"] = album_hash + ".webp"
 
         try:
             del album["image"]
-            a = Album(**album)  # test if album dict is valid
+            Album(**album)  # test if album dict is valid
             del album["id"]
             return album
         except KeyError:

@@ -27,5 +27,3 @@ def get_sqlite_conn():
 def create_tables(conn: SqlConn, sql_path: str):
     with open(sql_path, "r") as sql_file:
         conn.executescript(sql_file.read())
-
-    # conn.close()
