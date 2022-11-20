@@ -109,4 +109,4 @@ def send_from_filepath(imgpath: str = ""):
 
 
 if __name__ == "__main__":
-    app.run(threaded=True, port=1971, host="0.0.0.0")
+    app.run(threaded=True, port=1971, host="0.0.0.0", debug=True)

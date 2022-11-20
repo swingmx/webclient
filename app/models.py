@@ -1,9 +1,11 @@
 """
 Contains all the models for objects generation and typing.
 """
-from dataclasses import dataclass, field
-from operator import itemgetter
-from typing import Any, List
+import json
+
+from dataclasses import dataclass
+
+# from operator import itemgetter
 
 from app import utils
 
@@ -32,15 +34,15 @@ class Track:
     track: int
     trackhash: str
 
-    filetype: str = None
-    image: str = None
+    filetype: str = ""
+    image: str = ""
 
     def __post_init__(self):
         if self.artist is not None:
-            self.artist = self.artist.split(", ")
+            self.artist = str(self.artist).split(", ")
 
-        self.filetype = self.filepath.split(".")[-1]
-        self.image = self.trackhash + ".webp"
+        self.filetype = self.filepath.rsplit(".", maxsplit=1)[-1]
+        self.image = self.albumhash + ".webp"
 
 
 @dataclass(slots=True)
@@ -72,9 +74,9 @@ class Album:
     date: int
     title: str
 
-    albumartisthash: str = None
-    image: str = None
-    artistimg: str = None
+    albumartisthash: str = ""
+    image: str = ""
+    artistimg: str = ""
     count: int = 0
     duration: int = 0
     is_soundtrack: bool = False
@@ -122,34 +124,47 @@ class Album:
 class Playlist:
     """Creates playlist objects"""
 
-    playlistid: str
-    name: str
-    tracks: List[Track]
-    pretracks: list = field(init=False, repr=False)
-    lastUpdated: int
+    id: int
+    artistids: str | list[str]
     image: str
-    thumb: str
+    last_updated: str
+    name: str
+    trackids: str | list[str]
+
+    thumb: str = ""
     count: int = 0
-    """A list of track objects in the playlist"""
 
-    def __init__(self, data):
-        self.playlistid = data["_id"]["$oid"]
-        self.tracks = []
-        self.pretracks = data["pre_tracks"]
-        self.count = len(self.pretracks)
-        self.write_props(data)
 
-    def update_playlist(self, data: dict):
-        self.write_props(data)
+    # def __init__(self, data):
+    #     self.id = data["_id"]["$oid"]
+    #     self.tracks = []
+    #     self.pretracks = data["pre_tracks"]
+    #     self.count = len(self.pretracks)
+    #     self.write_props(data)
+
+    def __post_init__(self):
+        self.trackids = json.loads(str(self.trackids))
+        self.artistids = json.loads(str(self.artistids))
+
+        self.count = len(self.trackids)
+
+        if self.image is not None:
+            self.thumb = "thumb_" + self.image
+        else:
+            self.image = "None"
+            self.thumb = "None"
+
+    # def update_playlist(self, data: dict):
+    #     self.write_props(data)
 
     # TODO: Find a better name for this method
-    def write_props(self, data: dict):
-        (self.name, self.image, self.thumb, self.lastUpdated,) = itemgetter(
-            "name",
-            "image",
-            "thumb",
-            "lastUpdated",
-        )(data)
+    # def write_props(self, data: dict):
+    #     (self.name, self.image, self.thumb, self.last_updated,) = itemgetter(
+    #         "name",
+    #         "image",
+    #         "thumb",
+    #         "last_updated",
+    #     )(data)
 
 
 @dataclass

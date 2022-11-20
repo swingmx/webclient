@@ -46,7 +46,7 @@ class ValidateAlbumThumbs:
         entries = [entry for entry in entries if entry.is_file()]
 
         albums = utils.Get.get_all_albums()
-        thumbs = [Thumbnail(album.hash + ".webp") for album in albums]
+        thumbs = [Thumbnail(album.albumhash + ".webp") for album in albums]
 
         for entry in tqdm(entries, desc="Validating thumbnails"):
             e = utils.UseBisection(thumbs, "filename", [entry.name])()
@@ -67,7 +67,7 @@ class ValidateAlbumThumbs:
         entries = [Thumbnail(entry.name) for entry in entries if entry.is_file()]
 
         albums = utils.Get.get_all_albums()
-        thumbs = [(album.hash + ".webp") for album in albums]
+        thumbs = [(album.albumhash + ".webp") for album in albums]
 
         def rip_image(t_hash: str):
             e = utils.UseBisection(entries, "filename", [t_hash])()[0]
@@ -100,7 +100,7 @@ def use_defaults() -> str:
     return path
 
 
-def get_album_image(track: models.Track) -> str:
+def get_album_image(track: models.Track) -> str | None:
     """
     Gets the image of an album.
     """
@@ -159,6 +159,5 @@ def create_album(track: models.Track) -> dict:
         return album
 
     album["image"] = None
-    print(album)
 
     return OrderedDict(sorted(album.items()))

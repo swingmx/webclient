@@ -2,13 +2,20 @@
 Contains all the album routes.
 """
 
-from app import api
-from app import utils
-from app import instances
-from app import models
-from app.functions import FetchAlbumBio
-from flask import Blueprint
 from flask import request
+from flask import Blueprint
+
+from app import utils
+# from app import instances
+# from app import models
+# from app.functions import FetchAlbumBio
+
+from app.db.sqlite.tracks import SQLiteTrackMethods
+from app.db.sqlite.albums import SQLiteAlbumMethods
+
+get_tracks_by_albumhash = SQLiteTrackMethods.get_tracks_by_albumhash
+get_album_by_id = SQLiteAlbumMethods.get_album_by_id
+get_album_by_hash = SQLiteAlbumMethods.get_album_by_hash
 
 album_bp = Blueprint("album", __name__, url_prefix="")
 
@@ -19,43 +26,52 @@ def say_hi():
     return "^ _ ^"
 
 
-@album_bp.route("/albums")
-def get_albums():
-    """returns all the albums"""
-    albums = []
+# @album_bp.route("/albums")
+# def get_albums():
+#     """returns all the albums"""
+#     albums = []
 
-    for song in api.DB_TRACKS:
-        al_obj = {"name": song["album"], "artist": song["artists"]}
+#     for song in api.DB_TRACKS:
+#         al_obj = {"name": song["album"], "artist": song["artists"]}
 
-        if al_obj not in albums:
-            albums.append(al_obj)
+#         if al_obj not in albums:
+#             albums.append(al_obj)
 
-    return {"albums": albums}
+#     return {"albums": albums}
 
 
 @album_bp.route("/album", methods=["POST"])
 def get_album():
     """Returns all the tracks in the given album."""
+
     data = request.get_json()
-    albumhash = data["hash"]
+    error_msg = {"msg": "No hash provided"}
+
+    if data is None:
+        return error_msg, 400
+
+    try:
+        albumhash = data["hash"]
+    except KeyError:
+        return error_msg, 400
+
     error_msg = {"error": "Album not created yet."}
+    album = get_album_by_hash(albumhash)
 
-    tracks = instances.tracks_instance.find_tracks_by_albumhash(albumhash)
+    if album is None:
+        return error_msg, 204
 
+    tracks = get_tracks_by_albumhash(albumhash)
+    if tracks is None:
+        return error_msg, 404
+
+    tracks = list(tracks)
     if len(tracks) == 0:
         return error_msg, 204
 
-    tracks = [models.Track(**t) for t in tracks]
     tracks = utils.RemoveDuplicates(tracks)()
-
-    album = instances.album_instance.find_album_by_hash(albumhash)
-
-    if not album:
-        return error_msg, 204
-
-    album = models.Album(album)
-
     album.count = len(tracks)
+
     try:
         album.duration = sum([t.duration for t in tracks])
     except AttributeError:
@@ -72,39 +88,39 @@ def get_album():
     return {"tracks": tracks, "info": album}
 
 
-@album_bp.route("/album/bio", methods=["POST"])
-def get_album_bio():
-    """Returns the album bio for the given album."""
-    data = request.get_json()
-    album_hash = data["hash"]
-    err_msg = {"bio": "No bio found"}
+# @album_bp.route("/album/bio", methods=["POST"])
+# def get_album_bio():
+#     """Returns the album bio for the given album."""
+#     data = request.get_json()
+#     album_hash = data["hash"]
+#     err_msg = {"bio": "No bio found"}
 
-    album = instances.album_instance.find_album_by_hash(album_hash)
+#     album = instances.album_instance.find_album_by_hash(album_hash)
 
-    if album is None:
-        return err_msg, 404
+#     if album is None:
+#         return err_msg, 404
 
-    bio = FetchAlbumBio(album["title"], album["artist"])()
+#     bio = FetchAlbumBio(album["title"], album["artist"])()
 
-    if bio is None:
-        return err_msg, 404
+#     if bio is None:
+#         return err_msg, 404
 
-    return {"bio": bio}
+#     return {"bio": bio}
 
 
-@album_bp.route("/album/artists", methods=["POST"])
-def get_albumartists():
-    """
-    Returns a list of artists featured in a given album.
-    """
+# @album_bp.route("/album/artists", methods=["POST"])
+# def get_albumartists():
+#     """
+#     Returns a list of artists featured in a given album.
+#     """
 
-    data = request.get_json()
-    albumhash = data["hash"]
+#     data = request.get_json()
+#     albumhash = data["hash"]
 
-    tracks = instances.tracks_instance.find_tracks_by_albumhash(albumhash)
-    tracks = [models.Track(**t) for t in tracks]
+#     tracks = instances.tracks_instance.find_tracks_by_albumhash(albumhash)
+#     tracks = [models.Track(**t) for t in tracks]
 
-    artists = [a for t in tracks for a in t.artists]
-    artists = utils.get_normalized_artists(artists)
+#     artists = [a for t in tracks for a in t.artists]
+#     artists = utils.get_normalized_artists(artists)
 
-    return {"artists": artists}
+#     return {"artists": artists}

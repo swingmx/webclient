@@ -1,13 +1,11 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from os import scandir
 from typing import Any
 
-from app import instances
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.models import Folder, Track
-from app.settings import SUPPORTED_FILES, SUPPORTED_IMAGES
+from app.settings import SUPPORTED_FILES
 
 find_tracks_by_filepath = SQLiteTrackMethods.find_tracks_by_filepath
 get_folder_count = SQLiteTrackMethods.get_folder_count
@@ -41,7 +39,7 @@ class getFnF:
 
     def __call__(self) -> tuple[Track | Any, Folder | Any]:
         try:
-            entries = scandir(self.path)
+            entries = os.scandir(self.path)
         except FileNotFoundError:
             return ([], [])
 

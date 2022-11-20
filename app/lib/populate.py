@@ -45,7 +45,7 @@ class Populate:
         return set(files) - set(tagged_files)
 
     @staticmethod
-    def tag_untagged(untagged: list[str]):
+    def tag_untagged(untagged: set[str]):
         log.info("Tagging untagged tracks...")
 
         tagged_tracks = []
@@ -93,8 +93,8 @@ class CreateAlbums:
         log.info("Albums processed.")
 
     def create_albums(self, tracks: list[Track]):
-        for h in self.hashes:
-            yield self.create_album(tracks, h)
+        for ahash in self.hashes:
+            yield self.create_album(tracks, ahash)
 
     @staticmethod
     def get_unprocessed(albums: list[Album], tracks: list[Track]) -> list[str]:
@@ -106,8 +106,7 @@ class CreateAlbums:
         return unprocessed_hashes
 
     @staticmethod
-    def create_album(tracks: list[Track], album_hash: str) -> dict:
-        print(album_hash)
+    def create_album(tracks: list[Track], album_hash: str) -> dict | None:
         album = {"image": None}
 
         while album["image"] is None:
@@ -117,7 +116,7 @@ class CreateAlbums:
                 album = create_album(track)
                 tracks.remove(track)
             else:
-                album["image"] = album_hash + ".webp"
+                album["image"] = album_hash + ".webp"  # type: ignore
 
         try:
             del album["image"]
