@@ -25,7 +25,7 @@ def background(func):
     return background_func
 
 
-def run_fast_scandir(__dir: str, full=False) -> Dict[List[str], List[str]]:
+def run_fast_scandir(__dir: str, full=False) -> tuple[List[str], List[str]]:
     """
     Scans a directory for files with a specific extension. Returns a list of files and folders in the directory.
     """
@@ -56,8 +56,12 @@ class RemoveDuplicates:
 
     def __call__(self) -> List[models.Track]:
         hashes = []
-        [hashes.append(t.hash) for t in self.tracklist if t.hash not in hashes]
-        tracks = UseBisection(self.tracklist, "hash", hashes)()
+        [
+            hashes.append(t.trackhash)
+            for t in self.tracklist
+            if t.trackhash not in hashes
+        ]
+        tracks = UseBisection(self.tracklist, "trackhash", hashes)()
 
         return tracks
 
@@ -87,8 +91,7 @@ def create_new_date():
     :return: A string of the current date and time.
     """
     now = datetime.now()
-    str = now.strftime("%Y-%m-%d %H:%M:%S")
-    return str
+    return now.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def create_safe_name(name: str) -> str:

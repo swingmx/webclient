@@ -1,12 +1,16 @@
 """
 Contains all the track routes.
 """
-from app import instances
-from app import models
 from flask import Blueprint
 from flask import send_file
 
+from app import instances
+
 track_bp = Blueprint("track", __name__, url_prefix="/")
+from app.db.sqlite.tracks import SQLiteTrackMethods
+
+get_track_by_id = SQLiteTrackMethods.get_track_by_id
+get_track_by_hash = SQLiteTrackMethods.get_track_by_trackhash
 
 
 @track_bp.route("/file/<id_and_hash>")
@@ -16,17 +20,16 @@ def send_track_file(id_and_hash: str):
     Falls back to track hash if id is not found.
     """
     [trackid, track_hash] = id_and_hash.split("-")
-    track = instances.tracks_instance.get_track_by_id(trackid)
+    track = get_track_by_id(int(trackid))
 
     if track is None:
-        track = instances.tracks_instance.find_track_by_hash(track_hash)
+        track = get_track_by_hash(track_hash)
 
     msg = {"msg": "File Not Found"}
 
     if track is None:
         return msg, 404
 
-    track = models.Track(**track)
     audio_type = track.filepath.rsplit(".", maxsplit=1)[-1]
 
     try:

@@ -1,11 +1,10 @@
 """
 This file contains the Playlists class for interacting with the playlist documents in MongoDB.
 """
-from app import utils
-from app.db.mongodb import convert_many
-from app.db.mongodb import convert_one
-from app.db.mongodb import MongoPlaylists
 from bson import ObjectId
+
+from app import utils
+from app.db.mongodb import MongoPlaylists, convert_many, convert_one
 
 
 class Playlists(MongoPlaylists):
@@ -39,13 +38,13 @@ class Playlists(MongoPlaylists):
 
     def set_last_updated(self, playlistid: str) -> None:
         """
-        Sets the lastUpdated field to the current date.
+        Sets the last_updated field to the current date.
         """
         date = utils.create_new_date()
 
         return self.collection.update_one(
             {"_id": ObjectId(playlistid)},
-            {"$set": {"lastUpdated": date}},
+            {"$set": {"last_updated": date}},
         )
 
     def add_track_to_playlist(self, playlistid: str, track: str) -> None:

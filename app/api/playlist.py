@@ -1,23 +1,24 @@
 """
-Contains all the playlist routes.
+All playlist-related routes.
 """
+import json
 from datetime import datetime
 
-from app import exceptions
-from app import instances
-from app import models
-from app import serializer
-from app.utils import create_new_date
-from app.utils import Get
-from app.utils import UseBisection
+from flask import Blueprint, request
+
+from app import exceptions, instances, models, serializer
+from app.db.sqlite.playlists import SQLitePlaylistMethods
 from app.lib import playlistlib
-from flask import Blueprint
-from flask import request
+from app.utils import Get, UseBisection, create_new_date
 
 playlist_bp = Blueprint("playlist", __name__, url_prefix="/")
 
 PlaylistExists = exceptions.PlaylistExistsError
 TrackExistsInPlaylist = exceptions.TrackExistsInPlaylistError
+
+insert_one_playlist = SQLitePlaylistMethods.insert_one_playlist
+get_playlist_by_name = SQLitePlaylistMethods.get_playlist_by_name
+count_playlist_by_name = SQLitePlaylistMethods.count_playlist_by_name
 
 
 @playlist_bp.route("/playlists", methods=["GET"])
@@ -30,7 +31,7 @@ def get_all_playlists():
         serializer.Playlist(p, construct_last_updated=False) for p in dbplaylists
     ]
     playlists.sort(
-        key=lambda p: datetime.strptime(p.lastUpdated, "%Y-%m-%d %H:%M:%S"),
+        key=lambda p: datetime.strptime(p.last_updated, "%Y-%m-%d %H:%M:%S"),
         reverse=True,
     )
     return {"data": playlists}
@@ -38,24 +39,31 @@ def get_all_playlists():
 
 @playlist_bp.route("/playlist/new", methods=["POST"])
 def create_playlist():
+    """
+    Creates a new playlist. Accepts POST method with a JSON body.
+    """
     data = request.get_json()
 
-    data = {
-        "name": data["name"],
-        "pre_tracks": [],
-        "lastUpdated": create_new_date(),
+    if data is None:
+        return {"error": "Playlist name not provided"}, 400
+
+    existing_playlist_count = count_playlist_by_name(data["name"])
+
+    if existing_playlist_count > 0:
+        return {"error": "Playlist already exists"}, 409
+
+    playlist = {
+        "artistids": json.dumps([]),
         "image": None,
-        "thumb": None,
+        "last_updated": create_new_date(),
+        "name": data["name"],
+        "trackids": json.dumps([]),
     }
 
-    db_p = instances.playlist_instance.get_playlist_by_name(data["name"])
+    playlist = insert_one_playlist(playlist)
 
-    if db_p is not None:
-        return {"message": "Playlist already exists."}, 409
-
-    upsert_id = instances.playlist_instance.insert_playlist(data)
-    p = instances.playlist_instance.get_playlist_by_id(upsert_id)
-    playlist = models.Playlist(p)
+    if playlist is None:
+        return {"error": "Playlist could not be created"}, 500
 
     return {"playlist": playlist}, 201
 
@@ -102,7 +110,7 @@ def update_playlist(playlistid: str):
 
     playlist = {
         "name": str(data.get("name")).strip(),
-        "lastUpdated": create_new_date(),
+        "last_updated": create_new_date(),
         "image": None,
         "thumb": None,
     }

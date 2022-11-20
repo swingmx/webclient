@@ -2,7 +2,7 @@ from sqlite3 import Connection
 
 from app.db import TrackMethods
 from app.db.sqlite import get_sqlite_conn
-from app.db.sqlite.utils import tuples_to_tracks
+from app.db.sqlite.utils import tuple_to_track, tuples_to_tracks
 
 
 class SQLiteTrackMethods(TrackMethods):
@@ -116,3 +116,46 @@ class SQLiteTrackMethods(TrackMethods):
         conn.close()
 
         return count
+
+    @staticmethod
+    def get_track_by_id(id: int):
+        conn = get_sqlite_conn()
+        cur = conn.cursor()
+
+        cur.execute("SELECT * FROM tracks WHERE id=?", (id,))
+        row = cur.fetchone()
+        conn.close()
+
+        if row is None:
+            return None
+
+        return tuple_to_track(row)
+
+    @staticmethod
+    def get_track_by_trackhash(trackhash: str):
+        conn = get_sqlite_conn()
+        cur = conn.cursor()
+
+        cur.execute("SELECT * FROM tracks WHERE trackhash=?", (trackhash,))
+        row = cur.fetchone()
+        conn.close()
+
+        if row is None:
+            return None
+
+        return tuple_to_track(row)
+
+    @staticmethod
+    def get_tracks_by_albumhash(albumhash: str):
+        conn = get_sqlite_conn()
+        cur = conn.cursor()
+
+        cur.execute("SELECT * FROM tracks WHERE albumhash=?", (albumhash,))
+        rows = cur.fetchall()
+        conn.close()
+
+
+        if rows is None:
+            return None
+
+        return tuples_to_tracks(rows)

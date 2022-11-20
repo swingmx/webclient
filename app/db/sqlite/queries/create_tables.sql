@@ -36,10 +36,12 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS playlists (
         id integer PRIMARY KEY,
-        lastupdated text not null,
-        trackids text,
+        artistids text,
         image text,
-        thumb text
+        last_updated text not null,
+        name text not null,
+        thumb text,
+        trackids text
     );
 
 CREATE TABLE

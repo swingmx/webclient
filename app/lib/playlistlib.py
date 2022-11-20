@@ -34,7 +34,7 @@ def add_track(playlistid: str, trackid: str):
 
     playlist = instances.playlist_instance.get_playlist_by_id(playlistid)
 
-    track_hash = track.hash
+    track_hash = track.trackhash
 
     if track_hash in playlist["pre_tracks"]:
         raise TrackExistsInPlaylist
