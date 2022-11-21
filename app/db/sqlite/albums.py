@@ -1,6 +1,9 @@
-from sqlite3 import Connection, Error as SqlError
+import json
+
 from typing import Generator
 from collections import OrderedDict
+from sqlite3 import Connection, Error as SqlError
+
 from app.db import AlbumMethods
 from app.db.sqlite import get_sqlite_conn
 from app.settings import DB_PATH
@@ -110,3 +113,12 @@ class SQLiteAlbumMethods(AlbumMethods):
                 return tuple_to_album(album)
 
             return None
+
+    @staticmethod
+    def update_album_colors(album_hash: str, colors: list[str]):
+        sql = "UPDATE albums SET colors=? WHERE albumhash=?"
+
+        colors_str = json.dumps(colors)
+
+        with SQLiteManager() as cur:
+            cur.execute(sql, (colors_str, album_hash))

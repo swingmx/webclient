@@ -34,7 +34,7 @@ def run_secondary_checks():
 
         Populate()
         CreateAlbums()
-        # ProcessAlbumColors()
+        ProcessAlbumColors()
 
         # if utils.Ping()():
         #     CheckArtistImages()()

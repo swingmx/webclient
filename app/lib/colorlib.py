@@ -1,14 +1,18 @@
+import json
 import colorgram
-from app import instances
+
 from app import settings
-from app.utils import Get
+
+# from app.utils import Get
 from app.logger import get_logger
 from app.models import Album
+
+from app.db.sqlite.albums import SQLiteAlbumMethods as db
 
 log = get_logger()
 
 
-def get_image_colors(image: str) -> list:
+def get_image_colors(image: str) -> list[str]:
     """Extracts 2 of the most dominant colors from an image."""
     try:
         colors = sorted(colorgram.extract(image, 4), key=lambda c: c.hsl.h)
@@ -25,15 +29,26 @@ def get_image_colors(image: str) -> list:
 
 
 class ProcessAlbumColors:
-
     def __init__(self) -> None:
-        log.info("Processing album colors")
-        all_albums = Get.get_all_albums()
+        log.info("Started processing album colors")
+        all_albums = db.get_all_albums()
 
-        all_albums = [a for a in all_albums if len(a.colors) == 0]
+        process_count = 0
 
-        for a in all_albums:
-            self.process_color(a)
+        if all_albums is None:
+            return
+
+        for album in all_albums:
+            if len(album.colors) != 0:
+                pass
+
+            self.process_color(album)
+            process_count += 1
+
+        # all_albums = [a for a in all_albums if len(a.colors) == 0]
+
+        # for a in all_albums:
+        #     self.process_color(a)
 
         log.info("Processing album colors ... ✅")
 
@@ -44,6 +59,6 @@ class ProcessAlbumColors:
         colors = get_image_colors(img)
 
         if len(colors) > 0:
-            instances.album_instance.set_album_colors(colors, album.albumhash)
+            db.update_album_colors(album.albumhash, colors)
 
         return colors

@@ -87,6 +87,9 @@ class Album:
         self.albumartisthash = utils.create_safe_name(self.albumartist)
         self.artistimg = self.albumartisthash + ".webp"
 
+        if self.colors is not None:
+            self.colors = json.loads(str(self.colors))
+
     def check_type(self):
         """
         Runs all the checks to determine the type of album.

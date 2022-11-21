@@ -3,7 +3,6 @@ from collections import OrderedDict
 
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.sqlite.utils import SQLiteManager, tuple_to_playlist, tuples_to_playlists
-from app.exceptions import ArtistInPlaylistError, TrackInPlaylistError
 from app.utils import background, create_safe_name
 
 
