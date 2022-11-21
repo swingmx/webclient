@@ -16,7 +16,7 @@ from app.lib import trackslib
 from app.logger import get_logger
 from app.utils import Get, get_normalized_artists
 
-TrackExistsInPlaylist = exceptions.TrackExistsInPlaylistError
+TrackExistsInPlaylist = exceptions.TrackInPlaylistError
 
 log = get_logger()
 
@@ -83,9 +83,9 @@ def save_p_image(file: datastructures.FileStorage, pid: str):
         return img_path, thumb_path
 
     img.save(full_img_path, "webp")
-    thumb_path = create_thumbnail(img, img_path=img_path)
+    create_thumbnail(img, img_path=img_path)
 
-    return img_path, thumb_path
+    return img_path
 
 
 class ValidatePlaylistThumbs:
@@ -119,14 +119,14 @@ def create_new_date():
     return datetime.now()
 
 
-def create_playlist_tracks(playlist_tracks: List[str]) -> List[models.Track]:
+def create_playlist_tracks(trackhashes: List[str]) -> List[models.Track]:
     """
-    Creates a list of model.Track objects from a list of playlist track dicts.
+    Creates a list of Track objects from a list of playlist track ids.
     """
     tracks: List[models.Track] = []
 
     with ThreadPoolExecutor() as pool:
-        tracks_iter = pool.map(trackslib.get_p_track, playlist_tracks)
+        tracks_iter = pool.map(trackslib.get_p_track, trackhashes)
         [tracks.append(models.Track(**t)) for t in tracks_iter if t is not None]
 
     return tracks

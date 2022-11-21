@@ -34,13 +34,12 @@ class SQLiteAlbumMethods(AlbumMethods):
 
         sql = """INSERT INTO albums(
             albumartist,
-            albumartistid,
             albumhash,
             colors,
             copyright,
             date,
             title
-            ) VALUES(?,?,?,?,?,?,?)
+            ) VALUES(?,?,?,?,?,?)
             """
         album = OrderedDict(sorted(album.items()))
         params = (*album.values(),)

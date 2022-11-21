@@ -2,12 +2,11 @@
 Contains all the models for objects generation and typing.
 """
 import json
-
 from dataclasses import dataclass
 
-# from operator import itemgetter
-
 from app import utils
+
+# from operator import itemgetter
 
 
 @dataclass(slots=True)
@@ -20,7 +19,6 @@ class Track:
     album: str
     albumartist: str
     albumhash: str
-    albumid: int
     artist: str | list[str]
     bitrate: int
     copyright: str
@@ -67,7 +65,6 @@ class Album:
 
     id: int
     albumartist: str
-    albumartistid: int
     albumhash: str
     colors: str | list[str]
     copyright: str
@@ -79,45 +76,53 @@ class Album:
     artistimg: str = ""
     count: int = 0
     duration: int = 0
+
     is_soundtrack: bool = False
     is_compilation: bool = False
     is_single: bool = False
+    is_EP: bool = False
 
     def __post_init__(self):
         self.image = self.albumhash + ".webp"
         self.albumartisthash = utils.create_safe_name(self.albumartist)
         self.artistimg = self.albumartisthash + ".webp"
-        # (
-        #     self.title,
-        #     self.artist,
-        #     self.date,
-        #     self.image,
-        #     self.hash,
-        #     self.copyright,
-        #     self.artistimg,
-        # ) = itemgetter(
-        #     "title", "artist", "date", "image", "hash", "copyright", "artistimg"
-        # )(
-        #     tags
-        # )
 
-        # try:
-        #     self.colors = tags["colors"]
-        # except KeyError:
-        #     self.colors = []
+    def check_type(self):
+        """
+        Runs all the checks to determine the type of album.
+        """
+        self.is_soundtrack = self.check_is_soundtrack()
+        if self.is_soundtrack:
+            return
 
-    # @property
-    # def is_soundtrack(self) -> bool:
-    #     keywords = ["motion picture", "soundtrack"]
-    #     for keyword in keywords:
-    #         if keyword in self.title.lower():
-    #             return True
+        self.is_compilation = self.check_is_compilation()
+        if self.is_compilation:
+            return
 
-    #     return False
+        self.is_EP = self.check_is_EP()
 
-    # @property
-    # def is_compilation(self) -> bool:
-    #     return "various artists" in self.albumartist.lower()
+    def check_is_soundtrack(self) -> bool:
+        """
+        Checks if the album is a soundtrack.
+        """
+        keywords = ["motion picture", "soundtrack"]
+        for keyword in keywords:
+            if keyword in self.title.lower():
+                return True
+
+        return False
+
+    def check_is_compilation(self) -> bool:
+        """
+        Checks if the album is a compilation.
+        """
+        return "various artists" in self.albumartist.lower()
+
+    def check_is_EP(self) -> bool:
+        """
+        Checks if the album is an EP.
+        """
+        return self.title.strip().endswith(" EP")
 
 
 @dataclass
@@ -125,15 +130,15 @@ class Playlist:
     """Creates playlist objects"""
 
     id: int
-    artistids: str | list[str]
+    artisthashes: str | list[str]
     image: str
     last_updated: str
     name: str
-    trackids: str | list[str]
+    trackhashes: str | list[str]
 
     thumb: str = ""
     count: int = 0
-
+    duration: int = 0
 
     # def __init__(self, data):
     #     self.id = data["_id"]["$oid"]
@@ -143,10 +148,10 @@ class Playlist:
     #     self.write_props(data)
 
     def __post_init__(self):
-        self.trackids = json.loads(str(self.trackids))
-        self.artistids = json.loads(str(self.artistids))
+        self.trackhashes = json.loads(str(self.trackhashes))
+        self.artisthashes = json.loads(str(self.artisthashes))
 
-        self.count = len(self.trackids)
+        self.count = len(self.trackhashes)
 
         if self.image is not None:
             self.thumb = "thumb_" + self.image

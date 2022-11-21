@@ -77,12 +77,12 @@ def is_valid_file(filename: str) -> bool:
         return False
 
 
-def create_hash(*args: List[str]) -> str:
+def create_hash(*args: str) -> str:
     """
     Creates a simple hash for an album
     """
     string = "".join(str(a) for a in args).replace(" ", "")
-    return "".join([i for i in string if i.isalnum()]).lower()
+    return "".join([i for i in string if (i.isalnum() or i == "•")]).lower()
 
 
 def create_new_date():
