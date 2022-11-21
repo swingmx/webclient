@@ -15,7 +15,7 @@ log = get_logger()
 def get_image_colors(image: str) -> list[str]:
     """Extracts 2 of the most dominant colors from an image."""
     try:
-        colors = sorted(colorgram.extract(image, 3), key=lambda c: c.hsl.h)
+        colors = sorted(colorgram.extract(image, 1), key=lambda c: c.hsl.h)
     except OSError:
         return []
 
