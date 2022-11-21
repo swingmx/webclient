@@ -4,10 +4,12 @@ Contains the functions to prepare the server for use.
 import os
 import shutil
 from pathlib import Path
+from sqlite3 import OperationalError
 
 from app import settings
 from app.db.sqlite import create_connection, create_tables
 from app.settings import DB_PATH
+from app.logger import log
 
 
 class CopyFiles:
@@ -80,14 +82,17 @@ def setup_sqlite():
     # if os.path.exists(DB_PATH):
     #     os.remove(DB_PATH)
 
-    conn = create_connection(DB_PATH)
-    current_path = Path(__file__).parent.resolve()
-    sql_path = "db/sqlite/queries/create_tables.sql"
-    sql_path = current_path.joinpath(sql_path)
+    try:
+        conn = create_connection(DB_PATH)
 
-    create_tables(conn, str(sql_path))
-    conn.close()
+        current_path = Path(__file__).parent.resolve()
+        sql_path = "db/sqlite/queries/create_tables.sql"
+        sql_path = current_path.joinpath(sql_path)
 
+        create_tables(conn, str(sql_path))
+        conn.close()
+    except OperationalError:
+        log.error("Failed to create database tables")
 
 
 def run_checks():

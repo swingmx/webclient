@@ -6,6 +6,7 @@ from flask import request
 from flask import Blueprint
 
 from app import utils
+
 # from app import instances
 # from app import models
 # from app.functions import FetchAlbumBio
@@ -73,7 +74,7 @@ def get_album():
     album.count = len(tracks)
 
     try:
-        album.duration = sum([t.duration for t in tracks])
+        album.duration = sum(t.duration for t in tracks)
     except AttributeError:
         album.duration = 0
 
@@ -84,6 +85,8 @@ def get_album():
         and tracks[0].disc == 1
     ):
         album.is_single = True
+    else:
+        album.check_type()
 
     return {"tracks": tracks, "info": album}
 

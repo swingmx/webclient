@@ -4,7 +4,6 @@ CREATE TABLE
         album text NOT NULL,
         albumartist text NOT NULL,
         albumhash text NOT NULL,
-        albumid integer NOT NULL,
         artist text NOT NULL,
         bitrate integer NOT NULL,
         copyright text,
@@ -16,32 +15,28 @@ CREATE TABLE
         genre text,
         title text NOT NULL,
         track integer NOT NULL,
-        trackhash text NOT NULL,
-        FOREIGN KEY (albumid) REFERENCES albums (id)
+        trackhash text NOT NULL
     );
 
 CREATE TABLE
     IF NOT EXISTS albums (
         id integer PRIMARY KEY,
         albumartist text NOT NULL,
-        albumartistid text NOT NULL,
         albumhash text NOT NULL,
         colors text,
         copyright text,
         date text NOT NULL,
-        title text NOT NULL,
-        FOREIGN KEY (albumartistid) REFERENCES artists (id)
+        title text NOT NULL
     );
 
 CREATE TABLE
     IF NOT EXISTS playlists (
         id integer PRIMARY KEY,
-        artistids text,
+        artisthashes text,
         image text,
         last_updated text not null,
         name text not null,
-        thumb text,
-        trackids text
+        trackhashes text
     );
 
 CREATE TABLE

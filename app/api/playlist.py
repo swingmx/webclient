@@ -6,34 +6,43 @@ from datetime import datetime
 
 from flask import Blueprint, request
 
-from app import exceptions, instances, models, serializer
-from app.db.sqlite.playlists import SQLitePlaylistMethods
+from app import models, serializer
+
 from app.lib import playlistlib
-from app.utils import Get, UseBisection, create_new_date
+from app.utils import create_new_date
+
+from app.db.sqlite.tracks import SQLiteTrackMethods
+from app.db.sqlite.playlists import SQLitePlaylistMethods
 
 playlist_bp = Blueprint("playlist", __name__, url_prefix="/")
 
-PlaylistExists = exceptions.PlaylistExistsError
-TrackExistsInPlaylist = exceptions.TrackExistsInPlaylistError
+PL = SQLitePlaylistMethods
 
-insert_one_playlist = SQLitePlaylistMethods.insert_one_playlist
-get_playlist_by_name = SQLitePlaylistMethods.get_playlist_by_name
-count_playlist_by_name = SQLitePlaylistMethods.count_playlist_by_name
+insert_one_playlist = PL.insert_one_playlist
+get_playlist_by_name = PL.get_playlist_by_name
+count_playlist_by_name = PL.count_playlist_by_name
+get_all_playlists = PL.get_all_playlists
+get_playlist_by_id = PL.get_playlist_by_id
+tracks_to_playlist = PL.add_tracks_to_playlist
+add_artist_to_playlist = PL.add_artist_to_playlist
+update_playlist = PL.update_playlist
+
+get_tracks_by_trackhashes = SQLiteTrackMethods.get_tracks_by_trackhashes
 
 
 @playlist_bp.route("/playlists", methods=["GET"])
-def get_all_playlists():
-    """Returns all the playlists."""
-    dbplaylists = instances.playlist_instance.get_all_playlists()
-    dbplaylists = [models.Playlist(p) for p in dbplaylists]
+def send_all_playlists():
+    """
+    Gets all the playlists.
+    """
+    playlists = get_all_playlists()
+    playlists = list(playlists)
 
-    playlists = [
-        serializer.Playlist(p, construct_last_updated=False) for p in dbplaylists
-    ]
     playlists.sort(
         key=lambda p: datetime.strptime(p.last_updated, "%Y-%m-%d %H:%M:%S"),
         reverse=True,
     )
+
     return {"data": playlists}
 
 
@@ -53,11 +62,11 @@ def create_playlist():
         return {"error": "Playlist already exists"}, 409
 
     playlist = {
-        "artistids": json.dumps([]),
+        "artisthashes": json.dumps([]),
         "image": None,
         "last_updated": create_new_date(),
         "name": data["name"],
-        "trackids": json.dumps([]),
+        "trackhashes": json.dumps([]),
     }
 
     playlist = insert_one_playlist(playlist)
@@ -70,37 +79,57 @@ def create_playlist():
 
 @playlist_bp.route("/playlist/<playlist_id>/add", methods=["POST"])
 def add_track_to_playlist(playlist_id: str):
+    """
+    Takes a playlist ID and a track hash, and adds the track to the playlist
+    """
     data = request.get_json()
 
-    trackid = data["track"]
+    if data is None:
+        return {"error": "Track hash not provided"}, 400
 
-    try:
-        playlistlib.add_track(playlist_id, trackid)
-    except TrackExistsInPlaylist:
+    trackhash = data["track"]
+
+    insert_count = tracks_to_playlist(int(playlist_id), [trackhash])
+
+    if insert_count == 0:
         return {"error": "Track already exists in playlist"}, 409
 
-    return {"msg": "I think It's done"}, 200
+    add_artist_to_playlist(int(playlist_id), trackhash)
+
+    return {"msg": "Done"}, 200
 
 
 @playlist_bp.route("/playlist/<playlistid>")
 def get_playlist(playlistid: str):
-    p = instances.playlist_instance.get_playlist_by_id(playlistid)
-    if p is None:
-        return {"info": {}, "tracks": []}
+    """
+    Gets a playlist by id, and if it exists, it gets all the tracks in the playlist and returns them.
+    """
+    playlist = get_playlist_by_id(int(playlistid))
 
-    playlist = models.Playlist(p)
+    if playlist is None:
+        return {"msg": "Playlist not found"}, 404
 
-    tracks = playlistlib.create_playlist_tracks(playlist.pretracks)
+    tracks = get_tracks_by_trackhashes(list(playlist.trackhashes))
+    tracks = list(tracks)
 
-    duration = sum([t.duration for t in tracks])
-    playlist = serializer.Playlist(playlist)
+    duration = sum(t.duration for t in tracks)
+    playlist.last_updated = serializer.date_string_to_time_passed(playlist.last_updated)
+
     playlist.duration = duration
 
     return {"info": playlist, "tracks": tracks}
 
 
 @playlist_bp.route("/playlist/<playlistid>/update", methods=["PUT"])
-def update_playlist(playlistid: str):
+def update_playlist_info(playlistid: str):
+    if playlistid is None:
+        return {"error": "Playlist ID not provided"}, 400
+
+    db_playlist = get_playlist_by_id(int(playlistid))
+
+    if db_playlist is None:
+        return {"error": "Playlist not found"}, 404
+
     image = None
 
     if "image" in request.files:
@@ -109,40 +138,34 @@ def update_playlist(playlistid: str):
     data = request.form
 
     playlist = {
-        "name": str(data.get("name")).strip(),
+        "id": int(playlistid),
+        "artisthashes": json.dumps([]),
+        "image": db_playlist.image,
         "last_updated": create_new_date(),
-        "image": None,
-        "thumb": None,
+        "name": str(data.get("name")).strip(),
+        "trackhashes": json.dumps([]),
     }
 
-    playlists = Get.get_all_playlists()
+    if image:
+        playlist["image"] = playlistlib.save_p_image(image, playlistid)
 
-    p = UseBisection(playlists, "playlistid", [playlistid])()
-    p: models.Playlist = p[0]
+    p_tuple = (*playlist.values(),)
 
-    if playlist is not None:
-        if image:
-            playlist["image"], playlist["thumb"] = playlistlib.save_p_image(
-                image, playlistid
-            )
-        elif p.image:
-            [playlist["image"], playlist["thumb"]] = [p.image, p.thumb]
+    update_playlist(int(playlistid), playlist)
 
-        p.update_playlist(playlist)
-        instances.playlist_instance.update_playlist(playlistid, playlist)
+    playlist = models.Playlist(*p_tuple)
+    playlist.last_updated = serializer.date_string_to_time_passed(playlist.last_updated)
 
-        return {
-            "data": serializer.Playlist(p),
-        }
-
-    return {"msg": "Something shady happened"}, 500
+    return {
+        "data": playlist,
+    }
 
 
-@playlist_bp.route("/playlist/artists", methods=["POST"])
-def get_playlist_artists():
-    data = request.get_json()
+# @playlist_bp.route("/playlist/artists", methods=["POST"])
+# def get_playlist_artists():
+#     data = request.get_json()
 
-    pid = data["pid"]
-    artists = playlistlib.GetPlaylistArtists(pid)()
+#     pid = data["pid"]
+#     artists = playlistlib.GetPlaylistArtists(pid)()
 
-    return {"data": artists}
+#     return {"data": artists}

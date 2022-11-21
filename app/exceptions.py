@@ -1,14 +1,16 @@
-class TrackExistsInPlaylistError(Exception):
+class TrackInPlaylistError(Exception):
     """
     Exception raised when a track is already in a playlist.
     """
 
-    pass
 
-
-class PlaylistExistsError(Exception):
+class ArtistInPlaylistError(Exception):
     """
-    Exception raised when a playlist already exists.
+    Exception raised when an artist is already in a playlist.
     """
 
-    pass
+
+# class PlaylistExistsError(Exception):
+#     """
+#     Exception raised when a playlist already exists.
+#     """

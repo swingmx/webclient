@@ -16,7 +16,6 @@ class SQLiteTrackMethods(TrackMethods):
             album,
             albumartist,
             albumhash,
-            albumid,
             artist,
             bitrate,
             copyright,
@@ -29,7 +28,7 @@ class SQLiteTrackMethods(TrackMethods):
             title,
             track,
             trackhash
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """
 
         cur.execute(
@@ -38,7 +37,6 @@ class SQLiteTrackMethods(TrackMethods):
                 track["album"],
                 track["albumartist"],
                 track["albumhash"],
-                1,
                 track["artist"],
                 track["bitrate"],
                 track["copyright"],
@@ -154,8 +152,25 @@ class SQLiteTrackMethods(TrackMethods):
         rows = cur.fetchall()
         conn.close()
 
-
         if rows is None:
             return None
 
         return tuples_to_tracks(rows)
+
+    @staticmethod
+    def get_tracks_by_trackhashes(hashes: list[str]):
+        conn = get_sqlite_conn()
+        cur = conn.cursor()
+
+        sql = "SELECT * FROM tracks WHERE trackhash IN ({})".format(
+            ",".join("?" * len(hashes))
+        )
+
+        cur.execute(sql, hashes)
+        rows = cur.fetchall()
+        conn.close()
+
+        if rows is not None:
+            return tuples_to_tracks(rows)
+
+        return []
