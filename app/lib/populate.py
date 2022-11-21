@@ -26,6 +26,7 @@ class Populate:
     """
 
     def __init__(self) -> None:
+
         tracks = get_all_tracks()
         tracks = list(tracks)
 
@@ -34,7 +35,7 @@ class Populate:
         untagged = self.filter_untagged(tracks, files)
 
         if len(untagged) == 0:
-            log.info("All clear, no untagged files.")
+            log.info("All clear, no unread files.")
             return
 
         self.tag_untagged(untagged)
@@ -46,8 +47,7 @@ class Populate:
 
     @staticmethod
     def tag_untagged(untagged: set[str]):
-        log.info("Tagging untagged tracks...")
-
+        log.info("Found %s new tracks", len(untagged))
         tagged_tracks = []
         tagged_count = 0
 
@@ -58,15 +58,13 @@ class Populate:
                 tagged_tracks.append(tags)
                 tagged_count += 1
             else:
-                log.warning("Could not tag file: %s", file)
-
-        log.info("Found %s untagged tracks", tagged_count)
+                log.warning("Could not read file: %s", file)
 
         if len(tagged_tracks) > 0:
             if settings.USE_SQLITE:
                 insert_many_tracks(tagged_tracks)
 
-        log.info("Tagged %s/%s untagged tracks", tagged_count, len(untagged))
+        log.info("Added %s/%s tracks", tagged_count, len(untagged))
 
 
 class CreateAlbums:
