@@ -146,7 +146,7 @@ def create_album(track: models.Track) -> dict:
         "albumartist": track.albumartist,
         "albumhash": track.albumhash,
         "copyright": track.copyright,
-        "colors": "",
+        "colors": "[]",
     }
 
     album["date"] = track.date
