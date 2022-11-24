@@ -13,10 +13,12 @@ from app import utils
 
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.sqlite.albums import SQLiteAlbumMethods
+from app.db.sqlite.search import SearchMethods as search
 
 get_tracks_by_albumhash = SQLiteTrackMethods.get_tracks_by_albumhash
 get_album_by_id = SQLiteAlbumMethods.get_album_by_id
 get_album_by_hash = SQLiteAlbumMethods.get_album_by_hash
+get_albums_by_albumartist = SQLiteAlbumMethods.get_albums_by_albumartist
 
 album_bp = Blueprint("album", __name__, url_prefix="")
 
@@ -89,6 +91,32 @@ def get_album():
         album.check_type()
 
     return {"tracks": tracks, "info": album}
+
+
+@album_bp.route("/album/from-artist", methods=["POST"])
+def get_artist_albums():
+    data = request.get_json()
+
+    if data is None:
+        return {"msg": "No albumartist provided"}
+
+    albumartists: str = data["albumartist"]
+    limit: int = data.get("limit")
+    exclude: str = data.get("exclude")
+
+    albumartists = albumartists.split(",")  # type: ignore
+
+    albums = [
+        {
+            "artist": a,
+            "albums": list(search.find_artist_albums(a, limit, exclude=exclude)),
+        }
+        for a in albumartists
+    ]
+
+    albums = [a for a in albums if len(a["albums"]) > 0]
+
+    return {"data": albums}
 
 
 # @album_bp.route("/album/bio", methods=["POST"])

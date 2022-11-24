@@ -2,20 +2,16 @@ import json
 
 from typing import Generator
 from collections import OrderedDict
-from sqlite3 import Connection, Error as SqlError
+from sqlite3 import Cursor
 
 from app.db import AlbumMethods
-from app.db.sqlite import get_sqlite_conn
-from app.settings import DB_PATH
 
 from .utils import SQLiteManager, tuple_to_album, tuples_to_albums
 
 
 class SQLiteAlbumMethods(AlbumMethods):
     @classmethod
-    def insert_one_album(
-        cls, album: dict, conn: Connection = get_sqlite_conn(), and_commit=True
-    ):
+    def insert_one_album(cls, album: dict, cur: Cursor):
         """
         Takes a dictionary of album data, and inserts it into the database
 
@@ -33,7 +29,6 @@ class SQLiteAlbumMethods(AlbumMethods):
             The last row id of the album that was inserted.
 
         """
-        cur = conn.cursor()
 
         sql = """INSERT INTO albums(
             albumartist,
@@ -47,16 +42,8 @@ class SQLiteAlbumMethods(AlbumMethods):
         album = OrderedDict(sorted(album.items()))
         params = (*album.values(),)
 
-        try:
-            cur.execute(sql, params)
-        except SqlError:
-            return None
+        cur.execute(sql, params)
 
-        if not and_commit:
-            return cur.lastrowid
-
-        conn.commit()
-        conn.close()
         return cur.lastrowid
 
     @classmethod
@@ -69,13 +56,9 @@ class SQLiteAlbumMethods(AlbumMethods):
         albums : Generator
             Generator
         """
-        conn = get_sqlite_conn()
-
-        for album in albums:
-            cls.insert_one_album(album, conn, and_commit=False)
-
-        conn.commit()
-        conn.close()
+        with SQLiteManager() as cur:
+            for album in albums:
+                cls.insert_one_album(album, cur)
 
     @classmethod
     def get_all_albums(cls):
@@ -86,7 +69,7 @@ class SQLiteAlbumMethods(AlbumMethods):
             if albums is not None:
                 return tuples_to_albums(albums)
 
-            return None
+        return None
 
     # @staticmethod
     # def get_album_by_id(album_id: int):
@@ -112,7 +95,22 @@ class SQLiteAlbumMethods(AlbumMethods):
             if album is not None:
                 return tuple_to_album(album)
 
-            return None
+        return None
+
+    @classmethod
+    def get_albums_by_hashes(cls, album_hashes: list):
+        """
+        Gets all the albums with the specified hashes. Returns a generator of albums or an empty list.
+        """
+        with SQLiteManager() as cur:
+            hashes = ",".join("?" * len(album_hashes))
+            cur.execute(f"SELECT * FROM albums WHERE albumhash IN ({hashes})", album_hashes)
+            albums = cur.fetchall()
+
+            if albums is not None:
+                return tuples_to_albums(albums)
+
+        return []
 
     @staticmethod
     def update_album_colors(album_hash: str, colors: list[str]):
@@ -122,3 +120,28 @@ class SQLiteAlbumMethods(AlbumMethods):
 
         with SQLiteManager() as cur:
             cur.execute(sql, (colors_str, album_hash))
+
+    @staticmethod
+    def get_albums_by_albumartist(albumartist: str):
+        with SQLiteManager() as cur:
+            cur.execute("SELECT * FROM albums WHERE albumartist=?", (albumartist,))
+            albums = cur.fetchall()
+
+            if albums is not None:
+                return tuples_to_albums(albums)
+
+        return []
+
+    @staticmethod
+    def get_all_albums_raw():
+        """
+        Returns all the albums in the database, as a list of tuples.
+        """
+        with SQLiteManager() as cur:
+            cur.execute("SELECT * FROM albums")
+            albums = cur.fetchall()
+
+            if albums is not None:
+                return albums
+
+        return []

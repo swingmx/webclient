@@ -12,6 +12,9 @@ from app.settings import DB_PATH
 from app.logger import log
 
 
+from app.db.sqlite.search import SearchMethods
+
+
 class CopyFiles:
     """Copies assets to the app directory."""
 
@@ -93,6 +96,10 @@ def setup_sqlite():
         conn.close()
     except OperationalError:
         log.error("Failed to create database tables")
+
+    SearchMethods.init_db()
+    SearchMethods.load_existing_tracks()
+    SearchMethods.load_existing_albums()
 
 
 def run_checks():

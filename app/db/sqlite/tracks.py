@@ -1,17 +1,26 @@
-from sqlite3 import Connection
+"""
+Contains the SQLiteTrackMethods class which contains methods for
+interacting with the tracks table.
+"""
 
-from app.db import TrackMethods
-from app.db.sqlite import get_sqlite_conn
+
+from sqlite3 import Cursor
+
 from app.db.sqlite.utils import tuple_to_track, tuples_to_tracks
 
+from .utils import SQLiteManager
 
-class SQLiteTrackMethods(TrackMethods):
+
+class SQLiteTrackMethods:
+    """
+    This class contains all methods for interacting with the tracks table.
+    """
+
     @classmethod
-    def insert_one_track(
-        cls, track: dict, conn: Connection = get_sqlite_conn(), commit=True
-    ):
-        cur = conn.cursor()
-
+    def insert_one_track(cls, track: dict, cur: Cursor):
+        """
+        Inserts a single track into the database.
+        """
         sql = """INSERT INTO tracks(
             album,
             albumartist,
@@ -52,125 +61,149 @@ class SQLiteTrackMethods(TrackMethods):
             ),
         )
 
-        if not commit:
-            return
-
-        conn.commit()
-        conn.close()
-
     @classmethod
-    def insert_many_tracks(cls, tracks: list):
-        conn = get_sqlite_conn()
-
-        for track in tracks:
-            cls.insert_one_track(track, conn, commit=False)
-
-        conn.commit()
-        conn.close()
+    def insert_many_tracks(cls, tracks: list[dict]):
+        """
+        Inserts a list of tracks into the database.
+        """
+        with SQLiteManager() as cur:
+            for track in tracks:
+                cls.insert_one_track(track, cur)
 
     @staticmethod
     def get_all_tracks():
-        conn = get_sqlite_conn()
-        cur = conn.cursor()
+        """
+        Get all tracks from the database and return a generator of Track objects
+        or an empty list.
+        """
+        with SQLiteManager() as cur:
+            cur.execute("SELECT * FROM tracks")
+            rows = cur.fetchall()
 
-        cur.execute("SELECT * FROM tracks")
-        rows = cur.fetchall()
-        conn.close()
+            if rows is not None:
+                return tuples_to_tracks(rows)
 
-        return tuples_to_tracks(rows)
+            return []
 
     @staticmethod
     def find_track_by_filepath(filepath: str):
-        conn = get_sqlite_conn()
-        cur = conn.cursor()
+        """
+        Find a track by its filepath. Returns a Track object or None.
+        """
+        with SQLiteManager() as cur:
+            cur.execute("SELECT * FROM tracks WHERE filepath=?", (filepath,))
+            row = cur.fetchone()
 
-        cur.execute("SELECT * FROM tracks WHERE filepath=?", (filepath,))
-        row = cur.fetchone()
-        conn.close()
+            if row is not None:
+                return tuple_to_track(row)
 
-        return tuples_to_tracks(row)
+            return None
 
     @staticmethod
     def find_tracks_by_filepath(filenames: list[str]):
-        conn = get_sqlite_conn()
-        cur = conn.cursor()
+        """
+        Find all tracks in the database whose filepath is in the list
+        of filepaths. Returns a generator of Track objects or an empty list.
+        """
+        with SQLiteManager() as cur:
+            sql = "SELECT * FROM tracks WHERE filepath IN ({})".format(
+                ",".join("?" * len(filenames))
+            )
+            cur.execute(sql, filenames)
+            rows = cur.fetchall()
 
-        sql = "SELECT * FROM tracks WHERE filepath IN ({})".format(
-            ",".join("?" * len(filenames))
-        )
-        cur.execute(sql, filenames)
-        rows = cur.fetchall()
-        conn.close()
+            if rows is not None:
+                return tuples_to_tracks(rows)
 
-        return tuples_to_tracks(rows)
+            return []
 
     @staticmethod
     def get_folder_count(folder: str):
-        conn = get_sqlite_conn()
-        cur = conn.cursor()
+        """
+        Get the number of tracks in a folder.
+        """
+        with SQLiteManager() as cur:
+            cur.execute("SELECT COUNT(*) FROM tracks WHERE folder=?", (folder,))
+            count = cur.fetchone()[0]
 
-        cur.execute("SELECT COUNT(*) FROM tracks WHERE folder=?", (folder,))
-        count = cur.fetchone()[0]
-        conn.close()
-
-        return count
+            return int(count)
 
     @staticmethod
-    def get_track_by_id(id: int):
-        conn = get_sqlite_conn()
-        cur = conn.cursor()
+    def get_track_by_id(rowid: int):
+        """
+        Get a track by its rowid. Returns a Track object or None.
+        """
+        with SQLiteManager() as cur:
 
-        cur.execute("SELECT * FROM tracks WHERE id=?", (id,))
-        row = cur.fetchone()
-        conn.close()
+            cur.execute("SELECT * FROM tracks WHERE id=?", (rowid,))
+            row = cur.fetchone()
 
-        if row is None:
+            if row is not None:
+                return tuple_to_track(row)
+
             return None
-
-        return tuple_to_track(row)
 
     @staticmethod
     def get_track_by_trackhash(trackhash: str):
-        conn = get_sqlite_conn()
-        cur = conn.cursor()
+        """
+        Gets a track using its trackhash. Returns a Track object or None.
+        """
+        with SQLiteManager() as cur:
+            cur.execute("SELECT * FROM tracks WHERE trackhash=?", (trackhash,))
+            row = cur.fetchone()
 
-        cur.execute("SELECT * FROM tracks WHERE trackhash=?", (trackhash,))
-        row = cur.fetchone()
-        conn.close()
+            if row is not None:
+                return tuple_to_track(row)
 
-        if row is None:
             return None
-
-        return tuple_to_track(row)
 
     @staticmethod
     def get_tracks_by_albumhash(albumhash: str):
-        conn = get_sqlite_conn()
-        cur = conn.cursor()
+        """
+        Gets all tracks in an album using its albumhash.
+        Returns a generator of Track objects or an empty list.
+        """
 
-        cur.execute("SELECT * FROM tracks WHERE albumhash=?", (albumhash,))
-        rows = cur.fetchall()
-        conn.close()
+        with SQLiteManager() as cur:
+            cur.execute("SELECT * FROM tracks WHERE albumhash=?", (albumhash,))
+            rows = cur.fetchall()
 
-        if rows is None:
-            return None
+            if rows is not None:
+                return tuples_to_tracks(rows)
 
-        return tuples_to_tracks(rows)
+            return []
 
     @staticmethod
     def get_tracks_by_trackhashes(hashes: list[str]):
-        conn = get_sqlite_conn()
-        cur = conn.cursor()
+        """
+        Gets all tracks in a list of trackhashes.
+        Returns a generator of Track objects or an empty list.
+        """
 
         sql = "SELECT * FROM tracks WHERE trackhash IN ({})".format(
             ",".join("?" * len(hashes))
         )
 
-        cur.execute(sql, hashes)
-        rows = cur.fetchall()
-        conn.close()
+        with SQLiteManager() as cur:
+            cur.execute(sql, hashes)
+            rows = cur.fetchall()
 
-        if rows is not None:
-            return tuples_to_tracks(rows)
+            if rows is not None:
+                return tuples_to_tracks(rows)
 
-        return []
+            return []
+
+    @staticmethod
+    def get_all_tracks_raw() -> list[tuple]:
+        """
+        Get all tracks from the database. Returns a list of tuples
+        or an empty list.
+        """
+        with SQLiteManager() as cur:
+            cur.execute("SELECT * FROM tracks")
+            rows = cur.fetchall()
+
+            if rows is not None:
+                return rows
+
+            return []

@@ -60,16 +60,28 @@ class SQLiteManager:
     for you. It also commits and closes the connection when you're done.
     """
 
-    def __init__(self) -> None:
-        self.conn: Connection
-        self.cur: Cursor
-        self.db_path = DB_PATH
+    def __init__(self, conn: Connection | None = None) -> None:
+        """
+        When a connection is passed in, don't close the connection, because it's
+        a connection to the search database [in memory db].
+        """
+        self.conn: Connection | None = conn
+        self.CLOSE_CONN = True
 
-    def __enter__(self):
-        self.conn = sqlite3.connect(self.db_path)
-        self.cur = self.conn.cursor()
-        return self.cur
+        if conn:
+            self.conn = conn
+            self.CLOSE_CONN = False
+
+    def __enter__(self) -> Cursor:
+        if self.conn is None:
+            self.conn = sqlite3.connect(DB_PATH)
+            return self.conn.cursor()
+
+        return self.conn.cursor()
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        self.conn.commit()
-        self.conn.close()
+        if self.conn:
+            self.conn.commit()
+
+            if self.CLOSE_CONN:
+                self.conn.close()
