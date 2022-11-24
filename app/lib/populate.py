@@ -8,8 +8,6 @@ from app.utils import UseBisection, run_fast_scandir
 from app.db.sqlite.albums import SQLiteAlbumMethods
 from app.db.sqlite.tracks import SQLiteTrackMethods
 
-from app.db.sqlite import get_sqlite_conn
-
 get_all_tracks = SQLiteTrackMethods.get_all_tracks
 insert_many_tracks = SQLiteTrackMethods.insert_many_tracks
 
@@ -73,7 +71,7 @@ class CreateAlbums:
         albums = get_all_albums()
 
         tracks = list(tracks)
-        albums = list(albums)
+        albums = list(albums)  # type: ignore
 
         log.info("Processing albums ...")
 

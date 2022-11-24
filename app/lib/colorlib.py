@@ -1,9 +1,7 @@
-import json
 import colorgram
 
 from app import settings
 
-# from app.utils import Get
 from app.logger import get_logger
 from app.models import Album
 
@@ -44,11 +42,6 @@ class ProcessAlbumColors:
 
             self.process_color(album)
             process_count += 1
-
-        # all_albums = [a for a in all_albums if len(a.colors) == 0]
-
-        # for a in all_albums:
-        #     self.process_color(a)
 
         log.info("Processing album colors ... ✅")
 
