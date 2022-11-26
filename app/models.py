@@ -1,6 +1,7 @@
 """
 Contains all the models for objects generation and typing.
 """
+import dataclasses
 import json
 from dataclasses import dataclass
 
@@ -27,7 +28,7 @@ class Track:
     duration: int
     filepath: str
     folder: str
-    genre: str
+    genre: str | list[str]
     title: str
     track: int
     trackhash: str
@@ -41,6 +42,10 @@ class Track:
 
         self.filetype = self.filepath.rsplit(".", maxsplit=1)[-1]
         self.image = self.albumhash + ".webp"
+
+        if self.genre is not None:
+            self.genre = str(self.genre).replace("/", ", ")
+            self.genre = str(self.genre).lower().split(", ")
 
 
 @dataclass(slots=True)
@@ -81,6 +86,7 @@ class Album:
     is_compilation: bool = False
     is_single: bool = False
     is_EP: bool = False
+    genres: list[str] = dataclasses.field(default_factory=list)
 
     def __post_init__(self):
         self.image = self.albumhash + ".webp"
@@ -181,10 +187,4 @@ class Folder:
     path: str
     trackcount: int
     is_sym: bool = False
-    """The number of tracks in the folder"""
-
-    def __init__(self, data) -> None:
-        self.name = data["name"]
-        self.path = data["path"]
-        self.is_sym = data["is_sym"]
-        self.trackcount = data["trackcount"]
+    path_token_count:int = 0

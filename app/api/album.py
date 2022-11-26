@@ -14,6 +14,7 @@ from app import utils
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.sqlite.albums import SQLiteAlbumMethods
 from app.db.sqlite.search import SearchMethods as search
+from app.models import Track
 
 get_tracks_by_albumhash = SQLiteTrackMethods.get_tracks_by_albumhash
 get_album_by_id = SQLiteAlbumMethods.get_album_by_id
@@ -72,6 +73,16 @@ def get_album():
     if len(tracks) == 0:
         return error_msg, 204
 
+    def get_album_genres(tracks: list[Track]):
+        genres = set()
+
+        for track in tracks:
+            if track.genre is not None:
+                genres.update(track.genre)
+
+        return list(genres)
+
+    album.genres = get_album_genres(tracks)
     tracks = utils.RemoveDuplicates(tracks)()
     album.count = len(tracks)
 

@@ -1,12 +1,12 @@
 from app import settings
+from app.db.sqlite.albums import SQLiteAlbumMethods
+from app.db.sqlite.search import SearchMethods as search
+from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.lib.albumslib import create_album
 from app.lib.taglib import get_tags
 from app.logger import log
 from app.models import Album, Track
 from app.utils import UseBisection, run_fast_scandir
-
-from app.db.sqlite.albums import SQLiteAlbumMethods
-from app.db.sqlite.tracks import SQLiteTrackMethods
 
 get_all_tracks = SQLiteTrackMethods.get_all_tracks
 insert_many_tracks = SQLiteTrackMethods.insert_many_tracks
@@ -63,6 +63,7 @@ class Populate:
                 insert_many_tracks(tagged_tracks)
 
         log.info("Added %s/%s tracks", tagged_count, len(untagged))
+        search.load_tracks()
 
 
 class CreateAlbums:
@@ -87,6 +88,8 @@ class CreateAlbums:
         insert_many_albums(albums)
 
         log.info("Albums processed.")
+
+        search.load_albums()
 
     def create_albums(self, tracks: list[Track]):
         for ahash in self.hashes:

@@ -5,10 +5,11 @@ Search related functions for SQLite
 import sqlite3
 from pathlib import Path
 
+from app.db.sqlite.albums import SQLiteAlbumMethods
+from app.db.sqlite.tracks import SQLiteTrackMethods
+from app.db.sqlite.utils import SQLiteManager
+from app.logger import log
 from app.utils import create_safe_name
-from .tracks import SQLiteTrackMethods
-from .albums import SQLiteAlbumMethods
-from .utils import SQLiteManager
 
 get_all_tracks = SQLiteTrackMethods.get_all_tracks_raw
 get_all_albums = SQLiteAlbumMethods.get_all_albums_raw
@@ -47,10 +48,11 @@ class SearchMethods:
     #         return cls.db.cursor()
 
     @classmethod
-    def load_existing_tracks(cls):
+    def load_tracks(cls):
         """
         Loads all the tracks in the database into the in-memory database.
         """
+        log.info("Loading tracks into search database")
 
         tracks = get_all_tracks()
 
@@ -77,14 +79,15 @@ class SearchMethods:
 
         with SQLiteManager(cls.db) as cur:
             cur.executemany(sql, tracks)
-            print("Loaded tracks into search db")
-            print(f"Total tracks: {cur.rowcount}")
+            log.info("Loaded %s tracks", cur.rowcount)
 
     @classmethod
-    def load_existing_albums(cls):
+    def load_albums(cls):
         """
         Loads all the albums in the database into the in-memory database.
         """
+        log.info("Loading albums into search db")
+
         albums = get_all_albums()
 
         def create_artist_hashes(artists: str):
@@ -108,8 +111,7 @@ class SearchMethods:
 
         with SQLiteManager(cls.db) as cur:
             cur.executemany(sql, albums)
-            print("Loaded albums into search db")
-            print(f"Total albums: {cur.rowcount}")
+            log.info("Loaded %s albums", (cur.rowcount))
 
     @classmethod
     def find_artist_albums(cls, artist: str, limit: int = 5, exclude: str = ""):
@@ -120,7 +122,7 @@ class SearchMethods:
         artist = create_safe_name(artist)
         artist = f"{artist}"
 
-        sql = f"""SELECT * from albums WHERE albumartisthashes MATCH "{artist}" limit {limit}"""
+        sql = f"""SELECT * from albums WHERE albumartisthashes MATCH "{artist}" ORDER BY RANDOM() limit {limit}"""
 
         with SQLiteManager(cls.db) as cur:
             cur.execute(sql)
@@ -136,13 +138,19 @@ class SearchMethods:
 
         return []
 
-    # @classmethod
-    # def get_all_abums(cls):
-    #     """
-    #     Returns all the albums in the database.
-    #     """
-    #     sql = """SELECT * FROM albums"""
+    @classmethod
+    def get_all_tracks(cls):
+        """
+        Returns all the tracks in the database.
+        """
 
-    #     with SQLiteManager(cls.db) as cur:
-    #         cur.execute(sql)
-    #         # pprint(cur.fetchall())
+        sql = """SELECT * FROM tracks"""
+
+        with SQLiteManager(cls.db) as cur:
+            cur.execute(sql)
+            tracks = cur.fetchall()
+
+            if tracks is not None:
+                return tracks
+
+        return []
