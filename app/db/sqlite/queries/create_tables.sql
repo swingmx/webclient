@@ -43,3 +43,9 @@ CREATE TABLE IF NOT EXISTS artists (
     bio text,
     image text
 );
+
+CREATE TABLE IF NOT EXISTS folders (
+    id integer PRIMARY KEY,
+    path text NOT NULL,
+    trackcount integer NOT NULL
+);
