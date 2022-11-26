@@ -4,7 +4,7 @@ CREATE VIRTUAL TABLE tracks using fts5 (
     artists,
     title,
     trackhash,
-    tokenize = 'porter unicode61'
+    tokenize = 'unicode61'
 );
 
 CREATE VIRTUAL TABLE albums using fts5 (
@@ -12,5 +12,5 @@ CREATE VIRTUAL TABLE albums using fts5 (
     albumartist,
     albumartisthashes,
     title,
-    tokenize = 'porter unicode61'
+    tokenize = 'unicode61'
 );

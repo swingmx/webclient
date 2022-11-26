@@ -1,7 +1,7 @@
 import colorgram
+from tqdm import tqdm
 
 from app import settings
-
 from app.logger import get_logger
 from app.models import Album
 
@@ -28,7 +28,6 @@ def get_image_colors(image: str) -> list[str]:
 
 class ProcessAlbumColors:
     def __init__(self) -> None:
-        log.info("Started processing album colors")
         all_albums = db.get_all_albums()
 
         process_count = 0
@@ -36,14 +35,12 @@ class ProcessAlbumColors:
         if all_albums is None:
             return
 
-        for album in all_albums:
+        for album in tqdm(list(all_albums), desc="Processing album colors"):
             if len(album.colors) != 0:
                 pass
 
             self.process_color(album)
             process_count += 1
-
-        log.info("Processing album colors ... ✅")
 
     @staticmethod
     def process_color(album: Album):

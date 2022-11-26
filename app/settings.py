@@ -15,7 +15,8 @@ THUMBS_PATH = os.path.join(IMG_PATH, "thumbnails")
 SM_THUMB_PATH = os.path.join(THUMBS_PATH, "small")
 LG_THUMBS_PATH = os.path.join(THUMBS_PATH, "large")
 
-TEST_DIR = "/home/cwilvx/Downloads/Telegram Desktop"
+# TEST_DIR = "/home/cwilvx/Downloads/Telegram Desktop"
+TEST_DIR = "/home/cwilvx/Downloads"
 HOME_DIR = TEST_DIR
 
 # URLS
@@ -59,3 +60,6 @@ USE_MONGO = False
 # ===== SQLite =====
 DB_NAME = "alice.db"
 DB_PATH = os.path.join(APP_DIR, DB_NAME)
+
+# ===== Store =====
+USE_STORE = True
