@@ -185,6 +185,6 @@ class Playlist:
 class Folder:
     name: str
     path: str
-    trackcount: int
+    has_tracks: bool
     is_sym: bool = False
     path_token_count:int = 0

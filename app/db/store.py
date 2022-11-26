@@ -2,14 +2,13 @@
 In memory store.
 """
 
-from tqdm import tqdm
 from pathlib import Path
 
-from app.utils import create_hash
-from app.utils import UseBisection
-from app.models import Track, Folder
-from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
+from tqdm import tqdm
 
+from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
+from app.models import Folder, Track
+from app.utils import UseBisection, create_hash
 
 class Store:
     """
@@ -29,27 +28,30 @@ class Store:
         cls.tracks = list(tdb.get_all_tracks())
 
     @classmethod
-    def get_folder_track_count(cls, path: str):
+    def check_has_tracks(cls, path: str):
         path_hash = create_hash(path)
-        tracks = [create_hash(track.folder) for track in cls.tracks]
+        tracks = [create_hash(f.path) for f in cls.folders]
 
-        tracks.sort()
+        tracks_hash = "".join(tracks)
+        return path_hash in tracks_hash
 
-        try:
-            index = tracks.index(path_hash)
-        except ValueError:
-            return 0
+        # tracks.sort()
 
-        tracks = tracks[index + 1 :]
+        # try:
+        #     index = tracks.index(path_hash)
+        # except ValueError:
+        #     return 0
 
-        tracks = [path for path in tracks if path_hash in path]
+        # tracks = tracks[index + 1 :]
 
-        return len(tracks)
+        # tracks = [path for path in tracks if path_hash in path]
 
     @classmethod
     def process_folders(cls):
         all_folders = [track.folder for track in cls.tracks]
         all_folders = set(all_folders)
+
+        all_folders = [folder for folder in all_folders if folder not in cls.folders]
 
         all_folders = [Path(f) for f in all_folders]
         all_folders = [f for f in all_folders if f.exists()]
@@ -61,22 +63,11 @@ class Store:
                 name=path.name,
                 path=str(path),
                 is_sym=path.is_symlink(),
-                trackcount=cls.get_folder_track_count(str(folder)),
+                has_tracks=True,
                 path_token_count=len(path.parts),
             )
 
             cls.folders.append(folder)
-
-    @classmethod
-    def get_folders_by_subpath(cls, path: str):
-        """
-        Returns all folders that contain the given substring.
-        """
-        path = path.lower()
-
-        folders = [f for f in cls.folders if path in f.path.lower()]
-
-        return folders
 
     @classmethod
     def get_folder(cls, path: str):  # type: ignore
@@ -88,24 +79,33 @@ class Store:
         if folder is not None:
             return folder
 
-        folders = cls.get_folders_by_subpath(path)
+        has_tracks = cls.check_has_tracks(path)
 
-        if len(folders) == 0:
+        if not has_tracks:
             return None
 
-        folders.sort(key=lambda f: f.path_token_count)
-
-        folders = [
-            f for f in folders if f.path_token_count == folders[0].path_token_count
-        ]
-
-        this_path_count = sum(f.trackcount for f in folders)
         path: Path = Path(path)  # type: ignore
 
-        return Folder(
+        folder = Folder(
             name=path.name,
             path=str(path),
             is_sym=path.is_symlink(),
-            trackcount=this_path_count,
+            has_tracks=True,
             path_token_count=len(path.parts),
         )
+        cls.folders.append(folder)
+        return folder
+
+    @classmethod
+    def update_store_folder_track_count(cls, path, count):
+        folder = cls.get_folder(path)
+
+        if folder is not None:
+            cls.folders.remove(folder)
+            folder.has_tracks = count
+            cls.folders.append(folder)
+
+    @classmethod
+    def get_tracks_by_filepaths(cls, paths: list[str]) -> list[Track]:
+        tracks = UseBisection(cls.tracks, "filepath", paths)()
+        return [track for track in tracks if track is not None]

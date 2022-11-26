@@ -2,6 +2,7 @@ from app import settings
 from app.db.sqlite.albums import SQLiteAlbumMethods
 from app.db.sqlite.search import SearchMethods as search
 from app.db.sqlite.tracks import SQLiteTrackMethods
+from app.db.store import Store
 from app.lib.albumslib import create_album
 from app.lib.taglib import get_tags
 from app.logger import log
@@ -64,6 +65,8 @@ class Populate:
 
         log.info("Added %s/%s tracks", tagged_count, len(untagged))
         search.load_tracks()
+
+        Store.process_folders()
 
 
 class CreateAlbums:
