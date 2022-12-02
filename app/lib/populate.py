@@ -126,10 +126,6 @@ class CreateAlbums:
         try:
             del album["image"]
             return album
-            # print(album)
-            # return Album(**album)  # test if album dict is valid
-            # del album["id"]
-            # return album
         except KeyError:
             print("KeyError when creating album")
             print(album)

@@ -16,8 +16,8 @@ SM_THUMB_PATH = os.path.join(THUMBS_PATH, "small")
 LG_THUMBS_PATH = os.path.join(THUMBS_PATH, "large")
 
 # TEST_DIR = "/home/cwilvx/Downloads/Telegram Desktop"
-TEST_DIR = "/home/cwilvx/Downloads"
-HOME_DIR = TEST_DIR
+# TEST_DIR = "/home/cwilvx/Downloads"
+# HOME_DIR = TEST_DIR
 
 # URLS
 IMG_BASE_URI = "http://127.0.0.1:8900/images/"

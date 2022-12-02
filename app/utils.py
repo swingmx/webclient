@@ -5,7 +5,7 @@ import os
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import Callable, Dict, List, Set
+from typing import Callable, List, Set
 
 import requests
 
@@ -82,7 +82,7 @@ def create_hash(*args: str) -> str:
     Creates a simple hash for an album
     """
     string = "".join(str(a) for a in args).replace(" ", "")
-    return "".join([i for i in string if (i.isalnum() or i == "•")]).lower()
+    return "".join([i for i in string if (i.isalnum())]).lower()
 
 
 def create_new_date():
@@ -94,14 +94,14 @@ def create_new_date():
     return now.strftime("%Y-%m-%d %H:%M:%S")
 
 
-def create_safe_name(name: str) -> str:
-    """
-    Creates a url-safe name from a name.
-    """
-    if name is None:
-        return "None"
+# def create_hash(name: str) -> str:
+#     """
+#     Creates a url-safe name from a name.
+#     """
+#     if name is None:
+#         return "None"
 
-    return "".join([str(i) for i in name if i.isalnum()]).lower()
+#     return "".join([str(i) for i in name if i.isalnum()]).lower()
 
 
 class UseBisection:

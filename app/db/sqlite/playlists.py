@@ -3,7 +3,7 @@ from collections import OrderedDict
 
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.sqlite.utils import SQLiteManager, tuple_to_playlist, tuples_to_playlists
-from app.utils import background, create_safe_name
+from app.utils import background, create_hash
 
 
 class SQLitePlaylistMethods:
@@ -136,7 +136,7 @@ class SQLitePlaylistMethods:
             return
 
         artists = track.artist
-        artisthashes = [create_safe_name(a) for a in artists]
+        artisthashes = [create_hash(a) for a in artists]
 
         cls.add_item_to_json_list(playlist_id, "artisthashes", artisthashes)
 

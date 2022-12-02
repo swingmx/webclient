@@ -9,7 +9,7 @@ from app.db.sqlite.albums import SQLiteAlbumMethods
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.sqlite.utils import SQLiteManager
 from app.logger import log
-from app.utils import create_safe_name
+from app.utils import create_hash
 
 get_all_tracks = SQLiteTrackMethods.get_all_tracks_raw
 get_all_albums = SQLiteAlbumMethods.get_all_albums_raw
@@ -92,7 +92,7 @@ class SearchMethods:
 
         def create_artist_hashes(artists: str):
             artists = artists.split(", ")  # type: ignore
-            artists = [create_safe_name(artist) for artist in artists]  # type: ignore
+            artists = [create_hash(artist) for artist in artists]  # type: ignore
             artists = "-".join(artists)
 
             return "-" + artists + "-"
@@ -119,7 +119,7 @@ class SearchMethods:
         Returns all the albums by the specified album artist.
         """
 
-        artist = create_safe_name(artist)
+        artist = create_hash(artist)
         artist = f"{artist}"
 
         sql = f"""SELECT * from albums WHERE albumartisthashes MATCH "{artist}" ORDER BY RANDOM() limit {limit}"""

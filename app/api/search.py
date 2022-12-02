@@ -61,8 +61,9 @@ class DoSearch:
         """Calls :class:`SearchArtists` which returns the artists that fuzzily match
         the search term. Then adds them to the `SearchResults` store.
         """
-        self.artists = utils.Get.get_all_artists()
-        artists = searchlib.SearchArtists(self.artists, self.query)()
+        # self.artists = utils.Get.get_all_artists()
+        artists = [a.name for a in Store.artists]
+        artists = searchlib.SearchArtists(artists, self.query)()
         SearchResults.artists = artists
 
         return artists

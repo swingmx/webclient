@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
 from app.db.sqlite.albums import SQLiteAlbumMethods as adb
-from app.models import Album, Folder, Track
+from app.models import Album, Artist, Folder, Track
 from app.utils import UseBisection, create_hash
 
 
@@ -21,6 +21,7 @@ class Store:
     tracks: list[Track] = []
     folders: list[Folder] = []
     albums: list[Album] = []
+    artists: list[Artist] = []
 
     @classmethod
     def load_all_tracks(cls):
@@ -172,3 +173,19 @@ class Store:
         """
         album = UseBisection(cls.albums, "albumhash", [albumhash])()[0]
         return album
+
+    # ====================================================
+    # ==================== ARTISTS =======================
+    # ====================================================
+
+    @classmethod
+    def load_artists(cls):
+        """
+        Loads all artists from the database into the store.
+        """
+        artists = set()
+
+        master_artist_list = [t.artist for t in Store.tracks]
+        artists = artists.union(*master_artist_list)
+
+        cls.artists = [Artist(a) for a in artists]
