@@ -13,12 +13,13 @@ from app import utils
 
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.sqlite.albums import SQLiteAlbumMethods
-from app.db.sqlite.search import SearchMethods as search
+# from app.db.sqlite.search import SearchMethods as search
 from app.models import Track
+from app.db.store import Store
 
 get_tracks_by_albumhash = SQLiteTrackMethods.get_tracks_by_albumhash
 get_album_by_id = SQLiteAlbumMethods.get_album_by_id
-get_album_by_hash = SQLiteAlbumMethods.get_album_by_hash
+# get_album_by_hash = SQLiteAlbumMethods.get_album_by_hash
 get_albums_by_albumartist = SQLiteAlbumMethods.get_albums_by_albumartist
 
 album_bp = Blueprint("album", __name__, url_prefix="")
@@ -60,12 +61,12 @@ def get_album():
         return error_msg, 400
 
     error_msg = {"error": "Album not created yet."}
-    album = get_album_by_hash(albumhash)
+    album = Store.get_album_by_hash(albumhash)
 
     if album is None:
         return error_msg, 204
 
-    tracks = get_tracks_by_albumhash(albumhash)
+    tracks = Store.get_tracks_by_albumhash(albumhash)
     if tracks is None:
         return error_msg, 404
 
@@ -111,16 +112,19 @@ def get_artist_albums():
     if data is None:
         return {"msg": "No albumartist provided"}
 
-    albumartists: str = data["albumartist"]
+    albumartists: str = data["albumartists"]  # type: ignore
     limit: int = data.get("limit")
     exclude: str = data.get("exclude")
 
-    albumartists = albumartists.split(",")  # type: ignore
+    print(albumartists, limit, exclude)
+
+    albumartists: list[str] = albumartists.split(",")  # type: ignore
+    albumartists = [utils.create_hash(a) for a in albumartists]
 
     albums = [
         {
             "artist": a,
-            "albums": list(search.find_artist_albums(a, limit, exclude=exclude)),
+            "albums": Store.get_album_by_albumartist(a, limit, exclude=exclude),
         }
         for a in albumartists
     ]

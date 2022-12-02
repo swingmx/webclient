@@ -100,9 +100,9 @@ def setup_sqlite():
     SearchMethods.load_tracks()
     SearchMethods.load_albums()
 
-    if settings.USE_STORE:
-        Store.load_all_tracks()
-        Store.process_folders()
+    Store.load_all_tracks()
+    Store.process_folders()
+    Store.load_albums()
 
 
 def run_checks():

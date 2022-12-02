@@ -116,7 +116,9 @@ class UseBisection:
         self.source_list = source
         self.queries_list = queries
         self.attr = search_from
-        self.source_list.sort(key=lambda x: getattr(x, search_from))
+        self.source_list = sorted(
+            self.source_list, key=lambda x: getattr(x, search_from)
+        )
 
     def find(self, query: str):
         left = 0

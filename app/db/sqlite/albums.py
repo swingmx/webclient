@@ -47,7 +47,7 @@ class SQLiteAlbumMethods(AlbumMethods):
         return cur.lastrowid
 
     @classmethod
-    def insert_many_albums(cls, albums: Generator):
+    def insert_many_albums(cls, albums: list[dict]):
         """
         Takes a generator of albums, and inserts them into the database
 
@@ -69,7 +69,7 @@ class SQLiteAlbumMethods(AlbumMethods):
             if albums is not None:
                 return tuples_to_albums(albums)
 
-        return None
+        return []
 
     # @staticmethod
     # def get_album_by_id(album_id: int):
@@ -104,7 +104,9 @@ class SQLiteAlbumMethods(AlbumMethods):
         """
         with SQLiteManager() as cur:
             hashes = ",".join("?" * len(album_hashes))
-            cur.execute(f"SELECT * FROM albums WHERE albumhash IN ({hashes})", album_hashes)
+            cur.execute(
+                f"SELECT * FROM albums WHERE albumhash IN ({hashes})", album_hashes
+            )
             albums = cur.fetchall()
 
             if albums is not None:
