@@ -55,11 +55,12 @@ class Artist:
     """
 
     name: str
-    image: str
+    artisthash: str = ""
+    image: str = ""
 
-    def __init__(self, name: str):
-        self.name = name
-        self.image = utils.create_safe_name(name) + ".webp"
+    def __post_init__(self):
+        self.artisthash = utils.create_hash(self.name)
+        self.image = self.artisthash + ".webp"
 
 
 @dataclass
@@ -104,7 +105,7 @@ class Album:
             self.albumartists = []
 
             for artist in artists:
-                a_hash = utils.create_safe_name(artist)
+                a_hash = utils.create_hash(artist)
                 self.albumartists.append(
                     {"hash": a_hash, "name": artist, "image": a_hash + ".webp"}  # type: ignore
                 )

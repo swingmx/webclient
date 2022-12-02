@@ -6,17 +6,13 @@ import time
 from io import BytesIO
 
 import requests
-from app import utils
-from app import settings
-from app.lib import trackslib
-from app.lib import watchdoge
-from app.lib.albumslib import ValidateAlbumThumbs
-from app.lib.colorlib import ProcessAlbumColors
-from app.lib.playlistlib import ValidatePlaylistThumbs
-from app.lib.populate import CreateAlbums
-from app.lib.populate import Populate
-from app.logger import get_logger
 from PIL import Image
+
+from app import settings, utils
+from app.lib import watchdoge
+from app.lib.colorlib import ProcessAlbumColors
+from app.lib.populate import CreateAlbums, Populate
+from app.logger import get_logger
 
 log = get_logger()
 
@@ -115,7 +111,7 @@ class CheckArtistImages:
         img_path = (
             settings.APP_DIR
             + "/images/artists/"
-            + utils.create_safe_name(artistname)
+            + utils.create_hash(artistname)
             + ".webp"
         )
 

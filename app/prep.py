@@ -103,6 +103,7 @@ def setup_sqlite():
     Store.load_all_tracks()
     Store.process_folders()
     Store.load_albums()
+    Store.load_artists()
 
 
 def run_checks():
