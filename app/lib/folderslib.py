@@ -37,8 +37,6 @@ class getFnF:
                 files.append(entry.path)
 
         tracks = Store.get_tracks_by_filepaths(files)
-        # FIXME: Use the Store to get tracks
-        # tracks = list(tracks)
 
         with ThreadPoolExecutor(max_workers=30) as pool:
             iterable = pool.map(Store.get_folder, dirs)

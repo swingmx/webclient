@@ -16,7 +16,7 @@ class Track:
     Track class
     """
 
-    id: int
+    # id: int
     album: str
     albumartist: str
     albumhash: str
@@ -68,8 +68,8 @@ class Album:
     Creates an album object
     """
 
-    id: int
-    albumartist: str
+    # id: int
+    albumartists: str | list[str]
     albumhash: str
     colors: str | list[str]
     copyright: str
@@ -78,7 +78,6 @@ class Album:
 
     albumartisthash: str = ""
     image: str = ""
-    artistimg: str = ""
     count: int = 0
     duration: int = 0
 
@@ -90,11 +89,25 @@ class Album:
 
     def __post_init__(self):
         self.image = self.albumhash + ".webp"
-        self.albumartisthash = utils.create_safe_name(self.albumartist)
-        self.artistimg = self.albumartisthash + ".webp"
+
+        artists = str(self.albumartists).split(", ")
+        artists = [utils.create_hash(a) for a in artists]
+
+        self.albumartisthash = "-".join(artists)
+        self.albumartisthash = f"-{self.albumartisthash}-"
 
         if self.colors is not None:
             self.colors = json.loads(str(self.colors))
+
+        if self.albumartists is not None:
+            artists = str(self.albumartists).split(", ")
+            self.albumartists = []
+
+            for artist in artists:
+                a_hash = utils.create_safe_name(artist)
+                self.albumartists.append(
+                    {"hash": a_hash, "name": artist, "image": a_hash + ".webp"}  # type: ignore
+                )
 
     def check_type(self):
         """
@@ -125,7 +138,10 @@ class Album:
         """
         Checks if the album is a compilation.
         """
-        return "various artists" in self.albumartist.lower()
+        artists = [a["name"] for a in self.albumartists]  # type: ignore
+        artists = "".join(artists).lower()
+
+        return "various artists" in artists
 
     def check_is_EP(self) -> bool:
         """
@@ -187,4 +203,4 @@ class Folder:
     path: str
     has_tracks: bool
     is_sym: bool = False
-    path_token_count:int = 0
+    path_token_count: int = 0

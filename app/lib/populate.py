@@ -1,6 +1,5 @@
 from app import settings
 from app.db.sqlite.albums import SQLiteAlbumMethods
-from app.db.sqlite.search import SearchMethods as search
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.store import Store
 from app.lib.albumslib import create_album
@@ -47,7 +46,7 @@ class Populate:
     @staticmethod
     def tag_untagged(untagged: set[str]):
         log.info("Found %s new tracks", len(untagged))
-        tagged_tracks = []
+        tagged_tracks: list[dict] = []
         tagged_count = 0
 
         for file in untagged:
@@ -60,16 +59,19 @@ class Populate:
                 log.warning("Could not read file: %s", file)
 
         if len(tagged_tracks) > 0:
-            if settings.USE_SQLITE:
-                insert_many_tracks(tagged_tracks)
+            insert_many_tracks(tagged_tracks)
+            Store.add_tracks([Track(**t) for t in tagged_tracks])
 
         log.info("Added %s/%s tracks", tagged_count, len(untagged))
-        search.load_tracks()
 
         Store.process_folders()
 
 
 class CreateAlbums:
+    """
+    Creates album objects from tracks, saves them to db and adds them to the store.
+    """
+
     def __init__(self) -> None:
         tracks = get_all_tracks()
         albums = get_all_albums()
@@ -87,12 +89,13 @@ class CreateAlbums:
 
         self.hashes = unprocessed_hashes
 
-        albums = self.create_albums(tracks)
-        insert_many_albums(albums)
+        gen = self.create_albums(tracks)
+        albums_dicts = [a for a in gen if a is not None]
+
+        Store.add_albums([Album(**a) for a in albums_dicts])
+        insert_many_albums(albums_dicts)
 
         log.info("Albums processed.")
-
-        search.load_albums()
 
     def create_albums(self, tracks: list[Track]):
         for ahash in self.hashes:
@@ -122,9 +125,11 @@ class CreateAlbums:
 
         try:
             del album["image"]
-            Album(**album)  # test if album dict is valid
-            del album["id"]
             return album
+            # print(album)
+            # return Album(**album)  # test if album dict is valid
+            # del album["id"]
+            # return album
         except KeyError:
             print("KeyError when creating album")
             print(album)

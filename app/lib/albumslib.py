@@ -132,8 +132,8 @@ class GetAlbumTracks:
         return tracks
 
 
-def get_album_tracks(tracklist: List[models.Track], hash: str) -> List:
-    return GetAlbumTracks(tracklist, hash)()
+def get_album_tracks(tracklist: List[models.Track], a_hash: str) -> List:
+    return GetAlbumTracks(tracklist, a_hash)()
 
 
 def create_album(track: models.Track) -> dict:
@@ -141,9 +141,8 @@ def create_album(track: models.Track) -> dict:
     Generates and returns an album object from a track object.
     """
     album = {
-        "id": 0,
         "title": track.album,
-        "albumartist": track.albumartist,
+        "albumartists": track.albumartist,
         "albumhash": track.albumhash,
         "copyright": track.copyright,
         "colors": "[]",

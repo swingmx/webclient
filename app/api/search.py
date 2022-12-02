@@ -1,15 +1,16 @@
 """
 Contains all the search routes.
 """
-import datetime
-from typing import List
+
+from flask import Blueprint
+from flask import request
 
 from app import utils
 from app import models
 from app import serializer
 from app.lib import searchlib
-from flask import Blueprint
-from flask import request
+
+from app.db.store import Store
 
 search_bp = Blueprint("search", __name__, url_prefix="/")
 
@@ -37,6 +38,7 @@ class DoSearch:
         """
         :param :str:`query`: the search query.
         """
+        self.tracks: list[models.Track] = []
         self.query = query
         SearchResults.query = query
 
@@ -44,7 +46,7 @@ class DoSearch:
         """Calls :class:`SearchTracks` which returns the tracks that fuzzily match
         the search terms. Then adds them to the `SearchResults` store.
         """
-        self.tracks = utils.Get.get_all_tracks()
+        self.tracks = Store.tracks
         tracks = searchlib.SearchTracks(self.tracks, self.query)()
 
         if len(tracks) == 0:
@@ -69,7 +71,8 @@ class DoSearch:
         """Calls :class:`SearchAlbums` which returns the albums that fuzzily match
         the search term. Then adds them to the `SearchResults` store.
         """
-        albums = utils.Get.get_all_albums()
+        # albums = utils.Get.get_all_albums()
+        albums = Store.albums
         albums = searchlib.SearchAlbums(albums, self.query)()
         SearchResults.albums = albums
 

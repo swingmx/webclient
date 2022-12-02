@@ -13,7 +13,7 @@ def tuple_to_track(track: tuple):
     """
     Takes a tuple and returns a Track object
     """
-    return Track(*track)
+    return Track(*track[1:])  # rowid is removed from the tuple
 
 
 def tuples_to_tracks(tracks: list[tuple]):
@@ -28,7 +28,7 @@ def tuple_to_album(album: tuple):
     """
     Takes a tuple and returns an Album object
     """
-    return Album(*album)
+    return Album(*album[1:])  # rowid is removed from the tuple
 
 
 def tuples_to_albums(albums: list[tuple]):

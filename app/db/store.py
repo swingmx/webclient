@@ -1,14 +1,16 @@
 """
 In memory store.
 """
-
+import random
 from pathlib import Path
 
 from tqdm import tqdm
 
 from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
-from app.models import Folder, Track
+from app.db.sqlite.albums import SQLiteAlbumMethods as adb
+from app.models import Album, Folder, Track
 from app.utils import UseBisection, create_hash
+
 
 class Store:
     """
@@ -18,6 +20,7 @@ class Store:
 
     tracks: list[Track] = []
     folders: list[Folder] = []
+    albums: list[Album] = []
 
     @classmethod
     def load_all_tracks(cls):
@@ -28,6 +31,22 @@ class Store:
         cls.tracks = list(tdb.get_all_tracks())
 
     @classmethod
+    def add_track(cls, track: Track):
+        """
+        Adds a single track to the store.
+        """
+
+        cls.tracks.append(track)
+
+    @classmethod
+    def add_tracks(cls, tracks: list[Track]):
+        """
+        Adds multiple tracks to the store.
+        """
+
+        cls.tracks.extend(tracks)
+
+    @classmethod
     def check_has_tracks(cls, path: str):
         path_hash = create_hash(path)
         tracks = [create_hash(f.path) for f in cls.folders]
@@ -35,19 +54,11 @@ class Store:
         tracks_hash = "".join(tracks)
         return path_hash in tracks_hash
 
-        # tracks.sort()
-
-        # try:
-        #     index = tracks.index(path_hash)
-        # except ValueError:
-        #     return 0
-
-        # tracks = tracks[index + 1 :]
-
-        # tracks = [path for path in tracks if path_hash in path]
-
     @classmethod
     def process_folders(cls):
+        """
+        Creates a list of folders from the tracks in the store.
+        """
         all_folders = [track.folder for track in cls.tracks]
         all_folders = set(all_folders)
 
@@ -97,15 +108,67 @@ class Store:
         return folder
 
     @classmethod
-    def update_store_folder_track_count(cls, path, count):
-        folder = cls.get_folder(path)
-
-        if folder is not None:
-            cls.folders.remove(folder)
-            folder.has_tracks = count
-            cls.folders.append(folder)
-
-    @classmethod
     def get_tracks_by_filepaths(cls, paths: list[str]) -> list[Track]:
+        """
+        Returns all tracks matching the given paths.
+        """
         tracks = UseBisection(cls.tracks, "filepath", paths)()
         return [track for track in tracks if track is not None]
+
+    @classmethod
+    def get_tracks_by_albumhash(cls, album_hash: str) -> list[Track]:
+        """
+        Returns all tracks matching the given album hash.
+        """
+        return [t for t in cls.tracks if t.albumhash == album_hash]
+
+    # ====================================================
+    # ==================== ALBUMS ========================
+    # ====================================================
+
+    @classmethod
+    def load_albums(cls):
+        """
+        Loads all albums from the database into the store.
+        """
+        cls.albums = list(adb.get_all_albums())
+
+    @classmethod
+    def add_album(cls, album: Album):
+        """
+        Adds an album to the store.
+        """
+        cls.albums.append(album)
+
+    @classmethod
+    def add_albums(cls, albums: list[Album]):
+        """
+        Adds multiple albums to the store.
+        """
+        cls.albums.extend(albums)
+
+    @classmethod
+    def get_album_by_albumartist(
+        cls, artisthash: str, limit: int, exclude: str
+    ) -> list[Album]:
+        """
+        Returns all albums by the given albumartist.
+        """
+        artisthash = f"-{artisthash}-"
+
+        albums = [album for album in cls.albums if artisthash in album.albumartisthash]
+
+        albums = [album for album in albums if album.albumhash != exclude]
+
+        if len(albums) > limit:
+            random.shuffle(albums)
+
+        return albums[:limit]
+
+    @classmethod
+    def get_album_by_hash(cls, albumhash: str) -> Album:
+        """
+        Returns an album by its hash.
+        """
+        album = UseBisection(cls.albums, "albumhash", [albumhash])()[0]
+        return album
