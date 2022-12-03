@@ -2,20 +2,19 @@
 Contains all the album routes.
 """
 
-from flask import request
-from flask import Blueprint
+from flask import Blueprint, request
 
 from app import utils
+from app.db.sqlite.albums import SQLiteAlbumMethods
+from app.db.sqlite.tracks import SQLiteTrackMethods
+from app.db.store import Store
+# from app.db.sqlite.search import SearchMethods as search
+from app.models import Track
 
 # from app import instances
 # from app import models
 # from app.functions import FetchAlbumBio
 
-from app.db.sqlite.tracks import SQLiteTrackMethods
-from app.db.sqlite.albums import SQLiteAlbumMethods
-# from app.db.sqlite.search import SearchMethods as search
-from app.models import Track
-from app.db.store import Store
 
 get_tracks_by_albumhash = SQLiteTrackMethods.get_tracks_by_albumhash
 get_album_by_id = SQLiteAlbumMethods.get_album_by_id
@@ -84,7 +83,7 @@ def get_album():
         return list(genres)
 
     album.genres = get_album_genres(tracks)
-    tracks = utils.RemoveDuplicates(tracks)()
+    tracks = utils.remove_duplicates(tracks)
     album.count = len(tracks)
 
     try:

@@ -8,7 +8,28 @@ from app import utils
 from app import instances
 from flask import Blueprint
 
+from app.db.store import Store
+
 artist_bp = Blueprint("artist", __name__, url_prefix="/")
+
+
+@artist_bp.route("/artist/<artisthash>", methods=["GET"])
+def get_artist(artisthash: str):
+    artist = Store.get_artist_by_hash(artisthash)
+
+    if artist is None:
+        return {"error": "Artist not found"}, 404
+
+    tracks = Store.get_tracks_by_artist(artist.name)
+    artist.track_count = len(tracks)
+
+    albums = Store.get_albums_by_artist(artist.name)
+    artist.album_count = len(albums)
+
+    artist.duration = sum(t.duration for t in tracks)
+
+    return {"artist": artist, "tracks": tracks[:5], "albums": albums[:5]}
+
 
 # @artist_bp.route("/artist/<artist>")
 # @cache.cached()

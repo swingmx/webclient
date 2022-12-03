@@ -1,7 +1,9 @@
 """
 This module contains mini functions for the server.
 """
+import hashlib
 import os
+import pathlib
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
@@ -50,20 +52,19 @@ def run_fast_scandir(__dir: str, full=False) -> tuple[List[str], List[str]]:
     return subfolders, files
 
 
-class RemoveDuplicates:
-    def __init__(self, tracklist: List[models.Track]) -> None:
-        self.tracklist = tracklist
+def remove_duplicates(tracks: list[models.Track]) -> list[models.Track]:
+    """
+    Removes duplicate tracks from a list of tracks.
+    """
+    hashes = []
 
-    def __call__(self) -> List[models.Track]:
-        hashes = []
-        [
-            hashes.append(t.trackhash)
-            for t in self.tracklist
-            if t.trackhash not in hashes
-        ]
-        tracks = UseBisection(self.tracklist, "trackhash", hashes)()
+    for track in tracks:
+        if track.trackhash not in hashes:
+            hashes.append(track.trackhash)
 
-        return tracks
+    tracks = UseBisection(tracks, "trackhash", hashes)()
+
+    return tracks
 
 
 def is_valid_file(filename: str) -> bool:
@@ -77,12 +78,29 @@ def is_valid_file(filename: str) -> bool:
         return False
 
 
-def create_hash(*args: str) -> str:
+def create_hash(*args: str, limit=3) -> str:
     """
     Creates a simple hash for an album
     """
-    string = "".join(str(a) for a in args).replace(" ", "")
-    return "".join([i for i in string if (i.isalnum())]).lower()
+    # string = "".join(str(a) for a in args).replace(" ", "")
+    # return "".join([i for i in string if (i.isalnum())]).lower()
+    # string = string.encode("utf-8")
+    # return hashlib.md5(string).hexdigest()[:4]
+    strings = [s.replace(" ", "").lower() for s in args]
+    strings = ["".join([t for t in s if t.isalnum()]) for s in strings]
+    strings = [s.encode("utf-8") for s in args]
+    strings = [hashlib.md5(s).hexdigest()[:limit] for s in strings]
+    # print(strings)
+    return "".join(strings)
+
+
+def get_path_hash(path: str):
+    """
+    Returns a fixed size hash of a path.
+    """
+
+    parts = pathlib.Path(path).parts[1:]
+    return create_hash(*parts)
 
 
 def create_new_date():
@@ -143,44 +161,10 @@ class UseBisection:
         return [self.find(query) for query in self.queries_list]
 
 
-class Get:
-    @staticmethod
-    def get_all_tracks() -> List[models.Track]:
-        """
-        Returns all tracks
-        """
-        t = instances.tracks_instance.get_all_tracks()
-        return [models.Track(**t) for t in t]
-
-    def get_all_albums() -> List[models.Album]:
-        """
-        Returns all albums
-        """
-        a = instances.album_instance.get_all_albums()
-        return [models.Album(a) for a in a]
-
-    @classmethod
-    def get_all_artists(cls) -> Set[str]:
-        tracks = cls.get_all_tracks()
-        artists: Set[str] = set()
-
-        for track in tracks:
-            for artist in track.artist:
-                artists.add(artist)
-
-        return artists
-
-    @staticmethod
-    def get_all_playlists() -> List[models.Playlist]:
-        """
-        Returns all playlists
-        """
-        p = instances.playlist_instance.get_all_playlists()
-        return [models.Playlist(p) for p in p]
-
-
 class Ping:
-    """Checks if there is a connection to the internet by pinging google.com"""
+    """
+    Checks if there is a connection to the internet by pinging google.com
+    """
 
     @staticmethod
     def __call__() -> bool:
@@ -291,3 +275,15 @@ def str_bisection(src: list[str], query: str):
             left = mid + 1
 
     return None
+
+
+def get_artists_from_tracks(tracks: List[models.Track]) -> List[models.Artist]:
+    """
+    Extracts all artists from a list of tracks. Returns a list of Artists.
+    """
+    artists = set()
+
+    master_artist_list = [t.artist for t in tracks]
+    artists = artists.union(*master_artist_list)
+
+    return [models.Artist(a) for a in artists]

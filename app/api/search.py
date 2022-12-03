@@ -2,15 +2,11 @@
 Contains all the search routes.
 """
 
-from flask import Blueprint
-from flask import request
+from flask import Blueprint, request
 
-from app import utils
-from app import models
-from app import serializer
-from app.lib import searchlib
-
+from app import models, serializer, utils
 from app.db.store import Store
+from app.lib import searchlib
 
 search_bp = Blueprint("search", __name__, url_prefix="/")
 
@@ -52,7 +48,7 @@ class DoSearch:
         if len(tracks) == 0:
             return []
 
-        tracks = utils.RemoveDuplicates(tracks)()
+        tracks = utils.remove_duplicates(tracks)
         SearchResults.tracks = tracks
 
         return tracks

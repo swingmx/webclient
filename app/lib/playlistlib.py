@@ -4,17 +4,14 @@ This library contains all the functions related to playlists.
 import os
 import random
 import string
-from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import List
+from typing import Any
 
 from PIL import Image, ImageSequence
 from werkzeug import datastructures
 
 from app import exceptions, instances, models, settings
-from app.lib import trackslib
 from app.logger import get_logger
-from app.utils import Get, get_normalized_artists
 
 TrackExistsInPlaylist = exceptions.TrackInPlaylistError
 
@@ -42,7 +39,7 @@ def add_track(playlistid: str, trackid: str):
     instances.playlist_instance.add_track_to_playlist(playlistid, track_hash)
 
 
-def create_thumbnail(image: any, img_path: str) -> str:
+def create_thumbnail(image: Any, img_path: str) -> str:
     """
     Creates a 250 x 250 thumbnail from a playlist image
     """
@@ -119,31 +116,33 @@ def create_new_date():
     return datetime.now()
 
 
-def create_playlist_tracks(trackhashes: List[str]) -> List[models.Track]:
-    """
-    Creates a list of Track objects from a list of playlist track ids.
-    """
-    tracks: List[models.Track] = []
+# def create_playlist_tracks(trackhashes: List[str]) -> List[models.Track]:
+#     """
+#     Creates a list of Track objects from a list of playlist track ids.
+#     """
+#     tracks: List[models.Track] = []
 
-    with ThreadPoolExecutor() as pool:
-        tracks_iter = pool.map(trackslib.get_p_track, trackhashes)
-        [tracks.append(models.Track(**t)) for t in tracks_iter if t is not None]
+#     with ThreadPoolExecutor() as pool:
+#         tracks_iter = pool.map(trackslib.get_p_track, trackhashes)
+#         # [tracks.append(models.Track(**t)) for t in tracks_iter if t is not None]
+#         t = [t for t in tracks_iter if t is not None]
+#         tracks = [models.Track(**track) for track in t]
 
-    return tracks
+#     return tracks
 
 
-class GetPlaylistArtists:
-    """
-    Returns a list of artists from a list of playlist tracks.
-    """
+# class GetPlaylistArtists:
+#     """
+#     Returns a list of artists from a list of playlist tracks.
+#     """
 
-    def __init__(self, pid: str) -> None:
-        self.pid = pid
-        p = instances.playlist_instance.get_playlist_by_id(self.pid)
-        self.tracks = create_playlist_tracks(p["pre_tracks"])
+#     def __init__(self, pid: str) -> None:
+#         self.pid = pid
+#         p = instances.playlist_instance.get_playlist_by_id(self.pid)
+#         self.tracks = create_playlist_tracks(p["pre_tracks"])
 
-    def __call__(self):
-        artists = set()
+#     def __call__(self):
+#         artists = set()
 
-        artists = [a for t in self.tracks for a in t.artists]
-        return get_normalized_artists(artists)
+#         artists = [a for t in self.tracks for a in t.artists]
+#         return get_normalized_artists(artists)

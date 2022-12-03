@@ -57,10 +57,15 @@ class Artist:
     name: str
     artisthash: str = ""
     image: str = ""
+    track_count: int = 0
+    album_count: int = 0
+    duration: int = 0
+    colors: list[str] = dataclasses.field(default_factory=list)
 
     def __post_init__(self):
-        self.artisthash = utils.create_hash(self.name)
+        self.artisthash = utils.create_hash(self.name, limit=5)
         self.image = self.artisthash + ".webp"
+        self.colors = json.loads(str(self.colors))
 
 
 @dataclass
@@ -105,7 +110,7 @@ class Album:
             self.albumartists = []
 
             for artist in artists:
-                a_hash = utils.create_hash(artist)
+                a_hash = utils.create_hash(artist, limit=5)
                 self.albumartists.append(
                     {"hash": a_hash, "name": artist, "image": a_hash + ".webp"}  # type: ignore
                 )
@@ -205,3 +210,4 @@ class Folder:
     has_tracks: bool
     is_sym: bool = False
     path_token_count: int = 0
+    path_hash: str = ""

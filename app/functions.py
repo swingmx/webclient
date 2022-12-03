@@ -3,16 +3,21 @@ This module contains functions for the server
 """
 import os
 import time
-from io import BytesIO
-
+from concurrent.futures import ThreadPoolExecutor
 import requests
+from io import BytesIO
 from PIL import Image
+from pathlib import Path
+
+from tqdm import tqdm
 
 from app import settings, utils
+from app.db.store import Store
 from app.lib import watchdoge
-from app.lib.colorlib import ProcessAlbumColors
+from app.lib.colorlib import ProcessAlbumColors, ProcessArtistColors
 from app.lib.populate import CreateAlbums, Populate
 from app.logger import get_logger
+from app.models import Artist
 
 log = get_logger()
 
@@ -31,9 +36,10 @@ def run_secondary_checks():
         Populate()
         CreateAlbums()
         ProcessAlbumColors()
+        ProcessArtistColors()
 
-        # if utils.Ping()():
-        #     CheckArtistImages()()
+        if utils.Ping()():
+            CheckArtistImages()
 
         time.sleep(300)
 
@@ -46,26 +52,22 @@ def start_watchdog():
     watchdoge.watch.run()
 
 
-class getArtistImage:
+def get_artist_image_link(artist: str):
     """
     Returns an artist image url.
     """
 
-    def __init__(self, artist: str):
-        self.artist = artist
+    try:
+        url = f"https://api.deezer.com/search/artist?q={artist}"
+        response = requests.get(url, timeout=30)
+        data = response.json()
 
-    def __call__(self):
-        try:
-            url = f"https://api.deezer.com/search/artist?q={self.artist}"
-            response = requests.get(url)
-            data = response.json()
-
-            return data["data"][0]["picture_big"]
-        except requests.exceptions.ConnectionError:
-            time.sleep(5)
-            return None
-        except (IndexError, KeyError):
-            return None
+        return data["data"][0]["picture_big"]
+    except requests.exceptions.ConnectionError:
+        time.sleep(5)
+        return None
+    except (IndexError, KeyError):
+        return None
 
 
 class useImageDownloader:
@@ -73,101 +75,81 @@ class useImageDownloader:
         self.url = url
         self.dest = dest
 
-    def __call__(self) -> None:
+    def download(self) -> bool:
+        """
+        Downloads the image from the url and saves it to the destination
+        """
         try:
-            img = Image.open(BytesIO(requests.get(self.url).content))
+            img = Image.open(BytesIO(requests.get(self.url, timeout=30).content))
             img.save(self.dest, format="webp")
             img.close()
-            return "fetched image"
+            return True
         except requests.exceptions.ConnectionError:
             time.sleep(5)
-            return "connection error"
+            return False
 
 
 class CheckArtistImages:
-    def __init__(self):
-        self.artists: list[str] = []
-        log.info("Checking artist images")
-
     @staticmethod
-    def check_if_exists(img_path: str):
-        """
-        Checks if an image exists on c.
-        """
-
-        if os.path.exists(img_path):
-            return True
-        else:
-            return False
-
-    @classmethod
-    def download_image(cls, artistname: str):
+    def download_image(artist: Artist):
         """
         Checks if an artist image exists and downloads it if not.
 
         :param artistname: The artist name
         """
+        img_path = settings.APP_DIR + "/images/artists/" + artist.artisthash + ".webp"
+        img_path = Path(img_path)
 
-        img_path = (
-            settings.APP_DIR
-            + "/images/artists/"
-            + utils.create_hash(artistname)
-            + ".webp"
-        )
+        if img_path.exists():
+            return
 
-        if cls.check_if_exists(img_path):
-            return "exists"
+        url = get_artist_image_link(artist.name)
 
-        url = getArtistImage(artistname)()
+        if url is not None:
+            return useImageDownloader(url, dest=str(img_path)).download()
 
-        if url is None:
-            return "url is none"
-
-        return useImageDownloader(url, img_path)()
-
-    def __call__(self):
-        self.artists = utils.Get.get_all_artists()
-
-        for a in self.artists:
-            self.download_image(a)
-
-        # with ThreadPoolExecutor() as pool:
-        #     iter = pool.map(self.download_image, self.artists)
-        #     [i for i in iter]
-
-        print("Done fetching images")
+    def __init__(self):
+        with ThreadPoolExecutor() as pool:
+            results = list(
+                tqdm(
+                    pool.map(self.download_image, Store.artists),
+                    total=len(Store.artists),
+                    desc="Downloading artist images",
+                )
+            )
+            [i for i in results]
 
 
-def fetch_album_bio(title: str, albumartist: str) -> str | None:
-    """
-    Returns the album bio for a given album.
-    """
-    last_fm_url = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key={}&artist={}&album={}&format=json".format(
-        settings.LAST_FM_API_KEY, albumartist, title
-    )
+# def fetch_album_bio(title: str, albumartist: str) -> str | None:
+#     """
+#     Returns the album bio for a given album.
+#     """
+#     last_fm_url = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key={}&artist={}&album={}&format=json".format(
+#         settings.LAST_FM_API_KEY, albumartist, title
+#     )
 
-    try:
-        response = requests.get(last_fm_url)
-        data = response.json()
-    except:
-        return None
+#     try:
+#         response = requests.get(last_fm_url)
+#         data = response.json()
+#     except:
+#         return None
 
-    try:
-        bio = data["album"]["wiki"]["summary"].split('<a href="https://www.last.fm/')[0]
-    except KeyError:
-        bio = None
+#     try:
+#         bio = data["album"]["wiki"]["summary"].split('<a href="https://www.last.fm/')[0]
+#     except KeyError:
+#         bio = None
 
-    return bio
+#     return bio
 
 
-class FetchAlbumBio:
-    """
-    Returns the album bio for a given album.
-    """
+# class FetchAlbumBio:
+#     """
+#     Returns the album bio for a given album.
+#     """
 
-    def __init__(self, title: str, albumartist: str):
-        self.title = title
-        self.albumartist = albumartist
+#     def __init__(self, title: str, albumartist: str):
+#         self.title = title
+#         self.albumartist = albumartist
 
-    def __call__(self):
-        return fetch_album_bio(self.title, self.albumartist)
+#     def __call__(self):
+#         return fetch_album_bio(self.title, self.albumartist)

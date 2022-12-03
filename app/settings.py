@@ -11,13 +11,16 @@ HOME_DIR = os.path.expanduser("~")
 APP_DIR = os.path.join(HOME_DIR, CONFIG_FOLDER)
 IMG_PATH = os.path.join(APP_DIR, "images")
 
+ARTIST_IMG_PATH = os.path.join(IMG_PATH, "artists")
+
 THUMBS_PATH = os.path.join(IMG_PATH, "thumbnails")
 SM_THUMB_PATH = os.path.join(THUMBS_PATH, "small")
 LG_THUMBS_PATH = os.path.join(THUMBS_PATH, "large")
 
+
 # TEST_DIR = "/home/cwilvx/Downloads/Telegram Desktop"
-# TEST_DIR = "/home/cwilvx/Downloads"
-# HOME_DIR = TEST_DIR
+TEST_DIR = "/mnt/dfc48e0f-103b-426e-9bf9-f25d3743bc96/Music/Chill/Wolftyla Radio"
+HOME_DIR = TEST_DIR
 
 # URLS
 IMG_BASE_URI = "http://127.0.0.1:8900/images/"
