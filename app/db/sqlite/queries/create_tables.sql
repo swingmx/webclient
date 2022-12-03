@@ -38,10 +38,9 @@ CREATE TABLE IF NOT EXISTS playlists (
 
 CREATE TABLE IF NOT EXISTS artists (
     id integer PRIMARY KEY,
-    name text NOT NULL,
-    artistid text NOT NULL,
-    bio text,
-    image text
+    artisthash text NOT NULL,
+    colors text,
+    bio text
 );
 
 CREATE TABLE IF NOT EXISTS folders (

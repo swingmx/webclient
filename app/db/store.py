@@ -1,15 +1,25 @@
 """
 In memory store.
 """
+import json
 import random
 from pathlib import Path
 
 from tqdm import tqdm
 
 from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
-from app.db.sqlite.albums import SQLiteAlbumMethods as adb
+from app.db.sqlite.albums import SQLiteAlbumMethods as aldb
+from app.db.sqlite.artists import SQLiteArtistMethods as ardb
 from app.models import Album, Artist, Folder, Track
-from app.utils import UseBisection, create_hash
+from app.utils import (
+    UseBisection,
+    create_hash,
+    get_artists_from_tracks,
+    get_path_hash,
+    remove_duplicates,
+)
+
+from app.logger import log
 
 
 class Store:
@@ -48,11 +58,13 @@ class Store:
         cls.tracks.extend(tracks)
 
     @classmethod
-    def check_has_tracks(cls, path: str):
-        path_hash = create_hash(path)
-        tracks = [create_hash(f.path) for f in cls.folders]
+    def check_has_tracks(cls, path: str):  # type: ignore
+        """
+        Checks if a folder has tracks.
+        """
+        path_hash = get_path_hash(path)
+        tracks_hash = "".join(f.path_hash for f in cls.folders)
 
-        tracks_hash = "".join(tracks)
         return path_hash in tracks_hash
 
     @classmethod
@@ -68,15 +80,14 @@ class Store:
         all_folders = [Path(f) for f in all_folders]
         all_folders = [f for f in all_folders if f.exists()]
 
-        for folder in tqdm(all_folders, desc="Processing folders"):
-            path = Path(folder)
-
+        for path in tqdm(all_folders, desc="Processing folders"):
             folder = Folder(
                 name=path.name,
                 path=str(path),
                 is_sym=path.is_symlink(),
                 has_tracks=True,
                 path_token_count=len(path.parts),
+                path_hash=create_hash(*path.parts[1:]),
             )
 
             cls.folders.append(folder)
@@ -123,6 +134,14 @@ class Store:
         """
         return [t for t in cls.tracks if t.albumhash == album_hash]
 
+    @classmethod
+    def get_tracks_by_artist(cls, artist: str) -> list[Track]:
+        """
+        Returns all tracks matching the given artist.
+        """
+        tracks = [t for t in cls.tracks if artist in t.artist]
+        return remove_duplicates(tracks)
+
     # ====================================================
     # ==================== ALBUMS ========================
     # ====================================================
@@ -132,7 +151,7 @@ class Store:
         """
         Loads all albums from the database into the store.
         """
-        cls.albums = list(adb.get_all_albums())
+        cls.albums = list(aldb.get_all_albums())
 
     @classmethod
     def add_album(cls, album: Album):
@@ -171,8 +190,18 @@ class Store:
         """
         Returns an album by its hash.
         """
-        album = UseBisection(cls.albums, "albumhash", [albumhash])()[0]
-        return album
+        return UseBisection(cls.albums, "albumhash", [albumhash])()[0]
+
+    @classmethod
+    def get_albums_by_artist(cls, artist: str) -> list[Album]:
+        """
+        Returns all albums by the given artist.
+        """
+        return [
+            album
+            for album in cls.albums
+            if create_hash(artist) in album.albumartisthash
+        ]
 
     # ====================================================
     # ==================== ARTISTS =======================
@@ -183,9 +212,35 @@ class Store:
         """
         Loads all artists from the database into the store.
         """
-        artists = set()
+        cls.artists = get_artists_from_tracks(cls.tracks)
+        db_artists: list[tuple] = list(ardb.get_all_artists())
 
-        master_artist_list = [t.artist for t in Store.tracks]
-        artists = artists.union(*master_artist_list)
+        for art in tqdm(db_artists, desc="Loading artists"):
+            artist: Artist = UseBisection(cls.artists, "artisthash", [art[1]])()[0]
 
-        cls.artists = [Artist(a) for a in artists]
+            if artist is not None:
+                artist.colors = json.loads(art[2])
+
+    @classmethod
+    def add_artist(cls, artist: Artist):
+        """
+        Adds an artist to the store.
+        """
+        cls.artists.append(artist)
+
+    @classmethod
+    def add_artists(cls, artists: list[Artist]):
+        """
+        Adds multiple artists to the store.
+        """
+        for artist in artists:
+            if artist not in cls.artists:
+                cls.artists.append(artist)
+
+    @classmethod
+    def get_artist_by_hash(cls, artisthash: str) -> Artist:
+        """
+        Returns an artist by its hash.
+        """
+        artist = UseBisection(cls.artists, "artisthash", [artisthash])()[0]
+        return artist

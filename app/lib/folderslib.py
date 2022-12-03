@@ -20,7 +20,7 @@ class getFnF:
     def __init__(self, path: str) -> None:
         self.path = path
 
-    def __call__(self) -> tuple[Track | Any, Folder | Any]:
+    def __call__(self) -> tuple[list[Track], list[Folder]]:
         try:
             entries = os.scandir(self.path)
         except FileNotFoundError:
@@ -44,4 +44,4 @@ class getFnF:
 
         folders = filter(lambda f: f.has_tracks, folders)
 
-        return (tracks, folders)
+        return (tracks, folders)  # type: ignore

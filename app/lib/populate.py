@@ -6,7 +6,7 @@ from app.lib.albumslib import create_album
 from app.lib.taglib import get_tags
 from app.logger import log
 from app.models import Album, Track
-from app.utils import UseBisection, run_fast_scandir
+from app.utils import UseBisection, get_artists_from_tracks, run_fast_scandir
 
 get_all_tracks = SQLiteTrackMethods.get_all_tracks
 insert_many_tracks = SQLiteTrackMethods.insert_many_tracks
@@ -60,7 +60,11 @@ class Populate:
 
         if len(tagged_tracks) > 0:
             insert_many_tracks(tagged_tracks)
-            Store.add_tracks([Track(**t) for t in tagged_tracks])
+            tracks = [Track(**t) for t in tagged_tracks]
+            Store.add_tracks(tracks)
+
+            artists = get_artists_from_tracks(tracks)
+            Store.add_artists(artists)
 
         log.info("Added %s/%s tracks", tagged_count, len(untagged))
 
