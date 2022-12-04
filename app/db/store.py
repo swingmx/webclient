@@ -11,13 +11,8 @@ from app.db.sqlite.albums import SQLiteAlbumMethods as aldb
 from app.db.sqlite.artists import SQLiteArtistMethods as ardb
 from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
 from app.models import Album, Artist, Folder, Track
-from app.utils import (
-    UseBisection,
-    create_hash,
-    get_all_artists,
-    get_path_hash,
-    remove_duplicates,
-)
+from app.utils import (UseBisection, create_hash, get_all_artists,
+                       get_path_hash, remove_duplicates)
 
 
 class Store:
@@ -158,11 +153,11 @@ class Store:
         return [t for t in cls.tracks if t.albumhash == album_hash]
 
     @classmethod
-    def get_tracks_by_artist(cls, artist: str) -> list[Track]:
+    def get_tracks_by_artist(cls, artisthash: str) -> list[Track]:
         """
         Returns all tracks matching the given artist.
         """
-        tracks = [t for t in cls.tracks if artist in t.artist]
+        tracks = [t for t in cls.tracks if artisthash in t.artist_hashes]
         return remove_duplicates(tracks)
 
     # ====================================================
@@ -199,11 +194,11 @@ class Store:
         album.colors = colors
 
     @classmethod
-    def get_album_by_albumartist(
+    def get_albums_by_albumartist(
         cls, artisthash: str, limit: int, exclude: str
     ) -> list[Album]:
         """
-        Returns all albums by the given albumartist.
+        Returns N albums by the given albumartist, excluding the specified album.
         """
         artisthash = f"-{artisthash}-"
 
@@ -231,7 +226,7 @@ class Store:
         return [
             album
             for album in cls.albums
-            if create_hash(artist) in album.albumartisthash
+            if f"-{create_hash(artist)}-" in album.albumartisthash
         ]
 
     # ====================================================

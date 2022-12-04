@@ -16,7 +16,7 @@ def parse_album_art(filepath: str):
     try:
         tags = TinyTag.get(filepath, image=True)
         return tags.get_image()
-    except:
+    except:  # pylint: disable=bare-except
         return None
 
 
@@ -30,11 +30,9 @@ def extract_thumb(filepath: str, webp_path: str) -> bool:
     tsize = settings.THUMB_SIZE
     sm_tsize = settings.SM_THUMB_SIZE
 
-    def save_image(img: Image.Image, small: bool = False):
-        if small:
-            img.resize((sm_tsize, sm_tsize), Image.ANTIALIAS).save(sm_img_path, "webp")
-        else:
-            img.resize((tsize, tsize), Image.ANTIALIAS).save(img_path, "webp")
+    def save_image(img: Image.Image):
+        img.resize((sm_tsize, sm_tsize), Image.ANTIALIAS).save(sm_img_path, "webp")
+        img.resize((tsize, tsize), Image.ANTIALIAS).save(img_path, "webp")
 
     if os.path.exists(img_path):
         img_size = os.path.getsize(filepath)
@@ -52,18 +50,15 @@ def extract_thumb(filepath: str, webp_path: str) -> bool:
 
         try:
             save_image(img)
-            save_image(img, small=True)
         except OSError:
             try:
                 png = img.convert("RGB")
                 save_image(png)
-                save_image(png, small=True)
-            except:
+            except:  # pylint: disable=bare-except
                 return False
 
         return True
-    else:
-        return False
+    return False
 
 
 def get_tags(filepath: str):
@@ -72,7 +67,7 @@ def get_tags(filepath: str):
 
     try:
         tags = TinyTag.get(filepath)
-    except:
+    except:  # pylint: disable=bare-except
         return None
 
     no_albumartist: bool = (tags.albumartist == "") or (tags.albumartist is None)

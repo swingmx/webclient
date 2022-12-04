@@ -12,6 +12,8 @@ APP_DIR = os.path.join(HOME_DIR, CONFIG_FOLDER)
 IMG_PATH = os.path.join(APP_DIR, "images")
 
 ARTIST_IMG_PATH = os.path.join(IMG_PATH, "artists")
+ARTIST_IMG_SM_PATH = os.path.join(ARTIST_IMG_PATH, "small")
+ARTIST_IMG_LG_PATH = os.path.join(ARTIST_IMG_PATH, "large")
 
 THUMBS_PATH = os.path.join(IMG_PATH, "thumbnails")
 SM_THUMB_PATH = os.path.join(THUMBS_PATH, "small")
@@ -36,7 +38,8 @@ LAST_FM_API_KEY = "762db7a44a9e6fb5585661f5f2bdf23a"
 CPU_COUNT = multiprocessing.cpu_count()
 
 THUMB_SIZE = 400
-SM_THUMB_SIZE = 60
+SM_THUMB_SIZE = 64
+SM_ARTIST_IMG_SIZE = 64
 """
 The size of extracted images in pixels
 """

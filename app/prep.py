@@ -56,14 +56,22 @@ def create_config_dir() -> None:
     small_thumb_path = os.path.join(thumb_path, "small")
     large_thumb_path = os.path.join(thumb_path, "large")
 
+    artist_img_path = os.path.join("images", "artists")
+    small_artist_img_path = os.path.join(artist_img_path, "small")
+    large_artist_img_path = os.path.join(artist_img_path, "large")
+
+    playlist_img_path = os.path.join("images", "playlists")
+
     dirs = [
         "",  # creates the config folder
         "images",
-        os.path.join("images", "artists"),
         thumb_path,
         small_thumb_path,
         large_thumb_path,
-        os.path.join("images", "playlists"),
+        artist_img_path,
+        small_artist_img_path,
+        large_artist_img_path,
+        playlist_img_path,
     ]
 
     for _dir in dirs:

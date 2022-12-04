@@ -81,7 +81,7 @@ class ProcessArtistColors:
 
     @staticmethod
     def process_color(artist: Artist):
-        path = Path(settings.ARTIST_IMG_PATH) / artist.image
+        path = Path(settings.ARTIST_IMG_SM_PATH) / artist.image
 
         if not path.exists():
             return

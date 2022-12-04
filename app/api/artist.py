@@ -26,7 +26,7 @@ def get_artist(artisthash: str):
     if artist is None:
         return {"error": "Artist not found"}, 404
 
-    tracks = Store.get_tracks_by_artist(artist.name)
+    tracks = Store.get_tracks_by_artist(artisthash)
     artist.trackcount = len(tracks)
 
     albums = Store.get_albums_by_artist(artist.name)

@@ -2,8 +2,8 @@
 This library contains all the functions related to the search functionality.
 """
 from typing import List
-from rapidfuzz import fuzz
-from rapidfuzz import process
+
+from rapidfuzz import fuzz, process
 
 from app import models
 
