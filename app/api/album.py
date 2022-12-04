@@ -115,15 +115,12 @@ def get_artist_albums():
     limit: int = data.get("limit")
     exclude: str = data.get("exclude")
 
-    print(albumartists, limit, exclude)
-
     albumartists: list[str] = albumartists.split(",")  # type: ignore
-    albumartists = [utils.create_hash(a) for a in albumartists]
 
     albums = [
         {
-            "artist": a,
-            "albums": Store.get_album_by_albumartist(a, limit, exclude=exclude),
+            "artisthash": a,
+            "albums": Store.get_albums_by_albumartist(a, limit, exclude=exclude),
         }
         for a in albumartists
     ]

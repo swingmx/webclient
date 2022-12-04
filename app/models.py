@@ -35,10 +35,12 @@ class Track:
 
     filetype: str = ""
     image: str = ""
+    artist_hashes: list[str] = dataclasses.field(default_factory=list)
 
     def __post_init__(self):
         if self.artist is not None:
             self.artist = str(self.artist).split(", ")
+            self.artist_hashes = [utils.create_hash(a) for a in self.artist]
 
         self.filetype = self.filepath.rsplit(".", maxsplit=1)[-1]
         self.image = self.albumhash + ".webp"

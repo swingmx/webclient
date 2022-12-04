@@ -212,6 +212,33 @@ def get_all_artists(
     artists_from_tracks = get_artists_from_tracks(tracks)
     artist_from_albums = get_albumartists(albums)
 
-    artists = artists_from_tracks.union(artist_from_albums)
+    artists = list(artists_from_tracks.union(artist_from_albums))
+    artists = sorted(artists)
+
+    lower_artists = set(a.lower().strip() for a in artists)
+    indices = [[ar.lower().strip() for ar in artists].index(a) for a in lower_artists]
+    artists = [artists[i] for i in indices]
 
     return [models.Artist(a) for a in artists]
+
+
+def use_string_bisection(src: list[str], query: str) -> str | None:
+    """
+    Uses bisection to find a string in a **sorted** list of strings.
+    """
+    left = 0
+    right = len(src) - 1
+    query = query.lower()
+    # src = sorted(src)
+
+    while left <= right:
+        mid = (left + right) // 2
+        if src[mid].lower() == query:
+            return src[mid]
+
+        if src[mid] > query:
+            right = mid - 1
+        else:
+            left = mid + 1
+
+    return None
