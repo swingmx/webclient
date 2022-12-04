@@ -7,19 +7,17 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
 from app.db.sqlite.albums import SQLiteAlbumMethods as aldb
 from app.db.sqlite.artists import SQLiteArtistMethods as ardb
+from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
 from app.models import Album, Artist, Folder, Track
 from app.utils import (
     UseBisection,
     create_hash,
-    get_artists_from_tracks,
+    get_all_artists,
     get_path_hash,
     remove_duplicates,
 )
-
-from app.logger import log
 
 
 class Store:
@@ -67,6 +65,33 @@ class Store:
 
         return path_hash in tracks_hash
 
+    @staticmethod
+    def create_folder(path: str) -> Folder:
+        """
+        Creates a folder object from a path.
+        """
+        folder = Path(path)
+
+        return Folder(
+            name=folder.name,
+            path=str(folder),
+            is_sym=folder.is_symlink(),
+            has_tracks=True,
+            path_hash=create_hash(*folder.parts[1:]),
+        )
+
+    @classmethod
+    def add_folder(cls, path: str):
+        """
+        Adds a folder to the store.
+        """
+
+        if cls.check_has_tracks(path):
+            return
+
+        folder = cls.create_folder(path)
+        cls.folders.append(folder)
+
     @classmethod
     def process_folders(cls):
         """
@@ -86,7 +111,6 @@ class Store:
                 path=str(path),
                 is_sym=path.is_symlink(),
                 has_tracks=True,
-                path_token_count=len(path.parts),
                 path_hash=create_hash(*path.parts[1:]),
             )
 
@@ -114,7 +138,6 @@ class Store:
             path=str(path),
             is_sym=path.is_symlink(),
             has_tracks=True,
-            path_token_count=len(path.parts),
         )
         cls.folders.append(folder)
         return folder
@@ -168,6 +191,14 @@ class Store:
         cls.albums.extend(albums)
 
     @classmethod
+    def map_album_color(cls, albumhash: str, colors: list[str]):
+        """
+        Maps a color tuple to an album.
+        """
+        album = UseBisection(cls.albums, "albumhash", [albumhash])()[0]
+        album.colors = colors
+
+    @classmethod
     def get_album_by_albumartist(
         cls, artisthash: str, limit: int, exclude: str
     ) -> list[Album]:
@@ -212,14 +243,22 @@ class Store:
         """
         Loads all artists from the database into the store.
         """
-        cls.artists = get_artists_from_tracks(cls.tracks)
+        cls.artists = get_all_artists(cls.tracks, cls.albums)
+
         db_artists: list[tuple] = list(ardb.get_all_artists())
 
         for art in tqdm(db_artists, desc="Loading artists"):
-            artist: Artist = UseBisection(cls.artists, "artisthash", [art[1]])()[0]
+            cls.map_artist_color(art)
 
-            if artist is not None:
-                artist.colors = json.loads(art[2])
+    @classmethod
+    def map_artist_color(cls, artist_tuple: tuple):
+        """
+        Maps a color to the corresponding artist.
+        """
+        artist: Artist = UseBisection(cls.artists, "artisthash", [artist_tuple[1]])()[0]
+
+        if artist is not None:
+            artist.colors = json.loads(artist_tuple[2])
 
     @classmethod
     def add_artist(cls, artist: Artist):

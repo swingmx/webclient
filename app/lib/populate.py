@@ -1,3 +1,5 @@
+from tqdm import tqdm
+
 from app import settings
 from app.db.sqlite.albums import SQLiteAlbumMethods
 from app.db.sqlite.tracks import SQLiteTrackMethods
@@ -5,7 +7,7 @@ from app.db.store import Store
 from app.lib.albumslib import create_album
 from app.lib.taglib import get_tags
 from app.logger import log
-from app.models import Album, Track
+from app.models import Album, Artist, Track
 from app.utils import UseBisection, get_artists_from_tracks, run_fast_scandir
 
 get_all_tracks = SQLiteTrackMethods.get_all_tracks
@@ -49,11 +51,19 @@ class Populate:
         tagged_tracks: list[dict] = []
         tagged_count = 0
 
-        for file in untagged:
+        for file in tqdm(untagged, desc="Reading files"):
             tags = get_tags(file)
 
             if tags is not None:
                 tagged_tracks.append(tags)
+
+                Store.add_track(Track(**tags))
+                Store.add_folder(tags["folder"])
+
+                # if len(Store.folders) == 0:
+
+                Store.get_folder(tags["folder"])
+
                 tagged_count += 1
             else:
                 log.warning("Could not read file: %s", file)
@@ -61,13 +71,12 @@ class Populate:
         if len(tagged_tracks) > 0:
             insert_many_tracks(tagged_tracks)
             tracks = [Track(**t) for t in tagged_tracks]
-            Store.add_tracks(tracks)
+            # Store.add_tracks(tracks)
 
             artists = get_artists_from_tracks(tracks)
-            Store.add_artists(artists)
+            Store.add_artists([Artist(a) for a in artists])
 
         log.info("Added %s/%s tracks", tagged_count, len(untagged))
-
         Store.process_folders()
 
 
@@ -96,14 +105,26 @@ class CreateAlbums:
         gen = self.create_albums(tracks)
         albums_dicts = [a for a in gen if a is not None]
 
-        Store.add_albums([Album(**a) for a in albums_dicts])
+        # Store.add_albums([Album(**a) for a in albums_dicts])
         insert_many_albums(albums_dicts)
 
         log.info("Albums processed.")
 
     def create_albums(self, tracks: list[Track]):
-        for ahash in self.hashes:
-            yield self.create_album(tracks, ahash)
+        for ahash in tqdm(self.hashes, desc="Creating albums"):
+            album_dict = self.create_album(tracks, ahash)
+
+            if album_dict is not None:
+                album = Album(**album_dict)
+                Store.add_album(album)
+
+                for artist in album.albumartists:
+                    store_artist = Store.get_artist_by_hash(artist["hash"])  # type: ignore
+
+                    if store_artist is None:
+                        Store.add_artist(Artist(artist["name"]))  # type: ignore
+
+                yield album_dict
 
     @staticmethod
     def get_unprocessed(albums: list[Album], tracks: list[Track]) -> list[str]:

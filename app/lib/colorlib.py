@@ -1,15 +1,15 @@
-import colorgram
-from tqdm import tqdm
+import json
 from pathlib import Path
 
+import colorgram
+from tqdm import tqdm
+
 from app import settings
+from app.db.sqlite.albums import SQLiteAlbumMethods as db
+from app.db.sqlite.artists import SQLiteArtistMethods as adb
 from app.db.store import Store
 from app.logger import get_logger
 from app.models import Album, Artist
-
-
-from app.db.sqlite.albums import SQLiteAlbumMethods as db
-from app.db.sqlite.artists import SQLiteArtistMethods as adb
 
 log = get_logger()
 
@@ -50,12 +50,16 @@ class ProcessAlbumColors:
 
     @staticmethod
     def process_color(album: Album):
-        img = settings.SM_THUMB_PATH + "/" + album.image
+        path = Path(settings.SM_THUMB_PATH) / album.image
 
-        colors = get_image_colors(img)
+        if not path.exists():
+            return
+
+        colors = get_image_colors(str(path))
 
         if len(colors) > 0:
             db.update_album_colors(album.albumhash, colors)
+            Store.map_album_color(albumhash=album.albumhash, colors=colors)
 
         return colors
 
@@ -77,7 +81,7 @@ class ProcessArtistColors:
 
     @staticmethod
     def process_color(artist: Artist):
-        path = Path(settings.ARTIST_IMG_PATH).joinpath(artist.image)
+        path = Path(settings.ARTIST_IMG_PATH) / artist.image
 
         if not path.exists():
             return
@@ -86,3 +90,6 @@ class ProcessArtistColors:
 
         if len(colors) > 0:
             adb.insert_one_artist(artisthash=artist.artisthash, colors=colors)
+            Store.map_artist_color((0, artist.artisthash, json.dumps(colors)))
+
+    # TODO: Load album and artist colors into the store.
