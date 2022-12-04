@@ -1,13 +1,12 @@
 """
 Contains all the artist(s) routes.
 """
-import urllib
+# import urllib
+# import requests
 
-from app import cache
-from app import utils
-from app import instances
-from flask import Blueprint
+from flask import Blueprint, request
 
+# from app import cache, instances, utils
 from app.db.store import Store
 
 artist_bp = Blueprint("artist", __name__, url_prefix="/")
@@ -15,20 +14,27 @@ artist_bp = Blueprint("artist", __name__, url_prefix="/")
 
 @artist_bp.route("/artist/<artisthash>", methods=["GET"])
 def get_artist(artisthash: str):
+    print(artisthash)
     artist = Store.get_artist_by_hash(artisthash)
+    limit = request.args.get("limit")
+
+    if limit is None:
+        limit = 6
+
+    limit = int(limit)
 
     if artist is None:
         return {"error": "Artist not found"}, 404
 
     tracks = Store.get_tracks_by_artist(artist.name)
-    artist.track_count = len(tracks)
+    artist.trackcount = len(tracks)
 
     albums = Store.get_albums_by_artist(artist.name)
-    artist.album_count = len(albums)
+    artist.albumcount = len(albums)
 
     artist.duration = sum(t.duration for t in tracks)
 
-    return {"artist": artist, "tracks": tracks[:5], "albums": albums[:5]}
+    return {"artist": artist, "tracks": tracks[:5], "albums": albums[:limit]}
 
 
 # @artist_bp.route("/artist/<artist>")

@@ -5,14 +5,12 @@ import hashlib
 import os
 import pathlib
 import threading
-from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import Callable, List, Set
 
 import requests
 
-from app import instances, models
-from app.settings import SUPPORTED_DIR_IMAGES, SUPPORTED_FILES
+from app import models
+from app.settings import SUPPORTED_FILES
 
 
 def background(func):
@@ -27,7 +25,7 @@ def background(func):
     return background_func
 
 
-def run_fast_scandir(__dir: str, full=False) -> tuple[List[str], List[str]]:
+def run_fast_scandir(__dir: str, full=False) -> tuple[list[str], list[str]]:
     """
     Scans a directory for files with a specific extension. Returns a list of files and folders in the directory.
     """
@@ -64,7 +62,7 @@ def remove_duplicates(tracks: list[models.Track]) -> list[models.Track]:
 
     tracks = UseBisection(tracks, "trackhash", hashes)()
 
-    return tracks
+    return [t for t in tracks if t is not None]
 
 
 def is_valid_file(filename: str) -> bool:
@@ -78,19 +76,15 @@ def is_valid_file(filename: str) -> bool:
         return False
 
 
-def create_hash(*args: str, limit=3) -> str:
+def create_hash(*args: str, limit=5) -> str:
     """
     Creates a simple hash for an album
     """
-    # string = "".join(str(a) for a in args).replace(" ", "")
-    # return "".join([i for i in string if (i.isalnum())]).lower()
-    # string = string.encode("utf-8")
-    # return hashlib.md5(string).hexdigest()[:4]
-    strings = [s.replace(" ", "").lower() for s in args]
+    strings = [s.lower().strip().replace(" ", "") for s in args]
+
     strings = ["".join([t for t in s if t.isalnum()]) for s in strings]
-    strings = [s.encode("utf-8") for s in args]
+    strings = [s.encode("utf-8") for s in strings]
     strings = [hashlib.md5(s).hexdigest()[:limit] for s in strings]
-    # print(strings)
     return "".join(strings)
 
 
@@ -130,7 +124,7 @@ class UseBisection:
     items.
     """
 
-    def __init__(self, source: List, search_from: str, queries: List[str]) -> None:
+    def __init__(self, source: list, search_from: str, queries: list[str]) -> None:
         self.source_list = source
         self.queries_list = queries
         self.attr = search_from
@@ -153,7 +147,7 @@ class UseBisection:
 
         return None
 
-    def __call__(self) -> List:
+    def __call__(self) -> list:
         if len(self.source_list) == 0:
             print("empty source list")
             return [None]
@@ -175,7 +169,7 @@ class Ping:
             return False
 
 
-def get_normal_artist_name(artists: List[str]) -> str:
+def get_normal_artist_name(artists: list[str]) -> str:
     """
     Returns the artist name with most capital letters.
     """
@@ -186,104 +180,38 @@ def get_normal_artist_name(artists: List[str]) -> str:
     return artists[0]
 
 
-def get_artist_lists(artists: List[str]) -> List[str]:
-    """
-    Takes in a list of artists and returns a list of lists of an artist's various name variations.
-
-    Example:
-    >>> get_artist_lists(['Juice WRLD', 'Juice Wrld', 'XXXtentacion', 'XXXTENTACION'])
-
-    >>> [['Juice WRLD', 'Juice Wrld'], ['XXXtentacion', 'XXXTENTACION']]
-    """
-    artist_lists: List[List[str]] = []
-
-    for artist in artists:
-        for list in artist_lists:
-            if artist.lower() == list[0].lower():
-                list.append(artist)
-                break
-        else:
-            artist_lists.append([artist])
-
-    return artist_lists
-
-
-def get_normalized_artists(names: List[str]) -> List[models.Artist]:
-    """
-    Takes a list of artist names, normalizes them, and returns a list of `Artist` objects
-
-    :param names: List[str]
-    :type names: List[str]
-    :return: A list of Artist objects.
-    """
-    names = [n.strip() for n in names]
-    names = get_artist_lists(names)
-    names = [get_normal_artist_name(a) for a in names]
-
-    return [models.Artist(a) for a in names]
-
-
-def use_threads(list: list, fn: Callable):
-    """
-    "Use threads to execute a function on a list of items."
-
-    The function takes two arguments:
-
-    - list: a list of items to execute the function on
-    - fn: the function to execute
-
-    The function returns a list of the results of executing the function on each item in the list
-
-    :param list: list - the list of items to be processed
-    :type list: list
-    :param fn: The function to be called
-    :type fn: Callable
-    :return: A list of the results of the function fn applied to each element of the list.
-    """
-    with ThreadPoolExecutor() as pool:
-        iter = pool.map(fn, list)
-        return [i for i in iter]
-
-
-def find_best_image(filepaths: List[str]) -> str:
-    """
-    Finds the best folder image in a list of images.
-    """
-    for entry in SUPPORTED_DIR_IMAGES:
-        for f in filepaths:
-            if entry in f.lower():
-                return f
-
-
-def str_bisection(src: list[str], query: str):
-    """
-    Uses bisection to find a string in a list of strings.
-
-    returns a list of found items with `None` items being not found
-    items.
-    """
-    left = 0
-    right = len(src) - 1
-
-    while left <= right:
-        mid = (left + right) // 2
-        if src[mid] == query:
-            return src[mid]
-        elif src[mid] > query:
-            right = mid - 1
-        else:
-            left = mid + 1
-
-    return None
-
-
-def get_artists_from_tracks(tracks: List[models.Track]) -> List[models.Artist]:
+def get_artists_from_tracks(tracks: list[models.Track]) -> set[str]:
     """
     Extracts all artists from a list of tracks. Returns a list of Artists.
     """
     artists = set()
 
     master_artist_list = [t.artist for t in tracks]
+
     artists = artists.union(*master_artist_list)
+
+    return artists
+
+
+def get_albumartists(albums: list[models.Album]) -> set[str]:
+    artists = set()
+
+    # master_artist_list = [a.albumartists for a in albums]
+    for album in albums:
+        albumartists = [a["name"] for a in album.albumartists]  # type: ignore
+
+        artists.update(albumartists)
+
+    # return [models.Artist(a) for a in artists]
+    return artists
+
+
+def get_all_artists(
+    tracks: list[models.Track], albums: list[models.Album]
+) -> list[models.Artist]:
+    artists_from_tracks = get_artists_from_tracks(tracks)
+    artist_from_albums = get_albumartists(albums)
+
+    artists = artists_from_tracks.union(artist_from_albums)
 
     return [models.Artist(a) for a in artists]
