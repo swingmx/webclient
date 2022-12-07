@@ -84,7 +84,7 @@ def create_hash(*args: str, limit=5) -> str:
 
     strings = ["".join([t for t in s if t.isalnum()]) for s in strings]
     strings = [s.encode("utf-8") for s in strings]
-    strings = [hashlib.md5(s).hexdigest()[:limit] for s in strings]
+    strings = [hashlib.md5(s).hexdigest()[-limit:] for s in strings]
     return "".join(strings)
 
 
@@ -186,8 +186,7 @@ def get_artists_from_tracks(tracks: list[models.Track]) -> set[str]:
     """
     artists = set()
 
-    master_artist_list = [t.artist for t in tracks]
-
+    master_artist_list = [[x.name for x in t.artist] for t in tracks] # type: ignore
     artists = artists.union(*master_artist_list)
 
     return artists
@@ -198,7 +197,7 @@ def get_albumartists(albums: list[models.Album]) -> set[str]:
 
     # master_artist_list = [a.albumartists for a in albums]
     for album in albums:
-        albumartists = [a["name"] for a in album.albumartists]  # type: ignore
+        albumartists = [a.name for a in album.albumartists]  # type: ignore
 
         artists.update(albumartists)
 

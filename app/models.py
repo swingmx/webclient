@@ -11,46 +11,6 @@ from app import utils
 
 
 @dataclass(slots=True)
-class Track:
-    """
-    Track class
-    """
-
-    # id: int
-    album: str
-    albumartist: str
-    albumhash: str
-    artist: str | list[str]
-    bitrate: int
-    copyright: str
-    date: str
-    disc: int
-    duration: int
-    filepath: str
-    folder: str
-    genre: str | list[str]
-    title: str
-    track: int
-    trackhash: str
-
-    filetype: str = ""
-    image: str = ""
-    artist_hashes: list[str] = dataclasses.field(default_factory=list)
-
-    def __post_init__(self):
-        if self.artist is not None:
-            self.artist = str(self.artist).split(", ")
-            self.artist_hashes = [utils.create_hash(a) for a in self.artist]
-
-        self.filetype = self.filepath.rsplit(".", maxsplit=1)[-1]
-        self.image = self.albumhash + ".webp"
-
-        if self.genre is not None:
-            self.genre = str(self.genre).replace("/", ", ")
-            self.genre = str(self.genre).lower().split(", ")
-
-
-@dataclass(slots=True)
 class Artist:
     """
     Artist class
@@ -70,13 +30,55 @@ class Artist:
         self.colors = json.loads(str(self.colors))
 
 
+@dataclass(slots=True)
+class Track:
+    """
+    Track class
+    """
+
+    # id: int
+    album: str
+    albumartist: str
+    albumhash: str
+    artist: str | list[Artist]
+    bitrate: int
+    copyright: str
+    date: str
+    disc: int
+    duration: int
+    filepath: str
+    folder: str
+    genre: str | list[str]
+    title: str
+    track: int
+    trackhash: str
+
+    filetype: str = ""
+    image: str = ""
+    artist_hashes: list[str] = dataclasses.field(default_factory=list)
+
+    def __post_init__(self):
+        if self.artist is not None:
+            artist_str = str(self.artist).split(", ")
+            self.artist_hashes = [utils.create_hash(a) for a in artist_str]
+
+            self.artist = [Artist(a) for a in artist_str]
+
+        self.filetype = self.filepath.rsplit(".", maxsplit=1)[-1]
+        self.image = self.albumhash + ".webp"
+
+        if self.genre is not None:
+            self.genre = str(self.genre).replace("/", ", ")
+            self.genre = str(self.genre).lower().split(", ")
+
+
 @dataclass
 class Album:
     """
     Creates an album object
     """
 
-    albumartists: str | list[dict]
+    albumartists: str | list[Artist]
     albumhash: str
     colors: str | list[str]
     copyright: str
@@ -111,10 +113,7 @@ class Album:
             self.albumartists = []
 
             for artist in artists:
-                a_hash = utils.create_hash(artist)
-                self.albumartists.append(
-                    {"hash": a_hash, "name": artist, "image": a_hash + ".webp"}  # type: ignore
-                )
+                self.albumartists.append(Artist(artist))
 
     def check_type(self):
         """
@@ -145,7 +144,7 @@ class Album:
         """
         Checks if the album is a compilation.
         """
-        artists = [a["name"] for a in self.albumartists]  # type: ignore
+        artists = [a.name for a in self.albumartists]  # type: ignore
         artists = "".join(artists).lower()
 
         return "various artists" in artists
@@ -155,6 +154,18 @@ class Album:
         Checks if the album is an EP.
         """
         return self.title.strip().endswith(" EP")
+
+    def check_is_single(self, tracks: list[Track]):
+        """
+        Checks if the album is a single.
+        """
+        if (
+            len(tracks) == 1
+            and tracks[0].title == self.title
+            and tracks[0].track == 1
+            and tracks[0].disc == 1
+        ):
+            self.is_single = True
 
 
 @dataclass

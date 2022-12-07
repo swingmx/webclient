@@ -8,17 +8,11 @@ from app import utils
 from app.db.sqlite.albums import SQLiteAlbumMethods
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.store import Store
-# from app.db.sqlite.search import SearchMethods as search
+
 from app.models import Track
-
-# from app import instances
-# from app import models
-# from app.functions import FetchAlbumBio
-
 
 get_tracks_by_albumhash = SQLiteTrackMethods.get_tracks_by_albumhash
 get_album_by_id = SQLiteAlbumMethods.get_album_by_id
-# get_album_by_hash = SQLiteAlbumMethods.get_album_by_hash
 get_albums_by_albumartist = SQLiteAlbumMethods.get_albums_by_albumartist
 
 album_bp = Blueprint("album", __name__, url_prefix="")
@@ -28,20 +22,6 @@ album_bp = Blueprint("album", __name__, url_prefix="")
 def say_hi():
     """Returns some text for the default route"""
     return "^ _ ^"
-
-
-# @album_bp.route("/albums")
-# def get_albums():
-#     """returns all the albums"""
-#     albums = []
-
-#     for song in api.DB_TRACKS:
-#         al_obj = {"name": song["album"], "artist": song["artists"]}
-
-#         if al_obj not in albums:
-#             albums.append(al_obj)
-
-#     return {"albums": albums}
 
 
 @album_bp.route("/album", methods=["POST"])
@@ -148,21 +128,3 @@ def get_artist_albums():
 #         return err_msg, 404
 
 #     return {"bio": bio}
-
-
-# @album_bp.route("/album/artists", methods=["POST"])
-# def get_albumartists():
-#     """
-#     Returns a list of artists featured in a given album.
-#     """
-
-#     data = request.get_json()
-#     albumhash = data["hash"]
-
-#     tracks = instances.tracks_instance.find_tracks_by_albumhash(albumhash)
-#     tracks = [models.Track(**t) for t in tracks]
-
-#     artists = [a for t in tracks for a in t.artists]
-#     artists = utils.get_normalized_artists(artists)
-
-#     return {"artists": artists}

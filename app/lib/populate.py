@@ -60,10 +60,6 @@ class Populate:
                 Store.add_track(Track(**tags))
                 Store.add_folder(tags["folder"])
 
-                # if len(Store.folders) == 0:
-
-                Store.get_folder(tags["folder"])
-
                 tagged_count += 1
             else:
                 log.warning("Could not read file: %s", file)
@@ -71,13 +67,11 @@ class Populate:
         if len(tagged_tracks) > 0:
             insert_many_tracks(tagged_tracks)
             tracks = [Track(**t) for t in tagged_tracks]
-            # Store.add_tracks(tracks)
 
             artists = get_artists_from_tracks(tracks)
             Store.add_artists([Artist(a) for a in artists])
 
         log.info("Added %s/%s tracks", tagged_count, len(untagged))
-        Store.process_folders()
 
 
 class CreateAlbums:
@@ -118,11 +112,12 @@ class CreateAlbums:
                 album = Album(**album_dict)
                 Store.add_album(album)
 
-                for artist in album.albumartists:
-                    store_artist = Store.get_artist_by_hash(artist["hash"])  # type: ignore
+                for artist in album.albumartists:  # type: ignore
+                    artist: Artist
+                    store_artist = Store.get_artist_by_hash(artist.artisthash)
 
                     if store_artist is None:
-                        Store.add_artist(Artist(artist["name"]))  # type: ignore
+                        Store.add_artist(artist)
 
                 yield album_dict
 
