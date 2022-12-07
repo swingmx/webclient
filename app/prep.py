@@ -8,7 +8,6 @@ from sqlite3 import OperationalError
 
 from app import settings
 from app.db.sqlite import create_connection, create_tables
-from app.db.sqlite.search import SearchMethods
 from app.db.store import Store
 from app.logger import log
 from app.settings import DB_PATH
@@ -103,10 +102,6 @@ def setup_sqlite():
         conn.close()
     except OperationalError:
         log.error("Failed to create database tables")
-
-    SearchMethods.init_db()
-    SearchMethods.load_tracks()
-    SearchMethods.load_albums()
 
     Store.load_all_tracks()
     Store.process_folders()

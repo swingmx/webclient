@@ -1,5 +1,4 @@
 import os
-from typing import Any
 from concurrent.futures import ThreadPoolExecutor
 
 from app.db.sqlite.tracks import SQLiteTrackMethods
@@ -38,7 +37,7 @@ class getFnF:
 
         tracks = Store.get_tracks_by_filepaths(files)
 
-        with ThreadPoolExecutor(max_workers=30) as pool:
+        with ThreadPoolExecutor() as pool:
             iterable = pool.map(Store.get_folder, dirs)
             folders = [i for i in iterable if i is not None]
 

@@ -11,8 +11,13 @@ from app.db.sqlite.albums import SQLiteAlbumMethods as aldb
 from app.db.sqlite.artists import SQLiteArtistMethods as ardb
 from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
 from app.models import Album, Artist, Folder, Track
-from app.utils import (UseBisection, create_hash, get_all_artists,
-                       get_path_hash, remove_duplicates)
+from app.utils import (
+    UseBisection,
+    create_hash,
+    get_all_artists,
+    get_path_hash,
+    remove_duplicates,
+)
 
 
 class Store:
@@ -49,6 +54,10 @@ class Store:
         """
 
         cls.tracks.extend(tracks)
+
+    # ====================================================
+    # ==================== FOLDERS =======================
+    # ====================================================
 
     @classmethod
     def check_has_tracks(cls, path: str):  # type: ignore
@@ -95,7 +104,9 @@ class Store:
         all_folders = [track.folder for track in cls.tracks]
         all_folders = set(all_folders)
 
-        all_folders = [folder for folder in all_folders if folder not in cls.folders]
+        all_folders = [
+            folder for folder in all_folders if not cls.check_has_tracks(folder)
+        ]
 
         all_folders = [Path(f) for f in all_folders]
         all_folders = [f for f in all_folders if f.exists()]
@@ -155,7 +166,7 @@ class Store:
     @classmethod
     def get_tracks_by_artist(cls, artisthash: str) -> list[Track]:
         """
-        Returns all tracks matching the given artist.
+        Returns all tracks matching the given artist. Duplicate tracks are removed.
         """
         tracks = [t for t in cls.tracks if artisthash in t.artist_hashes]
         return remove_duplicates(tracks)
@@ -209,6 +220,7 @@ class Store:
         if len(albums) > limit:
             random.shuffle(albums)
 
+        # TODO: Merge this with `cls.get_albums_by_artisthash()`
         return albums[:limit]
 
     @classmethod
@@ -216,18 +228,31 @@ class Store:
         """
         Returns an album by its hash.
         """
-        return UseBisection(cls.albums, "albumhash", [albumhash])()[0]
+        # return UseBisection(cls.albums, "albumhash", [albumhash])()[0]
+
+        return [a for a in cls.albums if a.albumhash == albumhash][0]
 
     @classmethod
-    def get_albums_by_artist(cls, artist: str) -> list[Album]:
+    def get_albums_by_artisthash(cls, artisthash: str) -> list[Album]:
         """
         Returns all albums by the given artist.
         """
         return [
-            album
-            for album in cls.albums
-            if f"-{create_hash(artist)}-" in album.albumartisthash
+            album for album in cls.albums if f"-{artisthash}-" in album.albumartisthash
         ]
+
+    @classmethod
+    def count_albums_by_artisthash(cls, artisthash: str):
+        albumartists = [a.albumartists for a in cls.albums]
+
+        artisthashes = []
+
+        for artist in albumartists:
+            artisthashes.extend([a.artisthash for a in artist])  # type: ignore
+
+        master_string = "-".join(artisthashes)
+
+        return master_string.count(artisthash)
 
     # ====================================================
     # ==================== ARTISTS =======================
