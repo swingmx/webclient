@@ -3,7 +3,8 @@ from collections import OrderedDict
 
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.sqlite.utils import SQLiteManager, tuple_to_playlist, tuples_to_playlists
-from app.utils import background, create_hash
+from app.models import Artist
+from app.utils import background
 
 
 class SQLitePlaylistMethods:
@@ -25,7 +26,7 @@ class SQLitePlaylistMethods:
         playlist = OrderedDict(sorted(playlist.items()))
         params = (*playlist.values(),)
 
-        with SQLiteManager() as cur:
+        with SQLiteManager(userdata_db=True) as cur:
             cur.execute(sql, params)
             pid = cur.lastrowid
             params = (pid, *params)
@@ -36,7 +37,7 @@ class SQLitePlaylistMethods:
     def get_playlist_by_name(name: str):
         sql = "SELECT * FROM playlists WHERE name = ?"
 
-        with SQLiteManager() as cur:
+        with SQLiteManager(userdata_db=True) as cur:
             cur.execute(sql, (name,))
 
             data = cur.fetchone()
@@ -50,7 +51,7 @@ class SQLitePlaylistMethods:
     def count_playlist_by_name(name: str):
         sql = "SELECT COUNT(*) FROM playlists WHERE name = ?"
 
-        with SQLiteManager() as cur:
+        with SQLiteManager(userdata_db=True) as cur:
             cur.execute(sql, (name,))
 
             data = cur.fetchone()
@@ -59,7 +60,7 @@ class SQLitePlaylistMethods:
 
     @staticmethod
     def get_all_playlists():
-        with SQLiteManager() as cur:
+        with SQLiteManager(userdata_db=True) as cur:
             cur.execute("SELECT * FROM playlists")
             playlists = cur.fetchall()
 
@@ -72,7 +73,7 @@ class SQLitePlaylistMethods:
     def get_playlist_by_id(playlist_id: int):
         sql = "SELECT * FROM playlists WHERE id = ?"
 
-        with SQLiteManager() as cur:
+        with SQLiteManager(userdata_db=True) as cur:
             cur.execute(sql, (playlist_id,))
 
             data = cur.fetchone()
@@ -107,7 +108,7 @@ class SQLitePlaylistMethods:
         """
         sql = f"SELECT {field} FROM playlists WHERE id = ?"
 
-        with SQLiteManager() as cur:
+        with SQLiteManager(userdata_db=True) as cur:
             cur.execute(sql, (playlist_id,))
             data = cur.fetchone()
 
@@ -135,8 +136,8 @@ class SQLitePlaylistMethods:
         if track is None:
             return
 
-        artists = track.artist
-        artisthashes = [create_hash(a) for a in artists]
+        artists: list[Artist] = track.artist # type: ignore
+        artisthashes = [a.artisthash for a in artists]
 
         cls.add_item_to_json_list(playlist_id, "artisthashes", artisthashes)
 
@@ -156,5 +157,5 @@ class SQLitePlaylistMethods:
         playlist = OrderedDict(sorted(playlist.items()))
         params = (*playlist.values(), playlist_id)
 
-        with SQLiteManager() as cur:
+        with SQLiteManager(userdata_db=True) as cur:
             cur.execute(sql, params)

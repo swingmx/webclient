@@ -111,6 +111,7 @@ def get_playlist(playlistid: str):
 
     tracks = get_tracks_by_trackhashes(list(playlist.trackhashes))
     tracks = list(tracks)
+    tracks.reverse()
 
     duration = sum(t.duration for t in tracks)
     playlist.last_updated = serializer.date_string_to_time_passed(playlist.last_updated)
