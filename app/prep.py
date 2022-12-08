@@ -10,7 +10,7 @@ from app import settings
 from app.db.sqlite import create_connection, create_tables
 from app.db.store import Store
 from app.logger import log
-from app.settings import DB_PATH
+from app.settings import APP_DB_PATH, USERDATA_DB_PATH
 
 
 class CopyFiles:
@@ -85,6 +85,9 @@ def create_config_dir() -> None:
 
 
 def setup_sqlite():
+    """
+    Create Sqlite databases and tables.
+    """
     if not settings.USE_SQLITE:
         return
 
@@ -92,14 +95,22 @@ def setup_sqlite():
     #     os.remove(DB_PATH)
 
     try:
-        conn = create_connection(DB_PATH)
+        app_db_conn = create_connection(APP_DB_PATH)
+        playlist_db_conn = create_connection(USERDATA_DB_PATH)
 
         current_path = Path(__file__).parent.resolve()
-        sql_path = "db/sqlite/queries/create_tables.sql"
-        sql_path = current_path.joinpath(sql_path)
 
-        create_tables(conn, str(sql_path))
-        conn.close()
+        appdb_sql_path = "db/sqlite/queries/create_app_db_tables.sql"
+        appdb_sql_path = current_path.joinpath(appdb_sql_path)
+
+        playlist_db_sql_path = "db/sqlite/queries/create_userdata_db_tables.sql"
+        playlist_db_sql_path = current_path.joinpath(playlist_db_sql_path)
+
+        create_tables(app_db_conn, str(appdb_sql_path))
+        create_tables(playlist_db_conn, str(playlist_db_sql_path))
+
+        app_db_conn.close()
+        playlist_db_conn.close()
     except OperationalError:
         log.error("Failed to create database tables")
 

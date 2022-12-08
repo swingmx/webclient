@@ -3,10 +3,10 @@ Helper functions for use with the SQLite database.
 """
 
 import sqlite3
-
 from sqlite3 import Connection, Cursor
+
 from app.models import Album, Playlist, Track
-from app.settings import DB_PATH
+from app.settings import APP_DB_PATH, USERDATA_DB_PATH
 
 
 def tuple_to_track(track: tuple):
@@ -60,23 +60,29 @@ class SQLiteManager:
     for you. It also commits and closes the connection when you're done.
     """
 
-    def __init__(self, conn: Connection | None = None) -> None:
+    def __init__(self, conn: Connection | None = None, userdata_db=False) -> None:
         """
         When a connection is passed in, don't close the connection, because it's
         a connection to the search database [in memory db].
         """
         self.conn: Connection | None = conn
         self.CLOSE_CONN = True
+        self.userdata_db = userdata_db
 
         if conn:
             self.conn = conn
             self.CLOSE_CONN = False
 
     def __enter__(self) -> Cursor:
-        if self.conn is None:
-            self.conn = sqlite3.connect(DB_PATH)
+        if self.conn is not None:
             return self.conn.cursor()
 
+        db_path = APP_DB_PATH
+
+        if self.userdata_db:
+            db_path = USERDATA_DB_PATH
+
+        self.conn = sqlite3.connect(db_path)
         return self.conn.cursor()
 
     def __exit__(self, exc_type, exc_value, exc_traceback):

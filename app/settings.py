@@ -64,8 +64,11 @@ USE_MONGO = False
 
 
 # ===== SQLite =====
-DB_NAME = "alice.db"
-DB_PATH = os.path.join(APP_DIR, DB_NAME)
+APP_DB_NAME = "alice.db"
+USER_DATA_DB_NAME = "playlists.db"
+APP_DB_PATH = os.path.join(APP_DIR, APP_DB_NAME)
+USERDATA_DB_PATH = os.path.join(APP_DIR, USER_DATA_DB_NAME)
+
 
 # ===== Store =====
 USE_STORE = True

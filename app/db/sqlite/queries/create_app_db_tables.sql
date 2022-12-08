@@ -27,14 +27,7 @@ CREATE TABLE IF NOT EXISTS albums (
     title text NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS playlists (
-    id integer PRIMARY KEY,
-    artisthashes text,
-    image text,
-    last_updated text not null,
-    name text not null,
-    trackhashes text
-);
+
 
 CREATE TABLE IF NOT EXISTS artists (
     id integer PRIMARY KEY,
