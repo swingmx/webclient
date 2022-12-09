@@ -59,13 +59,12 @@ SUPPORTED_DIR_IMAGES = [
 ]
 
 # ===== DB =========
-USE_SQLITE = True
 USE_MONGO = False
 
 
 # ===== SQLite =====
 APP_DB_NAME = "alice.db"
-USER_DATA_DB_NAME = "playlists.db"
+USER_DATA_DB_NAME = "userdata.db"
 APP_DB_PATH = os.path.join(APP_DIR, APP_DB_NAME)
 USERDATA_DB_PATH = os.path.join(APP_DIR, USER_DATA_DB_NAME)
 

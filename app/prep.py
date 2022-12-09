@@ -88,9 +88,6 @@ def setup_sqlite():
     """
     Create Sqlite databases and tables.
     """
-    if not settings.USE_SQLITE:
-        return
-
     # if os.path.exists(DB_PATH):
     #     os.remove(DB_PATH)
 

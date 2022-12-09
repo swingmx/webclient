@@ -2,6 +2,7 @@
 Contains all the album routes.
 """
 
+from dataclasses import asdict
 from flask import Blueprint, request
 
 from app import utils
@@ -82,6 +83,23 @@ def get_album():
         album.check_type()
 
     return {"tracks": tracks, "info": album}
+
+
+@album_bp.route("/album/<albumhash>/tracks", methods=["GET"])
+def get_album_tracks(albumhash: str):
+    """
+    Returns all the tracks in the given album.
+    """
+    tracks = Store.get_tracks_by_albumhash(albumhash)
+    tracks = [asdict(t) for t in tracks]
+
+    for t in tracks:
+        track = str(t["track"]).zfill(3)
+        t["pos"] = int(f"{t['disc']}{track}")
+
+    tracks = sorted(tracks, key=lambda t: t["pos"])
+
+    return {"tracks": tracks}
 
 
 @album_bp.route("/album/from-artist", methods=["POST"])
