@@ -67,6 +67,11 @@ def get_album():
     tracks = utils.remove_duplicates(tracks)
     album.count = len(tracks)
 
+    for track in tracks:
+        if track.date != "Unknown":
+            album.date = track.date
+            break
+
     try:
         album.duration = sum(t.duration for t in tracks)
     except AttributeError:
@@ -124,6 +129,7 @@ def get_artist_albums():
     ]
 
     albums = [a for a in albums if len(a["albums"]) > 0]
+    print(albumartists, exclude)
 
     return {"data": albums}
 
