@@ -1,9 +1,8 @@
 """
 This module contains mini functions for the server.
 """
-import hashlib
 import os
-import pathlib
+import hashlib
 import threading
 from datetime import datetime
 
@@ -65,17 +64,6 @@ def remove_duplicates(tracks: list[models.Track]) -> list[models.Track]:
     return [t for t in tracks if t is not None]
 
 
-def is_valid_file(filename: str) -> bool:
-    """
-    Checks if a file is valid. Returns True if it is, False if it isn't.
-    """
-
-    if filename.endswith(".flac") or filename.endswith(".mp3"):
-        return True
-    else:
-        return False
-
-
 def create_hash(*args: str, limit=7) -> str:
     """
     Creates a simple hash for an album
@@ -100,15 +88,6 @@ def create_folder_hash(*args: str, limit=7) -> str:
     return "".join(strings)
 
 
-def get_path_hash(path: str):
-    """
-    Returns a fixed size hash of a path.
-    """
-
-    parts = pathlib.Path(path).parts[1:]
-    return create_hash(*parts)
-
-
 def create_new_date():
     """
     It creates a new date and time string in the format of "YYYY-MM-DD HH:MM:SS"
@@ -116,16 +95,6 @@ def create_new_date():
     """
     now = datetime.now()
     return now.strftime("%Y-%m-%d %H:%M:%S")
-
-
-# def create_hash(name: str) -> str:
-#     """
-#     Creates a url-safe name from a name.
-#     """
-#     if name is None:
-#         return "None"
-
-#     return "".join([str(i) for i in name if i.isalnum()]).lower()
 
 
 class UseBisection:
@@ -181,17 +150,6 @@ class Ping:
             return False
 
 
-def get_normal_artist_name(artists: list[str]) -> str:
-    """
-    Returns the artist name with most capital letters.
-    """
-    if len(artists) == 1:
-        return artists[0]
-
-    artists.sort()
-    return artists[0]
-
-
 def get_artists_from_tracks(tracks: list[models.Track]) -> set[str]:
     """
     Extracts all artists from a list of tracks. Returns a list of Artists.
@@ -240,7 +198,6 @@ def use_string_bisection(src: list[str], query: str) -> str | None:
     left = 0
     right = len(src) - 1
     query = query.lower()
-    # src = sorted(src)
 
     while left <= right:
         mid = (left + right) // 2

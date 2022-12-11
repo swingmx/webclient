@@ -11,12 +11,11 @@ from app.db.sqlite.albums import SQLiteAlbumMethods as aldb
 from app.db.sqlite.artists import SQLiteArtistMethods as ardb
 from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
 from app.models import Album, Artist, Folder, Track
+
 from app.utils import (
     UseBisection,
     create_folder_hash,
-    create_hash,
     get_all_artists,
-    get_path_hash,
     remove_duplicates,
 )
 
@@ -76,7 +75,7 @@ class Store:
         Creates a folder object from a path.
         """
         folder = Path(path)
-        
+
         return Folder(
             name=folder.name,
             path=str(folder),
@@ -166,13 +165,38 @@ class Store:
     # ====================================================
     # ==================== ALBUMS ========================
     # ====================================================
+    @staticmethod
+    def create_album(track: Track):
+        return Album(
+            albumhash=track.albumhash,
+            albumartists=track.albumartist,  # type: ignore
+            title=track.album,
+        )
 
     @classmethod
     def load_albums(cls):
         """
         Loads all albums from the database into the store.
         """
-        cls.albums = list(aldb.get_all_albums())
+
+        albumhashes = set(t.albumhash for t in cls.tracks)
+
+        for albumhash in tqdm(albumhashes, desc="Loading albums"):
+            for track in cls.tracks:
+                if track.albumhash == albumhash:
+                    cls.albums.append(cls.create_album(track))
+                    break
+
+        db_albums: list[tuple] = aldb.get_all_albums()
+
+        for album in tqdm(db_albums, desc="Mapping album colors"):
+            albumhash = album[1]
+            colors = json.loads(album[2])
+
+            for al in cls.albums:
+                if al.albumhash == albumhash:
+                    al.set_colors(colors)
+                    break
 
     @classmethod
     def add_album(cls, album: Album):
@@ -187,14 +211,6 @@ class Store:
         Adds multiple albums to the store.
         """
         cls.albums.extend(albums)
-
-    @classmethod
-    def map_album_color(cls, albumhash: str, colors: list[str]):
-        """
-        Maps a color tuple to an album.
-        """
-        album = UseBisection(cls.albums, "albumhash", [albumhash])()[0]
-        album.colors = colors
 
     @classmethod
     def get_albums_by_albumartist(
@@ -267,10 +283,14 @@ class Store:
         """
         Maps a color to the corresponding artist.
         """
-        artist: Artist = UseBisection(cls.artists, "artisthash", [artist_tuple[1]])()[0]
 
-        if artist is not None:
-            artist.colors = json.loads(artist_tuple[2])
+        artisthash = artist_tuple[1]
+        color = json.loads(artist_tuple[2])
+
+        for artist in cls.artists:
+            if artist.artisthash == artisthash:
+                artist.colors = color
+                break
 
     @classmethod
     def add_artist(cls, artist: Artist):

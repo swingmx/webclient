@@ -7,6 +7,7 @@ from tqdm import tqdm
 from app import settings
 from app.db.sqlite.albums import SQLiteAlbumMethods as db
 from app.db.sqlite.artists import SQLiteArtistMethods as adb
+from app.db.sqlite.utils import SQLiteManager
 from app.db.store import Store
 from app.logger import get_logger
 from app.models import Album, Artist
@@ -36,17 +37,19 @@ class ProcessAlbumColors:
     """
 
     def __init__(self) -> None:
-        all_albums = Store.albums
 
-        process_count = 0
+        with SQLiteManager() as cur:
+            for album in tqdm(Store.albums, desc="Processing album colors"):
+                if len(album.colors) == 0:
+                    colors = self.process_color(album)
 
-        if all_albums is None:
-            return
+                    if colors is None:
+                        continue
 
-        for album in tqdm(all_albums, desc="Processing album colors"):
-            if len(album.colors) == 0:
-                self.process_color(album)
-                process_count += 1
+                    album.set_colors(colors)
+
+                    color_str = json.dumps(colors)
+                    db.insert_one_album(cur, album.albumhash, color_str)
 
     @staticmethod
     def process_color(album: Album):
@@ -56,11 +59,6 @@ class ProcessAlbumColors:
             return
 
         colors = get_image_colors(str(path))
-
-        if len(colors) > 0:
-            db.update_album_colors(album.albumhash, colors)
-            Store.map_album_color(albumhash=album.albumhash, colors=colors)
-
         return colors
 
 
