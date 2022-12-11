@@ -219,7 +219,6 @@ class Store:
         """
         Returns N albums by the given albumartist, excluding the specified album.
         """
-        artisthash = f"-{artisthash}-"
 
         albums = [album for album in cls.albums if artisthash in album.albumartisthash]
 
