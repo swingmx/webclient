@@ -5,8 +5,6 @@ import os
 import time
 from typing import List
 
-from app import instances
-from app.utils import create_hash
 from app.lib.taglib import get_tags
 from app.logger import get_logger
 from watchdog.events import PatternMatchingEventHandler

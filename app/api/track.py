@@ -5,7 +5,6 @@ from flask import Blueprint
 from flask import send_file
 
 
-from app import instances
 from app.db.sqlite.tracks import SQLiteTrackMethods
 
 track_bp = Blueprint("track", __name__, url_prefix="/")
@@ -35,14 +34,3 @@ def send_track_file(trackhash: str):
         return send_file(track.filepath, mimetype=f"audio/{audio_type}")
     except FileNotFoundError:
         return msg, 404
-
-
-@track_bp.route("/sample")
-def get_sample_track():
-    """
-    Returns a sample track object.
-    """
-
-    return instances.tracks_instance.get_song_by_album(
-        "Legends Never Die", "Juice WRLD"
-    )

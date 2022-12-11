@@ -3,7 +3,6 @@ This library contains all the functions related to tracks.
 """
 import os
 
-from app import instances
 from tqdm import tqdm
 
 
