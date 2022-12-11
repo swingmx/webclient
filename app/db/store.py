@@ -13,6 +13,7 @@ from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
 from app.models import Album, Artist, Folder, Track
 from app.utils import (
     UseBisection,
+    create_folder_hash,
     create_hash,
     get_all_artists,
     get_path_hash,
@@ -64,10 +65,10 @@ class Store:
         """
         Checks if a folder has tracks.
         """
-        path_hash = get_path_hash(path)
-        tracks_hash = "".join(f.path_hash for f in cls.folders)
+        path_hashes = "".join(f.path_hash for f in cls.folders)
+        path_hash = create_folder_hash(*Path(path).parts[1:])
 
-        return path_hash in tracks_hash
+        return path_hash in path_hashes
 
     @staticmethod
     def create_folder(path: str) -> Folder:
@@ -75,13 +76,13 @@ class Store:
         Creates a folder object from a path.
         """
         folder = Path(path)
-
+        
         return Folder(
             name=folder.name,
             path=str(folder),
             is_sym=folder.is_symlink(),
             has_tracks=True,
-            path_hash=create_hash(*folder.parts[1:]),
+            path_hash=create_folder_hash(*folder.parts[1:]),
         )
 
     @classmethod
@@ -112,15 +113,11 @@ class Store:
         all_folders = [f for f in all_folders if f.exists()]
 
         for path in tqdm(all_folders, desc="Processing folders"):
-            folder = Folder(
-                name=path.name,
-                path=str(path),
-                is_sym=path.is_symlink(),
-                has_tracks=True,
-                path_hash=create_hash(*path.parts[1:]),
-            )
+            folder = cls.create_folder(str(path))
 
             cls.folders.append(folder)
+
+        # print(cls.folders)
 
     @classmethod
     def get_folder(cls, path: str):  # type: ignore
@@ -137,14 +134,9 @@ class Store:
         if not has_tracks:
             return None
 
-        path: Path = Path(path)  # type: ignore
+        # path: Path = Path(path)  # type: ignore
 
-        folder = Folder(
-            name=path.name,
-            path=str(path),
-            is_sym=path.is_symlink(),
-            has_tracks=True,
-        )
+        folder = cls.create_folder(path)
         cls.folders.append(folder)
         return folder
 

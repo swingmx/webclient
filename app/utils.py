@@ -76,7 +76,19 @@ def is_valid_file(filename: str) -> bool:
         return False
 
 
-def create_hash(*args: str, limit=5) -> str:
+def create_hash(*args: str, limit=7) -> str:
+    """
+    Creates a simple hash for an album
+    """
+    string = "".join(args)
+    string = string.lower().strip().replace(" ", "")
+    string = "".join(t for t in string if t.isalnum())
+    string = string.encode("utf-8")
+    string = hashlib.sha256(string).hexdigest()
+    return string[-limit:]
+
+
+def create_folder_hash(*args: str, limit=7) -> str:
     """
     Creates a simple hash for an album
     """
@@ -84,7 +96,7 @@ def create_hash(*args: str, limit=5) -> str:
 
     strings = ["".join([t for t in s if t.isalnum()]) for s in strings]
     strings = [s.encode("utf-8") for s in strings]
-    strings = [hashlib.md5(s).hexdigest()[-limit:] for s in strings]
+    strings = [hashlib.sha256(s).hexdigest()[-limit:] for s in strings]
     return "".join(strings)
 
 
@@ -186,7 +198,7 @@ def get_artists_from_tracks(tracks: list[models.Track]) -> set[str]:
     """
     artists = set()
 
-    master_artist_list = [[x.name for x in t.artist] for t in tracks] # type: ignore
+    master_artist_list = [[x.name for x in t.artist] for t in tracks]  # type: ignore
     artists = artists.union(*master_artist_list)
 
     return artists
