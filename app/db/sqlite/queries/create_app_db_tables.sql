@@ -19,12 +19,8 @@ CREATE TABLE IF NOT EXISTS tracks (
 
 CREATE TABLE IF NOT EXISTS albums (
     id integer PRIMARY KEY,
-    albumartist text NOT NULL,
     albumhash text NOT NULL,
-    colors text,
-    copyright text,
-    date text NOT NULL,
-    title text NOT NULL
+    colors text NOT NULL
 );
 
 

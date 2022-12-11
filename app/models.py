@@ -7,8 +7,6 @@ from dataclasses import dataclass
 
 from app import utils
 
-# from operator import itemgetter
-
 
 @dataclass(slots=True)
 class Artist:
@@ -36,9 +34,8 @@ class Track:
     Track class
     """
 
-    # id: int
     album: str
-    albumartist: str
+    albumartist: str | list[Artist]
     albumhash: str
     artist: str | list[Artist]
     bitrate: int
@@ -64,6 +61,9 @@ class Track:
 
             self.artist = [Artist(a) for a in artist_str]
 
+            albumartists = str(self.albumartist).split(", ")
+            self.albumartist = [Artist(a) for a in albumartists]
+
         self.filetype = self.filepath.rsplit(".", maxsplit=1)[-1]
         self.image = self.albumhash + ".webp"
 
@@ -78,17 +78,16 @@ class Album:
     Creates an album object
     """
 
-    albumartists: str | list[Artist]
     albumhash: str
-    colors: str | list[str]
-    copyright: str
-    date: int
     title: str
+    albumartists: list[Artist]
 
     albumartisthash: str = ""
     image: str = ""
     count: int = 0
     duration: int = 0
+    colors: list[str] = dataclasses.field(default_factory=list)
+    date: str = ""
 
     is_soundtrack: bool = False
     is_compilation: bool = False
@@ -98,22 +97,10 @@ class Album:
 
     def __post_init__(self):
         self.image = self.albumhash + ".webp"
+        self.albumartisthash = "-".join(a.artisthash for a in self.albumartists)
 
-        artists = str(self.albumartists).split(", ")
-        artists = [utils.create_hash(a) for a in artists]
-
-        self.albumartisthash = "-".join(artists)
-        self.albumartisthash = f"-{self.albumartisthash}-"
-
-        if self.colors is not None:
-            self.colors = json.loads(str(self.colors))
-
-        if self.albumartists is not None:
-            artists = str(self.albumartists).split(", ")
-            self.albumartists = []
-
-            for artist in artists:
-                self.albumartists.append(Artist(artist))
+    def set_colors(self, colors: list[str]):
+        self.colors = colors
 
     def check_type(self):
         """
@@ -183,13 +170,6 @@ class Playlist:
     count: int = 0
     duration: int = 0
 
-    # def __init__(self, data):
-    #     self.id = data["_id"]["$oid"]
-    #     self.tracks = []
-    #     self.pretracks = data["pre_tracks"]
-    #     self.count = len(self.pretracks)
-    #     self.write_props(data)
-
     def __post_init__(self):
         self.trackhashes = json.loads(str(self.trackhashes))
         self.artisthashes = json.loads(str(self.artisthashes))
@@ -201,18 +181,6 @@ class Playlist:
         else:
             self.image = "None"
             self.thumb = "None"
-
-    # def update_playlist(self, data: dict):
-    #     self.write_props(data)
-
-    # TODO: Find a better name for this method
-    # def write_props(self, data: dict):
-    #     (self.name, self.image, self.thumb, self.last_updated,) = itemgetter(
-    #         "name",
-    #         "image",
-    #         "thumb",
-    #         "last_updated",
-    #     )(data)
 
 
 @dataclass

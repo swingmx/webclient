@@ -1,20 +1,17 @@
+from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 
 from app import settings
-from app.db.sqlite.albums import SQLiteAlbumMethods
 from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.store import Store
-from app.lib.albumslib import create_album
-from app.lib.taglib import get_tags
+
+from app.lib.taglib import extract_thumb, get_tags
 from app.logger import log
 from app.models import Album, Artist, Track
-from app.utils import UseBisection, get_artists_from_tracks, run_fast_scandir
+from app.utils import get_artists_from_tracks, run_fast_scandir
 
 get_all_tracks = SQLiteTrackMethods.get_all_tracks
 insert_many_tracks = SQLiteTrackMethods.insert_many_tracks
-
-get_all_albums = SQLiteAlbumMethods.get_all_albums
-insert_many_albums = SQLiteAlbumMethods.insert_many_albums
 
 
 class Populate:
@@ -74,78 +71,100 @@ class Populate:
         log.info("Added %s/%s tracks", tagged_count, len(untagged))
 
 
-class CreateAlbums:
-    """
-    Creates album objects from tracks, saves them to db and adds them to the store.
-    """
+def get_image(album: Album):
+    for track in Store.tracks:
+        if track.albumhash == album.albumhash:
+            extract_thumb(track.filepath, track.image)
+            break
 
+
+class ProcessTrackThumbnails:
     def __init__(self) -> None:
-        tracks = get_all_tracks()
-        albums = get_all_albums()
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            results = list(
+                tqdm(
+                    pool.map(get_image, Store.albums),
+                    total=len(Store.albums),
+                    desc="Extracting track images",
+                )
+            )
 
-        tracks = list(tracks)
-        albums = list(albums)  # type: ignore
+            results = [r for r in results]
 
-        log.info("Processing albums ...")
+        # for album in tqdm(Store.albums, desc="Extracting track images"):
 
-        unprocessed_hashes = self.get_unprocessed(albums, tracks)
-        log.info("Found %s unprocessed albums", len(unprocessed_hashes))
+    # class CreateAlbums:
+    #     """
+    #     Creates album objects from tracks, saves them to db and adds them to the store.
+    #     """
 
-        if len(unprocessed_hashes) == 0:
-            return
+    #     def __init__(self) -> None:
+    #         tracks = get_all_tracks()
+    #         albums = get_all_albums()
 
-        self.hashes = unprocessed_hashes
+    #         tracks = list(tracks)
+    #         albums = list(albums)  # type: ignore
 
-        gen = self.create_albums(tracks)
-        albums_dicts = [a for a in gen if a is not None]
+    #         log.info("Processing albums ...")
 
-        # Store.add_albums([Album(**a) for a in albums_dicts])
-        insert_many_albums(albums_dicts)
+    #         unprocessed_hashes = self.get_unprocessed(albums, tracks)
+    #         log.info("Found %s unprocessed albums", len(unprocessed_hashes))
 
-        log.info("Albums processed.")
+    #         if len(unprocessed_hashes) == 0:
+    #             return
 
-    def create_albums(self, tracks: list[Track]):
-        for ahash in tqdm(self.hashes, desc="Creating albums"):
-            album_dict = self.create_album(tracks, ahash)
+    #         self.hashes = unprocessed_hashes
 
-            if album_dict is not None:
-                album = Album(**album_dict)
-                Store.add_album(album)
+    # gen = self.create_albums(tracks)
+    #         albums_dicts = [a for a in gen if a is not None]
 
-                for artist in album.albumartists:  # type: ignore
-                    artist: Artist
-                    store_artist = Store.get_artist_by_hash(artist.artisthash)
+    #         # Store.add_albums([Album(**a) for a in albums_dicts])
+    #         insert_many_albums(albums_dicts)
 
-                    if store_artist is None:
-                        Store.add_artist(artist)
+    #         log.info("Albums processed.")
 
-                yield album_dict
+    #     def create_albums(self, tracks: list[Track]):
+    #         for ahash in tqdm(self.hashes, desc="Creating albums"):
+    #             album_dict = self.create_album(tracks, ahash)
 
-    @staticmethod
-    def get_unprocessed(albums: list[Album], tracks: list[Track]) -> list[str]:
-        track_album_hashes = set(t.albumhash for t in tracks)
-        processed_hashes = set(a.albumhash for a in albums)
+    #             if album_dict is not None:
+    #                 album = Album(**album_dict)
+    #                 Store.add_album(album)
 
-        unprocessed_hashes = list(track_album_hashes - processed_hashes)
+    #                 for artist in album.albumartists:  # type: ignore
+    #                     artist: Artist
+    #                     store_artist = Store.get_artist_by_hash(artist.artisthash)
 
-        return unprocessed_hashes
+    #                     if store_artist is None:
+    #                         Store.add_artist(artist)
 
-    @staticmethod
-    def create_album(tracks: list[Track], album_hash: str) -> dict | None:
-        album = {"image": None}
+    #                 yield album_dict
 
-        while album["image"] is None:
-            track = UseBisection(tracks, "albumhash", [album_hash])()[0]
+    # @staticmethod
+    # def get_unprocessed(albums: list[Album], tracks: list[Track]) -> list[str]:
+    #     track_album_hashes = set(t.albumhash for t in tracks)
+    #     processed_hashes = set(a.albumhash for a in albums)
 
-            if track is not None:
-                album = create_album(track)
-                tracks.remove(track)
-            else:
-                album["image"] = album_hash + ".webp"  # type: ignore
+    #     unprocessed_hashes = list(track_album_hashes - processed_hashes)
 
-        try:
-            del album["image"]
-            return album
-        except KeyError:
-            print("KeyError when creating album")
-            print(album)
+    #     return unprocessed_hashes
+
+    # @staticmethod
+    # def create_album(tracks: list[Track], album_hash: str) -> dict | None:
+    #     album = {"image": None}
+
+    #     while album["image"] is None:
+    #         track = UseBisection(tracks, "albumhash", [album_hash])()[0]
+
+    #         if track is not None:
+    #             album = create_album(track)
+    #             tracks.remove(track)
+    #         else:
+    #             album["image"] = album_hash + ".webp"  # type: ignore
+
+    #     try:
+    #         del album["image"]
+    #         return album
+    #     except KeyError:
+    #         print("KeyError when creating album")
+    #         print(album)
