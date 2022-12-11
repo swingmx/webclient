@@ -9,7 +9,7 @@ from typing import List
 
 from tqdm import tqdm
 
-from app import instances, models, utils
+from app import models, utils
 from app.lib import taglib
 from app.logger import log
 from app.settings import LG_THUMBS_PATH

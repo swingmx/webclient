@@ -10,33 +10,12 @@ from typing import Any
 from PIL import Image, ImageSequence
 from werkzeug import datastructures
 
-from app import exceptions, instances, models, settings
+from app import exceptions, models, settings
 from app.logger import get_logger
 
 TrackExistsInPlaylist = exceptions.TrackInPlaylistError
 
 log = get_logger()
-
-
-def add_track(playlistid: str, trackid: str):
-    """
-    Adds a track to a playlist to the database.
-    """
-    tt = instances.tracks_instance.get_track_by_id(trackid)
-
-    if tt is None:
-        return
-
-    track = models.Track(**tt)
-
-    playlist = instances.playlist_instance.get_playlist_by_id(playlistid)
-
-    track_hash = track.trackhash
-
-    if track_hash in playlist["pre_tracks"]:
-        raise TrackExistsInPlaylist
-
-    instances.playlist_instance.add_track_to_playlist(playlistid, track_hash)
 
 
 def create_thumbnail(image: Any, img_path: str) -> str:
