@@ -147,6 +147,11 @@ def add_albums_to_cache(artisthash: str):
     return True
 
 
+# =======================================================
+# ===================== ROUTES ==========================
+# =======================================================
+
+
 @artist_bp.route("/artist/<artisthash>", methods=["GET"])
 def get_artist(artisthash: str):
     limit = request.args.get("limit")
@@ -192,6 +197,8 @@ def get_artist_albums(artisthash: str):
     if limit is None:
         limit = 6
 
+    return_all = request.args.get("all")
+
     limit = int(limit)
 
     all_albums = []
@@ -226,6 +233,9 @@ def get_artist_albums(artisthash: str):
     appearances = list(appearances)
 
     appearances = remove_EPs_and_singles(appearances)
+
+    if return_all is not None:
+        limit = len(all_albums)
 
     return {
         "albums": albums[:limit],
