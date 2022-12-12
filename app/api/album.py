@@ -7,12 +7,10 @@ from flask import Blueprint, request
 
 from app import utils
 from app.db.sqlite.albums import SQLiteAlbumMethods
-from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.store import Store
 
 from app.models import Track
 
-get_tracks_by_albumhash = SQLiteTrackMethods.get_tracks_by_albumhash
 get_album_by_id = SQLiteAlbumMethods.get_album_by_id
 get_albums_by_albumartist = SQLiteAlbumMethods.get_albums_by_albumartist
 
@@ -80,8 +78,8 @@ def get_album():
     if (
         album.count == 1
         and tracks[0].title == album.title
-        and tracks[0].track == 1
-        and tracks[0].disc == 1
+        # and tracks[0].track == 1
+        # and tracks[0].disc == 1
     ):
         album.is_single = True
     else:
@@ -129,7 +127,6 @@ def get_artist_albums():
     ]
 
     albums = [a for a in albums if len(a["albums"]) > 0]
-    print(albumartists, exclude)
 
     return {"data": albums}
 

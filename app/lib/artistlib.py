@@ -3,6 +3,7 @@ from pathlib import Path
 from io import BytesIO
 from PIL import Image
 import requests
+import urllib
 
 from tqdm import tqdm
 from requests.exceptions import ConnectionError as ReqConnError, ReadTimeout
@@ -10,6 +11,7 @@ from requests.exceptions import ConnectionError as ReqConnError, ReadTimeout
 from app import settings
 from app.models import Artist
 from app.db.store import Store
+from app.utils import create_hash
 
 
 def get_artist_image_link(artist: str):
@@ -18,11 +20,20 @@ def get_artist_image_link(artist: str):
     """
 
     try:
-        url = f"https://api.deezer.com/search/artist?q={artist}"
-        response = requests.get(url, timeout=10)
+        query = urllib.parse.quote(artist)  # type: ignore
+
+        url = f"https://api.deezer.com/search/artist?q={query}"
+        response = requests.get(url, timeout=30)
         data = response.json()
 
-        return data["data"][0]["picture_big"]
+        for res in data["data"]:
+            res_hash = create_hash(res["name"], decode=True)
+            artist_hash = create_hash(artist, decode=True)
+
+            if res_hash == artist_hash:
+                return res["picture_big"]
+
+        return None
     except (ReqConnError, ReadTimeout, IndexError, KeyError):
         return None
 

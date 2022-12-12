@@ -5,19 +5,15 @@ import os
 
 from tqdm import tqdm
 
+from app.db.store import Store
+from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
+
 
 def validate_tracks() -> None:
     """
     Gets all songs under the ~/ directory.
     """
-    entries = instances.tracks_instance.get_all_tracks()
-
-    for track in tqdm(entries, desc="Validating tracks"):
-        try:
-            os.chmod(track["filepath"], 0o755)
-        except FileNotFoundError:
-            instances.tracks_instance.remove_song_by_id(track["_id"]["$oid"])
-
-
-def get_p_track(trackhash: str):
-    return instances.tracks_instance.find_track_by_hash(trackhash)
+    for track in tqdm(Store.tracks, desc="Removing deleted tracks"):
+        if not os.path.exists(track.filepath):
+            Store.tracks.remove(track)
+            tdb.remove_track_by_filepath(track.filepath)

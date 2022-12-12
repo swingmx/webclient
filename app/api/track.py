@@ -9,7 +9,6 @@ from app.db.sqlite.tracks import SQLiteTrackMethods
 
 track_bp = Blueprint("track", __name__, url_prefix="/")
 
-get_track_by_id = SQLiteTrackMethods.get_track_by_id
 get_track_by_hash = SQLiteTrackMethods.get_track_by_trackhash
 
 
