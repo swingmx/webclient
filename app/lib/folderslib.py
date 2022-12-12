@@ -1,14 +1,10 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
 
-from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.store import Store
 
 from app.models import Folder, Track
 from app.settings import SUPPORTED_FILES
-
-find_tracks_by_filepath = SQLiteTrackMethods.find_tracks_by_filepath
-get_all_tracks = SQLiteTrackMethods.get_all_tracks_raw
 
 
 class getFnF:

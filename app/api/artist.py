@@ -234,10 +234,13 @@ def get_artist_albums(artisthash: str):
 
     appearances = remove_EPs_and_singles(appearances)
 
+    artist = Store.get_artist_by_hash(artisthash)
+
     if return_all is not None:
         limit = len(all_albums)
 
     return {
+        "artistname": artist.name,
         "albums": albums[:limit],
         "singles": singles[:limit],
         "eps": eps[:limit],

@@ -10,6 +10,7 @@ from app.lib import watchdoge
 from app.lib.artistlib import CheckArtistImages
 from app.lib.colorlib import ProcessAlbumColors, ProcessArtistColors
 from app.lib.populate import Populate, ProcessTrackThumbnails
+from app.lib.trackslib import validate_tracks
 from app.logger import get_logger
 
 log = get_logger()
@@ -22,6 +23,7 @@ def run_secondary_checks():
     """
     # ValidateAlbumThumbs()
     # ValidatePlaylistThumbs()
+    validate_tracks()
 
     while True:
         # trackslib.validate_tracks()

@@ -5,7 +5,7 @@ import os
 import hashlib
 import threading
 from datetime import datetime
-
+from unidecode import unidecode
 import requests
 
 from app import models
@@ -64,11 +64,15 @@ def remove_duplicates(tracks: list[models.Track]) -> list[models.Track]:
     return [t for t in tracks if t is not None]
 
 
-def create_hash(*args: str, limit=7) -> str:
+def create_hash(*args: str, decode=False, limit=7) -> str:
     """
     Creates a simple hash for an album
     """
     string = "".join(args)
+
+    if decode:
+        string = unidecode(string)
+
     string = string.lower().strip().replace(" ", "")
     string = "".join(t for t in string if t.isalnum())
     string = string.encode("utf-8")
