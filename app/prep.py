@@ -15,9 +15,14 @@ class CopyFiles:
     """Copies assets to the app directory."""
 
     def __init__(self) -> None:
+        assets_dir = "assets"
+
+        if settings.BUILD:
+            assets_dir = Path(__file__).parent.resolve() / "assets"
+
         files = [
             {
-                "src": "assets",
+                "src": assets_dir,
                 "dest": os.path.join(settings.APP_DIR, "assets"),
                 "is_dir": True,
             }

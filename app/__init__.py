@@ -1,4 +1,5 @@
 from flask import Flask
+
 # from flask_caching import Cache
 from flask_cors import CORS
 
@@ -16,7 +17,7 @@ def create_api():
     """
     Creates the Flask instance, registers modules and registers all the API blueprints.
     """
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path="")
     CORS(app)
 
     # app.config.from_mapping(config)
