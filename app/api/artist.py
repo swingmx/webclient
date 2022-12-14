@@ -4,6 +4,7 @@ Contains all the artist(s) routes.
 # import urllib
 # import requests
 from collections import deque
+
 from flask import Blueprint, request
 
 # from app import cache, instances, utils
@@ -11,7 +12,7 @@ from app.db.store import Store
 from app.models import Album, Track
 from app.utils import remove_duplicates
 
-artist_bp = Blueprint("artist", __name__, url_prefix="/")
+artistbp = Blueprint("artist", __name__, url_prefix="/")
 
 
 class CacheEntry:
@@ -152,7 +153,7 @@ def add_albums_to_cache(artisthash: str):
 # =======================================================
 
 
-@artist_bp.route("/artist/<artisthash>", methods=["GET"])
+@artistbp.route("/artist/<artisthash>", methods=["GET"])
 def get_artist(artisthash: str):
     limit = request.args.get("limit")
 
@@ -190,7 +191,7 @@ def get_artist(artisthash: str):
     return {"artist": artist, "tracks": tracks[:limit]}
 
 
-@artist_bp.route("/artist/<artisthash>/albums", methods=["GET"])
+@artistbp.route("/artist/<artisthash>/albums", methods=["GET"])
 def get_artist_albums(artisthash: str):
     limit = request.args.get("limit")
 
@@ -248,7 +249,7 @@ def get_artist_albums(artisthash: str):
     }
 
 
-@artist_bp.route("/artist/<artisthash>/tracks", methods=["GET"])
+@artistbp.route("/artist/<artisthash>/tracks", methods=["GET"])
 def get_artist_tracks(artisthash: str):
     """
     Returns all artists by a given artist.

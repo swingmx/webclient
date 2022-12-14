@@ -1,3 +1,21 @@
+CREATE_USERDATA_TABLES = """
+CREATE TABLE IF NOT EXISTS playlists (
+    id integer PRIMARY KEY,
+    artisthashes text,
+    image text,
+    last_updated text not null,
+    name text not null,
+    trackhashes text
+);
+
+CREATE TABLE IF NOT EXISTS favorites (
+    id integer PRIMARY KEY,
+    hash text not null,
+    type text not null
+);
+"""
+
+CREATE_APPDB_TABLES = """
 CREATE TABLE IF NOT EXISTS tracks (
     id integer PRIMARY KEY,
     album text NOT NULL,
@@ -37,3 +55,4 @@ CREATE TABLE IF NOT EXISTS folders (
     path text NOT NULL,
     trackcount integer NOT NULL
 );
+"""

@@ -10,6 +10,7 @@ from tqdm import tqdm
 from app.db.sqlite.albums import SQLiteAlbumMethods as aldb
 from app.db.sqlite.artists import SQLiteArtistMethods as ardb
 from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
+from app.db.sqlite.favorite import SQLiteFavoriteMethods as favdb
 from app.models import Album, Artist, Folder, Track
 
 from app.utils import (
@@ -39,6 +40,13 @@ class Store:
 
         cls.tracks = list(tdb.get_all_tracks())
 
+        fav_hashes = favdb.get_fav_tracks()
+        fav_hashes = [t[1] for t in fav_hashes]
+
+        for track in tqdm(cls.tracks, desc="Loading tracks"):
+            if track.trackhash in fav_hashes:
+                track.is_favorite = True
+
     @classmethod
     def add_track(cls, track: Track):
         """
@@ -54,6 +62,41 @@ class Store:
         """
 
         cls.tracks.extend(tracks)
+
+    @classmethod
+    def add_fav_track(cls, trackhash: str):
+        """
+        Adds a track to the favorites.
+        """
+
+        for track in cls.tracks:
+            if track.trackhash == trackhash:
+                track.is_favorite = True
+
+    @classmethod
+    def remove_fav_track(cls, trackhash: str):
+        """
+        Removes a track from the favorites.
+        """
+
+        for track in cls.tracks:
+            if track.trackhash == trackhash:
+                track.is_favorite = False
+
+    @classmethod
+    def get_tracks_by_trackhashes(cls, trackhashes: list[str]) -> list[Track]:
+        """
+        Returns a list of tracks by their hashes.
+        """
+
+        tracks = []
+
+        for trackhash in trackhashes:
+            for track in cls.tracks:
+                if track.trackhash == trackhash:
+                    tracks.append(track)
+
+        return tracks
 
     # ====================================================
     # ==================== FOLDERS =======================

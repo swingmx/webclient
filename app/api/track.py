@@ -1,18 +1,16 @@
 """
 Contains all the track routes.
 """
-from flask import Blueprint
-from flask import send_file
-
+from flask import Blueprint, send_file
 
 from app.db.sqlite.tracks import SQLiteTrackMethods
 
-track_bp = Blueprint("track", __name__, url_prefix="/")
+trackbp = Blueprint("track", __name__, url_prefix="/")
 
 get_track_by_hash = SQLiteTrackMethods.get_track_by_trackhash
 
 
-@track_bp.route("/file/<trackhash>")
+@trackbp.route("/file/<trackhash>")
 def send_track_file(trackhash: str):
     """
     Returns an audio file that matches the passed id to the client.

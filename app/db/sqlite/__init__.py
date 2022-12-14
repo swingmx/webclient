@@ -25,12 +25,12 @@ def get_sqlite_conn():
     return create_connection(APP_DB_PATH)
 
 
-def create_tables(conn: SqlConn, sql_path: str):
+def create_tables(conn: SqlConn, sql_query: str):
     """
     Executes the specifiend SQL file to create database tables.
     """
-    with open(sql_path, "r", encoding="utf-8") as sql_file:
-        conn.executescript(sql_file.read())
+    # with open(sql_query, "r", encoding="utf-8") as sql_file:
+    conn.executescript(sql_query)
 
 
 def setup_search_db():

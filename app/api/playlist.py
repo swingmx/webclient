@@ -5,16 +5,16 @@ import json
 from datetime import datetime
 
 from flask import Blueprint, request
+from PIL import UnidentifiedImageError
 
 from app import models, serializer
-
-from app.lib import playlistlib
-from app.utils import create_new_date
-
-from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.sqlite.playlists import SQLitePlaylistMethods
+from app.db.sqlite.tracks import SQLiteTrackMethods
+from app.db.store import Store
+from app.lib import playlistlib
+from app.utils import create_new_date, remove_duplicates
 
-playlist_bp = Blueprint("playlist", __name__, url_prefix="/")
+playlistbp = Blueprint("playlist", __name__, url_prefix="/")
 
 PL = SQLitePlaylistMethods
 
@@ -27,10 +27,10 @@ tracks_to_playlist = PL.add_tracks_to_playlist
 add_artist_to_playlist = PL.add_artist_to_playlist
 update_playlist = PL.update_playlist
 
-get_tracks_by_trackhashes = SQLiteTrackMethods.get_tracks_by_trackhashes
+# get_tracks_by_trackhashes = SQLiteTrackMethods.get_tracks_by_trackhashes
 
 
-@playlist_bp.route("/playlists", methods=["GET"])
+@playlistbp.route("/playlists", methods=["GET"])
 def send_all_playlists():
     """
     Gets all the playlists.
@@ -46,7 +46,7 @@ def send_all_playlists():
     return {"data": playlists}
 
 
-@playlist_bp.route("/playlist/new", methods=["POST"])
+@playlistbp.route("/playlist/new", methods=["POST"])
 def create_playlist():
     """
     Creates a new playlist. Accepts POST method with a JSON body.
@@ -77,7 +77,7 @@ def create_playlist():
     return {"playlist": playlist}, 201
 
 
-@playlist_bp.route("/playlist/<playlist_id>/add", methods=["POST"])
+@playlistbp.route("/playlist/<playlist_id>/add", methods=["POST"])
 def add_track_to_playlist(playlist_id: str):
     """
     Takes a playlist ID and a track hash, and adds the track to the playlist
@@ -99,7 +99,7 @@ def add_track_to_playlist(playlist_id: str):
     return {"msg": "Done"}, 200
 
 
-@playlist_bp.route("/playlist/<playlistid>")
+@playlistbp.route("/playlist/<playlistid>")
 def get_playlist(playlistid: str):
     """
     Gets a playlist by id, and if it exists, it gets all the tracks in the playlist and returns them.
@@ -109,9 +109,8 @@ def get_playlist(playlistid: str):
     if playlist is None:
         return {"msg": "Playlist not found"}, 404
 
-    tracks = get_tracks_by_trackhashes(list(playlist.trackhashes))
-    tracks = list(tracks)
-    tracks.reverse()
+    tracks = Store.get_tracks_by_trackhashes(list(playlist.trackhashes))
+    tracks = remove_duplicates(tracks)
 
     duration = sum(t.duration for t in tracks)
     playlist.last_updated = serializer.date_string_to_time_passed(playlist.last_updated)
@@ -121,7 +120,7 @@ def get_playlist(playlistid: str):
     return {"info": playlist, "tracks": tracks}
 
 
-@playlist_bp.route("/playlist/<playlistid>/update", methods=["PUT"])
+@playlistbp.route("/playlist/<playlistid>/update", methods=["PUT"])
 def update_playlist_info(playlistid: str):
     if playlistid is None:
         return {"error": "Playlist ID not provided"}, 400
@@ -148,7 +147,10 @@ def update_playlist_info(playlistid: str):
     }
 
     if image:
-        playlist["image"] = playlistlib.save_p_image(image, playlistid)
+        try:
+            playlist["image"] = playlistlib.save_p_image(image, playlistid)
+        except UnidentifiedImageError:
+            return {"error": "Failed: Invalid image"}, 400
 
     p_tuple = (*playlist.values(),)
 
