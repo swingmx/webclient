@@ -11,16 +11,11 @@ from app.db.sqlite.albums import SQLiteAlbumMethods
 from app.db.store import Store
 from app.models import Track
 
+
 get_album_by_id = SQLiteAlbumMethods.get_album_by_id
 get_albums_by_albumartist = SQLiteAlbumMethods.get_albums_by_albumartist
 
 albumbp = Blueprint("album", __name__, url_prefix="")
-
-
-@albumbp.route("/")
-def say_hi():
-    """Returns some text for the default route"""
-    return "^ _ ^"
 
 
 @albumbp.route("/album", methods=["POST"])

@@ -8,7 +8,7 @@ a = Analysis(
     ['manage.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('assets', 'app/assets'), ('app/client', 'app/client')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
