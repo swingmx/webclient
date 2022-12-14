@@ -18,3 +18,5 @@ sqllib.py
 encoderx.py
 tests
 .pytest_cache
+dist
+build

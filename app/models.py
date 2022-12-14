@@ -21,9 +21,10 @@ class Artist:
     albumcount: int = 0
     duration: int = 0
     colors: list[str] = dataclasses.field(default_factory=list)
+    is_favorite: bool = False
 
     def __post_init__(self):
-        self.artisthash = utils.create_hash(self.name)
+        self.artisthash = utils.create_hash(self.name, decode=True)
         self.image = self.artisthash + ".webp"
         self.colors = json.loads(str(self.colors))
 
@@ -53,11 +54,12 @@ class Track:
     filetype: str = ""
     image: str = ""
     artist_hashes: list[str] = dataclasses.field(default_factory=list)
+    is_favorite: bool = False
 
     def __post_init__(self):
         if self.artist is not None:
             artist_str = str(self.artist).split(", ")
-            self.artist_hashes = [utils.create_hash(a) for a in artist_str]
+            self.artist_hashes = [utils.create_hash(a, decode=True) for a in artist_str]
 
             self.artist = [Artist(a) for a in artist_str]
 
@@ -93,6 +95,7 @@ class Album:
     is_compilation: bool = False
     is_single: bool = False
     is_EP: bool = False
+    is_favorite: bool = False
     genres: list[str] = dataclasses.field(default_factory=list)
 
     def __post_init__(self):
@@ -190,3 +193,11 @@ class Folder:
     has_tracks: bool
     is_sym: bool = False
     path_hash: str = ""
+
+
+class FavType:
+    """Favorite types enum"""
+
+    track = "track"
+    album = "album"
+    artist = "artist"

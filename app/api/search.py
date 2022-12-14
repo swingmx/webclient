@@ -8,7 +8,7 @@ from app import models, serializer, utils
 from app.db.store import Store
 from app.lib import searchlib
 
-search_bp = Blueprint("search", __name__, url_prefix="/")
+searchbp = Blueprint("search", __name__, url_prefix="/")
 
 
 SEARCH_COUNT = 10
@@ -95,7 +95,7 @@ class DoSearch:
         self.search_playlists()
 
 
-@search_bp.route("/search/tracks", methods=["GET"])
+@searchbp.route("/search/tracks", methods=["GET"])
 def search_tracks():
     """
     Searches for tracks that match the search query.
@@ -113,7 +113,7 @@ def search_tracks():
     }, 200
 
 
-@search_bp.route("/search/albums", methods=["GET"])
+@searchbp.route("/search/albums", methods=["GET"])
 def search_albums():
     """
     Searches for albums.
@@ -131,7 +131,7 @@ def search_albums():
     }, 200
 
 
-@search_bp.route("/search/artists", methods=["GET"])
+@searchbp.route("/search/artists", methods=["GET"])
 def search_artists():
     """
     Searches for artists.
@@ -149,7 +149,7 @@ def search_artists():
     }, 200
 
 
-@search_bp.route("/search/playlists", methods=["GET"])
+@searchbp.route("/search/playlists", methods=["GET"])
 def search_playlists():
     """
     Searches for playlists.
@@ -167,7 +167,7 @@ def search_playlists():
     }, 200
 
 
-@search_bp.route("/search/top", methods=["GET"])
+@searchbp.route("/search/top", methods=["GET"])
 def get_top_results():
     """
     Returns the top results for the search query.
@@ -188,7 +188,7 @@ def get_top_results():
     }
 
 
-@search_bp.route("/search/loadmore")
+@searchbp.route("/search/loadmore")
 def search_load_more():
     """
     Returns more songs, albums or artists from a search query.

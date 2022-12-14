@@ -195,22 +195,25 @@ def get_all_artists(
     return [models.Artist(a) for a in artists]
 
 
-def use_string_bisection(src: list[str], query: str) -> str | None:
+def bisection_search_string(strings: list[str], target: str) -> str | None:
     """
-    Uses bisection to find a string in a **sorted** list of strings.
+    Finds a string in a list of strings using bisection search.
     """
+    if not strings:
+        return None
+
+    strings = sorted(strings)
+
     left = 0
-    right = len(src) - 1
-    query = query.lower()
-
+    right = len(strings) - 1
     while left <= right:
-        mid = (left + right) // 2
-        if src[mid].lower() == query:
-            return src[mid]
+        middle = (left + right) // 2
+        if strings[middle] == target:
+            return strings[middle]
 
-        if src[mid] > query:
-            right = mid - 1
+        if strings[middle] < target:
+            left = middle + 1
         else:
-            left = mid + 1
+            right = middle - 1
 
     return None

@@ -3,27 +3,27 @@ Contains all the album routes.
 """
 
 from dataclasses import asdict
+
 from flask import Blueprint, request
 
 from app import utils
 from app.db.sqlite.albums import SQLiteAlbumMethods
 from app.db.store import Store
-
 from app.models import Track
 
 get_album_by_id = SQLiteAlbumMethods.get_album_by_id
 get_albums_by_albumartist = SQLiteAlbumMethods.get_albums_by_albumartist
 
-album_bp = Blueprint("album", __name__, url_prefix="")
+albumbp = Blueprint("album", __name__, url_prefix="")
 
 
-@album_bp.route("/")
+@albumbp.route("/")
 def say_hi():
     """Returns some text for the default route"""
     return "^ _ ^"
 
 
-@album_bp.route("/album", methods=["POST"])
+@albumbp.route("/album", methods=["POST"])
 def get_album():
     """Returns all the tracks in the given album."""
 
@@ -88,7 +88,7 @@ def get_album():
     return {"tracks": tracks, "info": album}
 
 
-@album_bp.route("/album/<albumhash>/tracks", methods=["GET"])
+@albumbp.route("/album/<albumhash>/tracks", methods=["GET"])
 def get_album_tracks(albumhash: str):
     """
     Returns all the tracks in the given album.
@@ -105,7 +105,7 @@ def get_album_tracks(albumhash: str):
     return {"tracks": tracks}
 
 
-@album_bp.route("/album/from-artist", methods=["POST"])
+@albumbp.route("/album/from-artist", methods=["POST"])
 def get_artist_albums():
     data = request.get_json()
 

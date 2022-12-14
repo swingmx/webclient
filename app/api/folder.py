@@ -1,16 +1,15 @@
 """
 Contains all the folder routes.
 """
-from flask import request
-from flask import Blueprint
+from flask import Blueprint, request
 
 from app import settings
 from app.lib.folderslib import getFnF
 
-folder_bp = Blueprint("folder", __name__, url_prefix="/")
+folderbp = Blueprint("folder", __name__, url_prefix="/")
 
 
-@folder_bp.route("/folder", methods=["POST"])
+@folderbp.route("/folder", methods=["POST"])
 def get_folder_tree():
     """
     Returns a list of all the folders and tracks in the given folder.

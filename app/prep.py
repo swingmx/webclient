@@ -6,7 +6,7 @@ import shutil
 from pathlib import Path
 
 from app import settings
-from app.db.sqlite import create_connection, create_tables
+from app.db.sqlite import create_connection, create_tables, queries
 from app.db.store import Store
 from app.settings import APP_DB_PATH, USERDATA_DB_PATH
 
@@ -92,16 +92,8 @@ def setup_sqlite():
     app_db_conn = create_connection(APP_DB_PATH)
     playlist_db_conn = create_connection(USERDATA_DB_PATH)
 
-    current_path = Path(__file__).parent.resolve()
-
-    appdb_sql_path = "db/sqlite/queries/create_app_db_tables.sql"
-    appdb_sql_path = current_path.joinpath(appdb_sql_path)
-
-    playlist_db_sql_path = "db/sqlite/queries/create_userdata_db_tables.sql"
-    playlist_db_sql_path = current_path.joinpath(playlist_db_sql_path)
-
-    create_tables(app_db_conn, str(appdb_sql_path))
-    create_tables(playlist_db_conn, str(playlist_db_sql_path))
+    create_tables(app_db_conn, queries.CREATE_APPDB_TABLES)
+    create_tables(playlist_db_conn, queries.CREATE_USERDATA_TABLES)
 
     app_db_conn.close()
     playlist_db_conn.close()
