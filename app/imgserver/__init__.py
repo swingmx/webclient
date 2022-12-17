@@ -1,10 +1,10 @@
 import os
 from pathlib import Path
 
-from flask import Flask, request, send_from_directory
+from flask import Blueprint, request, send_from_directory
 
 
-app = Flask(__name__)
+app = Blueprint("imgserver", __name__, url_prefix="/img")
 SUPPORTED_IMAGES = (".jpg", ".png", ".webp", ".jpeg")
 
 HOME = os.path.expanduser("~")
@@ -26,7 +26,7 @@ PLAYLIST_PATH = IMG_PATH / "playlists"
 
 @app.route("/")
 def hello():
-    return "Holla"
+    return "<h1>Image Server</h1>"
 
 
 def send_fallback_img(filename: str = "default.webp"):
@@ -111,5 +111,5 @@ def send_playlist_image(imgpath: str):
 #     return imgpath, 404
 
 
-if __name__ == "__main__":
-    app.run(threaded=True, port=1971, host="0.0.0.0", debug=True)
+# def serve_imgs():
+#     app.run(threaded=True, port=1971, host="0.0.0.0", debug=True)

@@ -71,5 +71,3 @@ USERDATA_DB_PATH = os.path.join(APP_DIR, USER_DATA_DB_NAME)
 
 # ===== Store =====
 USE_STORE = True
-
-BUILD = True
