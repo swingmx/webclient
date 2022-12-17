@@ -8,7 +8,7 @@ a = Analysis(
     ['manage.py'],
     pathex=[],
     binaries=[],
-    datas=[('assets', 'app/assets'), ('app/client', 'app/client')],
+    datas=[('assets', 'assets'), ('app/client', 'app/client'), ('pyinstaller.config.ini', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

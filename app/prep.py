@@ -4,11 +4,23 @@ Contains the functions to prepare the server for use.
 import os
 import shutil
 from pathlib import Path
+from configparser import ConfigParser
 
 from app import settings
 from app.db.sqlite import create_connection, create_tables, queries
 from app.db.store import Store
 from app.settings import APP_DB_PATH, USERDATA_DB_PATH
+
+CWD = Path(__file__).parent.resolve()
+
+config = ConfigParser()
+config.read(CWD / ".." / "pyinstaller.config.ini")
+
+try:
+    IS_BUILD = config["DEFAULT"]["BUILD"] == "True"
+except KeyError:
+    # If the key doesn't exist, it means that the app is being executed in dev mode.
+    IS_BUILD = False
 
 
 class CopyFiles:
@@ -17,8 +29,8 @@ class CopyFiles:
     def __init__(self) -> None:
         assets_dir = "assets"
 
-        if settings.BUILD:
-            assets_dir = Path(__file__).parent.resolve() / "assets"
+        if IS_BUILD:
+            assets_dir = CWD / ".." / "assets"
 
         files = [
             {

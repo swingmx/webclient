@@ -7,6 +7,7 @@ from app import functions
 from app.utils import background
 
 from app.api import album, artist, favorites, folder, playlist, search, track
+from app.imgserver import app as imgserver
 
 # config = {"CACHE_TYPE": "SimpleCache", "CACHE_DEFAULT_TIMEOUT": 300}
 
@@ -32,6 +33,7 @@ def create_api():
         app.register_blueprint(folder.folderbp)
         app.register_blueprint(playlist.playlistbp)
         app.register_blueprint(favorites.favbp)
+        app.register_blueprint(imgserver)
 
         return app
 

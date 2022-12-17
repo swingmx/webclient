@@ -159,8 +159,6 @@ class Store:
 
             cls.folders.append(folder)
 
-        # print(cls.folders)
-
     @classmethod
     def get_folder(cls, path: str):  # type: ignore
         """
@@ -175,8 +173,6 @@ class Store:
 
         if not has_tracks:
             return None
-
-        # path: Path = Path(path)  # type: ignore
 
         folder = cls.create_folder(path)
         cls.folders.append(folder)
@@ -208,8 +204,12 @@ class Store:
     # ====================================================
     # ==================== ALBUMS ========================
     # ====================================================
+
     @staticmethod
     def create_album(track: Track):
+        """
+        Creates album object from a track
+        """
         return Album(
             albumhash=track.albumhash,
             albumartists=track.albumartist,  # type: ignore
@@ -274,27 +274,28 @@ class Store:
         return albums[:limit]
 
     @classmethod
-    def get_album_by_hash(cls, albumhash: str) -> Album:
+    def get_album_by_hash(cls, albumhash: str) -> Album | None:
         """
         Returns an album by its hash.
         """
-        # return UseBisection(cls.albums, "albumhash", [albumhash])()[0]
-
-        return [a for a in cls.albums if a.albumhash == albumhash][0]
+        try:
+            return [a for a in cls.albums if a.albumhash == albumhash][0]
+        except IndexError:
+            return None
 
     @classmethod
     def get_albums_by_artisthash(cls, artisthash: str) -> list[Album]:
         """
         Returns all albums by the given artist.
         """
-        return [
-            album for album in cls.albums if f"-{artisthash}-" in album.albumartisthash
-        ]
+        return [album for album in cls.albums if artisthash in album.albumartisthash]
 
     @classmethod
     def count_albums_by_artisthash(cls, artisthash: str):
+        """
+        Count albums for the given artisthash.
+        """
         albumartists = [a.albumartists for a in cls.albums]
-
         artisthashes = []
 
         for artist in albumartists:

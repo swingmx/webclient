@@ -1,13 +1,10 @@
 """
 Contains all the artist(s) routes.
 """
-# import urllib
-# import requests
 from collections import deque
 
 from flask import Blueprint, request
 
-# from app import cache, instances, utils
 from app.db.store import Store
 from app.models import Album, Track
 from app.utils import remove_duplicates
@@ -37,6 +34,10 @@ class CacheEntry:
 
 
 class ArtistsCache:
+    """
+    Holds artist page cache.
+    """
+
     artists: deque[CacheEntry] = deque(maxlen=6)
 
     @classmethod
@@ -103,7 +104,8 @@ class ArtistsCache:
         """
         entry = [a for a in cls.artists if a.artisthash == artisthash][0]
 
-        entry.albums = [Store.get_album_by_hash(h) for h in entry.albumhashes]
+        albums = [Store.get_album_by_hash(h) for h in entry.albumhashes]
+        entry.albums = [album for album in albums if album is not None]
 
         store_albums = Store.get_albums_by_artisthash(artisthash)
 
@@ -155,6 +157,9 @@ def add_albums_to_cache(artisthash: str):
 
 @artistbp.route("/artist/<artisthash>", methods=["GET"])
 def get_artist(artisthash: str):
+    """
+    Get artist data.
+    """
     limit = request.args.get("limit")
 
     if limit is None:
@@ -174,6 +179,14 @@ def get_artist(artisthash: str):
     else:
         tracks = Store.get_tracks_by_artist(artisthash)
         albumhashes = set(t.albumhash for t in tracks)
+        hashes_from_albums = set(
+            a.albumhash for a in Store.get_albums_by_artisthash(artisthash)
+        )
+
+        print(hashes_from_albums)
+
+        albumhashes = albumhashes.union(hashes_from_albums)
+        print(albumhashes)
 
         ArtistsCache.add_entry(artisthash, albumhashes, tracks)
 

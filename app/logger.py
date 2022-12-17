@@ -1,7 +1,14 @@
+"""
+Logger module
+"""
+
 import logging
 
 
 class CustomFormatter(logging.Formatter):
+    """
+    Custom log formatter
+    """
 
     grey = "\x1b[38;20m"
     yellow = "\x1b[33;20m"
@@ -11,14 +18,14 @@ class CustomFormatter(logging.Formatter):
     # format = (
     #     "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
     # )
-    format = "[%(asctime)s]@%(name)s • %(message)s"
+    format_ = "[%(asctime)s]@%(name)s • %(message)s"
 
     FORMATS = {
-        logging.DEBUG: grey + format + reset,
-        logging.INFO: grey + format + reset,
-        logging.WARNING: yellow + format + reset,
-        logging.ERROR: red + format + reset,
-        logging.CRITICAL: bold_red + format + reset,
+        logging.DEBUG: grey + format_ + reset,
+        logging.INFO: grey + format_ + reset,
+        logging.WARNING: yellow + format_ + reset,
+        logging.ERROR: red + format_ + reset,
+        logging.CRITICAL: bold_red + format_ + reset,
     }
 
     def format(self, record):
