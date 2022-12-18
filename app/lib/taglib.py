@@ -1,4 +1,5 @@
 import os
+import datetime
 from io import BytesIO
 
 from tinytag import TinyTag
@@ -61,6 +62,18 @@ def extract_thumb(filepath: str, webp_path: str) -> bool:
     return False
 
 
+def extract_date(date_str: str | None) -> int:
+    current_year = datetime.date.today().today().year
+
+    if date_str is None:
+        return current_year
+
+    try:
+        return int(date_str.split("-")[0])
+    except:  # pylint: disable=bare-except
+        return current_year
+
+
 def get_tags(filepath: str):
     filetype = filepath.split(".")[-1]
     filename = (filepath.split("/")[-1]).replace(f".{filetype}", "")
@@ -115,7 +128,7 @@ def get_tags(filepath: str):
     tags.image = f"{tags.albumhash}.webp"
     tags.folder = os.path.dirname(filepath)
 
-    tags.date = tags.year
+    tags.date = extract_date(tags.year)
     tags.filepath = filepath
     tags.filetype = filetype
 

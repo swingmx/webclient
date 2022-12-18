@@ -183,11 +183,7 @@ def get_artist(artisthash: str):
             a.albumhash for a in Store.get_albums_by_artisthash(artisthash)
         )
 
-        print(hashes_from_albums)
-
         albumhashes = albumhashes.union(hashes_from_albums)
-        print(albumhashes)
-
         ArtistsCache.add_entry(artisthash, albumhashes, tracks)
 
     tcount = len(tracks)

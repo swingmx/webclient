@@ -1,6 +1,5 @@
 from flask import Flask
 
-# from flask_caching import Cache
 from flask_cors import CORS
 
 from app import functions
@@ -9,10 +8,6 @@ from app.utils import background
 from app.api import album, artist, favorites, folder, playlist, search, track
 from app.imgserver import app as imgserver
 
-# config = {"CACHE_TYPE": "SimpleCache", "CACHE_DEFAULT_TIMEOUT": 300}
-
-# cache = Cache(config=config)
-
 
 def create_api():
     """
@@ -20,9 +15,6 @@ def create_api():
     """
     app = Flask(__name__, static_url_path="")
     CORS(app)
-
-    # app.config.from_mapping(config)
-    # cache.init_app(app)
 
     with app.app_context():
 
