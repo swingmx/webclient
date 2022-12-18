@@ -305,6 +305,13 @@ class Store:
 
         return master_string.count(artisthash)
 
+    @classmethod
+    def album_exists(cls, albumhash: str) -> bool:
+        """
+        Checks if an album exists.
+        """
+        return albumhash in "-".join([a.albumhash for a in cls.albums])
+
     # ====================================================
     # ==================== ARTISTS =======================
     # ====================================================
@@ -358,3 +365,10 @@ class Store:
         """
         artist = UseBisection(cls.artists, "artisthash", [artisthash])()[0]
         return artist
+
+    @classmethod
+    def artist_exists(cls, artisthash: str) -> bool:
+        """
+        Checks if an artist exists.
+        """
+        return artisthash in "-".join([a.artisthash for a in cls.artists])

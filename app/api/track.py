@@ -2,12 +2,9 @@
 Contains all the track routes.
 """
 from flask import Blueprint, send_file
-
-from app.db.sqlite.tracks import SQLiteTrackMethods
+from app.db.store import Store
 
 trackbp = Blueprint("track", __name__, url_prefix="/")
-
-get_track_by_hash = SQLiteTrackMethods.get_track_by_trackhash
 
 
 @trackbp.route("/file/<trackhash>")
@@ -20,7 +17,10 @@ def send_track_file(trackhash: str):
     if trackhash is None:
         return msg, 404
 
-    track = get_track_by_hash(trackhash)
+    try:
+        track = Store.get_tracks_by_trackhashes([trackhash])[0]
+    except IndexError:
+        track = None
 
     if track is None:
         return msg, 404
