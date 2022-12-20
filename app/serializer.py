@@ -1,7 +1,4 @@
-from dataclasses import dataclass
 from datetime import datetime
-
-from app import models
 
 
 def date_string_to_time_passed(prev_date: str) -> str:
@@ -56,28 +53,3 @@ def date_string_to_time_passed(prev_date: str) -> str:
 
     return "I honestly don't know"
 
-
-# @dataclass
-# class Playlist:
-#     playlistid: str
-#     name: str
-#     image: str
-#     thumb: str
-#     last_updated: int
-#     count: int = 0
-#     duration: int = 0
-
-#     def __init__(self, p: models.Playlist, construct_last_updated: bool = True) -> None:
-#         self.playlistid = p.id
-#         self.name = p.name
-#         self.image = p.image
-#         self.thumb = p.thumb
-#         self.last_updated = p.last_updated
-#         self.count = p.count
-
-#         if construct_last_updated:
-#             self.last_updated = self.get_l_updated(p.last_updated)
-
-#     @staticmethod
-#     def get_l_updated(date: str) -> str:
-#         return date_string_to_time_passed(date)

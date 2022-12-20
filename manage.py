@@ -17,7 +17,7 @@ log.setLevel(logging.ERROR)
 
 
 app = create_api()
-app.static_folder = "./client"
+app.static_folder = "../client"
 
 config = ConfigParser()
 config.read("pyinstaller.config.ini")
@@ -72,7 +72,7 @@ class HandleArgs:
                     "alice",
                     "--clean",
                     "--add-data=assets:assets",
-                    "--add-data=app/client:app/client",
+                    "--add-data=app/client:client",
                     "--add-data=pyinstaller.config.ini:.",
                     "-y",
                 ]

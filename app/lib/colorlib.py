@@ -1,3 +1,7 @@
+"""
+Contains everything that deals with image color extraction.
+"""
+
 import json
 from pathlib import Path
 
