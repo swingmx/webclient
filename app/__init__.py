@@ -1,12 +1,8 @@
 from flask import Flask
-
 from flask_cors import CORS
 
-from app import functions
-from app.utils import background
-
 from app.api import album, artist, favorites, folder, playlist, search, track
-from app.imgserver import app as imgserver
+from app.imgserver import imgbp as imgserver
 
 
 def create_api():
@@ -28,11 +24,3 @@ def create_api():
         app.register_blueprint(imgserver)
 
         return app
-
-
-@background
-def watch_files():
-    """
-    Starts the watchdog to watch for file changes.
-    """
-    functions.start_watchdog()

@@ -7,20 +7,17 @@ from requests import ConnectionError as RequestConnectionError
 from requests import ReadTimeout
 
 from app import utils
-from app.lib import watchdogg
 from app.lib.artistlib import CheckArtistImages
 from app.lib.colorlib import ProcessAlbumColors, ProcessArtistColors
 from app.lib.populate import Populate, ProcessTrackThumbnails
 from app.lib.trackslib import validate_tracks
-from app.logger import get_logger
-
-log = get_logger()
+from app.logger import log
 
 
 @utils.background
-def run_secondary_checks():
+def run_periodic_checks():
     """
-    Checks for new songs every 5 minutes.
+    Checks for new songs every N minutes.
     """
     # ValidateAlbumThumbs()
     # ValidatePlaylistThumbs()
@@ -42,11 +39,3 @@ def run_secondary_checks():
                 )
 
         time.sleep(300)
-
-
-@utils.background
-def start_watchdog():
-    """
-    Starts the file watcher.
-    """
-    watchdogg.watcher.run()

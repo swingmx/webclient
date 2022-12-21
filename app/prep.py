@@ -3,8 +3,8 @@ Contains the functions to prepare the server for use.
 """
 import os
 import shutil
-from pathlib import Path
 from configparser import ConfigParser
+from pathlib import Path
 
 from app import settings
 from app.db.sqlite import create_connection, create_tables, queries
@@ -121,6 +121,6 @@ def setup_sqlite():
     Store.load_artists()
 
 
-def run_checks():
+def run_setup():
     create_config_dir()
     setup_sqlite()

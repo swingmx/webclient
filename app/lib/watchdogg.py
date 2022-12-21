@@ -11,10 +11,8 @@ from app.db.sqlite.tracks import SQLiteManager
 from app.db.sqlite.tracks import SQLiteTrackMethods as db
 from app.db.store import Store
 from app.lib.taglib import get_tags
-from app.logger import get_logger
+from app.logger import log
 from app.models import Artist, Track
-
-log = get_logger()
 
 
 class OnMyWatch:

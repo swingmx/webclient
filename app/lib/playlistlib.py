@@ -10,12 +10,10 @@ from typing import Any
 from PIL import Image, ImageSequence
 from werkzeug import datastructures
 
-from app import exceptions, models, settings
-from app.logger import get_logger
+from app import exceptions, settings
+from app.logger import log
 
 TrackExistsInPlaylist = exceptions.TrackInPlaylistError
-
-log = get_logger()
 
 
 def create_thumbnail(image: Any, img_path: str) -> str:
@@ -93,35 +91,3 @@ class ValidatePlaylistThumbs:
 
 def create_new_date():
     return datetime.now()
-
-
-# def create_playlist_tracks(trackhashes: List[str]) -> List[models.Track]:
-#     """
-#     Creates a list of Track objects from a list of playlist track ids.
-#     """
-#     tracks: List[models.Track] = []
-
-#     with ThreadPoolExecutor() as pool:
-#         tracks_iter = pool.map(trackslib.get_p_track, trackhashes)
-#         # [tracks.append(models.Track(**t)) for t in tracks_iter if t is not None]
-#         t = [t for t in tracks_iter if t is not None]
-#         tracks = [models.Track(**track) for track in t]
-
-#     return tracks
-
-
-# class GetPlaylistArtists:
-#     """
-#     Returns a list of artists from a list of playlist tracks.
-#     """
-
-#     def __init__(self, pid: str) -> None:
-#         self.pid = pid
-#         p = instances.playlist_instance.get_playlist_by_id(self.pid)
-#         self.tracks = create_playlist_tracks(p["pre_tracks"])
-
-#     def __call__(self):
-#         artists = set()
-
-#         artists = [a for t in self.tracks for a in t.artists]
-#         return get_normalized_artists(artists)
