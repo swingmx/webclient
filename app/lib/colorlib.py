@@ -13,10 +13,7 @@ from app.db.sqlite.albums import SQLiteAlbumMethods as db
 from app.db.sqlite.artists import SQLiteArtistMethods as adb
 from app.db.sqlite.utils import SQLiteManager
 from app.db.store import Store
-from app.logger import get_logger
 from app.models import Album, Artist
-
-log = get_logger()
 
 
 def get_image_colors(image: str) -> list[str]:

@@ -38,18 +38,12 @@ log = logging.getLogger("alice")
 log.setLevel(logging.DEBUG)
 
 # create console handler with a higher log level
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
+handler = logging.StreamHandler()
+handler.setLevel(logging.DEBUG)
 
-ch.setFormatter(CustomFormatter())
+handler.setFormatter(CustomFormatter())
 
-log.addHandler(ch)
+log.addHandler(handler)
 
-
-def get_logger():
-    return log
-
-
-log = get_logger()
 
 # copied from: https://stackoverflow.com/a/56944256:

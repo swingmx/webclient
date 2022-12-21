@@ -1,17 +1,17 @@
 """
 This file is used to run the application.
 """
-import sys
 import logging
+import sys
 from configparser import ConfigParser
+
 import PyInstaller.__main__ as bundler
 
 from app import create_api
-from app.functions import run_secondary_checks
-from app.prep import run_checks
-from app.utils import background
+from app.functions import run_periodic_checks
 from app.lib.watchdogg import watcher as WatchDog
-
+from app.prep import run_setup
+from app.utils import background
 
 log = logging.getLogger("werkzeug")
 log.setLevel(logging.ERROR)
@@ -90,9 +90,9 @@ HandleArgs()
 
 
 @background
-def run_bg_checks():
-    run_checks()
-    run_secondary_checks()
+def run_bg_checks() -> None:
+    run_setup()
+    run_periodic_checks()
 
 @background
 def start_watchdog():
