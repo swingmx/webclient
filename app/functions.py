@@ -3,10 +3,11 @@ This module contains functions for the server
 """
 import time
 
-from requests import ConnectionError as RequestConnectionError, ReadTimeout
+from requests import ConnectionError as RequestConnectionError
+from requests import ReadTimeout
 
 from app import utils
-from app.lib import watchdoge
+from app.lib import watchdogg
 from app.lib.artistlib import CheckArtistImages
 from app.lib.colorlib import ProcessAlbumColors, ProcessArtistColors
 from app.lib.populate import Populate, ProcessTrackThumbnails
@@ -26,10 +27,8 @@ def run_secondary_checks():
     validate_tracks()
 
     while True:
-        # trackslib.validate_tracks()
 
         Populate()
-        # CreateAlbums()
         ProcessTrackThumbnails()
         ProcessAlbumColors()
         ProcessArtistColors()
@@ -50,4 +49,4 @@ def start_watchdog():
     """
     Starts the file watcher.
     """
-    watchdoge.watch.run()
+    watchdogg.watcher.run()

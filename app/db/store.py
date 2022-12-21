@@ -9,10 +9,9 @@ from tqdm import tqdm
 
 from app.db.sqlite.albums import SQLiteAlbumMethods as aldb
 from app.db.sqlite.artists import SQLiteArtistMethods as ardb
-from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
 from app.db.sqlite.favorite import SQLiteFavoriteMethods as favdb
+from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
 from app.models import Album, Artist, Folder, Track
-
 from app.utils import (
     UseBisection,
     create_folder_hash,
@@ -64,6 +63,50 @@ class Store:
         cls.tracks.extend(tracks)
 
     @classmethod
+    def get_tracks_by_trackhashes(cls, trackhashes: list[str]) -> list[Track]:
+        """
+        Returns a list of tracks by their hashes.
+        """
+
+        tracks = []
+
+        for trackhash in trackhashes:
+            for track in cls.tracks:
+                if track.trackhash == trackhash:
+                    tracks.append(track)
+
+        return tracks
+
+    @classmethod
+    def remove_track_by_filepath(cls, filepath: str):
+        """
+        Removes a track from the store by its filepath.
+        """
+
+        for track in cls.tracks:
+            if track.filepath == filepath:
+                cls.tracks.remove(track)
+                break
+
+    @classmethod
+    def count_tracks_by_hash(cls, trackhash: str) -> int:
+        """
+        Counts the number of tracks with a specific hash.
+        """
+
+        count = 0
+
+        for track in cls.tracks:
+            if track.trackhash == trackhash:
+                count += 1
+
+        return count
+
+    # ====================================================
+    # =================== FAVORITES ======================
+    # ====================================================
+
+    @classmethod
     def add_fav_track(cls, trackhash: str):
         """
         Adds a track to the favorites.
@@ -83,21 +126,6 @@ class Store:
             if track.trackhash == trackhash:
                 track.is_favorite = False
 
-    @classmethod
-    def get_tracks_by_trackhashes(cls, trackhashes: list[str]) -> list[Track]:
-        """
-        Returns a list of tracks by their hashes.
-        """
-
-        tracks = []
-
-        for trackhash in trackhashes:
-            for track in cls.tracks:
-                if track.trackhash == trackhash:
-                    tracks.append(track)
-
-        return tracks
-
     # ====================================================
     # ==================== FOLDERS =======================
     # ====================================================
@@ -111,6 +139,20 @@ class Store:
         path_hash = create_folder_hash(*Path(path).parts[1:])
 
         return path_hash in path_hashes
+
+    @classmethod
+    def is_empty_folder(cls, path: str):
+        """
+        Checks if a folder has tracks using tracks in the store.
+        """
+
+        all_folders = set(track.folder for track in cls.tracks)
+        folder_hashes = "".join(
+            create_folder_hash(*Path(f).parts[1:]) for f in all_folders
+        )
+
+        path_hash = create_folder_hash(*Path(path).parts[1:])
+        return path_hash in folder_hashes
 
     @staticmethod
     def create_folder(path: str) -> Folder:
@@ -138,6 +180,17 @@ class Store:
 
         folder = cls.create_folder(path)
         cls.folders.append(folder)
+
+    @classmethod
+    def remove_folder(cls, path: str):
+        """
+        Removes a folder from the store.
+        """
+
+        for folder in cls.folders:
+            if folder.path == path:
+                cls.folders.remove(folder)
+                break
 
     @classmethod
     def process_folders(cls):
@@ -312,6 +365,13 @@ class Store:
         """
         return albumhash in "-".join([a.albumhash for a in cls.albums])
 
+    @classmethod
+    def remove_album_by_hash(cls, albumhash: str):
+        """
+        Removes an album from the store.
+        """
+        cls.albums = [a for a in cls.albums if a.albumhash != albumhash]
+
     # ====================================================
     # ==================== ARTISTS =======================
     # ====================================================
@@ -372,3 +432,25 @@ class Store:
         Checks if an artist exists.
         """
         return artisthash in "-".join([a.artisthash for a in cls.artists])
+
+    @classmethod
+    def artist_has_tracks(cls, artisthash: str) -> bool:
+        """
+        Checks if an artist has tracks.
+        """
+        artists: set[str] = set()
+
+        for track in cls.tracks:
+            artists.update(track.artist_hashes)
+            album_artists: list[str] = [a.artisthash for a in track.albumartist]
+            artists.update(album_artists)
+
+        master_hash = "-".join(artists)
+        return artisthash in master_hash
+
+    @classmethod
+    def remove_artist_by_hash(cls, artisthash: str):
+        """
+        Removes an artist from the store.
+        """
+        cls.artists = [a for a in cls.artists if a.artisthash != artisthash]
