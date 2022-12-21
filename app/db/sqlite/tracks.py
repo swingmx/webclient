@@ -126,3 +126,17 @@ class SQLiteTrackMethods:
         """
         with SQLiteManager() as cur:
             cur.execute("DELETE FROM tracks WHERE filepath=?", (filepath,))
+
+    @staticmethod
+    def track_exists(filepath: str):
+        """
+        Checks if a track exists in the database using its filepath.
+        """
+        with SQLiteManager() as cur:
+            cur.execute("SELECT * FROM tracks WHERE filepath=?", (filepath,))
+            row = cur.fetchone()
+
+            if row is not None:
+                return True
+
+            return False

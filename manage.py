@@ -10,6 +10,7 @@ from app import create_api
 from app.functions import run_secondary_checks
 from app.prep import run_checks
 from app.utils import background
+from app.lib.watchdogg import watcher as WatchDog
 
 
 log = logging.getLogger("werkzeug")
@@ -93,15 +94,12 @@ def run_bg_checks():
     run_checks()
     run_secondary_checks()
 
-
-# @background
-# def start_img_server():
-#     serve_imgs()
-#     # pass
+@background
+def start_watchdog():
+    WatchDog.run()
 
 
 if __name__ == "__main__":
     run_bg_checks()
-    # start_img_server()
-    # watch_files()
+    start_watchdog()
     app.run(debug=True, threaded=True, host="0.0.0.0", port=1970, use_reloader=False)
