@@ -35,6 +35,7 @@ class CustomFormatter(logging.Formatter):
 
 
 log = logging.getLogger("alice")
+log.propagate = False
 log.setLevel(logging.DEBUG)
 
 # create console handler with a higher log level
@@ -42,7 +43,6 @@ handler = logging.StreamHandler()
 handler.setLevel(logging.DEBUG)
 
 handler.setFormatter(CustomFormatter())
-
 log.addHandler(handler)
 
 

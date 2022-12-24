@@ -9,6 +9,7 @@ from app import settings
 from app.utils import create_hash
 
 
+
 def parse_album_art(filepath: str):
     """
     Returns the album art for a given audio file.
