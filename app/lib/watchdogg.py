@@ -15,7 +15,7 @@ from app.logger import log
 from app.models import Artist, Track
 
 
-class OnMyWatch:
+class Watcher:
     """
     Contains the methods for initializing and starting watchdog.
     """
@@ -169,4 +169,4 @@ class Handler(PatternMatchingEventHandler):
             pass
 
 
-watcher = OnMyWatch()
+# watcher = Watcher()

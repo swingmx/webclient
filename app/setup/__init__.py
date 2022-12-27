@@ -4,17 +4,19 @@ Contains the functions to prepare the server for use.
 import os
 import shutil
 from configparser import ConfigParser
-from pathlib import Path
 
 from app import settings
 from app.db.sqlite import create_connection, create_tables, queries
 from app.db.store import Store
 from app.settings import APP_DB_PATH, USERDATA_DB_PATH
+from app.utils import get_home_res_path
 
-CWD = Path(__file__).parent.resolve()
 
 config = ConfigParser()
-config.read(CWD / ".." / "pyinstaller.config.ini")
+
+config_path = get_home_res_path("pyinstaller.config.ini")
+config.read(config_path)
+
 
 try:
     IS_BUILD = config["DEFAULT"]["BUILD"] == "True"
@@ -30,7 +32,7 @@ class CopyFiles:
         assets_dir = "assets"
 
         if IS_BUILD:
-            assets_dir = CWD / ".." / "assets"
+            assets_dir = get_home_res_path("assets")
 
         files = [
             {
