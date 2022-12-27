@@ -7,18 +7,25 @@ from configparser import ConfigParser
 
 import PyInstaller.__main__ as bundler
 
-from app import create_api
+from app.api import create_api
 from app.functions import run_periodic_checks
-from app.lib.watchdogg import watcher as WatchDog
-from app.prep import run_setup
-from app.utils import background
+from app.lib.watchdogg import Watcher as WatchDog
+from app.setup import run_setup
+from app.utils import background, get_home_res_path
 
-log = logging.getLogger("werkzeug")
-log.setLevel(logging.ERROR)
+from app.logger import log
+
+werkzeug = logging.getLogger("werkzeug")
+werkzeug.setLevel(logging.ERROR)
+
+
+class Variables:
+    FLASK_PORT = 1970
+    FLASK_HOST = "0.0.0.0"
 
 
 app = create_api()
-app.static_folder = "../client"
+app.static_folder = get_home_res_path("client")
 
 config = ConfigParser()
 config.read("pyinstaller.config.ini")
@@ -43,24 +50,28 @@ def serve_client():
 ARGS = sys.argv[1:]
 
 
-class PossibleArgs:
+class ArgsEnum:
     """
     Enumerates the possible file arguments.
     """
 
     build = "--build"
+    port = "--port"
+    host = "--host"
 
 
 class HandleArgs:
     def __init__(self) -> None:
         self.handle_build()
+        self.handle_host()
+        self.handle_port()
 
     @staticmethod
     def handle_build():
         """
         Runs Pyinstaller.
         """
-        if PossibleArgs.build in ARGS:
+        if ArgsEnum.build in ARGS:
             with open("pyinstaller.config.ini", "w", encoding="utf-8") as file:
                 config["DEFAULT"]["BUILD"] = "True"
                 config.write(file)
@@ -73,7 +84,7 @@ class HandleArgs:
                     "alice",
                     "--clean",
                     "--add-data=assets:assets",
-                    "--add-data=app/client:client",
+                    "--add-data=client:client",
                     "--add-data=pyinstaller.config.ini:.",
                     "-y",
                 ]
@@ -85,8 +96,34 @@ class HandleArgs:
 
             sys.exit(0)
 
+    @staticmethod
+    def handle_port():
+        if ArgsEnum.port in ARGS:
+            index = ARGS.index(ArgsEnum.port)
+            try:
+                port = ARGS[index + 1]
+            except IndexError:
+                print("ERROR: Port not specified")
+                sys.exit(0)
 
-HandleArgs()
+            try:
+                Variables.FLASK_PORT = int(port)
+            except ValueError:
+                print("ERROR: Port should be a number")
+                sys.exit(0)
+
+    @staticmethod
+    def handle_host():
+        if ArgsEnum.host in ARGS:
+            index = ARGS.index(ArgsEnum.host)
+
+            try:
+                host = ARGS[index + 1]
+            except IndexError:
+                print("ERROR: Host not specified")
+                sys.exit(0)
+
+            Variables.FLASK_HOST = host
 
 
 @background
@@ -94,12 +131,30 @@ def run_bg_checks() -> None:
     run_setup()
     run_periodic_checks()
 
+
 @background
 def start_watchdog():
-    WatchDog.run()
+    WatchDog().run()
+
+
+def log_info():
+    log.info(  # pylint: disable=logging-fstring-interpolation
+        f"Running server on: http://{Variables.FLASK_HOST}:{Variables.FLASK_PORT}"
+    )
 
 
 if __name__ == "__main__":
+    HandleArgs()
+    log_info()
     run_bg_checks()
     start_watchdog()
-    app.run(debug=True, threaded=True, host="0.0.0.0", port=1970, use_reloader=False)
+    app.run(
+        debug=True,
+        threaded=True,
+        host=Variables.FLASK_HOST,
+        port=Variables.FLASK_PORT,
+        use_reloader=False,
+    )
+
+# TODO: Find out how to print in color: red for errors, etc.
+# TODO: Find a way to verify the host string

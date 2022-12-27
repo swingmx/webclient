@@ -8,12 +8,9 @@ from datetime import datetime
 from typing import Any
 
 from PIL import Image, ImageSequence
-from werkzeug import datastructures
 
-from app import exceptions, settings
+from app import settings
 from app.logger import log
-
-TrackExistsInPlaylist = exceptions.TrackInPlaylistError
 
 
 def create_thumbnail(image: Any, img_path: str) -> str:
@@ -33,7 +30,7 @@ def create_thumbnail(image: Any, img_path: str) -> str:
     return thumb_path
 
 
-def save_p_image(file: datastructures.FileStorage, pid: str):
+def save_p_image(file, pid: str):
     """
     Saves the image of a playlist to the database.
     """
@@ -91,3 +88,5 @@ class ValidatePlaylistThumbs:
 
 def create_new_date():
     return datetime.now()
+
+# TODO: Fix ValidatePlaylistThumbs

@@ -3,6 +3,7 @@ This module contains mini functions for the server.
 """
 import os
 import hashlib
+from pathlib import Path
 import threading
 from datetime import datetime
 from unidecode import unidecode
@@ -11,6 +12,7 @@ import requests
 from app import models
 from app.settings import SUPPORTED_FILES
 
+CWD = Path(__file__).parent.resolve()
 
 def background(func):
     """
@@ -134,7 +136,6 @@ class UseBisection:
 
     def __call__(self) -> list:
         if len(self.source_list) == 0:
-            print("empty source list")
             return [None]
 
         return [self.find(query) for query in self.queries_list]
@@ -217,3 +218,10 @@ def bisection_search_string(strings: list[str], target: str) -> str | None:
             right = middle - 1
 
     return None
+
+
+def get_home_res_path(filename: str):
+    """
+    Returns a path to resources in the home directory of this project. Used to resolve resources in builds.
+    """
+    return (CWD / ".." / filename).resolve()
