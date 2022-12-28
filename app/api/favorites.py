@@ -46,3 +46,63 @@ def remove_favorite():
         Store.remove_fav_track(itemhash)
 
     return {"msg": "Removed from favorites"}
+
+
+@favbp.route("/albums/favorite")
+def get_favorite_albums():
+    limit = request.args.get("limit")
+
+    if limit is None:
+        limit = 6
+
+    limit = int(limit)
+
+    albums = favdb.get_fav_albums()
+    albumhashes = "-".join(a[1] for a in albums)
+
+    albums = [a for a in Store.albums if a.albumhash in albumhashes]
+
+    if limit == 0:
+        limit = len(albums)
+
+    return {"albums": albums[:limit]}
+
+
+@favbp.route("/tracks/favorite")
+def get_favorite_tracks():
+    limit = request.args.get("limit")
+
+    if limit is None:
+        limit = 6
+
+    limit = int(limit)
+
+    tracks = favdb.get_fav_tracks()
+    trackhashes = "-".join(t[1] for t in tracks)
+
+    tracks = [t for t in Store.tracks if t.trackhash in trackhashes]
+
+    if limit == 0:
+        limit = len(tracks)
+
+    return {"tracks": tracks[:limit]}
+
+
+@favbp.route("/artists/favorite")
+def get_favorite_artists():
+    limit = request.args.get("limit")
+
+    if limit is None:
+        limit = 6
+
+    limit = int(limit)
+
+    artists = favdb.get_fav_artists()
+    artisthashes = "-".join(t[1] for t in artists)
+
+    artists = [t for t in Store.artists if t.artisthash in artisthashes]
+
+    if limit == 0:
+        limit = len(artists)
+
+    return {"artists": artists[:limit]}
