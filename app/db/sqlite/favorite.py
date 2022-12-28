@@ -54,3 +54,14 @@ class SQLiteFavoriteMethods:
 
         with SQLiteManager(userdata_db=True) as cur:
             cur.execute(sql, (fav_hash, fav_type))
+
+    @classmethod
+    def check_is_favorite(cls, itemhash: str, fav_type: str):
+        """
+        Checks if an item is favorited.
+        """
+        sql = """SELECT * FROM favorites WHERE hash = ? AND type = ?"""
+        with SQLiteManager(userdata_db=True) as cur:
+            cur.execute(sql, (itemhash, fav_type))
+            items = cur.fetchall()
+            return len(items) > 0

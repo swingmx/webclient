@@ -7,13 +7,15 @@ from dataclasses import asdict
 from flask import Blueprint, request
 
 from app import utils
-from app.db.sqlite.albums import SQLiteAlbumMethods
+from app.db.sqlite.albums import SQLiteAlbumMethods as adb
+from app.db.sqlite.favorite import SQLiteFavoriteMethods as favdb
 from app.db.store import Store
-from app.models import Track
+from app.models import FavType, Track
 
 
-get_album_by_id = SQLiteAlbumMethods.get_album_by_id
-get_albums_by_albumartist = SQLiteAlbumMethods.get_albums_by_albumartist
+get_album_by_id = adb.get_album_by_id
+get_albums_by_albumartist = adb.get_albums_by_albumartist
+check_is_fav = favdb.check_is_favorite
 
 albumbp = Blueprint("album", __name__, url_prefix="")
 
@@ -79,6 +81,8 @@ def get_album():
         album.is_single = True
     else:
         album.check_type()
+
+    album.is_favorite = check_is_fav(albumhash, FavType.album)
 
     return {"tracks": tracks, "info": album}
 

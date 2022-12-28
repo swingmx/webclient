@@ -6,8 +6,9 @@ from collections import deque
 from flask import Blueprint, request
 
 from app.db.store import Store
-from app.models import Album, Track
+from app.models import Album, FavType, Track
 from app.utils import remove_duplicates
+from app.db.sqlite.favorite import SQLiteFavoriteMethods as favdb
 
 artistbp = Blueprint("artist", __name__, url_prefix="/")
 
@@ -196,6 +197,8 @@ def get_artist(artisthash: str):
     artist.albumcount = acount
 
     artist.duration = sum(t.duration for t in tracks)
+
+    artist.is_favorite = favdb.check_is_favorite(artisthash, FavType.artist)
 
     return {"artist": artist, "tracks": tracks[:limit]}
 
