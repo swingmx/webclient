@@ -12,8 +12,12 @@ from app.db.sqlite.artists import SQLiteArtistMethods as ardb
 from app.db.sqlite.favorite import SQLiteFavoriteMethods as favdb
 from app.db.sqlite.tracks import SQLiteTrackMethods as tdb
 from app.models import Album, Artist, Folder, Track
-from app.utils import (UseBisection, create_folder_hash, get_all_artists,
-                       remove_duplicates)
+from app.utils import (
+    UseBisection,
+    create_folder_hash,
+    get_all_artists,
+    remove_duplicates,
+)
 
 
 class Store:
@@ -213,7 +217,8 @@ class Store:
         """
         Returns a folder object by its path.
         """
-        folder = UseBisection(cls.folders, "path", [path])()[0]
+        folders = sorted(cls.folders, key=lambda x: x.path)
+        folder = UseBisection(folders, "path", [path])()[0]
 
         if folder is not None:
             return folder
@@ -232,7 +237,8 @@ class Store:
         """
         Returns all tracks matching the given paths.
         """
-        tracks = UseBisection(cls.tracks, "filepath", paths)()
+        tracks = sorted(cls.tracks, key=lambda x: x.filepath)
+        tracks = UseBisection(tracks, "filepath", paths)()
         return [track for track in tracks if track is not None]
 
     @classmethod
@@ -419,7 +425,8 @@ class Store:
         """
         Returns an artist by its hash.
         """
-        artist = UseBisection(cls.artists, "artisthash", [artisthash])()[0]
+        artists = sorted(cls.artists, key=lambda x: x.artisthash)
+        artist = UseBisection(artists, "artisthash", [artisthash])()[0]
         return artist
 
     @classmethod

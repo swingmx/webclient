@@ -14,6 +14,7 @@ from app.settings import SUPPORTED_FILES
 
 CWD = Path(__file__).parent.resolve()
 
+
 def background(func):
     """
     a threading decorator
@@ -60,6 +61,11 @@ def remove_duplicates(tracks: list[models.Track]) -> list[models.Track]:
     for track in tracks:
         if track.trackhash not in hashes:
             hashes.append(track.trackhash)
+
+    tracks = sorted(tracks, key=lambda x: x.track)
+    # self.source_list = sorted(
+    #     self.source_list, key=lambda x: getattr(x, search_from)
+    # )
 
     tracks = UseBisection(tracks, "trackhash", hashes)()
 
@@ -115,9 +121,6 @@ class UseBisection:
         self.source_list = source
         self.queries_list = queries
         self.attr = search_from
-        self.source_list = sorted(
-            self.source_list, key=lambda x: getattr(x, search_from)
-        )
 
     def find(self, query: str):
         left = 0
