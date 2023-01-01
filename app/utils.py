@@ -62,11 +62,7 @@ def remove_duplicates(tracks: list[models.Track]) -> list[models.Track]:
         if track.trackhash not in hashes:
             hashes.append(track.trackhash)
 
-    tracks = sorted(tracks, key=lambda x: x.track)
-    # self.source_list = sorted(
-    #     self.source_list, key=lambda x: getattr(x, search_from)
-    # )
-
+    tracks = sorted(tracks, key=lambda x: x.trackhash)
     tracks = UseBisection(tracks, "trackhash", hashes)()
 
     return [t for t in tracks if t is not None]

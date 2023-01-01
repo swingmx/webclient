@@ -2,11 +2,12 @@ from flask import Blueprint, request
 from app.db.sqlite.favorite import SQLiteFavoriteMethods as favdb
 from app.db.store import Store
 from app.models import FavType
+from app.utils import UseBisection
 
 favbp = Blueprint("favorite", __name__, url_prefix="/")
 
 
-@favbp.route("/favorite", methods=["POST"])
+@favbp.route("/favorite/add", methods=["POST"])
 def add_favorite():
     """
     Adds a favorite to the database.
@@ -58,14 +59,18 @@ def get_favorite_albums():
     limit = int(limit)
 
     albums = favdb.get_fav_albums()
-    albumhashes = "-".join(a[1] for a in albums)
+    albumhashes = [a[1] for a in albums]
+    albumhashes.reverse()
 
-    albums = [a for a in Store.albums if a.albumhash in albumhashes]
+    src_albums = sorted(Store.albums, key=lambda x: x.albumhash)
+
+    fav_albums = UseBisection(src_albums, "albumhash", albumhashes)()
+    fav_albums = [a for a in fav_albums if a is not None]
 
     if limit == 0:
         limit = len(albums)
 
-    return {"albums": albums[:limit]}
+    return {"albums": fav_albums[:limit]}
 
 
 @favbp.route("/tracks/favorite")
@@ -78,9 +83,12 @@ def get_favorite_tracks():
     limit = int(limit)
 
     tracks = favdb.get_fav_tracks()
-    trackhashes = "-".join(t[1] for t in tracks)
+    trackhashes = [t[1] for t in tracks]
+    trackhashes.reverse()
+    src_tracks = sorted(Store.tracks, key=lambda x: x.trackhash)
 
-    tracks = [t for t in Store.tracks if t.trackhash in trackhashes]
+    tracks = UseBisection(src_tracks, "trackhash", trackhashes)()
+    tracks = [t for t in tracks if t is not None]
 
     if limit == 0:
         limit = len(tracks)
@@ -98,11 +106,85 @@ def get_favorite_artists():
     limit = int(limit)
 
     artists = favdb.get_fav_artists()
-    artisthashes = "-".join(t[1] for t in artists)
+    artisthashes = [a[1] for a in artists]
+    artisthashes.reverse()
 
-    artists = [t for t in Store.artists if t.artisthash in artisthashes]
+    src_artists = sorted(Store.artists, key=lambda x: x.artisthash)
+
+    artists = UseBisection(src_artists, "artisthash", artisthashes)()
+    artists = [a for a in artists if a is not None]
 
     if limit == 0:
         limit = len(artists)
 
     return {"artists": artists[:limit]}
+
+
+@favbp.route("/favorites")
+def get_all_favorites():
+    """
+    Returns all the favorites in the database.
+    """
+    track_limit = request.args.get("track_limit")
+    album_limit = request.args.get("album_limit")
+    artist_limit = request.args.get("artist_limit")
+
+    if track_limit is None:
+        track_limit = 6
+
+    if album_limit is None:
+        album_limit = 6
+
+    if artist_limit is None:
+        artist_limit = 6
+
+    track_limit = int(track_limit)
+    album_limit = int(album_limit)
+    artist_limit = int(artist_limit)
+
+    favs = favdb.get_all()
+    favs.reverse()
+
+    tracks = []
+    albums = []
+    artists = []
+
+    for fav in favs:
+        if (
+            len(tracks) >= track_limit
+            and len(albums) >= album_limit
+            and len(artists) >= artist_limit
+        ):
+            break
+
+        if fav[2] == FavType.track:
+            tracks.append(fav[1])
+        elif fav[2] == FavType.album:
+            albums.append(fav[1])
+        elif fav[2] == FavType.artist:
+            artists.append(fav[1])
+
+    src_tracks = sorted(Store.tracks, key=lambda x: x.trackhash)
+    src_albums = sorted(Store.albums, key=lambda x: x.albumhash)
+    src_artists = sorted(Store.artists, key=lambda x: x.artisthash)
+
+    tracks = tracks[:track_limit]
+    albums = albums[:album_limit]
+    artists = artists[:artist_limit]
+
+    tracks = UseBisection(src_tracks, "trackhash", tracks)()
+    albums = UseBisection(src_albums, "albumhash", albums)()
+    artists = UseBisection(src_artists, "artisthash", artists)()
+
+    def remove_None(items: list):
+        return [i for i in items if i is not None]
+
+    tracks = remove_None(tracks)
+    albums = remove_None(albums)
+    artists = remove_None(artists)
+
+    return {
+        "tracks": tracks,
+        "albums": albums,
+        "artists": artists,
+    }
