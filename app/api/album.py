@@ -42,10 +42,10 @@ def get_album():
         return error_msg, 204
 
     tracks = Store.get_tracks_by_albumhash(albumhash)
+
     if tracks is None:
         return error_msg, 404
 
-    tracks = list(tracks)
     if len(tracks) == 0:
         return error_msg, 204
 
@@ -60,6 +60,7 @@ def get_album():
 
     album.genres = get_album_genres(tracks)
     tracks = utils.remove_duplicates(tracks)
+
     album.count = len(tracks)
 
     for track in tracks:
@@ -68,7 +69,7 @@ def get_album():
             break
 
     try:
-        album.duration = sum(t.duration for t in tracks)
+        album.duration = sum((t.duration for t in tracks))
     except AttributeError:
         album.duration = 0
 

@@ -15,6 +15,16 @@ class SQLiteFavoriteMethods:
             cur.execute(sql, (fav_type, fav_hash))
 
     @classmethod
+    def get_all(cls) -> list[tuple]:
+        """
+        Returns a list of all favorites.
+        """
+        sql = """SELECT * FROM favorites"""
+        with SQLiteManager(userdata_db=True) as cur:
+            cur.execute(sql)
+            return cur.fetchall()
+
+    @classmethod
     def get_favorites(cls, fav_type: str) -> list[tuple]:
         """
         Returns a list of favorite tracks.
