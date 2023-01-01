@@ -6,6 +6,9 @@ from app.utils import UseBisection
 
 favbp = Blueprint("favorite", __name__, url_prefix="/")
 
+def remove_none(items: list):
+    return [i for i in items if i is not None]
+
 
 @favbp.route("/favorite/add", methods=["POST"])
 def add_favorite():
@@ -65,7 +68,7 @@ def get_favorite_albums():
     src_albums = sorted(Store.albums, key=lambda x: x.albumhash)
 
     fav_albums = UseBisection(src_albums, "albumhash", albumhashes)()
-    fav_albums = [a for a in fav_albums if a is not None]
+    fav_albums = remove_none(fav_albums)
 
     if limit == 0:
         limit = len(albums)
@@ -88,7 +91,7 @@ def get_favorite_tracks():
     src_tracks = sorted(Store.tracks, key=lambda x: x.trackhash)
 
     tracks = UseBisection(src_tracks, "trackhash", trackhashes)()
-    tracks = [t for t in tracks if t is not None]
+    tracks = remove_none(tracks)
 
     if limit == 0:
         limit = len(tracks)
@@ -112,7 +115,7 @@ def get_favorite_artists():
     src_artists = sorted(Store.artists, key=lambda x: x.artisthash)
 
     artists = UseBisection(src_artists, "artisthash", artisthashes)()
-    artists = [a for a in artists if a is not None]
+    artists = remove_none(artists)
 
     if limit == 0:
         limit = len(artists)
@@ -176,12 +179,10 @@ def get_all_favorites():
     albums = UseBisection(src_albums, "albumhash", albums)()
     artists = UseBisection(src_artists, "artisthash", artists)()
 
-    def remove_None(items: list):
-        return [i for i in items if i is not None]
 
-    tracks = remove_None(tracks)
-    albums = remove_None(albums)
-    artists = remove_None(artists)
+    tracks = remove_none(tracks)
+    albums = remove_none(albums)
+    artists = remove_none(artists)
 
     return {
         "tracks": tracks,
