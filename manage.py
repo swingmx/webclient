@@ -107,7 +107,7 @@ class HandleArgs:
                 sys.exit(0)
 
             try:
-                Variables.FLASK_PORT = int(port)
+                Variables.FLASK_PORT = int(port) # type: ignore
             except ValueError:
                 print("ERROR: Port should be a number")
                 sys.exit(0)
@@ -123,8 +123,7 @@ class HandleArgs:
                 print("ERROR: Host not specified")
                 sys.exit(0)
 
-            Variables.FLASK_HOST = host
-
+            Variables.FLASK_HOST = host # type: ignore
 
 @background
 def run_bg_checks() -> None:

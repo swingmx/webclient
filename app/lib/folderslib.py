@@ -1,13 +1,13 @@
 import os
+import pathlib
 from concurrent.futures import ThreadPoolExecutor
 
 from app.db.store import Store
-
 from app.models import Folder, Track
 from app.settings import SUPPORTED_FILES
 
 
-class getFnF:
+class GetFilesAndDirs:
     """
     Get files and folders from a directory.
     """
@@ -30,6 +30,11 @@ class getFnF:
                 dirs.append(entry.path)
             elif entry.is_file() and ext in SUPPORTED_FILES:
                 files.append(entry.path)
+
+        # sort files by modified time
+        files.sort(
+            key=lambda f: os.path.getmtime(f)  # pylint: disable=unnecessary-lambda
+        )
 
         tracks = Store.get_tracks_by_filepaths(files)
 

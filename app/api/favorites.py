@@ -6,6 +6,7 @@ from app.utils import UseBisection
 
 favbp = Blueprint("favorite", __name__, url_prefix="/")
 
+
 def remove_none(items: list):
     return [i for i in items if i is not None]
 
@@ -179,7 +180,6 @@ def get_all_favorites():
     albums = UseBisection(src_albums, "albumhash", albums)()
     artists = UseBisection(src_artists, "artisthash", artists)()
 
-
     tracks = remove_none(tracks)
     albums = remove_none(albums)
     artists = remove_none(artists)
@@ -189,3 +189,22 @@ def get_all_favorites():
         "albums": albums,
         "artists": artists,
     }
+
+
+@favbp.route("/favorites/check")
+def check_favorite():
+    """
+    Checks if a favorite exists in the database.
+    """
+    itemhash = request.args.get("hash")
+    itemtype = request.args.get("type")
+
+    if itemhash is None:
+        return {"error": "No hash provided"}, 400
+
+    if itemtype is None:
+        return {"error": "No type provided"}, 400
+
+    exists = favdb.check_is_favorite(itemhash, itemtype)
+
+    return {"is_favorite": exists}
