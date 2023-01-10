@@ -136,7 +136,7 @@ class SQLitePlaylistMethods:
         if track is None:
             return
 
-        artists: list[Artist] = track.artist # type: ignore
+        artists: list[Artist] = track.artist  # type: ignore
         artisthashes = [a.artisthash for a in artists]
 
         cls.add_item_to_json_list(playlist_id, "artisthashes", artisthashes)
@@ -159,3 +159,10 @@ class SQLitePlaylistMethods:
 
         with SQLiteManager(userdata_db=True) as cur:
             cur.execute(sql, params)
+
+    @staticmethod
+    def delete_playlist(pid: str):
+        sql = "DELETE FROM playlists WHERE id = ?"
+
+        with SQLiteManager(userdata_db=True) as cur:
+            cur.execute(sql, (pid,))

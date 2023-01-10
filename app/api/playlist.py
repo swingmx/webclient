@@ -9,7 +9,6 @@ from PIL import UnidentifiedImageError
 
 from app import models, serializer
 from app.db.sqlite.playlists import SQLitePlaylistMethods
-from app.db.sqlite.tracks import SQLiteTrackMethods
 from app.db.store import Store
 from app.lib import playlistlib
 from app.utils import create_new_date, remove_duplicates
@@ -26,6 +25,7 @@ get_playlist_by_id = PL.get_playlist_by_id
 tracks_to_playlist = PL.add_tracks_to_playlist
 add_artist_to_playlist = PL.add_artist_to_playlist
 update_playlist = PL.update_playlist
+delete_playlist = PL.delete_playlist
 
 # get_tracks_by_trackhashes = SQLiteTrackMethods.get_tracks_by_trackhashes
 
@@ -172,3 +172,24 @@ def update_playlist_info(playlistid: str):
 #     artists = playlistlib.GetPlaylistArtists(pid)()
 
 #     return {"data": artists}
+
+
+@playlistbp.route("/playlist/delete", methods=["POST"])
+def remove_playlist():
+    """
+    Deletes a playlist by ID.
+    """
+    message = {"error": "Playlist ID not provided"}
+    data = request.get_json()
+
+    if data is None:
+        return message, 400
+
+    try:
+        pid = data["pid"]
+    except KeyError:
+        return message, 400
+
+    delete_playlist(pid)
+
+    return {"msg": "Done"}, 200
