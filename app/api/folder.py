@@ -4,7 +4,7 @@ Contains all the folder routes.
 from flask import Blueprint, request
 
 from app import settings
-from app.lib.folderslib import getFnF
+from app.lib.folderslib import GetFilesAndDirs
 
 folderbp = Blueprint("folder", __name__, url_prefix="/")
 
@@ -24,7 +24,7 @@ def get_folder_tree():
     if req_dir == "$home":
         req_dir = settings.HOME_DIR
 
-    tracks, folders = getFnF(req_dir)()
+    tracks, folders = GetFilesAndDirs(req_dir)()
 
     return {
         "tracks": tracks,

@@ -4,14 +4,14 @@ Contains all the search routes.
 
 from flask import Blueprint, request
 
-from app import models, serializer, utils
+from app import models, utils
 from app.db.store import Store
 from app.lib import searchlib
 
 searchbp = Blueprint("search", __name__, url_prefix="/")
 
 
-SEARCH_COUNT = 10
+SEARCH_COUNT = 12
 """The max amount of items to return per request"""
 
 
@@ -75,24 +75,24 @@ class DoSearch:
 
         return albums
 
-    def search_playlists(self):
-        """Calls :class:`SearchPlaylists` which returns the playlists that fuzzily match
-        the search term. Then adds them to the `SearchResults` store.
-        """
-        playlists = utils.Get.get_all_playlists()
-        playlists = [serializer.Playlist(playlist) for playlist in playlists]
+    # def search_playlists(self):
+    #     """Calls :class:`SearchPlaylists` which returns the playlists that fuzzily match
+    #     the search term. Then adds them to the `SearchResults` store.
+    #     """
+    #     playlists = utils.Get.get_all_playlists()
+    #     playlists = [serializer.Playlist(playlist) for playlist in playlists]
 
-        playlists = searchlib.SearchPlaylists(playlists, self.query)()
-        SearchResults.playlists = playlists
+    #     playlists = searchlib.SearchPlaylists(playlists, self.query)()
+    #     SearchResults.playlists = playlists
 
-        return playlists
+    #     return playlists
 
     def search_all(self):
         """Calls all the search methods."""
         self.search_tracks()
         self.search_albums()
         self.search_artists()
-        self.search_playlists()
+        # self.search_playlists()
 
 
 @searchbp.route("/search/tracks", methods=["GET"])
@@ -110,7 +110,7 @@ def search_tracks():
     return {
         "tracks": tracks[:SEARCH_COUNT],
         "more": len(tracks) > SEARCH_COUNT,
-    }, 200
+    }
 
 
 @searchbp.route("/search/albums", methods=["GET"])
@@ -128,7 +128,7 @@ def search_albums():
     return {
         "albums": tracks[:SEARCH_COUNT],
         "more": len(tracks) > SEARCH_COUNT,
-    }, 200
+    }
 
 
 @searchbp.route("/search/artists", methods=["GET"])
@@ -146,25 +146,25 @@ def search_artists():
     return {
         "artists": artists[:SEARCH_COUNT],
         "more": len(artists) > SEARCH_COUNT,
-    }, 200
+    }
 
 
-@searchbp.route("/search/playlists", methods=["GET"])
-def search_playlists():
-    """
-    Searches for playlists.
-    """
+# @searchbp.route("/search/playlists", methods=["GET"])
+# def search_playlists():
+#     """
+#     Searches for playlists.
+#     """
 
-    query = request.args.get("q")
-    if not query:
-        return {"error": "No query provided"}, 400
+#     query = request.args.get("q")
+#     if not query:
+#         return {"error": "No query provided"}, 400
 
-    playlists = DoSearch(query).search_playlists()
+#     playlists = DoSearch(query).search_playlists()
 
-    return {
-        "playlists": playlists[:SEARCH_COUNT],
-        "more": len(playlists) > SEARCH_COUNT,
-    }, 200
+#     return {
+#         "playlists": playlists[:SEARCH_COUNT],
+#         "more": len(playlists) > SEARCH_COUNT,
+#     }
 
 
 @searchbp.route("/search/top", methods=["GET"])
@@ -193,24 +193,24 @@ def search_load_more():
     """
     Returns more songs, albums or artists from a search query.
     """
-    type = request.args.get("type")
-    index = int(request.args.get("index"))
+    s_type = request.args.get("type")
+    index = int(request.args.get("index") or 0)
 
-    if type == "tracks":
+    if s_type == "tracks":
         t = SearchResults.tracks
         return {
             "tracks": t[index : index + SEARCH_COUNT],
             "more": len(t) > index + SEARCH_COUNT,
         }
 
-    elif type == "albums":
+    elif s_type == "albums":
         a = SearchResults.albums
         return {
             "albums": a[index : index + SEARCH_COUNT],
             "more": len(a) > index + SEARCH_COUNT,
         }
 
-    elif type == "artists":
+    elif s_type == "artists":
         a = SearchResults.artists
         return {
             "artists": a[index : index + SEARCH_COUNT],
