@@ -120,7 +120,7 @@ class Handler(PatternMatchingEventHandler):
     files_to_process = []
 
     def __init__(self):
-        log.info("💠 started watchdog 💠")
+        log.info("✅ started watchdog")
         PatternMatchingEventHandler.__init__(
             self,
             patterns=["*.flac", "*.mp3"],

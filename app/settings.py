@@ -4,6 +4,8 @@ Contains default configs
 import multiprocessing
 import os
 
+APP_VERSION = "Swing v0.0.1.alpha"
+
 # paths
 CONFIG_FOLDER = ".alice"
 HOME_DIR = os.path.expanduser("~")
@@ -71,3 +73,31 @@ USERDATA_DB_PATH = os.path.join(APP_DIR, USER_DATA_DB_NAME)
 
 # ===== Store =====
 USE_STORE = True
+
+HELP_MESSAGE = """
+Usage: alice [options]
+
+Options:
+    --build: Build the application
+    --host: Set the host
+    --port: Set the port
+    --help, -h: Show this help message
+    --version, -v: Show the version
+"""
+
+
+class TCOLOR:
+    """
+    Terminal colors
+    """
+
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+    # credits: https://stackoverflow.com/a/287944
