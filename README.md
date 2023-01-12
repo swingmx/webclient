@@ -10,7 +10,7 @@
 
 The app is currently only available on linux. (I don't have access to a Windows machine for building and testing purposes and my machine is not strong enough to support Windows in VM).
 
-# Setup
+### Setup
 
 Download the latest release from the [release page](#) and extract it in your machine. Then execute the extracted file in a terminal.
 
@@ -20,7 +20,7 @@ Download the latest release from the [release page](#) and extract it in your ma
 
 The file will start the app at <http://localhost:1970> by default. See the setup option section on how to change the host and port.
 
-# Setup options
+### Setup options
 
 ```
 Usage: swing [options]
@@ -32,7 +32,7 @@ Options:
     --version, -v: Show the version
 ```
 
-# Development
+### Development
 
 This project is broken down into 2. The client and the server. The client comprises of the user interface code. This part is written in Typescript, Vue 3 and SCSS. To setup the client, checkout the [swing client repo ](#) on GitHub.
 
@@ -60,15 +60,15 @@ poetry install
 poetry run python manage.py
 ```
 
-# Contributing
+### Contributing
 
 If you want to contribute to this project, feel free to open an issue or a pull request on Github. Your contributions are highly valued and appreciated. Feature suggestions, bug reports and code contribution are welcome.
 
-# License
+### License
 
 This software is provided to you with terms stated in the MIT License. Read the full text in the `LICENSE` file located at the root of this repository.
 
-# A brain dump ...
+### A brain dump ...
 
 I started working on this project on dec 2021. Why? I like listening and exploring music and I like it more when I can enjoy it (like really really). I'd been searching for cute music players for linux that allow me to manage my ever growing music library. Some of the main features I was looking for were:
 
@@ -87,9 +87,7 @@ I've been keeping a small 🤥 list of a few cool features that I'd like to see 
 
 I have been working on this project solo, so it’s very hard to push things fast. The app is written in Python for the backend and Vue3 for the client. If you have knowledge in any or both of this areas, feel free to contribute to the project. We’ll be excited to have you. Your help is highly appreciated.
 
-_The backend is honestly a bunch of Python classes and functions. The client just sends API request and displays it._
-
-I’m quite a noob myself. I started _serious_ programming in 2021. If you don’t know much programming, come and let’s grow together. If you have some good programming experience, we have been waiting for you.
+_The backend is basically a bunch of Python classes and functions. The client just sends API request and displays it._
 
 ---
 
