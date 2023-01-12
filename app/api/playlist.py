@@ -149,6 +149,7 @@ def update_playlist_info(playlistid: str):
     if image:
         try:
             playlist["image"] = playlistlib.save_p_image(image, playlistid)
+            print(playlist['image'])
         except UnidentifiedImageError:
             return {"error": "Failed: Invalid image"}, 400
 
