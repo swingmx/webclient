@@ -16,11 +16,12 @@ class SQLitePlaylistMethods:
     def insert_one_playlist(playlist: dict):
         sql = """INSERT INTO playlists(
             artisthashes,
+            has_gif,
             image,
             last_updated,
             name,
             trackhashes
-            ) VALUES(?,?,?,?,?)
+            ) VALUES(?,?,?,?,?,?)
             """
 
         playlist = OrderedDict(sorted(playlist.items()))
@@ -144,6 +145,7 @@ class SQLitePlaylistMethods:
     @staticmethod
     def update_playlist(playlist_id: int, playlist: dict):
         sql = """UPDATE playlists SET
+            has_gif = ?,
             image = ?,
             last_updated = ?,
             name = ?
