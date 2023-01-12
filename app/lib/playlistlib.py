@@ -30,6 +30,28 @@ def create_thumbnail(image: Any, img_path: str) -> str:
     return thumb_path
 
 
+def create_gif_thumbnail(image: Any, img_path: str):
+    """
+    Creates a 250 x 250 thumbnail from a playlist image
+    """
+    thumb_path = "thumb_" + img_path
+    full_thumb_path = os.path.join(settings.APP_DIR, "images", "playlists", thumb_path)
+
+    frames = []
+
+    for frame in ImageSequence.Iterator(image):
+        aspect_ratio = frame.width / frame.height
+
+        new_w = round(250 * aspect_ratio)
+
+        thumb = frame.resize((new_w, 250), Image.ANTIALIAS)
+        frames.append(thumb)
+
+    frames[0].save(full_thumb_path, save_all=True, append_images=frames[1:])
+
+    return thumb_path
+
+
 def save_p_image(file, pid: str):
     """
     Saves the image of a playlist to the database.
@@ -49,9 +71,9 @@ def save_p_image(file, pid: str):
             frames.append(frame.copy())
 
         frames[0].save(full_img_path, save_all=True, append_images=frames[1:])
-        thumb_path = create_thumbnail(img, img_path=img_path)
+        create_gif_thumbnail(img, img_path=img_path)
 
-        return img_path, thumb_path
+        return img_path
 
     img.save(full_img_path, "webp")
     create_thumbnail(img, img_path=img_path)
@@ -88,5 +110,6 @@ class ValidatePlaylistThumbs:
 
 def create_new_date():
     return datetime.now()
+
 
 # TODO: Fix ValidatePlaylistThumbs
