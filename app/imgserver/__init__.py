@@ -8,7 +8,7 @@ SUPPORTED_IMAGES = (".jpg", ".png", ".webp", ".jpeg")
 
 HOME = os.path.expanduser("~")
 
-APP_DIR = Path(HOME) / ".alice"
+APP_DIR = Path(HOME) / ".swing"
 IMG_PATH = APP_DIR / "images"
 ASSETS_PATH = APP_DIR / "assets"
 

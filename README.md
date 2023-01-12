@@ -1,109 +1,111 @@
-# `alice-core` v0.1.0
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 784 114" width="784" height="114">
+  <!-- svg-source:excalidraw -->
+  <defs>
+    <style class="style-fonts">
+      @font-face {
+        font-family: "Virgil";
+        src: url("https://excalidraw.com/Virgil.woff2");
+      }
+      @font-face {
+        font-family: "Cascadia";
+        src: url("https://excalidraw.com/Cascadia.woff2");
+      }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="784" height="114" fill="#ffffff"></rect><g stroke-linecap="round" transform="translate(10 10) rotate(0 382 47)"><path d="M23.5 0 M23.5 0 C215.78 1.44, 412.53 0.31, 740.5 0 M23.5 0 C281.51 -5.39, 540.97 -5.16, 740.5 0 M740.5 0 C753.39 2.07, 765.57 6.41, 764 23.5 M740.5 0 C751.65 2.03, 761.95 10.91, 764 23.5 M764 23.5 C765.22 38.93, 764.07 54.39, 764 70.5 M764 23.5 C765.71 35.55, 762.55 50.68, 764 70.5 M764 70.5 C767.93 86.58, 758.49 93.89, 740.5 94 M764 70.5 C764.02 86.35, 752.13 91.39, 740.5 94 M740.5 94 C527.53 91.64, 315.65 91.8, 23.5 94 M740.5 94 C478.72 89.22, 217.48 88.45, 23.5 94 M23.5 94 C6.69 94.57, 2.33 89.15, 0 70.5 M23.5 94 C11.38 93.18, 4.58 86.22, 0 70.5 M0 70.5 C-1.6 61.79, -4.18 54.1, 0 23.5 M0 70.5 C0.49 59.36, 0.09 50.04, 0 23.5 M0 23.5 C0.11 9, 4.33 1.63, 23.5 0 M0 23.5 C0.11 6.62, 10.72 -1.87, 23.5 0" stroke="#000000" stroke-width="1" fill="none"></path></g><g transform="translate(180 34) rotate(0 212 23)"><text x="212" y="32" font-family="Virgil, Segoe UI Emoji" font-size="36px" fill="#000000" text-anchor="middle" style="white-space: pre;" direction="ltr">🎵 Swing music player 🎵</text></g>
+</svg>
 
-This is the engine that runs the alice music application.
+---
 
-### What is alice?
+### Make listening to your local music fun again.
 
-Simply put, `alice` is a browser-based music player for playing local music files. It currently supports MP3 and FLAC file types. You need to install the `alice-server` package (this repo) to process your files. You can use it using the live `alice-client` at <https://alicemusic.netlify.app> or setup the client locally [from GitHub](https://github.com/geoffrey45/alice).
+`Swing` is a music player for local audio files that is built with both visual coolness and functionality in mind. Just run the app and enjoy your music library in a web browser.
 
-### How does this work?
+> Note: This project is in the early stages of development. Many features are missing but will be added with time.
 
-`alice` works _quite similar_ to how streaming music on a streaming site works.
+The app is currently only available on linux. (I don't have access to a Windows machine for building and testing purposes and my machine is not strong enough to support Windows in VM).
 
-Basically, `alice-server` checks your files and extracts metadata from them, stores it in a databases and then makes it available to the browser using a REST API.
+# Setup
 
-The server goes through all your folders in the `~/` directory and checks for audio files. It then extracts audio tags using [`mutagen`](https://mutagen.readthedocs.io/en/latest/) and stores them in a database. After processing all files, it scraps through the data to create albums.
+Download the latest release from the [release page](#) and extract it in your machine. Then execute the extracted file in a terminal.
 
-The client communicates with the server via a REST API interface built using [`flask`](https://flask.palletsprojects.com), which just reads data from the database. When you want to view tracks in some folder, you just send a POST request to the Flask app with the path you want to access and the server will return a JSON response of all folders and files that match that directory in the database.
-
-Everything in the server revolves around reading files, communicating with the database and processing requests.
-
-### Development setup
-
-To locally setup `alice` **development** copy on your machine, you are required to have the following tools installed in your machine:
-
-1. **Python 3**
-
-   You can check your installed version using `python3 --version`.
-   Refer to the Python [downloads page](https://www.python.org/downloads/) for a fresh installation.
-
-2. **[Python Poetry](https://python-poetry.org/)** - Manages project dependencies and virtual environment.
-
-   Refer to [Python Poetry installation docs](https://python-poetry.org/docs/) for fresh installation.
-
-3. MongoDB (at least for now) - For storing your music data.
-
-   Refer to the [MongoDB community edition installation directory](https://www.mongodb.com/docs/manual/administration/install-community/).
-
-> Note: MongoDB should be accessible at `mongodb://localhost:27017` which is the default port.
-
-Once you have all the above installed, clone the repo.
-
-#### On Linux
-
-```sh
-# using https
-git clone https://github.com/geoffrey45/alice.git
-
-# using ssh
-git clone git@github.com:geoffrey45/alice.git
+```bash
+./swing
 ```
 
-Now cd into the project directory and install dependencies.
+The file will start the app at <http://localhost:1970> by default. See the setup option section on how to change the host and port.
+
+# Setup options
+
+```
+Usage: swing [options]
+
+Options:
+    --host: Set the host
+    --port: Set the port
+    --help, -h: Show this help message
+    --version, -v: Show the version
+```
+
+# Development
+
+This project is broken down into 2. The client and the server. The client comprises of the user interface code. This part is written in Typescript, Vue 3 and SCSS. To setup the client, checkout the [swing client repo ](#) on GitHub.
+
+The second part of this project is the server. This is the main part of the app that runs on your machine, interacts with audio files and send data to the client. It's written in Python 3.
+
+The following instructions will guide you on how to setup the **server**.
+
+---
+
+The project uses [Python poetry](https://python-poetry.org) as the dependency manager. Follow the instructions in [their docs](https://python-poetry.org/docs/) to install it in your machine.
+
+> It is assumed that you have `Python 3.10` or newer installed in your machine. This project uses duck typing features so older version of Python will not work. If you don't have Python installed in your machine, get it from the [python website](https://www.python.org/downloads/).
+
+Clone this repo locally in your machine. Then install the project dependencies and start the app.
 
 ```sh
-cd alice
+git clone <$>
 
+cd swing-core
+
+# install dependencies using poetry
 poetry install
+
+# start the app
+poetry run python manage.py
 ```
 
-Make the start script executable and run it.
+# License
 
-```sh
-chmod a+x ./start.sh
+This software is provided to you with terms stated in the MIT License. Read the full text in the `LICENSE` file located at the root of this repository.
 
-./start.sh -s
-```
+# Contributing
 
-The `-s` flag is used to start the image server. Sometimes when you are killing the script, the image server might not be killed. In that case, you might need to start the music server alone using `./start.sh`.
+If you want to contribute to this project, feel free to open an issue or a pull request on Github. Your contributions are highly valued and appreciated. Feature suggestions, bug reports and code contribution are welcome.
 
-That's it. The server should be running on [`localhost:1970`](https://localhost:1970). The client is set to communicate with `alice` on that specific port.
+# A brain dump ...
 
-Please note:
+I started working on this project on dec 2021. Why? I like listening and exploring music and I like it more when I can enjoy it (like really really). I'd been searching for cute music players for linux that allow me to manage my ever growing music library. Some of the main features I was looking for were:
 
-The time taken to process your files for the first time depends on a few factors:
+- A simple, lively and beautiful user interface (main reason)
+- Creating automated daily mixes based on my listening activity.
+- Ability to move files around without breaking my playlists and mixes.
+- Something that can bring together all the audio files scattered all over my disks into a single place.
+- Browsing related artists and albums.
+- Reading artists and albums biographies.
+- Web browser based user interface.
+- a lot more ... but I can't remember them at the moment
 
-1. The amount of files you have
-2. The access speed of disk they're stored on
-3. You computer's processing power
-4. Whether you love cats
+I've been working to make sure that most (if not all) of the features listed above are built. Some of them are done, but most are not even touched yet. A lot of work is needed and I know that it will take a lot of time to build and perfect them.
 
-`alice` doesn't use multi-processing to process files. If you have a thousands of music files, you might want to take a walk.
+I've been keeping a small 🤥 list of a few cool features that I'd like to see implemented in the project. You can check it out in [this notion page](https://rhetorical-othnielia-565.notion.site/Cool-features-1a0cd5b797904da687bec441e7c7aa19). https://rhetorical-othnielia-565.notion.site/Cool-features-1a0cd5b797904da687bec441e7c7aa19
 
-### The server config folder
+I have been working on this project solo, so it’s very hard to push things fast. The app is written in Python for the backend and Vue3 for the client. If you have knowledge in any or both of this areas, feel free to contribute to the project. We’ll be excited to have you. Your help is highly appreciated.
 
-The server config folder is located at `~/.alice`. It looks something like this:
+_The backend is honestly a bunch of Python classes and functions. The client just sends API request and displays it._
 
-```sh
-./alice
-├── assets # static files
-│   └── default.webp # fallback thumbnail
-└── images
-    ├── artists      # images downloaded from Deezer
-    ├── playlists    # playlist thumbnails
-    └── thumbnails   # album thumbnails
-```
+I’m quite a noob myself. I started _serious_ programming in 2021. If you don’t know much programming, come and let’s grow together. If you have some good programming experience, we have been waiting for you.
 
-All images are converted to `.webp` before storage for a smaller file size.
+---
 
-### Music data storage
-
-Currently, all data related to `alice` is stored in MongoDB. The server creates a single collections named `ALICE_SERVER` with multiple documents inside it.
-
-1. `ALBUMS` - Stores album data
-2. `TRACKS` - Stores file tags and other related data like bitrate.
-3. `PLAYLISTS` - Stores playlist data.
-
-### Contributing
-
-If you like this project and would like to cotribute, please feel free to open an issue or a pull request.
+**MIT License | Copyright (c) 2023 Mungai Njoroge** 

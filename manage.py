@@ -85,7 +85,7 @@ class HandleArgs:
                     "manage.py",
                     "--onefile",
                     "--name",
-                    "alice",
+                    "swing",
                     "--clean",
                     "--add-data=assets:assets",
                     "--add-data=client:client",

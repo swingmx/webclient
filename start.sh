@@ -21,7 +21,7 @@ while getopts ':s' opt; do
 done
 
 
-echo "Starting alice server"
+echo "Starting swing"
 "$gpath" -b 0.0.0.0:1970 --threads=2 "manage:create_api()"
 
-# poetry run pyinstaller -F  -n alice -y --add-data "assets:assets" --add-data="app/client:app/client"  --clean manage.py
+# poetry run pyinstaller -F  -n swing -y --add-data "assets:assets" --add-data="app/client:app/client"  --clean manage.py

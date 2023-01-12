@@ -34,7 +34,7 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-log = logging.getLogger("alice")
+log = logging.getLogger("swing")
 log.propagate = False
 log.setLevel(logging.DEBUG)
 

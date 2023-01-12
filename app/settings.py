@@ -7,7 +7,7 @@ import os
 APP_VERSION = "Swing v0.0.1.alpha"
 
 # paths
-CONFIG_FOLDER = ".alice"
+CONFIG_FOLDER = ".swing"
 HOME_DIR = os.path.expanduser("~")
 
 APP_DIR = os.path.join(HOME_DIR, CONFIG_FOLDER)
@@ -65,7 +65,7 @@ USE_MONGO = False
 
 
 # ===== SQLite =====
-APP_DB_NAME = "alice.db"
+APP_DB_NAME = "swing.db"
 USER_DATA_DB_NAME = "userdata.db"
 APP_DB_PATH = os.path.join(APP_DIR, APP_DB_NAME)
 USERDATA_DB_PATH = os.path.join(APP_DIR, USER_DATA_DB_NAME)
@@ -75,7 +75,7 @@ USERDATA_DB_PATH = os.path.join(APP_DIR, USER_DATA_DB_NAME)
 USE_STORE = True
 
 HELP_MESSAGE = """
-Usage: alice [options]
+Usage: swing [options]
 
 Options:
     --build: Build the application
