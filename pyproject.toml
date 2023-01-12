@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Alice Server"
+name = "Swing music player"
 version = "0.1.0"
 description = ""
 authors = ["geoffrey45 <geoffreymungai45@gmail.com>"]
