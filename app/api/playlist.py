@@ -63,11 +63,14 @@ def create_playlist():
 
     playlist = {
         "artisthashes": json.dumps([]),
+        "has_gif": 0,
         "image": None,
         "last_updated": create_new_date(),
         "name": data["name"],
         "trackhashes": json.dumps([]),
     }
+
+    print(playlist)
 
     playlist = insert_one_playlist(playlist)
 
@@ -140,6 +143,7 @@ def update_playlist_info(playlistid: str):
     playlist = {
         "id": int(playlistid),
         "artisthashes": json.dumps([]),
+        "has_gif": 0,
         "image": db_playlist.image,
         "last_updated": create_new_date(),
         "name": str(data.get("name")).strip(),
@@ -149,7 +153,10 @@ def update_playlist_info(playlistid: str):
     if image:
         try:
             playlist["image"] = playlistlib.save_p_image(image, playlistid)
-            print(playlist['image'])
+
+            if image.content_type == "image/gif":
+                playlist["has_gif"] = 1
+
         except UnidentifiedImageError:
             return {"error": "Failed: Invalid image"}, 400
 

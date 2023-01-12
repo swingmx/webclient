@@ -164,6 +164,7 @@ class Playlist:
 
     id: int
     artisthashes: str | list[str]
+    has_gif: str | bool
     image: str
     last_updated: str
     name: str
@@ -178,6 +179,7 @@ class Playlist:
         self.artisthashes = json.loads(str(self.artisthashes))
 
         self.count = len(self.trackhashes)
+        self.has_gif = bool(int(self.has_gif))
 
         if self.image is not None:
             self.thumb = "thumb_" + self.image
