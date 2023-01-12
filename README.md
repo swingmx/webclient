@@ -1,19 +1,4 @@
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 784 114" width="784" height="114">
-  <!-- svg-source:excalidraw -->
-  <defs>
-    <style class="style-fonts">
-      @font-face {
-        font-family: "Virgil";
-        src: url("https://excalidraw.com/Virgil.woff2");
-      }
-      @font-face {
-        font-family: "Cascadia";
-        src: url("https://excalidraw.com/Cascadia.woff2");
-      }
-    </style>
-  </defs>
-  <rect x="0" y="0" width="784" height="114" fill="#ffffff"></rect><g stroke-linecap="round" transform="translate(10 10) rotate(0 382 47)"><path d="M23.5 0 M23.5 0 C215.78 1.44, 412.53 0.31, 740.5 0 M23.5 0 C281.51 -5.39, 540.97 -5.16, 740.5 0 M740.5 0 C753.39 2.07, 765.57 6.41, 764 23.5 M740.5 0 C751.65 2.03, 761.95 10.91, 764 23.5 M764 23.5 C765.22 38.93, 764.07 54.39, 764 70.5 M764 23.5 C765.71 35.55, 762.55 50.68, 764 70.5 M764 70.5 C767.93 86.58, 758.49 93.89, 740.5 94 M764 70.5 C764.02 86.35, 752.13 91.39, 740.5 94 M740.5 94 C527.53 91.64, 315.65 91.8, 23.5 94 M740.5 94 C478.72 89.22, 217.48 88.45, 23.5 94 M23.5 94 C6.69 94.57, 2.33 89.15, 0 70.5 M23.5 94 C11.38 93.18, 4.58 86.22, 0 70.5 M0 70.5 C-1.6 61.79, -4.18 54.1, 0 23.5 M0 70.5 C0.49 59.36, 0.09 50.04, 0 23.5 M0 23.5 C0.11 9, 4.33 1.63, 23.5 0 M0 23.5 C0.11 6.62, 10.72 -1.87, 23.5 0" stroke="#000000" stroke-width="1" fill="none"></path></g><g transform="translate(180 34) rotate(0 212 23)"><text x="212" y="32" font-family="Virgil, Segoe UI Emoji" font-size="36px" fill="#000000" text-anchor="middle" style="white-space: pre;" direction="ltr">🎵 Swing music player 🎵</text></g>
-</svg>
+![SWING MUSIC PLAYER BANNER IMAGE](./rd-me-banner.png)
 
 ---
 
@@ -75,13 +60,13 @@ poetry install
 poetry run python manage.py
 ```
 
-# License
-
-This software is provided to you with terms stated in the MIT License. Read the full text in the `LICENSE` file located at the root of this repository.
-
 # Contributing
 
 If you want to contribute to this project, feel free to open an issue or a pull request on Github. Your contributions are highly valued and appreciated. Feature suggestions, bug reports and code contribution are welcome.
+
+# License
+
+This software is provided to you with terms stated in the MIT License. Read the full text in the `LICENSE` file located at the root of this repository.
 
 # A brain dump ...
 
@@ -108,4 +93,4 @@ I’m quite a noob myself. I started _serious_ programming in 2021. If you don�
 
 ---
 
-**MIT License | Copyright (c) 2023 Mungai Njoroge** 
+**[MIT License](https://opensource.org/licenses/MIT) | Copyright (c) 2023 Mungai Njoroge**
