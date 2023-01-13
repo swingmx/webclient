@@ -35,78 +35,6 @@ export default {
         title: "Album 3",
         artist: "Artist 3",
       },
-      {
-        title: "Album 1",
-        artist: "Artist 1",
-      },
-      {
-        title: "Album 2",
-        artist: "Artist 2",
-      },
-      {
-        title: "Album 3",
-        artist: "Artist 3",
-      },
-      {
-        title: "Album 1",
-        artist: "Artist 1",
-      },
-      {
-        title: "Album 2",
-        artist: "Artist 2",
-      },
-      {
-        title: "Album 3",
-        artist: "Artist 3",
-      },
-      {
-        title: "Album 1",
-        artist: "Artist 1",
-      },
-      {
-        title: "Album 2",
-        artist: "Artist 2",
-      },
-      {
-        title: "Album 3",
-        artist: "Artist 3",
-      },
-      {
-        title: "Album 1",
-        artist: "Artist 1",
-      },
-      {
-        title: "Album 2",
-        artist: "Artist 2",
-      },
-      {
-        title: "Album 3",
-        artist: "Artist 3",
-      },
-      {
-        title: "Album 1",
-        artist: "Artist 1",
-      },
-      {
-        title: "Album 2",
-        artist: "Artist 2",
-      },
-      {
-        title: "Album 3",
-        artist: "Artist 3",
-      },
-      {
-        title: "Album 1",
-        artist: "Artist 1",
-      },
-      {
-        title: "Album 2",
-        artist: "Artist 2",
-      },
-      {
-        title: "Album 3",
-        artist: "Artist 3",
-      },
     ];
 
     return {
@@ -144,7 +72,7 @@ export default {
         left: $small;
         height: 3rem;
         width: 3rem;
-        background: url(../../assets/icons/play.svg) no-repeat center;
+        // background: url(../../assets/icons/play.svg) no-repeat center;
         background-size: 60%;
         cursor: default;
         opacity: 0;
@@ -163,7 +91,7 @@ export default {
       .album-art {
         height: 9em;
         width: 9em;
-        background-image: url(../../assets/images/null.webp);
+        // background-image: url(../../assets/images/null.webp);
       }
 
       .name {

@@ -16,8 +16,7 @@
         {{ index }}
       </div>
       <div class="heart-icon">
-        <HeartFillSvg v-if="is_fav" />
-        <HeartSvg v-else />
+        <HeartSvg :state="is_fav" :no_emit="true" />
       </div>
     </div>
     <div class="flex">
@@ -74,21 +73,18 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 
-import { showTrackContextMenu as showContext } from "@/composables/context";
 import { paths } from "@/config";
 import { Track } from "@/interfaces";
 import { formatSeconds } from "@/utils";
-
-import HeartSvg from "@/assets/icons/heart.svg";
-import HeartFillSvg from "@/assets/icons/heart.fill.svg";
-import OptionSvg from "@/assets/icons/more.svg";
-import ArtistName from "./ArtistName.vue";
-
 import useQueueStore from "@/stores/queue";
 import { favType } from "@/composables/enums";
-
-import MasterFlag from "./MasterFlag.vue";
 import favoriteHandler from "@/composables/favoriteHandler";
+import { showTrackContextMenu as showContext } from "@/composables/context";
+
+import HeartSvg from "./HeartSvg.vue";
+import ArtistName from "./ArtistName.vue";
+import MasterFlag from "./MasterFlag.vue";
+import OptionSvg from "@/assets/icons/more.svg";
 
 const imguri = paths.images.thumb.small;
 const context_menu_showing = ref(false);
@@ -100,7 +96,7 @@ const props = defineProps<{
   hide_album?: Boolean;
 }>();
 
-const is_fav = ref(props.track.is_favorite);
+const is_fav = ref(false);
 
 const emit = defineEmits<{
   (e: "playThis"): void;
@@ -179,7 +175,6 @@ watch(
         transition-delay: 500ms;
 
         transform: translateX(0);
-        opacity: 1;
       }
     }
   }
@@ -223,6 +218,13 @@ watch(
       align-content: center;
       transition: all 0.2s;
       transform: translateX(-1.5rem);
+
+      button {
+        border: none;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+      }
     }
   }
 

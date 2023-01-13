@@ -84,7 +84,7 @@ export default {
       .image {
         height: 7rem;
         width: 7rem;
-        background-image: url(../../assets/images/null.webp);
+        // background-image: url(../../assets/images/null.webp);
         border-radius: $small;
       }
 

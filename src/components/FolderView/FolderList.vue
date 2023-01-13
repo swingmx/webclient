@@ -24,7 +24,7 @@ defineProps<{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
   gap: 1.5rem;
-  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
 }
 
 #f-items.list-mode {

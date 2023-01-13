@@ -41,18 +41,6 @@
       display: flex;
       align-items: center;
       gap: $small;
-
-      #heart {
-        background-image: url(../../icons/heart.svg);
-      }
-
-      #add-to {
-        background-image: url(../../icons/plus.svg);
-      }
-
-      #repeat {
-        background-image: url(../../icons/repeat.svg);
-      }
     }
 
     .volume-group {
