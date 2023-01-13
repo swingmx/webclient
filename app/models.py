@@ -164,6 +164,7 @@ class Playlist:
 
     id: int
     artisthashes: str | list[str]
+    banner_pos: int
     has_gif: str | bool
     image: str
     last_updated: str

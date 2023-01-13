@@ -7,6 +7,7 @@ CREATE_USERDATA_TABLES = """
 CREATE TABLE IF NOT EXISTS playlists (
     id integer PRIMARY KEY,
     artisthashes text,
+    banner_pos integer NOT NULL,
     has_gif integer,
     image text,
     last_updated text not null,
