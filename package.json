@@ -35,5 +35,5 @@
     "vite": "^3.0.4",
     "vue-svg-loader": "^0.16.0"
   },
-  "packageManager": "yarn@3.1.1"
+  "packageManager": "yarn@1.22.19"
 }
