@@ -16,12 +16,13 @@ class SQLitePlaylistMethods:
     def insert_one_playlist(playlist: dict):
         sql = """INSERT INTO playlists(
             artisthashes,
+            banner_pos,
             has_gif,
             image,
             last_updated,
             name,
             trackhashes
-            ) VALUES(?,?,?,?,?,?)
+            ) VALUES(?,?,?,?,?,?,?)
             """
 
         playlist = OrderedDict(sorted(playlist.items()))
@@ -155,6 +156,7 @@ class SQLitePlaylistMethods:
         del playlist["id"]
         del playlist["trackhashes"]
         del playlist["artisthashes"]
+        del playlist['banner_pos']
 
         playlist = OrderedDict(sorted(playlist.items()))
         params = (*playlist.values(), playlist_id)
@@ -168,3 +170,10 @@ class SQLitePlaylistMethods:
 
         with SQLiteManager(userdata_db=True) as cur:
             cur.execute(sql, (pid,))
+
+    @staticmethod
+    def update_banner_pos(playlistid: int, pos: int):
+        sql = """UPDATE playlists SET banner_pos = ? WHERE id = ?"""
+
+        with SQLiteManager(userdata_db=True) as cur:
+            cur.execute(sql, (pos, playlistid))

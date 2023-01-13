@@ -63,14 +63,13 @@ def create_playlist():
 
     playlist = {
         "artisthashes": json.dumps([]),
+        "banner_pos": 50,
         "has_gif": 0,
         "image": None,
         "last_updated": create_new_date(),
         "name": data["name"],
         "trackhashes": json.dumps([]),
     }
-
-    print(playlist)
 
     playlist = insert_one_playlist(playlist)
 
@@ -143,6 +142,7 @@ def update_playlist_info(playlistid: str):
     playlist = {
         "id": int(playlistid),
         "artisthashes": json.dumps([]),
+        "banner_pos": db_playlist.banner_pos,
         "has_gif": 0,
         "image": db_playlist.image,
         "last_updated": create_new_date(),
@@ -157,10 +157,15 @@ def update_playlist_info(playlistid: str):
             if image.content_type == "image/gif":
                 playlist["has_gif"] = 1
 
+            # reset banner position to center.
+            playlist["banner_pos"] = 50
+            PL.update_banner_pos(int(playlistid), 50)
+
         except UnidentifiedImageError:
             return {"error": "Failed: Invalid image"}, 400
 
     p_tuple = (*playlist.values(),)
+    print("banner pos:", playlist["banner_pos"])
 
     update_playlist(int(playlistid), playlist)
 
@@ -201,3 +206,21 @@ def remove_playlist():
     delete_playlist(pid)
 
     return {"msg": "Done"}, 200
+
+
+@playlistbp.route("/playlist/<pid>/set-image-pos", methods=["POST"])
+def update_image_position(pid: int):
+    data = request.get_json()
+    message = {"msg": "No data provided"}
+
+    if data is None:
+        return message, 400
+
+    try:
+        pos = data["pos"]
+    except KeyError:
+        return message, 400
+
+    PL.update_banner_pos(pid, pos)
+
+    return {"msg": "Image position saved"}, 200
