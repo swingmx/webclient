@@ -172,6 +172,10 @@ onBeforeRouteLeave(async () => {
 
 <style lang="scss">
 .artist-page {
+  .scroller {
+    padding-bottom: 4rem;
+  }
+
   .artist-albums {
     margin-top: 2rem;
   }
