@@ -52,7 +52,7 @@ const scrollerItems = computed(() => {
   return tracks.value.map((track) => {
     return {
       track,
-      id: Math.random(),
+      id: track.filepath,
       props: createTrackProps(track),
     };
   });

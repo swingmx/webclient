@@ -40,7 +40,7 @@ const album = useAlbumStore();
 const queue = useQueueStore();
 
 interface ScrollerItem {
-  id: string;
+  id: string | undefined;
   component:
     | typeof Header
     | typeof SongItem
@@ -51,13 +51,13 @@ interface ScrollerItem {
 }
 
 class songItem {
-  id: number;
+  id: string | number;
   props = {};
   size = 64;
   component: typeof SongItem | typeof AlbumDiscBar;
 
   constructor(track: Track) {
-    this.id = Math.random();
+    this.id = track.filepath || Math.random();
     this.props = track.is_album_disc_number
       ? { album_disc: track }
       : { track, hide_album: true, index: track.track };
@@ -86,7 +86,7 @@ function getArtistAlbumComponents(): ScrollerItem[] {
     const artisthash = artist?.artisthash;
 
     return {
-      id: Math.random().toString(),
+      id: artisthash,
       component: ArtistAlbums,
       props: {
         artisthash,

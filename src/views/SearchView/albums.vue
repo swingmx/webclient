@@ -2,7 +2,7 @@
   <div class="search-albums-view grid-page">
     <AlbumCard
       v-for="album in search.albums.value"
-      :key="Math.random()"
+      :key="album.albumhash"
       :album="album"
     />
   </div>

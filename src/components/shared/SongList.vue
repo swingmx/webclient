@@ -8,7 +8,7 @@
       class="scroller"
       id="songlist-scroller"
       style="height: 100%"
-      :items="tracks.map((track) => ({ track, id: Math.random() }))"
+      :items="tracks.map((track) => ({ track, id: track.filepath }))"
       :item-size="itemHeight"
       key-field="id"
       v-slot="{ item, index }"

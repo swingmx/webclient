@@ -32,14 +32,14 @@ const search = useSearchStore();
 const queue = useQueueStore();
 
 interface scrollerItem {
-  id: number;
+  id: string | number | undefined;
   component: typeof SongItem | typeof FetchMore;
   props: Record<string, any>;
 }
 
 const scrollerItems = computed(() => {
   const items: scrollerItem[] = search.tracks.value.map((track, index) => ({
-    id: Math.random(),
+    id: track.filepath,
     component: SongItem,
     props: {
       track,

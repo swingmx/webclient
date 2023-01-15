@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import { paths } from "@/config";
 import { Track } from "@/interfaces";
@@ -96,7 +96,7 @@ const props = defineProps<{
   hide_album?: Boolean;
 }>();
 
-const is_fav = ref(false);
+const is_fav = ref(props.track.is_favorite);
 
 const emit = defineEmits<{
   (e: "playThis"): void;
@@ -128,12 +128,16 @@ function addToFav(trackhash: string) {
   );
 }
 
-watch(
+const stop = watch(
   () => props.track.is_favorite,
   (newValue) => {
     is_fav.value = newValue;
   }
 );
+
+onBeforeUnmount(() => {
+  stop();
+});
 </script>
 
 <style lang="scss">

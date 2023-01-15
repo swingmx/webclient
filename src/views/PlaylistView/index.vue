@@ -53,7 +53,7 @@ const scrollerItems = computed(() => {
     header,
     ...playlist.tracks.map((track) => {
       return {
-        id: Math.random(),
+        id: track.filepath,
         component: SongItem,
         props: {
           track: track,

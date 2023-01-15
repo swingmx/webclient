@@ -48,18 +48,18 @@ const folder = useFolderStore();
 const queue = useQueueStore();
 
 interface ScrollerItem {
-  id: string | number;
+  id: string | undefined;
   component: typeof FolderList | typeof SongItem;
   props: any;
 }
 
 class songItem {
-  id: number;
+  id: string | undefined;
   props: any;
   component = SongItem;
 
   constructor(track: Track) {
-    this.id = Math.random();
+    this.id = track.filepath;
     this.props = createTrackProps(track)
   }
 }

@@ -41,7 +41,7 @@ const mouseover = ref(false);
 const scrollerItems = computed(() => {
   return queue.tracklist.map((track) => ({
     track,
-    id: Math.random(),
+    id: track.filepath,
   }));
 });
 
