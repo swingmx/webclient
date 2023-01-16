@@ -1,5 +1,32 @@
 ### Swing music client
-This repo contains the client code for the swing music player. Documentation coming soon ...
+
+This repo contains the client code for the swing music player.
+
+### Setup
+
+This project requires `Node v14` or newer and `yarn@1.22.19`. Install them first.
+
+- [NodeJS](https://nodejs.org/en/)
+- [Yarn](https://yarnpkg.com)
+
+Clone the repository and install the dependencies.
+
+```bash
+git clone #
+
+cd swing-client
+
+# Install dependencies
+yarn install
+
+# Start the development server
+yarn dev
+```
+
+### Contributing
+
+If you want to contribute to this project, feel free to open a pull request with you changes. All bug reports and contributions are welcome.
 
 ---
+
 **[MIT License](https://opensource.org/licenses/MIT) | Copyright (c) 2023 Mungai Njoroge**
