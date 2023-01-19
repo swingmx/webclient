@@ -2,11 +2,10 @@
   <div class="welcome-to-swing">
     <h3 class="t-center">
       Welcome to
-      <span class="app-name">Alice</span>
-      <span class="release">0.1.0</span>
+      <span class="app-name">Swing Music</span>
     </h3>
     <p>
-      Alice is a web based music player that is designed to provide a home 🏡
+      Swing Music is a web based music player that is designed to provide a home 🏡
       for all your local music files 💿️.
     </p>
     <hr />
