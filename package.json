@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "serve": "vite preview",
-    "build": "vite build --emptyOutDir --outDir ../swing/client",
+    "build": "vite build --emptyOutDir --outDir dist",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },
   "dependencies": {
