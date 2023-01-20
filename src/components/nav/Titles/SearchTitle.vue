@@ -17,11 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router/routes";
+import { Routes } from "@/router";
 
-import useSearchStore from "@/stores/search";
 import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
 import SearchInput from "@/components/RightSideBar/SearchInput.vue";
+import useSearchStore from "@/stores/search";
 
 const search = useSearchStore();
 const tabs = ["tracks", "albums", "artists"];

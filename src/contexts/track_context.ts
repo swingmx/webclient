@@ -2,7 +2,7 @@ import { Artist, Playlist, Track } from "../interfaces";
 
 // @ts-ignore
 import { Option } from "../interfaces";
-import Router from "../router";
+import { Routes, router as Router } from "@/router";
 
 import {
   addTrackToPlaylist,
@@ -11,7 +11,6 @@ import {
 
 import useModalStore from "../stores/modal";
 import useQueueStore from "../stores/queue";
-import { Routes } from "@/router/routes";
 /**
  * Returns a list of context menu items for a track.
  * @param  {any} track a track object.

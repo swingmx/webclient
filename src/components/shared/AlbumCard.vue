@@ -45,8 +45,8 @@ import { Album } from "../../interfaces";
 import PlayBtn from "./PlayBtn.vue";
 
 import { playSources } from "@/composables/enums";
+import { Routes } from "@/router";
 import useAlbumStore from "@/stores/pages/album";
-import { Routes } from "@/router/routes";
 
 const imguri = paths.images.thumb.large;
 defineProps<{

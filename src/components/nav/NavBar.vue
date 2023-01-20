@@ -45,18 +45,18 @@ import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import { subPath } from "@/interfaces";
-import { Routes } from "@/router/routes";
+import { Routes } from "@/router";
 import { createSubPaths } from "@/utils";
 
 import NavButtons from "./NavButtons.vue";
 
+import ArtistDiscographyTitle from "./Titles/ArtistDiscographyTitle.vue";
 import FolderTitle from "./Titles/Folder.vue";
-import SimpleNav from "./Titles/SimpleNav.vue";
 import PlaylistsTitle from "./Titles/PlaylistsTitle.vue";
 import QueueTitle from "./Titles/QueueTitle.vue";
 import SearchTitle from "./Titles/SearchTitle.vue";
 import SettingsTitle from "./Titles/SettingsTitle.vue";
-import ArtistDiscographyTitle from "./Titles/ArtistDiscographyTitle.vue";
+import SimpleNav from "./Titles/SimpleNav.vue";
 
 const route = useRoute();
 const subPaths = ref<subPath[]>([]);

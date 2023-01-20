@@ -11,9 +11,8 @@ import {
 import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 
-
 import App from "./App.vue";
-import router from "./router";
+import { router } from "./router";
 import vTooltip from "./directives/vTooltip";
 
 import "./assets/scss/index.scss";

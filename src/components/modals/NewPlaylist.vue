@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router/routes";
+import { Routes } from "@/router";
 import usePlaylistStore from "@/stores/pages/playlists";
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";

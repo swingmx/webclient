@@ -3,8 +3,7 @@ import { useDebounce } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { watch } from "vue";
 import { useRoute } from "vue-router";
-import { Routes } from "@/router/routes";
-import router from "@/router";
+import { router, Routes } from "@/router";
 
 import {
   loadMoreAlbums,

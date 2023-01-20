@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { Artist } from "@/interfaces";
-import { Routes } from "@/router/routes";
+import { Routes } from "@/router";
 
 const props = defineProps<{
   artists: Artist[] | null;

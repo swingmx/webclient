@@ -28,7 +28,7 @@ import useFolderStore from "@/stores/pages/folder";
 import usePStore from "@/stores/pages/playlist";
 
 import SearchSvg from "@/assets/icons/search.svg";
-import { Routes } from "@/router/routes";
+import { Routes } from "@/router";
 
 const clicked = ref(false);
 const [playlist, album, folder] = [
