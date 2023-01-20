@@ -1,7 +1,7 @@
 const development = import.meta.env.DEV;
 const dev_url = "http://localhost:1970";
 
-const baseApiUrl = development ? dev_url : "";
+const baseApiUrl = development ? dev_url : dev_url;
 const baseImgUrl = baseApiUrl + "/img";
 
 const imageRoutes = {
