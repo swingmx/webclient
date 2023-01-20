@@ -17,17 +17,17 @@
 <script setup lang="ts">
 import QueueActions from "@/components/RightSideBar/Queue/QueueActions.vue";
 import { FromOptions } from "@/composables/enums";
+import { Routes } from "@/router";
 import useQueueStore from "@/stores/queue";
-import { Routes } from "@/router/routes";
 
 import AlbumSvg from "@/assets/icons/album.svg";
+import ArtistSvg from "@/assets/icons/artist.svg";
 import FolderSvg from "@/assets/icons/folder.svg";
 import PlaylistSvg from "@/assets/icons/playlist.svg";
 import SearchSvg from "@/assets/icons/search.svg";
-import ArtistSvg from "@/assets/icons/artist.svg";
 
-import { RouteLocationRaw } from "vue-router";
 import HeartSvg from "@/assets/icons/heart.fill.svg";
+import { RouteLocationRaw } from "vue-router";
 
 const queue = useQueueStore();
 

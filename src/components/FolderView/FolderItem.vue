@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { Folder } from "@/interfaces";
-import { Routes } from "@/router/routes";
+import { Routes } from "@/router";
 
 import FolderSvg from "@/assets/icons/folder.svg";
 import SymLinkSvg from "@/assets/icons/symlink.svg";

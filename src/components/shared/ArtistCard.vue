@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { Artist } from "@/interfaces";
-import { Routes } from "@/router/routes";
+import { Routes } from "@/router";
 import { paths } from "../../config";
 
 const imguri = paths.images.artist.large;

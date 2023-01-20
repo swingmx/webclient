@@ -108,9 +108,9 @@ onBeforeRouteLeave(() => {
 </script>
 
 
-<style lang="scss">
-// .folder-view {
-//   background-color: $red;
-//   padding-left: 0 !important;
-// }
-</style>
+<!-- <style lang="scss">
+.folder-view {
+  background-color: $red;
+  padding-left: 0 !important;
+}
+</style> -->

@@ -79,20 +79,19 @@
 import { ref } from "vue";
 
 import ArtistName from "@/components/shared/ArtistName.vue";
+import { isLight } from "@/composables/colors/album";
+import { favType, playSources } from "@/composables/enums";
 import { paths } from "@/config";
+import { Routes } from "@/router";
 import { albumHeaderSmall } from "@/stores/content-width";
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
 import { formatSeconds, useVisibility } from "@/utils";
-import { isLight } from "@/composables/colors/album";
-import { favType, playSources } from "@/composables/enums";
-import { Album } from "@/interfaces";
-import { Routes } from "@/router/routes";
 import HeartSvg from "../shared/HeartSvg.vue";
 
-import PlayBtnRect from "../shared/PlayBtnRect.vue";
 import favoriteHandler from "@/composables/favoriteHandler";
 import { storeToRefs } from "pinia";
+import PlayBtnRect from "../shared/PlayBtnRect.vue";
 
 // const props = defineProps<{
 //   album: Album;
