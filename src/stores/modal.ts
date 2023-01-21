@@ -7,6 +7,8 @@ enum ModalOptions {
   welcome,
   deletePlaylist,
   SetIP,
+  rootDirsPrompt,
+  setRootDirs,
 }
 
 export default defineStore("newModal", {
@@ -43,6 +45,12 @@ export default defineStore("newModal", {
     },
     showSetIPModal() {
       this.showModal(ModalOptions.SetIP);
+    },
+    showRootDirsPromptModal() {
+      this.showModal(ModalOptions.rootDirsPrompt);
+    },
+    showSetRootDirsModal() {
+      this.showModal(ModalOptions.setRootDirs);
     },
     hideModal() {
       this.visible = false;

@@ -33,7 +33,7 @@ const imageRoutes = {
   raw: "/raw/",
 };
 
-const paths = {
+export const paths = {
   api: {
     album: baseApiUrl.value + "/album",
     favorite: baseApiUrl.value + "/favorite",
@@ -59,6 +59,7 @@ const paths = {
       return this.album + "/from-artist";
     },
     folder: baseApiUrl.value + "/folder",
+    dir_browser: baseApiUrl.value + "/folder/dir-browser",
     playlist: {
       base: baseApiUrl.value + "/playlist",
       get new() {
@@ -88,8 +89,14 @@ const paths = {
     },
     settings: {
       base: baseApiUrl.value + "/settings",
+      get get_root_dirs() {
+        return this.base + "/get-root-dirs";
+      },
       get add_root_dir() {
         return this.base + "/add-root-dirs";
+      },
+      get remove_root_dir() {
+        return this.base + "/remove-root-dirs";
       },
     },
     files: baseApiUrl.value + "/file",
@@ -107,5 +114,3 @@ const paths = {
     raw: baseImgUrl + imageRoutes.raw,
   },
 };
-
-export { paths };

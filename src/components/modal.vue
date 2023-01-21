@@ -1,7 +1,13 @@
 <template>
   <div class="modal" v-if="modal.visible">
     <div class="bg" @click="modal.hideModal"></div>
-    <div class="m-content rounded">
+    <div
+      class="m-content rounded"
+      :style="{
+        maxWidth:
+          modal.component == modal.options.setRootDirs ? '56rem' : '30rem',
+      }"
+    >
       <div class="heading">{{ modal.title }}</div>
       <div class="close image" @click="modal.hideModal"></div>
       <NewPlaylist
@@ -28,34 +34,35 @@
         v-if="modal.component == modal.options.SetIP"
         @setTitle="setTitle"
       />
+      <SetRootDirs
+        v-if="modal.component == modal.options.setRootDirs"
+        @hideModal="hideModal"
+      />
+      <RootDirsPrompt v-if="modal.component == modal.options.rootDirsPrompt" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import useModalStore from "../stores/modal";
-
-import NewPlaylist from "./modals/NewPlaylist.vue";
-import UpdatePlaylist from "./modals/updatePlaylist.vue";
-import WelcomeModal from "./WelcomeModal.vue";
-import ConfirmModal from "./modals/ConfirmModal.vue";
-import { deletePlaylist as delPlaylist } from "@/composables/fetch/playlists";
 import { useRouter } from "vue-router";
+import useModalStore from "../stores/modal";
+import { deletePlaylist as delPlaylist } from "@/composables/fetch/playlists";
+
 import SetIP from "./modals/SetIP.vue";
+import WelcomeModal from "./WelcomeModal.vue";
+import NewPlaylist from "./modals/NewPlaylist.vue";
+import SetRootDirs from "./modals/SetRootDirs.vue";
+import ConfirmModal from "./modals/ConfirmModal.vue";
+import UpdatePlaylist from "./modals/updatePlaylist.vue";
+import RootDirsPrompt from "./modals/RootDirsPrompt.vue";
 
 const modal = useModalStore();
 const router = useRouter();
-/**
- * Sets the modal title
- * @param title
- */
+
 function setTitle(title: string) {
   modal.setTitle(title);
 }
 
-/**
- * Handle the emit to hide the modal
- */
 function hideModal() {
   modal.hideModal();
 }
@@ -97,11 +104,13 @@ function deletePlaylist() {
   }
 
   .m-content {
-    width: 100%;
-    max-width: 30rem;
+    width: calc(100% - 4rem);
+    // height: max-content;
+    max-height: 40rem;
     padding: 2rem;
     position: relative;
     background-color: $black;
+    overflow: hidden;
 
     .close {
       width: 2rem;

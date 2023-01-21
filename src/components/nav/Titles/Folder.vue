@@ -9,25 +9,13 @@
               $router.push({ name: Routes.folder, params: { path: '$home' } })
             "
           ></div>
-          <div class="paths">
-            <div
-              class="path"
-              v-for="path in subPaths.slice(1)"
-              :key="path.path"
-              :class="{ inthisfolder: path.active }"
-            >
-              <router-link
-                class="text"
-                :to="{ name: Routes.folder, params: { path: path.path } }"
-                >{{ path.name }}</router-link
-              >
-            </div>
-          </div>
+          <BreadCrumbNav :subPaths="subPaths" @navigate="navigate" />
         </div>
       </div>
+      <button @click.prevent="modal.showRootDirsPromptModal" class="circular">
+        Set Root Dirs
+      </button>
       <SearchInput :page="Routes.folder" />
-      <!-- <div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -39,13 +27,25 @@ import { Routes } from "@/router";
 import { focusElemByClass } from "@/utils";
 import { onUpdated } from "vue";
 
+import useModalStore from "@/stores/modal";
+import BreadCrumbNav from "@/components/FolderView/BreadCrumbNav.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
 defineProps<{
   subPaths: subPath[];
 }>();
 
+const modal = useModalStore();
+
 onUpdated(() => {
   focusElemByClass("inthisfolder");
 });
+
+function navigate(path: string) {
+  router.push({ name: Routes.folder, params: { path } });
+}
 </script>
 
 <style lang="scss">
@@ -54,7 +54,7 @@ onUpdated(() => {
 
   .folder {
     display: grid;
-    grid-template-columns: 1fr max-content;
+    grid-template-columns: 1fr max-content max-content;
 
     .fname-wrapper {
       width: 100%;
@@ -83,51 +83,6 @@ onUpdated(() => {
         background-image: url("../../../assets/icons/folder.fill.svg");
         background-size: 1.5rem;
         margin-left: $smaller;
-      }
-
-      .paths {
-        display: flex;
-        gap: $smaller;
-
-        &::-webkit-scrollbar {
-          display: none;
-        }
-
-        .path {
-          white-space: nowrap;
-          margin: auto 0;
-
-          .text {
-            padding: $smaller;
-            border-radius: $smaller;
-          }
-
-          &::before {
-            content: "∕";
-            margin-right: $smaller;
-            color: $gray2;
-            font-size: 1rem;
-          }
-
-          &:first-child {
-            display: none;
-          }
-
-          &:last-child {
-            padding-right: $smaller;
-          }
-
-          &:hover {
-            .text {
-              background-color: $gray;
-            }
-          }
-        }
-
-        .inthisfolder > .text {
-          background-color: $gray;
-          transition: all 0.5s;
-        }
       }
     }
   }
