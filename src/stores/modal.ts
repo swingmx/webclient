@@ -6,6 +6,7 @@ enum ModalOptions {
   updatePlaylist,
   welcome,
   deletePlaylist,
+  SetIP,
 }
 
 export default defineStore("newModal", {
@@ -39,6 +40,9 @@ export default defineStore("newModal", {
         pid: pid,
       };
       this.showModal(ModalOptions.deletePlaylist);
+    },
+    showSetIPModal() {
+      this.showModal(ModalOptions.SetIP);
     },
     hideModal() {
       this.visible = false;

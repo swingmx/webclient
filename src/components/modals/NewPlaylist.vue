@@ -76,17 +76,6 @@ function create(e: Event) {
     color: $gray1;
   }
 
-  input[type="text"] {
-    margin: $small 0;
-    border: 2px solid $gray3;
-    background-color: transparent;
-    color: #fff;
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    outline: none;
-  }
-
   .submit {
     display: flex;
     justify-content: flex-end;

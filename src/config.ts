@@ -1,8 +1,24 @@
+import { useStorage } from "@vueuse/core";
+
 const development = import.meta.env.DEV;
 const dev_url = "http://localhost:1970";
+const url = development ? dev_url : "";
 
-const baseApiUrl = development ? dev_url : dev_url;
-const baseImgUrl = baseApiUrl + "/img";
+export const baseApiUrl = useStorage("baseApiUrl", url, sessionStorage);
+
+const hostname = "swingmusic.netlify.app";
+
+if (window.location.hostname === hostname && baseApiUrl.value === "") {
+  // is running on netlify and baseApiUrl is not set
+  baseApiUrl.value = null;
+}
+
+const baseImgUrl = baseApiUrl.value + "/img";
+
+export function setBaseApiUrl(url: string) {
+  baseApiUrl.value = url;
+  location.reload();
+}
 
 const imageRoutes = {
   thumb: {
@@ -19,14 +35,14 @@ const imageRoutes = {
 
 const paths = {
   api: {
-    album: baseApiUrl + "/album",
-    favorite: baseApiUrl + "/favorite",
-    favorites: baseApiUrl + "/favorites",
-    favAlbums: baseApiUrl + "/albums/favorite",
-    favTracks: baseApiUrl + "/tracks/favorite",
-    favArtists: baseApiUrl + "/artists/favorite",
-    isFavorite: baseApiUrl + "/favorites/check",
-    artist: baseApiUrl + "/artist",
+    album: baseApiUrl.value + "/album",
+    favorite: baseApiUrl.value + "/favorite",
+    favorites: baseApiUrl.value + "/favorites",
+    favAlbums: baseApiUrl.value + "/albums/favorite",
+    favTracks: baseApiUrl.value + "/tracks/favorite",
+    favArtists: baseApiUrl.value + "/artists/favorite",
+    isFavorite: baseApiUrl.value + "/favorites/check",
+    artist: baseApiUrl.value + "/artist",
     get addFavorite() {
       return this.favorite + "/add";
     },
@@ -42,9 +58,9 @@ const paths = {
     get albumsByArtistUrl() {
       return this.album + "/from-artist";
     },
-    folder: baseApiUrl + "/folder",
+    folder: baseApiUrl.value + "/folder",
     playlist: {
-      base: baseApiUrl + "/playlist",
+      base: baseApiUrl.value + "/playlist",
       get new() {
         return this.base + "/new";
       },
@@ -56,7 +72,7 @@ const paths = {
       },
     },
     search: {
-      base: baseApiUrl + "/search",
+      base: baseApiUrl.value + "/search",
       get tracks() {
         return this.base + "/tracks?q=";
       },
@@ -70,7 +86,13 @@ const paths = {
         return this.base + "/loadmore";
       },
     },
-    files: baseApiUrl + "/file",
+    settings: {
+      base: baseApiUrl.value + "/settings",
+      get add_root_dir() {
+        return this.base + "/add-root-dirs";
+      },
+    },
+    files: baseApiUrl.value + "/file",
   },
   images: {
     thumb: {

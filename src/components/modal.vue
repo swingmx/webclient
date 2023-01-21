@@ -24,6 +24,10 @@
           :confirmAction="deletePlaylist"
         />
       </div>
+      <SetIP
+        v-if="modal.component == modal.options.SetIP"
+        @setTitle="setTitle"
+      />
     </div>
   </div>
 </template>
@@ -37,6 +41,7 @@ import WelcomeModal from "./WelcomeModal.vue";
 import ConfirmModal from "./modals/ConfirmModal.vue";
 import { deletePlaylist as delPlaylist } from "@/composables/fetch/playlists";
 import { useRouter } from "vue-router";
+import SetIP from "./modals/SetIP.vue";
 
 const modal = useModalStore();
 const router = useRouter();
@@ -70,7 +75,17 @@ function deletePlaylist() {
   width: 100vw;
   display: grid;
   place-items: center;
-  // padding: 1rem;
+
+  input[type="text"] {
+    margin: $small 0;
+    border: 2px solid $gray3;
+    background-color: transparent;
+    color: #fff;
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    outline: none;
+  }
 
   .bg {
     position: absolute;

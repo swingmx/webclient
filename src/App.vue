@@ -49,6 +49,7 @@ import BottomBar from "@/components/BottomBar.vue";
 import NavBar from "@/components/nav/NavBar.vue";
 import RightSideBar from "@/components/RightSideBar/Main.vue";
 import LeftSidebar from "./components/LeftSidebar/index.vue";
+import { baseApiUrl } from "./config";
 
 const queue = useQStore();
 const router = useRouter();
@@ -91,6 +92,10 @@ function handleWelcomeModal() {
 
 onMounted(() => {
   handleWelcomeModal();
+
+  if (baseApiUrl.value === null) {
+    modal.showSetIPModal();
+  }
 });
 </script>
 

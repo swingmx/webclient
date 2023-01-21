@@ -11,6 +11,7 @@ export default defineStore("settings", {
     artist_top_tracks_count: 5,
     repeat_all: true,
     repeat_one: false,
+    baseApiUrl: "meh",
   }),
   actions: {
     toggleUseNPImg() {
@@ -47,6 +48,9 @@ export default defineStore("settings", {
       if (!this.repeat_all && !this.repeat_one) {
         this.repeat_all = true;
       }
+    },
+    setApiUrl(url: string) {
+      this.baseApiUrl = url;
     },
   },
   getters: {
