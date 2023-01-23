@@ -23,6 +23,7 @@ const albumHeaderSmall = computed(() => {
 });
 
 const heightLarge = computed(() => content_height.value > 1080);
+
 const album_card_with = 10 * 16;
 
 const maxAbumCards = computed(() => {

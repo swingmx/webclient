@@ -9,6 +9,7 @@
       NoSideBorders: !xxl,
       extendWidth: settings.extend_width && settings.can_extend_width,
     }"
+    :style="{ maxWidth: `${content_height > 1080 ? '2220px' : '1720px'}` }"
   >
     <LeftSidebar />
     <NavBar />
