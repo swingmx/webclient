@@ -28,8 +28,7 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 // @stores
-import { content_width } from "@/stores/content-width";
-import useContextStore from "@/stores/context";
+import { content_width, content_height } from "@/stores/content-width";
 import useModalStore from "@/stores/modal";
 import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
@@ -73,8 +72,15 @@ onStartTyping((e) => {
   elem.value = "";
 });
 
-function updateContentElemSize({ width }: { width: number }) {
+function updateContentElemSize({
+  width,
+  height,
+}: {
+  width: number;
+  height: number;
+}) {
   content_width.value = width;
+  content_height.value = height;
 }
 
 function handleWelcomeModal() {

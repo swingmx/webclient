@@ -43,7 +43,7 @@ const favArtists: Ref<Artist[]> = ref([]);
 
 onMounted(() => {
   const max = maxAbumCards.value;
-  getAllFavs(5, max, max).then((favs) => {
+  getAllFavs(6, max, max).then((favs) => {
     favAlbums.value = favs.albums;
     favTracks.value = favs.tracks;
     favArtists.value = favs.artists;
@@ -85,7 +85,6 @@ async function handlePlay(index: number) {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
     }
-    margin-bottom: 2rem;
   }
 }
 </style>

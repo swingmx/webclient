@@ -33,7 +33,7 @@ import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 import Header from "@/components/AlbumView/Header.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 
-import { isSmall } from "@/stores/content-width";
+import { isSmall, heightLarge } from "@/stores/content-width";
 import { discographyAlbumTypes } from "@/composables/enums";
 
 const album = useAlbumStore();
@@ -104,7 +104,7 @@ const scrollerItems = computed(() => {
   const header: ScrollerItem = {
     id: "album-header",
     component: Header,
-    size: 19 * 16,
+    size: heightLarge.value ? 25 * 16 : 19 * 16,
   };
 
   return [

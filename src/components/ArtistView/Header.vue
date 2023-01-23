@@ -8,7 +8,12 @@
         : undefined,
     }"
   ></div>
-  <div class="artist-page-header rounded no-scroll">
+  <div
+    class="artist-page-header rounded no-scroll"
+    :style="{
+      height: `${heightLarge ? '24rem' : '18rem'}`,
+    }"
+  >
     <div
       class="artist-info"
       :class="{
@@ -34,7 +39,12 @@
         <HeartSvg @handleFav="handleFav" :state="artist.info.is_favorite" />
       </div>
     </div>
-    <div class="artist-img no-select">
+    <div
+      class="artist-img no-select"
+      :style="{
+        height: `${heightLarge ? '24rem' : '18rem'}`,
+      }"
+    >
       <img :src="paths.images.artist.large + artist.info.image" />
     </div>
     <div
@@ -61,6 +71,8 @@ import favoriteHandler from "@/composables/favoriteHandler";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
 import HeartSvg from "@/components/shared/HeartSvg.vue";
 
+import { heightLarge } from "@/stores/content-width";
+
 const artist = useArtistPageStore();
 
 function handleFav() {
@@ -83,14 +95,11 @@ function handleFav() {
 }
 
 .artist-page-header {
-  height: 18rem;
   display: grid;
   grid-template-columns: 50% 50%;
   position: relative;
 
   .artist-img {
-    // border: solid red;
-    height: 18rem;
     width: 100%;
 
     img {

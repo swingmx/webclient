@@ -37,6 +37,7 @@ defineProps<{
 <style lang="scss">
 .artist-albums {
   overflow: hidden;
+  max-height: 17rem;
 
   h3 {
     display: grid;

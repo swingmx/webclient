@@ -25,7 +25,7 @@
 import { computed } from "@vue/reactivity";
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
-import { isMedium, isSmall } from "@/stores/content-width";
+import { isMedium, isSmall, heightLarge } from "@/stores/content-width";
 import usePlaylistStore from "@/stores/pages/playlist";
 import useQueueStore from "@/stores/queue";
 
@@ -42,13 +42,13 @@ interface ScrollerItem {
   size: number;
 }
 
-const header: ScrollerItem = {
-  id: "header",
-  component: Header,
-  size: 19 * 16,
-};
-
 const scrollerItems = computed(() => {
+  const header: ScrollerItem = {
+    id: "header",
+    component: Header,
+    size: heightLarge.value ? 25 * 16 : 19 * 16,
+  };
+
   return [
     header,
     ...playlist.tracks.map((track) => {

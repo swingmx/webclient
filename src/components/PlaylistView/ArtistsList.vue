@@ -29,19 +29,21 @@ defineProps<{
 
 <style lang="scss">
 .f-artists {
+  overflow: hidden;
+  max-height: 17rem;
+
   h3 {
     display: flex;
     justify-content: space-between;
     padding-left: $medium;
     align-items: center;
     margin-bottom: $small;
-
-   
   }
 
   .artist-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 10rem 0;
   }
 }
 </style>

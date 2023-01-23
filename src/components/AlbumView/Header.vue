@@ -11,6 +11,7 @@
     ref="albumheaderthing"
     :style="{
       backgroundColor: album.colors ? album.colors[0] : '',
+      height: `${heightLarge ? '24rem' : '18rem'}`,
     }"
   >
     <div
@@ -77,21 +78,22 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-
-import ArtistName from "@/components/shared/ArtistName.vue";
-import { isLight } from "@/composables/colors/album";
-import { favType, playSources } from "@/composables/enums";
-import { paths } from "@/config";
+import { storeToRefs } from "pinia";
 import { Routes } from "@/router";
-import { albumHeaderSmall } from "@/stores/content-width";
+
+import { paths } from "@/config";
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
-import { formatSeconds, useVisibility } from "@/utils";
-import HeartSvg from "../shared/HeartSvg.vue";
+import { albumHeaderSmall, heightLarge } from "@/stores/content-width";
 
-import favoriteHandler from "@/composables/favoriteHandler";
-import { storeToRefs } from "pinia";
+import { isLight } from "@/composables/colors/album";
+import { formatSeconds, useVisibility } from "@/utils";
+import { favType, playSources } from "@/composables/enums";
+
+import HeartSvg from "../shared/HeartSvg.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
+import favoriteHandler from "@/composables/favoriteHandler";
+import ArtistName from "@/components/shared/ArtistName.vue";
 
 // const props = defineProps<{
 //   album: Album;
@@ -146,7 +148,8 @@ function handleFav() {
   grid-template-columns: max-content 1fr;
   gap: 1rem;
   padding: 1rem;
-  height: $banner-height;
+  height: 24rem;
+  // height: $banner-height;
   background-color: $black;
   align-items: flex-end;
 
@@ -158,12 +161,14 @@ function handleFav() {
   .big-img {
     height: calc(100%);
     width: 16rem;
+    height: 16rem;
     display: flex;
     align-items: flex-end;
 
     img {
       height: 16rem;
       aspect-ratio: 1;
+      object-fit: cover;
     }
   }
 

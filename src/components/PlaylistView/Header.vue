@@ -6,6 +6,7 @@
       {
         backgroundImage: info.image ? `url(${imguri + info.image})` : undefined,
         backgroundPosition: `center ${bannerPos}%`,
+        height: `${heightLarge ? '24rem' : '18rem'}`,
       },
     ]"
     :class="{ border: !info.image }"
@@ -41,8 +42,9 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 
 import useNavStore from "@/stores/nav";
-import usePStore from "@/stores/pages/playlist";
 import useModalStore from "@/stores/modal";
+import usePStore from "@/stores/pages/playlist";
+import { heightLarge } from "@/stores/content-width";
 
 import { paths } from "@/config";
 import { playSources } from "@/composables/enums";
@@ -75,7 +77,7 @@ function deletePlaylist() {
 .p-header {
   display: grid;
   grid-template-columns: 1fr;
-  height: $banner-height;
+  // height: $banner-height;
   position: relative;
   background-color: $gray5;
   background-position: center 50%;
