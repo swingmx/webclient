@@ -1,4 +1,5 @@
 import useQStore from "@/stores/queue";
+import useModalStore from "@/stores/modal";
 
 let key_down_fired = false;
 
@@ -11,8 +12,10 @@ function focusPageSearchBox() {
   }
 }
 
-export default function (queue: typeof useQStore) {
+export default function (queue: typeof useQStore, modal: typeof useModalStore) {
   const q = queue();
+  const m = modal();
+
   window.addEventListener("keydown", (e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
     if (e.altKey) return;
@@ -75,6 +78,14 @@ export default function (queue: typeof useQStore) {
           focusPageSearchBox();
 
           key_down_fired = true;
+        }
+      }
+
+      case "Escape": {
+        if (!key_down_fired) {
+          if (m.visible) {
+            m.hideModal();
+          }
         }
       }
     }

@@ -11,7 +11,9 @@
       :animate="{ opacity: 1, y: 0 }"
     >
       <div class="heading">{{ modal.title }}</div>
-      <div class="close image" @click="modal.hideModal"></div>
+      <div class="close circular" @click="modal.hideModal">
+        <PlusSvg />
+      </div>
       <NewPlaylist
         v-if="modal.component == modal.options.newPlaylist"
         :track="modal.props.track"
@@ -60,6 +62,7 @@ import SetRootDirs from "./modals/SetRootDirs.vue";
 import ConfirmModal from "./modals/ConfirmModal.vue";
 import UpdatePlaylist from "./modals/updatePlaylist.vue";
 import RootDirsPrompt from "./modals/RootDirsPrompt.vue";
+import PlusSvg from "@/assets/icons/plus.svg";
 
 const modal = useModalStore();
 const router = useRouter();
@@ -110,7 +113,6 @@ function deletePlaylist() {
 
   .m-content {
     width: calc(100% - 4rem);
-    // height: max-content;
     max-height: 40rem;
     padding: 2rem;
     position: relative;
@@ -118,17 +120,24 @@ function deletePlaylist() {
     overflow: hidden;
 
     .close {
-      width: 2rem;
-      height: 2rem;
       position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background-image: url("../assets/icons/plus.svg");
+      top: $small;
+      right: $small;
+
       transform: rotate(45deg);
+
+      svg {
+        background-color: $gray3;
+        border-radius: 1rem;
+      }
+
       cursor: pointer;
+      opacity: 0.75;
 
       &:hover {
-        transform: rotate(45deg) scale(1.2);
+        svg {
+          background-color: $red;
+        }
       }
     }
   }

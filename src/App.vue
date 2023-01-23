@@ -58,7 +58,7 @@ const modal = useModalStore();
 const settings = useSettingsStore();
 
 queue.readQueue();
-handleShortcuts(useQStore);
+handleShortcuts(useQStore, useModalStore);
 
 router.afterEach(() => {
   (document.getElementById("acontent") as HTMLElement).scrollTo(0, 0);
