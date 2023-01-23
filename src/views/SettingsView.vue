@@ -8,5 +8,13 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
+
 import Content from "../components/SettingsView/Content.vue";
+import { getRootDirs } from "@/composables/fetch/settings/rootdirs";
+import useSettingsStore from "@/stores/settings";
+
+const settings = useSettingsStore();
+
+onMounted(() => getRootDirs().then((dirs) => settings.setRootDirs(dirs)));
 </script>

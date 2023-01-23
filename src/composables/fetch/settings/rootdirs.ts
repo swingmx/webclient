@@ -19,20 +19,22 @@ export async function getRootDirs() {
 }
 
 export async function addRootDirs(new_dirs: string[], removed: string[]) {
-  const { error } = await useAxios({
+  const { error, data } = await useAxios({
     url: add_root_dir,
     props: { new_dirs, removed },
   });
 
   if (error) {
     useNotifStore().showNotification("Error adding root dirs", NotifType.Error);
-    return;
+    return [];
   }
 
   useNotifStore().showNotification(
     "Root directories configured",
     NotifType.Success
   );
+
+  return data.root_dirs as string[];
 }
 
 export async function removeRootDirs(dirs: string[]) {

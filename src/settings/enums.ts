@@ -3,4 +3,6 @@ export enum SettingType {
   select,
   multiselect,
   binary,
+  button,
+  list
 }

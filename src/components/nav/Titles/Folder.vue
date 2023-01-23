@@ -12,32 +12,27 @@
           <BreadCrumbNav :subPaths="subPaths" @navigate="navigate" />
         </div>
       </div>
-      <button @click.prevent="modal.showRootDirsPromptModal" class="circular">
-        Set Root Dirs
-      </button>
       <SearchInput :page="Routes.folder" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import SearchInput from "@/components/shared/NavSearchInput.vue";
-import { subPath } from "@/interfaces";
-import { Routes } from "@/router";
-import { focusElemByClass } from "@/utils";
 import { onUpdated } from "vue";
-
-import useModalStore from "@/stores/modal";
-import BreadCrumbNav from "@/components/FolderView/BreadCrumbNav.vue";
 import { useRouter } from "vue-router";
+
+import { Routes } from "@/router";
+import { subPath } from "@/interfaces";
+import { focusElemByClass } from "@/utils";
+
+import SearchInput from "@/components/shared/NavSearchInput.vue";
+import BreadCrumbNav from "@/components/FolderView/BreadCrumbNav.vue";
 
 const router = useRouter();
 
 defineProps<{
   subPaths: subPath[];
 }>();
-
-const modal = useModalStore();
 
 onUpdated(() => {
   focusElemByClass("inthisfolder");

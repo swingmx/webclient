@@ -16,7 +16,7 @@
           y: 0,
           transition: {
             delay: option.delay,
-            easing: 'ease-out'
+            easing: 'ease-out',
           },
         }"
       >
@@ -48,7 +48,6 @@ const root_dirs: string[] = [];
 const options = ref<any[]>([]);
 
 onMounted(() => {
-  console.log(settings.root_dirs);
   getRootDirs()
     .then((res) => root_dirs.push(...res))
     .then(() => {
@@ -62,7 +61,9 @@ onMounted(() => {
           active: settings.root_dirs[0] === "$home",
           delay: 0,
           action: () =>
-            addRootDirs(["$home"], []).then(() => emit("hideModal")),
+            addRootDirs(["$home"], [])
+              .then(() => settings.setRootDirs(["$home"]))
+              .then(() => emit("hideModal")),
         },
         {
           id: "wtf",

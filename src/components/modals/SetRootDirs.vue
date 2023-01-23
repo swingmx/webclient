@@ -28,7 +28,8 @@
       <h3 v-if="no_more_dirs">No folders here 😶</h3>
     </div>
     <div class="bottom-text t-center">
-      Select the <b><u>main</u> </b> folder(s) where your music files are stored.
+      Select the <b><u>main</u> </b> folder(s) where your music files are
+      stored.
     </div>
   </div>
 </template>
@@ -40,10 +41,13 @@ import {
   getRootDirs,
 } from "@/composables/fetch/settings/rootdirs";
 import { Folder, subPath } from "@/interfaces";
+import useSettingsStore from "@/stores/settings";
 import { createSubPaths } from "@/utils";
 import { onMounted, Ref, ref } from "vue";
 import BreadCrumbNav from "../FolderView/BreadCrumbNav.vue";
 import FolderItem from "../FolderView/FolderItem.vue";
+
+const settings = useSettingsStore();
 
 const dirs: Ref<Folder[]> = ref([]);
 const no_more_dirs = ref(false);
@@ -91,7 +95,8 @@ function submitFolders() {
   const removed_dirs = getRemovedDirs();
 
   addRootDirs(new_dirs, removed_dirs)
-  .then(() => emit("hideModal"));
+    .then((res) => settings.setRootDirs(res))
+    .then(() => emit("hideModal"));
 }
 
 onMounted(() => {

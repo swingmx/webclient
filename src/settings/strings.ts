@@ -38,3 +38,12 @@ export const contextChildrenShowModeStrings = <S>{
 export const showFoldersAsStrings = <S>{
   settings: { show_folders_as: "Show folders as" },
 };
+
+export const manageRootDirsStrings = <S>{
+  title: "Root directories",
+  desc: "Settings related to your root directories",
+  settings: {
+    change: "Change your root directories",
+    list_root_dirs: "Current root directories",
+  },
+};

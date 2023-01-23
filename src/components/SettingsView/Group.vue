@@ -6,9 +6,13 @@
     </div>
     <div class="setting rounded pad-lg">
       <div
+        class="setting-item"
         v-for="(setting, index) in group.settings"
         :key="index"
-        :class="{ inactive: setting.inactive && setting.inactive() }"
+        :class="{
+          inactive: setting.inactive && setting.inactive(),
+          'is-list': setting.type === SettingType.list,
+        }"
       >
         <div
           class="title ellip"
@@ -22,14 +26,28 @@
           <Switch
             v-if="setting.type == SettingType.binary"
             @click="setting.action()"
-            :state="setting.source()"
+            :state="setting.source && setting.source()"
           />
           <Select
             v-if="setting.type === SettingType.select"
             :options="setting.options"
-            :source="setting.source"
+            :source="setting.source !== null ? setting.source : () => ''"
             :setterFn="setting.action"
           />
+          <button
+            v-if="setting.type === SettingType.button"
+            @click="setting.action"
+          >
+            {{ setting.button_text }}
+          </button>
+        </div>
+
+        <div class="option-list" v-if="setting.type === SettingType.list">
+          <div v-for="item in setting.source !== null ? setting.source() : []">
+            <code>
+              {{ item }}
+            </code>
+          </div>
         </div>
       </div>
     </div>
@@ -90,6 +108,15 @@ defineProps<{
       margin: auto 0;
       user-select: none;
       cursor: pointer;
+    }
+  }
+
+  .setting-item.is-list {
+    .option-list {
+      background-color: rgba(94, 94, 94, 0.425);
+      border-radius: $small;
+      padding: 1rem;
+      margin-top: $small;
     }
   }
 }
