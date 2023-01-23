@@ -21,11 +21,14 @@
           @navigate="fetchDirs(dir.path)"
           @check="handleCheck(dir.path)"
           :is_checked="
-            selected.filter((p) => p.startsWith(dir.path)).length > 0
+            selected.filter((p) => p == dir.path).length > 0 ? true : false
           "
         />
       </div>
       <h3 v-if="no_more_dirs">No folders here 😶</h3>
+    </div>
+    <div class="bottom-text t-center">
+      Select the <b><u>main</u> </b> folder(s) where your music files are stored.
     </div>
   </div>
 </template>
@@ -44,9 +47,11 @@ import FolderItem from "../FolderView/FolderItem.vue";
 
 const dirs: Ref<Folder[]> = ref([]);
 const no_more_dirs = ref(false);
-const subPaths = ref<subPath[]>([]);
 const selected = ref<string[]>([]);
-let prev_selected: string[] = [];
+
+const subPaths = ref<subPath[]>([]);
+
+const prev_selected: string[] = [];
 
 let oldpath = "$home";
 
@@ -64,35 +69,36 @@ function fetchDirs(path: string) {
 }
 
 function handleCheck(path: string) {
-  if (selected.value.filter((p) => p.startsWith(path)).length == 0) {
-    selected.value.push(path);
+  if (selected.value.includes(path)) {
+    selected.value = selected.value.filter((p) => p != path);
   } else {
-    selected.value = selected.value.filter((p) => !p.startsWith(path));
+    selected.value.push(path);
   }
 }
 
 // All dir entries that were unchecked.
 function getRemovedDirs() {
-  return prev_selected.filter((p) => !selected.value.includes(p));
+  return prev_selected.filter((dir) => !selected.value.includes(dir));
 }
 
 // All dir entries that were newly checked.
 function getNewDirs() {
-  return selected.value.filter((p) => !prev_selected.includes(p));
+  return selected.value.filter((dir) => !prev_selected.includes(dir));
 }
 
 function submitFolders() {
   const new_dirs = getNewDirs();
   const removed_dirs = getRemovedDirs();
 
-  addRootDirs(new_dirs, removed_dirs).then(() => emit("hideModal"));
+  addRootDirs(new_dirs, removed_dirs)
+  .then(() => emit("hideModal"));
 }
 
 onMounted(() => {
   fetchDirs("$home");
-  getRootDirs().then((dirs) => {
-    selected.value = dirs;
-    prev_selected = dirs;
+  getRootDirs().then((_dirs) => {
+    selected.value = _dirs;
+    prev_selected.push(..._dirs);
   });
 });
 </script>
@@ -116,13 +122,21 @@ onMounted(() => {
   }
 }
 
+.bottom-text {
+  position: absolute;
+  font-size: small;
+  bottom: -1.25rem;
+  width: 100%;
+  opacity: 0.5;
+}
+
 .set-root-dirs-browser {
-  height: 24.5rem;
+  height: 34rem;
   overflow: scroll;
   overflow-x: hidden;
   padding-right: 1rem;
   scrollbar-gutter: stable;
-  margin-right: -1.75rem;
+  margin-right: -1rem;
 
   button {
     height: 2.15rem;

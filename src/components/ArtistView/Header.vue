@@ -81,6 +81,7 @@ function handleFav() {
   opacity: 0.25;
   margin-right: -1rem;
 }
+
 .artist-page-header {
   height: 18rem;
   display: grid;

@@ -32,7 +32,7 @@ defineProps<{
 
 <style lang="scss">
 .artist-top-tracks {
-  margin-top: 2rem;
+  padding-top: 1rem;
 
   .section-title {
     margin-left: 0;
