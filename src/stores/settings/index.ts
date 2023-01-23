@@ -11,7 +11,8 @@ export default defineStore("settings", {
     artist_top_tracks_count: 5,
     repeat_all: true,
     repeat_one: false,
-    baseApiUrl: "meh",
+    root_dir_set: false,
+    root_dirs: <string[]>[],
   }),
   actions: {
     toggleUseNPImg() {
@@ -49,8 +50,11 @@ export default defineStore("settings", {
         this.repeat_all = true;
       }
     },
-    setApiUrl(url: string) {
-      this.baseApiUrl = url;
+    toggleRootDirSet() {
+      this.root_dir_set = !this.root_dir_set;
+    },
+    setRootDirs(dirs: string[]) {
+      this.root_dirs = dirs;
     },
   },
   getters: {

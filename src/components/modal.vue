@@ -1,12 +1,14 @@
 <template>
   <div class="modal" v-if="modal.visible">
     <div class="bg" @click="modal.hideModal"></div>
-    <div
+    <Motion
       class="m-content rounded"
       :style="{
         maxWidth:
           modal.component == modal.options.setRootDirs ? '56rem' : '30rem',
       }"
+      :initial="{ opacity: 0, y: -20 }"
+      :animate="{ opacity: 1, y: 0 }"
     >
       <div class="heading">{{ modal.title }}</div>
       <div class="close image" @click="modal.hideModal"></div>
@@ -38,8 +40,11 @@
         v-if="modal.component == modal.options.setRootDirs"
         @hideModal="hideModal"
       />
-      <RootDirsPrompt v-if="modal.component == modal.options.rootDirsPrompt" />
-    </div>
+      <RootDirsPrompt
+        v-if="modal.component == modal.options.rootDirsPrompt"
+        @hideModal="hideModal"
+      />
+    </Motion>
   </div>
 </template>
 

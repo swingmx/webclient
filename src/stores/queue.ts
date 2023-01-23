@@ -50,6 +50,7 @@ export default defineStore("Queue", {
     tracklist: [] as Track[],
     queueScrollFunction: (index: number) => {},
     mousover: <Ref | null>null,
+    to: 50,
   }),
   actions: {
     focusCurrentInSidebar(timeout = 500) {
@@ -122,6 +123,7 @@ export default defineStore("Queue", {
       }
     },
     autoPlayNext() {
+      this.to = 50;
       const settings = useSettingsStore();
       const is_last = this.currentindex === this.tracklist.length - 1;
 
@@ -144,9 +146,11 @@ export default defineStore("Queue", {
       !is_last ? this.play(this.currentindex + 1) : resetQueue();
     },
     playNext() {
+      this.to = 50;
       this.play(this.nextindex);
     },
     playPrev() {
+      this.to = -50;
       this.play(this.previndex);
     },
     seek(pos: number) {

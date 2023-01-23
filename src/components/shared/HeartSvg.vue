@@ -6,8 +6,21 @@
       is_fav: state,
     }"
   >
-    <HeartFillSvg v-if="state" />
-    <HeartSvg v-else />
+    <Motion
+      :initial="{
+        opacity: 0,
+      }"
+      :animate="{
+        opacity: 1,
+        transition: {
+          delay: 0.25,
+          duration: 0.5,
+        },
+      }"
+    >
+      <HeartFillSvg v-if="state" />
+      <HeartSvg v-else />
+    </Motion>
   </button>
 </template>
 
@@ -35,6 +48,17 @@ $bg: rgb(250, 33, 33);
   border: solid 1px $bg;
   background: transparent;
   color: rgb(250, 33, 33);
+
+  div {
+    // border: solid 1px;
+    height: max-content;
+    scale: 1;
+
+    svg {
+      // background-color: $red;
+      height: 1.5rem;
+    }
+  }
 
   &:hover {
     background: transparent;

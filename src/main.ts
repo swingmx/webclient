@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-
+import { Motion, Presence } from "motion/vue";
 import {
   RecycleScroller,
   DynamicScroller,
@@ -30,5 +30,6 @@ app.directive("tooltip", vTooltip);
 app.component("RecycleScroller", RecycleScroller);
 app.component("DynamicScroller", DynamicScroller);
 app.component("DynamicScrollerItem", DynamicScrollerItem);
+app.component("Motion", Motion);
 
 app.mount("#app");

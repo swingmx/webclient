@@ -1,43 +1,61 @@
 <template>
-  <div class="sidebar-songcard">
-    <router-link
-      :to="{
-        name: 'AlbumView',
-        params: {
-          hash: track?.albumhash ? track.albumhash : ' ',
-        },
+  <Presence>
+    <Motion
+      :key="q.currenttrack?.filepath"
+      :initial="{ opacity: 0, x: q.to }"
+      :animate="{
+        opacity: 1,
+        x: 0,
+        transition: { delay: 0.1, duration: 0.25, easing: 'ease-out' },
       }"
+      :exit="{ opacity: 0, x: -50 }"
     >
-      <img
-        :src="imguri + track?.image"
-        alt=""
-        class="l-image rounded force-lm"
-      />
-    </router-link>
-    <div id="bitrate" v-if="track?.bitrate" title="file type • bitrate">
-      {{ track.filetype }} • {{ track.bitrate }}
-    </div>
-  </div>
+      <div class="sidebar-songcard">
+        <router-link
+          :to="{
+            name: 'AlbumView',
+            params: {
+              hash: q.currenttrack?.albumhash ? q.currenttrack.albumhash : ' ',
+            },
+          }"
+        >
+          <img
+            :src="imguri + q.currenttrack?.image"
+            alt=""
+            class="l-image rounded force-lm"
+          />
+        </router-link>
+        <div
+          id="bitrate"
+          v-if="q.currenttrack?.bitrate"
+          title="file type • bitrate"
+        >
+          {{ q.currenttrack.filetype }} • {{ q.currenttrack.bitrate }}
+        </div>
+      </div>
+    </Motion>
+  </Presence>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import useQueueStore from "@/stores/queue";
 
 import { paths } from "@/config";
-import { Track } from "@/interfaces";
+// import { Track } from "@/interfaces";
 
-defineProps<{
-  track: Track | undefined;
-}>();
+// defineProps<{
+//   track: Track | undefined;
+// }>();
 
 const imguri = paths.images.thumb.large;
+const q = useQueueStore();
 </script>
 
 <style lang="scss">
 .sidebar-songcard {
   width: 100%;
   position: relative;
-  
+
   img {
     cursor: pointer;
     width: 100%;

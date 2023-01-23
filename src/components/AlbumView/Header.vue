@@ -55,7 +55,18 @@
           </div>
         </div>
       </div>
-      <div class="art" v-if="!albumHeaderSmall">
+      <Motion
+        class="art"
+        v-if="!albumHeaderSmall"
+        :initial="{ opacity: 0, x: 10 }"
+        :animate="{
+          opacity: 1,
+          x: 0,
+          transition: {
+            delay: 0.1,
+          },
+        }"
+      >
         <RouterLink
           v-for="a in album.albumartists"
           :to="{
@@ -71,7 +82,7 @@
             :style="{ border: `solid 2px ${album.colors[0]}` }"
           />
         </RouterLink>
-      </div>
+      </Motion>
     </div>
   </div>
 </template>
