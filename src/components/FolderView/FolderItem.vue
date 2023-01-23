@@ -2,14 +2,14 @@
   <router-link :to="{ name: Routes.folder, params: { path: folder.path } }">
     <div
       class="f-item"
-      @click.prevent="handleClick"
+      @click="(e) => (folder_page ? null : handleClick(e))"
       @mouseover="mouse_over = true"
       @mouseleave="mouse_over = false"
       :style="{
         backgroundColor: is_checked ? '#234ece' : '',
       }"
     >
-      <div class="check">
+      <div class="check" v-if="!folder_page">
         <CheckSvg v-if="!is_checked && mouse_over" />
         <CheckFilledSvg v-if="is_checked" />
       </div>
@@ -38,6 +38,7 @@ import CheckSvg from "@/assets/icons/square.svg";
 const props = defineProps<{
   folder: Folder;
   is_checked?: boolean;
+  folder_page?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -45,10 +46,10 @@ const emit = defineEmits<{
   (e: "check"): void;
 }>();
 
-// const is_checked = ref(false);
 const mouse_over = ref(false);
 
 function handleClick(e: MouseEvent) {
+  e.preventDefault();
   // check if the click was on the checkbox
   if (e.target instanceof Element && e.target.closest(".check")) {
     emit("check");
@@ -69,7 +70,7 @@ function handleClick(e: MouseEvent) {
   align-items: center;
   background-color: $gray;
   transition: all 0.2s ease;
-  border-radius: 0.75rem;
+  border-radius: $medium;
   position: relative;
 
   .check {
@@ -98,12 +99,6 @@ function handleClick(e: MouseEvent) {
 
   &:hover {
     background: $gray3;
-    background-size: 105% 105%;
-    background-position-x: -$small;
-
-    .f-item-count {
-      color: #ffffff;
-    }
   }
 }
 </style>

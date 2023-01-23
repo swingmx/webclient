@@ -3,8 +3,9 @@
     <div id="f-items" class="rounded">
       <FolderItem
         v-for="folder in folders"
-        :key="JSON.stringify(folder)"
+        :key="folder.path"
         :folder="folder"
+        :folder_page="true"
       />
     </div>
   </div>
