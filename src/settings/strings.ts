@@ -31,7 +31,7 @@ export const sidebarStrings = <S>{
 
 export const contextChildrenShowModeStrings = <S>{
   settings: {
-    show_mode: "Show context children on",
+    show_mode: "Show right click menu dropdowns on",
   },
 };
 

@@ -1,51 +1,44 @@
 <template>
-  <Presence>
-    <Motion
-      :key="q.currenttrack?.filepath"
-      :initial="{ opacity: 0, x: q.to }"
-      :animate="{
-        opacity: 1,
-        x: 0,
-        transition: { delay: 0.1, duration: 0.25, easing: 'ease-out' },
-      }"
-      :exit="{ opacity: 0, x: -50 }"
-    >
-      <div class="sidebar-songcard">
-        <router-link
-          :to="{
-            name: 'AlbumView',
-            params: {
-              hash: q.currenttrack?.albumhash ? q.currenttrack.albumhash : ' ',
-            },
-          }"
-        >
-          <img
-            :src="imguri + q.currenttrack?.image"
-            alt=""
-            class="l-image rounded force-lm"
-          />
-        </router-link>
-        <div
-          id="bitrate"
-          v-if="q.currenttrack?.bitrate"
-          title="file type • bitrate"
-        >
-          {{ q.currenttrack.filetype }} • {{ q.currenttrack.bitrate }}
-        </div>
+  <Motion
+    :key="q.currenttrack?.filepath"
+    :initial="{ opacity: 0, scale: 0.9 }"
+    :animate="{
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.5, ease: 'ease-in' },
+    }"
+    :exit="{ opacity: 0, scale: 0.9 }"
+  >
+    <div class="sidebar-songcard">
+      <router-link
+        :to="{
+          name: 'AlbumView',
+          params: {
+            hash: q.currenttrack?.albumhash ? q.currenttrack.albumhash : ' ',
+          },
+        }"
+      >
+        <img
+          :src="imguri + q.currenttrack?.image"
+          alt=""
+          class="l-image rounded force-lm"
+        />
+      </router-link>
+      <div
+        id="bitrate"
+        v-if="q.currenttrack?.bitrate"
+        title="file type • bitrate"
+      >
+        {{ q.currenttrack.filetype }} • {{ q.currenttrack.bitrate }}
       </div>
-    </Motion>
-  </Presence>
+    </div>
+  </Motion>
 </template>
 
 <script setup lang="ts">
 import useQueueStore from "@/stores/queue";
 
 import { paths } from "@/config";
-// import { Track } from "@/interfaces";
-
-// defineProps<{
-//   track: Track | undefined;
-// }>();
 
 const imguri = paths.images.thumb.large;
 const q = useQueueStore();

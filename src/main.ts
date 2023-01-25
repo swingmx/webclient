@@ -31,5 +31,6 @@ app.component("RecycleScroller", RecycleScroller);
 app.component("DynamicScroller", DynamicScroller);
 app.component("DynamicScrollerItem", DynamicScrollerItem);
 app.component("Motion", Motion);
+app.component("Presence", Presence);
 
 app.mount("#app");

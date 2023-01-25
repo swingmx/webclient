@@ -23,7 +23,6 @@ defineProps<{
   display: grid;
   place-items: center;
   margin-top: $small;
-  background-color: red;
 
   button {
     padding: 0 1rem !important;

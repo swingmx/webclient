@@ -15,7 +15,6 @@ import Main from "@/components/RightSideBar/Search/Main.vue";
   height: 100%;
   padding-top: 0;
   margin-right: -1rem;
-  background-color: red !important;
 
   .scrollable {
     height: 100%;

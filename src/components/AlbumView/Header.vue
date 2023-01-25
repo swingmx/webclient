@@ -244,7 +244,6 @@ function handleFav() {
 
       .artist {
         font-size: 1.15rem;
-        background-color: red;
       }
     }
 
