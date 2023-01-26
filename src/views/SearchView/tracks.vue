@@ -1,5 +1,11 @@
 <template>
   <div class="search-tracks-view">
+    <NoItems
+      :title="'No track results'"
+      :description="desc"
+      :icon="SearchSvg"
+      :flag="!search.tracks.value.length"
+    />
     <div :class="{ isSmall, isMedium }" style="height: 100%">
       <RecycleScroller
         id="songlist-scroller"
@@ -27,9 +33,20 @@ import useSearchStore from "@/stores/search";
 import { isMedium, isSmall } from "@/stores/content-width";
 import SongItem from "@/components/shared/SongItem.vue";
 import FetchMore from "@/components/SearchPage/FetchMore.vue";
+import NoItems from "@/components/shared/NoItems.vue";
+
+import state from "@/composables/state";
+
+import SearchSvg from "@/assets/icons/search.svg";
 
 const search = useSearchStore();
 const queue = useQueueStore();
+
+const desc = computed(() =>
+  search.query === ""
+    ? "Start typing to search for tracks"
+    : `Track results for '${search.query}' should appear here`
+);
 
 interface scrollerItem {
   id: string | number | undefined;

@@ -1,4 +1,10 @@
 <template>
+  <NoItems
+    :flag="true"
+    :title="'No songs in queue'"
+    :description="'When you start playing songs, they will appear here.'"
+    :icon="QueueSvg"
+  />
   <SongList :tracks="queue.tracklist" :handlePlay="playFromQueue" />
 </template>
 
@@ -6,6 +12,9 @@
 import { onMounted } from "vue";
 import useQStore from "@/stores/queue";
 import SongList from "@/components/shared/SongList.vue";
+import NoItems from "@/components/shared/NoItems.vue";
+
+import QueueSvg from "@/assets/icons/queue.svg";
 
 const queue = useQStore();
 function playFromQueue(index: number) {

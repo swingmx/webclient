@@ -29,6 +29,7 @@ export default async (
 
   const single_artist = track.artist.length === 1;
   const single_album_artist = track.albumartist.length === 1;
+  let no_playlists = false;
 
   const goToArtist = (artists: Artist[]) => {
     if (artists.length === 1) {
@@ -60,6 +61,10 @@ export default async (
     let playlists = <Option[]>[];
     const p = await getAllPlaylists();
 
+    if (p.length === 0) {
+      no_playlists = true;
+    }
+
     playlists = p.map((playlist: Playlist) => {
       return <Option>{
         label: playlist.name,
@@ -69,7 +74,13 @@ export default async (
       };
     });
 
-    return [new_playlist, separator, ...playlists];
+    let return_value = [new_playlist, separator, ...playlists];
+
+    if (no_playlists) {
+      return_value.splice(1, 1);
+    }
+
+    return return_value;
   }
 
   const add_to_playlist: Option = {

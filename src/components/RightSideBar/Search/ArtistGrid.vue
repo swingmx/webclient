@@ -17,7 +17,7 @@
         :alt="true"
       />
     </div>
-    <div v-else class="t-center"><h5>💔 No results 💔</h5></div>
+    <div v-else class="t-center"><h5>No {{ album_grid ? 'albums' : 'artists' }}</h5></div>
     <LoadMore
       v-if="search.albums.value.length || search.artists.value.length"
       :loader="album_grid ? search.loadAlbums : search.loadArtists"

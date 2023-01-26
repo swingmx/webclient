@@ -5,6 +5,12 @@
     @mouseover="mouseover = true"
     @mouseout="mouseover = false"
   >
+    <NoItems
+      :flag="!queue.tracklist.length"
+      :title="'No songs in queue'"
+      :description="'When you start playing songs, they will appear here.'"
+      :icon="QueueSvg"
+    />
     <RecycleScroller
       class="scroller"
       id="queue-scrollable"
@@ -33,6 +39,8 @@ import useQStore from "@/stores/queue";
 
 import TrackItem from "@/components/shared/TrackItem.vue";
 import QueueActions from "./Queue/QueueActions.vue";
+import NoItems from "../shared/NoItems.vue";
+import QueueSvg from "@/assets/icons/queue.svg";
 
 const itemHeight = 64;
 const queue = useQStore();

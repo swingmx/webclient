@@ -14,7 +14,7 @@
         :index="index + 1"
       />
     </div>
-    <div v-else class="t-center"><h5>💔 No results 💔</h5></div>
+    <div v-else class="t-center"><h5>No tracks</h5></div>
     <LoadMore
       :loader="search.loadTracks"
       :can_load_more="search.tracks.more"

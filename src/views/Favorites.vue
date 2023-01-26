@@ -18,8 +18,19 @@
     </div>
 
     <div class="fav-artists" v-if="favArtists.length">
-      <FeaturedArtists :artists="favArtists" :title="'Artists ❤️'" :route="'/favorites/artists'"/>
+      <FeaturedArtists
+        :artists="favArtists"
+        :title="'Artists ❤️'"
+        :route="'/favorites/artists'"
+      />
     </div>
+
+    <NoItems
+      :flag="noFavs"
+      :icon="HeartSvg"
+      :title="'No favorites found'"
+      :description="description"
+    />
   </div>
 </template>
 
@@ -35,11 +46,18 @@ import { Album, Artist, Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
 import { maxAbumCards } from "@/stores/content-width";
 
+import HeartSvg from "@/assets/icons/heart-no-color.svg";
+import NoItems from "@/components/shared/NoItems.vue";
+
+const description = `You can add tracks, albums and artists to your favorites by clicking the ❤️ heart icon`;
+
 const queue = useQueueStore();
 
 const favAlbums: Ref<Album[]> = ref([]);
 const favTracks: Ref<Track[]> = ref([]);
 const favArtists: Ref<Artist[]> = ref([]);
+
+const noFavs = ref(false)
 
 onMounted(() => {
   const max = maxAbumCards.value;
@@ -47,7 +65,10 @@ onMounted(() => {
     favAlbums.value = favs.albums;
     favTracks.value = favs.tracks;
     favArtists.value = favs.artists;
+  }).then(() => {
+    noFavs.value = !favAlbums.value.length && !favTracks.value.length && !favArtists.value.length
   });
+
 });
 
 async function handlePlay(index: number) {
