@@ -1,18 +1,21 @@
 <template>
   <br /><br />
   <div style="position: relative">
-    <div class="bread-nav rounded-sm">
+    <div class="bread-nav rounded-sm" id="bread-nav">
       &nbsp;&nbsp; 📁 &nbsp;&nbsp;<BreadCrumbNav
         :subPaths="subPaths"
         @navigate="fetchDirs"
       />
     </div>
     <div class="set-root-dirs-browser">
-      <button class="circular btn-active" @click="submitFolders">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        Finish
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      </button>
+      <div class="buttons">
+        <button class="circular btn-active select-here" @click="selectHere">
+          Select here
+        </button>
+        <button class="circular btn-active finish" @click="submitFolders">
+          Finish
+        </button>
+      </div>
       <div class="no-scroll">
         <FolderItem
           v-for="dir in dirs"
@@ -25,11 +28,14 @@
           "
         />
       </div>
-      <h3 v-if="no_more_dirs">No folders here 😶</h3>
+      <h4 v-if="no_more_dirs">
+        📂 No folders here. Use the "Select here" button to select this
+        location.
+      </h4>
     </div>
     <div class="bottom-text t-center">
-      Select the <b><u>main</u> </b> folder(s) where your music files are
-      stored.
+      ℹ️ Check the main folder(s) you want to scan for music, then hit the
+      "finish" button.
     </div>
   </div>
 </template>
@@ -58,18 +64,21 @@ const subPaths = ref<subPath[]>([]);
 const prev_selected: string[] = [];
 
 let oldpath = "$home";
+let current = "";
 
 const emit = defineEmits<{
   (e: "hideModal"): void;
 }>();
 
 function fetchDirs(path: string) {
-  getFolders(path).then((folders) => {
-    dirs.value = folders;
-    no_more_dirs.value = folders.length == 0;
+  getFolders(path)
+    .then((folders) => {
+      dirs.value = folders;
+      no_more_dirs.value = folders.length == 0;
 
-    [oldpath, subPaths.value] = createSubPaths(path, oldpath);
-  });
+      [oldpath, subPaths.value] = createSubPaths(path, oldpath);
+    })
+    .then(() => current = path);
 }
 
 function handleCheck(path: string) {
@@ -99,6 +108,12 @@ function submitFolders() {
     .then(() => emit("hideModal"));
 }
 
+function selectHere() {
+  addRootDirs([current], [])
+    .then((res) => settings.setRootDirs(res))
+    .then(() => emit("hideModal"));
+}
+
 onMounted(() => {
   fetchDirs("$home");
   getRootDirs().then((_dirs) => {
@@ -116,7 +131,7 @@ onMounted(() => {
   margin-bottom: 1rem;
   position: absolute;
   top: -3.25rem;
-  max-width: calc(100% - 12rem);
+  max-width: calc(100% - 16rem);
   overflow-x: scroll;
   scrollbar-width: none;
   display: grid;
@@ -143,11 +158,26 @@ onMounted(() => {
   scrollbar-gutter: stable;
   margin-right: -1rem;
 
-  button {
-    height: 2.15rem;
+  .buttons {
     position: absolute;
-    right: 2rem;
     top: -3.15rem;
+    right: 2rem;
+    display: flex;
+    gap: $medium;
+
+    & > * {
+      height: 2.15rem;
+      cursor: pointer;
+    }
+
+    button.finish {
+      padding: 0 2rem;
+    }
+
+    button.select-here {
+      padding: 0 1rem;
+      background: $red;
+    }
   }
 
   & > div {

@@ -117,12 +117,11 @@ function deletePlaylist() {
     padding: 2rem;
     position: relative;
     background-color: $black;
-    overflow: hidden;
 
     .close {
       position: absolute;
-      top: $small;
-      right: $small;
+      top: 1.5rem;
+      right: 1.25rem;
 
       transform: rotate(45deg);
 

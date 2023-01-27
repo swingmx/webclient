@@ -15,6 +15,8 @@
 
 <script setup lang="ts">
 import { subPath } from "@/interfaces";
+import { focusElemByClass } from "@/utils";
+import { onUpdated } from "vue";
 
 defineProps<{
   subPaths: subPath[];
@@ -23,6 +25,10 @@ defineProps<{
 const emit = defineEmits<{
   (e: "navigate", path: string): void;
 }>();
+
+onUpdated(() => {
+  focusElemByClass("inthisfolder");
+});
 </script>
 
 <style lang="scss">

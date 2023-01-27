@@ -18,12 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import { onUpdated } from "vue";
 import { useRouter } from "vue-router";
 
 import { Routes } from "@/router";
 import { subPath } from "@/interfaces";
-import { focusElemByClass } from "@/utils";
 
 import SearchInput from "@/components/shared/NavSearchInput.vue";
 import BreadCrumbNav from "@/components/FolderView/BreadCrumbNav.vue";
@@ -33,10 +31,6 @@ const router = useRouter();
 defineProps<{
   subPaths: subPath[];
 }>();
-
-onUpdated(() => {
-  focusElemByClass("inthisfolder");
-});
 
 function navigate(path: string) {
   router.push({ name: Routes.folder, params: { path } });
