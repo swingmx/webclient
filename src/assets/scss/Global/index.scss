@@ -12,7 +12,8 @@
 
 html {
   cursor: default !important;
-
+  overflow: hidden;
+  
   & > * {
     overflow: visible !important;
   }

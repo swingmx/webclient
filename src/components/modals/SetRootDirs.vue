@@ -8,34 +8,32 @@
       />
     </div>
     <div class="set-root-dirs-browser">
-      <div class="buttons">
-        <button class="circular btn-active select-here" @click="selectHere">
-          Select here
-        </button>
-        <button class="circular btn-active finish" @click="submitFolders">
-          Finish
-        </button>
-      </div>
-      <div class="no-scroll">
-        <FolderItem
-          v-for="dir in dirs"
-          :key="dir.name"
-          :folder="dir"
-          @navigate="fetchDirs(dir.path)"
-          @check="handleCheck(dir.path)"
-          :is_checked="
-            selected.filter((p) => p == dir.path).length > 0 ? true : false
-          "
-        />
-      </div>
       <h4 v-if="no_more_dirs">
         📂 No folders here. Use the "Select here" button to select this
         location.
       </h4>
-    </div>
-    <div class="bottom-text t-center">
-      ℹ️ Check the main folder(s) you want to scan for music, then hit the
-      "finish" button.
+      <div class="scrollable">
+        <div class="content">
+          <FolderItem
+            v-for="dir in dirs"
+            :key="dir.name"
+            :folder="dir"
+            @navigate="fetchDirs(dir.path)"
+            @check="handleCheck(dir.path)"
+            :is_checked="
+              selected.filter((p) => p == dir.path).length > 0 ? true : false
+            "
+          />
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="btn-active select-here" @click="selectHere">
+          Select here
+        </button>
+        <button class="btn-active finish" @click="submitFolders">
+          Select checked
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -63,7 +61,7 @@ const subPaths = ref<subPath[]>([]);
 
 const prev_selected: string[] = [];
 
-let oldpath = "$home";
+let oldpath = "";
 let current = "";
 
 const emit = defineEmits<{
@@ -78,7 +76,7 @@ function fetchDirs(path: string) {
 
       [oldpath, subPaths.value] = createSubPaths(path, oldpath);
     })
-    .then(() => current = path);
+    .then(() => (current = path));
 }
 
 function handleCheck(path: string) {
@@ -131,7 +129,7 @@ onMounted(() => {
   margin-bottom: 1rem;
   position: absolute;
   top: -3.25rem;
-  max-width: calc(100% - 16rem);
+  max-width: calc(100% - 2rem);
   overflow-x: scroll;
   scrollbar-width: none;
   display: grid;
@@ -151,39 +149,49 @@ onMounted(() => {
 }
 
 .set-root-dirs-browser {
-  height: 34rem;
-  overflow: scroll;
-  overflow-x: hidden;
-  padding-right: 1rem;
-  scrollbar-gutter: stable;
+  height: 27rem;
   margin-right: -1rem;
 
-  .buttons {
-    position: absolute;
-    top: -3.15rem;
-    right: 2rem;
-    display: flex;
-    gap: $medium;
+  display: grid;
+  grid-template-rows: 1fr max-content;
+  gap: 1.25rem;
 
-    & > * {
-      height: 2.15rem;
-      cursor: pointer;
+  .scrollable {
+    overflow-x: hidden;
+    height: 100%;
+    padding-right: 1rem;
+    padding: 1rem 1rem 1rem 0;
+
+    .content {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+      gap: 1.5rem;
+      overflow: hidden;
     }
 
-    button.finish {
-      padding: 0 2rem;
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: $medium;
+    margin-right: 1rem;
+    margin-bottom: -$medium;
+
+    & > * {
+      cursor: pointer;
+      margin: 0;
+    }
+
+    button {
+      padding: 0 1rem;
     }
 
     button.select-here {
-      padding: 0 1rem;
       background: $red;
     }
-  }
-
-  & > div {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-    gap: 1.5rem;
   }
 
   .f-item {

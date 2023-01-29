@@ -42,14 +42,6 @@ function switchTab(tab: string) {
   display: grid;
   grid-template-rows: max-content 1fr;
 
-  .heading {
-    padding: $medium;
-    border-radius: $small;
-    margin-bottom: $small;
-    font-size: 2rem;
-    color: $white;
-  }
-
   .input {
     display: flex;
     align-items: center;

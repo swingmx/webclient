@@ -1,6 +1,6 @@
 <template>
   <NoItems
-    :flag="true"
+    :flag="!queue.tracklist.length"
     :title="'No songs in queue'"
     :description="'When you start playing songs, they will appear here.'"
     :icon="QueueSvg"

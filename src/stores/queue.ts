@@ -181,11 +181,11 @@ export default defineStore("Queue", {
       this.focusCurrentInSidebar(1000);
     },
     playFromFolder(fpath: string, tracks: Track[]) {
-      console.log("play from folder");
+      const name = fpath.split("/").pop();
       this.from = <fromFolder>{
         type: FromOptions.folder,
         path: fpath,
-        name: "Folder: " + fpath.split("/").pop(),
+        name: "Folder: " + (name?.trim() === "" ? fpath : name),
       };
       this.setNewQueue(tracks);
     },

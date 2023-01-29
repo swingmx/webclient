@@ -2,7 +2,7 @@
   <div class="breadcrumb-nav">
     <div
       class="path"
-      v-for="path in subPaths.slice(1)"
+      v-for="path in subPaths"
       :key="path.path"
       :class="{ inthisfolder: path.active }"
       @click.prevent="emit('navigate', path.path)"
@@ -56,9 +56,9 @@ onUpdated(() => {
       font-size: 1rem;
     }
 
-    &:first-child {
-      display: none;
-    }
+    // &:first-child {
+    //   display: none;
+    // }
 
     &:last-child {
       padding-right: $smaller;

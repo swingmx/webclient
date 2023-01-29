@@ -10,8 +10,13 @@ export default function createSubPaths(
   oldpath: string
 ): [string, subPath[]] {
   if (oldpath === undefined) oldpath = "";
-  newpath = newpath.replaceAll("\\", "/");
-  oldpath = oldpath.replaceAll("\\", "/");
+  if (newpath.endsWith("/")) {
+    newpath = newpath.slice(0, -1);
+  }
+
+  if (oldpath.endsWith("/")) {
+    oldpath = oldpath.slice(0, -1);
+  }
 
   const newlist = newpath.split("/");
 

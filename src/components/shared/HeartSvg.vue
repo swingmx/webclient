@@ -50,12 +50,10 @@ $bg: rgb(250, 33, 33);
   color: rgb(250, 33, 33);
 
   div {
-    // border: solid 1px;
     height: max-content;
     scale: 1;
 
     svg {
-      // background-color: $red;
       height: 1.5rem;
     }
   }

@@ -56,7 +56,7 @@ onMounted(() => {
       options.value = [
         {
           id: "$home",
-          title: "Everywhere",
+          title: "Home directory",
           info: "Scan all folders in your home directory.",
           active: settings.root_dirs[0] === "$home",
           delay: 0,

@@ -4,6 +4,12 @@
     style="height: 100%"
     :class="{ isSmall, isMedium }"
   >
+    <NoItems
+      :flag="folder.tracks.length === 0 && folder.dirs.length === 0"
+      :title="'Folder is empty'"
+      :description="'The folder you are trying to access has no indexed tracks. Please add tracks to this folder and try again'"
+      :icon="FolderSvg"
+    />
     <DynamicScroller
       :items="scrollerItems"
       :min-item-size="64"
@@ -42,6 +48,8 @@ import useQueueStore from "@/stores/queue";
 import FolderList from "@/components/FolderView/FolderList.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import { createTrackProps } from "@/utils";
+import NoItems from "@/components/shared/NoItems.vue";
+import FolderSvg from "@/assets/icons/folder.svg";
 
 const loader = useLoaderStore();
 const folder = useFolderStore();
@@ -60,7 +68,7 @@ class songItem {
 
   constructor(track: Track) {
     this.id = track.filepath;
-    this.props = createTrackProps(track)
+    this.props = createTrackProps(track);
   }
 }
 
@@ -106,7 +114,6 @@ onBeforeRouteLeave(() => {
   setTimeout(() => folder.resetQuery(), 500);
 });
 </script>
-
 
 <!-- <style lang="scss">
 .folder-view {

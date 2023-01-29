@@ -64,6 +64,12 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+#tracks-results {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr max-content;
+}
+
 #tracks-results .morexx {
   margin-top: 1rem;
 }
