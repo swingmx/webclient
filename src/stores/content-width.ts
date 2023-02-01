@@ -6,20 +6,20 @@ const content_height = ref(0);
 
 const brk = {
   small: 600,
-  medium: 950,
   album_header_small: 700,
+  medium: 950,
 };
 
 const isSmall = computed(() => {
   return content_width.value <= brk.small;
 });
 
-const isMedium = computed(() => {
-  return content_width.value > brk.small && content_width.value <= brk.medium;
-});
-
 const albumHeaderSmall = computed(() => {
   return content_width.value <= brk.album_header_small;
+});
+
+const isMedium = computed(() => {
+  return content_width.value > brk.small && content_width.value <= brk.medium;
 });
 
 const heightLarge = computed(() => content_height.value > 1080);

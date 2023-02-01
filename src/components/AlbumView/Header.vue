@@ -57,7 +57,7 @@
       </div>
       <Motion
         class="art"
-        v-if="!albumHeaderSmall"
+        v-if="!isMedium"
         :initial="{ opacity: 0, x: 10 }"
         :animate="{
           opacity: 1,
@@ -95,7 +95,7 @@ import { Routes } from "@/router";
 import { paths } from "@/config";
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
-import { albumHeaderSmall, heightLarge } from "@/stores/content-width";
+import { albumHeaderSmall, heightLarge, isMedium } from "@/stores/content-width";
 
 import { isLight } from "@/composables/colors/album";
 import { formatSeconds, useVisibility } from "@/utils";
@@ -206,11 +206,12 @@ function handleFav() {
     .art {
       display: inline-flex;
       gap: $small;
+      max-width: 10rem;
+      flex-wrap: wrap;
 
       img {
         height: 3rem;
         background-color: $gray;
-        border: solid 2px $white;
       }
 
       a {
@@ -218,7 +219,9 @@ function handleFav() {
       }
 
       a:hover {
-        transform: scale(1.4);
+        img {
+          border: solid 2px white !important;
+        }
       }
     }
 

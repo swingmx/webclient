@@ -107,12 +107,10 @@ const scrollerItems = computed(() => {
     size: heightLarge.value ? 25 * 16 : 19 * 16,
   };
 
-  return [
-    header,
-    ...getSongItems(),
-    genreBanner,
-    ...getArtistAlbumComponents(),
-  ];
+  let moreFrom = getArtistAlbumComponents();
+  moreFrom = moreFrom.filter((item) => item.id !== undefined);
+
+  return [header, ...getSongItems(), genreBanner, ...moreFrom];
 });
 
 function playFromAlbum(index: number) {
