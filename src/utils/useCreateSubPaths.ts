@@ -18,6 +18,14 @@ export default function createSubPaths(
     oldpath = oldpath.slice(0, -1);
   }
 
+  if (oldpath.startsWith("/")) {
+    oldpath = oldpath.replace("/", "");
+  }
+
+  if (newpath.startsWith("/")) {
+    newpath = newpath.replace("/", "");
+  }
+
   const newlist = newpath.split("/");
 
   if (newlist[0] == "$home") {

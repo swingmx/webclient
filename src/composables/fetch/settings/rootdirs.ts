@@ -62,6 +62,5 @@ export async function getFolders(folder: string = "$home") {
   if (error) {
     return [];
   }
-
   return data.folders as Folder[];
 }
