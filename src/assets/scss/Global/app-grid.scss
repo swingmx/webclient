@@ -66,10 +66,10 @@ $g-border: solid 1px $gray5;
 // ====== MODIFIERS =======
 
 #app-grid.extendWidth {
-  max-width: 100%;
   padding-right: 0;
   border-left: none;
   border-right: none;
+  max-width: 100% !important;
 }
 
 #app-grid.noSidebar {
