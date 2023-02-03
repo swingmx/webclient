@@ -2,10 +2,8 @@
   <br /><br />
   <div style="position: relative">
     <div class="bread-nav rounded-sm" id="bread-nav">
-      &nbsp;&nbsp; 📁 &nbsp;&nbsp;<BreadCrumbNav
-        :subPaths="subPaths"
-        @navigate="fetchDirs"
-      />
+      &nbsp;&nbsp;<span @click="fetchDirs('$root')">📁</span
+      >&nbsp;&nbsp;<BreadCrumbNav :subPaths="subPaths" @navigate="fetchDirs" />
     </div>
     <div class="set-root-dirs-browser">
       <h4 v-if="no_more_dirs">
@@ -31,7 +29,7 @@
           Select here
         </button>
         <button class="btn-active finish" @click="submitFolders">
-          Select checked
+          Select checked ({{ getNewDirs().length }})
         </button>
       </div>
     </div>
@@ -39,17 +37,20 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, Ref, ref } from "vue";
+
 import {
   getFolders,
   addRootDirs,
   getRootDirs,
 } from "@/composables/fetch/settings/rootdirs";
+
+import { createSubPaths } from "@/utils";
 import { Folder, subPath } from "@/interfaces";
 import useSettingsStore from "@/stores/settings";
-import { createSubPaths } from "@/utils";
-import { onMounted, Ref, ref } from "vue";
-import BreadCrumbNav from "../FolderView/BreadCrumbNav.vue";
+
 import FolderItem from "../FolderView/FolderItem.vue";
+import BreadCrumbNav from "../FolderView/BreadCrumbNav.vue";
 
 const settings = useSettingsStore();
 
@@ -76,7 +77,7 @@ function fetchDirs(path: string) {
 
       [oldpath, subPaths.value] = createSubPaths(path, oldpath);
     })
-    .then(() => (current = path));
+    .then(() => (current = path == "$home" ? "" : path));
 }
 
 function handleCheck(path: string) {
@@ -101,19 +102,26 @@ function submitFolders() {
   const new_dirs = getNewDirs();
   const removed_dirs = getRemovedDirs();
 
+  if (new_dirs.length == 0 && removed_dirs.length == 0) {
+    emit("hideModal");
+    return;
+  }
+
   addRootDirs(new_dirs, removed_dirs)
     .then((res) => settings.setRootDirs(res))
     .then(() => emit("hideModal"));
 }
 
 function selectHere() {
+  if (current == "$root") return;
+
   addRootDirs([current], [])
     .then((res) => settings.setRootDirs(res))
     .then(() => emit("hideModal"));
 }
 
 onMounted(() => {
-  fetchDirs("$home");
+  fetchDirs("$root");
   getRootDirs().then((_dirs) => {
     selected.value = _dirs;
     prev_selected.push(..._dirs);
@@ -132,11 +140,16 @@ onMounted(() => {
   max-width: calc(100% - 2rem);
   overflow-x: scroll;
   scrollbar-width: none;
-  display: grid;
-  grid-template-columns: max-content 1fr;
+
+  display: flex;
+  align-items: center;
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  span {
+    cursor: pointer;
   }
 }
 
@@ -190,7 +203,12 @@ onMounted(() => {
     }
 
     button.select-here {
-      background: $red;
+      border: solid $darkestblue;
+      background: transparent;
+
+      &:hover {
+        background-color: $darkestblue;
+      }
     }
   }
 

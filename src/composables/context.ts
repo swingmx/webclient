@@ -8,6 +8,9 @@ import { ContextSrc } from "./enums";
 import { Track } from "@/interfaces";
 import trackContext from "@/contexts/track_context";
 
+let prev_track = "";
+let prev_watcher = () => {};
+
 /**
  * Handles showing the context menu for a track component.
  * @param e The MouseEvent for positioning the context menu
@@ -20,16 +23,18 @@ export const showTrackContextMenu = (
   flag: Ref<boolean>
 ) => {
   const menu = useContextStore();
-
   const options = () => trackContext(track, useModalStore, useQueueStore);
 
   menu.showContextMenu(e, options, ContextSrc.Track);
-  flag.value = true;
 
-  // watch for context menu visibility and reset flag
-  menu.$subscribe((mutation, state) => {
-    if (!state.visible) {
-      flag.value = false;
-    }
-  });
+  if (prev_track !== track.filepath) {
+    prev_track = track.filepath || "";
+    prev_watcher();
+
+    // watch for context menu visibility and reset flag
+    prev_watcher = menu.$subscribe((mutation, state) => {
+      console.log(track.title);
+      flag.value = state.visible;
+    });
+  }
 };

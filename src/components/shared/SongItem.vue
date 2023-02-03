@@ -253,10 +253,10 @@ onBeforeUnmount(() => {
     }
   }
 
-  .context_menu_showing {
-    background-color: $gray4;
-    opacity: 1;
-  }
+  // .context_menu_showing {
+  //   background-color: $red;
+  //   opacity: 1;
+  // }
 
   .flex {
     position: relative;
@@ -299,6 +299,6 @@ onBeforeUnmount(() => {
 }
 
 .songlist-item.contexton {
-  background-color: $gray;
+  background-color: $gray4 !important;
 }
 </style>
