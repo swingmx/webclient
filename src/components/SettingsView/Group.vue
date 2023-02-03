@@ -38,17 +38,14 @@
             v-if="setting.type === SettingType.button"
             @click="setting.action"
           >
-            {{ setting.button_text }}
+            {{ setting.button_text && setting.button_text() }}
           </button>
         </div>
 
-        <div class="option-list" v-if="setting.type === SettingType.list">
-          <div v-for="item in setting.source !== null ? setting.source() : []">
-            <code>
-              {{ item }}
-            </code>
-          </div>
-        </div>
+        <List
+          :items="setting.source !== null ? setting.source() : []"
+          v-if="setting.type === SettingType.list"
+        />
       </div>
     </div>
   </div>
@@ -60,6 +57,7 @@ import { SettingGroup } from "@/interfaces/settings";
 
 import Switch from "./Components/Switch.vue";
 import Select from "./Components/Select.vue";
+import List from "./Components/List.vue";
 
 defineProps<{
   group: SettingGroup;
@@ -111,13 +109,14 @@ defineProps<{
     }
   }
 
-  .setting-item.is-list {
-    .option-list {
-      background-color: rgba(94, 94, 94, 0.425);
-      border-radius: $small;
-      padding: 1rem;
-      margin-top: $small;
-    }
-  }
+  // .setting-item.is-list {
+  // .option-list {
+  //   // background-color: rgba(94, 94, 94, 0.425);
+  //   border: solid 1px $green;
+  //   border-radius: $small;
+  //   padding: 1rem;
+  //   margin-top: $small;
+  // }
+  // }
 }
 </style>

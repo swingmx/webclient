@@ -12,7 +12,7 @@ export interface Setting {
   inactive?: () => boolean;
   action: (arg0?: any) => void;
   source: (() => any) | null;
-  button_text?: string;
+  button_text?: () => string;
   defaultAction?: () => void;
 }
 
