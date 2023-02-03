@@ -57,10 +57,12 @@ function playFromQueue(index: number) {
   queue.play(index);
 }
 
+const show_above = 1; // the number of tracks to show above the current track
+
 function scrollToCurrent() {
   const elem = document.getElementById("queue-scrollable") as HTMLElement;
 
-  const top = (queue.currentindex - 1) * itemHeight;
+  const top = (queue.currentindex - show_above) * itemHeight;
   elem.scroll({
     top,
     behavior: "smooth",

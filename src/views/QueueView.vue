@@ -21,10 +21,12 @@ function playFromQueue(index: number) {
   queue.play(index);
 }
 
+const show_above = 1; // the number of tracks to show above the current track
+
 function scrollToCurrent() {
   const scrollable = document.getElementById("songlist-scroller");
   const itemHeight = 64;
-  const top = (queue.currentindex - 1) * itemHeight;
+  const top = (queue.currentindex - show_above) * itemHeight;
 
   scrollable?.scrollTo({
     top,

@@ -4,14 +4,14 @@
     ref="playlistheader"
     :style="[
       {
-        backgroundImage: info.image ? `url(${imguri + info.image})` : undefined,
+        backgroundImage: !(info.image as string).endsWith('None') ? `url(${imguri + info.image})` : undefined,
         backgroundPosition: `center ${bannerPos}%`,
         height: `${heightLarge ? '24rem' : '18rem'}`,
       },
     ]"
-    :class="{ border: !info.image }"
+    :class="{ border: (info.image as string).endsWith('None') }"
   >
-    <div class="gradient" v-if="info.image"></div>
+    <div class="gradient" v-if="!(info.image as string).endsWith('None')"></div>
     <div class="carddd">
       <div class="info">
         <div class="btns">
@@ -77,9 +77,8 @@ function deletePlaylist() {
 .p-header {
   display: grid;
   grid-template-columns: 1fr;
-  // height: $banner-height;
   position: relative;
-  background-color: $gray5;
+  background-color: $gray;
   background-position: center 50%;
 
   .gradient {
@@ -161,5 +160,9 @@ function deletePlaylist() {
       gap: $small;
     }
   }
+}
+
+.p-header.border {
+  border: solid 1px $gray4;
 }
 </style>
