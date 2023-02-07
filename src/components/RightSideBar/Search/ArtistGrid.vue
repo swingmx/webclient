@@ -62,5 +62,9 @@ defineProps<{
   gap: 0.75rem;
   min-height: 10rem;
   padding-bottom: $small;
+
+  .album-card:hover {
+    border: solid 1px $gray3;
+  }
 }
 </style>

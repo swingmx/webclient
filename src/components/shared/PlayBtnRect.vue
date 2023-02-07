@@ -1,5 +1,5 @@
 <template>
-  <button class="playbtnrect shadow-sm" @click="usePlayFrom(source, useQStore, store)">
+  <button class="playbtnrect shadow-sm circular btn-active" @click="usePlayFrom(source, useQStore, store)">
     <playBtnSvg />
     <div class="text">Play</div>
   </button>
@@ -34,7 +34,5 @@ defineProps<{
   justify-content: center;
   transition: all 0.5s ease-in-out;
   color: $white;
-  background: $darkestblue !important;
-  border-radius: 2rem;
 }
 </style>

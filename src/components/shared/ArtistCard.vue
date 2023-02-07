@@ -33,6 +33,7 @@ defineProps<{
   flex: 0 0 auto;
   overflow: hidden;
   position: relative;
+  border: solid 1px transparent;
 
   border-radius: $medium;
   display: grid;
@@ -45,6 +46,7 @@ defineProps<{
 
   &:hover {
     background-color: $gray4;
+    border: solid 1px $gray3;
   }
 
   .artist-image {

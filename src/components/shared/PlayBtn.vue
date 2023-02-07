@@ -43,6 +43,7 @@ function handlePlay() {
   aspect-ratio: 1;
   padding: 0;
   background: $black;
+  border: solid 1px $gray;
 
   svg {
     transition: none;

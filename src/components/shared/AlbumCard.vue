@@ -60,6 +60,7 @@ defineProps<{
   gap: $small;
   padding: $medium;
   border-radius: 1rem;
+  border: solid 1px transparent;
 
   .with-img {
     position: relative;
@@ -100,15 +101,11 @@ defineProps<{
     transform: translateY(1rem);
     transition: all 0.25s;
     width: $btn-width;
-
-    &:hover {
-      transition: all 0.25s;
-      background: $darkestblue;
-    }
   }
 
   &:hover {
     background-color: $gray4;
+    border: solid 1px $gray5;
   }
 
   img {

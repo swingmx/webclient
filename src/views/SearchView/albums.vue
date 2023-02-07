@@ -35,5 +35,9 @@ const desc = computed(() =>
   padding-right: $small;
 
   overflow: auto;
+
+  .album-card:hover {
+    border: solid 1px $gray3;
+  }
 }
 </style>
