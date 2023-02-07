@@ -109,15 +109,5 @@ defineProps<{
       cursor: pointer;
     }
   }
-
-  // .setting-item.is-list {
-  // .option-list {
-  //   // background-color: rgba(94, 94, 94, 0.425);
-  //   border: solid 1px $green;
-  //   border-radius: $small;
-  //   padding: 1rem;
-  //   margin-top: $small;
-  // }
-  // }
 }
 </style>

@@ -22,7 +22,7 @@
           }"
           >{{ `${artist.name}` }}</RouterLink
         >
-        {{ index === artists.length - 1 ? "" : ",&nbsp;" }}
+        <span>{{ index === artists.length - 1 ? "" : ",&nbsp;" }}</span>
       </template>
     </div>
   </div>

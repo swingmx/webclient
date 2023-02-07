@@ -26,7 +26,9 @@ const q = useQStore();
 <style lang="scss">
 .hotkeys {
   display: grid;
-  grid-template-columns: 4rem 4rem 4rem;
+  // grid-template-columns: 4rem 4rem 4rem;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
   height: 100%;
 
   button {

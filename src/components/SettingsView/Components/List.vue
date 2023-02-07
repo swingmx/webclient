@@ -54,10 +54,7 @@ defineProps<{
     span {
       color: $red;
       cursor: pointer;
-
-      &:hover {
-        border-bottom: solid 2px;
-      }
+      text-decoration: underline;
     }
   }
 }

@@ -1,82 +1,84 @@
 <template>
   <div class="b-bar">
-    <div class="centered">
-      <div class="inner">
-        <div class="with-icons rounded-sm border">
-          <RouterLink
-            title="go to album"
-            :to="{
-              name: Routes.album,
-              params: {
-                hash: queue.currenttrack?.albumhash || ' ',
-              },
-            }"
-          >
-            <img
-              class="rounded-sm"
-              :src="paths.images.thumb.small + queue.currenttrack?.image"
-              alt=""
-            />
-          </RouterLink>
-
-          <HeartSvg
-            :state="queue.currenttrack?.is_favorite"
-            @handleFav="handleFav"
-          />
-          <button
-            class="repeat"
-            :class="{ 'repeat-disabled': settings.no_repeat }"
-            @click="settings.toggleRepeatMode"
-            :title="
-              settings.repeat_all
-                ? 'Repeat all'
-                : settings.no_repeat
-                ? 'No repeat'
-                : 'Repeat one'
-            "
-          >
-            <RepeatOneSvg v-if="settings.repeat_one" />
-            <RepeatAllSvg v-else />
-          </button>
+    <div class="left-group" v-auto-animate>
+      <HeartSvg
+        v-if="settings.use_np_img"
+        :state="queue.currenttrack?.is_favorite"
+        @handleFav="handleFav"
+      />
+      <RouterLink
+        v-else
+        title="go to album"
+        :to="{
+          name: Routes.album,
+          params: {
+            hash: queue.currenttrack?.albumhash || ' ',
+          },
+        }"
+      >
+        <img
+          class="rounded-sm"
+          :src="paths.images.thumb.small + queue.currenttrack?.image"
+          alt=""
+        />
+      </RouterLink>
+      <div class="track-info">
+        <ArtistName
+          :artists="queue.currenttrack?.artist || []"
+          :albumartists="
+            queue.currenttrack?.albumartist || 'Welcome to Swing Music'
+          "
+          class="artist"
+        />
+        <div v-tooltip class="title ellip">
+          {{ queue.currenttrack?.title || "Hello there" }}
+        </div>
+      </div>
+    </div>
+    <div class="center">
+      <div class="with-time">
+        <div class="time time-current">
+          <span>
+            {{ formatSeconds(queue.duration.current || 0) }}
+          </span>
         </div>
 
-        <div class="info">
-          <div class="with-title">
-            <div class="time time-current">
-              <span>
-                {{ formatSeconds(queue.duration.current || 0) }}
-              </span>
-            </div>
-            <div class="tags">
-              <div v-tooltip class="title ellip">
-                {{ queue.currenttrack?.title || "Hello there" }}
-              </div>
-              <ArtistName
-                :artists="queue.currenttrack?.artist || []"
-                :albumartists="
-                  queue.currenttrack?.albumartist || 'Welcome to Swing Music'
-                "
-                class="artist"
-              />
-            </div>
-            <div class="time time-full">
-              <span>
-                {{
-                  formatSeconds(
-                    queue.currenttrack ? queue.currenttrack.duration : 0
-                  )
-                }}
-              </span>
-            </div>
-          </div>
-
-          <Progress />
-        </div>
         <div class="buttons rounded-sm border">
           <HotKeys />
         </div>
+        <div class="time time-full">
+          <span>
+            {{
+              formatSeconds(
+                queue.currenttrack ? queue.currenttrack.duration : 0
+              )
+            }}
+          </span>
+        </div>
       </div>
-      <div></div>
+      <Progress />
+    </div>
+
+    <div class="right-group">
+      <HeartSvg
+        :state="queue.currenttrack?.is_favorite"
+        @handleFav="handleFav"
+      />
+      <button
+        class="repeat"
+        :class="{ 'repeat-disabled': settings.no_repeat }"
+        @click="settings.toggleRepeatMode"
+        :title="
+          settings.repeat_all
+            ? 'Repeat all'
+            : settings.no_repeat
+            ? 'No repeat'
+            : 'Repeat one'
+        "
+      >
+        <RepeatOneSvg v-if="settings.repeat_one" />
+        <RepeatAllSvg v-else />
+      </button>
     </div>
   </div>
 </template>
@@ -117,8 +119,64 @@ function handleFav() {
 .b-bar {
   background-color: rgb(22, 22, 22);
   display: grid;
+  grid-template-columns: 1fr max-content 1fr;
   align-items: center;
   z-index: 1;
+
+  button {
+    height: 2rem;
+    width: 2rem;
+    background: transparent;
+    border-radius: $small;
+
+    &:hover {
+      border: solid 1px $gray3 !important;
+    }
+  }
+
+  gap: 1rem;
+
+  .left-group {
+    display: grid;
+    padding-left: 1rem;
+    grid-template-columns: max-content 1fr;
+    gap: $small;
+    align-items: center;
+    font-size: small;
+
+    a {
+      font-size: small;
+    }
+
+    img {
+      height: 3rem;
+    }
+
+    button {
+      height: 3rem;
+      width: 3rem;
+      border: solid 1px $gray4;
+      padding: 0;
+    }
+
+    button:hover {
+      border: solid 1px $red !important;
+    }
+
+    .track-info {
+      .artistname {
+        font-size: 0.9rem;
+        opacity: 0.75;
+        font-weight: bold;
+        margin-bottom: 2px;
+      }
+
+      .title {
+        color: $white;
+        font-weight: bold;
+      }
+    }
+  }
 
   &:hover {
     ::-moz-range-thumb {
@@ -134,123 +192,77 @@ function handleFav() {
     }
   }
 
-  .centered {
+  .with-time {
     display: grid;
-    align-items: center;
-    width: max-content;
-    padding: $small $medium;
-    margin: 0 auto;
+    grid-template-columns: max-content 1fr max-content;
+    align-items: flex-end;
+    height: 2rem;
 
-    .inner {
-      display: grid;
-      height: 3rem;
-      grid-template-columns: max-content 1fr max-content;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .with-icons {
-      background-color: rgba(255, 255, 255, 0.048);
-      display: grid;
-      gap: $small;
-      grid-template-columns: repeat(3, max-content);
-      align-items: center;
-      padding: 0 5px;
-      margin-top: -$smaller;
-
-      button {
-        height: 2rem;
-        width: 2rem;
-        background: transparent;
-        padding: 0;
-        border: none;
-        border-radius: $small;
-
-        &:hover {
-          border: solid 1px $gray3;
-        }
-      }
-
-      button.repeat {
-        svg {
-          transform: scale(0.75);
-        }
-      }
-
-      button.repeat.repeat-disabled {
-        opacity: 0.25;
-      }
-    }
-
-    img {
-      height: 2.75rem;
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      cursor: pointer;
-      margin-top: $smaller;
-    }
-
-    .info {
-      width: 30rem;
-
-      @media (max-width: 833px) {
-        width: 20rem !important;
-      }
-
-      .with-title {
-        display: grid;
-        grid-template-columns: max-content 1fr max-content;
-        align-items: flex-end;
-        gap: $smaller;
-      }
-
-      .time {
-        font-size: $medium;
-        height: fit-content;
-        width: 3rem;
-
-        span {
-          background-color: $gray3;
-          border-radius: $smaller;
-          padding: 0 $smaller;
-        }
-      }
-
-      .time-full {
-        text-align: end;
-      }
-
-      .tags {
-        font-size: small;
-        display: grid;
-        grid-template-rows: 1fr 1fr;
-        place-items: center;
-
-        .title {
-          font-weight: bold;
-        }
-
-        .artist {
-          opacity: 0.75;
-          margin-bottom: -$smaller;
-          font-size: $medium;
-        }
-      }
-    }
-
-    .buttons {
-      height: 100%;
-      margin-top: -$smaller;
-      background-color: rgba(255, 255, 255, 0.048);
-      display: grid;
-      place-items: center;
+    button {
+      background: transparent;
     }
   }
 
-  .right {
+  .center {
     display: grid;
-    place-content: end;
+    align-items: center;
+    gap: $small;
+
+    width: 30rem;
+
+    @media (max-width: 833px) {
+      width: 20rem !important;
+    }
+
+    .time {
+      font-size: $medium;
+      height: fit-content;
+      width: 3rem;
+
+      span {
+        background-color: $gray3;
+        border-radius: $smaller;
+        padding: 0 $smaller;
+      }
+    }
+
+    .time-full {
+      text-align: end;
+    }
+  }
+
+  // hotkeys
+  .buttons {
+    display: grid;
+    place-items: center;
+    scale: 1.2;
+    border: none;
+  }
+}
+
+.right-group {
+  display: grid;
+  justify-content: flex-end;
+  gap: 1rem;
+  grid-template-columns: repeat(2, max-content);
+  align-items: center;
+  height: 4rem;
+  padding-right: 2rem;
+
+  button {
+    background: transparent;
+    padding: 0;
+    border: none;
+  }
+
+  button.repeat {
+    svg {
+      transform: scale(0.75);
+    }
+  }
+
+  button.repeat.repeat-disabled {
+    opacity: 0.25;
   }
 }
 </style>
