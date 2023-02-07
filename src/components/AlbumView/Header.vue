@@ -28,6 +28,7 @@
         <div class="top">
           <div v-auto-animate class="h">
             <span v-if="album.is_soundtrack">Soundtrack</span>
+            <span v-else-if="album.is_live">Concert</span>
             <span v-else-if="album.is_compilation">Compilation</span>
             <span v-else-if="album.is_EP">EP</span>
             <span v-else-if="album.is_single">Single</span>
@@ -95,7 +96,11 @@ import { Routes } from "@/router";
 import { paths } from "@/config";
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
-import { albumHeaderSmall, heightLarge, isMedium } from "@/stores/content-width";
+import {
+  albumHeaderSmall,
+  heightLarge,
+  isMedium,
+} from "@/stores/content-width";
 
 import { isLight } from "@/composables/colors/album";
 import { formatSeconds, useVisibility } from "@/utils";

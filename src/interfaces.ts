@@ -50,6 +50,7 @@ export interface Album {
   colors: string[];
   copyright?: string;
 
+  is_live: boolean;
   is_compilation: boolean;
   is_soundtrack: boolean;
   is_single: boolean;
