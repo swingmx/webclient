@@ -1,13 +1,13 @@
 <template>
   <form
     @submit.prevent="update_playlist"
-    class="new-p-form"
+    class="playlist-modal"
     enctype="multipart/form-data"
   >
     <label for="name">Playlist name</label>
     <br />
     <input
-      type="text"
+      type="search"
       class="rounded-sm"
       name="name"
       id="modal-playlist-name-input"
@@ -23,7 +23,13 @@
       @change="handleUpload"
       ref="dropZoneRef"
     />
-    <div id="upload" class="boxed rounded-sm" @click="selectFiles">
+    <div
+      id="upload"
+      class="boxed rounded-sm"
+      @click="selectFiles"
+      tabindex="0"
+      @keydown.space.enter.stop="selectFiles"
+    >
       <div>Click to upload cover image</div>
       <div
         id="update-pl-img-preview"
@@ -47,7 +53,7 @@
       </div>
     </div>
 
-    <button class="circular btn-active">
+    <button>
       {{ clicked ? "Updating" : "Update" }}
     </button>
   </form>
@@ -57,14 +63,13 @@
 import { onMounted, ref } from "vue";
 // import { useDropZone } from "@vueuse/core";
 
+import { updatePlaylist } from "@/composables/fetch/playlists";
 import { paths } from "@/config";
 import { Playlist } from "@/interfaces";
 import usePStore from "@/stores/pages/playlist";
-import { updatePlaylist } from "@/composables/fetch/playlists";
 
 import ExpandSvg from "@/assets/icons/expand.svg";
 const pStore = usePStore();
-const bannerPos = ref(0);
 
 const props = defineProps<{
   playlist: Playlist;
@@ -153,7 +158,7 @@ function update_playlist(e: Event) {
 </script>
 
 <style lang="scss">
-.new-p-form {
+.playlist-modal {
   .boxed {
     border: solid 2px $gray3;
     color: $gray1;
@@ -192,6 +197,11 @@ function update_playlist(e: Event) {
       width: 2rem;
       padding: 0;
       background: transparent;
+      border: solid 1px transparent;
+
+      &:hover {
+        border: solid 1px $gray4;
+      }
     }
 
     button:last-child {

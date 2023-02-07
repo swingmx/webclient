@@ -77,8 +77,10 @@ button {
   align-items: center;
   justify-content: center;
   height: 2.25rem;
-  background: linear-gradient(70deg, $gray3, $gray2);
   padding: 0 $small;
+
+  background-color: $gray4;
+  border: solid 1px $gray3;
 
   svg {
     transition: all 0.2s;
@@ -91,12 +93,14 @@ button {
   }
 
   &:hover {
-    background-image: linear-gradient($darkestblue, $darkblue);
+    background-color: $darkestblue;
+    border: solid 1px $darkblue;
   }
 }
 
 .btn-active {
-  background-image: linear-gradient($darkestblue, $darkblue);
+  background-color: $darkestblue;
+  border: solid 1px $darkblue;
 }
 
 .btn-disabled {

@@ -91,6 +91,7 @@ defineProps<{
     background-color: $gray;
     display: grid;
     gap: 1rem;
+    border: solid 1px $gray5;
 
     .inactive {
       opacity: 0.5;

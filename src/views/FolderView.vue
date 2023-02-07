@@ -6,8 +6,13 @@
   >
     <NoItems
       :flag="folder.tracks.length === 0 && folder.dirs.length === 0"
-      :title="'Folder is empty'"
-      :description="'The folder you are trying to access has no indexed tracks. Please add tracks to this folder and try again'"
+      :title="folder.query === '' ? 'Folder is empty' : 'No results found'"
+      :description="
+        folder.query === ''
+          ? 'The folder you are trying to access has no indexed tracks. Please add tracks to this folder and try again'
+          : `
+      No tracks or folders in this immediate directory matched the query: '${folder.query}'`
+      "
       :icon="FolderSvg"
     />
     <DynamicScroller

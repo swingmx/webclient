@@ -1,15 +1,15 @@
 <template>
-  <form @submit="create" class="new-p-form">
+  <form @submit="create" class="playlist-modal">
     <label for="name">Playlist name</label>
     <br />
     <input
-      type="text"
+      type="search"
       class="rounded-sm"
       name="name"
       id="modal-playlist-name-input"
     />
-    <br /><br>
-    <button type="submit" class="circular btn-active">Create</button>
+    <br /><br />
+    <button type="submit">Create</button>
   </form>
 </template>
 
@@ -67,7 +67,7 @@ function create(e: Event) {
 </script>
 
 <style lang="scss">
-.new-p-form {
+.playlist-modal {
   grid-gap: 1rem;
   margin-top: 1rem;
 
@@ -83,12 +83,8 @@ function create(e: Event) {
 
   button {
     margin: 0 auto;
-    width: 6rem;
-    transition: all .25s ease-out;
-
-    &:hover {
-      width: 10rem;
-    }
+    width: 8rem;
+    transition: all 0.25s ease-out;
   }
 }
 </style>

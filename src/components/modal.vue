@@ -91,7 +91,7 @@ function deletePlaylist() {
   display: grid;
   place-items: center;
 
-  input[type="text"] {
+  input[type="search"] {
     margin: $small 0;
     border: 2px solid $gray3;
     background-color: transparent;
@@ -117,6 +117,7 @@ function deletePlaylist() {
     padding: 2rem;
     position: relative;
     background-color: $black;
+    border: solid 1px $gray5;
 
     .close {
       position: absolute;

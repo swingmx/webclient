@@ -33,6 +33,7 @@ const q = useQStore();
     height: 100%;
     padding: 0;
     background: none;
+    border: none;
     border-radius: 0;
 
     &:hover {

@@ -19,12 +19,10 @@
             />
           </RouterLink>
 
-          <button>
-            <HeartSvg
-              :state="queue.currenttrack?.is_favorite"
-              @handleFav="handleFav"
-            />
-          </button>
+          <HeartSvg
+            :state="queue.currenttrack?.is_favorite"
+            @handleFav="handleFav"
+          />
           <button
             class="repeat"
             :class="{ 'repeat-disabled': settings.no_repeat }"
@@ -166,6 +164,11 @@ function handleFav() {
         background: transparent;
         padding: 0;
         border: none;
+        border-radius: $small;
+
+        &:hover {
+          border: solid 1px $gray3;
+        }
       }
 
       button.repeat {

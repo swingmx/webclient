@@ -68,7 +68,6 @@ function handleButton() {
 .gsearch-input {
   display: grid;
   grid-template-columns: 1fr max-content;
-  border-radius: 3rem;
 
   #ginner {
     width: 100%;
@@ -80,6 +79,7 @@ function handleButton() {
 
     button {
       background: transparent;
+      border: none;
       width: 3rem;
       padding: 0;
       border-radius: 3rem;

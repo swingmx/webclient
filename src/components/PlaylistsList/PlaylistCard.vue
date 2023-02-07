@@ -35,11 +35,13 @@ const props = defineProps<{
   grid-template-rows: 1fr max-content;
   padding: 1rem;
   gap: $small;
+  border: solid 1px $gray5;
 
   &:hover {
-    transition: all .25s ease;
+    transition: all 0.25s ease;
     background-color: $gray3;
     background-blend-mode: screen;
+    border: solid 1px $gray3;
   }
 
   img {

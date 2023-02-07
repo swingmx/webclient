@@ -9,7 +9,7 @@
       <SearchSvg /> Search
     </button>
     <input
-      class="header-input pad-sm"
+      class="header-input pad-sm circular"
       :class="{ showInput: clicked }"
       placeholder="Type to search"
       v-model.trim="query"
@@ -20,8 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
 
 import useAlbumStore from "@/stores/pages/album";
 import useFolderStore from "@/stores/pages/folder";
@@ -87,7 +87,7 @@ if (source) {
 <style lang="scss">
 .header-input-wrapper {
   &.showInput {
-    width: 21.5rem;
+    width: 20rem;
   }
 
   display: flex;
@@ -107,12 +107,12 @@ if (source) {
   transition: all 0.25s $overshoot;
   opacity: 0;
   transform: translateY(-3.5rem);
-  border-radius: 3rem;
-  padding-left: 1rem;
-  outline: solid 1px $gray1;
+  padding-left: 1rem !important;
+  outline: none;
+  background-color: $gray5;
 
   &:focus {
-    outline: solid $darkblue;
+    background-color: $gray3;
   }
 
   &.showInput {
