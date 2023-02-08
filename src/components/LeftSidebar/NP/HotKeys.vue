@@ -3,7 +3,7 @@
     <button @click.prevent="q.playPrev">
       <PrevSvg />
     </button>
-    <button v-auto-animate @click.prevent="q.playPause">
+    <button @click.prevent="q.playPause">
       <PauseSvg v-if="q.playing" />
       <PlaySvg v-else />
     </button>
@@ -16,7 +16,10 @@
 <script setup lang="ts">
 import useQStore from "@/stores/queue";
 
-import { default as NextSvg, default as PrevSvg } from "../../../assets/icons/next.svg";
+import {
+  default as NextSvg,
+  default as PrevSvg,
+} from "../../../assets/icons/next.svg";
 import PauseSvg from "../../../assets/icons/pause.svg";
 import PlaySvg from "../../../assets/icons/play.svg";
 
@@ -26,9 +29,8 @@ const q = useQStore();
 <style lang="scss">
 .hotkeys {
   display: grid;
-  // grid-template-columns: 4rem 4rem 4rem;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 2rem;
+  grid-template-columns: 1fr 6rem 1fr;
+  gap: 1rem;
   height: 100%;
 
   button {
@@ -47,6 +49,10 @@ const q = useQStore();
     svg {
       transform: rotate(180deg);
     }
+  }
+
+  button:nth-child(2) {
+    width: 100%;
   }
 }
 </style>

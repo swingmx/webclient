@@ -131,6 +131,7 @@ function handleFav() {
 
     &:hover {
       border: solid 1px $gray3 !important;
+      background-color: $gray !important;
     }
   }
 
@@ -157,10 +158,6 @@ function handleFav() {
       width: 3rem;
       border: solid 1px $gray4;
       padding: 0;
-    }
-
-    button:hover {
-      border: solid 1px $red !important;
     }
 
     .track-info {
@@ -243,26 +240,30 @@ function handleFav() {
 .right-group {
   display: grid;
   justify-content: flex-end;
-  gap: 1rem;
   grid-template-columns: repeat(2, max-content);
   align-items: center;
   height: 4rem;
   padding-right: 2rem;
 
   button {
-    background: transparent;
     padding: 0;
+    height: 3rem;
+    width: 3rem;
     border: none;
   }
 
   button.repeat {
+    background-color: transparent;
+
     svg {
       transform: scale(0.75);
     }
   }
 
   button.repeat.repeat-disabled {
-    opacity: 0.25;
+    svg {
+      opacity: 0.25;
+    }
   }
 }
 </style>
