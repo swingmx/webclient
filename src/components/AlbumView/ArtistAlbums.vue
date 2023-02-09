@@ -3,7 +3,7 @@
     <h3>
       <span>{{ title }} </span>
       <SeeAll
-        v-if="maxAbumCards <= albums.length"
+        v-if="maxAbumCards - 1 <= albums.length"
         :route="route"
         @click="
           !favorites ? useArtistDiscographyStore().setPage(albumType) : null
@@ -11,7 +11,16 @@
       />
     </h3>
     <div class="cards">
-      <AlbumCard v-for="a in albums.slice(0, maxAbumCards)" :album="a" />
+      <AlbumCard
+        v-for="a in artist_page
+          ? albums
+              .slice(0, maxAbumCards)
+              .sort((a, b) => parseInt(b.date) - parseInt(a.date))
+          : albums.slice(0, maxAbumCards)"
+        :album="a"
+        :show_date="show_date"
+        :artist_page="artist_page"
+      />
     </div>
   </div>
 </template>
@@ -31,6 +40,8 @@ defineProps<{
   albumType?: discographyAlbumTypes;
   favorites?: boolean;
   route: string;
+  show_date?: boolean;
+  artist_page?: boolean;
 }>();
 </script>
 

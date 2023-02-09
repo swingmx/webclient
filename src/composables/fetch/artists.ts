@@ -27,11 +27,12 @@ const getArtistData = async (hash: string, limit: number = 5) => {
 
 const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
   interface ArtistAlbums {
+    artistname: string;
     albums: Album[];
     eps: Album[];
     singles: Album[];
     appearances: Album[];
-    artistname: string;
+    compilations: Album[];
   }
 
   const { data, error } = await useAxios({

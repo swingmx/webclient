@@ -11,6 +11,7 @@ export default defineStore("artistPage", {
     tracks: <Track[]>[],
     albums: <Album[]>[],
     eps: <Album[]>[],
+    compilations: <Album[]>[],
     singles: <Album[]>[],
     appearances: <Album[]>[],
   }),
@@ -26,15 +27,14 @@ export default defineStore("artistPage", {
       this.tracks = tracks;
     },
     async getArtistAlbums() {
-      const { albums, eps, singles, appearances } = await getArtistAlbums(
-        this.info.artisthash,
-        maxAbumCards.value
-      );
+      const { albums, eps, singles, appearances, compilations } =
+        await getArtistAlbums(this.info.artisthash, maxAbumCards.value);
 
       this.albums = albums;
       this.eps = eps;
       this.singles = singles;
       this.appearances = appearances;
+      this.compilations = compilations;
 
       // if (albums.length > 0) {
       // }

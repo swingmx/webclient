@@ -62,9 +62,14 @@ enum AlbumType {
   EPS = "EPs",
   SINGLES = "Singles",
   APPEARANCES = "Appearances",
+  COMPILATIONS = "Compilations",
 }
 
-function createAbumComponent(title: AlbumType, albums: Album[]) {
+function createAbumComponent(
+  title: AlbumType,
+  albums: Album[],
+  show_date = true
+) {
   let albumType = null;
 
   switch (title) {
@@ -79,6 +84,8 @@ function createAbumComponent(title: AlbumType, albums: Album[]) {
       break;
     case AlbumType.APPEARANCES:
       albumType = discographyAlbumTypes.appearances;
+    case AlbumType.COMPILATIONS:
+      albumType = discographyAlbumTypes.compilations;
       break;
 
     default:
@@ -92,6 +99,8 @@ function createAbumComponent(title: AlbumType, albums: Album[]) {
       albums,
       title,
       artisthash: route.params.hash,
+      show_date,
+      artist_page: true,
       route: `/artists/${store.info.artisthash}/discography?artist=${store.info.name}`,
     },
   };
@@ -124,20 +133,29 @@ const scrollerItems = computed(() => {
     components.push(albums);
   }
 
-  if (store.eps.length > 0) {
-    const eps = createAbumComponent(AlbumType.EPS, store.eps);
-    components.push(eps);
-  }
-
   if (store.singles.length > 0) {
     const singles = createAbumComponent(AlbumType.SINGLES, store.singles);
     components.push(singles);
   }
 
+  if (store.eps.length > 0) {
+    const eps = createAbumComponent(AlbumType.EPS, store.eps);
+    components.push(eps);
+  }
+
+  if (store.compilations.length > 0) {
+    const compilations = createAbumComponent(
+      AlbumType.COMPILATIONS,
+      store.compilations
+    );
+    components.push(compilations);
+  }
+
   if (store.appearances.length > 0) {
     const appearances = createAbumComponent(
       AlbumType.APPEARANCES,
-      store.appearances
+      store.appearances,
+      false
     );
     components.push(appearances);
   }

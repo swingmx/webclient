@@ -50,6 +50,7 @@ function switchView(album: albums) {
 }
 
 onClickOutside(dropOptionsRef, (e) => {
+  // @ts-ignore
   e.stopImmediatePropagation();
   hideDropDown();
 });

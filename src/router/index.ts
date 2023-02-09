@@ -15,7 +15,7 @@ import AlbumView from "@/views/AlbumView/index.vue";
 import ArtistExplorer from "@/views/ArtistsExplorer.vue";
 import ArtistView from "@/views/ArtistView";
 import ArtistTracksView from "@/views/ArtistTracks.vue";
-import ArtistDiscographyView from "@/views/AlbumsGrid.vue";
+import ArtistDiscographyView from "@/views/ArtistDiscography.vue";
 import SettingsView from "@/views/SettingsView.vue";
 import SearchView from "@/views/SearchView";
 import QueueView from "@/views/QueueView.vue";

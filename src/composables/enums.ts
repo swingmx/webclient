@@ -52,6 +52,7 @@ export enum discographyAlbumTypes {
   singles = "Singles",
   eps = "EPs",
   appearances = "Appearances",
+  compilations = "Compilations",
 }
 
 export enum favType {

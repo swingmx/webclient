@@ -14,6 +14,7 @@ export default defineStore("artistDiscography", {
     eps: <Album[]>[],
     singles: <Album[]>[],
     appearances: <Album[]>[],
+    compilations: <Album[]>[],
   }),
   actions: {
     setAlbums(page: discographyAlbumTypes) {
@@ -30,6 +31,9 @@ export default defineStore("artistDiscography", {
           break;
         case discographyAlbumTypes.appearances:
           this.toShow = this.appearances;
+          break;
+        case discographyAlbumTypes.compilations:
+          this.toShow = this.compilations;
           break;
         default:
           this.toShow = this.albums.concat(
@@ -51,6 +55,7 @@ export default defineStore("artistDiscography", {
           this.singles = data.singles;
           this.appearances = data.appearances;
           this.artistname = data.artistname;
+          this.compilations = data.compilations;
         })
         .then(() => this.setAlbums(this.page));
     },

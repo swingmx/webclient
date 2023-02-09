@@ -26,7 +26,22 @@
         {{ album.title }}
       </h4>
       <div class="artist ellip" @click.prevent.stop="() => {}">
+        <template v-if="show_date"> {{ album.date }} </template>
+        <span
+          v-if="
+            show_date &&
+            artist_page &&
+            album.albumartists[0].artisthash != $route.params.hash
+          "
+        >
+          •
+        </span>
         <RouterLink
+          v-if="
+            !show_date ||
+            (artist_page &&
+              album.albumartists[0].artisthash != $route.params.hash)
+          "
           :to="{
             name: Routes.artist,
             params: { hash: album.albumartists[0].artisthash },
@@ -51,6 +66,8 @@ import useAlbumStore from "@/stores/pages/album";
 const imguri = paths.images.thumb.large;
 defineProps<{
   album: Album;
+  show_date?: boolean;
+  artist_page?: boolean;
 }>();
 </script>
 

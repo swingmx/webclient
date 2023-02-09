@@ -45,7 +45,7 @@
                 :artists="album.albumartists"
                 :albumartists="''"
                 :small="true"
-              />&nbsp; • {{ album.date }} • {{ album.count }}
+              />&nbsp;• {{ album.date }} • {{ album.count }}
               {{ album.count === 1 ? "Track" : "Tracks" }} •
               {{ formatSeconds(album.duration, true) }}
             </div>
