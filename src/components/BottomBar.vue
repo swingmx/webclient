@@ -204,6 +204,7 @@ function handleFav() {
     display: grid;
     align-items: center;
     gap: $small;
+    margin-bottom: -$small;
 
     width: 30rem;
 
