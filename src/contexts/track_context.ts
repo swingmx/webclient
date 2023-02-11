@@ -166,12 +166,6 @@ export default async (
     critical: true,
   };
 
-  const add_to_fav: Option = {
-    label: "I love this",
-    action: () => console.log("I love this"),
-    icon: "heart",
-  };
-
   const options: Option[] = [
     play_next,
     add_to_q,
@@ -183,7 +177,6 @@ export default async (
     separator,
     go_to_artist,
     go_to_alb_artist,
-    // add_to_fav,
     // separator,
     // del_track,
   ];

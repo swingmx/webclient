@@ -74,7 +74,6 @@ function playFromPlaylistPage(index: number) {
 [onBeforeRouteLeave, onBeforeRouteUpdate].forEach((guard) => {
   guard(() => {
     if (playlist.bannerPosUpdated) {
-      console.log("Update banner pos in server");
       updateBannerPos(parseInt(playlist.info.id), playlist.bannerPos);
     }
 

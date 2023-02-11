@@ -233,6 +233,12 @@ export default defineStore("Queue", {
     },
     addTrackToQueue(track: Track) {
       this.tracklist.push(track);
+
+      const Toast = useNotifStore();
+      Toast.showNotification(
+        `Added ${track.title} to queue`,
+        NotifType.Success
+      );
     },
     playTrackNext(track: Track) {
       const Toast = useNotifStore();

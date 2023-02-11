@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 
 import { paths } from "@/config";
 import { Track } from "@/interfaces";

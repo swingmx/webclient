@@ -99,7 +99,6 @@ export default defineStore("search", () => {
   }
 
   function fetchAlbums(query: string) {
-    console.log("fetching albums");
     if (!query) return;
 
     searchAlbums(query).then((res) => {

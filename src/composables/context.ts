@@ -33,7 +33,6 @@ export const showTrackContextMenu = (
 
     // watch for context menu visibility and reset flag
     prev_watcher = menu.$subscribe((mutation, state) => {
-      console.log(track.title);
       flag.value = state.visible;
     });
   }
