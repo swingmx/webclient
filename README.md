@@ -26,15 +26,6 @@ yarn dev
 yarn build
 ```
 
-If you are developing together with the server, make sure the server code is placed in the same directory as the client code. Such that when you run `yarn build` the output is placed in the server's `client` directory.
-
-```bash
-│ 
-├── swing-client
-│   └── # client code here
-├── swingmusic
-│   └── # server code here
-```
 
 ### Contributing
 
