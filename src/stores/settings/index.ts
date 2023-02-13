@@ -66,5 +66,11 @@ export default defineStore("settings", {
       return !this.repeat_all && !this.repeat_one;
     },
   },
-  persist: true,
+  persist: {
+    afterRestore: (context) => {
+      let store = context.store;
+      store.root_dirs = [];
+      store.root_dir_set = false;
+    },
+  },
 });

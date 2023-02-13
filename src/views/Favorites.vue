@@ -57,18 +57,22 @@ const favAlbums: Ref<Album[]> = ref([]);
 const favTracks: Ref<Track[]> = ref([]);
 const favArtists: Ref<Artist[]> = ref([]);
 
-const noFavs = ref(false)
+const noFavs = ref(false);
 
 onMounted(() => {
   const max = maxAbumCards.value;
-  getAllFavs(6, max, max).then((favs) => {
-    favAlbums.value = favs.albums;
-    favTracks.value = favs.tracks;
-    favArtists.value = favs.artists;
-  }).then(() => {
-    noFavs.value = !favAlbums.value.length && !favTracks.value.length && !favArtists.value.length
-  });
-
+  getAllFavs(6, max, max)
+    .then((favs) => {
+      favAlbums.value = favs.albums;
+      favTracks.value = favs.tracks;
+      favArtists.value = favs.artists;
+    })
+    .then(() => {
+      noFavs.value =
+        !favAlbums.value.length &&
+        !favTracks.value.length &&
+        !favArtists.value.length;
+    });
 });
 
 async function handlePlay(index: number) {
@@ -90,7 +94,7 @@ async function handlePlay(index: number) {
   }
 
   .fav-tracks {
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 
     h3 {
       margin-top: 0;
@@ -102,6 +106,8 @@ async function handlePlay(index: number) {
   }
 
   .fav-albums {
+    margin-bottom: 2rem;
+
     .album-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));

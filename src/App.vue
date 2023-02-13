@@ -99,11 +99,11 @@ function handleWelcomeModal() {
 }
 
 function handleRootDirsPrompt() {
-  getRootDirs().then((res) => {
-    if (res.length === 0) {
+  getRootDirs().then((dirs) => {
+    if (dirs.length === 0) {
       modal.showRootDirsPromptModal();
     } else {
-      settings.setRootDirs(res);
+      settings.setRootDirs(dirs);
     }
   });
 }
