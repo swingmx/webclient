@@ -11,7 +11,7 @@
     <input
       class="header-input pad-sm circular"
       :class="{ showInput: clicked }"
-      placeholder="Type to search"
+      placeholder="type to search"
       v-model.trim="query"
       id="page-search"
       ref="inputRef"
@@ -87,7 +87,7 @@ if (source) {
 <style lang="scss">
 .header-input-wrapper {
   &.showInput {
-    width: 20rem;
+    width: 22rem;
   }
 
   display: flex;
