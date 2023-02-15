@@ -94,6 +94,7 @@ export default defineStore("Queue", {
             "Can't play: " + track.title,
             NotifType.Error
           );
+
           if (this.currentindex !== this.tracklist.length - 1) {
             setTimeout(() => {
               if (!this.playing) return;
@@ -137,7 +138,10 @@ export default defineStore("Queue", {
 
       const resetQueue = () => {
         this.currentindex = 0;
+        audio.src = "";
         this.playing = false;
+
+        updateMediaNotif()
         this.focusCurrentInSidebar();
       };
 
