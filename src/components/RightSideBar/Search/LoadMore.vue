@@ -30,6 +30,12 @@ defineProps<{
     border-radius: 0;
     height: 3rem;
     background: $darkestblue;
+    border: none;
+
+    &:hover {
+      background: $darkblue;
+      border-color: $darkblue;
+    }
   }
 }
 </style>

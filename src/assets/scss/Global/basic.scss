@@ -150,5 +150,6 @@ button {
 .load_disabled {
   pointer-events: all;
   background: $gray5 !important;
+  border-color: $gray5 !important;
   opacity: 1;
 }

@@ -258,6 +258,11 @@ function handleFav() {
     .bottom {
       margin-top: $smaller;
 
+      .heart-button {
+        background-color: pink !important;
+        border-color: pink;
+      }
+
       .stats {
         font-weight: bold;
         margin-bottom: 0.75rem;
