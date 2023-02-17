@@ -73,18 +73,18 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from "vue";
 
-import { paths } from "@/config";
-import { Track } from "@/interfaces";
-import { formatSeconds } from "@/utils";
-import useQueueStore from "@/stores/queue";
+import { showTrackContextMenu as showContext } from "@/composables/context";
 import { favType } from "@/composables/enums";
 import favoriteHandler from "@/composables/favoriteHandler";
-import { showTrackContextMenu as showContext } from "@/composables/context";
+import { paths } from "@/config";
+import { Track } from "@/interfaces";
+import useQueueStore from "@/stores/queue";
+import { formatSeconds } from "@/utils";
 
-import HeartSvg from "./HeartSvg.vue";
-import ArtistName from "./ArtistName.vue";
-import MasterFlag from "./MasterFlag.vue";
 import OptionSvg from "@/assets/icons/more.svg";
+import ArtistName from "./ArtistName.vue";
+import HeartSvg from "./HeartSvg.vue";
+import MasterFlag from "./MasterFlag.vue";
 
 const imguri = paths.images.thumb.small;
 const context_menu_showing = ref(false);
@@ -92,8 +92,9 @@ const queue = useQueueStore();
 
 const props = defineProps<{
   track: Track;
-  index: Number | String;
+  index: number | string;
   hide_album?: Boolean;
+  is_queue_track?: Boolean;
 }>();
 
 const is_fav = ref(props.track.is_favorite);
@@ -111,6 +112,10 @@ function showMenu(e: MouseEvent) {
 }
 
 function isCurrent() {
+  if (props.is_queue_track) {
+    return queue.currentindex == parseInt(props.index as string) - 1;
+  }
+
   return queue.currenttrackhash == props.track.trackhash;
 }
 

@@ -94,7 +94,7 @@ async function handlePlay(index: number) {
   }
 
   .fav-tracks {
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
 
     h3 {
       margin-top: 0;
@@ -106,8 +106,6 @@ async function handlePlay(index: number) {
   }
 
   .fav-albums {
-    margin-bottom: 2rem;
-
     .album-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));

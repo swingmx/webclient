@@ -16,6 +16,7 @@
       <SongItem
         :track="item.track"
         :index="index + 1"
+        :is_queue_track="true"
         @playThis="handlePlay(index)"
       />
     </RecycleScroller>
@@ -24,11 +25,12 @@
 
 <script setup lang="ts">
 import SongItem from "@/components/shared/SongItem.vue";
-import { isMedium, isSmall } from "@/stores/content-width";
 import { Track } from "@/interfaces";
+import { isMedium, isSmall } from "@/stores/content-width";
 
 defineProps<{
   tracks: Track[];
+  is_queue?: boolean;
   handlePlay: (index: number) => void;
 }>();
 

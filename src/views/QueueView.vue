@@ -5,7 +5,11 @@
     :description="'When you start playing songs, they will appear here.'"
     :icon="QueueSvg"
   />
-  <SongList :tracks="queue.tracklist" :handlePlay="playFromQueue" />
+  <SongList
+    :tracks="queue.tracklist"
+    :handlePlay="playFromQueue"
+    :is_queue="true"
+  />
 </template>
 
 <script setup lang="ts">
