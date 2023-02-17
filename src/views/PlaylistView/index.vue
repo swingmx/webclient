@@ -32,15 +32,31 @@ import useQueueStore from "@/stores/queue";
 import Header from "@/components/PlaylistView/Header.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import { updateBannerPos } from "@/composables/fetch/playlists";
+import NoItems from "@/components/shared/NoItems.vue";
+import playlistSvg from "@/assets/icons/playlist.svg";
 
 const queue = useQueueStore();
 const playlist = usePlaylistStore();
 
 interface ScrollerItem {
   id: string | number;
-  component: typeof Header | typeof SongItem;
+  component: typeof Header | typeof SongItem | typeof NoItems;
   size: number;
+  props?: {};
 }
+
+const noItems: ScrollerItem = {
+  id: "Noitems",
+  component: NoItems,
+  size: 300, // somehow it doesn't work, patched with CSS
+  props: {
+    icon: playlistSvg,
+    flag: playlist.tracks.length === 0,
+    title: "No tracks in this playlist",
+    description:
+      'Add tracks to this playlist by right clicking on a track and selecting "add to playlist"',
+  },
+};
 
 const scrollerItems = computed(() => {
   const header: ScrollerItem = {
@@ -49,20 +65,21 @@ const scrollerItems = computed(() => {
     size: heightLarge.value ? 25 * 16 : 19 * 16,
   };
 
-  return [
-    header,
-    ...playlist.tracks.map((track) => {
-      return {
-        id: track.filepath,
-        component: SongItem,
-        props: {
-          track: track,
-          index: track.index + 1,
-        },
-        size: 64,
-      };
-    }),
-  ];
+  const tracks = playlist.tracks.map((track) => {
+    return {
+      id: track.filepath,
+      component: SongItem,
+      props: {
+        track: track,
+        index: track.index + 1,
+      },
+      size: 64,
+    };
+  });
+
+  const body = playlist.tracks.length === 0 ? [noItems] : tracks;
+
+  return [header, ...body];
 });
 
 function playFromPlaylistPage(index: number) {
@@ -83,3 +100,11 @@ function playFromPlaylistPage(index: number) {
   });
 });
 </script>
+
+<style lang="scss">
+.playlist-virtual-scroller {
+  .nothing {
+    height: 25rem;
+  }
+}
+</style>

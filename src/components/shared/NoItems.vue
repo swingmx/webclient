@@ -4,14 +4,13 @@
       <component :is="icon" />
       <h3>{{ title }}</h3>
       <p>
-        {{ description  }}
+        {{ description }}
       </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
 defineProps<{
   icon: any;
   flag: boolean;
@@ -26,7 +25,7 @@ defineProps<{
   width: 25rem;
   margin: 0 auto;
   display: grid;
-  opacity: .5;
+  opacity: 0.5;
 
   p {
     word-break: break-word;
