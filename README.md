@@ -1,6 +1,6 @@
 ### Swing music client
 
-This repo contains the client code for the swing music player.
+This repo contains the client code for the [swing music player](https://github.com/geoffrey45/swingmusic).
 
 ### Setup
 
