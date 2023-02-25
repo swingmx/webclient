@@ -153,3 +153,14 @@ button {
   border-color: $gray5 !important;
   opacity: 1;
 }
+
+#drag-img {
+  width: max-content;
+  max-width: 15rem;
+  background-color: $darkblue;
+  padding: $smaller $small;
+  border-radius: $smaller;
+  opacity: 1;
+  position: absolute;
+  left: -20rem;
+}

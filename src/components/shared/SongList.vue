@@ -18,6 +18,8 @@
         :index="index + 1"
         :is_queue_track="true"
         @playThis="handlePlay(index)"
+        :is_last="index == tracks.length - 1"
+        :droppable="true"
       />
     </RecycleScroller>
   </div>

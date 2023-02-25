@@ -72,6 +72,8 @@ const scrollerItems = computed(() => {
       props: {
         track: track,
         index: track.index + 1,
+        is_last: track.index === playlist.tracks.length - 1,
+        droppable: true,
       },
       size: 64,
     };
