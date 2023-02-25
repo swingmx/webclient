@@ -6,7 +6,34 @@
     :class="[{ current: isCurrent() }, { contexton: context_menu_showing }]"
     @dblclick.prevent="emitUpdate"
     @contextmenu.prevent="showMenu"
+    @dragstart="showDragStart"
+    @dragend.prevent="showDragEnd"
+    draggable="true"
   >
+    <div
+      v-if="droppable"
+      class="top-drop"
+      :class="{ active: dropTop }"
+      @dragenter="
+        dropTop = true;
+        dropBottom = false;
+      "
+      @dragleave="dropTop = false"
+      @dragover.prevent
+      @drop="dropHere(true)"
+    ></div>
+    <div
+      v-if="droppable && is_last"
+      class="bottom-drop"
+      :class="{ active: dropBottom }"
+      @dragenter="
+        dropBottom = true;
+        dropTop = false;
+      "
+      @dragleave="dropBottom = false"
+      @dragover.prevent
+      @drop="dropHere(false)"
+    ></div>
     <div
       class="index t-center ellip"
       @click.prevent="addToFav(track.trackhash)"
@@ -86,6 +113,9 @@ import ArtistName from "./ArtistName.vue";
 import HeartSvg from "./HeartSvg.vue";
 import MasterFlag from "./MasterFlag.vue";
 
+const dropTop = ref(false);
+const dropBottom = ref(false);
+
 const imguri = paths.images.thumb.small;
 const context_menu_showing = ref(false);
 const queue = useQueueStore();
@@ -93,9 +123,35 @@ const queue = useQueueStore();
 const props = defineProps<{
   track: Track;
   index: number | string;
-  hide_album?: Boolean;
-  is_queue_track?: Boolean;
+  hide_album?: boolean;
+  is_queue_track?: boolean;
+  droppable?: boolean;
+  is_last?: boolean;
 }>();
+
+// -------------
+
+function showDragStart(e: DragEvent) {
+  console.log("drag start");
+  const dragDiv = document.getElementById("drag-img") as HTMLDivElement;
+  dragDiv.innerText = props.track.title;
+  e.dataTransfer?.setDragImage(dragDiv, -15, 0);
+}
+
+function resetFlags() {
+  dropTop.value = false;
+  dropBottom.value = false;
+}
+
+function showDragEnd(e: DragEvent) {
+  resetFlags();
+  console.log("drag end");
+}
+
+function dropHere(top: boolean) {
+  resetFlags();
+  console.log(top ? "on top" : "on bottom");
+}
 
 const is_fav = ref(props.track.is_favorite);
 
@@ -156,6 +212,39 @@ onBeforeUnmount(() => {
   user-select: none;
   padding-left: $small;
   border: solid 1px transparent;
+  position: relative;
+
+  .top-drop,
+  .bottom-drop {
+    display: flex;
+    align-items: center;
+
+    z-index: 20;
+    position: absolute;
+    height: 32px;
+    width: 100%;
+    left: 0;
+
+    &.active {
+      &::before {
+        content: "";
+        position: absolute;
+        height: 1px;
+        width: 100%;
+        background-color: $red;
+        left: 0;
+        top: 50%;
+      }
+    }
+  }
+
+  .top-drop {
+    top: -16px;
+  }
+
+  .bottom-drop {
+    bottom: -16px;
+  }
 
   .song-title {
     .with-flag {
@@ -260,11 +349,6 @@ onBeforeUnmount(() => {
     }
   }
 
-  // .context_menu_showing {
-  //   background-color: $red;
-  //   opacity: 1;
-  // }
-
   .flex {
     position: relative;
     align-items: center;
@@ -278,6 +362,7 @@ onBeforeUnmount(() => {
       width: 3rem;
       height: 3rem;
       cursor: pointer;
+      z-index: 20;
     }
 
     .now-playing-track-indicator {

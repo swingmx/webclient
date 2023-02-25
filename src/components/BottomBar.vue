@@ -208,7 +208,7 @@ function handleFav() {
 
     width: 30rem;
 
-    @media (max-width: 833px) {
+    @media (max-width: 1080px) {
       width: 20rem !important;
     }
 

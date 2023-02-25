@@ -2,6 +2,7 @@
   <ContextMenu />
   <Modal />
   <Notification />
+  <div id="drag-img" class="ellip2" style=""></div>
   <section
     id="app-grid"
     :class="{
