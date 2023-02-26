@@ -8,7 +8,6 @@ import TracksGrid from "./TracksGrid.vue";
 
 const props = defineProps<{
   name: string;
-  isOnSearchPage?: boolean;
 }>();
 
 function getComponent() {
@@ -16,9 +15,6 @@ function getComponent() {
     case "tracks":
       return {
         component: TracksGrid,
-        props: {
-          isOnSearchPage: props.isOnSearchPage,
-        },
       };
     case "albums":
       return {

@@ -6,7 +6,7 @@
       :currentTab="currentTab"
       :tabContent="true"
     >
-      <Tab :name="currentTab" :isOnSearchPage="isOnSearchPage" />
+      <Tab :name="currentTab" />
     </TabsWrapper>
   </div>
 </template>
@@ -19,9 +19,6 @@ import Tab from "./Tab.vue";
 import TabsWrapper from "./TabsWrapper.vue";
 
 const search = useSearchStore();
-defineProps<{
-  isOnSearchPage?: boolean;
-}>();
 
 const tabs = ["tracks", "albums", "artists"];
 

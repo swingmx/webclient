@@ -35,9 +35,8 @@ import SongItem from "@/components/shared/SongItem.vue";
 import FetchMore from "@/components/SearchPage/FetchMore.vue";
 import NoItems from "@/components/shared/NoItems.vue";
 
-import state from "@/composables/state";
-
 import SearchSvg from "@/assets/icons/search.svg";
+import { dropSources } from "@/composables/enums";
 
 const search = useSearchStore();
 const queue = useQueueStore();
@@ -61,6 +60,7 @@ const scrollerItems = computed(() => {
     props: {
       track,
       index: index + 1,
+      source: dropSources.search,
     },
   }));
 

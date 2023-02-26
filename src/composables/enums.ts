@@ -60,3 +60,13 @@ export enum favType {
   album = "album",
   track = "track",
 }
+
+export enum dropSources {
+  queue = "queue",
+  playlist = "playlist",
+  folder = "folder",
+  album = "album",
+  search = "search",
+  artist = "artist",
+  favorite = "favorite",
+}

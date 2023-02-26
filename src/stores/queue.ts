@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { Ref } from "vue";
 import { NotifType, useNotifStore } from "./notification";
 
-import { favType, FromOptions } from "../composables/enums";
+import { dropSources, favType, FromOptions } from "../composables/enums";
 import updateMediaNotif from "../composables/mediaNotification";
 import { isFavorite } from "@/composables/fetch/favorite";
 import useSettingsStore from "./settings";
@@ -141,7 +141,7 @@ export default defineStore("Queue", {
         audio.src = "";
         this.playing = false;
 
-        updateMediaNotif()
+        updateMediaNotif();
         this.focusCurrentInSidebar();
       };
 
@@ -269,6 +269,23 @@ export default defineStore("Queue", {
         `Added ${track.title} to queue`,
         NotifType.Success
       );
+    },
+    addTrackToIndex(
+      source: dropSources,
+      track: Track,
+      newIndex: number,
+      oldIndex: number
+    ) {
+      console.log(source);
+      if (source === dropSources.queue) {
+        console.log("moving track in queue");
+        this.tracklist.splice(oldIndex, 1);
+        this.tracklist.splice(newIndex, 0, track);
+        return;
+      }
+
+      // else, just insert track at newIndex
+      this.tracklist.splice(newIndex, 0, track);
     },
     clearQueue() {
       this.tracklist = [] as Track[];

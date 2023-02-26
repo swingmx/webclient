@@ -1,5 +1,10 @@
 <template>
-  <SongList :tracks="tracks" :handlePlay="handlePlay" />
+  <SongList
+    :tracks="tracks"
+    :handlePlay="handlePlay"
+    :dropHandler="() => {}"
+    :source="dropSources.favorite"
+  />
 </template>
 
 <script setup lang="ts">
@@ -10,6 +15,7 @@ import useQueueStore from "@/stores/queue";
 import { getFavTracks } from "@/composables/fetch/favorite";
 
 import SongList from "@/components/shared/SongList.vue";
+import { dropSources } from "@/composables/enums";
 
 const tracks: Ref<Track[]> = ref([]);
 const queue = useQueueStore();

@@ -16,6 +16,7 @@
         :track="item.track"
         :index="index + 1"
         @playThis="playFromPage(index)"
+        :source="dropSources.artist"
       />
     </RecycleScroller>
   </div>
@@ -32,7 +33,7 @@ import { getArtistTracks } from "@/composables/fetch/artists";
 import useQueueStore from "@/stores/queue";
 
 import SongItem from "@/components/shared/SongItem.vue";
-import { FromOptions } from "@/composables/enums";
+import { dropSources, FromOptions } from "@/composables/enums";
 
 const itemHeight = 64;
 const route = useRoute();

@@ -6,7 +6,7 @@
     :class="[{ current: isCurrent() }, { contexton: context_menu_showing }]"
     @dblclick.prevent="emitUpdate"
     @contextmenu.prevent="showMenu"
-    @dragstart="showDragStart"
+    @dragstart="(e) => showDragStart(e, track, (index  as number) - 1 , source)"
     @dragend.prevent="showDragEnd"
     draggable="true"
   >
@@ -20,7 +20,7 @@
       "
       @dragleave="dropTop = false"
       @dragover.prevent
-      @drop="dropHere(true)"
+      @drop="(e) => dropHere(e, true)"
     ></div>
     <div
       v-if="droppable && is_last"
@@ -32,7 +32,7 @@
       "
       @dragleave="dropBottom = false"
       @dragover.prevent
-      @drop="dropHere(false)"
+      @drop="(e) => dropHere(e, false)"
     ></div>
     <div
       class="index t-center ellip"
@@ -107,11 +107,13 @@ import { paths } from "@/config";
 import { Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
 import { formatSeconds } from "@/utils";
+import { showDragStart, handleDrop } from "@/utils/songItemMethods";
 
 import OptionSvg from "@/assets/icons/more.svg";
 import ArtistName from "./ArtistName.vue";
 import HeartSvg from "./HeartSvg.vue";
 import MasterFlag from "./MasterFlag.vue";
+import { dropSources } from "@/composables/enums";
 
 const dropTop = ref(false);
 const dropBottom = ref(false);
@@ -127,17 +129,29 @@ const props = defineProps<{
   is_queue_track?: boolean;
   droppable?: boolean;
   is_last?: boolean;
+  source: dropSources;
 }>();
 
 // -------------
 
-function showDragStart(e: DragEvent) {
-  console.log("drag start");
-  const dragDiv = document.getElementById("drag-img") as HTMLDivElement;
-  dragDiv.innerText = props.track.title;
-  e.dataTransfer?.setDragImage(dragDiv, -15, 0);
+const is_fav = ref(props.track.is_favorite);
+
+const emit = defineEmits<{
+  (e: "playThis"): void;
+  (
+    e: "trackDropped",
+    source: dropSources,
+    track: Track,
+    newIndex: number,
+    oldIndex: number
+  ): void;
+}>();
+
+function emitUpdate() {
+  emit("playThis");
 }
 
+// ==== DRAG AND DROP ==== //
 function resetFlags() {
   dropTop.value = false;
   dropBottom.value = false;
@@ -145,23 +159,20 @@ function resetFlags() {
 
 function showDragEnd(e: DragEvent) {
   resetFlags();
-  console.log("drag end");
 }
 
-function dropHere(top: boolean) {
+function dropHere(e: DragEvent, top: boolean) {
+  e.preventDefault();
   resetFlags();
-  console.log(top ? "on top" : "on bottom");
+
+  const dropData = handleDrop(e, props.index as number, top);
+  if (!dropData) return;
+
+  const { track, newIndex, oldIndex } = dropData;
+  emit("trackDropped", props.source, track, newIndex, oldIndex);
 }
 
-const is_fav = ref(props.track.is_favorite);
-
-const emit = defineEmits<{
-  (e: "playThis"): void;
-}>();
-
-function emitUpdate() {
-  emit("playThis");
-}
+// ==== DRAG AND DROP END ==== //
 
 function showMenu(e: MouseEvent) {
   showContext(e, props.track, context_menu_showing);

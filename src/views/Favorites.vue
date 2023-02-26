@@ -14,6 +14,7 @@
         :route="'/favorites/tracks'"
         :title="'Tracks ❤️'"
         :playHandler="handlePlay"
+        :source="dropSources.favorite"
       />
     </div>
 
@@ -40,7 +41,7 @@ import { onMounted, Ref, ref } from "vue";
 import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
 import FeaturedArtists from "@/components/PlaylistView/ArtistsList.vue";
-import { discographyAlbumTypes } from "@/composables/enums";
+import { discographyAlbumTypes, dropSources } from "@/composables/enums";
 import { getAllFavs, getFavTracks } from "@/composables/fetch/favorite";
 import { Album, Artist, Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
