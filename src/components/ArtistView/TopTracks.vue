@@ -10,6 +10,7 @@
         :track="song"
         :index="index + 1"
         @playThis="playHandler(index)"
+        :source="source"
       />
     </div>
     <div class="error" v-if="!tracks.length">No tracks</div>
@@ -21,12 +22,14 @@ import SongItem from "../shared/SongItem.vue";
 import { Track } from "@/interfaces";
 import { isMedium, isSmall } from "@/stores/content-width";
 import SeeAll from "../shared/SeeAll.vue";
+import { dropSources } from "@/composables/enums";
 
 defineProps<{
   tracks: Track[];
   route: string;
   title: string;
   playHandler: (index: number) => void;
+  source: dropSources;
 }>();
 </script>
 

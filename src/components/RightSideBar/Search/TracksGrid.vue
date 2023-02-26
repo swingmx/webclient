@@ -1,7 +1,7 @@
 <template>
   <div id="tracks-results">
     <div v-if="search.tracks.value.length">
-      <TrackComponent
+      <TrackItem
         v-for="(track, index) in search.tracks.value"
         :key="track.id"
         :isCurrent="queue.currenttrackhash === track.trackhash"
@@ -24,9 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { onMounted } from "vue";
 
-import SongItem from "@/components/shared/SongItem.vue";
 import TrackItem from "@/components/shared/TrackItem.vue";
 import useQStore from "@/stores/queue";
 import useSearchStore from "@/stores/search";
@@ -38,24 +37,6 @@ const search = useSearchStore();
 function updateQueue(index: number) {
   queue.playFromSearch(search.query, search.tracks.value);
   queue.play(index);
-}
-
-const props = defineProps<{
-  isOnSearchPage?: boolean;
-}>();
-
-const TrackComponent = computed(() => {
-  if (props.isOnSearchPage) {
-    return SongItem;
-  }
-
-  return TrackItem;
-});
-
-let use_song_item: boolean = false;
-
-if (props.isOnSearchPage) {
-  use_song_item = true;
 }
 
 onMounted(() => {

@@ -34,7 +34,7 @@ import Header from "@/components/AlbumView/Header.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 
 import { isSmall, heightLarge } from "@/stores/content-width";
-import { discographyAlbumTypes } from "@/composables/enums";
+import { discographyAlbumTypes, dropSources } from "@/composables/enums";
 
 const album = useAlbumStore();
 const queue = useQueueStore();
@@ -60,7 +60,12 @@ class songItem {
     this.id = track.filepath || Math.random();
     this.props = track.is_album_disc_number
       ? { album_disc: track }
-      : { track, hide_album: true, index: track.track };
+      : {
+          track,
+          hide_album: true,
+          index: track.track,
+          source: dropSources.album,
+        };
     this.component = track.is_album_disc_number ? AlbumDiscBar : SongItem;
   }
 }

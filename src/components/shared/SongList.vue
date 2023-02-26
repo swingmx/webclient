@@ -20,6 +20,8 @@
         @playThis="handlePlay(index)"
         :is_last="index == tracks.length - 1"
         :droppable="true"
+        @trackDropped="dropHandler"
+        :source="source"
       />
     </RecycleScroller>
   </div>
@@ -27,6 +29,7 @@
 
 <script setup lang="ts">
 import SongItem from "@/components/shared/SongItem.vue";
+import { dropSources } from "@/composables/enums";
 import { Track } from "@/interfaces";
 import { isMedium, isSmall } from "@/stores/content-width";
 
@@ -34,6 +37,13 @@ defineProps<{
   tracks: Track[];
   is_queue?: boolean;
   handlePlay: (index: number) => void;
+  dropHandler: (
+    source: dropSources,
+    track: Track,
+    newIndex: number,
+    oldIndex: number
+  ) => void;
+  source: dropSources;
 }>();
 
 const itemHeight = 64;

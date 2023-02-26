@@ -34,6 +34,7 @@ import SongItem from "@/components/shared/SongItem.vue";
 import { updateBannerPos } from "@/composables/fetch/playlists";
 import NoItems from "@/components/shared/NoItems.vue";
 import playlistSvg from "@/assets/icons/playlist.svg";
+import { dropSources } from "@/composables/enums";
 
 const queue = useQueueStore();
 const playlist = usePlaylistStore();
@@ -74,6 +75,7 @@ const scrollerItems = computed(() => {
         index: track.index + 1,
         is_last: track.index === playlist.tracks.length - 1,
         droppable: true,
+        source: dropSources.playlist,
       },
       size: 64,
     };

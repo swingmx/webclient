@@ -9,6 +9,8 @@
     :tracks="queue.tracklist"
     :handlePlay="playFromQueue"
     :is_queue="true"
+    :dropHandler="queue.addTrackToIndex"
+    :source="dropSources.queue"
   />
 </template>
 
@@ -19,6 +21,7 @@ import SongList from "@/components/shared/SongList.vue";
 import NoItems from "@/components/shared/NoItems.vue";
 
 import QueueSvg from "@/assets/icons/queue.svg";
+import { dropSources } from "@/composables/enums";
 
 const queue = useQStore();
 function playFromQueue(index: number) {

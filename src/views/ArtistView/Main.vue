@@ -33,7 +33,7 @@ import ArtistAlbumsFetcher from "@/components/ArtistView/ArtistAlbumsFetcher.vue
 import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 import { Album } from "@/interfaces";
-import { discographyAlbumTypes, FromOptions } from "@/composables/enums";
+import { discographyAlbumTypes, dropSources, FromOptions } from "@/composables/enums";
 import useQueueStore from "@/stores/queue";
 import { getArtistTracks } from "@/composables/fetch/artists";
 
@@ -115,6 +115,7 @@ function getTopTracksComponent(): ScrollerItem {
       title: "Tracks",
       route: `/artists/${store.info.artisthash}/tracks?artist=${store.info.name}`,
       playHandler: handlePlay,
+      source: dropSources.artist,
     },
   };
 }

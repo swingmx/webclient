@@ -55,6 +55,7 @@ import SongItem from "@/components/shared/SongItem.vue";
 import { createTrackProps } from "@/utils";
 import NoItems from "@/components/shared/NoItems.vue";
 import FolderSvg from "@/assets/icons/folder.svg";
+import { dropSources } from "@/composables/enums";
 
 const loader = useLoaderStore();
 const folder = useFolderStore();
@@ -73,7 +74,7 @@ class songItem {
 
   constructor(track: Track) {
     this.id = track.filepath;
-    this.props = createTrackProps(track);
+    this.props = { ...createTrackProps(track), source: dropSources.folder };
   }
 }
 
