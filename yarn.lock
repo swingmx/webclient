@@ -1738,6 +1738,11 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
+sortable-dnd@0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/sortable-dnd/-/sortable-dnd-0.2.7.tgz#36038039cd365725d8710d4c8e4a21d208f5f0be"
+  integrity sha512-hpQDkdGTSLQN5OnxVOyFVmMuTEfYZdKTztEgvPiyC9LAUCHSm9DOY6UXWxjBoyCY+9LVZvJ1yMC+oEi96rTl5Q==
+
 "source-map-js@>=0.6.2 <2.0.0", source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
@@ -1952,6 +1957,13 @@ vue-template-compiler@^2.0.0:
   dependencies:
     de-indent "^1.0.2"
     he "^1.2.0"
+
+vue-virtual-draglist@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/vue-virtual-draglist/-/vue-virtual-draglist-3.0.4.tgz#ecf24aa70dd695708460ab19c0d476ca4f6b13dc"
+  integrity sha512-TH5+kOwSqpZNBd3MmD5Sc5e4wAZHaUDYwcQHePyHm1SNIWwnH8e9OWEKqIxFTOjfZWEw9BqUOwk2YQirs+rVig==
+  dependencies:
+    sortable-dnd "0.2.7"
 
 vue-virtual-scroller@^2.0.0-beta.7:
   version "2.0.0-beta.7"
