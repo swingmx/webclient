@@ -72,7 +72,7 @@ context.$subscribe((mutation, state) => {
   transform: scale(0);
   height: min-content;
 
-  padding: $small 0;
+  padding: $medium;
   background: $context;
   transform-origin: top left;
   font-size: 0.875rem;

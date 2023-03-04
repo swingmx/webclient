@@ -65,7 +65,9 @@ export default defineStore("Queue", {
       this.focusCurrentInSidebar();
 
       const track = this.tracklist[index];
-      const uri = `${paths.api.files}/${track.trackhash}`;
+      const uri = `${paths.api.files}/${
+        track.trackhash
+      }?filepath=${decodeURIComponent(track.filepath as string)}`;
 
       new Promise((resolve, reject) => {
         audio.autoplay = true;

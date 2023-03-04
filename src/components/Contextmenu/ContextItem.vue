@@ -121,8 +121,9 @@ function runChildAction(action: () => void) {
   width: 100%;
   display: flex;
   align-items: center;
-  padding: 0.4rem 1rem;
+  padding: 0.4rem;
   position: relative;
+  border-radius: $small;
 
   .more {
     height: 1.5rem;
@@ -134,14 +135,16 @@ function runChildAction(action: () => void) {
 
   .children {
     position: absolute;
-    width: 13rem;
+    width: 12rem;
 
     background-color: $context;
     transform: scale(0);
-    padding: $small 0;
+    padding: $medium;
+    border: solid 1px $gray;
 
     .context-item {
       padding: $small 1rem;
+      padding: 0.4rem;
     }
 
     .separator {
