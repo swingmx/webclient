@@ -10,6 +10,9 @@
       { contexton: context_on },
     ]"
     @contextmenu.prevent="showMenu"
+    v-wave="{
+      duration: 0.35,
+    }"
   >
     <div class="album-art">
       <img :src="paths.images.thumb.small + track.image" class="rounded-sm" />
@@ -34,6 +37,7 @@
     </div>
     <div class="float-buttons flex">
       <div
+        class="fav-icon"
         :title="is_fav ? 'Add to favorites' : 'Remove from favorites'"
         @click.stop="() => addToFav(track.trackhash)"
       >
@@ -130,19 +134,31 @@ watch(
 
   .float-buttons {
     opacity: 0;
+    gap: $small;
 
     .heart-button {
       width: 2rem;
+      height: 2rem;
       padding: 0;
       border: none;
-      transition: all 0.25s ease;
-      transform: scale(1) translateY(-1rem);
+
+      &:hover {
+        background-color: pink;
+      }
     }
 
     .remove-track {
-      margin-top: $smaller;
-      transition: all 0.25s ease;
-      transform: scale(1) translateY(1rem) rotate(45deg);
+      transform: rotate(45deg);
+      height: 2rem;
+      width: 2rem;
+
+      display: grid;
+      place-items: center;
+
+      &:hover {
+        border-radius: 1rem;
+        background-color: $red;
+      }
     }
 
     &:hover {
@@ -155,12 +171,8 @@ watch(
       opacity: 1;
     }
 
-    .heart-button {
-      transform: scale(1) translateY(0);
-    }
-
     .remove-track {
-      transform: scale(1) translateY(0) rotate(45deg);
+      transform: translateY(0) rotate(45deg);
     }
 
     background-color: $gray5;

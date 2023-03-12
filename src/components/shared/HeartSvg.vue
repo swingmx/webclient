@@ -1,5 +1,6 @@
 <template>
   <button
+    v-wave
     class="heart-button circular"
     @click="!no_emit && emit('handleFav')"
     :class="{
@@ -29,8 +30,8 @@ import HeartSvg from "@/assets/icons/heart.svg";
 import HeartFillSvg from "@/assets/icons/heart.fill.svg";
 
 defineProps<{
-  state: boolean | undefined;
-  no_emit?: boolean;
+  state: Boolean | undefined;
+  no_emit?: Boolean;
 }>();
 
 const emit = defineEmits<{
