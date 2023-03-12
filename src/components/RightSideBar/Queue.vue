@@ -11,7 +11,7 @@
       :description="'When you start playing songs, they will appear here.'"
       :icon="QueueSvg"
     />
-    <!-- <RecycleScroller
+    <RecycleScroller
       class="scroller"
       id="queue-scrollable"
       style="height: 100%"
@@ -28,23 +28,12 @@
         :isQueueTrack="true"
         @playThis="playFromQueue(index)"
       />
-    </RecycleScroller> -->
-    <virtual-list
-      :data-key="'id'"
-      :data-source="items"
-      :draggable="'#drag'"
-      style="height: 500px"
-    >
-      <template #item="{ record, index, dataKey }">
-        <i id="drag" class="drag">drag me</i>
-        <span>{{ (record.text, dataKey, index) }}</span>
-      </template>
-    </virtual-list>
+    </RecycleScroller>
   </div>
 </template>
 
 <script setup lang="ts">
-import VirtualList from "vue-virtual-draglist";
+// import VirtualList from "vue-virtual-draglist";
 
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 

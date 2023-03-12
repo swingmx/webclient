@@ -5,6 +5,7 @@
       id="page-search-trigger"
       :class="{ 'btn-active': clicked }"
       @click="handleFocus"
+      v-wave
     >
       <SearchSvg /> Search
     </button>

@@ -21,6 +21,7 @@
     "pinia-plugin-persistedstate": "^2.1.1",
     "sass": "^1.56.1",
     "sass-loader": "^13.2.0",
+    "v-wave": "^1.5.0",
     "vue": "^v3.2.45",
     "vue-debounce": "^3.0.2",
     "vue-router": "^4.1.3",

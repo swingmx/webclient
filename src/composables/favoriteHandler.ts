@@ -14,6 +14,8 @@ export default async function favoriteHandler(
   setter: (x?: unknown) => void,
   remover: (x?: unknown) => void
 ) {
+  if (itemhash == "") return;
+
   const queue = useQueueStore();
   const is_current =
     type === favType.track && itemhash === queue.currenttrackhash;

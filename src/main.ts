@@ -7,9 +7,9 @@ import {
   DynamicScrollerItem,
   // @ts-ignore
 } from "vue-virtual-scroller";
-
 import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import VWave from "v-wave";
 
 import App from "./App.vue";
 import { router } from "./router";
@@ -25,6 +25,7 @@ pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 app.use(router);
 app.use(autoAnimatePlugin);
+app.use(VWave);
 
 app.directive("tooltip", vTooltip);
 app.component("RecycleScroller", RecycleScroller);

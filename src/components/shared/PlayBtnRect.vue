@@ -1,5 +1,9 @@
 <template>
-  <button class="playbtnrect shadow-sm circular btn-active" @click="usePlayFrom(source, useQStore, store)">
+  <button
+    v-wave
+    class="playbtnrect shadow-sm circular btn-active"
+    @click="usePlayFrom(source, useQStore, store)"
+  >
     <playBtnSvg />
     <div class="text">Play</div>
   </button>
