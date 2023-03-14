@@ -48,7 +48,7 @@ const menus = [
   },
   {
     name: "folders",
-    route_name: "FolderView",
+    route_name: Routes.folder,
     params: { path: "$home" },
     icon: FolderSvg,
   },
@@ -90,23 +90,35 @@ const menus = [
   margin-top: 1rem;
 
   .nav-button {
-    border-radius: $medium;
+    border-radius: $small;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     padding: $small 0;
     position: relative;
+    font-size: 14px;
+    font-weight: 700;
 
     &.active::before {
-      content: "•";
+      content: " ";
       position: absolute;
-      left: -$small;
-      top: $medium;
+
+      top: 50%;
+      transform: translateY(-50%);
+
       opacity: 0.75;
+      height: 40%;
+      width: 4px;
+      background-color: $pink;
+      border-radius: 1rem;
     }
 
     &:hover {
       background-color: $darkestblue;
+
+      &::before {
+        background-color: $white;
+      }
     }
 
     .in {

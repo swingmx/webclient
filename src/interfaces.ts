@@ -83,6 +83,7 @@ export interface Playlist {
   id: string;
   name: string;
   image: string | FormData;
+  has_image: boolean;
   tracks: Track[];
   count: number;
   last_updated: string;
@@ -90,6 +91,10 @@ export interface Playlist {
   duration: number;
   has_gif: boolean;
   banner_pos: number;
+  images: {
+    image: string;
+    color: string;
+  }[];
 }
 
 export interface Notif {

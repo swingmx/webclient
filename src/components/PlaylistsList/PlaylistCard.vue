@@ -5,7 +5,7 @@
   >
     <img
       :src="imguri + playlist.thumb"
-      class="rounded"
+      class="rounded-sm"
       :class="{ border: !playlist.thumb }"
     />
     <div class="overlay rounded">
