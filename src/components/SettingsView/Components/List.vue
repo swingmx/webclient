@@ -1,14 +1,17 @@
 <template>
   <div class="list-items">
-    <div class="option-list" v-for="i in items" :key="i.title">
-      <div class="ellip">
-        {{ i.title }}
+    <div class="option-list-item" v-for="i in items" :key="i.title">
+      <div class="with-icon">
+        <component :is="icon" />
+        <div class="text ellip">
+          {{ i.title }}
+        </div>
       </div>
       <div class="icon" @click="i.action">
         <span>{{ i.buttontext }}</span>
       </div>
     </div>
-    <div v-if="!items.length" class="option-list" style="opacity: 0.5">
+    <div v-if="!items.length" class="option-list-item" style="opacity: 0.5">
       Root directories not configured. Use the "modify" button above to
       configure
     </div>
@@ -16,13 +19,30 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import FolderSvg from "../../../assets/icons/folder.svg";
+
+const props = defineProps<{
   items: {
     title: string;
     buttontext: string;
     action: () => void;
   }[];
+  icon: "folder";
 }>();
+
+function getIcon() {
+  switch (props.icon) {
+    case "folder":
+      return FolderSvg;
+
+    default:
+      return FolderSvg;
+  }
+}
+
+console.log(props.icon);
+
+const icon = getIcon();
 </script>
 
 <style lang="scss">
@@ -34,27 +54,35 @@ defineProps<{
     border-radius: $small;
     margin-top: 1rem;
     overflow: hidden;
+    padding: 1rem 0;
   }
 
-  .option-list {
+  .option-list-item {
     padding: $small 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
 
-    &:nth-child(even) {
-      background-color: $gray4;
+    .with-icon {
+      display: flex;
+      gap: $small;
+      align-items: center;
+      font-family: "SF Mono", monospace;
+      font-size: 0.9rem;
     }
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.178);
+      background-color: $gray4;
     }
 
     span {
-      color: $red;
+      color: white;
       cursor: pointer;
-      text-decoration: underline;
+      background-color: $red;
+      padding: $smaller $small;
+      border-radius: 6px;
+      z-index: 20;
     }
   }
 }

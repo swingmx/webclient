@@ -2,6 +2,7 @@
   <SongList
     :tracks="tracks"
     :handlePlay="handlePlay"
+    :is_queue="false"
     :dropHandler="() => {}"
     :source="dropSources.favorite"
   />

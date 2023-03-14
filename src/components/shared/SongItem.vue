@@ -356,7 +356,7 @@ onBeforeUnmount(() => {
     }
 
     &:hover {
-      background-color: $darkestblue;
+      background-color: $gray3;
     }
   }
 
@@ -380,6 +380,7 @@ onBeforeUnmount(() => {
       position: absolute;
       left: $small;
       top: $small;
+      z-index: 20;
     }
   }
 

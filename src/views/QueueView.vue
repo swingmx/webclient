@@ -48,10 +48,4 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss">
-.queue-view-virtual-scroller {
-  .songlist-item.current {
-    background-color: $darkestblue !important;
-  }
-}
-</style>
+
