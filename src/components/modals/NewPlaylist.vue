@@ -9,7 +9,7 @@
       id="modal-playlist-name-input"
     />
     <br /><br />
-    <button type="submit">Create</button>
+    <button type="submit">CREATE</button>
   </form>
 </template>
 

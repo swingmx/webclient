@@ -7,10 +7,14 @@
 export function isLight(rgb: string): boolean {
   if (rgb == null || undefined) return false;
 
-  const [r, g, b] = rgb.match(/\d+/g)!.map(Number);
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  try {
+    const [r, g, b] = rgb.match(/\d+/g)!.map(Number);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
 
-  return brightness > 165;
+    return brightness > 165;
+  } catch (error) {
+    return false;
+  }
 }
 
 interface BtnColor {

@@ -31,7 +31,15 @@ function playFromQueue(index: number) {
 const show_above = 1; // the number of tracks to show above the current track
 
 function scrollToCurrent() {
-  const scrollable = document.getElementById("songlist-scroller");
+  const scrollable = document.getElementById(
+    "songlist-scroller"
+  ) as HTMLElement;
+
+  if (scrollable?.scrollTop > 0) {
+    // user has scrolled
+    return;
+  }
+
   const itemHeight = 64;
   const top = (queue.currentindex - show_above) * itemHeight;
 
@@ -47,5 +55,3 @@ onMounted(() => {
   }, 1000);
 });
 </script>
-
-

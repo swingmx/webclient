@@ -4,7 +4,11 @@
     ref="playlistheader"
     :style="[
       {
-        backgroundImage: !(info.image as string).endsWith('None') ? `url(${imguri + info.image})` : undefined,
+        background: info.has_image
+          ? `url(${imguri + info.image})`
+          : info.images.length > 2
+          ? info.images[2].color
+          : '',
         backgroundPosition: `center ${bannerPos}%`,
         height: `${heightLarge ? '24rem' : '18rem'}`,
       },
@@ -12,8 +16,22 @@
     :class="{ border: (info.image as string).endsWith('None') }"
   >
     <div class="gradient" v-if="!(info.image as string).endsWith('None')"></div>
+    <div class="playlist-banner-images" v-if="!info.has_image">
+      <img
+        v-for="(img, index) in info.images"
+        :key="index"
+        :src="paths.images.thumb.large + img.image"
+        alt=""
+        class="rounded-sm"
+      />
+    </div>
     <div class="carddd">
-      <div class="info">
+      <div
+        class="info"
+        :class="{
+          is_light: isLight(info.images.length > 2 ? info.images[2].color : ''),
+        }"
+      >
         <div class="btns">
           <PlayBtnRect :source="playSources.playlist" :store="usePStore" />
         </div>
@@ -52,6 +70,7 @@ import { formatSeconds, useVisibility } from "@/utils";
 
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
 import DeleteSvg from "@/assets/icons/delete.svg";
+import { isLight } from "@/composables/colors/album";
 
 const modal = useModalStore();
 const nav = useNavStore();
@@ -89,6 +108,23 @@ function deletePlaylist() {
     height: 100%;
     background-color: $black;
     opacity: 0.5;
+  }
+
+  .playlist-banner-images {
+    width: 21rem;
+    position: absolute;
+    right: 0;
+    top: -10rem;
+    rotate: -40deg;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: $medium;
+
+    img {
+      height: 9rem;
+      box-shadow: 0 0 1rem rgba(80, 79, 79, 0.562);
+    }
   }
 
   .last-updated {
@@ -135,7 +171,7 @@ function deletePlaylist() {
 
     .type {
       font-size: small;
-      font-weight: bold;
+      font-weight: 700;
       color: rgba(255, 255, 255, 0.692);
     }
 
@@ -145,9 +181,17 @@ function deletePlaylist() {
       cursor: text;
     }
 
+    .info.is_light {
+      color: $gray5;
+
+      .type {
+        color: $gray5;
+        opacity: 0.5;
+      }
+    }
+
     .duration {
       font-size: 0.8rem;
-      color: $white;
       padding: $smaller;
       padding-left: 0;
       font-weight: 900;

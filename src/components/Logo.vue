@@ -1,24 +1,46 @@
 <template>
-  <div id="logo-container"
-  >
-    <router-link :to="{ name: 'Home' }">
-      <div id="logo"></div
-    ></router-link>
-  </div>
+  <router-link class="swing-logo rounded" :to="{ name: 'Home' }">
+    <div class="link">
+      <img src="/logo-fill.svg" alt="" />
+      <div>Swing <br />Music</div>
+    </div>
+    <SettingsSvg />
+  </router-link>
 </template>
 
+<script setup lang="ts">
+import SettingsSvg from "@/assets/icons/more.svg";
+</script>
+
 <style lang="scss">
-@import "../assets/scss/mixins.scss";
+.swing-logo {
+  background-color: $gray4;
+  padding: $medium;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $small;
+  cursor: pointer !important;
+  line-height: 1rem;
 
-#logo-container {
-  overflow: hidden;
-}
+  svg {
+    scale: 1.5;
+  }
 
-#logo {
-  height: 4.5rem !important;
-  background-image: url(./../assets/images/logo.webp);
-  background-size: contain;
-  @include ximage;
-  border-radius: $medium;
+  .link {
+    display: flex;
+    align-items: center;
+    gap: $small;
+  }
+
+  span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $white;
+  }
+
+  img {
+    height: 2.25rem;
+  }
 }
 </style>
