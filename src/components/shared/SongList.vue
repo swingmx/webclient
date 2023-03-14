@@ -1,7 +1,7 @@
 <template>
   <div
     class="queue-view-virtual-scroller v-scroll-page"
-    :class="{ isSmall, isMedium }"
+    :class="{ isSmall, isMedium, is_queue }"
     style="height: 100%"
   >
     <RecycleScroller
@@ -16,7 +16,7 @@
       <SongItem
         :track="item.track"
         :index="index + 1"
-        :is_queue_track="true"
+        :is_queue_track="is_queue"
         @playThis="handlePlay(index)"
         :is_last="index == tracks.length - 1"
         :droppable="true"
@@ -48,3 +48,13 @@ defineProps<{
 
 const itemHeight = 64;
 </script>
+
+<style lang="scss">
+
+.queue-view-virtual-scroller.is_queue {
+  .songlist-item.current {
+    background-color: $darkestblue !important;
+    border: none;
+  }
+}
+</style>

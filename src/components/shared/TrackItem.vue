@@ -111,7 +111,7 @@ watch(
 </script>
 
 <style lang="scss">
-.currentInQueue {
+.track-item.currentInQueue {
   background-color: $gray4;
 }
 
@@ -204,6 +204,7 @@ watch(
   .artist {
     opacity: 0.67;
     width: fit-content;
+    font-weight: bold;
   }
 }
 </style>

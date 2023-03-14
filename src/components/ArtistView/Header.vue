@@ -165,9 +165,9 @@ function handleFav() {
     gap: $small;
 
     .heart-button {
-        background-color: pink !important;
-        border-color: pink;
-      }
+      background-color: pink !important;
+      border-color: pink;
+    }
   }
 }
 </style>

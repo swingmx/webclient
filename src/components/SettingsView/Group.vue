@@ -43,6 +43,7 @@
         </div>
 
         <List
+          icon="folder"
           :items="setting.source !== null ? setting.source() : []"
           v-if="setting.type === SettingType.list"
         />

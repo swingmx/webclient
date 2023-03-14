@@ -33,8 +33,6 @@
 </template>
 
 <script setup lang="ts">
-// import VirtualList from "vue-virtual-draglist";
-
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 import useQStore from "@/stores/queue";
@@ -76,7 +74,7 @@ function scrollToCurrent() {
 }
 
 onMounted(() => {
-  // queue.setScrollFunction(scrollToCurrent, mouseover);
+  queue.setScrollFunction(scrollToCurrent, mouseover);
   queue.focusCurrentInSidebar();
 });
 
