@@ -13,7 +13,7 @@
         height: `${heightLarge ? '24rem' : '18rem'}`,
       },
     ]"
-    :class="{ border: (info.image as string).endsWith('None') }"
+    :class="{ border: !info.images.length }"
   >
     <div class="gradient" v-if="!(info.image as string).endsWith('None')"></div>
     <div class="playlist-banner-images" v-if="!info.has_image">
