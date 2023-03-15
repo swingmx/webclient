@@ -1,5 +1,5 @@
 <template>
-  <router-link class="swing-logo rounded" :to="{ name: 'Home' }">
+  <router-link class="swing-logo" :to="{ name: 'Home' }">
     <div class="link">
       <img src="/logo-fill.svg" alt="" />
       <div>Swing <br />Music</div>
@@ -22,6 +22,7 @@ import SettingsSvg from "@/assets/icons/more.svg";
   gap: $small;
   cursor: pointer !important;
   line-height: 1rem;
+  border-radius: 12px;
 
   svg {
     scale: 1.5;

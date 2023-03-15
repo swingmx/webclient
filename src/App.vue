@@ -19,6 +19,7 @@
     </div>
     <RightSideBar v-if="settings.use_sidebar && xl" />
     <BottomBar />
+    <!-- <BubbleManager /> -->
   </section>
 </template>
 
@@ -52,6 +53,7 @@ import RightSideBar from "@/components/RightSideBar/Main.vue";
 import LeftSidebar from "./components/LeftSidebar/index.vue";
 import { baseApiUrl } from "./config";
 import { getRootDirs } from "./composables/fetch/settings/rootdirs";
+// import BubbleManager from "./components/bubbles/BinManager.vue";
 
 const queue = useQStore();
 const router = useRouter();

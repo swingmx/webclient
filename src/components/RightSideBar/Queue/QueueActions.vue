@@ -36,7 +36,7 @@ const queue = useQueueStore();
   }
 
   .action {
-    padding-left: $smaller;
+    padding: 0 $medium;
 
     svg {
       transform: scale(0.8);

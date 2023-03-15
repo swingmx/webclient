@@ -145,6 +145,7 @@ defineProps<{
     font-size: 0.8rem;
     text-align: left;
     opacity: 0.75;
+    font-weight: 700;
 
     a {
       cursor: pointer !important;
