@@ -7,7 +7,7 @@
         background: info.has_image
           ? `url(${imguri + info.image})`
           : info.images.length > 2
-          ? info.images[2].color
+          ? getBackgroundColor(info.images[2].color)
           : '',
         backgroundPosition: `center ${bannerPos}%`,
         height: `${heightLarge ? '24rem' : '18rem'}`,
@@ -23,13 +23,23 @@
         :src="paths.images.thumb.large + img.image"
         alt=""
         class="rounded-sm"
+        :style="{
+          boxShadow: `0 0 1rem ${
+            !info.has_image && info.images.length > 2
+              ? getShift(info.images[2].color, [40, 60])
+              : ''
+          }`,
+        }"
       />
     </div>
     <div class="carddd">
       <div
         class="info"
-        :class="{
-          is_light: isLight(info.images.length > 2 ? info.images[2].color : ''),
+        :style="{
+          color:
+            !info.has_image && info.images.length > 2
+              ? getTextColor(info.images[2].color)
+              : '',
         }"
       >
         <div class="btns">
@@ -70,7 +80,11 @@ import { formatSeconds, useVisibility } from "@/utils";
 
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
 import DeleteSvg from "@/assets/icons/delete.svg";
-import { isLight } from "@/composables/colors/album";
+import {
+  getShift,
+  getTextColor,
+  getBackgroundColor,
+} from "@/utils/colortools/shift";
 
 const modal = useModalStore();
 const nav = useNavStore();
@@ -120,10 +134,11 @@ function deletePlaylist() {
     display: flex;
     flex-wrap: wrap;
     gap: $medium;
+    transition: all 0.2s ease-in-out;
 
     img {
       height: 9rem;
-      box-shadow: 0 0 1rem rgba(80, 79, 79, 0.562);
+      transition: all 0.2s ease-in-out;
     }
   }
 
@@ -172,7 +187,8 @@ function deletePlaylist() {
     .type {
       font-size: small;
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.692);
+      // color: rgb(218, 218, 218);
+      opacity: 0.85;
     }
 
     .title {
@@ -185,8 +201,8 @@ function deletePlaylist() {
       color: $gray5;
 
       .type {
-        color: $gray5;
-        opacity: 0.5;
+        color: $pink;
+        // opacity: 0.5;
       }
     }
 
@@ -196,6 +212,7 @@ function deletePlaylist() {
       padding-left: 0;
       font-weight: 900;
       cursor: text;
+      opacity: 0.85;
     }
 
     .btns {

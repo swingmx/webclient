@@ -165,6 +165,11 @@
     "@motionone/dom" "^10.15.5"
     tslib "^2.3.1"
 
+"@nextcss/color-tools@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@nextcss/color-tools/-/color-tools-1.0.7.tgz#ebd791fed5634a0be7d373e1a3b835457fab1f23"
+  integrity sha512-1rt18GXQHOF8JXN4Mm68/AI8CIQDdZOfSP0iZ0+/u7wZeM/PDC6ttBZcNvPX34a2Ksl07v0bH1IXgdQbfzgTcg==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"

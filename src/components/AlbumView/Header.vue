@@ -3,14 +3,14 @@
     class="album-header-ambient rounded"
     style="height: 100%; width: 100%"
     :style="{
-      boxShadow: album.colors ? `0 .5rem 2rem ${album.colors[0]}` : '',
+      boxShadow: album.colors[0] ? `0 .5rem 2rem ${album.colors[0]}` : '0 .5rem 2rem black',
     }"
   ></div>
   <div
     class="a-header rounded"
     ref="albumheaderthing"
     :style="{
-      backgroundColor: album.colors ? album.colors[0] : '',
+      backgroundColor: album.colors[0] ? getBackgroundColor(album.colors[0]) : '',
       height: `${heightLarge ? '24rem' : '18rem'}`,
     }"
   >
@@ -22,8 +22,9 @@
     </div>
     <div
       class="info"
-      :class="{ nocontrast: album.colors ? isLight(album.colors[0]) : false }"
+      :style="{ color: album.colors[0] ? getTextColor(album.colors[0]) : '' }"
     >
+      <!-- :class="{ nocontrast: album.colors ? isLight(album.colors[0]) : false }" -->
       <div class="album-info">
         <div class="top">
           <div v-auto-animate class="h">
@@ -102,6 +103,8 @@ import {
   isMedium,
 } from "@/stores/content-width";
 
+import { getTextColor, getBackgroundColor } from "@/utils/colortools/shift";
+
 import { isLight } from "@/composables/colors/album";
 import { formatSeconds, useVisibility } from "@/utils";
 import { favType, playSources } from "@/composables/enums";
@@ -110,10 +113,6 @@ import HeartSvg from "../shared/HeartSvg.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
 import favoriteHandler from "@/composables/favoriteHandler";
 import ArtistName from "@/components/shared/ArtistName.vue";
-
-// const props = defineProps<{
-//   album: Album;
-// }>();
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;
@@ -199,6 +198,12 @@ function handleFav() {
 
   .nocontrast {
     color: $black;
+
+    .top {
+      .h {
+        color: $pink;
+      }
+    }
   }
 
   .info {
@@ -240,12 +245,12 @@ function handleFav() {
     .top {
       .h {
         font-size: 14px;
-        opacity: 0.5;
+        font-weight: 700;
       }
 
       .title {
-        font-size: 2.5rem;
-        font-weight: 600;
+        font-size: 2.75rem;
+        font-weight: 700;
         width: fit-content;
         cursor: text;
       }
@@ -280,8 +285,6 @@ function handleFav() {
           font-size: 0.8rem;
           display: flex;
           flex-wrap: wrap;
-          // width: fit-content;
-          // cursor: text;
         }
       }
     }
