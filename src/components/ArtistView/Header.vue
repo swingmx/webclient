@@ -16,10 +16,15 @@
   >
     <div
       class="artist-info"
-      :class="{
-        nocontrast: artist.info.colors ? isLight(artist.info.colors[0]) : false,
+      :style="{
+        color: artist.info.colors[0]
+          ? getTextColor(artist.info.colors[0])
+          : undefined,
       }"
     >
+      <!-- :class="{
+        nocontrast: artist.info.colors ? isLight(artist.info.colors[0]) : false,
+      }" -->
       <section class="text">
         <div class="card-title">Artist</div>
         <div class="artist-name ellip2">{{ artist.info.name }}</div>
@@ -67,11 +72,12 @@ import formatSeconds from "@/utils/useFormatSeconds";
 import { isLight } from "@/composables/colors/album";
 import { favType, playSources } from "@/composables/enums";
 import favoriteHandler from "@/composables/favoriteHandler";
+import { heightLarge } from "@/stores/content-width";
+
+import { getTextColor } from "@/utils/colortools/shift";
 
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
 import HeartSvg from "@/components/shared/HeartSvg.vue";
-
-import { heightLarge } from "@/stores/content-width";
 
 const artist = useArtistPageStore();
 
@@ -141,18 +147,19 @@ function handleFav() {
     }
 
     .card-title {
-      opacity: 0.5;
       font-size: small;
+      font-weight: 700;
     }
 
     .artist-name {
-      font-size: 3rem;
+      font-size: 3.5rem;
       font-weight: bold;
       word-wrap: break-word;
     }
 
     .stats {
       font-size: small;
+      font-weight: 700;
     }
   }
 

@@ -9,7 +9,7 @@
       id="modal-playlist-name-input"
     />
     <br /><br />
-    <button type="submit">CREATE</button>
+    <button type="submit">Create</button>
   </form>
 </template>
 
@@ -74,6 +74,7 @@ function create(e: Event) {
   label {
     font-size: 0.9rem;
     color: $gray1;
+    font-weight: 700;
   }
 
   .submit {
@@ -85,6 +86,8 @@ function create(e: Event) {
     margin: 0 auto;
     width: 8rem;
     transition: all 0.25s ease-out;
+    background-color: $pink;
+    border: solid 1px $pink;
   }
 }
 </style>

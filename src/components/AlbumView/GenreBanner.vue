@@ -1,17 +1,24 @@
 <template>
   <div
     class="genres-banner"
-    :class="{
-      nocontrast: album.info.colors ? isLight(album.info.colors[0]) : false,
+    :style="{
+      color: album.info.colors ? getTextColor(album.info.colors[0]) : '',
     }"
   >
+    <!-- :class="{
+      nocontrast: album.info.colors ? isLight(album.info.colors[0]) : false,
+    }" -->
     <div class="rounded pad-sm">
       {{ album.info.genres.length ? "Genres" : "No genres" }}
     </div>
     <div
       v-for="genre in album.info.genres"
       class="rounded pad-sm"
-      :style="{ backgroundColor: album.info.colors[0] }"
+      :style="{
+        backgroundColor: album.info.colors
+          ? getBackgroundColor(album.info.colors[0])
+          : '',
+      }"
     >
       {{ genre }}
     </div>
@@ -23,6 +30,8 @@ import { onMounted } from "vue";
 import useAlbumStore from "@/stores/pages/album";
 import { isLight } from "@/composables/colors/album";
 
+import { getTextColor, getBackgroundColor } from "@/utils/colortools/shift";
+
 const album = useAlbumStore();
 
 onMounted(async () => {
@@ -33,10 +42,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-.genres-banner.nocontrast {
-  color: $black;
-}
-
 .genres-banner {
   display: flex;
   gap: 1rem;
@@ -52,6 +57,7 @@ onMounted(async () => {
     text-align: center;
     outline: solid 1px $gray;
     padding: $small 1rem;
+    font-weight: 700;
 
     &:first-child {
       background-color: white;
@@ -61,8 +67,8 @@ onMounted(async () => {
     }
 
     &:hover {
-      background-color: $darkestblue !important;
-      outline-color: $darkestblue;
+      background-color: $pink !important;
+      outline-color: $pink;
       color: $white;
     }
   }
