@@ -9,7 +9,7 @@
     }"
     :exit="{ opacity: 0, scale: 0.9 }"
   >
-    <div class="sidebar-songcard">
+    <div class="sidebar-songcard rounded" v-wave>
       <router-link
         :to="{
           name: 'AlbumView',
@@ -48,6 +48,8 @@ const q = useQueueStore();
 .sidebar-songcard {
   width: 100%;
   position: relative;
+  width: 13rem;
+  height: 13rem;
 
   img {
     cursor: pointer;

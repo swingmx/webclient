@@ -59,7 +59,7 @@ export default async (
     };
 
     let playlists = <Option[]>[];
-    const p = await getAllPlaylists();
+    const p = await getAllPlaylists(true);
 
     if (p.length === 0) {
       no_playlists = true;
