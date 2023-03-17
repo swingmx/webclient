@@ -3,7 +3,17 @@
     :to="{ name: 'PlaylistView', params: { pid: playlist.id } }"
     class="p-card rounded no-scroll"
   >
+    <div
+      class="image-grid rounded-sm no-scroll"
+      v-if="!playlist.has_image && playlist.images.length"
+    >
+      <img
+        v-for="img in playlist.images"
+        :src="paths.images.thumb.large + img"
+      />
+    </div>
     <img
+      v-else
       :src="imguri + playlist.thumb"
       class="rounded-sm"
       :class="{ border: !playlist.thumb }"
@@ -36,6 +46,11 @@ const props = defineProps<{
   padding: 1rem;
   gap: $small;
   border: solid 1px $gray5;
+
+  .image-grid {
+    display: grid;
+    grid: repeat(2, 1fr) / repeat(2, 1fr);
+  }
 
   &:hover {
     transition: all 0.25s ease;

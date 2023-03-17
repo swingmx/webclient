@@ -91,10 +91,12 @@ export interface Playlist {
   duration: number;
   has_gif: boolean;
   banner_pos: number;
-  images: {
-    image: string;
-    color: string;
-  }[];
+  images:
+    | {
+        image: string;
+        color: string;
+      }[] // for playlist page
+    | string[]; // for playlist list page
 }
 
 export interface Notif {

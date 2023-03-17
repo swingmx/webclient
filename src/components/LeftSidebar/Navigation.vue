@@ -9,21 +9,23 @@
         query: menu.query && menu.query(),
       }"
     >
-      <div
-        v-if="menu.separator"
-        :class="{
-          separator: menu.separator,
-        }"
-      ></div>
-      <div
-        class="nav-button"
-        :class="{ active: $route.name === menu.route_name }"
-        id="home-button"
-        v-else
-      >
-        <div class="in">
-          <component :is="menu.icon"></component>
-          <span>{{ menu.name }}</span>
+      <div v-wave class="rounded-sm">
+        <div
+          v-if="menu.separator"
+          :class="{
+            separator: menu.separator,
+          }"
+        ></div>
+        <div
+          class="nav-button"
+          :class="{ active: $route.name === menu.route_name }"
+          id="home-button"
+          v-else
+        >
+          <div class="in">
+            <component :is="menu.icon"></component>
+            <span>{{ menu.name }}</span>
+          </div>
         </div>
       </div>
     </router-link>
