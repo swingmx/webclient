@@ -87,6 +87,12 @@ export const paths = {
         return this.base + "/loadmore";
       },
     },
+    colors: {
+      base: baseApiUrl.value + "/colors",
+      get album() {
+        return this.base + "/album";
+      },
+    },
     settings: {
       base: baseApiUrl.value + "/settings",
       get get_root_dirs() {

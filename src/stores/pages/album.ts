@@ -5,6 +5,7 @@ import { AlbumDisc } from "./../../interfaces";
 
 import { FuseTrackOptions } from "@/composables/enums";
 import { maxAbumCards } from "@/stores/content-width";
+import useColorStore from "@/stores/colors";
 
 import { getAlbum, getAlbumsFromArtist } from "../../composables/fetch/album";
 import { Album, FuseResult, Track } from "../../interfaces";
@@ -60,6 +61,7 @@ export default defineStore("album", {
 
       this.srcTracks = album.tracks;
       this.info = album.info;
+      useColorStore().setTheme1Color(this.info.colors[0]);
 
       const tracks = sortByTrackNumber(this.srcTracks);
       this.discs = createDiscs(tracks);
@@ -102,26 +104,6 @@ export default defineStore("album", {
     },
   },
   getters: {
-    // discs(): Disc {
-    //   return createDiscs(this.srcTracks);
-    // },
-    /**
-     * All tracks ordered by disc and track number.
-     */
-    // allTracks(): Track[] {
-    //   const tracks = Object.keys(this.discs).reduce((tracks: Track[], disc) => {
-    //     const disc_tracks = this.discs[disc];
-
-    //     return [...tracks, ...disc_tracks];
-    //   }, []);
-
-    //   tracks.map((t, index) => {
-    //     t.master_index = index;
-    //     return t;
-    //   });
-
-    //   return tracks;
-    // },
     filteredTracks(): ComputedRef<FuseResult[]> {
       const discs = this.discs;
       let tracks: Track[] | AlbumDisc[] = [];

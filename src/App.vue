@@ -47,7 +47,7 @@ import Modal from "@/components/modal.vue";
 import Notification from "@/components/Notification.vue";
 
 // @app-grid-components
-import BottomBar from "@/components/BottomBar.vue";
+import BottomBar from "@/components/BottomBar/BottomBar.vue";
 import NavBar from "@/components/nav/NavBar.vue";
 import RightSideBar from "@/components/RightSideBar/Main.vue";
 import LeftSidebar from "./components/LeftSidebar/index.vue";

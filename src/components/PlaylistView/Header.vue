@@ -1,14 +1,9 @@
 <template>
   <div
     class="p-header image rounded no-scroll"
-    ref="playlistheader"
     :style="[
       {
-        background: info.has_image
-          ? `url(${imguri + info.image})`
-          : info.images.length > 2
-          ? getBackgroundColor(info.images[2].color)
-          : '',
+        background: bg,
         backgroundPosition: `center ${bannerPos}%`,
         height: `${heightLarge ? '24rem' : '18rem'}`,
       },
@@ -16,94 +11,46 @@
     :class="{ border: !info.images.length }"
   >
     <div class="gradient" v-if="!(info.image as string).endsWith('None')"></div>
-    <div class="playlist-banner-images" v-if="!info.has_image">
-      <img
-        v-for="(img, index) in info.images"
-        :key="index"
-        :src="paths.images.thumb.large + img.image"
-        alt=""
-        class="rounded-sm"
-        :style="{
-          boxShadow: `0 0 1rem ${
-            !info.has_image && info.images.length > 2
-              ? getShift(info.images[2].color, [40, 60])
-              : ''
-          }`,
-        }"
-      />
-    </div>
-    <div class="carddd">
-      <div
-        class="info"
-        :style="{
-          color:
-            !info.has_image && info.images.length > 2
-              ? getTextColor(info.images[2].color)
-              : '',
-        }"
-      >
-        <div class="btns">
-          <PlayBtnRect :source="playSources.playlist" :store="usePStore" />
-        </div>
-        <div class="duration">
-          {{ info.count + ` ${info.count == 1 ? "Track" : "Tracks"}` }}
-          •
-          {{ formatSeconds(info.duration, true) }}
-        </div>
-        <div class="title ellip">{{ info.name }}</div>
-        <div class="type">Playlist</div>
-      </div>
-    </div>
-    <div class="last-updated" :class="{ lightbg: !info.image }">
-      <span class="status"
-        >Last updated {{ info.last_updated }} &#160;|&#160;&#160;</span
-      >
-      <div class="edit" @click="editPlaylist">Edit&#160;&#160;</div>
-      |
-      <DeleteSvg class="edit" @click="deletePlaylist" />
-    </div>
+    <BannerImages />
+    <Info />
+    <LastUpdated />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 
-import useNavStore from "@/stores/nav";
-import useModalStore from "@/stores/modal";
 import usePStore from "@/stores/pages/playlist";
 import { heightLarge } from "@/stores/content-width";
 
 import { paths } from "@/config";
-import { playSources } from "@/composables/enums";
-import { formatSeconds, useVisibility } from "@/utils";
+import BannerImages from "./Header/BannerImages.vue";
 
-import PlayBtnRect from "../shared/PlayBtnRect.vue";
-import DeleteSvg from "@/assets/icons/delete.svg";
-import {
-  getShift,
-  getTextColor,
-  getBackgroundColor,
-} from "@/utils/colortools/shift";
+import Info from "./Header/Info.vue";
+import { getBackgroundColor } from "@/utils/colortools/shift";
+import LastUpdated from "./Header/LastUpdated.vue";
 
-const modal = useModalStore();
-const nav = useNavStore();
 const playlist = usePStore();
 
 const imguri = paths.images.playlist;
 
-const playlistheader = ref<HTMLElement | null>(null);
 const { info, bannerPos } = storeToRefs(playlist);
+const bg = ref("");
 
-useVisibility(playlistheader, nav.toggleShowPlay);
+function getBg() {
+  console.log("test");
 
-function editPlaylist() {
-  modal.showEditPlaylistModal(info.value);
+  if (playlist.info.has_image) {
+    return `url(${imguri + info.value.image})`;
+  }
+
+  if (info.value.images.length > 2) {
+    return getBackgroundColor(info.value.images[2].color);
+  }
 }
 
-function deletePlaylist() {
-  modal.showDeletePlaylistModal(parseInt(playlist.info.id));
-}
+onMounted(() => (bg.value = getBg()));
 </script>
 
 <style lang="scss">
