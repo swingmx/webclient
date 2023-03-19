@@ -7,6 +7,7 @@ import { dropSources, favType, FromOptions } from "../composables/enums";
 import updateMediaNotif from "../composables/mediaNotification";
 import { isFavorite } from "@/composables/fetch/favorite";
 import useSettingsStore from "./settings";
+import useColorStore from "./colors";
 
 import {
   fromAlbum,
@@ -17,6 +18,7 @@ import {
   fromSearch,
   Track,
 } from "../interfaces";
+import { fetchAlbumColor } from "@/composables/fetch/colors";
 
 function shuffle(tracks: Track[]) {
   const shuffled = tracks.slice();
@@ -80,6 +82,11 @@ export default defineStore("Queue", {
           audio.play().then(() => {
             this.playing = true;
             updateMediaNotif();
+
+            fetchAlbumColor(track.albumhash).then((color) => {
+              console.log(color)
+              useColorStore().setTheme1Color(color);
+            });
 
             audio.ontimeupdate = () => {
               this.duration.current = audio.currentTime;

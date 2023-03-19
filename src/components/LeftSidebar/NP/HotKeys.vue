@@ -1,5 +1,8 @@
 <template>
-  <div class="hotkeys rounded-sm no-scroll">
+  <div
+    class="hotkeys rounded-sm no-scroll"
+
+  >
     <button @click.prevent="q.playPrev">
       <PrevSvg />
     </button>
@@ -24,6 +27,7 @@ import PauseSvg from "../../../assets/icons/pause.svg";
 import PlaySvg from "../../../assets/icons/play.svg";
 
 const q = useQStore();
+
 </script>
 
 <style lang="scss">
