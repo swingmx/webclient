@@ -174,6 +174,7 @@ function runChildAction(action: () => void) {
 
   .folder {
     background-image: url("../../assets/icons/folder.svg");
+    filter: invert(100%);
   }
 
   .artist {

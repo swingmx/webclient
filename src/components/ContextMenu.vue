@@ -43,7 +43,6 @@ context.$subscribe((mutation, state) => {
       watcher = onClickOutside(
         contextMenuRef,
         (e) => {
-          e.stopImmediatePropagation();
           context.hideContextMenu();
         },
         {
@@ -57,8 +56,6 @@ context.$subscribe((mutation, state) => {
   if (watcher !== null) {
     watcher();
   }
-
-  // wat();
 });
 </script>
 
