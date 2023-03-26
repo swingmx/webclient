@@ -84,7 +84,6 @@ export default defineStore("Queue", {
             updateMediaNotif();
 
             fetchAlbumColor(track.albumhash).then((color) => {
-              console.log(color)
               useColorStore().setTheme1Color(color);
             });
 
