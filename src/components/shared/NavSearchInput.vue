@@ -1,18 +1,18 @@
 <template>
   <div class="header-input-wrapper rounded-sm" :class="{ showInput: clicked }">
     <button
-      class="search-btn circular"
+      class="search-btn"
       id="page-search-trigger"
       :class="{ 'btn-active': clicked }"
       @click="handleFocus"
       v-wave
     >
-      <SearchSvg /> Search
+      <SearchSvg />
     </button>
     <input
-      class="header-input pad-sm circular"
+      class="header-input pad-sm rounded-sm"
       :class="{ showInput: clicked }"
-      placeholder="type to search"
+      :placeholder="currentEmoji"
       v-model.trim="query"
       id="page-search"
       ref="inputRef"
@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 
 import useAlbumStore from "@/stores/pages/album";
@@ -48,15 +48,15 @@ const props = defineProps<{
 const inputRef = ref<HTMLElement>();
 
 function handleFocus() {
-  // if input is not focused, focus it
-  // if input is focused, blur it
   clicked.value = !clicked.value;
   if (clicked.value) {
     inputRef.value?.focus();
+    setRandomEmoji();
   } else {
     inputRef.value?.blur();
     resetQuery();
   }
+
 }
 
 function getRef() {
@@ -83,17 +83,27 @@ if (source) {
   query = source[0];
   resetQuery = source[1];
 }
+
+const currentEmoji = ref("");
+
+function setRandomEmoji() {
+  const emojis = ["😹", "😺", "😻", "😸", "😼", "😽", "🙀", "😿", "😾"];
+  const randomIndex = Math.floor(Math.random() * emojis.length);
+  currentEmoji.value = emojis[randomIndex];
+}
+
+onMounted(() => setRandomEmoji());
 </script>
 
 <style lang="scss">
 .header-input-wrapper {
   &.showInput {
-    width: 22rem;
+    width: 19rem;
   }
 
   display: flex;
   flex-direction: row-reverse;
-  width: 7rem;
+  width: 5rem;
   gap: $small;
   transition: all 0.25s;
   transition-delay: 0.1s;
@@ -102,18 +112,18 @@ if (source) {
 .header-input {
   background-color: transparent;
   border: none;
-  color: inherit;
-  font-size: 1rem;
+  color: white;
   z-index: 200;
+  font-size: 1rem;
   transition: all 0.25s $overshoot;
   opacity: 0;
   transform: translateY(-3.5rem);
   padding-left: 1rem !important;
   outline: none;
-  background-color: $gray5;
+  background-color: $gray3;
 
   &:focus {
-    background-color: $gray3;
+    background-color: $darkestblue;
   }
 
   &.showInput {
@@ -126,6 +136,6 @@ if (source) {
 .search-btn {
   cursor: pointer;
   padding: 0 $small;
-  padding-right: 1rem;
+  // padding-right: 1rem;
 }
 </style>

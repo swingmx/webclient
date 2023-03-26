@@ -324,6 +324,7 @@ export default defineStore("Queue", {
         // insert current track at beginning of queue
         this.tracklist.unshift(current as Track);
         this.currentindex = 0;
+        this.focusCurrentInSidebar()
         return;
       }
 

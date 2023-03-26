@@ -14,6 +14,7 @@ export default defineStore("settings", {
     repeat_one: false,
     root_dir_set: false,
     root_dirs: <string[]>[],
+    folder_list_mode: false,
   }),
   actions: {
     toggleUseNPImg() {
@@ -56,6 +57,9 @@ export default defineStore("settings", {
     },
     setRootDirs(dirs: string[]) {
       this.root_dirs = dirs;
+    },
+    toggleFolderListMode() {
+      this.folder_list_mode = !this.folder_list_mode;
     },
   },
   getters: {

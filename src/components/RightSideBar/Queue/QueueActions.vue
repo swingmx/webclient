@@ -1,13 +1,19 @@
 <template>
   <div class="queue-actions">
     <div class="left">
-      <button v-wave class="clear-queue action" @click="queue.clearQueue">
-        <ClearSvg />
-        <span>Clear</span>
-      </button>
       <button v-wave class="shuffle-queue action" @click="queue.shuffleQueue">
         <ShuffleSvg />
         <span>Shuffle</span>
+      </button>
+    </div>
+    <div class="right">
+      <button
+        v-wave
+        class="go-to-source action"
+        href="#"
+        @click="queue.clearQueue"
+      >
+        <ClearSvg />
       </button>
     </div>
   </div>
@@ -40,6 +46,12 @@ const queue = useQueueStore();
 
     svg {
       transform: scale(0.8);
+    }
+  }
+
+  .right {
+    .go-to-source {
+      padding: 0 $smaller;
     }
   }
 }

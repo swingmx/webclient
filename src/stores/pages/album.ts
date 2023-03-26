@@ -5,7 +5,6 @@ import { AlbumDisc } from "./../../interfaces";
 
 import { FuseTrackOptions } from "@/composables/enums";
 import { maxAbumCards } from "@/stores/content-width";
-import useColorStore from "@/stores/colors";
 
 import { getAlbum, getAlbumsFromArtist } from "../../composables/fetch/album";
 import { Album, FuseResult, Track } from "../../interfaces";
@@ -61,7 +60,6 @@ export default defineStore("album", {
 
       this.srcTracks = album.tracks;
       this.info = album.info;
-      useColorStore().setTheme1Color(this.info.colors[0]);
 
       const tracks = sortByTrackNumber(this.srcTracks);
       this.discs = createDiscs(tracks);
