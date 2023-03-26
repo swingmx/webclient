@@ -35,15 +35,6 @@ export default defineStore("artistPage", {
       this.singles = singles;
       this.appearances = appearances;
       this.compilations = compilations;
-
-      // if (albums.length > 0) {
-      // }
-
-      // if (eps.length > 0) {
-      // }
-
-      // if (singles.length > 0) {
-      // }
     },
     resetAlbums() {
       this.albums = [];

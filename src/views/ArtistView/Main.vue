@@ -33,7 +33,11 @@ import ArtistAlbumsFetcher from "@/components/ArtistView/ArtistAlbumsFetcher.vue
 import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 import { Album } from "@/interfaces";
-import { discographyAlbumTypes, dropSources, FromOptions } from "@/composables/enums";
+import {
+  discographyAlbumTypes,
+  dropSources,
+  FromOptions,
+} from "@/composables/enums";
 import useQueueStore from "@/stores/queue";
 import { getArtistTracks } from "@/composables/fetch/artists";
 
@@ -82,11 +86,11 @@ function createAbumComponent(
     case AlbumType.SINGLES:
       albumType = discographyAlbumTypes.singles;
       break;
-    case AlbumType.APPEARANCES:
-      albumType = discographyAlbumTypes.appearances;
     case AlbumType.COMPILATIONS:
       albumType = discographyAlbumTypes.compilations;
       break;
+    case AlbumType.APPEARANCES:
+      albumType = discographyAlbumTypes.appearances;
 
     default:
       break;
