@@ -1,6 +1,10 @@
 <template>
   <div class="f-container rounded">
-    <div id="f-items" class="rounded">
+    <div
+      id="f-items"
+      class="rounded"
+      :class="{ 'list-mode': settings.folder_list_mode }"
+    >
       <FolderItem
         v-for="folder in folders"
         :key="folder.path"
@@ -14,10 +18,13 @@
 <script setup lang="ts">
 import { Folder } from "@/interfaces";
 import FolderItem from "./FolderItem.vue";
+import useSettingsStore from "@/stores/settings";
 
 defineProps<{
   folders: Folder[];
 }>();
+
+const settings = useSettingsStore();
 </script>
 
 <style lang="scss">
@@ -36,6 +43,13 @@ defineProps<{
     height: 3.25rem;
     border-radius: $small;
     background-color: transparent;
+
+    .f-count {
+      position: absolute;
+      right: 1.25rem;
+      bottom: 50%;
+      translate: 0 50%;
+    }
   }
 
   .f-item:hover {

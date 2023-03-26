@@ -8,6 +8,7 @@
       :style="{
         backgroundColor: is_checked ? '#234ece' : '',
       }"
+      v-auto-animate
     >
       <div class="check" v-if="!folder_page">
         <CheckSvg v-if="!is_checked && mouse_over" />
@@ -18,6 +19,9 @@
       <SymLinkSvg v-if="folder.is_sym" />
       <div class="info">
         <div class="f-item-text ellip">{{ folder.name }}</div>
+        <div class="f-count" v-if="folder.count">
+          {{ folder.count + ` File${folder.count == 1 ? "" : "s"}` }}
+        </div>
       </div>
     </div>
   </router-link>
@@ -73,6 +77,13 @@ function handleClick(e: MouseEvent) {
   border-radius: $medium;
   position: relative;
 
+  .f-count {
+    font-size: $medium;
+    font-weight: 700;
+    color: $gray1;
+    margin-top: $smaller;
+  }
+
   .check {
     z-index: 10;
     position: absolute;
@@ -91,6 +102,7 @@ function handleClick(e: MouseEvent) {
 
   svg {
     margin: 0 $small 0 1rem;
+    color: $gray1;
   }
 
   .f-item-text {

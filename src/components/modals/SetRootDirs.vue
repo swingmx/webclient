@@ -213,10 +213,10 @@ onMounted(() => {
   }
 
   .f-item {
-    background-color: $gray3;
+    background-color: $gray5;
 
     &:hover {
-      background-color: $brown;
+      background-color: $gray3;
     }
   }
 }
