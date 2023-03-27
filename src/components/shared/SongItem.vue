@@ -6,34 +6,7 @@
     :class="[{ current: isCurrent() }, { contexton: context_menu_showing }]"
     @dblclick.prevent="emitUpdate"
     @contextmenu.prevent="showMenu"
-    @dragstart="(e) => showDragStart(e, track, (index  as number) - 1 , source)"
-    @dragend.prevent="showDragEnd"
-    draggable="true"
   >
-    <div
-      v-if="droppable"
-      class="top-drop"
-      :class="{ active: dropTop }"
-      @dragenter="
-        dropTop = true;
-        dropBottom = false;
-      "
-      @dragleave="dropTop = false"
-      @dragover.prevent
-      @drop="(e) => dropHere(e, true)"
-    ></div>
-    <div
-      v-if="droppable && is_last"
-      class="bottom-drop"
-      :class="{ active: dropBottom }"
-      @dragenter="
-        dropBottom = true;
-        dropTop = false;
-      "
-      @dragleave="dropBottom = false"
-      @dragover.prevent
-      @drop="(e) => dropHere(e, false)"
-    ></div>
     <div
       class="index t-center ellip"
       @click.prevent="addToFav(track.trackhash)"
@@ -107,16 +80,12 @@ import { paths } from "@/config";
 import { Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
 import { formatSeconds } from "@/utils";
-import { showDragStart, handleDrop } from "@/utils/songItemMethods";
 
 import OptionSvg from "@/assets/icons/more.svg";
 import ArtistName from "./ArtistName.vue";
 import HeartSvg from "./HeartSvg.vue";
 import MasterFlag from "./MasterFlag.vue";
 import { dropSources } from "@/composables/enums";
-
-const dropTop = ref(false);
-const dropBottom = ref(false);
 
 const imguri = paths.images.thumb.small;
 const context_menu_showing = ref(false);
@@ -131,8 +100,6 @@ const props = defineProps<{
   is_last?: boolean;
   source: dropSources;
 }>();
-
-// -------------
 
 const is_fav = ref(props.track.is_favorite);
 
@@ -150,29 +117,6 @@ const emit = defineEmits<{
 function emitUpdate() {
   emit("playThis");
 }
-
-// ==== DRAG AND DROP ==== //
-function resetFlags() {
-  dropTop.value = false;
-  dropBottom.value = false;
-}
-
-function showDragEnd(e: DragEvent) {
-  resetFlags();
-}
-
-function dropHere(e: DragEvent, top: boolean) {
-  e.preventDefault();
-  resetFlags();
-
-  const dropData = handleDrop(e, props.index as number, top);
-  if (!dropData) return;
-
-  const { track, newIndex, oldIndex } = dropData;
-  emit("trackDropped", props.source, track, newIndex, oldIndex);
-}
-
-// ==== DRAG AND DROP END ==== //
 
 function showMenu(e: MouseEvent) {
   showContext(e, props.track, context_menu_showing);

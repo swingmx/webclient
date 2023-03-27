@@ -102,11 +102,11 @@ function handleFav() {
 
 .artist-page-header {
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 1fr minmax(min-content, 50%);
   position: relative;
 
   .artist-img {
-    width: 100%;
+    // width: 100%;
 
     img {
       height: 100%;
@@ -119,12 +119,7 @@ function handleFav() {
 
   .gradient {
     position: absolute;
-    background-image: linear-gradient(
-      to left,
-      transparent 10%,
-      $gray 50%,
-      $gray 100%
-    );
+    background-image: linear-gradient(to left, transparent 10%, $gray 50%, $gray 100%);
     height: 100%;
     width: 100%;
   }

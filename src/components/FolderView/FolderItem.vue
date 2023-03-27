@@ -73,7 +73,6 @@ function handleClick(e: MouseEvent) {
   grid-template-columns: max-content 1fr;
   align-items: center;
   background-color: $gray;
-  transition: all 0.2s ease;
   border-radius: $medium;
   position: relative;
 

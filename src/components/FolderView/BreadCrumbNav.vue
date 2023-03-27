@@ -43,6 +43,7 @@ onUpdated(() => {
   .path {
     white-space: nowrap;
     margin: auto 0;
+    cursor: pointer;
 
     .text {
       padding: $smaller;
