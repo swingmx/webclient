@@ -82,6 +82,7 @@ button {
   background-color: $gray4;
   border: solid 1px $gray3;
   font-weight: 700;
+  cursor: pointer;
 
   svg {
     transition: all 0.2s;

@@ -19,7 +19,7 @@
         :is_queue_track="is_queue"
         @playThis="handlePlay(index)"
         :is_last="index == tracks.length - 1"
-        :droppable="true"
+        :droppable="false"
         @trackDropped="dropHandler"
         :source="source"
       />

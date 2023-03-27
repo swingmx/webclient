@@ -1,10 +1,9 @@
 <template>
-  <div class="f-container rounded">
-    <div
-      id="f-items"
-      class="rounded"
-      :class="{ 'list-mode': settings.folder_list_mode }"
-    >
+  <div
+    class="f-container rounded-sm"
+    :class="{ 'list-mode': settings.folder_list_mode }"
+  >
+    <div id="f-items" class="rounded">
       <FolderItem
         v-for="folder in folders"
         :key="folder.path"
@@ -28,18 +27,29 @@ const settings = useSettingsStore();
 </script>
 
 <style lang="scss">
+.f-container {
+  padding-bottom: 1.25rem;
+}
+
 #f-items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
   gap: 1.5rem;
-  padding-bottom: 1.25rem;
 }
 
-#f-items.list-mode {
+.f-item:hover {
+  // cursor: pointer;
+  background-color: $gray5;
+}
+
+.f-container.list-mode > #f-items {
   grid-template-columns: 1fr;
   gap: 0;
+  // border: solid 1px $gray;
+  // padding: 1rem;
 
   .f-item {
+    transition: none;
     height: 3.25rem;
     border-radius: $small;
     background-color: transparent;
@@ -50,10 +60,10 @@ const settings = useSettingsStore();
       bottom: 50%;
       translate: 0 50%;
     }
-  }
 
-  .f-item:hover {
-    background-color: $gray !important;
+    &:hover {
+      background-color: $gray !important;
+    }
   }
 }
 </style>
