@@ -39,8 +39,6 @@ const { info, bannerPos } = storeToRefs(playlist);
 const bg = ref("");
 
 function getBg() {
-  console.log("test");
-
   if (playlist.info.has_image) {
     return `url(${imguri + info.value.image})`;
   }

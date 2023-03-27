@@ -40,8 +40,6 @@ function getIcon() {
   }
 }
 
-console.log(props.icon);
-
 const icon = getIcon();
 </script>
 

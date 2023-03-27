@@ -68,10 +68,6 @@ router.afterEach(() => {
 });
 
 onStartTyping((e) => {
-  if (e.ctrlKey) {
-    console.log("ctrl pressed");
-  }
-
   const elem = document.getElementById("globalsearch") as HTMLInputElement;
   elem.focus();
   elem.value = "";

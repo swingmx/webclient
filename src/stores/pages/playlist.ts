@@ -39,18 +39,17 @@ export default defineStore("playlist-tracks", {
      * @param info Playlist info
      */
     updatePInfo(info: Playlist) {
-      const { duration, count } = this.info;
+      const { duration, count, images } = this.info;
 
       this.info = info;
-
-      this.info = { ...this.info, duration, count };
+      this.info = { ...this.info, duration, count, images };
       this.bannerPos = this.info.banner_pos;
     },
     plusBannerPos() {
-      this.bannerPos !== 100 ? (this.bannerPos += 10) : null;
+      this.bannerPos !== 100 ? (this.bannerPos += 5) : null;
     },
     minusBannerPos() {
-      this.bannerPos !== 0 ? (this.bannerPos -= 10) : null;
+      this.bannerPos !== 0 ? (this.bannerPos -= 5) : null;
     },
     resetArtists() {
       this.artists = [];
