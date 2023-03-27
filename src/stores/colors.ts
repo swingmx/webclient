@@ -9,7 +9,6 @@ export default defineStore("SwingMusicColors", {
   }),
   actions: {
     setTheme1Color(color: string) {
-      console.log(brightness(rgb2Hex(color)));
       this.theme1 = color;
     },
   },

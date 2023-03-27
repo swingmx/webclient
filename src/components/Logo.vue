@@ -4,13 +4,8 @@
       <img src="/logo-fill.svg" alt="" />
       <div>Swing <br />Music</div>
     </div>
-    <SettingsSvg />
   </router-link>
 </template>
-
-<script setup lang="ts">
-import SettingsSvg from "@/assets/icons/more.svg";
-</script>
 
 <style lang="scss">
 .swing-logo {

@@ -3,11 +3,11 @@
 
   .scrollable {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
     padding: 0 1rem;
     padding-bottom: 4rem;
     overflow: auto;
     max-height: 100%;
-    gap: 2rem $smaller;
+    gap: 2rem 1rem;
   }
 }

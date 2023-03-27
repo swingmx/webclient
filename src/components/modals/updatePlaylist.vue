@@ -1,8 +1,10 @@
 <template>
   <form
     @submit.prevent="update_playlist"
+    id="playlist-update-modal"
     class="playlist-modal"
     enctype="multipart/form-data"
+    autocomplete="off"
   >
     <label for="name">Playlist name</label>
     <br />
@@ -11,7 +13,8 @@
       class="rounded-sm"
       name="name"
       id="modal-playlist-name-input"
-      :value="props.playlist.name"
+      v-model="pname"
+      @keypress.enter="playlist.has_image && update_playlist"
     />
     <br />
     <input
@@ -41,15 +44,20 @@
         }"
       />
     </div>
-    <div class="boxed banner-position-adjust rounded-sm">
-      <div class="t-center">Adjust image position</div>
+    <div
+      class="boxed banner-position-adjust rounded-sm"
+      v-if="playlist.has_image"
+    >
+      <div class="t-center">
+        Adjust image position - {{ pStore.bannerPos }}%
+      </div>
       <div class="buttons">
-        <button @click.prevent="pStore.minusBannerPos">
+        <div @click.prevent="pStore.minusBannerPos">
           <ExpandSvg />
-        </button>
-        <button @click.prevent="pStore.plusBannerPos">
+        </div>
+        <div @click.prevent="pStore.plusBannerPos">
           <ExpandSvg />
-        </button>
+        </div>
       </div>
     </div>
 
@@ -61,7 +69,6 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-// import { useDropZone } from "@vueuse/core";
 
 import { updatePlaylist } from "@/composables/fetch/playlists";
 import { paths } from "@/config";
@@ -75,8 +82,7 @@ const props = defineProps<{
   playlist: Playlist;
 }>();
 
-// const dropZoneRef = ref<HTMLDivElement>();
-// const { isOverDropZone } = useDropZone(dropZoneRef, handleDrop);
+const pname = ref(props.playlist.name);
 
 onMounted(() => {
   (document.getElementById("modal-playlist-name-input") as HTMLElement).focus();
@@ -108,12 +114,6 @@ function handleUpload() {
   }
 }
 
-// function handleDrop(files: File[] | null) {
-//   if (files) {
-//     handleFile(files[0]);
-//   }
-// }
-
 function handleFile(file: File) {
   if (!file || !file.type.startsWith("image/")) {
     return;
@@ -132,7 +132,9 @@ function handleFile(file: File) {
 let clicked = ref(false);
 
 function update_playlist(e: Event) {
-  const form = e.target as HTMLFormElement;
+  const form = document.getElementById(
+    "playlist-update-modal"
+  ) as HTMLFormElement;
   const formData = new FormData(form);
 
   const name = formData.get("name") as string;
@@ -155,9 +157,16 @@ function update_playlist(e: Event) {
     });
   }
 }
+
+// Future TODO: Implement drag and drop for images here
 </script>
 
 <style lang="scss">
+#playlist-update-modal {
+  input {
+    height: 3rem !important;
+  }
+}
 .playlist-modal {
   .boxed {
     border: solid 2px $gray3;
@@ -172,6 +181,7 @@ function update_playlist(e: Event) {
     width: 100%;
     padding: $small;
     cursor: pointer;
+    margin-bottom: 1rem;
 
     #update-pl-img-preview {
       width: 4.5rem;
@@ -191,25 +201,31 @@ function update_playlist(e: Event) {
       position: relative;
     }
 
-    button {
-      aspect-ratio: 1;
-      height: 2rem;
-      width: 2rem;
-      padding: 0;
-      background: transparent;
-      border: solid 1px transparent;
+    .buttons {
+      display: grid;
+      gap: $small;
 
-      &:hover {
-        border: solid 1px $gray4;
+      div {
+        aspect-ratio: 1;
+        height: 2rem;
+
+        background-color: $gray4;
+        border-radius: $small;
+        display: grid;
+        place-content: center;
+
+        &:first-child {
+          rotate: -90deg;
+        }
+
+        &:last-child {
+          rotate: 90deg;
+        }
+
+        &:hover {
+          background-color: $pink;
+        }
       }
-    }
-
-    button:last-child {
-      transform: rotate(90deg);
-    }
-
-    button:first-child {
-      transform: rotate(-90deg);
     }
   }
 }

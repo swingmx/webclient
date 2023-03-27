@@ -23,3 +23,4 @@ onMounted(() => {
   getFavArtists(0).then((data) => (artists.value = data));
 });
 </script>
+

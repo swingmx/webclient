@@ -286,7 +286,6 @@ export default defineStore("Queue", {
     ) {
       console.log(source);
       if (source === dropSources.queue) {
-        console.log("moving track in queue");
         this.tracklist.splice(oldIndex, 1);
         this.tracklist.splice(newIndex, 0, track);
         return;
@@ -323,7 +322,7 @@ export default defineStore("Queue", {
         // insert current track at beginning of queue
         this.tracklist.unshift(current as Track);
         this.currentindex = 0;
-        this.focusCurrentInSidebar()
+        this.focusCurrentInSidebar();
         return;
       }
 
@@ -345,8 +344,13 @@ export default defineStore("Queue", {
         if (was_playing) {
           this.playPause();
         }
-      } else {
-        this.tracklist.splice(index, 1);
+        return;
+      }
+
+      this.tracklist.splice(index, 1);
+
+      if (index < this.currentindex) {
+        this.currentindex -= 1;
       }
     },
     setScrollFunction(
