@@ -11,7 +11,7 @@ export interface Setting {
   options?: SettingOption[];
   inactive?: () => boolean;
   action: (arg0?: any) => void;
-  source: (() => any) | null;
+  state: (() => any) | null;
   button_text?: () => string;
   defaultAction?: () => void;
 }

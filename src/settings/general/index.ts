@@ -5,6 +5,7 @@ import extendWidth from "./extend-width";
 import nowPlaying from "./now-playing-group";
 import sidebarSettings from "./sidebar";
 import rootDirSettings from "./root-dirs";
+import masterFlag from "./master-flag";
 
 const npStrings = strings.nowPlayingStrings;
 const rootRootStrings = strings.manageRootDirsStrings;
@@ -16,6 +17,7 @@ export default {
       settings: [
         ...sidebarSettings,
         ...extendWidth,
+        ...masterFlag,
         ...contextChildrenShowMode,
       ],
     },

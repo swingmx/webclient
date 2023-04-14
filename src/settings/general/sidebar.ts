@@ -9,7 +9,7 @@ const settings = useSettingsStore;
 const use_sidebar: Setting = {
   title: sidebarStrings.settings.use_sidebar,
   type: SettingType.binary,
-  source: () => settings().use_sidebar,
+  state: () => settings().use_sidebar,
   action: () => settings().toggleDisableSidebar(),
 };
 

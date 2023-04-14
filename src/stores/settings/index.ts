@@ -15,6 +15,7 @@ export default defineStore("settings", {
     root_dir_set: false,
     root_dirs: <string[]>[],
     folder_list_mode: false,
+    show_master_quality_flag: true,
   }),
   actions: {
     toggleUseNPImg() {
@@ -61,6 +62,9 @@ export default defineStore("settings", {
     toggleFolderListMode() {
       this.folder_list_mode = !this.folder_list_mode;
     },
+    toggleShowMasterQualityFlag(){
+      this.show_master_quality_flag = !this.show_master_quality_flag
+    }
   },
   getters: {
     can_extend_width(): boolean {

@@ -103,6 +103,17 @@ async function handlePlay(index: number) {
 
     .artist-top-tracks {
       margin-top: 0;
+      padding-right: $small;
+
+      h3 {
+        padding-right: $smaller;
+      }
+    }
+  }
+
+  .fav-artists {
+    h3 {
+      padding-right: $medium;
     }
   }
 

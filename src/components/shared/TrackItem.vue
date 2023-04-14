@@ -23,8 +23,10 @@
       ></div>
     </div>
     <div class="tags">
-      <div class="title ellip" v-tooltip>
-        {{ track.title }}
+      <div class="title" v-tooltip>
+        <span class="ellip">
+          {{ track.title }}
+        </span>
       </div>
       <hr />
       <div class="artist">
@@ -58,15 +60,17 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 
-import DelSvg from "@/assets/icons/plus.svg";
-import { showTrackContextMenu as showContext } from "@/composables/context";
 import { paths } from "@/config";
 import { Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
-import ArtistName from "./ArtistName.vue";
-import HeartSvg from "./HeartSvg.vue";
-import favoriteHandler from "@/composables/favoriteHandler";
 import { favType } from "@/composables/enums";
+import favoriteHandler from "@/composables/favoriteHandler";
+import { showTrackContextMenu as showContext } from "@/composables/context";
+
+import HeartSvg from "./HeartSvg.vue";
+import MasterFlag from "./MasterFlag.vue";
+import ArtistName from "./ArtistName.vue";
+import DelSvg from "@/assets/icons/plus.svg";
 
 const props = defineProps<{
   track: Track;
