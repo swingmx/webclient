@@ -19,6 +19,7 @@ const { showNewPlaylistModal } = useModalStore();
 .playlists-nav {
   display: grid;
   grid-template-columns: 1fr max-content;
+  align-items: center;
 
   button {
     padding-right: $small;

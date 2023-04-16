@@ -33,6 +33,7 @@ const tabs = ["tracks", "albums", "artists"];
   display: grid;
   grid-template-columns: 1fr max-content;
   gap: 1rem;
+
   
   .buttons-area {
     position: relative;

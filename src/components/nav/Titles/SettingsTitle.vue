@@ -14,5 +14,6 @@ import Nav from "@/components/SettingsView/Nav.vue";
 .settings-nav {
   display: grid;
   grid-template-columns: 1fr max-content;
+  align-items: center;
 }
 </style>

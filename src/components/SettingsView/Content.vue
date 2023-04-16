@@ -20,7 +20,7 @@ defineProps<{
 <style lang="scss">
 .settingscontent {
   width: 100%;
-  // max-width: 40rem;
   margin: 0 auto;
+  padding-bottom: 2rem;
 }
 </style>

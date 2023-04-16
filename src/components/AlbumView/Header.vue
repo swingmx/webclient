@@ -3,14 +3,18 @@
     class="album-header-ambient rounded"
     style="height: 100%; width: 100%"
     :style="{
-      boxShadow: album.colors[0] ? `0 .5rem 2rem ${album.colors[0]}` : '0 .5rem 2rem black',
+      boxShadow: album.colors[0]
+        ? `0 .5rem 2rem ${album.colors[0]}`
+        : '0 .5rem 2rem black',
     }"
   ></div>
   <div
     class="a-header rounded"
     ref="albumheaderthing"
     :style="{
-      backgroundColor: album.colors[0] ? getBackgroundColor(album.colors[0]) : '',
+      backgroundColor: album.colors[0]
+        ? getBackgroundColor(album.colors[0])
+        : '',
       height: `${heightLarge ? '24rem' : '18rem'}`,
     }"
   >
@@ -59,7 +63,7 @@
       </div>
       <Motion
         class="art"
-        v-if="!isMedium"
+        v-if="!isMedium && !isSmall"
         :initial="{ opacity: 0, x: 10 }"
         :animate="{
           opacity: 1,
@@ -78,10 +82,14 @@
         >
           <img
             :src="imguri.artist.small + a.image"
-            class="shadow-lg circular"
+            class="circular"
             loading="lazy"
             :title="a.name"
-            :style="{ border: `solid 2px ${album.colors[0]}` }"
+            :style="{
+              border: `solid 4px ${
+                album.colors[0] ? getBackgroundColor(album.colors[0]) : ''
+              }`,
+            }"
           />
         </RouterLink>
       </Motion>
@@ -90,9 +98,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { storeToRefs } from "pinia";
 import { Routes } from "@/router";
+import { storeToRefs } from "pinia";
+import { ref } from "vue";
 
 import { paths } from "@/config";
 import useNavStore from "@/stores/nav";
@@ -101,18 +109,18 @@ import {
   albumHeaderSmall,
   heightLarge,
   isMedium,
+  isSmall,
 } from "@/stores/content-width";
 
-import { getTextColor, getBackgroundColor } from "@/utils/colortools/shift";
+import { getBackgroundColor, getTextColor } from "@/utils/colortools/shift";
 
-import { isLight } from "@/composables/colors/album";
-import { formatSeconds, useVisibility } from "@/utils";
 import { favType, playSources } from "@/composables/enums";
+import { formatSeconds, useVisibility } from "@/utils";
 
+import ArtistName from "@/components/shared/ArtistName.vue";
+import favoriteHandler from "@/composables/favoriteHandler";
 import HeartSvg from "../shared/HeartSvg.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
-import favoriteHandler from "@/composables/favoriteHandler";
-import ArtistName from "@/components/shared/ArtistName.vue";
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;
@@ -219,9 +227,14 @@ function handleFav() {
       max-width: 10rem;
       flex-wrap: wrap;
 
+      .shadow-inset {
+        height: max-content;
+      }
+
       img {
         height: 3rem;
         background-color: $gray;
+        margin-left: -1.5rem;
       }
 
       a {
@@ -230,7 +243,10 @@ function handleFav() {
 
       a:hover {
         img {
-          border: solid 2px white !important;
+          z-index: 100;
+          border-color: $pink !important;
+          // margin-right: 1.5rem;
+          // border: solid 2px white !important;
         }
       }
     }

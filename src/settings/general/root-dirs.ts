@@ -11,7 +11,7 @@ const text = data.settings;
 const change_root_dirs: Setting = {
   title: text.change,
   type: SettingType.button,
-  source: null,
+  state: null,
   button_text: () =>
     `\xa0 \xa0 ${
       useSettingsStore().root_dirs.length ? "Modify" : "Configure"
@@ -22,7 +22,7 @@ const change_root_dirs: Setting = {
 const list_root_dirs: Setting = {
   title: text.list_root_dirs,
   type: SettingType.list,
-  source: () =>
+  state: () =>
     useSettingsStore().root_dirs.map((d) => ({
       title: d,
       buttontext: "remove",

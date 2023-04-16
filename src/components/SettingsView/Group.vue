@@ -26,12 +26,12 @@
           <Switch
             v-if="setting.type == SettingType.binary"
             @click="setting.action()"
-            :state="setting.source && setting.source()"
+            :state="setting.state && setting.state()"
           />
           <Select
             v-if="setting.type === SettingType.select"
             :options="setting.options"
-            :source="setting.source !== null ? setting.source : () => ''"
+            :source="setting.state !== null ? setting.state : () => ''"
             :setterFn="setting.action"
           />
           <button
@@ -44,7 +44,7 @@
 
         <List
           icon="folder"
-          :items="setting.source !== null ? setting.source() : []"
+          :items="setting.state !== null ? setting.state() : []"
           v-if="setting.type === SettingType.list"
         />
       </div>

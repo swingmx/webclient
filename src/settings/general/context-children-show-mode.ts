@@ -20,7 +20,7 @@ const context_children_show_mode: Setting = {
       value: mode.hover,
     },
   ],
-  source: () => settings().contextChildrenShowMode,
+  state: () => settings().contextChildrenShowMode,
   action: (value: mode) => settings().setContextChildrenShowMode(value),
   defaultAction: () => settings().toggleContextChildrenShowMode(),
 };

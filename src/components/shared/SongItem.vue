@@ -33,7 +33,7 @@
           <span class="title ellip">
             {{ track.title }}
           </span>
-          <MasterFlag v-if="track.bitrate > 1024" />
+          <MasterFlag :bitrate="track.bitrate" />
         </div>
         <div class="isSmallArtists" style="display: none">
           <ArtistName
@@ -169,37 +169,37 @@ onBeforeUnmount(() => {
   border: solid 1px transparent;
   position: relative;
 
-  .top-drop,
-  .bottom-drop {
-    display: flex;
-    align-items: center;
+  // .top-drop,
+  // .bottom-drop {
+  //   display: flex;
+  //   align-items: center;
 
-    z-index: 20;
-    position: absolute;
-    height: 32px;
-    width: 100%;
-    left: 0;
+  //   z-index: 20;
+  //   position: absolute;
+  //   height: 32px;
+  //   width: 100%;
+  //   left: 0;
 
-    &.active {
-      &::before {
-        content: "";
-        position: absolute;
-        height: 1px;
-        width: 100%;
-        background-color: $red;
-        left: 0;
-        top: 50%;
-      }
-    }
-  }
+  //   &.active {
+  //     &::before {
+  //       content: "";
+  //       position: absolute;
+  //       height: 1px;
+  //       width: 100%;
+  //       background-color: $red;
+  //       left: 0;
+  //       top: 50%;
+  //     }
+  //   }
+  // }
 
-  .top-drop {
-    top: -16px;
-  }
+  // .top-drop {
+  //   top: -16px;
+  // }
 
-  .bottom-drop {
-    bottom: -16px;
-  }
+  // .bottom-drop {
+  //   bottom: -16px;
+  // }
 
   .song-title {
     .with-flag {

@@ -34,8 +34,11 @@
         "
         class="artist"
       />
-      <div v-tooltip class="title ellip">
-        {{ queue.currenttrack?.title || "Hello there" }}
+      <div v-tooltip class="title">
+        <span class="ellip">
+          {{ queue.currenttrack?.title || "Hello there" }}
+        </span>
+        <MasterFlag :bitrate="queue.currenttrack?.bitrate || 0" />
       </div>
     </div>
   </div>
@@ -51,6 +54,7 @@ import useColorStore from "@/stores/colors";
 import useSettingsStore from "@/stores/settings";
 import useQStore from "@/stores/queue";
 import HeartSvg from "../shared/HeartSvg.vue";
+import MasterFlag from "../shared/MasterFlag.vue";
 
 const queue = useQStore();
 const settings = useSettingsStore();
@@ -96,6 +100,8 @@ const emit = defineEmits<{
     .title {
       color: $white;
       font-weight: bold;
+      display: flex;
+      align-items: center;
     }
   }
 }

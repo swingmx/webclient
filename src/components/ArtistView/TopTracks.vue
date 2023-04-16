@@ -39,6 +39,7 @@ defineProps<{
 
   .section-title {
     margin-left: 0;
+    align-items: baseline;
   }
 
   .error {

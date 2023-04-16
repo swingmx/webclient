@@ -53,7 +53,7 @@ defineProps<{
   h3 {
     display: grid;
     grid-template-columns: 1fr max-content;
-    align-items: center;
+    align-items: baseline;
     padding: 0 $medium;
     margin-bottom: $small;
   }

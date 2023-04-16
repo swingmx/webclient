@@ -1,6 +1,21 @@
 <template>
-  <span class="master-flag" title="Master audio file">M</span>
+  <span
+    v-if="store.show_master_quality_flag && bitrate > 1024"
+    class="master-flag"
+    :title="'Master audio bitrate - ' + `${bitrate} Kbps`"
+    >M</span
+  >
 </template>
+
+<script setup lang="ts">
+import useSettingsStore from "@/stores/settings";
+
+defineProps<{
+  bitrate: number;
+}>();
+
+const store = useSettingsStore();
+</script>
 
 <style lang="scss">
 .master-flag {

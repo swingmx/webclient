@@ -9,7 +9,7 @@
     }"
     :exit="{ opacity: 0, scale: 0.9 }"
   >
-    <div class="sidebar-songcard rounded" v-wave>
+    <div class="sidebar-songcard rounded-sm" v-wave>
       <router-link
         :to="{
           name: 'AlbumView',
@@ -21,7 +21,7 @@
         <img
           :src="imguri + q.currenttrack?.image"
           alt=""
-          class="l-image rounded force-lm"
+          class="l-image rounded-sm force-lm"
         />
       </router-link>
       <div
