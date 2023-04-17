@@ -28,7 +28,6 @@
       class="info"
       :style="{ color: album.colors[0] ? getTextColor(album.colors[0]) : '' }"
     >
-      <!-- :class="{ nocontrast: album.colors ? isLight(album.colors[0]) : false }" -->
       <div class="album-info">
         <div class="top">
           <div v-auto-animate class="h">
@@ -57,7 +56,11 @@
           </div>
           <div class="buttons">
             <PlayBtnRect :source="playSources.album" :store="useAlbumStore" />
-            <HeartSvg :state="album.is_favorite" @handleFav="handleFav" />
+            <HeartSvg
+              :state="album.is_favorite"
+              @handleFav="handleFav"
+              :color="album.colors[0] ? album.colors[0] : ''"
+            />
           </div>
         </div>
       </div>
@@ -103,16 +106,20 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { paths } from "@/config";
-import useNavStore from "@/stores/nav";
-import useAlbumStore from "@/stores/pages/album";
 import {
   albumHeaderSmall,
   heightLarge,
   isMedium,
   isSmall,
 } from "@/stores/content-width";
+import useNavStore from "@/stores/nav";
+import useAlbumStore from "@/stores/pages/album";
 
-import { getBackgroundColor, getTextColor } from "@/utils/colortools/shift";
+import {
+  getBackgroundColor,
+  getShift,
+  getTextColor,
+} from "@/utils/colortools/shift";
 
 import { favType, playSources } from "@/composables/enums";
 import { formatSeconds, useVisibility } from "@/utils";
@@ -278,11 +285,6 @@ function handleFav() {
 
     .bottom {
       margin-top: $smaller;
-
-      .heart-button {
-        background-color: pink !important;
-        border-color: pink;
-      }
 
       .stats {
         font-weight: bold;

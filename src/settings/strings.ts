@@ -37,7 +37,7 @@ export const contextChildrenShowModeStrings = <S>{
 
 export const showMasterFlag = <S>{
   settings: {
-    show_flag: "Show M (Master) flag on track with bitrate higher than 1024 Kbps",
+    show_flag: "Show M (Master) flag on tracks with bitrate higher than 1Mbps",
   },
 };
 

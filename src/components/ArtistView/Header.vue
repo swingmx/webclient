@@ -22,9 +22,6 @@
           : undefined,
       }"
     >
-      <!-- :class="{
-        nocontrast: artist.info.colors ? isLight(artist.info.colors[0]) : false,
-      }" -->
       <section class="text">
         <div class="card-title">Artist</div>
         <div class="artist-name ellip2">{{ artist.info.name }}</div>
@@ -41,7 +38,11 @@
       </section>
       <div class="buttons">
         <PlayBtnRect :source="playSources.artist" :store="useArtistPageStore" />
-        <HeartSvg @handleFav="handleFav" :state="artist.info.is_favorite" />
+        <HeartSvg
+          @handleFav="handleFav"
+          :state="artist.info.is_favorite"
+          :color="artist.info.colors[0] ? artist.info.colors[0] : ''"
+        />
       </div>
     </div>
     <div
@@ -66,18 +67,17 @@
 </template>
 
 <script setup lang="ts">
-import { paths } from "@/config";
-import useArtistPageStore from "@/stores/pages/artist";
-import formatSeconds from "@/utils/useFormatSeconds";
-import { isLight } from "@/composables/colors/album";
 import { favType, playSources } from "@/composables/enums";
 import favoriteHandler from "@/composables/favoriteHandler";
+import { paths } from "@/config";
 import { heightLarge } from "@/stores/content-width";
+import useArtistPageStore from "@/stores/pages/artist";
+import formatSeconds from "@/utils/useFormatSeconds";
 
-import { getTextColor } from "@/utils/colortools/shift";
+import { getShift, getTextColor } from "@/utils/colortools/shift";
 
-import PlayBtnRect from "../shared/PlayBtnRect.vue";
 import HeartSvg from "@/components/shared/HeartSvg.vue";
+import PlayBtnRect from "../shared/PlayBtnRect.vue";
 
 const artist = useArtistPageStore();
 
@@ -119,7 +119,12 @@ function handleFav() {
 
   .gradient {
     position: absolute;
-    background-image: linear-gradient(to left, transparent 10%, $gray 50%, $gray 100%);
+    background-image: linear-gradient(
+      to left,
+      transparent 10%,
+      $gray 50%,
+      $gray 100%
+    );
     height: 100%;
     width: 100%;
   }
@@ -165,11 +170,6 @@ function handleFav() {
   .buttons {
     display: flex;
     gap: $small;
-
-    .heart-button {
-      background-color: pink !important;
-      border-color: pink;
-    }
   }
 }
 </style>
