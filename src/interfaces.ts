@@ -40,6 +40,7 @@ export interface Folder {
 export interface Album {
   albumid: string;
   title: string;
+  og_title: string;
   albumartists: Artist[];
   count: number;
   duration: number;
@@ -57,7 +58,7 @@ export interface Album {
   is_EP: boolean;
   is_favorite: boolean;
   genres: string[];
-  versions: string[]
+  versions: string[];
 }
 
 export interface Artist {

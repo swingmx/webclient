@@ -25,25 +25,36 @@
 </template>
 
 <script setup lang="ts">
-import Header from "@/components/ArtistView/Header.vue";
-import TopTracks from "@/components/ArtistView/TopTracks.vue";
-import useArtistPageStore from "@/stores/pages/artist";
-import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
-import ArtistAlbumsFetcher from "@/components/ArtistView/ArtistAlbumsFetcher.vue";
 import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
-import { Album } from "@/interfaces";
+
 import {
   discographyAlbumTypes,
   dropSources,
   FromOptions,
 } from "@/composables/enums";
+import { Album } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
+import useArtistPageStore from "@/stores/pages/artist";
 import { getArtistTracks } from "@/composables/fetch/artists";
+
+import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
+import Header from "@/components/ArtistView/Header.vue";
+import TopTracks from "@/components/ArtistView/TopTracks.vue";
+import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 
 const store = useArtistPageStore();
 const queue = useQueueStore();
 const route = useRoute();
+
+function fetchArtistAlbums() {
+  store.getArtistAlbums();
+}
+
+function reFetchArtistAlbums() {
+  store.resetAlbums();
+  store.getArtistAlbums();
+}
 
 interface ScrollerItem {
   id: string | number;
@@ -59,6 +70,11 @@ const header: ScrollerItem = {
 const artist_albums_fetcher: ScrollerItem = {
   id: "artist-albums-fetcher",
   component: ArtistAlbumsFetcher,
+  props: {
+    fetch_callback: fetchArtistAlbums,
+    reset_callback: reFetchArtistAlbums,
+    clear_callback: store.resetAlbums,
+  },
 };
 
 enum AlbumType {

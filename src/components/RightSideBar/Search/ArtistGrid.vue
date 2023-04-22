@@ -59,7 +59,6 @@ defineProps<{
 .search-results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
-  gap: 0.75rem;
   min-height: 10rem;
   padding-bottom: $small;
 

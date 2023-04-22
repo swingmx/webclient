@@ -8,6 +8,7 @@ const {
   albumartists: albumArtistsUrl,
   albumbio: albumBioUrl,
   albumsByArtistUrl,
+  albumVersions,
 } = paths.api;
 
 const getAlbumData = async (hash: string, ToastStore: typeof useNotifStore) => {
@@ -61,7 +62,7 @@ const getAlbumBio = async (hash: string) => {
   }
 };
 
-const getAlbumsFromArtist = async (
+export const getAlbumsFromArtist = async (
   albumartists: string,
   limit: number = 2,
   exclude: string
@@ -82,7 +83,28 @@ const getAlbumsFromArtist = async (
   return [];
 };
 
-async function getAlbumTracks(albumhash: string): Promise<Track[]> {
+export const getAlbumVersions = async (
+  og_album_title: string,
+  album_title: string,
+  artisthash: string
+) => {
+  const { data } = await useAxios({
+    url: albumVersions,
+    props: {
+      og_album_title,
+      album_title,
+      artisthash,
+    },
+  });
+
+  if (data) {
+    return data.data;
+  }
+
+  return [];
+};
+
+export async function getAlbumTracks(albumhash: string): Promise<Track[]> {
   const { data } = await useAxios({
     url: albumUrl + `/${albumhash}/` + "tracks",
     get: true,
@@ -91,10 +113,4 @@ async function getAlbumTracks(albumhash: string): Promise<Track[]> {
   return data.tracks;
 }
 
-export {
-  getAlbumData as getAlbum,
-  getAlbumTracks,
-  getAlbumArtists,
-  getAlbumBio,
-  getAlbumsFromArtist,
-};
+export { getAlbumData as getAlbum, getAlbumArtists, getAlbumBio };

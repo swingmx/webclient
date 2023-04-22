@@ -24,14 +24,15 @@ import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
 import { Track } from "@/interfaces";
 
-import useAlbumStore from "@/stores/pages/album";
 import useQueueStore from "@/stores/queue";
+import useAlbumStore from "@/stores/pages/album";
 
-import AlbumDiscBar from "@/components/AlbumView/AlbumDiscBar.vue";
-import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
-import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 import Header from "@/components/AlbumView/Header.vue";
 import SongItem from "@/components/shared/SongItem.vue";
+import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
+import AlbumDiscBar from "@/components/AlbumView/AlbumDiscBar.vue";
+import AlbumsList from "@/components/AlbumView/ArtistAlbums.vue";
+import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 
 import { isSmall, heightLarge } from "@/stores/content-width";
 import { discographyAlbumTypes, dropSources } from "@/composables/enums";
@@ -45,7 +46,8 @@ interface ScrollerItem {
     | typeof Header
     | typeof SongItem
     | typeof GenreBanner
-    | typeof ArtistAlbums;
+    | typeof AlbumsList
+    | typeof AlbumsFetcher;
   props?: any;
   size: number;
 }
@@ -76,6 +78,20 @@ const genreBanner: ScrollerItem = {
   size: 80,
 };
 
+const AlbumVersionsFetcher: ScrollerItem = {
+  id: "otherVersionsFetcherBanner",
+  component: AlbumsFetcher,
+  props: {
+    fetch_callback: album.fetchAlbumVersions,
+    reset_callback: () => {
+      album.resetOtherVersions();
+      album.fetchAlbumVersions();
+    },
+    clear_callback: album.resetOtherVersions,
+  },
+  size: 2,
+};
+
 function getSongItems() {
   return album.tracks.map((track) => {
     return new songItem(track);
@@ -92,7 +108,7 @@ function getArtistAlbumComponents(): ScrollerItem[] {
 
     return {
       id: artisthash,
-      component: ArtistAlbums,
+      component: AlbumsList,
       props: {
         artisthash,
         albums: ar.albums,
@@ -105,6 +121,23 @@ function getArtistAlbumComponents(): ScrollerItem[] {
   });
 }
 
+function getAlbumVersionsComponent(): ScrollerItem | null {
+  if (album.otherVersions.length == 0) return null;
+
+  return {
+    id: "otherVersions",
+    component: AlbumsList,
+    props: {
+      artisthash: album.info.albumartists[0].artisthash,
+      albums: album.otherVersions,
+      title: "Other versions",
+      albumType: discographyAlbumTypes.albums,
+      route: ``,
+    },
+    size: 20 * 16,
+  };
+}
+
 const scrollerItems = computed(() => {
   const header: ScrollerItem = {
     id: "album-header",
@@ -114,8 +147,23 @@ const scrollerItems = computed(() => {
 
   let moreFrom = getArtistAlbumComponents();
   moreFrom = moreFrom.filter((item) => item.id !== undefined);
+  const otherVersionsComponent = getAlbumVersionsComponent();
 
-  return [header, ...getSongItems(), genreBanner, ...moreFrom];
+  let components = [
+    header,
+    ...getSongItems(),
+    genreBanner,
+    AlbumVersionsFetcher,
+  ];
+
+  if (otherVersionsComponent !== null) {
+    components.push(otherVersionsComponent);
+  }
+
+  // components.push();
+  components.push(...moreFrom);
+
+  return components;
 });
 
 function playFromAlbum(index: number) {

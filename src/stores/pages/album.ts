@@ -6,7 +6,11 @@ import { AlbumDisc } from "./../../interfaces";
 import { FuseTrackOptions } from "@/composables/enums";
 import { maxAbumCards } from "@/stores/content-width";
 
-import { getAlbum, getAlbumsFromArtist } from "../../composables/fetch/album";
+import {
+  getAlbum,
+  getAlbumsFromArtist,
+  getAlbumVersions,
+} from "../../composables/fetch/album";
 import { Album, FuseResult, Track } from "../../interfaces";
 import { useNotifStore } from "../notification";
 
@@ -46,6 +50,7 @@ export default defineStore("album", {
     info: <Album>{},
     srcTracks: <Track[]>[],
     albumArtists: <{ artisthash: string; albums: Album[] }[]>[],
+    otherVersions: <Album[]>[],
     bio: null,
     discs: <Disc>{},
   }),
@@ -88,11 +93,21 @@ export default defineStore("album", {
         this.info.albumhash
       );
     },
+    async fetchAlbumVersions() {
+      this.otherVersions = await getAlbumVersions(
+        this.info.og_title,
+        this.info.title,
+        this.info.albumartists[0].artisthash
+      );
+    },
     resetQuery() {
       this.query = "";
     },
     resetAlbumArtists() {
       this.albumArtists = [];
+    },
+    resetOtherVersions() {
+      this.otherVersions = [];
     },
     makeFavorite() {
       this.info.is_favorite = true;

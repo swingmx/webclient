@@ -602,6 +602,11 @@ axios@^0.26.1:
   dependencies:
     follow-redirects "^1.14.8"
 
+balance-text@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/balance-text/-/balance-text-3.3.1.tgz#d1d7c182c9b60c57028383c8ed19765b6a6b1603"
+  integrity sha512-tpnHvo1w0rJ5rbu+jZKf7NLKKg6XZ6eAwREP/9jEDJ+ZTBi6jQFqn/UGARL3/oqD8SgQbyTwBXBjhKDdTgoPRw==
+
 balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
@@ -1919,6 +1924,13 @@ vite@^3.0.4:
     rollup "^2.79.1"
   optionalDependencies:
     fsevents "~2.3.2"
+
+vue-balance-text@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/vue-balance-text/-/vue-balance-text-1.3.0.tgz#c96440c3411ebd62c25436a6d833db305adeb2f3"
+  integrity sha512-jqw3NMr5a3Qn2gBKfIliiVUJ9gfLqlf5JTSCVoj5a3+4QkzxyfL5xICgBcdTLBiXAtvsE8Gug5yCvy5I17hbYg==
+  dependencies:
+    balance-text "^3.3.1"
 
 vue-debounce@^3.0.2:
   version "3.1.1"

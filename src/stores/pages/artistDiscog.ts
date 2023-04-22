@@ -39,7 +39,8 @@ export default defineStore("artistDiscography", {
           this.toShow = this.albums.concat(
             this.eps,
             this.singles,
-            this.appearances
+            this.appearances,
+            this.compilations
           );
       }
     },

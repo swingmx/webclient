@@ -38,21 +38,28 @@
             <span v-else-if="album.is_single">Single</span>
             <span v-else>Album</span>
           </div>
-          <div class="title ellip2" v-tooltip>
-            {{ album.title }}
+          <div class="title ellip2" id="albumheadertitle">
+            <span v-for="t in titleSplits">{{ t }} <br></span>
           </div>
         </div>
         <div class="bottom">
+          <div id="test-elem"></div>
           <div class="versions">
             <MasterFlag
               v-for="v in album.versions"
               :bitrate="1200"
               :text="v"
               :key="v"
-              :colors="[
-                album.colors[0] ? getShift(album.colors[0], [80, -90]) : '',
-                album.colors[0] ? getShift(album.colors[0], [-100, 80]) : '',
-              ]"
+              :bg_color="
+                album.colors[0]
+                  ? getShift(album.colors[0], [80, -90])
+                  : undefined
+              "
+              :text_color="
+                album.colors[0]
+                  ? getShift(album.colors[0], [-100, 80])
+                  : undefined
+              "
             />
           </div>
           <div class="stats ellip">
@@ -115,7 +122,7 @@
 <script setup lang="ts">
 import { Routes } from "@/router";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { onMounted, onUpdated, ref } from "vue";
 
 import { paths } from "@/config";
 import {
@@ -147,6 +154,8 @@ const imguri = paths.images;
 const nav = useNavStore();
 const store = useAlbumStore();
 
+const titleSplits = ref([""]);
+
 const { info: album } = storeToRefs(store);
 
 defineEmits<{
@@ -165,8 +174,6 @@ function handleVisibilityState(state: boolean) {
 
 useVisibility(albumheaderthing, handleVisibilityState);
 
-// const is_fav = ref(props.album.is_favorite);
-
 function handleFav() {
   favoriteHandler(
     album.value.is_favorite,
@@ -176,9 +183,56 @@ function handleFav() {
     store.removeFavorite
   );
 }
+
+function balanceText(text: string, container_width: number) {
+  const tempElem = document.createElement("span");
+  tempElem.classList.add("balance-text-temp");
+  tempElem.style.fontSize = "2.75rem";
+  tempElem.style.fontWeight = "700";
+  tempElem.innerText = text;
+  document.body.appendChild(tempElem);
+
+  const tempWidth = tempElem.offsetWidth;
+
+  document.body.removeChild(tempElem);
+
+  const ratio = tempWidth / container_width;
+
+  if (ratio < 1 || ratio > 1.5) {
+    // text fits properly or overflows 2 lines.
+    return [text];
+  }
+
+  const words = text.split(" ");
+  console.log(words.length)
+  const wordsPerLine = Math.ceil(words.length / 3);
+
+  const firstLine = words.slice(0, wordsPerLine).join(" ");
+  const secondLine = words.slice(wordsPerLine).join(" ");
+
+  return [firstLine, secondLine];
+}
+
+onMounted(() => {
+  const elem = document.getElementById("test-elem");
+  titleSplits.value = balanceText(album.value.title, elem?.offsetWidth || 0);
+  console.log(titleSplits.value);
+});
+
+onUpdated(() => {
+  const elem = document.getElementById("test-elem");
+  titleSplits.value = balanceText(album.value.title, elem?.offsetWidth || 0);
+});
 </script>
 
 <style lang="scss">
+.balance-text-temp {
+  visibility: hidden;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+
 .album-header-ambient {
   width: 20rem;
   position: absolute;

@@ -58,6 +58,9 @@ export const paths = {
     get albumsByArtistUrl() {
       return this.album + "/from-artist";
     },
+    get albumVersions() {
+      return this.album + "/versions";
+    },
     folder: baseApiUrl.value + "/folder",
     dir_browser: baseApiUrl.value + "/folder/dir-browser",
     playlist: {

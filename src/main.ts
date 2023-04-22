@@ -28,6 +28,7 @@ app.use(autoAnimatePlugin);
 app.use(VWave);
 
 app.directive("tooltip", vTooltip);
+
 app.component("RecycleScroller", RecycleScroller);
 app.component("DynamicScroller", DynamicScroller);
 app.component("DynamicScrollerItem", DynamicScrollerItem);
