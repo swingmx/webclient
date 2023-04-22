@@ -57,6 +57,7 @@ export interface Album {
   is_EP: boolean;
   is_favorite: boolean;
   genres: string[];
+  versions: string[]
 }
 
 export interface Artist {

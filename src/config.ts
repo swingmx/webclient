@@ -1,7 +1,7 @@
 import { useStorage } from "@vueuse/core";
 
 const development = import.meta.env.DEV;
-const dev_url = "http://localhost:1970";
+const dev_url = "http://localhost:1980";
 const url = development ? dev_url : "";
 
 export const baseApiUrl = useStorage("baseApiUrl", url, sessionStorage);

@@ -50,6 +50,15 @@
           {{ album.albumartists[0].name }}
         </RouterLink>
       </div>
+
+      <div class="versions">
+        <MasterFlag
+          v-for="v in album.versions"
+          :bitrate="1200"
+          :text="v"
+          :key="v"
+        />
+      </div>
     </div>
   </RouterLink>
 </template>
@@ -62,6 +71,7 @@ import PlayBtn from "./PlayBtn.vue";
 import { playSources } from "@/composables/enums";
 import { Routes } from "@/router";
 import useAlbumStore from "@/stores/pages/album";
+import MasterFlag from "./MasterFlag.vue";
 
 const imguri = paths.images.thumb.large;
 defineProps<{
@@ -78,6 +88,7 @@ defineProps<{
   padding: $medium;
   border-radius: 1rem;
   border: solid 1px transparent;
+  height: max-content;
 
   .with-img {
     position: relative;
@@ -127,7 +138,8 @@ defineProps<{
 
   img {
     width: 100%;
-    height: auto;
+    // height: 100%;
+    aspect-ratio: 1;
   }
 
   h4 {
@@ -154,6 +166,13 @@ defineProps<{
         text-decoration: underline;
       }
     }
+  }
+
+  .versions {
+    display: flex;
+    gap: $smaller;
+    margin-top: $small;
+    margin-left: -$smaller;
   }
 }
 </style>

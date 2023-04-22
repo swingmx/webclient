@@ -43,6 +43,18 @@
           </div>
         </div>
         <div class="bottom">
+          <div class="versions">
+            <MasterFlag
+              v-for="v in album.versions"
+              :bitrate="1200"
+              :text="v"
+              :key="v"
+              :colors="[
+                album.colors[0] ? getShift(album.colors[0], [80, -90]) : '',
+                album.colors[0] ? getShift(album.colors[0], [-100, 80]) : '',
+              ]"
+            />
+          </div>
           <div class="stats ellip">
             <div class="border rounded-sm pad-sm">
               <ArtistName
@@ -128,6 +140,7 @@ import ArtistName from "@/components/shared/ArtistName.vue";
 import favoriteHandler from "@/composables/favoriteHandler";
 import HeartSvg from "../shared/HeartSvg.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
+import MasterFlag from "../shared/MasterFlag.vue";
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;
@@ -304,6 +317,11 @@ function handleFav() {
           display: flex;
           flex-wrap: wrap;
         }
+      }
+
+      .versions {
+        margin-bottom: $medium;
+        margin-left: -$smaller;
       }
     }
   }
