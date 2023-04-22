@@ -53,7 +53,7 @@
 
       <div class="versions">
         <MasterFlag
-          v-for="v in album.versions.slice(0, 2)"
+          v-for="v in album.versions.slice(0, 1)"
           :bitrate="1200"
           :text="v"
           :key="v"

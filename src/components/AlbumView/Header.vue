@@ -122,7 +122,7 @@
 <script setup lang="ts">
 import { Routes } from "@/router";
 import { storeToRefs } from "pinia";
-import { onMounted, onUpdated, ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import { paths } from "@/config";
 import {
@@ -148,6 +148,7 @@ import favoriteHandler from "@/composables/favoriteHandler";
 import HeartSvg from "../shared/HeartSvg.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
+import { onBeforeRouteUpdate } from "vue-router";
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;
@@ -204,7 +205,6 @@ function balanceText(text: string, container_width: number) {
   }
 
   const words = text.split(" ");
-  console.log(words.length)
   const wordsPerLine = Math.ceil(words.length / 3);
 
   const firstLine = words.slice(0, wordsPerLine).join(" ");
@@ -216,10 +216,9 @@ function balanceText(text: string, container_width: number) {
 onMounted(() => {
   const elem = document.getElementById("test-elem");
   titleSplits.value = balanceText(album.value.title, elem?.offsetWidth || 0);
-  console.log(titleSplits.value);
 });
 
-onUpdated(() => {
+onBeforeRouteUpdate(() => {
   const elem = document.getElementById("test-elem");
   titleSplits.value = balanceText(album.value.title, elem?.offsetWidth || 0);
 });
