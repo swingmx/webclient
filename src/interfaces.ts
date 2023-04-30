@@ -155,3 +155,47 @@ export interface FuseResult {
   item: Track;
   refIndex: number;
 }
+
+export interface RecentFavTrack {
+  trackhash: string;
+  image: string;
+  title: string;
+  filepath: string;
+}
+
+export interface RecentFavAlbum {
+  albumhash: string;
+  image: string;
+  title: string;
+}
+
+export interface RecentFavArtist {
+  artisthash: string;
+  image: string;
+  name: string;
+}
+
+// export interface RecentFavResultItem {
+//   type: "track" | "album" | "artist";
+//   item: RecentFavTrack | RecentFavAlbum | RecentFavArtist;
+// }
+
+export interface RecentFavAlbumResult {
+  type: "album";
+  item: RecentFavAlbum;
+}
+
+export interface RecentFavArtistResult {
+  type: "artist";
+  item: RecentFavArtist;
+}
+
+export interface RecentFavTrackResult {
+  type: "track";
+  item: RecentFavTrack;
+}
+
+export type RecentFavResult =
+  | RecentFavAlbumResult
+  | RecentFavArtistResult
+  | RecentFavTrackResult;

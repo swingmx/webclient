@@ -132,7 +132,7 @@ function getAlbumVersionsComponent(): ScrollerItem | null {
       albums: album.otherVersions,
       title: "Other versions",
       albumType: discographyAlbumTypes.albums,
-      route: ``,
+      route: `/artists/${album.info.albumartists[0].artisthash}/discography`,
     },
     size: 20 * 16,
   };
