@@ -24,10 +24,16 @@ const isMedium = computed(() => {
 
 const heightLarge = computed(() => content_height.value > 1080);
 
+const paddings = 32;
 const album_card_with = 10 * 16;
 
 const maxAbumCards = computed(() => {
-  return Math.floor(content_width.value / album_card_with) + 1;
+  const max =
+    Math.floor((content_width.value - paddings) / album_card_with) + 1;
+
+  if (max < 1) return 7;
+
+  return max;
 });
 
 export {

@@ -2,10 +2,15 @@
   <span
     v-if="store.show_master_quality_flag && bitrate > 1024"
     class="master-flag"
-    :title="'Master audio bitrate - ' + `${bitrate} Kbps`"
+    :title="!text ? 'Master audio bitrate - ' + `${bitrate} Kbps` : ''"
     :style="{
-      backgroundColor: bg_color ? bg_color : 'rgba(184, 108, 21, 0.281)',
-      color: text_color ? text_color : 'rgb(255, 153, 0)',
+      backgroundColor: bg_color
+        ? fill
+          ? bg_color
+          : 'transparent'
+        : 'rgba(184, 108, 21, 0.281)',
+      color: text_color ? (fill ? text_color : '') : 'rgb(255, 153, 0)',
+      border: !fill ? `1px solid ${bg_color}` : 'none',
     }"
     >{{ text ? text : "M" }}</span
   >
@@ -19,6 +24,7 @@ defineProps<{
   text?: string;
   bg_color?: string;
   text_color?: string;
+  fill?: boolean;
 }>();
 
 const store = useSettingsStore();

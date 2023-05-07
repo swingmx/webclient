@@ -39,14 +39,14 @@
             <span v-else>Album</span>
           </div>
           <div class="title ellip2" id="albumheadertitle">
-            <span v-for="t in titleSplits">{{ t }} <br></span>
+            <span v-for="t in titleSplits">{{ t }} <br /></span>
           </div>
         </div>
         <div class="bottom">
           <div id="test-elem"></div>
           <div class="versions">
             <MasterFlag
-              v-for="v in album.versions"
+              v-for="(v, index) in album.versions"
               :bitrate="1200"
               :text="v"
               :key="v"
@@ -60,6 +60,7 @@
                   ? getShift(album.colors[0], [-100, 80])
                   : undefined
               "
+              :fill="album.versions.length > 1 && index === 0"
             />
           </div>
           <div class="stats ellip">
@@ -375,6 +376,12 @@ onBeforeRouteUpdate(() => {
       .versions {
         margin-bottom: $medium;
         margin-left: -$smaller;
+
+        // &:first-child {}
+        // .master-flag {
+        //   background-color: transparent !important;
+        //   border: solid 1px !important;
+        // }
       }
     }
   }

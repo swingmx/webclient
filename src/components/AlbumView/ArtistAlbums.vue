@@ -1,5 +1,10 @@
 <template>
-  <div class="artist-albums">
+  <div
+    class="artist-albums"
+    :style="{
+      height: `${heightCalculator(artistItemsWrappers?.clientHeight || 0)}px`,
+    }"
+  >
     <h3>
       <span>{{ title }} </span>
       <SeeAll
@@ -10,7 +15,7 @@
         "
       />
     </h3>
-    <div class="cards">
+    <div class="cards" ref="artistItemsWrappers">
       <AlbumCard
         v-for="a in artist_page
           ? albums
@@ -26,8 +31,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+
 import { Album } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
+import heightCalculator from "@/utils/heightCalculator";
 import { discographyAlbumTypes } from "@/composables/enums";
 import useArtistDiscographyStore from "@/stores/pages/artistDiscog";
 
@@ -43,12 +51,14 @@ defineProps<{
   show_date?: boolean;
   artist_page?: boolean;
 }>();
+
+const artistItemsWrappers = ref<HTMLElement | null>(null);
 </script>
 
 <style lang="scss">
 .artist-albums {
   overflow: hidden;
-  max-height: 20rem;
+  margin-bottom: 2rem;
 
   h3 {
     display: grid;

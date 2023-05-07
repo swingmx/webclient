@@ -41,6 +41,7 @@ export interface Album {
   albumid: string;
   title: string;
   og_title: string;
+  base_title: string;
   albumartists: Artist[];
   count: number;
   duration: number;
@@ -167,6 +168,7 @@ export interface RecentFavAlbum {
   albumhash: string;
   image: string;
   title: string;
+  colors: string[];
 }
 
 export interface RecentFavArtist {

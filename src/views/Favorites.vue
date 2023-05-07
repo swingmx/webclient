@@ -3,14 +3,6 @@
     <div class="fav-recents" v-if="recentFavs.length">
       <Recents :favs="recentFavs" />
     </div>
-    <div class="fav-albums" v-if="favAlbums.length">
-      <ArtistAlbums
-        :albums="favAlbums"
-        :albumType="discographyAlbumTypes.albums"
-        :title="'Albums ❤️'"
-        :route="'/favorites/albums'"
-      />
-    </div>
     <div class="fav-tracks" v-if="favTracks.length">
       <TopTracks
         :tracks="favTracks"
@@ -18,6 +10,14 @@
         :title="'Tracks ❤️'"
         :playHandler="handlePlay"
         :source="dropSources.favorite"
+      />
+    </div>
+    <div class="fav-albums" v-if="favAlbums.length">
+      <ArtistAlbums
+        :albums="favAlbums"
+        :albumType="discographyAlbumTypes.albums"
+        :title="'Albums ❤️'"
+        :route="'/favorites/albums'"
       />
     </div>
 

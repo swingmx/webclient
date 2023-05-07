@@ -90,13 +90,13 @@ export default defineStore("album", {
       this.albumArtists = await getAlbumsFromArtist(
         albumartisthashes.join(),
         maxAbumCards.value,
-        this.info.albumhash
+        this.info.base_title
       );
     },
     async fetchAlbumVersions() {
       this.otherVersions = await getAlbumVersions(
         this.info.og_title,
-        this.info.title,
+        this.info.base_title,
         this.info.albumartists[0].artisthash
       );
     },

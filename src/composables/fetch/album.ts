@@ -65,14 +65,14 @@ const getAlbumBio = async (hash: string) => {
 export const getAlbumsFromArtist = async (
   albumartists: string,
   limit: number = 2,
-  exclude: string
+  base_title: string
 ) => {
   const { data } = await useAxios({
     url: albumsByArtistUrl,
     props: {
       albumartists: albumartists,
       limit: limit,
-      exclude: exclude,
+      base_title,
     },
   });
 
@@ -85,14 +85,14 @@ export const getAlbumsFromArtist = async (
 
 export const getAlbumVersions = async (
   og_album_title: string,
-  album_title: string,
+  base_title: string,
   artisthash: string
 ) => {
   const { data } = await useAxios({
     url: albumVersions,
     props: {
       og_album_title,
-      album_title,
+      base_title,
       artisthash,
     },
   });

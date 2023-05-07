@@ -1,6 +1,7 @@
 <template>
   <RouterLink
     class="recent-fav-item rounded"
+    :class="fav.type"
     :to="{
       name:
         fav.type === 'album'
@@ -18,18 +19,28 @@
       },
     }"
   >
-    <img
-      :src="
-        fav.type === 'album'
-          ? paths.images.thumb.large + fav.item.image
-          : fav.type === 'track'
-          ? paths.images.thumb.large + fav.item.image
-          : paths.images.artist.large + fav.item.image
-      "
-      alt=""
-      :class="`rounded-sm ${fav.type}`"
-    />
-    <div class="name ellip">
+    <div class="imagegroup">
+      <div
+        v-if="fav.type === 'album'"
+        class="albumbar rounded-sm"
+        style="background-image: url('/cd.texture.webp')"
+      ></div>
+      <img
+        :src="
+          fav.type === 'album'
+            ? paths.images.thumb.large + fav.item.image
+            : fav.type === 'track'
+            ? paths.images.thumb.large + fav.item.image
+            : paths.images.artist.large + fav.item.image
+        "
+        alt=""
+        class="rounded-sm"
+      />
+    </div>
+    <div
+      class="name ellip"
+      :title="fav.type === 'artist' ? fav.item.name : fav.item.title"
+    >
       {{ fav.type === "artist" ? fav.item.name : fav.item.title }}
     </div>
     <div class="label">{{ fav.type }}</div>
@@ -40,6 +51,8 @@
 import { RecentFavResult } from "@/interfaces";
 import { paths } from "../../config";
 import { Routes } from "@/router";
+
+import { getShift } from "@/utils/colortools/shift";
 
 defineProps<{
   fav: RecentFavResult;
@@ -54,6 +67,32 @@ defineProps<{
   gap: $small;
   height: max-content;
   border: solid 1px transparent;
+
+  .album-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    // object-fit: cover;
+    // border-radius: $small;
+    // opacity: 0.5;
+  }
+
+  .imagegroup {
+    position: relative;
+    display: flex;
+  }
+
+  .albumbar {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    // border-radius: $small 0 0 $small;
+
+    background-size: 108% 108%;
+    background-position: center;
+    mix-blend-mode: screen;
+    // background
+  }
 
   &:hover {
     border-color: $gray3;
@@ -78,8 +117,19 @@ defineProps<{
     text-transform: capitalize;
   }
 
-  .artist {
-    border-radius: 50%;
+  &.artist {
+    img {
+      border-radius: 50%;
+    }
+
+    .name {
+      margin: 0 auto;
+      width: max-content;
+    }
+
+    .label {
+      margin: 0 auto;
+    }
   }
 }
 </style>

@@ -1,7 +1,12 @@
 <template>
-  <div class="recent-items">
-    <h3>Recently added</h3>
-    <div class="list">
+  <div
+    class="recent-items"
+    :style="{
+      height: `${heightCalculator(recentitemswrappers?.clientHeight || 0)}px`,
+    }"
+  >
+    <h3>Recently added favorites</h3>
+    <div ref="recentitemswrappers" class="list">
       <Recentsitemcard
         v-for="fav in favs.slice(0, maxAbumCards)"
         :key="JSON.stringify(fav)"
@@ -12,19 +17,29 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+
 import { RecentFavResult } from "@/interfaces";
-import Recentsitemcard from "@/components/Favorites/RecentsItemCard.vue";
 import { maxAbumCards } from "@/stores/content-width";
+import heightCalculator from "@/utils/heightCalculator";
+
+import Recentsitemcard from "@/components/Favorites/RecentsItemCard.vue";
 
 defineProps<{
   favs: RecentFavResult[];
 }>();
+
+const recentitemswrappers = ref<HTMLElement | null>(null);
 </script>
 
 <style lang="scss">
 .recent-items {
-  max-height: 20rem;
   overflow: hidden;
+  margin-bottom: 2rem;
+
+  h3 {
+    padding: 0 0.75rem;
+  }
 
   .list {
     display: grid;
