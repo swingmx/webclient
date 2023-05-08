@@ -2,13 +2,10 @@
   <div
     class="f-artists"
     :style="{
-      height: `${heightCalculator(artistItemswrappers?.clientHeight || 0)}px`,
+      height: `${heightCalculator(height)}px`,
     }"
   >
-    <h3>
-      {{ title }} {{ artistItemswrappers?.clientHeight }}
-      <SeeAll :route="route" />
-    </h3>
+    <h3>{{ title }} <SeeAll :route="route" /></h3>
     <div class="artist-list" ref="artistItemswrappers">
       <ArtistCard
         v-for="artist in artists.slice(0, maxAbumCards)"
@@ -21,6 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useElementSize } from "@vueuse/core";
 
 import { Artist } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
@@ -36,6 +34,7 @@ defineProps<{
 }>();
 
 const artistItemswrappers = ref<HTMLElement | null>(null);
+const { height } = useElementSize(artistItemswrappers);
 </script>
 
 <style lang="scss">

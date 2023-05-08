@@ -216,7 +216,7 @@ onBeforeRouteLeave(async () => {
   }
 
   .section-title {
-    margin: 1rem;
+    // margin: 1rem;
     padding-left: 1rem;
   }
 }

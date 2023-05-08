@@ -116,7 +116,7 @@ function getArtistAlbumComponents(): ScrollerItem[] {
         albumType: discographyAlbumTypes.all,
         route: `/artists/${artisthash}/discography`,
       },
-      size: 20 * 16,
+      size: 18 * 16,
     };
   });
 }
@@ -133,8 +133,9 @@ function getAlbumVersionsComponent(): ScrollerItem | null {
       title: "Other versions",
       albumType: discographyAlbumTypes.albums,
       route: `/artists/${album.info.albumartists[0].artisthash}/discography`,
+      hide_artists: true,
     },
-    size: 20 * 16,
+    size: 18 * 16,
   };
 }
 

@@ -2,11 +2,12 @@
   <div
     class="artist-albums"
     :style="{
-      height: `${heightCalculator(artistItemsWrappers?.clientHeight || 0)}px`,
+      height: `${heightCalculator(height + (artist_page ? 60 : 0))}px`,
+      marginBottom: !artist_page ? '2rem' : '0',
     }"
   >
     <h3>
-      <span>{{ title }} </span>
+      <span>{{ title }}</span>
       <SeeAll
         v-if="maxAbumCards - 1 <= albums.length"
         :route="route"
@@ -25,6 +26,7 @@
         :album="a"
         :show_date="show_date"
         :artist_page="artist_page"
+        :hide_artists="hide_artists"
       />
     </div>
   </div>
@@ -32,12 +34,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useElementSize } from "@vueuse/core";
 
+import { discographyAlbumTypes } from "@/composables/enums";
 import { Album } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
-import heightCalculator from "@/utils/heightCalculator";
-import { discographyAlbumTypes } from "@/composables/enums";
 import useArtistDiscographyStore from "@/stores/pages/artistDiscog";
+import heightCalculator from "@/utils/heightCalculator";
 
 import AlbumCard from "../shared/AlbumCard.vue";
 import SeeAll from "../shared/SeeAll.vue";
@@ -50,22 +53,23 @@ defineProps<{
   route: string;
   show_date?: boolean;
   artist_page?: boolean;
+  hide_artists?: boolean;
 }>();
 
 const artistItemsWrappers = ref<HTMLElement | null>(null);
+const { height } = useElementSize(artistItemsWrappers);
 </script>
 
 <style lang="scss">
 .artist-albums {
   overflow: hidden;
-  margin-bottom: 2rem;
 
   h3 {
     display: grid;
     grid-template-columns: 1fr max-content;
     align-items: baseline;
     padding: 0 $medium;
-    margin-bottom: $small;
+    margin-bottom: $medium;
   }
 
   .cards {

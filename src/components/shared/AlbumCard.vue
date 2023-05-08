@@ -25,7 +25,11 @@
       <h4 class="title ellip" v-tooltip>
         {{ album.title }}
       </h4>
-      <div class="artist ellip" @click.prevent.stop="() => {}">
+      <div
+        class="artist ellip"
+        @click.prevent.stop="() => {}"
+        v-if="!hide_artists"
+      >
         <template v-if="show_date"> {{ album.date }} </template>
         <span
           v-if="
@@ -78,6 +82,7 @@ defineProps<{
   album: Album;
   show_date?: boolean;
   artist_page?: boolean;
+  hide_artists?: boolean;
 }>();
 </script>
 

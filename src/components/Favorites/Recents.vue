@@ -2,7 +2,7 @@
   <div
     class="recent-items"
     :style="{
-      height: `${heightCalculator(recentitemswrappers?.clientHeight || 0)}px`,
+      height: `${heightCalculator(height)}px`,
     }"
   >
     <h3>Recently added favorites</h3>
@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useElementSize } from "@vueuse/core";
 
 import { RecentFavResult } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
@@ -30,6 +31,7 @@ defineProps<{
 }>();
 
 const recentitemswrappers = ref<HTMLElement | null>(null);
+const { height } = useElementSize(recentitemswrappers);
 </script>
 
 <style lang="scss">
