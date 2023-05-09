@@ -61,7 +61,10 @@ export const paths = {
     get albumVersions() {
       return this.album + "/versions";
     },
-    folder: baseApiUrl.value + "/folder",
+    folder: {
+      base: baseApiUrl.value + "/folder",
+      showInFiles: baseApiUrl.value + "/folder/show-in-files",
+    },
     dir_browser: baseApiUrl.value + "/folder/dir-browser",
     playlist: {
       base: baseApiUrl.value + "/playlist",

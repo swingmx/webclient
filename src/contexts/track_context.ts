@@ -1,16 +1,18 @@
-import { Artist, Playlist, Track } from "../interfaces";
+import { Routes, router as Router } from "@/router";
+import { Artist, Playlist, Track } from "@/interfaces";
 
 // @ts-ignore
-import { Option } from "../interfaces";
-import { Routes, router as Router } from "@/router";
 
 import {
   addTrackToPlaylist,
   getAllPlaylists,
-} from "../composables/fetch/playlists";
+} from "@/composables/fetch/playlists";
+import { Option } from "@/interfaces";
+import { openInFiles } from "@/composables/fetch/folders";
 
-import useModalStore from "../stores/modal";
-import useQueueStore from "../stores/queue";
+import useModalStore from "@/stores/modal";
+import useQueueStore from "@/stores/queue";
+
 /**
  * Returns a list of context menu items for a track.
  * @param  {any} track a track object.
@@ -148,6 +150,14 @@ export default async (
     children: goToArtist(track.albumartist),
   };
 
+  const open_in_explorer: Option = {
+    label: "Open in files",
+    action: () => {
+      openInFiles(track.filepath || track.folder || "");
+    },
+    icon: "folder",
+  };
+
   const go_to_album: Option = {
     label: "Go to Album",
     action: () => {
@@ -177,6 +187,8 @@ export default async (
     separator,
     go_to_artist,
     go_to_alb_artist,
+    separator,
+    open_in_explorer,
     // separator,
     // del_track,
   ];

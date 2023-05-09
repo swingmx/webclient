@@ -24,6 +24,8 @@ export interface Track extends AlbumDisc {
   filetype: string;
   is_favorite: boolean;
 
+  og_title: string;
+  og_album: string;
   genre?: string;
   copyright?: string;
   master_index?: number;
