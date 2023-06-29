@@ -5,7 +5,7 @@
       height: `${heightCalculator(height)}px`,
     }"
   >
-    <h3>Recently added favorites</h3>
+    <h3>Recent</h3>
     <div ref="recentitemswrappers" class="list">
       <Recentsitemcard
         v-for="fav in favs.slice(0, maxAbumCards)"
@@ -38,6 +38,7 @@ const { height } = useElementSize(recentitemswrappers);
 .recent-items {
   overflow: hidden;
   margin-bottom: 2rem;
+  margin-top: 1rem;
 
   h3 {
     padding: 0 0.75rem;

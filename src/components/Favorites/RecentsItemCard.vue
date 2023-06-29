@@ -20,16 +20,10 @@
     }"
   >
     <div class="imagegroup">
-      <div
-        v-if="fav.type === 'album'"
-        class="albumbar rounded-sm"
-        style="background-image: url('/cd.texture.webp')"
-      ></div>
+      <div v-if="fav.type === 'album'" class="albumbar rounded-sm"></div>
       <img
         :src="
           fav.type === 'album'
-            ? paths.images.thumb.large + fav.item.image
-            : fav.type === 'track'
             ? paths.images.thumb.large + fav.item.image
             : paths.images.artist.large + fav.item.image
         "
@@ -43,7 +37,9 @@
     >
       {{ fav.type === "artist" ? fav.item.name : fav.item.title }}
     </div>
-    <div class="label">{{ fav.type }}</div>
+    <div class="label" :class="{ on_artist: fav.type === 'artist' }">
+      {{ fav.type === "album" ? fav.item.artist : "Artist" }}
+    </div>
   </RouterLink>
 </template>
 
@@ -51,8 +47,6 @@
 import { RecentFavResult } from "@/interfaces";
 import { paths } from "../../config";
 import { Routes } from "@/router";
-
-import { getShift } from "@/utils/colortools/shift";
 
 defineProps<{
   fav: RecentFavResult;
@@ -67,15 +61,6 @@ defineProps<{
   gap: $small;
   height: max-content;
   border: solid 1px transparent;
-
-  .album-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    // object-fit: cover;
-    // border-radius: $small;
-    // opacity: 0.5;
-  }
 
   .imagegroup {
     position: relative;
@@ -110,11 +95,17 @@ defineProps<{
   .label {
     font-size: 0.8rem;
     color: $gray1;
-    border: solid 1px;
+    font-weight: bold;
     width: max-content;
     border-radius: 1rem;
-    padding: 0 $small;
     text-transform: capitalize;
+    margin-top: -$smaller;
+  }
+
+  .on_artist {
+    background-color: $gray3;
+    padding: 0.1rem $small;
+    // opacity: 0;
   }
 
   &.artist {

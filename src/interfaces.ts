@@ -168,6 +168,7 @@ export interface RecentFavTrack {
 
 export interface RecentFavAlbum {
   albumhash: string;
+  artist: string;
   image: string;
   title: string;
   colors: string[];
@@ -194,12 +195,4 @@ export interface RecentFavArtistResult {
   item: RecentFavArtist;
 }
 
-export interface RecentFavTrackResult {
-  type: "track";
-  item: RecentFavTrack;
-}
-
-export type RecentFavResult =
-  | RecentFavAlbumResult
-  | RecentFavArtistResult
-  | RecentFavTrackResult;
+export type RecentFavResult = RecentFavAlbumResult | RecentFavArtistResult;
