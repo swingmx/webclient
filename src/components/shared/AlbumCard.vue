@@ -63,17 +63,20 @@
           $route.name === Routes.album
         "
       >
-        {{ album.date }} •
+        {{ album.date }}
         {{
           album.albumartists.length > 1
-            ? album.albumartists[1].name
-            : album.albumartists[0].name
+            ? ` • ${album.albumartists[1].name}`
+            : ""
         }}
       </div>
 
-      <div class="versions">
+      <div class="versions" v-if="album.versions.length">
         <MasterFlag
-          v-for="v in album.versions.slice(0, 1)"
+          v-for="v in getVersions(
+            album.versions,
+            useAlbumStore().info.versions
+          )"
           :bitrate="1200"
           :text="v"
           :key="v"
@@ -100,6 +103,16 @@ defineProps<{
   artist_page?: boolean;
   hide_artists?: boolean;
 }>();
+
+function getVersions(ver1: string[], ver2: string[] = []) {
+  const diff = ver1.filter((x) => !ver2.includes(x));
+
+  if (diff.length > 0) {
+    return diff.slice(0, 1);
+  }
+
+  return ver1.slice(0, 1);
+}
 </script>
 
 <style lang="scss">

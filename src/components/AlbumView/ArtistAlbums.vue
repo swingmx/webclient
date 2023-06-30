@@ -2,8 +2,7 @@
   <div
     class="artist-albums"
     :style="{
-      height: `${heightCalculator(height + (artist_page ? 60 : 0))}px`,
-      marginBottom: !artist_page ? '2rem' : '0',
+      height: `${heightCalculator(height)}px`,
     }"
   >
     <h3>
@@ -76,7 +75,6 @@ const { height } = useElementSize(artistItemsWrappers);
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
     gap: 5rem 0;
-    // outline: solid;
   }
 
   .album-card {
