@@ -2,7 +2,7 @@
   <div
     class="recent-items"
     :style="{
-      height: `${heightCalculator(height)}px`,
+      height: `${heightCalculator(height, 48)}px`,
     }"
   >
     <h3>Recent</h3>

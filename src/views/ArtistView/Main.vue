@@ -42,6 +42,7 @@ import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
 import Header from "@/components/ArtistView/Header.vue";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
 import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
+import SimilarArtists from "@/components/PlaylistView/ArtistsList.vue";
 
 const store = useArtistPageStore();
 const queue = useQueueStore();
@@ -54,6 +55,16 @@ function fetchArtistAlbums() {
 function reFetchArtistAlbums() {
   store.resetAlbums();
   store.getArtistAlbums();
+}
+
+function fetchSimilarArtists() {
+  console.log("fetchSimilarArtists");
+  store.fetchSimilarArtists();
+}
+
+function reFetchSimilarArtists() {
+  store.resetSimilarArtists();
+  store.fetchSimilarArtists();
 }
 
 interface ScrollerItem {
@@ -74,6 +85,16 @@ const artist_albums_fetcher: ScrollerItem = {
     fetch_callback: fetchArtistAlbums,
     reset_callback: reFetchArtistAlbums,
     clear_callback: store.resetAlbums,
+  },
+};
+
+const similar_artists_fetcher: ScrollerItem = {
+  id: "similar-artist-fetcher",
+  component: ArtistAlbumsFetcher,
+  props: {
+    fetch_callback: fetchSimilarArtists,
+    reset_callback: reFetchSimilarArtists,
+    clear_callback: store.resetSimilarArtists,
   },
 };
 
@@ -140,6 +161,8 @@ function getTopTracksComponent(): ScrollerItem {
   };
 }
 
+// functio
+
 const scrollerItems = computed(() => {
   let components = [header];
 
@@ -179,6 +202,21 @@ const scrollerItems = computed(() => {
       false
     );
     components.push(appearances);
+  }
+
+  components = [...components, similar_artists_fetcher];
+
+  if (store.similar_artists.length > 0) {
+    const SimilarArtistsComponent = {
+      id: "similar-artists",
+      component: SimilarArtists,
+      props: {
+        artists: store.similar_artists,
+        title: "Similar Artists",
+        route: `/artists/${store.info.artisthash}/similar?artist=${store.info.name}`,
+      },
+    };
+    components.push(SimilarArtistsComponent);
   }
 
   return components;

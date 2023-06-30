@@ -60,7 +60,7 @@ export default defineStore("context-menu", {
               this.src = src;
             },
           });
-        })
+        });
     },
     hideContextMenu() {
       this.visible = false;

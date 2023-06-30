@@ -55,6 +55,22 @@
         </RouterLink>
       </div>
 
+      <div
+        class="artist ellip"
+        v-if="
+          album.versions.length === 0 &&
+          hide_artists &&
+          $route.name === Routes.album
+        "
+      >
+        {{ album.date }} •
+        {{
+          album.albumartists.length > 1
+            ? album.albumartists[1].name
+            : album.albumartists[0].name
+        }}
+      </div>
+
       <div class="versions">
         <MasterFlag
           v-for="v in album.versions.slice(0, 1)"
@@ -100,6 +116,9 @@ defineProps<{
 
     img {
       display: block;
+      height: 8.5rem;
+      aspect-ratio: 1;
+      object-fit: cover;
     }
 
     .gradient {

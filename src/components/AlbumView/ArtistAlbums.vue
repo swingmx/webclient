@@ -76,6 +76,7 @@ const { height } = useElementSize(artistItemsWrappers);
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
     gap: 5rem 0;
+    // outline: solid;
   }
 
   .album-card {

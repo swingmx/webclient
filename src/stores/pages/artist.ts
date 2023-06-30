@@ -1,9 +1,14 @@
 import { defineStore } from "pinia";
 
-import { getArtistAlbums, getArtistData } from "@/composables/fetch/artists";
+import {
+  getArtistAlbums,
+  getArtistData,
+  getSimilarArtists,
+} from "@/composables/fetch/artists";
+
+import useSettingsStore from "@/stores/settings";
 import { Album, Artist, Track } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
-import useSettingsStore from "@/stores/settings";
 
 export default defineStore("artistPage", {
   state: () => ({
@@ -14,6 +19,7 @@ export default defineStore("artistPage", {
     compilations: <Album[]>[],
     singles: <Album[]>[],
     appearances: <Album[]>[],
+    similar_artists: <Artist[]>[],
   }),
   actions: {
     async getData(hash: string) {
@@ -36,10 +42,20 @@ export default defineStore("artistPage", {
       this.appearances = appearances;
       this.compilations = compilations;
     },
+    async fetchSimilarArtists() {
+      this.similar_artists = await getSimilarArtists(
+        this.info.artisthash,
+        maxAbumCards.value
+      );
+      console.log(this.similar_artists);
+    },
     resetAlbums() {
       this.albums = [];
       this.eps = [];
       this.singles = [];
+    },
+    resetSimilarArtists() {
+      this.similar_artists = [];
     },
     makeFavorite() {
       this.info.is_favorite = true;

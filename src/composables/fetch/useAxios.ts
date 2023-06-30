@@ -35,3 +35,5 @@ export default async (args: FetchProps) => {
 
   return { data, error, status };
 };
+
+// TODO: Set base url in axios config

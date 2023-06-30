@@ -4,7 +4,7 @@
     ref="contextMenuRef"
     id="context-menu"
     :style="{
-      opacity: context.visible ? '1' : '0',
+      visibility: context.visible ? 'visible' : 'hidden',
     }"
   >
     <ContextItem

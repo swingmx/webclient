@@ -3,7 +3,7 @@ import { paths } from "@/config";
 import useAxios from "./useAxios";
 import { Artist, Track, Album } from "@/interfaces";
 
-const getArtistData = async (hash: string, limit: number = 5) => {
+export const getArtistData = async (hash: string, limit: number = 5) => {
   interface ArtistData {
     artist: Artist;
     tracks: Track[];
@@ -25,7 +25,7 @@ const getArtistData = async (hash: string, limit: number = 5) => {
   return data as ArtistData;
 };
 
-const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
+export const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
   interface ArtistAlbums {
     artistname: string;
     albums: Album[];
@@ -47,7 +47,11 @@ const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
   return data as ArtistAlbums;
 };
 
-const getArtistTracks = async (hash: string, offset: number = 0, limit = 6) => {
+export const getArtistTracks = async (
+  hash: string,
+  offset: number = 0,
+  limit = 6
+) => {
   const { data, error } = await useAxios({
     get: true,
     url: paths.api.artist + `/${hash}/tracks?offset=${offset}&limit=${limit}`,
@@ -60,4 +64,15 @@ const getArtistTracks = async (hash: string, offset: number = 0, limit = 6) => {
   return data.tracks as Track[];
 };
 
-export { getArtistData, getArtistAlbums, getArtistTracks };
+export const getSimilarArtists = async (hash: string, limit = 6) => {
+  const { data, error } = await useAxios({
+    get: true,
+    url: paths.api.artist + `/${hash}/similar?limit=${limit}`,
+  });
+
+  if (error) {
+    console.error(error);
+  }
+
+  return data.artists as Artist[];
+};

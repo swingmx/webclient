@@ -1,7 +1,10 @@
-export default function getComponentHeight(wrapperHeight: number) {
-  const paddings = 64;
+export default function getComponentHeight(
+  wrapperHeight: number,
+  offset: number = 0
+) {
+  const paddings = 32 + 16;
 
   return wrapperHeight / 2 < 150
     ? wrapperHeight + paddings
-    : (wrapperHeight - 5 * 16) / 2 + paddings;
+    : wrapperHeight / 2 - offset + paddings;
 }
