@@ -82,10 +82,10 @@ import useQueueStore from "@/stores/queue";
 import { formatSeconds } from "@/utils";
 
 import OptionSvg from "@/assets/icons/more.svg";
+import { dropSources } from "@/composables/enums";
 import ArtistName from "./ArtistName.vue";
 import HeartSvg from "./HeartSvg.vue";
 import MasterFlag from "./MasterFlag.vue";
-import { dropSources } from "@/composables/enums";
 
 const imguri = paths.images.thumb.small;
 const context_menu_showing = ref(false);

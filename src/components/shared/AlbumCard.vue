@@ -22,7 +22,7 @@
       />
     </div>
     <div>
-      <h4 class="title ellip" v-tooltip>
+      <h4 class="title ellip">
         {{ album.title }}
       </h4>
       <div

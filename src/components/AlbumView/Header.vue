@@ -63,15 +63,16 @@
               :fill="album.versions.length > 1 && index === 0"
             />
           </div>
-          <div class="stats ellip">
-            <div class="border rounded-sm pad-sm">
+          <div class="stats ellip2">
+            <div class="border rounded-sm pad-sm ellip">
               <ArtistName
                 :artists="album.albumartists"
                 :albumartists="''"
                 :small="true"
-              />&nbsp;• {{ album.date }} • {{ album.count }}
-              {{ album.count === 1 ? "Track" : "Tracks" }} •
-              {{ formatSeconds(album.duration, true) }}
+                :append="`• ${album.date}  •  ${album.count} ${
+                  album.count === 1 ? 'Track' : 'Tracks'
+                }  •  ${formatSeconds(album.duration, true)}`"
+              />
             </div>
           </div>
           <div class="buttons">
@@ -298,7 +299,7 @@ onBeforeRouteUpdate(() => {
     .art {
       display: inline-flex;
       gap: $small;
-      max-width: 10rem;
+      max-width: 8rem;
       flex-wrap: wrap;
 
       .shadow-inset {

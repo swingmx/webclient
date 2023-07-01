@@ -82,6 +82,7 @@ export default defineStore("Queue", {
           audio.play().then(() => {
             this.playing = true;
             updateMediaNotif();
+            this.duration.full = audio.duration;
 
             fetchAlbumColor(track.albumhash).then((color) => {
               useColorStore().setTheme1Color(color);

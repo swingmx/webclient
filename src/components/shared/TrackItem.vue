@@ -60,17 +60,16 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 
+import { showTrackContextMenu as showContext } from "@/composables/context";
+import { favType } from "@/composables/enums";
+import favoriteHandler from "@/composables/favoriteHandler";
 import { paths } from "@/config";
 import { Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
-import { favType } from "@/composables/enums";
-import favoriteHandler from "@/composables/favoriteHandler";
-import { showTrackContextMenu as showContext } from "@/composables/context";
 
-import HeartSvg from "./HeartSvg.vue";
-import MasterFlag from "./MasterFlag.vue";
-import ArtistName from "./ArtistName.vue";
 import DelSvg from "@/assets/icons/plus.svg";
+import ArtistName from "./ArtistName.vue";
+import HeartSvg from "./HeartSvg.vue";
 
 const props = defineProps<{
   track: Track;

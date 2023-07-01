@@ -45,14 +45,14 @@
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router";
-import { paths } from "@/config";
 import ArtistName from "@/components/shared/ArtistName.vue";
-import { getShift } from "@/utils/colortools/shift";
+import { paths } from "@/config";
+import { Routes } from "@/router";
 import useColorStore from "@/stores/colors";
+import { getShift } from "@/utils/colortools/shift";
 
-import useSettingsStore from "@/stores/settings";
 import useQStore from "@/stores/queue";
+import useSettingsStore from "@/stores/settings";
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
 
