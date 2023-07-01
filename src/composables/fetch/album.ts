@@ -113,4 +113,17 @@ export async function getAlbumTracks(albumhash: string): Promise<Track[]> {
   return data.tracks;
 }
 
+export async function getSimilarAlbums(
+  artisthash: string,
+  limit: number = 5
+): Promise<Album[]> {
+  const { data, error, status } = await useAxios({
+    url:
+      albumUrl + "/similar?" + "artisthash=" + artisthash + "&limit=" + limit,
+    get: true,
+  });
+
+  return data.albums;
+}
+
 export { getAlbumData as getAlbum, getAlbumArtists, getAlbumBio };

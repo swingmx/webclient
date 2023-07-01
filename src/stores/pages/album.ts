@@ -10,6 +10,7 @@ import {
   getAlbum,
   getAlbumsFromArtist,
   getAlbumVersions,
+  getSimilarAlbums,
 } from "../../composables/fetch/album";
 import { Album, FuseResult, Track } from "../../interfaces";
 import { useNotifStore } from "../notification";
@@ -51,6 +52,7 @@ export default defineStore("album", {
     srcTracks: <Track[]>[],
     albumArtists: <{ artisthash: string; albums: Album[] }[]>[],
     otherVersions: <Album[]>[],
+    similarAlbums: <Album[]>[],
     bio: null,
     discs: <Disc>{},
   }),
@@ -100,6 +102,12 @@ export default defineStore("album", {
         this.info.albumartists[0].artisthash
       );
     },
+    async fetchSimilarAlbums() {
+      this.similarAlbums = await getSimilarAlbums(
+        this.info.albumartists[0].artisthash,
+        maxAbumCards.value
+      );
+    },
     resetQuery() {
       this.query = "";
     },
@@ -108,6 +116,9 @@ export default defineStore("album", {
     },
     resetOtherVersions() {
       this.otherVersions = [];
+    },
+    resetSimilarAlbums() {
+      this.similarAlbums = [];
     },
     makeFavorite() {
       this.info.is_favorite = true;

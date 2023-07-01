@@ -33,9 +33,11 @@ import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 import AlbumDiscBar from "@/components/AlbumView/AlbumDiscBar.vue";
 import AlbumsList from "@/components/AlbumView/ArtistAlbums.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
+import SimilarAlbumLoader from "./SimilarAlbumLoader.vue";
 
 import { isSmall, heightLarge } from "@/stores/content-width";
 import { discographyAlbumTypes, dropSources } from "@/composables/enums";
+import { onMounted } from "vue";
 
 const album = useAlbumStore();
 const queue = useQueueStore();
@@ -88,6 +90,20 @@ const AlbumVersionsFetcher: ScrollerItem = {
       album.fetchAlbumVersions();
     },
     clear_callback: album.resetOtherVersions,
+  },
+  size: 2,
+};
+
+const SimilarAlbumsFetcher: ScrollerItem = {
+  id: "similarAlbumsFetcherBanner",
+  component: AlbumsFetcher,
+  props: {
+    fetch_callback: album.fetchSimilarAlbums,
+    reset_callback: () => {
+      album.resetSimilarAlbums();
+      album.fetchSimilarAlbums();
+    },
+    clear_callback: album.resetSimilarAlbums,
   },
   size: 2,
 };
@@ -161,8 +177,13 @@ const scrollerItems = computed(() => {
     components.push(otherVersionsComponent);
   }
 
-  // components.push();
   components.push(...moreFrom);
+  components.push(SimilarAlbumsFetcher);
+  components.push({
+    id: "similarAlbums",
+    component: SimilarAlbumLoader,
+    size: 18 * 16,
+  });
 
   return components;
 });
@@ -187,6 +208,8 @@ onBeforeRouteLeave(() => {
     album.resetAlbumArtists();
   }, 500);
 });
+
+onMounted(() => console.log("mounted"));
 </script>
 
 <style lang="scss">

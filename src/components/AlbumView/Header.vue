@@ -207,12 +207,14 @@ function balanceText(text: string, container_width: number) {
   }
 
   const words = text.split(" ");
-  const wordsPerLine = Math.ceil(words.length / 3);
+  const wordsPerLine = Math.ceil(words.length / 2);
+  // TODO: use characters to determine if text should be split. Check if the middle word is too short or too long, and if so, split at the next word or previous.
 
   const firstLine = words.slice(0, wordsPerLine).join(" ");
   const secondLine = words.slice(wordsPerLine).join(" ");
 
   return [firstLine, secondLine];
+
 }
 
 onMounted(() => {
