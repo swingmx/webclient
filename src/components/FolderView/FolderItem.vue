@@ -28,8 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { Routes } from "@/router";
+import { ref } from "vue";
 
 import { Folder } from "@/interfaces";
 
@@ -95,7 +95,7 @@ function handleClick(e: MouseEvent) {
     color: $darkblue;
   }
 
-  @include phone-only {
+  @include largePhones {
     height: 4rem;
   }
 

@@ -5,22 +5,21 @@
       color: album.info.colors ? getTextColor(album.info.colors[0]) : '',
     }"
   >
-    <!-- :class="{
-      nocontrast: album.info.colors ? isLight(album.info.colors[0]) : false,
-    }" -->
-    <div class="rounded pad-sm">
-      {{ album.info.genres.length ? "Genres" : "No genres" }}
-    </div>
-    <div
-      v-for="genre in album.info.genres"
-      class="rounded pad-sm"
-      :style="{
-        backgroundColor: album.info.colors
-          ? getBackgroundColor(album.info.colors[0])
-          : '',
-      }"
-    >
-      {{ genre }}
+    <div class="scrollable">
+      <div class="rounded pad-sm genre-pill">
+        {{ album.info.genres.length ? "Genres" : "No genres" }}
+      </div>
+      <div
+        v-for="genre in album.info.genres"
+        class="genre-pill rounded pad-sm"
+        :style="{
+          backgroundColor: album.info.colors
+            ? getBackgroundColor(album.info.colors[0])
+            : '',
+        }"
+      >
+        {{ genre }}
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +27,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import useAlbumStore from "@/stores/pages/album";
-import { isLight } from "@/composables/colors/album";
 
 import { getTextColor, getBackgroundColor } from "@/utils/colortools/shift";
 
@@ -43,15 +41,28 @@ onMounted(async () => {
 
 <style lang="scss">
 .genres-banner {
-  display: flex;
-  gap: 1rem;
+  // display: flex;
+  // flex-wrap: nowrap;
+  // gap: 1rem;
   margin-top: 2rem;
   font-size: 0.9rem;
   padding-left: $medium;
   text-transform: capitalize;
   user-select: none;
+  overflow: scroll;
+  @include hideScrollbars;
 
-  div {
+
+  .scrollable {
+    display: flex;
+    flex-wrap: nowrap;
+    width: max-content;
+    gap: 1rem;
+    padding-right: $medium;
+    overflow-x: hidden;
+  }
+
+  .genre-pill {
     background-color: $gray5;
     min-width: 4rem;
     text-align: center;

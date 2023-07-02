@@ -44,7 +44,7 @@ import { menus } from "./navitems";
   text-transform: capitalize;
   margin-top: 1rem;
 
-  @media screen and (max-width: 768px) {
+  @include allPhones {
     display: flex;
     justify-content: space-between;
 
@@ -80,7 +80,7 @@ import { menus } from "./navitems";
       background-color: $pink;
       border-radius: 1rem;
 
-      @media screen and (max-width: 768px) {
+      @include allPhones {
         top: 90%;
         left: 50%;
         transform: translateX(-50%);

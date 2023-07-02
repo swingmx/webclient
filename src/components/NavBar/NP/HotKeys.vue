@@ -17,8 +17,8 @@
 import useQStore from "@/stores/queue";
 
 import {
-  default as NextSvg,
-  default as PrevSvg,
+default as NextSvg,
+default as PrevSvg,
 } from "../../../assets/icons/next.svg";
 import PauseSvg from "../../../assets/icons/pause.svg";
 import PlaySvg from "../../../assets/icons/play.svg";
@@ -56,7 +56,7 @@ const q = useQStore();
     width: 100%;
   }
 
-  @media screen and (max-width: 768px) {
+  @include allPhones {
     grid-template-columns: 1fr max-content 1fr;
     position: relative;
     margin-right: -$small;

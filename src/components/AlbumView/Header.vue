@@ -12,12 +12,10 @@
     class="a-header rounded"
     ref="albumheaderthing"
     :style="{
-      backgroundColor: album.colors[0]
-        ? getBackgroundColor(album.colors[0])
-        : '',
-      height: `${heightLarge ? '24rem' : '18rem'}`,
+      background: album.colors[0] ? getBackgroundColor(album.colors[0]) : '',
     }"
   >
+    <!-- height: `${heightLarge ? '24rem' : '18rem'}`, -->
     <div
       class="big-img no-scroll"
       :class="`${albumHeaderSmall ? 'imgSmall' : ''} shadow-lg rounded-sm`"
@@ -30,7 +28,7 @@
     >
       <div class="album-info">
         <div class="top">
-          <div v-auto-animate class="h">
+          <div v-auto-animate class="h" v-if="!isMobile">
             <span v-if="album.is_soundtrack">Soundtrack</span>
             <span v-else-if="album.is_live">Concert</span>
             <span v-else-if="album.is_compilation">Compilation</span>
@@ -39,7 +37,7 @@
             <span v-else>Album</span>
           </div>
           <div class="title ellip2" id="albumheadertitle">
-            <span v-for="t in titleSplits">{{ t }} <br /></span>
+            <span v-for="t in titleSplits">{{ t }}<br /></span>
           </div>
         </div>
         <div class="bottom">
@@ -69,10 +67,18 @@
                 :artists="album.albumartists"
                 :albumartists="''"
                 :small="true"
-                :append="`• ${album.date}  •  ${album.count} ${
-                  album.count === 1 ? 'Track' : 'Tracks'
-                }  •  ${formatSeconds(album.duration, true)}`"
+                :append="
+                  !isMobile
+                    ? `• ${album.date}  •  ${album.count} ${
+                        album.count === 1 ? 'Track' : 'Tracks'
+                      }  •  ${formatSeconds(album.duration, true)}`
+                    : ''
+                "
               />
+            </div>
+            <div class="stats2" v-if="isMobile">
+              {{ album.date }} • {{ album.count }} Tracks •
+              {{ formatSeconds(album.duration, true) }}
             </div>
           </div>
           <div class="buttons">
@@ -132,6 +138,7 @@ import {
   heightLarge,
   isMedium,
   isSmall,
+  isMobile,
 } from "@/stores/content-width";
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
@@ -147,10 +154,10 @@ import { formatSeconds, useVisibility } from "@/utils";
 
 import ArtistName from "@/components/shared/ArtistName.vue";
 import favoriteHandler from "@/composables/favoriteHandler";
-import HeartSvg from "../shared/HeartSvg.vue";
-import PlayBtnRect from "../shared/PlayBtnRect.vue";
-import MasterFlag from "../shared/MasterFlag.vue";
 import { onBeforeRouteUpdate } from "vue-router";
+import HeartSvg from "../shared/HeartSvg.vue";
+import MasterFlag from "../shared/MasterFlag.vue";
+import PlayBtnRect from "../shared/PlayBtnRect.vue";
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;
@@ -188,6 +195,8 @@ function handleFav() {
 }
 
 function balanceText(text: string, container_width: number) {
+  if (isMobile.value) return [text];
+
   const tempElem = document.createElement("span");
   tempElem.classList.add("balance-text-temp");
   tempElem.style.fontSize = "2.75rem";
@@ -214,7 +223,6 @@ function balanceText(text: string, container_width: number) {
   const secondLine = words.slice(wordsPerLine).join(" ");
 
   return [firstLine, secondLine];
-
 }
 
 onMounted(() => {
@@ -248,7 +256,7 @@ onBeforeRouteUpdate(() => {
   grid-template-columns: max-content 1fr;
   gap: 1rem;
   padding: 1rem;
-  height: 24rem;
+  // height: 30rem;
   // height: $banner-height;
   background-color: $black;
   align-items: flex-end;
@@ -259,7 +267,6 @@ onBeforeRouteUpdate(() => {
   }
 
   .big-img {
-    height: calc(100%);
     width: 16rem;
     height: 16rem;
     display: flex;
@@ -356,6 +363,11 @@ onBeforeRouteUpdate(() => {
     .bottom {
       margin-top: $smaller;
 
+      .stats2 {
+        text-align: left;
+        margin: 0;
+      }
+
       .stats {
         font-weight: bold;
         margin-bottom: 0.75rem;
@@ -371,8 +383,8 @@ onBeforeRouteUpdate(() => {
 
         div {
           font-size: 0.8rem;
-          display: flex;
-          flex-wrap: wrap;
+          word-break: normal;
+          text-align: center;
         }
       }
 
@@ -386,6 +398,44 @@ onBeforeRouteUpdate(() => {
         //   border: solid 1px !important;
         // }
       }
+    }
+  }
+
+  @include allPhones {
+    grid-template-columns: 1fr;
+    padding: 2rem 1rem;
+
+    .big-img {
+      width: 10rem !important;
+      height: 10rem !important;
+      aspect-ratio: 1;
+      margin: 0 auto;
+
+      img {
+        height: 10rem !important;
+      }
+    }
+
+    .title {
+      font-size: 1.5rem !important;
+      max-width: fit-content;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .buttons {
+      justify-content: center;
+    }
+
+    .stats > div {
+      border: none;
+      margin: 0 auto;
+    }
+
+    .versions {
+      margin-bottom: 0 !important;
+      margin-left: 0 !important;
+      text-align: center;
     }
   }
 }

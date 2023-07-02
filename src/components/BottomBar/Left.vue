@@ -51,15 +51,15 @@ import ArtistName from "@/components/shared/ArtistName.vue";
 import { paths } from "@/config";
 import { Routes } from "@/router";
 import useColorStore from "@/stores/colors";
-import { getShift } from "@/utils/colortools/shift";
 import { isLargerMobile, isMobile } from "@/stores/content-width";
+import { getShift } from "@/utils/colortools/shift";
 
 import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
+import HotKeys from "../NavBar/NP/HotKeys.vue";
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
 import Actions from "./Right.vue";
-import HotKeys from "../NavBar/NP/HotKeys.vue";
 
 const queue = useQStore();
 const settings = useSettingsStore();
@@ -108,7 +108,7 @@ const emit = defineEmits<{
       align-items: center;
     }
   }
-  @media screen and (max-width: 768px) {
+  @include allPhones {
     height: 4rem;
     grid-template-columns: max-content 1fr max-content;
 

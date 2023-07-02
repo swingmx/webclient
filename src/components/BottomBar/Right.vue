@@ -26,9 +26,9 @@
 import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
 
-import HeartSvg from "../shared/HeartSvg.vue";
-import RepeatAllSvg from "@/assets/icons/repeat.svg";
 import RepeatOneSvg from "@/assets/icons/repeat-one.svg";
+import RepeatAllSvg from "@/assets/icons/repeat.svg";
+import HeartSvg from "../shared/HeartSvg.vue";
 
 const queue = useQStore();
 const settings = useSettingsStore();
@@ -47,7 +47,7 @@ const emit = defineEmits<{
   align-items: center;
   height: 4rem;
 
-  @media screen and (max-width: 768px) {
+  @include allPhones {
     width: max-content;
   }
 
