@@ -8,6 +8,9 @@
         params: menu?.params,
         query: menu.query && menu.query(),
       }"
+      :class="{
+        separator: menu.separator,
+      }"
     >
       <div v-wave class="rounded-sm">
         <div
@@ -46,6 +49,10 @@ import { menus } from "./navitems";
     justify-content: space-between;
 
     .in > span {
+      display: none;
+    }
+
+    .separator {
       display: none;
     }
   }

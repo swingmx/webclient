@@ -1,5 +1,6 @@
 import { computed } from "vue";
 import { ref } from "@vue/reactivity";
+import { useWindowSize } from "@vueuse/core";
 
 const content_width = ref(0);
 const content_height = ref(0);
@@ -35,6 +36,16 @@ const maxAbumCards = computed(() => {
 
   return max;
 });
+
+// WINDOW SIZES
+const MOBILE_WIDTH = 768;
+const LARGER_MOBILE_WIDTH = 550;
+const { width: win_width } = useWindowSize();
+
+export const isMobile = computed(() => win_width.value < MOBILE_WIDTH);
+export const isLargerMobile = computed(
+  () => win_width.value > LARGER_MOBILE_WIDTH && win_width.value < MOBILE_WIDTH
+);
 
 export {
   content_width,

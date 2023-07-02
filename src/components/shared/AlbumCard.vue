@@ -129,7 +129,8 @@ function getVersions(ver1: string[], ver2: string[] = []) {
 
     img {
       display: block;
-      height: 8.5rem;
+      aspect-ratio: 1;
+      height: 100%;
       aspect-ratio: 1;
       object-fit: cover;
     }

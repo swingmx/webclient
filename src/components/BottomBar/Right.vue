@@ -3,7 +3,6 @@
     <HeartSvg
       :state="queue.currenttrack?.is_favorite"
       @handleFav="() => emit('handleFav')"
-      v-if="!hide_fav"
     />
     <button
       class="repeat"
@@ -37,10 +36,6 @@ const settings = useSettingsStore();
 // define emits: handleFav
 const emit = defineEmits<{
   (event: "handleFav"): void;
-}>();
-
-defineProps<{
-  hide_fav?: boolean;
 }>();
 </script>
 

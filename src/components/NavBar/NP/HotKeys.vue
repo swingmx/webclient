@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="hotkeys rounded-sm no-scroll"
-
-  >
+  <div class="hotkeys no-scroll">
     <button @click.prevent="q.playPrev">
       <PrevSvg />
     </button>
@@ -27,7 +24,6 @@ import PauseSvg from "../../../assets/icons/pause.svg";
 import PlaySvg from "../../../assets/icons/play.svg";
 
 const q = useQStore();
-
 </script>
 
 <style lang="scss">
@@ -36,12 +32,13 @@ const q = useQStore();
   grid-template-columns: 1fr 4rem 1fr;
   gap: 1rem;
   height: 100%;
+  align-items: center;
 
   button {
     height: 100%;
     padding: 0;
     background: none;
-    border: none;
+    border: 1px solid transparent;
     border-radius: 0;
 
     &:hover {
@@ -57,6 +54,26 @@ const q = useQStore();
 
   button:nth-child(2) {
     width: 100%;
+  }
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: 1fr max-content 1fr;
+    position: relative;
+    margin-right: -$small;
+
+    button:first-child {
+      margin-left: $small;
+    }
+  }
+
+  @media screen and (min-width: 550px) {
+    &::before {
+      content: "";
+      position: absolute;
+      height: 1.5rem;
+      background-color: $gray4;
+      width: 1px;
+    }
   }
 }
 </style>

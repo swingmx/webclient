@@ -127,4 +127,3 @@ export const paths = {
   },
 };
 
-export const MOBILE_WIDTH = 768;

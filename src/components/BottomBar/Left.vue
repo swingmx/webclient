@@ -1,7 +1,7 @@
 <template>
   <div class="left-group" v-auto-animate>
     <HeartSvg
-      v-if="settings.use_np_img"
+      v-if="settings.use_np_img && !isMobile"
       :state="queue.currenttrack?.is_favorite"
       @handleFav="emit('handleFav')"
     />
@@ -27,6 +27,12 @@
         color: getShift(colors.theme1, [0, -170]),
       }"
     >
+      <div v-tooltip class="title">
+        <span class="ellip">
+          {{ queue.currenttrack?.title || "Hello there" }}
+        </span>
+        <MasterFlag :bitrate="queue.currenttrack?.bitrate || 0" />
+      </div>
       <ArtistName
         :artists="queue.currenttrack?.artist || []"
         :albumartists="
@@ -34,14 +40,9 @@
         "
         class="artist"
       />
-      <div v-tooltip class="title">
-        <span class="ellip">
-          {{ queue.currenttrack?.title || "Hello there" }}
-        </span>
-        <MasterFlag :bitrate="queue.currenttrack?.bitrate || 0" />
-      </div>
     </div>
-    <Actions :hide_fav="true" v-if="show_actions" />
+    <Actions v-if="isLargerMobile" />
+    <HotKeys v-if="isMobile" />
   </div>
 </template>
 
@@ -51,12 +52,14 @@ import { paths } from "@/config";
 import { Routes } from "@/router";
 import useColorStore from "@/stores/colors";
 import { getShift } from "@/utils/colortools/shift";
+import { isLargerMobile, isMobile } from "@/stores/content-width";
 
 import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
 import Actions from "./Right.vue";
+import HotKeys from "../NavBar/NP/HotKeys.vue";
 
 const queue = useQStore();
 const settings = useSettingsStore();
@@ -64,10 +67,6 @@ const colors = useColorStore();
 
 const emit = defineEmits<{
   (e: "handleFav"): void;
-}>();
-
-defineProps<{
-  show_actions: boolean;
 }>();
 </script>
 
@@ -78,10 +77,6 @@ defineProps<{
   gap: $small;
   align-items: center;
   font-size: small;
-
-  @media screen and (max-width: 768px) {
-    grid-template-columns: max-content 1fr max-content;
-  }
 
   a {
     font-size: small;
@@ -112,6 +107,19 @@ defineProps<{
       display: flex;
       align-items: center;
     }
+  }
+  @media screen and (max-width: 768px) {
+    height: 4rem;
+    grid-template-columns: max-content 1fr max-content;
+
+    .heart-button {
+      height: max-content;
+      border: none !important;
+    }
+  }
+
+  @media screen and (min-width: 550px) {
+    grid-template-columns: max-content 1fr max-content max-content;
   }
 }
 </style>

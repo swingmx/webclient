@@ -10,15 +10,15 @@ import SettingsSvg from "../../assets/icons/settings.svg";
 
 export const menus = [
   {
-    name: "playlists",
-    route_name: Routes.playlists,
-    icon: PlaylistSvg,
-  },
-  {
     name: "folders",
     route_name: Routes.folder,
     params: { path: "$home" },
     icon: FolderSvg,
+  },
+  {
+    name: "playlists",
+    route_name: Routes.playlists,
+    icon: PlaylistSvg,
   },
 
   {

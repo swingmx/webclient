@@ -1,8 +1,8 @@
 <template>
   <div class="b-bar">
-    <LeftGroup @handleFav="handleFav" :show_actions="width < MOBILE_WIDTH" />
+    <LeftGroup @handleFav="handleFav"/>
     <div class="center">
-      <div class="with-time">
+      <div class="with-time" v-if="!isMobile">
         <div class="time time-current">
           <span>
             {{ formatSeconds(queue.duration.current || 0) }}
@@ -24,18 +24,16 @@
       </div>
       <Progress />
     </div>
-    <RightGroup @handleFav="handleFav" v-if="width > MOBILE_WIDTH" />
+    <RightGroup @handleFav="handleFav" v-if="!isMobile" />
     <Navigation v-else />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useWindowSize } from "@vueuse/core";
-
 import { formatSeconds } from "@/utils";
 import { favType } from "@/composables/enums";
 import favoriteHandler from "@/composables/favoriteHandler";
-import { MOBILE_WIDTH } from "@/config";
+import { isMobile } from "@/stores/content-width";
 
 import useQStore from "@/stores/queue";
 
@@ -57,8 +55,6 @@ function handleFav() {
     () => null
   );
 }
-
-const { width } = useWindowSize();
 </script>
 
 <style lang="scss">
@@ -68,11 +64,12 @@ const { width } = useWindowSize();
   grid-template-columns: 1fr max-content 1fr;
   align-items: center;
   z-index: 1;
+  padding: 0 1rem;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(3, 1fr);
-    padding: 1rem;
+    padding: 0 1rem $small 1rem;
   }
 
   button {
