@@ -1,7 +1,7 @@
 import { useStorage } from "@vueuse/core";
 
 const development = import.meta.env.DEV;
-const dev_url = "http://localhost:1980";
+const dev_url = "http://192.168.100.65:1980";
 const url = development ? dev_url : "";
 
 export const baseApiUrl = useStorage("baseApiUrl", url, sessionStorage);
@@ -126,3 +126,5 @@ export const paths = {
     raw: baseImgUrl + imageRoutes.raw,
   },
 };
+
+export const MOBILE_WIDTH = 768;

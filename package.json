@@ -6,6 +6,7 @@
     "dev": "vite",
     "serve": "vite preview",
     "build": "vite build --emptyOutDir",
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo-fill.svg",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },
   "dependencies": {
@@ -32,11 +33,13 @@
   },
   "devDependencies": {
     "@nextcss/color-tools": "^1.0.7",
+    "@vite-pwa/assets-generator": "^0.0.3",
     "@vitejs/plugin-vue": "^3.2.0",
     "eslint": "^8.7.0",
     "eslint-plugin-vue": "^8.3.0",
     "typescript": "^5.0.4",
     "vite": "^3.0.4",
+    "vite-plugin-pwa": "^0.16.4",
     "vite-svg-loader": "^3.4.0",
     "vue-virtual-draglist": "^3.0.4"
   },

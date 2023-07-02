@@ -14,6 +14,7 @@ const props = defineProps<{
 
 onMounted(async () => {
   props.fetch_callback();
+  console.log("mounted xx");
 });
 
 onBeforeRouteUpdate(() => {

@@ -161,8 +161,6 @@ function getTopTracksComponent(): ScrollerItem {
   };
 }
 
-// functio
-
 const scrollerItems = computed(() => {
   let components = [header];
 
@@ -204,6 +202,7 @@ const scrollerItems = computed(() => {
     components.push(appearances);
   }
 
+  components = [...components];
   components = [...components, similar_artists_fetcher];
 
   if (store.similar_artists.length > 0) {
@@ -212,7 +211,7 @@ const scrollerItems = computed(() => {
       component: SimilarArtists,
       props: {
         artists: store.similar_artists,
-        title: "Similar Artists",
+        title: "You Might Like",
         route: `/artists/${store.info.artisthash}/similar?artist=${store.info.name}`,
       },
     };

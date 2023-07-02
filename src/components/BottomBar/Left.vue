@@ -41,6 +41,7 @@
         <MasterFlag :bitrate="queue.currenttrack?.bitrate || 0" />
       </div>
     </div>
+    <Actions :hide_fav="true" v-if="show_actions" />
   </div>
 </template>
 
@@ -55,6 +56,7 @@ import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
+import Actions from "./Right.vue";
 
 const queue = useQStore();
 const settings = useSettingsStore();
@@ -63,16 +65,23 @@ const colors = useColorStore();
 const emit = defineEmits<{
   (e: "handleFav"): void;
 }>();
+
+defineProps<{
+  show_actions: boolean;
+}>();
 </script>
 
 <style lang="scss">
 .left-group {
   display: grid;
-  padding-left: 1rem;
   grid-template-columns: max-content 1fr;
   gap: $small;
   align-items: center;
   font-size: small;
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: max-content 1fr max-content;
+  }
 
   a {
     font-size: small;

@@ -1,6 +1,6 @@
 <template>
   <div class="b-bar">
-    <LeftGroup @handleFav="handleFav" />
+    <LeftGroup @handleFav="handleFav" :show_actions="width < MOBILE_WIDTH" />
     <div class="center">
       <div class="with-time">
         <div class="time time-current">
@@ -24,49 +24,29 @@
       </div>
       <Progress />
     </div>
-
-    <div class="right-group">
-      <HeartSvg
-        :state="queue.currenttrack?.is_favorite"
-        @handleFav="handleFav"
-      />
-      <button
-        class="repeat"
-        :class="{ 'repeat-disabled': settings.no_repeat }"
-        @click="settings.toggleRepeatMode"
-        :title="
-          settings.repeat_all
-            ? 'Repeat all'
-            : settings.no_repeat
-            ? 'No repeat'
-            : 'Repeat one'
-        "
-      >
-        <RepeatOneSvg v-if="settings.repeat_one" />
-        <RepeatAllSvg v-else />
-      </button>
-    </div>
+    <RightGroup @handleFav="handleFav" v-if="width > MOBILE_WIDTH" />
+    <Navigation v-else />
   </div>
 </template>
 
 <script setup lang="ts">
+import { useWindowSize } from "@vueuse/core";
+
 import { formatSeconds } from "@/utils";
 import { favType } from "@/composables/enums";
 import favoriteHandler from "@/composables/favoriteHandler";
+import { MOBILE_WIDTH } from "@/config";
 
 import useQStore from "@/stores/queue";
-import useSettingsStore from "@/stores/settings";
 
-import HotKeys from "@/components/LeftSidebar/NP/HotKeys.vue";
-import Progress from "@/components/LeftSidebar/NP/Progress.vue";
+import HotKeys from "@/components/NavBar/NP/HotKeys.vue";
+import Progress from "@/components/NavBar/NP/Progress.vue";
+import Navigation from "@/components/NavBar/Navigation.vue";
 
-import HeartSvg from "../shared/HeartSvg.vue";
-import RepeatAllSvg from "@/assets/icons/repeat.svg";
-import RepeatOneSvg from "@/assets/icons/repeat-one.svg";
 import LeftGroup from "./Left.vue";
+import RightGroup from "./Right.vue";
 
 const queue = useQStore();
-const settings = useSettingsStore();
 
 function handleFav() {
   favoriteHandler(
@@ -77,6 +57,8 @@ function handleFav() {
     () => null
   );
 }
+
+const { width } = useWindowSize();
 </script>
 
 <style lang="scss">
@@ -86,6 +68,12 @@ function handleFav() {
   grid-template-columns: 1fr max-content 1fr;
   align-items: center;
   z-index: 1;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    padding: 1rem;
+  }
 
   button {
     height: 2rem;
@@ -98,8 +86,6 @@ function handleFav() {
       background-color: $gray !important;
     }
   }
-
-  gap: 1rem;
 
   &:hover {
     ::-moz-range-thumb {
@@ -138,6 +124,10 @@ function handleFav() {
       width: 20rem !important;
     }
 
+    @media (max-width: 768px) {
+      width: 100% !important;
+    }
+
     .time {
       font-size: $medium;
       height: fit-content;
@@ -161,36 +151,6 @@ function handleFav() {
     place-items: center;
     scale: 1.2;
     border: none;
-  }
-}
-
-.right-group {
-  display: grid;
-  justify-content: flex-end;
-  grid-template-columns: repeat(2, max-content);
-  align-items: center;
-  height: 4rem;
-  padding-right: 2rem;
-
-  button {
-    padding: 0;
-    height: 3rem;
-    width: 3rem;
-    border: none;
-  }
-
-  button.repeat {
-    background-color: transparent;
-
-    svg {
-      transform: scale(0.75);
-    }
-  }
-
-  button.repeat.repeat-disabled {
-    svg {
-      opacity: 0.25;
-    }
   }
 }
 </style>

@@ -37,7 +37,6 @@ import SimilarAlbumLoader from "./SimilarAlbumLoader.vue";
 
 import { isSmall, heightLarge } from "@/stores/content-width";
 import { discographyAlbumTypes, dropSources } from "@/composables/enums";
-import { onMounted } from "vue";
 
 const album = useAlbumStore();
 const queue = useQueueStore();
@@ -179,11 +178,14 @@ const scrollerItems = computed(() => {
 
   components.push(...moreFrom);
   components.push(SimilarAlbumsFetcher);
-  components.push({
-    id: "similarAlbums",
-    component: SimilarAlbumLoader,
-    size: 18 * 16,
-  });
+
+  if (album.similarAlbums.length > 0) {
+    components.push({
+      id: "similarAlbums",
+      component: SimilarAlbumLoader,
+      size: 18 * 16,
+    });
+  }
 
   return components;
 });
@@ -208,8 +210,6 @@ onBeforeRouteLeave(() => {
     album.resetAlbumArtists();
   }, 500);
 });
-
-onMounted(() => console.log("mounted"));
 </script>
 
 <style lang="scss">

@@ -12,7 +12,7 @@
     }"
     :style="{ maxWidth: `${content_height > 1080 ? '2220px' : '1720px'}` }"
   >
-    <LeftSidebar />
+    <LeftSidebar v-if="win_width > PHONE_WIDTH" />
     <NavBar />
     <div id="acontent" v-element-size="updateContentElemSize">
       <router-view />
@@ -25,11 +25,11 @@
 
 <script setup lang="ts">
 // @libraries
-import { vElementSize } from "@vueuse/components";
-import { onStartTyping } from "@vueuse/core";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-
+import { useWindowSize } from "@vueuse/core";
+import { onStartTyping } from "@vueuse/core";
+import { vElementSize } from "@vueuse/components";
 // @stores
 import { content_width, content_height } from "@/stores/content-width";
 import useModalStore from "@/stores/modal";
@@ -50,7 +50,8 @@ import Notification from "@/components/Notification.vue";
 import BottomBar from "@/components/BottomBar/BottomBar.vue";
 import NavBar from "@/components/nav/NavBar.vue";
 import RightSideBar from "@/components/RightSideBar/Main.vue";
-import LeftSidebar from "./components/LeftSidebar/index.vue";
+import LeftSidebar from "./components/NavBar/index.vue";
+
 import { baseApiUrl } from "./config";
 import { getRootDirs } from "./composables/fetch/settings/rootdirs";
 // import BubbleManager from "./components/bubbles/BinManager.vue";
@@ -59,6 +60,10 @@ const queue = useQStore();
 const router = useRouter();
 const modal = useModalStore();
 const settings = useSettingsStore();
+
+const { width: win_width } = useWindowSize();
+
+const PHONE_WIDTH = 768;
 
 queue.readQueue();
 handleShortcuts(useQStore, useModalStore);
