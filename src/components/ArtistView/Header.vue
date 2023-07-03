@@ -11,7 +11,7 @@
   <div
     class="artist-page-header rounded no-scroll"
     :style="{
-      height: `${heightLarge ? '24rem' : '18rem'}`,
+      height: `${heightLarge || isSmallPhone ? '25rem' : '18rem'}`,
     }"
   >
     <div
@@ -57,8 +57,10 @@
       class="gradient"
       :style="{
         backgroundImage: artist.info.colors[0]
-          ? `linear-gradient(to left, transparent 30%,
-      ${artist.info.colors[0]} 50%,
+          ? `linear-gradient(${
+              isSmallPhone ? '210deg' : 'to left'
+            }, transparent 20%,
+      ${artist.info.colors[0]} ${isSmallPhone ? '80' : '50'}%,
       ${artist.info.colors[0]} 100%)`
           : '',
       }"
@@ -67,14 +69,15 @@
 </template>
 
 <script setup lang="ts">
+import { paths } from "@/config";
+
 import { favType, playSources } from "@/composables/enums";
 import favoriteHandler from "@/composables/favoriteHandler";
-import { paths } from "@/config";
-import { heightLarge } from "@/stores/content-width";
+import { heightLarge, isSmallPhone } from "@/stores/content-width";
 import useArtistPageStore from "@/stores/pages/artist";
 import formatSeconds from "@/utils/useFormatSeconds";
 
-import { getShift, getTextColor } from "@/utils/colortools/shift";
+import { getTextColor } from "@/utils/colortools/shift";
 
 import HeartSvg from "@/components/shared/HeartSvg.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
@@ -170,6 +173,27 @@ function handleFav() {
   .buttons {
     display: flex;
     gap: $small;
+  }
+
+  @media (max-width: 550px) {
+    display: flex;
+    flex-direction: column-reverse;
+    position: relative;
+
+    .artist-img {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      height: 100% !important;
+
+      img {
+        height: 100%;
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        object-position: 0% 20%;
+      }
+    }
   }
 }
 </style>
