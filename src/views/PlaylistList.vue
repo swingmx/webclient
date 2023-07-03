@@ -17,12 +17,16 @@ import PlaylistCard from "@/components/PlaylistsList/PlaylistCard.vue";
 import PlaylistSvg from "@/assets/icons/playlist-1.svg";
 import usePStore from "@/stores/pages/playlists";
 import NoItems from "@/components/shared/NoItems.vue";
+import { onMounted } from "vue";
+import updatePageTitle from "@/utils/updatePageTitle";
 const pStore = usePStore();
 
 const description = `You can create a playlist by right clicking on a track and selecting the
         "Add to Playlist" option`;
 
 // TODO: When you add a song to playlist when you are in this page, increase the count on the card.
+
+onMounted(() => updatePageTitle("Playlists"))
 </script>
 
 <style lang="scss">

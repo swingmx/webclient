@@ -27,7 +27,6 @@
 // @libraries
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useWindowSize } from "@vueuse/core";
 import { onStartTyping } from "@vueuse/core";
 import { vElementSize } from "@vueuse/components";
 // @stores

@@ -158,6 +158,7 @@ import { onBeforeRouteUpdate } from "vue-router";
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;
@@ -225,14 +226,18 @@ function balanceText(text: string, container_width: number) {
   return [firstLine, secondLine];
 }
 
-onMounted(() => {
+const updateTitle = () => {
+  updatePageTitle(album.value.title + " - " + album.value.albumartists[0].name);
   const elem = document.getElementById("test-elem");
   titleSplits.value = balanceText(album.value.title, elem?.offsetWidth || 0);
+};
+
+onMounted(() => {
+  updateTitle();
 });
 
 onBeforeRouteUpdate(() => {
-  const elem = document.getElementById("test-elem");
-  titleSplits.value = balanceText(album.value.title, elem?.offsetWidth || 0);
+  updateTitle();
 });
 </script>
 

@@ -56,6 +56,8 @@ import { createTrackProps } from "@/utils";
 import NoItems from "@/components/shared/NoItems.vue";
 import FolderSvg from "@/assets/icons/folder.svg";
 import { dropSources } from "@/composables/enums";
+import { onMounted } from "vue";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 const loader = useLoaderStore();
 const folder = useFolderStore();
@@ -119,6 +121,8 @@ onBeforeRouteUpdate((to, from) => {
 onBeforeRouteLeave(() => {
   setTimeout(() => folder.resetQuery(), 500);
 });
+
+onMounted(() => updatePageTitle("Folders"));
 </script>
 
 <!-- <style lang="scss">

@@ -22,6 +22,7 @@ import NoItems from "@/components/shared/NoItems.vue";
 
 import QueueSvg from "@/assets/icons/queue.svg";
 import { dropSources } from "@/composables/enums";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 const queue = useQStore();
 function playFromQueue(index: number) {
@@ -50,6 +51,7 @@ function scrollToCurrent() {
 }
 
 onMounted(() => {
+  updatePageTitle("Queue");
   setTimeout(() => {
     scrollToCurrent();
   }, 1000);

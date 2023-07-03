@@ -69,18 +69,20 @@
 </template>
 
 <script setup lang="ts">
-import { paths } from "@/config";
+import { onMounted } from "vue";
 
+import { paths } from "@/config";
+import formatSeconds from "@/utils/useFormatSeconds";
+import useArtistPageStore from "@/stores/pages/artist";
+import { getTextColor } from "@/utils/colortools/shift";
 import { favType, playSources } from "@/composables/enums";
 import favoriteHandler from "@/composables/favoriteHandler";
 import { heightLarge, isSmallPhone } from "@/stores/content-width";
-import useArtistPageStore from "@/stores/pages/artist";
-import formatSeconds from "@/utils/useFormatSeconds";
-
-import { getTextColor } from "@/utils/colortools/shift";
 
 import HeartSvg from "@/components/shared/HeartSvg.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
+import updatePageTitle from "@/utils/updatePageTitle";
+import { onBeforeRouteUpdate } from "vue-router";
 
 const artist = useArtistPageStore();
 
@@ -93,6 +95,9 @@ function handleFav() {
     artist.removeFavorite
   );
 }
+const updateTitle = () => updatePageTitle(artist.info.name);
+onMounted(() => updateTitle());
+onBeforeRouteUpdate(() => updateTitle());
 </script>
 
 <style lang="scss">
@@ -130,6 +135,15 @@ function handleFav() {
     );
     height: 100%;
     width: 100%;
+
+    @media (max-width: 550px) {
+      background-image: linear-gradient(
+        210deg,
+        transparent 20%,
+        $gray 80%,
+        $gray 100%
+      );
+    }
   }
 
   .artist-info {

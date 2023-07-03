@@ -23,6 +23,7 @@ import useSearchStore from "@/stores/search";
 import AlbumPage from "./albums.vue";
 import ArtistPage from "./artists.vue";
 import TracksPage from "./tracks.vue";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 const page = ref<HTMLElement>();
 
@@ -107,6 +108,7 @@ const canLoadMore = computed(() => {
 });
 
 onMounted(() => {
+  updatePageTitle("Search");
   search.switchTab(route.params.page as string);
   search.query = route.query.q as string;
 });
@@ -145,6 +147,4 @@ onMounted(() => {
     background: $darkestblue;
   }
 }
-
-
 </style>

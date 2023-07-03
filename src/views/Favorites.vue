@@ -54,6 +54,7 @@ import Recents from "@/components/Favorites/Recents.vue";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
 import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
 import FeaturedArtists from "@/components/PlaylistView/ArtistsList.vue";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 const description = `You can add tracks, albums and artists to your favorites by clicking the ❤️ heart icon`;
 
@@ -67,6 +68,7 @@ const favArtists: Ref<Artist[]> = ref([]);
 const noFavs = ref(false);
 
 onMounted(() => {
+  updatePageTitle("Favorites");
   const max = maxAbumCards.value;
   getAllFavs(6, max, max)
     .then((favs) => {
