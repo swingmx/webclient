@@ -5,7 +5,7 @@
       {
         background: bg,
         backgroundPosition: `center ${bannerPos}%`,
-        height: `${heightLarge ? '24rem' : '18rem'}`,
+        height: `${heightLarge || isSmallPhone ? '24rem' : '18rem'}`,
       },
     ]"
     :class="{ border: !info.images.length }"
@@ -22,7 +22,7 @@ import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 
 import usePStore from "@/stores/pages/playlist";
-import { heightLarge } from "@/stores/content-width";
+import { heightLarge, isSmallPhone } from "@/stores/content-width";
 
 import { paths } from "@/config";
 import BannerImages from "./Header/BannerImages.vue";
@@ -44,6 +44,7 @@ function getBg() {
   }
 
   if (info.value.images.length > 2) {
+    // @ts-ignore
     return getBackgroundColor(info.value.images[2].color);
   }
 }
@@ -58,6 +59,7 @@ onMounted(() => (bg.value = getBg()));
   position: relative;
   background-color: $gray;
   background-position: center 50%;
+  background-size: cover !important;
 
   .gradient {
     position: absolute;
@@ -67,55 +69,6 @@ onMounted(() => (bg.value = getBg()));
     height: 100%;
     background-color: $black;
     opacity: 0.5;
-  }
-
-  .playlist-banner-images {
-    width: 21rem;
-    position: absolute;
-    right: 0;
-    top: -10rem;
-    rotate: -40deg;
-
-    display: flex;
-    flex-wrap: wrap;
-    gap: $medium;
-    transition: all 0.2s ease-in-out;
-
-    img {
-      height: 9rem;
-      transition: all 0.2s ease-in-out;
-    }
-  }
-
-  .last-updated {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    padding: $smaller $small;
-    background-color: $body;
-    color: rgb(255, 255, 255);
-    font-size: 0.9rem;
-    border-radius: $smaller;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.479);
-    z-index: 12;
-
-    display: flex;
-    align-items: center;
-
-    .edit {
-      cursor: pointer;
-      color: $brown;
-    }
-
-    svg {
-      transform: scale(0.75);
-      margin-bottom: -0.2rem;
-      color: $red !important;
-    }
-  }
-
-  .last-updated.lightbg {
-    background-color: $gray2;
   }
 
   .carddd {

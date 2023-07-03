@@ -71,18 +71,18 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import { paths } from "@/config";
-import formatSeconds from "@/utils/useFormatSeconds";
-import useArtistPageStore from "@/stores/pages/artist";
-import { getTextColor } from "@/utils/colortools/shift";
 import { favType, playSources } from "@/composables/enums";
 import favoriteHandler from "@/composables/favoriteHandler";
+import { paths } from "@/config";
 import { heightLarge, isSmallPhone } from "@/stores/content-width";
+import useArtistPageStore from "@/stores/pages/artist";
+import { getTextColor } from "@/utils/colortools/shift";
+import formatSeconds from "@/utils/useFormatSeconds";
 
 import HeartSvg from "@/components/shared/HeartSvg.vue";
-import PlayBtnRect from "../shared/PlayBtnRect.vue";
 import updatePageTitle from "@/utils/updatePageTitle";
 import { onBeforeRouteUpdate } from "vue-router";
+import PlayBtnRect from "../shared/PlayBtnRect.vue";
 
 const artist = useArtistPageStore();
 
@@ -136,7 +136,7 @@ onBeforeRouteUpdate(() => updateTitle());
     height: 100%;
     width: 100%;
 
-    @media (max-width: 550px) {
+    @include smallPhone {
       background-image: linear-gradient(
         210deg,
         transparent 20%,
@@ -189,7 +189,7 @@ onBeforeRouteUpdate(() => updateTitle());
     gap: $small;
   }
 
-  @media (max-width: 550px) {
+  @include smallPhone {
     display: flex;
     flex-direction: column-reverse;
     position: relative;

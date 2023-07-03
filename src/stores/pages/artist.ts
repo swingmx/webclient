@@ -47,7 +47,6 @@ export default defineStore("artistPage", {
         this.info.artisthash,
         maxAbumCards.value
       );
-      console.log(this.similar_artists);
     },
     resetAlbums() {
       this.albums = [];

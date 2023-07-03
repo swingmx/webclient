@@ -25,7 +25,12 @@
 import { computed } from "@vue/reactivity";
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
-import { isMedium, isSmall, heightLarge } from "@/stores/content-width";
+import {
+  isMedium,
+  isSmall,
+  heightLarge,
+  isSmallPhone,
+} from "@/stores/content-width";
 import usePlaylistStore from "@/stores/pages/playlist";
 import useQueueStore from "@/stores/queue";
 
@@ -35,6 +40,8 @@ import { updateBannerPos } from "@/composables/fetch/playlists";
 import NoItems from "@/components/shared/NoItems.vue";
 import playlistSvg from "@/assets/icons/playlist.svg";
 import { dropSources } from "@/composables/enums";
+import { onMounted, onUpdated } from "vue";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 const queue = useQueueStore();
 const playlist = usePlaylistStore();
@@ -63,7 +70,7 @@ const scrollerItems = computed(() => {
   const header: ScrollerItem = {
     id: "header",
     component: Header,
-    size: heightLarge.value ? 25 * 16 : 19 * 16,
+    size: heightLarge.value || isSmallPhone.value ? 25 * 16 : 19 * 16,
   };
 
   const tracks = playlist.tracks.map((track) => {
@@ -102,6 +109,10 @@ function playFromPlaylistPage(index: number) {
       playlist.resetQuery();
     }, 500);
   });
+});
+
+[onMounted, onUpdated].forEach(() => {
+  updatePageTitle(playlist.info.name);
 });
 </script>
 

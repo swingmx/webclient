@@ -24,3 +24,31 @@ import { paths } from "@/config";
 
 const playlist = usePStore();
 </script>
+
+<style lang="scss">
+.playlist-banner-images {
+  width: 21rem;
+  position: absolute;
+  right: 0;
+  top: -10rem;
+  rotate: -40deg;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: $medium;
+  transition: all 0.2s ease-in-out;
+
+  img {
+    height: 9rem;
+    transition: all 0.2s ease-in-out;
+  }
+
+  @include smallPhone {
+    right: -4rem;
+
+    img {
+      height: 7rem;
+    }
+  }
+}
+</style>

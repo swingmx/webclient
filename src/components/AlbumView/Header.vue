@@ -134,19 +134,18 @@ import { onMounted, ref } from "vue";
 
 import { paths } from "@/config";
 import {
-  albumHeaderSmall,
-  heightLarge,
-  isMedium,
-  isSmall,
-  isSmallPhone,
+albumHeaderSmall,
+isMedium,
+isSmall,
+isSmallPhone
 } from "@/stores/content-width";
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
 
 import {
-  getBackgroundColor,
-  getShift,
-  getTextColor,
+getBackgroundColor,
+getShift,
+getTextColor,
 } from "@/utils/colortools/shift";
 
 import { favType, playSources } from "@/composables/enums";
@@ -154,11 +153,11 @@ import { formatSeconds, useVisibility } from "@/utils";
 
 import ArtistName from "@/components/shared/ArtistName.vue";
 import favoriteHandler from "@/composables/favoriteHandler";
+import updatePageTitle from "@/utils/updatePageTitle";
 import { onBeforeRouteUpdate } from "vue-router";
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
-import updatePageTitle from "@/utils/updatePageTitle";
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;
@@ -406,7 +405,7 @@ onBeforeRouteUpdate(() => {
     }
   }
 
-  @media (max-width: 550px) {
+  @include smallPhone {
     grid-template-columns: 1fr;
     padding: 2rem 1rem;
     height: 25rem;

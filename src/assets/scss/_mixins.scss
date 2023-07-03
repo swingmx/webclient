@@ -5,6 +5,11 @@
 }
 
 // media query mixins
+@mixin smallPhone {
+  @media (max-width: 550px) {
+    @content;
+  }
+}
 
 @mixin allPhones {
   @media (max-width: 900px) {
@@ -47,7 +52,7 @@
 @mixin hideScrollbars {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
-  
+
   &::-webkit-scrollbar {
     display: none !important;
   }

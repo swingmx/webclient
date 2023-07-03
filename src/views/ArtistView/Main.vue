@@ -58,7 +58,6 @@ function reFetchArtistAlbums() {
 }
 
 function fetchSimilarArtists() {
-  console.log("fetchSimilarArtists");
   store.fetchSimilarArtists();
 }
 
