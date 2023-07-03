@@ -22,7 +22,7 @@ defineProps<{
 <style lang="scss">
 .nothing {
   height: 100%;
-  width: 25rem;
+  max-width: 25rem;
   margin: 0 auto;
   display: grid;
   opacity: 0.5;

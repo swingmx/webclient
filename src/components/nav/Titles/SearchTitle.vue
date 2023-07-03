@@ -1,7 +1,7 @@
 <template>
   <div class="nav-search-input">
     <SearchInput :on_nav="true" />
-    <div class="buttons-area">
+    <div class="buttons-area" v-if="!isSmallPhone">
       <Tabs
         :tabs="tabs"
         :currentTab="($route.params.page as string)"
@@ -22,6 +22,7 @@ import { Routes } from "@/router";
 import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
 import SearchInput from "@/components/RightSideBar/SearchInput.vue";
 import useSearchStore from "@/stores/search";
+import { isSmallPhone } from "@/stores/content-width";
 
 const search = useSearchStore();
 const tabs = ["tracks", "albums", "artists"];
@@ -34,7 +35,10 @@ const tabs = ["tracks", "albums", "artists"];
   grid-template-columns: 1fr max-content;
   gap: 1rem;
 
-  
+  @include smallPhone {
+    gap: 0;
+  }
+
   .buttons-area {
     position: relative;
     height: 100%;

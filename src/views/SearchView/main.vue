@@ -1,5 +1,17 @@
 <template>
   <div class="search-view content-page" style="padding-right: 0">
+    <div class="buttons-area" v-if="isSmallPhone">
+      <Tabs
+        :tabs="Object.values(pages)"
+        :currentTab="($route.params.page as string)"
+        @switchTab="(tab: string) => {
+        $router.replace({ name: Routes.search, params: { page: tab }, query: {
+          q: search.query,
+        } });
+        search.switchTab(tab);
+      }"
+      />
+    </div>
     <div ref="page" class="page no-scroll" v-auto-animate>
       <component :is="component" />
     </div>
@@ -16,14 +28,17 @@
 
 <script setup lang="ts">
 import { useRoute } from "vue-router";
+import { Routes } from "@/router";
 import { computed, onMounted, ref } from "vue";
 
 import useSearchStore from "@/stores/search";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 import AlbumPage from "./albums.vue";
 import ArtistPage from "./artists.vue";
 import TracksPage from "./tracks.vue";
-import updatePageTitle from "@/utils/updatePageTitle";
+import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
+import { isSmallPhone } from "@/stores/content-width";
 
 const page = ref<HTMLElement>();
 
@@ -123,6 +138,16 @@ onMounted(() => {
 
   .page.no-scroll {
     overflow-x: visible;
+    // @include hideScrollbars
+  }
+
+  .buttons-area {
+    position: relative;
+    height: 3rem;
+
+    .tabheaders {
+      margin: 0;
+    }
   }
 
   .grid-page {
