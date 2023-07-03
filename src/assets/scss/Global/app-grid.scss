@@ -15,7 +15,7 @@ $g-border: solid 1px $gray5;
   border-bottom: none;
   margin: 0 auto;
 
-  // for small screen less than 768px, hide left sidebar and right sidebar
+  // for small screen less than 900px, hide left sidebar and right sidebar
 }
 
 #acontent {
@@ -92,7 +92,7 @@ $g-border: solid 1px $gray5;
     padding-right: 0;
   }
 
-  @media (max-width: 768px) {
+  @include allPhones {
     grid-template-columns: 1fr;
     grid-template-rows: max-content 1fr 8.5rem;
     grid-template-areas:

@@ -66,7 +66,7 @@ function handleFav() {
   z-index: 1;
   padding: 0 1rem;
 
-  @media (max-width: 768px) {
+  @include allPhones {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(3, 1fr);
     padding: 0 1rem $small 1rem;
@@ -121,7 +121,7 @@ function handleFav() {
       width: 20rem !important;
     }
 
-    @media (max-width: 768px) {
+    @include allPhones {
       width: 100% !important;
     }
 

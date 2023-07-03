@@ -28,7 +28,7 @@
     >
       <div class="album-info">
         <div class="top">
-          <div v-auto-animate class="h" v-if="!isMobile">
+          <div v-auto-animate class="h" v-if="!isSmallPhone">
             <span v-if="album.is_soundtrack">Soundtrack</span>
             <span v-else-if="album.is_live">Concert</span>
             <span v-else-if="album.is_compilation">Compilation</span>
@@ -68,7 +68,7 @@
                 :albumartists="''"
                 :small="true"
                 :append="
-                  !isMobile
+                  !isSmallPhone
                     ? `• ${album.date}  •  ${album.count} ${
                         album.count === 1 ? 'Track' : 'Tracks'
                       }  •  ${formatSeconds(album.duration, true)}`
@@ -76,7 +76,7 @@
                 "
               />
             </div>
-            <div class="stats2" v-if="isMobile">
+            <div class="stats2" v-if="isSmallPhone">
               {{ album.date }} • {{ album.count }} Tracks •
               {{ formatSeconds(album.duration, true) }}
             </div>
@@ -138,7 +138,7 @@ import {
   heightLarge,
   isMedium,
   isSmall,
-  isMobile,
+  isSmallPhone,
 } from "@/stores/content-width";
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
@@ -195,7 +195,7 @@ function handleFav() {
 }
 
 function balanceText(text: string, container_width: number) {
-  if (isMobile.value) return [text];
+  if (isSmallPhone.value) return [text];
 
   const tempElem = document.createElement("span");
   tempElem.classList.add("balance-text-temp");
@@ -256,8 +256,8 @@ onBeforeRouteUpdate(() => {
   grid-template-columns: max-content 1fr;
   gap: 1rem;
   padding: 1rem;
-  // height: 30rem;
-  // height: $banner-height;
+  height: $banner-height;
+  // height: 100%;
   background-color: $black;
   align-items: flex-end;
 
@@ -401,9 +401,10 @@ onBeforeRouteUpdate(() => {
     }
   }
 
-  @include allPhones {
+  @media (max-width: 550px) {
     grid-template-columns: 1fr;
     padding: 2rem 1rem;
+    height: 25rem;
 
     .big-img {
       width: 10rem !important;

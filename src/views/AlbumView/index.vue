@@ -35,7 +35,7 @@ import AlbumsList from "@/components/AlbumView/ArtistAlbums.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import SimilarAlbumLoader from "./SimilarAlbumLoader.vue";
 
-import { isSmall, heightLarge, isMobile } from "@/stores/content-width";
+import { isSmall, heightLarge, isSmallPhone } from "@/stores/content-width";
 import { discographyAlbumTypes, dropSources } from "@/composables/enums";
 
 const album = useAlbumStore();
@@ -158,7 +158,8 @@ const scrollerItems = computed(() => {
   const header: ScrollerItem = {
     id: "album-header",
     component: Header,
-    size: isMobile.value ? 25 * 16 : heightLarge.value ? 25 * 16 : 19 * 16,
+    size: (isSmallPhone.value) || heightLarge.value ? 25 * 16 : 19 * 16,
+    // size: (!isSmallPhone.value) || heightLarge.value ? 25 * 16 : 19 * 16,
   };
 
   let moreFrom = getArtistAlbumComponents();

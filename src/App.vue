@@ -12,7 +12,7 @@
     }"
     :style="{ maxWidth: `${content_height > 1080 ? '2220px' : '1720px'}` }"
   >
-    <LeftSidebar v-if="win_width > PHONE_WIDTH" />
+    <LeftSidebar v-if="!isMobile" />
     <NavBar />
     <div id="acontent" v-element-size="updateContentElemSize">
       <router-view />
@@ -31,7 +31,11 @@ import { useWindowSize } from "@vueuse/core";
 import { onStartTyping } from "@vueuse/core";
 import { vElementSize } from "@vueuse/components";
 // @stores
-import { content_width, content_height } from "@/stores/content-width";
+import {
+  content_width,
+  content_height,
+  isMobile,
+} from "@/stores/content-width";
 import useModalStore from "@/stores/modal";
 import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
@@ -60,10 +64,6 @@ const queue = useQStore();
 const router = useRouter();
 const modal = useModalStore();
 const settings = useSettingsStore();
-
-const { width: win_width } = useWindowSize();
-
-const PHONE_WIDTH = 768;
 
 queue.readQueue();
 handleShortcuts(useQStore, useModalStore);

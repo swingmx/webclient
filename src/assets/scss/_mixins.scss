@@ -7,13 +7,13 @@
 // media query mixins
 
 @mixin allPhones {
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     @content;
   }
 }
 
 @mixin largePhones {
-  // 550px <= width < 768px
+  // 550px <= width < 900px
   @media (min-width: 550px) {
     @content;
   }
@@ -45,9 +45,10 @@
 
 // hide scrollbar
 @mixin hideScrollbars {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  
   &::-webkit-scrollbar {
-    display: none;
+    display: none !important;
   }
 }

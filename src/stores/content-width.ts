@@ -38,13 +38,16 @@ const maxAbumCards = computed(() => {
 });
 
 // WINDOW SIZES
-const MOBILE_WIDTH = 768;
-const LARGER_MOBILE_WIDTH = 550;
+const MOBILE_WIDTH = 900;
+const SMALL_MOBILE_WIDTH = 550;
 const { width: win_width } = useWindowSize();
 
+export const isSmallPhone = computed(
+  () => win_width.value < SMALL_MOBILE_WIDTH
+);
 export const isMobile = computed(() => win_width.value < MOBILE_WIDTH);
 export const isLargerMobile = computed(
-  () => win_width.value > LARGER_MOBILE_WIDTH && win_width.value < MOBILE_WIDTH
+  () => win_width.value > SMALL_MOBILE_WIDTH && win_width.value < MOBILE_WIDTH
 );
 
 export {
