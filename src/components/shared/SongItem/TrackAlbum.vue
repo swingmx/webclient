@@ -25,7 +25,7 @@ defineProps<{
 <style lang="scss">
 .song-album {
   max-width: max-content;
-
+  color: inherit;
   cursor: pointer !important;
 
   &:hover {

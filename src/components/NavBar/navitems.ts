@@ -31,7 +31,7 @@ export const menus = [
   },
   {
     name: "queue",
-    route_name: Routes.queue,
+    route_name: Routes.nowPlaying,
     icon: QueueSvg,
   },
   {

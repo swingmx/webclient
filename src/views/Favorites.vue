@@ -98,7 +98,7 @@ async function handlePlay(index: number) {
 .favorites-page {
   height: 100%;
   overflow: auto;
-  padding-bottom: 4rem;
+  padding-bottom: 2rem;
   padding-right: 1rem;
 
   h3 {

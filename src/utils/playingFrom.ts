@@ -8,6 +8,7 @@ import FolderSvg from "@/assets/icons/folder.svg";
 import PlaylistSvg from "@/assets/icons/playlist.svg";
 import SearchSvg from "@/assets/icons/search.svg";
 import HeartSvg from "@/assets/icons/heart.fill.svg";
+import { paths } from "@/config";
 
 export default (source: From) => {
   switch (source.type) {
@@ -21,6 +22,7 @@ export default (source: From) => {
             hash: source.albumhash,
           },
         },
+        image: paths.images.thumb.small + source.albumhash,
       };
 
     case FromOptions.folder:
@@ -33,6 +35,7 @@ export default (source: From) => {
             path: source.path,
           },
         },
+        image: "",
       };
 
     case FromOptions.playlist:
@@ -45,6 +48,7 @@ export default (source: From) => {
             pid: source.id,
           },
         },
+        image: paths.images.playlist + source.id,
       };
 
     case FromOptions.search:
@@ -58,6 +62,7 @@ export default (source: From) => {
             page: "tracks",
           },
         },
+        image: "",
       };
 
     case FromOptions.artist:
@@ -70,6 +75,7 @@ export default (source: From) => {
             hash: source.artisthash,
           },
         },
+        image: paths.images.artist.small + source.artisthash,
       };
 
     case FromOptions.favorite:
@@ -79,9 +85,10 @@ export default (source: From) => {
         location: {
           name: Routes.favoriteTracks,
         },
+        image: "",
       };
 
     default:
       return { name: "👻 No source", location: {} };
   }
-}
+};

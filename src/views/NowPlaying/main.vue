@@ -1,5 +1,5 @@
 <template>
-  <div class="now-playing-view">
+  <div class="now-playing-view v-scroll-page" :class="{ isSmall, isMedium }">
     <DynamicScroller
       :items="scrollerItems"
       :min-item-size="64"
@@ -27,10 +27,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { ScrollerItem } from "@/interfaces";
+import { isMedium, isSmall } from "@/stores/content-width";
 
 import Header from "@/components/NowPlaying/Header.vue";
-import TrackItem from "@/components/shared/TrackItem.vue";
 import useQueueStore from "@/stores/queue";
+import SongItem from "@/components/shared/SongItem.vue";
+import { FromOptions } from "@/composables/enums";
 
 const header: ScrollerItem = {
   id: "header",
@@ -42,18 +44,17 @@ const queue = useQueueStore();
 const scrollerItems = computed(() => {
   const items = [header];
 
-  const trackComponents = queue.tracklist.map((track) => {
-    const index = track.index;
-
+  const trackComponents = queue.tracklist.map((track, index) => {
     return {
       id: index,
-      component: TrackItem,
+      component: SongItem,
       props: {
         track,
-        index: index,
+        index: index + 1,
         isCurrent: index === queue.currentindex,
         isCurrentPlaying: index === queue.currentindex && queue.playing,
         isQueueTrack: true,
+        source: queue.from.type,
       },
     };
   });
@@ -68,17 +69,17 @@ const scrollerItems = computed(() => {
   margin-right: -$medium;
   margin-bottom: 2rem;
   // padding-bottom: 2rem;
-  
+
   .track-item {
     // padding: $small 2rem;
     margin: 0 auto;
-    max-width: 28rem;
+    max-width: 26rem;
 
-    @include smallPhone {
-      margin-left: -1.25rem;
-    }
+    // @include smallPhone {
+    //   margin-left: -$medium;
+    // }
 
-    border-radius: $small;
+    // border-radius: $small;
   }
 
   .vue-recycle-scroller {
