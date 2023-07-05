@@ -72,14 +72,12 @@ onMounted(() => {
   const max = maxAbumCards.value;
   getAllFavs(6, max, max)
     .then((favs) => {
-      console.log(favs.recents);
       recentFavs.value = favs.recents;
       favAlbums.value = favs.albums;
       favTracks.value = favs.tracks;
       favArtists.value = favs.artists;
     })
     .then(() => {
-      console.log(recentFavs.value);
       noFavs.value =
         !favAlbums.value.length &&
         !favTracks.value.length &&

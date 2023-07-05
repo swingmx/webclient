@@ -41,12 +41,21 @@ export default defineStore("artistPage", {
       this.singles = singles;
       this.appearances = appearances;
       this.compilations = compilations;
+
+      console.log("meh");
     },
     async fetchSimilarArtists() {
+      // the fetcher component is first mounted then unmounted by the recycler view,
+      // resulting in this function being called twice.
+      // 👇👇 To fix multiple calls, check if data is already fetched .
+      if (this.similar_artists.length) return;
+
       this.similar_artists = await getSimilarArtists(
         this.info.artisthash,
         maxAbumCards.value
       );
+
+      console.log("meh 2");
     },
     resetAlbums() {
       this.albums = [];

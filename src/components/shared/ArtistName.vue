@@ -21,8 +21,8 @@
           }"
           >{{ `${artist.name}` }}</RouterLink
         >
-        <span v-if="index < artists.length - 1">, </span>
-        <span v-if="artists.length > 3 && index === 2">
+        <span class="artist" v-if="index < artists.length - 1">, </span>
+        <span class="artist" v-if="artists.length > 3 && index === 2">
           +{{ artists.length - 3 }} more
         </span> </template
       >&nbsp;

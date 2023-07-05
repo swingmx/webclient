@@ -195,7 +195,6 @@ const scrollerItems = computed(() => {
     components.push(appearances);
   }
 
-  components = [...components];
   components = [...components, similar_artists_fetcher];
 
   if (store.similar_artists.length > 0) {

@@ -47,16 +47,13 @@
       </div>
       <Progress />
     </div>
-    <h3 v-if="queue.next">Up Next</h3>
+    <h3 v-if="queue.currenttrack">[Image here] Now Playing</h3>
     <SongItem
-      v-if="queue.next"
-      :track="queue.next"
-      :is-current="false"
-      :is-current-playing="false"
-      :hide-index="true"
-      :index="queue.nextindex"
+      v-if="queue.currenttrack"
+      :track="queue.currenttrack"
+      :index="queue.currentindex + 1"
       :source="dropSources.folder"
-      @play-this="queue.playNext"
+      @play-this="() => {}"
       :style="{
         backgroundColor: colors.theme1,
         color: getTextColor(colors.theme1),
