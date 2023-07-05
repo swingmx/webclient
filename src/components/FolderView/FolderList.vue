@@ -1,7 +1,9 @@
 <template>
   <div
     class="f-container rounded-sm"
-    :class="{ 'list-mode': settings.folder_list_mode }"
+    :class="{
+      'list-mode': isIphoneSE ? true : settings.folder_list_mode,
+    }"
   >
     <div id="f-items" class="rounded">
       <FolderItem
@@ -18,6 +20,7 @@
 import { Folder } from "@/interfaces";
 import FolderItem from "./FolderItem.vue";
 import useSettingsStore from "@/stores/settings";
+import { isIphoneSE } from "@/stores/content-width";
 
 defineProps<{
   folders: Folder[];

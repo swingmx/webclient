@@ -11,6 +11,12 @@
   }
 }
 
+@mixin iphoneSE {
+  @media (max-width: 386px) {
+    @content;
+  }
+}
+
 @mixin allPhones {
   @media (max-width: 900px) {
     @content;

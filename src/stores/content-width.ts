@@ -40,6 +40,8 @@ const maxAbumCards = computed(() => {
 // WINDOW SIZES
 const MOBILE_WIDTH = 900;
 const SMALL_MOBILE_WIDTH = 550;
+const IPHONE_SE_WIDTH = 386; // very small screens
+
 const { width: win_width } = useWindowSize();
 
 export const isSmallPhone = computed(
@@ -50,7 +52,10 @@ export const isLargerMobile = computed(
   () => win_width.value >= SMALL_MOBILE_WIDTH && win_width.value <= MOBILE_WIDTH
 );
 
+export const isIphoneSE = computed(() => win_width.value <= IPHONE_SE_WIDTH);
+
 export {
+  win_width,
   content_width,
   content_height,
   heightLarge,

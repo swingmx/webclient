@@ -12,12 +12,13 @@
           <BreadCrumbNav :subPaths="subPaths" @navigate="navigate" />
         </div>
       </div>
-      <SearchInput :page="Routes.folder" />
+      <SearchInput :page="Routes.folder" v-if="!isSmallPhone" />
       <button
         class="toggle-list-mode"
         @click="settings.toggleFolderListMode"
         title="toggle list mode for folders"
         v-auto-animate
+        v-if="!isIphoneSE"
       >
         <GridSvg v-if="settings.folder_list_mode" />
         <ListSvg v-else />
@@ -37,6 +38,7 @@ import BreadCrumbNav from "@/components/FolderView/BreadCrumbNav.vue";
 import GridSvg from "@/assets/icons/grid.svg";
 import ListSvg from "@/assets/icons/playlist.svg";
 import useSettingsStore from "@/stores/settings";
+import { isSmallPhone, isIphoneSE } from "@/stores/content-width";
 
 const router = useRouter();
 const settings = useSettingsStore();
@@ -57,6 +59,10 @@ function navigate(path: string) {
   .folder {
     display: grid;
     grid-template-columns: 1fr max-content max-content;
+
+    @include iphoneSE {
+      grid-template-columns: 1fr;
+    }
 
     .fname-wrapper {
       width: 100%;
