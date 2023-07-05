@@ -50,10 +50,10 @@ onMounted(() => {
 });
 
 const scrollerItems = computed(() => {
-  return tracks.value.map((track) => {
+  return tracks.value.map((track, index) => {
     return {
       track,
-      id: track.filepath,
+      id: index,
       props: createTrackProps(track),
     };
   });

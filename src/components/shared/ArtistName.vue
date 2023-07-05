@@ -12,10 +12,7 @@
       <span>{{ albumartists }}</span>
     </div>
     <div v-tooltip v-else>
-      <template
-        v-for="(artist, index) in artists.slice(0, 3)"
-        :key="artist.artisthash"
-      >
+      <template v-for="(artist, index) in artists.slice(0, 3)" :key="index">
         <RouterLink
           class="artist"
           :to="{

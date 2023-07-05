@@ -370,7 +370,7 @@ export default defineStore("Queue", {
     },
   },
   getters: {
-    next(): Track | undefined {
+    next(): Track {
       if (this.currentindex == this.tracklist.length - 1) {
         return this.tracklist[0];
       } else {

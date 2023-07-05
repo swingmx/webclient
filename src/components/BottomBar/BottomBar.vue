@@ -1,6 +1,6 @@
 <template>
   <div class="b-bar">
-    <LeftGroup @handleFav="handleFav"/>
+    <LeftGroup @handleFav="handleFav" />
     <div class="center">
       <div class="with-time" v-if="!isMobile">
         <div class="time time-current">
@@ -70,6 +70,10 @@ function handleFav() {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(3, 1fr);
     padding: 0 1rem $small 1rem;
+
+    .center > input {
+      height: 2px !important;
+    }
   }
 
   button {

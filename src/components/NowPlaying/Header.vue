@@ -31,6 +31,14 @@
       </div>
     </div>
     <Progress />
+    <h3>Up Next</h3>
+    <TrackItem
+      :track="queue.next"
+      :is-current="false"
+      :is-current-playing="false"
+      @play-this="queue.playNext"
+    />
+    <h3>Queue</h3>
   </div>
 </template>
 
@@ -47,6 +55,7 @@ import favoriteHandler from "@/composables/favoriteHandler";
 import { favType } from "@/composables/enums";
 import Progress from "@/components/NavBar/NP/Progress.vue";
 import Bitrate from "../NavBar/NP/Bitrate.vue";
+import TrackItem from "../shared/TrackItem.vue";
 
 const queue = useQueueStore();
 
@@ -67,6 +76,8 @@ const { name, location, icon } = playingFrom(queue.from);
 .now-playing-header {
   width: fit-content;
   margin: 0 auto;
+  padding-bottom: 1rem;
+  padding-right: 1rem;
 
   .from {
     margin-bottom: 1rem;
@@ -87,14 +98,14 @@ const { name, location, icon } = playingFrom(queue.from);
       bottom: 1rem;
       left: 1rem;
     }
-  }
 
-  img {
-    width: 100%;
-    height: 100%;
-    max-width: 30rem;
-    aspect-ratio: 1;
-    object-fit: cover;
+    img {
+      width: 100%;
+      height: 100%;
+      max-width: 30rem;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
   }
 
   .info {
@@ -110,7 +121,20 @@ const { name, location, icon } = playingFrom(queue.from);
 
   #progress {
     margin-top: 1rem;
+    margin-bottom: 1rem;
     margin-right: 0;
+
+    &::-moz-range-thumb {
+      height: 0.8rem;
+    }
+
+    &::-webkit-slider-thumb {
+      height: 0.8rem;
+    }
+
+    &::-ms-thumb {
+      height: 0.8rem;
+    }
   }
 }
 </style>
