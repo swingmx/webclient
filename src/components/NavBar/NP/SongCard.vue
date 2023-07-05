@@ -24,13 +24,7 @@
           class="l-image rounded-sm force-lm"
         />
       </router-link>
-      <div
-        id="bitrate"
-        v-if="q.currenttrack?.bitrate"
-        title="file type • bitrate"
-      >
-        {{ q.currenttrack.filetype }} • {{ q.currenttrack.bitrate }}
-      </div>
+      <Bitrate />
     </div>
   </Motion>
 </template>
@@ -39,6 +33,7 @@
 import useQueueStore from "@/stores/queue";
 
 import { paths } from "@/config";
+import Bitrate from "./Bitrate.vue";
 
 const imguri = paths.images.thumb.large;
 const q = useQueueStore();
@@ -57,18 +52,6 @@ const q = useQueueStore();
     height: auto;
     aspect-ratio: 1;
     object-fit: cover;
-  }
-
-  #bitrate {
-    position: absolute;
-    font-size: 0.75rem;
-    width: max-content;
-    padding: 0.2rem 0.35rem;
-    bottom: $medium;
-    left: $small;
-    background-color: $gray4;
-    border-radius: $smaller;
-    text-transform: uppercase;
   }
 }
 </style>

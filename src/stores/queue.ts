@@ -29,7 +29,7 @@ function shuffle(tracks: Track[]) {
   return shuffled;
 }
 
-type From =
+export type From =
   | fromFolder
   | fromAlbum
   | fromPlaylist
@@ -198,7 +198,7 @@ export default defineStore("Queue", {
       this.from = <fromFolder>{
         type: FromOptions.folder,
         path: fpath,
-        name: "Folder: " + (name?.trim() === "" ? fpath : name),
+        name: name?.trim() === "" ? fpath : name,
       };
       this.setNewQueue(tracks);
     },

@@ -24,6 +24,7 @@ import FavoriteAlbums from "@/views/FavoriteAlbums.vue";
 import FavoriteTracks from "@/views/FavoriteTracks.vue";
 import FavoriteArtists from "@/views/FavoriteArtists.vue";
 import NotFound from "@/views/NotFound.vue";
+import NowPlaying from "@/views/NowPlaying";
 
 const home = {
   path: "/",
@@ -114,6 +115,12 @@ const artistView = {
   },
 };
 
+const NowPlayingView = {
+  path: "/nowplaying",
+  name: "NowPlaying",
+  component: NowPlaying,
+};
+
 const ArtistTracks = {
   path: "/artists/:hash/tracks",
   name: "ArtistTracks",
@@ -193,6 +200,7 @@ const routes = [
   favoriteAlbums,
   favoriteTracks,
   favoriteArtists,
+  NowPlayingView,
 ];
 
 export const Routes = {
@@ -214,6 +222,7 @@ export const Routes = {
   favoriteAlbums: favoriteAlbums.name,
   favoriteTracks: favoriteTracks.name,
   favoriteArtists: favoriteArtists.name,
+  nowPlaying: NowPlayingView.name,
 };
 
 export const router = createRouter({

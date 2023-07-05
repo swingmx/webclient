@@ -196,3 +196,9 @@ export interface RecentFavArtistResult {
 }
 
 export type RecentFavResult = RecentFavAlbumResult | RecentFavArtistResult;
+
+export interface ScrollerItem {
+  id: string | number;
+  component: any;
+  props?: Record<string, unknown>;
+}

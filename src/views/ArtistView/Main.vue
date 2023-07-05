@@ -33,7 +33,7 @@ import {
   dropSources,
   FromOptions,
 } from "@/composables/enums";
-import { Album } from "@/interfaces";
+import { Album, ScrollerItem } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
 import useArtistPageStore from "@/stores/pages/artist";
 import { getArtistTracks } from "@/composables/fetch/artists";
@@ -64,12 +64,6 @@ function fetchSimilarArtists() {
 function reFetchSimilarArtists() {
   store.resetSimilarArtists();
   store.fetchSimilarArtists();
-}
-
-interface ScrollerItem {
-  id: string | number;
-  component: any;
-  props?: Record<string, unknown>;
 }
 
 const header: ScrollerItem = {

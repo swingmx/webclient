@@ -4,7 +4,7 @@
       <div class="playing-from">
         <router-link :to="(location as RouteLocationRaw)">
           <div class="border rounded-sm pad-sm">
-            <SourceIcon v-if="SourceIcon" />
+            <component :is="SourceIcon" v-if="SourceIcon" />
             <b class="ellip">{{ name }}</b>
           </div>
         </router-link>
@@ -16,101 +16,15 @@
 
 <script setup lang="ts">
 import QueueActions from "@/components/RightSideBar/Queue/QueueActions.vue";
-import { FromOptions } from "@/composables/enums";
-import { Routes } from "@/router";
+
 import useQueueStore from "@/stores/queue";
+import playingFrom from "@/utils/playingFrom";
 
-import AlbumSvg from "@/assets/icons/album.svg";
-import ArtistSvg from "@/assets/icons/artist.svg";
-import FolderSvg from "@/assets/icons/folder.svg";
-import PlaylistSvg from "@/assets/icons/playlist.svg";
-import SearchSvg from "@/assets/icons/search.svg";
-
-import HeartSvg from "@/assets/icons/heart.fill.svg";
 import { RouteLocationRaw } from "vue-router";
 
 const queue = useQueueStore();
 
-const { from: source } = queue;
-
-function getSource() {
-  switch (source.type) {
-    case FromOptions.album:
-      return {
-        name: source.name,
-        icon: AlbumSvg,
-        location: {
-          name: Routes.album,
-          params: {
-            hash: source.albumhash,
-          },
-        },
-      };
-
-    case FromOptions.folder:
-      return {
-        name: source.name,
-        icon: FolderSvg,
-        location: {
-          name: Routes.folder,
-          params: {
-            path: source.path,
-          },
-        },
-      };
-
-    case FromOptions.playlist:
-      return {
-        name: source.name,
-        icon: PlaylistSvg,
-        location: {
-          name: Routes.playlist,
-          params: {
-            pid: source.id,
-          },
-        },
-      };
-
-    case FromOptions.search:
-      return {
-        name: `Search for: "${source.query}"`,
-        icon: SearchSvg,
-        location: {
-          name: Routes.search,
-          params: {
-            query: source.query,
-            page: "tracks",
-          },
-        },
-      };
-
-    case FromOptions.artist:
-      return {
-        name: source.artistname,
-        icon: ArtistSvg,
-        location: {
-          name: Routes.artist,
-          params: {
-            hash: source.artisthash,
-          },
-        },
-      };
-
-    case FromOptions.favorite:
-      return {
-        name: "Favorite tracks",
-        icon: HeartSvg,
-        location: {
-          name: Routes.favoriteTracks,
-        },
-      };
-
-    default:
-      return { name: "👻 No source", location: {} };
-  }
-}
-
-const { name, icon: SourceIcon, location } = getSource();
+const { name, icon: SourceIcon, location } = playingFrom(queue.from);
 </script>
 
 <style lang="scss">
