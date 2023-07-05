@@ -3,7 +3,7 @@
     <HeartSvg
       v-if="settings.use_np_img && !isMobile"
       :state="queue.currenttrack?.is_favorite"
-      @handleFav="emit('handleFav')"
+      @handleFav="$emit('handleFav')"
     />
     <RouterLink
       v-else
@@ -65,7 +65,7 @@ const queue = useQStore();
 const settings = useSettingsStore();
 const colors = useColorStore();
 
-const emit = defineEmits<{
+defineEmits<{
   (e: "handleFav"): void;
 }>();
 </script>

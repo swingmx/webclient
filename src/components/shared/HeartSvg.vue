@@ -2,7 +2,7 @@
   <button
     v-wave
     class="heart-button circular"
-    @click="!no_emit && emit('handleFav')"
+    @click="!no_emit && $emit('handleFav')"
     :style="{
       color: color ? getTextColor(color) : '',
       border: color ? `solid 1px ${getShift(color, [25, -25])}` : '',
@@ -38,7 +38,7 @@ defineProps<{
   color?: string;
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
   (event: "handleFav"): void;
 }>();
 </script>

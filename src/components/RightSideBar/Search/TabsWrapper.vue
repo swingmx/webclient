@@ -6,7 +6,7 @@
           class="tab"
           v-for="tab in tabs"
           :key="tab"
-          @click="emit('switchTab', tab)"
+          @click="$emit('switchTab', tab)"
           :class="{ activetab: tab === currentTab }"
         >
           {{ tab }}
@@ -27,7 +27,7 @@ defineProps<{
   tabContent?: boolean;
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
   (e: "switchTab", tab: string): void;
 }>();
 </script>

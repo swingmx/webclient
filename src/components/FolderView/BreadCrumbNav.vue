@@ -5,7 +5,7 @@
       v-for="path in subPaths"
       :key="path.path"
       :class="{ inthisfolder: path.active }"
-      @click.prevent="emit('navigate', path.path)"
+      @click.prevent="$emit('navigate', path.path)"
     >
       <a class="text">{{ path.name }}</a>
       <!-- 👆 the a tag was misused to avoid rewriting css after moving this code to a component -->
@@ -22,7 +22,7 @@ defineProps<{
   subPaths: subPath[];
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
   (e: "navigate", path: string): void;
 }>();
 

@@ -119,6 +119,11 @@ function deletePlaylist() {
     background-color: $black;
     border: solid 1px $gray5;
 
+    @include smallPhone {
+      width: calc(100% - 2rem);
+      padding: 2rem 1rem;
+    }
+
     .close {
       position: absolute;
       top: 1.5rem;

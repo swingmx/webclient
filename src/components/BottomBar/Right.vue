@@ -2,7 +2,7 @@
   <div class="right-group">
     <HeartSvg
       :state="queue.currenttrack?.is_favorite"
-      @handleFav="() => emit('handleFav')"
+      @handleFav="() => $emit('handleFav')"
     />
     <button
       class="repeat"
@@ -33,8 +33,7 @@ import HeartSvg from "../shared/HeartSvg.vue";
 const queue = useQStore();
 const settings = useSettingsStore();
 
-// define emits: handleFav
-const emit = defineEmits<{
+ defineEmits<{
   (event: "handleFav"): void;
 }>();
 </script>

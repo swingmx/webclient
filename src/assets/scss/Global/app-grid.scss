@@ -120,7 +120,7 @@ $g-border: solid 1px $gray5;
 
 .isSmall {
   .songlist-item {
-    grid-template-columns: 1.75rem 2fr 2.5rem 2.5rem;
+    grid-template-columns: 2fr 5.5rem;
   }
 
   .song-artists,
@@ -139,7 +139,7 @@ $g-border: solid 1px $gray5;
 .isMedium {
   // hide album column
   .songlist-item {
-    grid-template-columns: 1.75rem 1.5fr 1fr 2.5rem 2.5rem;
+    grid-template-columns: 1.75rem 1.5fr 1fr 5.5rem;
   }
 
   .song-album {

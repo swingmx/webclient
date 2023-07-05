@@ -27,18 +27,19 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import { Routes } from "@/router";
 import { computed, onMounted, ref } from "vue";
 
+import { Routes } from "@/router";
+import { useRoute } from "vue-router";
+
 import useSearchStore from "@/stores/search";
+import { isSmallPhone } from "@/stores/content-width";
 import updatePageTitle from "@/utils/updatePageTitle";
 
 import AlbumPage from "./albums.vue";
 import ArtistPage from "./artists.vue";
 import TracksPage from "./tracks.vue";
 import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
-import { isSmallPhone } from "@/stores/content-width";
 
 const page = ref<HTMLElement>();
 
@@ -83,13 +84,13 @@ function scrollToGridPageBottom() {
 
 function loadAlbums() {
   search.loadAlbums();
-  scrollToGridPageBottom();
+  !isSmallPhone.value && scrollToGridPageBottom();
 }
 
 function loadArtists() {
   search.loadArtists();
 
-  scrollToGridPageBottom();
+  !isSmallPhone.value && scrollToGridPageBottom();
 }
 
 function loadMore() {
@@ -135,6 +136,11 @@ onMounted(() => {
   display: grid;
   margin-right: -0.75rem;
   position: relative;
+
+  @include smallPhone {
+    display: grid;
+    grid-template-rows: 3rem 1fr;
+  }
 
   .page.no-scroll {
     overflow-x: visible;
