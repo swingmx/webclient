@@ -17,6 +17,7 @@
             :key="index"
             :is="item.component"
             v-bind="item.props"
+            @playThis="playFromQueue(item.props.index - 1)"
           ></component>
         </DynamicScrollerItem>
       </template>
@@ -25,24 +26,34 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { ScrollerItem } from "@/interfaces";
 import { isMedium, isSmall } from "@/stores/content-width";
 
 import Header from "@/components/NowPlaying/Header.vue";
 import useQueueStore from "@/stores/queue";
 import SongItem from "@/components/shared/SongItem.vue";
-import { FromOptions } from "@/composables/enums";
+import updatePageTitle from "@/utils/updatePageTitle";
+import Tabs from "@/components/NowPlaying/Tabs.vue";
 
 const header: ScrollerItem = {
   id: "header",
   component: Header,
 };
 
+const tabs: ScrollerItem = {
+  id: "tabs",
+  component: Tabs,
+};
+
 const queue = useQueueStore();
 
+function playFromQueue(index: number) {
+  queue.play(index);
+}
+
 const scrollerItems = computed(() => {
-  const items = [header];
+  const items = [header, tabs];
 
   const trackComponents = queue.tracklist.map((track, index) => {
     return {
@@ -61,6 +72,8 @@ const scrollerItems = computed(() => {
 
   return items.concat(trackComponents);
 });
+
+onMounted(() => updatePageTitle("Now Playing"));
 </script>
 
 <style lang="scss">
@@ -68,18 +81,10 @@ const scrollerItems = computed(() => {
   height: 100%;
   margin-right: -$medium;
   margin-bottom: 2rem;
-  // padding-bottom: 2rem;
 
   .track-item {
-    // padding: $small 2rem;
     margin: 0 auto;
     max-width: 26rem;
-
-    // @include smallPhone {
-    //   margin-left: -$medium;
-    // }
-
-    // border-radius: $small;
   }
 
   .vue-recycle-scroller {

@@ -12,9 +12,9 @@
     <div class="sidebar-songcard rounded-sm" v-wave>
       <router-link
         :to="{
-          name: 'AlbumView',
-          params: {
-            hash: q.currenttrack?.albumhash ? q.currenttrack.albumhash : ' ',
+          name: Routes.nowPlaying,
+          query: {
+            tab: 'queue',
           },
         }"
       >
@@ -34,6 +34,7 @@ import useQueueStore from "@/stores/queue";
 
 import { paths } from "@/config";
 import Bitrate from "./Bitrate.vue";
+import { Routes } from "@/router";
 
 const imguri = paths.images.thumb.large;
 const q = useQueueStore();

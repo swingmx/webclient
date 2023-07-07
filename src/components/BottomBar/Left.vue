@@ -7,11 +7,11 @@
     />
     <RouterLink
       v-else
-      title="go to album"
+      title="Go to Now Playing"
       :to="{
-        name: Routes.album,
-        params: {
-          hash: queue.currenttrack?.albumhash || ' ',
+        name: Routes.nowPlaying,
+        query: {
+          tab: 'queue',
         },
       }"
     >

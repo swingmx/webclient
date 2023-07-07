@@ -384,7 +384,7 @@ export default defineStore("Queue", {
         return this.tracklist[this.currentindex - 1];
       }
     },
-    currenttrack(): Track | undefined {
+    currenttrack(): Track {
       const current = this.tracklist[this.currentindex];
 
       isFavorite(current?.trackhash || "", favType.track).then((is_fav) => {

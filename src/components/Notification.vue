@@ -40,9 +40,9 @@ function getSvg(notif: NotifType) {
 <style lang="scss">
 .toasts {
   position: fixed;
-  bottom: 2rem;
+  top: 2rem;
   left: 50%;
-  translate: -50%;
+  transform: translate(-50%);
   z-index: 100;
   display: flex;
   flex-direction: column-reverse;
@@ -50,7 +50,7 @@ function getSvg(notif: NotifType) {
 }
 
 .new-notif {
-  width: 20rem;
+  width: 18rem;
   height: 4rem;
   background-color: $gray;
   display: grid;
@@ -70,24 +70,24 @@ function getSvg(notif: NotifType) {
 .new-notif.error {
   $bg: rgb(236, 31, 31);
   $bg1: rgba(236, 31, 31, 0.15);
-  background-image: linear-gradient(275deg, $bg, $bg1 74%);
+  background-image: linear-gradient(37deg, $bg, $bg1 74%);
 }
 
 .new-notif.info, .new-notif.favorite {
   $bg: rgb(28, 102, 238);
   $bg1: rgba(31, 144, 236, 0.15);
-  background-image: linear-gradient(275deg, $bg, $bg1 74%);
+  background-image: linear-gradient(37deg, $bg, $bg1 74%);
 }
 
 .new-notif.success {
   $bg: rgb(5, 167, 53);
   $bg1: rgba(5, 167, 54, 0.15);
-  background-image: linear-gradient(275deg, $bg, $bg1 74%);
+  background-image: linear-gradient(37deg, $bg, $bg1 74%);
 }
 
 .new-notif.working {
   $bg: $gray4;
   $bg1: rgba(128, 128, 128, 0.151);
-  background-image: linear-gradient(275deg, $bg, $bg1 74%);
+  background-image: linear-gradient(37deg, $bg, $bg1 74%);
 }
 </style>

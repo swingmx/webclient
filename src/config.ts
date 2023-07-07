@@ -1,7 +1,7 @@
 import { useStorage } from "@vueuse/core";
 
 const development = import.meta.env.DEV;
-const dev_url = "http://localhost:1980";
+const dev_url = "http://192.168.100.65:1980/";
 const url = development ? dev_url : "";
 
 export const baseApiUrl = useStorage("baseApiUrl", url, sessionStorage);
@@ -24,6 +24,7 @@ const imageRoutes = {
   thumb: {
     large: "/t/",
     small: "/t/s/",
+    original: "/t/o/",
   },
   artist: {
     large: "/a/",
@@ -117,6 +118,7 @@ export const paths = {
     thumb: {
       small: baseImgUrl + imageRoutes.thumb.small,
       large: baseImgUrl + imageRoutes.thumb.large,
+      original: baseImgUrl + imageRoutes.thumb.original,
     },
     artist: {
       small: baseImgUrl + imageRoutes.artist.small,
@@ -126,4 +128,3 @@ export const paths = {
     raw: baseImgUrl + imageRoutes.raw,
   },
 };
-

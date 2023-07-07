@@ -1,53 +1,29 @@
 <template>
   <div class="now-playing-header">
     <div class="centered">
-      <div class="from">
+      <PlayingFrom />
+      <RouterLink
+        :to="{
+          name: Routes.album,
+          params: {
+            hash: queue.currenttrack?.albumhash || '',
+          },
+        }"
+        title="Go to Album"
+        class="np-image"
+      >
         <img
-          v-if="
-            queue.from.type === FromOptions.album ||
-            queue.from.type === FromOptions.artist
-          "
-          :src="image + '.webp'"
-          :alt="`Now Playing ${queue.from.type} image`"
-          :class="`${
-            queue.from.type === FromOptions.artist ? 'circular' : 'rounded-sm'
-          }`"
-        />
-        <div class="from-icon border rounded-sm" v-else>
-          <component :is="icon"></component>
-        </div>
-        <router-link :to="(location as RouteLocationRaw)">
-          <div class="pad-sm">
-            <div class="type">{{ queue.from.type }}</div>
-            <div class="ellip2">{{ name }}</div>
-          </div>
-        </router-link>
-      </div>
-      <div class="np-image">
-        <img
+          v-motion-fade
           class="rounded"
-          :src="paths.images.thumb.large + queue.currenttrack?.image"
+          :src="paths.images.thumb.original + queue.currenttrack?.image"
+          @dblclick="handleFav(queue.currenttrack?.trackhash || '')"
         />
         <Bitrate />
-      </div>
-      <div class="info">
-        <div class="text">
-          <div class="title">{{ queue.currenttrack?.title }}</div>
-          <ArtistName
-            :albumartists="queue.currenttrack?.albumartist || []"
-            :artists="queue.currenttrack?.artist || []"
-          />
-        </div>
-        <div class="actions">
-          <HeartSvg
-            :state="queue.currenttrack?.is_favorite"
-            @handle-fav="addToFav(queue.currenttrackhash)"
-          />
-        </div>
-      </div>
+      </RouterLink>
+      <NowPlayingInfo @handle-fav="handleFav" />
       <Progress />
     </div>
-    <h3 v-if="queue.currenttrack">[Image here] Now Playing</h3>
+    <h3 v-if="queue.currenttrack">Now Playing</h3>
     <SongItem
       v-if="queue.currenttrack"
       :track="queue.currenttrack"
@@ -59,31 +35,28 @@
         color: getTextColor(colors.theme1),
       }"
     />
-    <h3>Queue</h3>
   </div>
 </template>
 
 <script setup lang="ts">
-import { RouteLocationRaw } from "vue-router";
-
 import { paths } from "@/config";
+import { Routes } from "@/router";
 import useQueueStore from "@/stores/queue";
-import playingFrom from "@/utils/playingFrom";
 
-import HeartSvg from "../shared/HeartSvg.vue";
-import ArtistName from "../shared/ArtistName.vue";
-import favoriteHandler from "@/composables/favoriteHandler";
-import { FromOptions, dropSources, favType } from "@/composables/enums";
+import { dropSources, favType } from "@/composables/enums";
 import Progress from "@/components/NavBar/NP/Progress.vue";
 import Bitrate from "../NavBar/NP/Bitrate.vue";
 import SongItem from "../shared/SongItem.vue";
 import useColorStore from "@/stores/colors";
 import { getTextColor } from "@/utils/colortools/shift";
+import PlayingFrom from "./PlayingFrom.vue";
+import NowPlayingInfo from "./NowPlayingInfo.vue";
+import favoriteHandler from "@/composables/favoriteHandler";
 
 const queue = useQueueStore();
 const colors = useColorStore();
 
-function addToFav(trackhash: string) {
+function handleFav(trackhash: string) {
   favoriteHandler(
     queue.currenttrack?.is_favorite,
     favType.track,
@@ -92,8 +65,6 @@ function addToFav(trackhash: string) {
     () => null
   );
 }
-
-const { name, location, icon, image } = playingFrom(queue.from);
 </script>
 
 <style lang="scss">
@@ -102,36 +73,8 @@ const { name, location, icon, image } = playingFrom(queue.from);
 
   .centered {
     margin: 0 auto;
-    width: fit-content;
-    max-width: 26rem;
-  }
-
-  .from {
-    margin-bottom: 1rem;
-    max-width: fit-content;
-    display: flex;
-    align-items: center;
-
-    img {
-      width: 2.5rem;
-      aspect-ratio: 1;
-      object-fit: cover;
-    }
-
-    .from-icon {
-      padding: $smaller;
-      aspect-ratio: 1;
-      width: 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .type {
-      text-transform: capitalize;
-      font-size: 0.8rem;
-      color: $gray1;
-    }
+    width: 26rem;
+    max-width: 100%;
   }
 
   .np-image {
@@ -150,17 +93,6 @@ const { name, location, icon, image } = playingFrom(queue.from);
       max-width: 30rem;
       aspect-ratio: 1;
       object-fit: cover;
-    }
-  }
-
-  .info {
-    display: grid;
-    grid-template-columns: 1fr max-content;
-    gap: 1rem;
-
-    .artist {
-      font-size: 0.8rem;
-      color: $gray1;
     }
   }
 

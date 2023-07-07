@@ -103,6 +103,8 @@ export default defineStore("album", {
       );
     },
     async fetchSimilarAlbums() {
+      if (this.similarAlbums.length) return;
+
       this.similarAlbums = await getSimilarAlbums(
         this.info.albumartists[0].artisthash,
         maxAbumCards.value

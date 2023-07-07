@@ -44,7 +44,7 @@ defineEmits<{
     width: 2rem;
 
     svg {
-      stroke: $white;
+      stroke: $gray1;
     }
 
     &:hover {

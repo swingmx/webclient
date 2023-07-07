@@ -29,11 +29,11 @@ export const menus = [
     route_name: Routes.favorites,
     icon: HeartSvg,
   },
-  {
-    name: "queue",
-    route_name: Routes.nowPlaying,
-    icon: QueueSvg,
-  },
+  // {
+  //   name: "Now Playing",
+  //   route_name: Routes.nowPlaying,
+  //   icon: QueueSvg,
+  // },
   {
     name: "search",
     route_name: Routes.search,

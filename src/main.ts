@@ -1,6 +1,9 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+
 import { Motion, Presence } from "motion/vue";
+import { MotionPlugin } from '@vueuse/motion'
+
 import {
   RecycleScroller,
   DynamicScroller,
@@ -26,6 +29,7 @@ app.use(pinia);
 app.use(router);
 app.use(autoAnimatePlugin);
 app.use(VWave);
+app.use(MotionPlugin)
 
 app.directive("tooltip", vTooltip);
 
