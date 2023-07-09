@@ -11,7 +11,10 @@ const {
   albumVersions,
 } = paths.api;
 
-const getAlbumData = async (hash: string, ToastStore: typeof useNotifStore) => {
+const getAlbumData = async (
+  albumhash: string,
+  ToastStore: typeof useNotifStore
+) => {
   interface AlbumData {
     info: Album;
     tracks: Track[];
@@ -20,14 +23,14 @@ const getAlbumData = async (hash: string, ToastStore: typeof useNotifStore) => {
   const { data, status } = await useAxios({
     url: albumUrl,
     props: {
-      hash: hash,
+      albumhash,
     },
   });
 
   if (status == 204) {
     ToastStore().showNotification("Album not created yet!", NotifType.Error);
   }
-    
+
   return data as AlbumData;
 };
 

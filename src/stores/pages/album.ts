@@ -60,10 +60,10 @@ export default defineStore("album", {
     /**
      * Fetches a single album information, artists and its tracks from the server
      * using the title and album-artist of the album.
-     * @param hash title of the album
+     * @param albumhash title of the album
      */
-    async fetchTracksAndArtists(hash: string) {
-      const album = await getAlbum(hash, useNotifStore);
+    async fetchTracksAndArtists(albumhash: string) {
+      const album = await getAlbum(albumhash, useNotifStore);
 
       this.srcTracks = album.tracks;
       this.info = album.info;

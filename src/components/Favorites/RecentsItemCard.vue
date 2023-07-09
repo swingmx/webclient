@@ -3,20 +3,11 @@
     class="recent-fav-item rounded"
     :class="fav.type"
     :to="{
-      name:
+      name: fav.type === 'album' ? Routes.album : Routes.artist,
+      params:
         fav.type === 'album'
-          ? Routes.album
-          : fav.type === 'artist'
-          ? Routes.artist
-          : undefined,
-      params: {
-        hash:
-          fav.type === 'album'
-            ? fav.item.albumhash
-            : fav.type === 'artist'
-            ? fav.item.artisthash
-            : undefined,
-      },
+          ? { albumhash: fav.item.albumhash }
+          : { hash: fav.item.artisthash },
     }"
   >
     <div class="imagegroup">

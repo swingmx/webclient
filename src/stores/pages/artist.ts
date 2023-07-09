@@ -41,8 +41,6 @@ export default defineStore("artistPage", {
       this.singles = singles;
       this.appearances = appearances;
       this.compilations = compilations;
-
-      console.log("meh");
     },
     async fetchSimilarArtists() {
       // the fetcher component is first mounted then unmounted by the recycler view,
@@ -54,8 +52,6 @@ export default defineStore("artistPage", {
         this.info.artisthash,
         maxAbumCards.value
       );
-
-      console.log("meh 2");
     },
     resetAlbums() {
       this.albums = [];

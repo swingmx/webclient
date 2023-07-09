@@ -19,7 +19,7 @@ export default (source: From) => {
         location: {
           name: Routes.album,
           params: {
-            hash: source.albumhash,
+            albumhash: source.albumhash,
           },
         },
         image: paths.images.thumb.small + source.albumhash,

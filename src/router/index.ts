@@ -81,16 +81,18 @@ const albums = {
 };
 
 const albumView = {
-  path: "/albums/:hash",
+  path: "/albums/:albumhash",
   name: "AlbumView",
   component: AlbumView,
   beforeEnter: async (to: any) => {
     state.loading.value = true;
     const store = useAlbumPageStore();
 
-    await store.fetchTracksAndArtists(to.params.hash).then(() => {
-      state.loading.value = false;
-    });
+    await store
+      .fetchTracksAndArtists(to.params.albumhash)
+      .then(() => {
+        state.loading.value = false;
+      });
   },
 };
 

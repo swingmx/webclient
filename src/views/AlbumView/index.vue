@@ -158,7 +158,7 @@ const scrollerItems = computed(() => {
   const header: ScrollerItem = {
     id: "album-header",
     component: Header,
-    size: (isSmallPhone.value) || heightLarge.value ? 25 * 16 : 19 * 16,
+    size: isSmallPhone.value || heightLarge.value ? 25 * 16 : 19 * 16,
     // size: (!isSmallPhone.value) || heightLarge.value ? 25 * 16 : 19 * 16,
   };
 
@@ -198,7 +198,7 @@ function playFromAlbum(index: number) {
 }
 
 onBeforeRouteUpdate(async (to) => {
-  await album.fetchTracksAndArtists(to.params.hash.toString()).then(() => {
+  await album.fetchTracksAndArtists(to.params.albumhash.toString()).then(() => {
     album.resetQuery();
     album.resetAlbumArtists();
     album.fetchArtistAlbums();

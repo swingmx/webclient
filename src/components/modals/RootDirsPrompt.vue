@@ -2,7 +2,7 @@
   <div class="root-dirs-prompt">
     <h3 class="t-center">Where do you want to look for music?</h3>
     <div class="options-group">
-      <Motion
+      <div
         class="option"
         v-for="option in options"
         :key="option.id"
@@ -10,20 +10,12 @@
           active: option.active,
         }"
         @click="option.action()"
-        :initial="{ opacity: 0, y: -20 }"
-        :animate="{
-          opacity: 1,
-          y: 0,
-          transition: {
-            delay: option.delay,
-            easing: 'ease-out',
-          },
-        }"
+        v-motion-slide-bottom
       >
         <b>{{ option.title }}</b>
         <div class="info">{{ option.info }}</div>
         <div class="check" v-if="option.active">✅</div>
-      </Motion>
+      </div>
     </div>
   </div>
 </template>

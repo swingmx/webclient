@@ -91,18 +91,7 @@
           </div>
         </div>
       </div>
-      <Motion
-        class="art"
-        v-if="!isMedium && !isSmall"
-        :initial="{ opacity: 0, x: 10 }"
-        :animate="{
-          opacity: 1,
-          x: 0,
-          transition: {
-            delay: 0.1,
-          },
-        }"
-      >
+      <div class="art" v-if="!isMedium && !isSmall">
         <RouterLink
           v-for="a in album.albumartists"
           :to="{
@@ -122,7 +111,7 @@
             }"
           />
         </RouterLink>
-      </Motion>
+      </div>
     </div>
   </div>
 </template>
@@ -134,18 +123,18 @@ import { onMounted, ref } from "vue";
 
 import { paths } from "@/config";
 import {
-albumHeaderSmall,
-isMedium,
-isSmall,
-isSmallPhone
+  albumHeaderSmall,
+  isMedium,
+  isSmall,
+  isSmallPhone,
 } from "@/stores/content-width";
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
 
 import {
-getBackgroundColor,
-getShift,
-getTextColor,
+  getBackgroundColor,
+  getShift,
+  getTextColor,
 } from "@/utils/colortools/shift";
 
 import { favType, playSources } from "@/composables/enums";

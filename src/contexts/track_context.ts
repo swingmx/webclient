@@ -163,7 +163,7 @@ export default async (
     action: () => {
       Router.push({
         name: Routes.album,
-        params: { hash: track.albumhash },
+        params: { albumhash: track.albumhash},
       });
     },
     icon: "album",

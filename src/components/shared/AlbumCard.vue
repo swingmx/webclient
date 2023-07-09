@@ -1,8 +1,8 @@
 <template>
   <RouterLink
     :to="{
-      name: 'AlbumView',
-      params: { hash: album.albumhash },
+      name: Routes.album,
+      params: { albumhash: album.albumhash},
     }"
     class="album-card"
   >

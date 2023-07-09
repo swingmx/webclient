@@ -27,6 +27,8 @@
 </template>
 
 <script setup lang="ts">
+import { Motion } from "motion/vue"
+
 import HeartFillSvg from "@/assets/icons/heart.fill.svg";
 import HeartSvg from "@/assets/icons/heart.svg";
 

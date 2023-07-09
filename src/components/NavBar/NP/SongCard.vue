@@ -30,6 +30,7 @@
 </template>
 
 <script setup lang="ts">
+import { Motion } from "motion/vue"
 import useQueueStore from "@/stores/queue";
 
 import { paths } from "@/config";

@@ -6,7 +6,7 @@
         :to="{
           name: Routes.album,
           params: {
-            hash: queue.currenttrack?.albumhash || '',
+            albumhash: queue.currenttrack?.albumhash || ' ',
           },
         }"
         title="Go to Album"

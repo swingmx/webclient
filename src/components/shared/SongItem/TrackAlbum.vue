@@ -6,7 +6,7 @@
     :to="{
       name: 'AlbumView',
       params: {
-        hash: albumhash || 'Unknown',
+        albumhash: albumhash || 'Unknown',
       },
     }"
   >
