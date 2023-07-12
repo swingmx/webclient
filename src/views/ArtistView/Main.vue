@@ -29,19 +29,19 @@ import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import {
-  discographyAlbumTypes,
-  dropSources,
-  FromOptions,
+discographyAlbumTypes,
+dropSources,
+FromOptions,
 } from "@/composables/enums";
-import { Album, ScrollerItem } from "@/interfaces";
-import useQueueStore from "@/stores/queue";
-import useArtistPageStore from "@/stores/pages/artist";
 import { getArtistTracks } from "@/composables/fetch/artists";
+import { Album, ScrollerItem } from "@/interfaces";
+import useArtistPageStore from "@/stores/pages/artist";
+import useQueueStore from "@/stores/queue";
 
 import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
+import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import Header from "@/components/ArtistView/Header.vue";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
-import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import SimilarArtists from "@/components/PlaylistView/ArtistsList.vue";
 
 const store = useArtistPageStore();
@@ -240,12 +240,11 @@ onBeforeRouteLeave(async () => {
 
 <style lang="scss">
 .artist-page {
-  .artist-albums {
+  .card-list-scroll-x {
     padding-top: 1rem;
   }
 
   .section-title {
-    // margin: 1rem;
     padding-left: 1rem;
   }
 }

@@ -32,7 +32,7 @@ const maxAbumCards = computed(() => {
   const max =
     Math.floor((content_width.value - paddings) / album_card_with) + 1;
 
-  if (max < 1) return 7;
+  if (max < 6) return 7;
 
   return max;
 });

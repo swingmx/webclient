@@ -131,7 +131,7 @@ function getArtistAlbumComponents(): ScrollerItem[] {
         albumType: discographyAlbumTypes.all,
         route: `/artists/${artisthash}/discography`,
       },
-      size: 18 * 16,
+      size: 19 * 16,
     };
   });
 }
@@ -184,7 +184,7 @@ const scrollerItems = computed(() => {
     components.push({
       id: "similarAlbums",
       component: SimilarAlbumLoader,
-      size: 18 * 16,
+      size: 19 * 16,
     });
   }
 

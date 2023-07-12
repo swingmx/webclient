@@ -46,6 +46,8 @@ defineProps<{
 
 <style lang="scss">
 .recent-fav-item {
+  flex: 0 0 10.1rem;
+
   padding: $medium;
   height: 100%;
   display: grid;

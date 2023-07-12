@@ -117,6 +117,8 @@ function getVersions(ver1: string[], ver2: string[] = []) {
 
 <style lang="scss">
 .album-card {
+  flex: 0 0 10.1rem;
+  
   display: grid;
   gap: $small;
   padding: $medium;

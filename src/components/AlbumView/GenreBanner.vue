@@ -41,9 +41,6 @@ onMounted(async () => {
 
 <style lang="scss">
 .genres-banner {
-  // display: flex;
-  // flex-wrap: nowrap;
-  // gap: 1rem;
   margin-top: 2rem;
   font-size: 0.9rem;
   padding-left: $medium;
@@ -51,7 +48,6 @@ onMounted(async () => {
   user-select: none;
   overflow: scroll;
   @include hideScrollbars;
-
 
   .scrollable {
     display: flex;
@@ -66,20 +62,17 @@ onMounted(async () => {
     background-color: $gray5;
     min-width: 4rem;
     text-align: center;
-    outline: solid 1px $gray;
     padding: $small 1rem;
     font-weight: 700;
 
     &:first-child {
       background-color: white;
       color: black;
-      outline-color: white;
       pointer-events: none;
     }
 
     &:hover {
       background-color: $pink !important;
-      outline-color: $pink;
       color: $white;
     }
   }
