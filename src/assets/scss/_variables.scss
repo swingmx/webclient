@@ -1,6 +1,5 @@
 // colors
 
-$separator: #ffffff2f;
 $highlight-blue: #006eff;
 $darkestblue: #234ece;
 $bbb: #161616; //bottom controls background
@@ -46,7 +45,7 @@ $accent: $gray1;
 $secondary: $gray5;
 $danger: $red;
 $track-hover: $gray4;
-$context: black;
+$context: $gray5;
 $playlist-card-bg: $gray4;
 
 // SVG COLORS
@@ -54,3 +53,5 @@ $default: $accent;
 $side-nav-svg: $red;
 
 $overshoot: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+$separator: $gray2;

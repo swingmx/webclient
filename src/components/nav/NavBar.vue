@@ -11,7 +11,7 @@
         <FolderTitle v-if="$route.name == Routes.folder" :subPaths="subPaths" />
         <SearchTitle v-if="$route.name == Routes.search" />
         <PlaylistsTitle v-if="$route.name == Routes.playlists" />
-        <QueueTitle v-if="$route.name == Routes.queue" />
+        <QueueTitle v-if="$route.name == Routes.nowPlaying" />
         <ArtistDiscographyTitle
           v-if="$route.name == Routes.artistDiscography"
         />
@@ -34,10 +34,6 @@
         <SimpleNav
           v-if="$route.name === Routes.favoriteTracks"
           :text="'Favorite Tracks ❤️'"
-        />
-        <SimpleNav
-          v-if="$route.name === Routes.nowPlaying"
-          :text="'Now Playing'"
         />
       </div>
     </div>

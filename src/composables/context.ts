@@ -7,16 +7,24 @@ import useContextStore from "@/stores/context";
 import { ContextSrc } from "./enums";
 import { Track } from "@/interfaces";
 import trackContext from "@/contexts/track_context";
+import albumContextItems from "@/contexts/album";
+import useAlbumStore from "@/stores/pages/album";
+import { Store } from "pinia";
 
 let prev_track = "";
-let prev_watcher = () => {};
+let stop_prev_watcher = () => {};
 
-/**
- * Handles showing the context menu for a track component.
- * @param e The MouseEvent for positioning the context menu
- * @param track The track to link to the context menu
- * @param flag The boolean that manages the context visibility in the source component
- */
+function flagWatcher(menu: Store, flag: Ref<boolean>) {
+  stop_prev_watcher();
+
+  // watch for context menu visibility and reset flag
+  stop_prev_watcher = menu.$subscribe((mutation, state) => {
+    console.log("mutation");
+    //@ts-ignore
+    flag.value = state.visible;
+  });
+}
+
 export const showTrackContextMenu = (
   e: MouseEvent,
   track: Track,
@@ -27,13 +35,20 @@ export const showTrackContextMenu = (
 
   menu.showContextMenu(e, options, ContextSrc.Track);
 
+  stop_prev_watcher();
+  // 👇 this block updates the flag on visibility change 😂
   if (prev_track !== track.filepath) {
     prev_track = track.filepath || "";
-    prev_watcher();
-
-    // watch for context menu visibility and reset flag
-    prev_watcher = menu.$subscribe((mutation, state) => {
-      flag.value = state.visible;
-    });
+    flagWatcher(menu, flag);
   }
+};
+
+export const showAlbumContextMenu = (e: MouseEvent, flag: Ref<boolean>) => {
+  const menu = useContextStore();
+
+  const options = () =>
+    albumContextItems(useQueueStore, useAlbumStore, useModalStore);
+  menu.showContextMenu(e, options, ContextSrc.AHeader);
+
+  flagWatcher(menu, flag);
 };

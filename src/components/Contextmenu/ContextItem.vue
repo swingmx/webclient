@@ -136,11 +136,12 @@ function runChildAction(action: () => void) {
   .children {
     position: absolute;
     width: 12rem;
+    z-index: 10;
 
     background-color: $context;
     transform: scale(0);
     padding: $medium;
-    border: solid 1px $gray;
+    border: solid 1px $gray2;
 
     .context-item {
       padding: $small 1rem;

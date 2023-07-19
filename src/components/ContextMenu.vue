@@ -77,6 +77,9 @@ context.$subscribe((mutation, state) => {
   .separator {
     height: 1px;
     padding: 0;
+    margin-left: -$medium;
+    width: calc(100% + $medium * 2);
+    pointer-events: none;
   }
 
   .critical {

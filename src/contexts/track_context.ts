@@ -12,6 +12,7 @@ import { openInFiles } from "@/composables/fetch/folders";
 
 import useModalStore from "@/stores/modal";
 import useQueueStore from "@/stores/queue";
+import { get_new_playlist_option, separator } from "./utils";
 
 /**
  * Returns a list of context menu items for a track.
@@ -25,10 +26,6 @@ export default async (
   modalStore: typeof useModalStore,
   QueueStore: typeof useQueueStore
 ): Promise<Option[]> => {
-  const separator: Option = {
-    type: "separator",
-  };
-
   const single_artist = track.artist.length === 1;
   const single_album_artist = track.albumartist.length === 1;
   let no_playlists = false;
@@ -53,20 +50,16 @@ export default async (
   };
 
   async function addToPlaylist() {
-    const new_playlist = <Option>{
-      label: "New playlist",
-      action: () => {
-        modalStore().showNewPlaylistModal(track);
-      },
-    };
-
-    let playlists = <Option[]>[];
+    const new_playlist = get_new_playlist_option(modalStore, track);
     const p = await getAllPlaylists(true);
 
+    let items = [new_playlist];
+
     if (p.length === 0) {
-      no_playlists = true;
+      return items;
     }
 
+    let playlists = <Option[]>[];
     playlists = p.map((playlist: Playlist) => {
       return <Option>{
         label: playlist.name,
@@ -76,13 +69,7 @@ export default async (
       };
     });
 
-    let return_value = [new_playlist, separator, ...playlists];
-
-    if (no_playlists) {
-      return_value.splice(1, 1);
-    }
-
-    return return_value;
+    return [...items, separator, ...playlists];
   }
 
   const add_to_playlist: Option = {
@@ -163,7 +150,7 @@ export default async (
     action: () => {
       Router.push({
         name: Routes.album,
-        params: { albumhash: track.albumhash},
+        params: { albumhash: track.albumhash },
       });
     },
     icon: "album",

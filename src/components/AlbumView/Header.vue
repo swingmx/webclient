@@ -83,11 +83,19 @@
           </div>
           <div class="buttons">
             <PlayBtnRect :source="playSources.album" :store="useAlbumStore" />
+
             <HeartSvg
               :state="album.is_favorite"
               @handleFav="handleFav"
               :color="album.colors[0] ? album.colors[0] : ''"
             />
+            <button
+              class="options"
+              :class="{ context_menu_showing }"
+              @click.prevent="showContextMenu"
+            >
+              <MoreSvg />
+            </button>
           </div>
         </div>
       </div>
@@ -120,6 +128,7 @@
 import { Routes } from "@/router";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
+import { onBeforeRouteUpdate } from "vue-router";
 
 import { paths } from "@/config";
 import {
@@ -128,8 +137,10 @@ import {
   isSmall,
   isSmallPhone,
 } from "@/stores/content-width";
+
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
+import useQueueStore from "@/stores/queue";
 
 import {
   getBackgroundColor,
@@ -139,14 +150,15 @@ import {
 
 import { favType, playSources } from "@/composables/enums";
 import { formatSeconds, useVisibility } from "@/utils";
-
-import ArtistName from "@/components/shared/ArtistName.vue";
-import favoriteHandler from "@/composables/favoriteHandler";
 import updatePageTitle from "@/utils/updatePageTitle";
-import { onBeforeRouteUpdate } from "vue-router";
+import favoriteHandler from "@/composables/favoriteHandler";
+import { showAlbumContextMenu } from "@/composables/context";
+
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
+import MoreSvg from "@/assets/icons/more.svg";
+import ArtistName from "@/components/shared/ArtistName.vue";
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;
@@ -154,12 +166,17 @@ const nav = useNavStore();
 const store = useAlbumStore();
 
 const titleSplits = ref([""]);
+const context_menu_showing = ref(false);
 
 const { info: album } = storeToRefs(store);
 
 defineEmits<{
   (event: "playThis"): void;
 }>();
+
+function showContextMenu(e: MouseEvent) {
+  showAlbumContextMenu(e, context_menu_showing);
+}
 
 /**
  * Calls the `toggleShowPlay` method which toggles the play button in the nav.
@@ -250,13 +267,25 @@ onBeforeRouteUpdate(() => {
   gap: 1rem;
   padding: 1rem;
   height: $banner-height;
-  // height: 100%;
   background-color: $black;
   align-items: flex-end;
 
   .buttons {
     display: flex;
     gap: $small;
+  }
+
+  .options {
+    background-color: transparent;
+    border: none;
+
+    &.context_menu_showing {
+      background-color: $darkblue;
+    }
+
+    svg {
+      transform: scale(1.25);
+    }
   }
 
   .big-img {

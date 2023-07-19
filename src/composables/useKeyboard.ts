@@ -1,5 +1,6 @@
 import useQStore from "@/stores/queue";
 import useModalStore from "@/stores/modal";
+import useContextStore from "@/stores/context";
 
 let key_down_fired = false;
 
@@ -14,7 +15,6 @@ function focusPageSearchBox() {
 
 export default function (queue: typeof useQStore, modal: typeof useModalStore) {
   const q = queue();
-  const m = modal();
 
   window.addEventListener("keydown", (e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
@@ -27,68 +27,68 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
       return target.tagName === "INPUT" || target.tagName === "TEXTAREA";
     }
 
-    if (FocusedOnInput(target)) return;
+    if (FocusedOnInput(target)) {
+      if (e.key == "Escape") {
+        target.blur();
+      }
+
+      return;
+    }
+
+    if (key_down_fired) return;
 
     switch (e.key) {
       case "ArrowRight":
         {
-          if (!key_down_fired) {
-            key_down_fired = true;
+          setTimeout(() => {
+            key_down_fired = false;
+          }, 1000);
 
-            setTimeout(() => {
-              key_down_fired = false;
-            }, 1000);
-
-            q.playNext();
-          }
+          q.playNext();
         }
         break;
 
       case "ArrowLeft":
         {
-          if (!key_down_fired) {
-            key_down_fired = true;
+          q.playPrev();
 
-            q.playPrev();
-
-            setTimeout(() => {
-              key_down_fired = false;
-            }, 1000);
-          }
+          setTimeout(() => {
+            key_down_fired = false;
+          }, 1000);
         }
 
         break;
 
-      case " ":
+      case " ": // space
         {
-          if (!key_down_fired) {
-            e.preventDefault();
-            key_down_fired = true;
+          e.preventDefault();
 
-            q.playPause();
-          }
+          q.playPause();
         }
 
         break;
 
       case "f": {
-        if (!key_down_fired) {
-          if (!ctrlKey) return;
-          e.preventDefault();
-          focusPageSearchBox();
-
-          key_down_fired = true;
-        }
+        if (!ctrlKey) return;
+        e.preventDefault();
+        focusPageSearchBox();
       }
 
       case "Escape": {
-        if (!key_down_fired) {
-          if (m.visible) {
-            m.hideModal();
-          }
+        const m = modal();
+        const c = useContextStore();
+
+        if (m.visible) {
+          m.hideModal();
+        }
+
+        if (c.visible) {
+          c.hideContextMenu();
         }
       }
     }
+
+    key_down_fired = true;
   });
 }
 

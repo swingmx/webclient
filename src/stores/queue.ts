@@ -368,6 +368,12 @@ export default defineStore("Queue", {
         track.is_favorite = !track.is_favorite;
       }
     },
+    addTracksToQueue(tracks: Track[]) {
+      this.tracklist = this.tracklist.concat(tracks);
+    },
+    insertAfterCurrent(tracks: Track[]) {
+      this.tracklist.splice(this.currentindex + 1, 0, ...tracks);
+    },
   },
   getters: {
     next(): Track {
