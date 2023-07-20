@@ -6,13 +6,12 @@ export const separator: Option = {
 };
 
 export function get_new_playlist_option(
-  modalStore: typeof modal,
   track?: Track
 ): Option {
   return {
     label: "New playlist",
     action: () => {
-      modalStore().showNewPlaylistModal(track);
+      modal().showNewPlaylistModal(track);
     },
   };
 }

@@ -9,6 +9,7 @@ import { Track } from "@/interfaces";
 import trackContext from "@/contexts/track_context";
 import albumContextItems from "@/contexts/album";
 import useAlbumStore from "@/stores/pages/album";
+
 import { Store } from "pinia";
 import { useRoute } from "vue-router";
 
@@ -20,7 +21,6 @@ function flagWatcher(menu: Store, flag: Ref<boolean>) {
 
   // watch for context menu visibility and reset flag
   stop_prev_watcher = menu.$subscribe((mutation, state) => {
-    console.log("mutation");
     //@ts-ignore
     flag.value = state.visible;
   });
@@ -30,11 +30,11 @@ export const showTrackContextMenu = (
   e: MouseEvent,
   track: Track,
   flag: Ref<boolean>,
-  route: ReturnType<typeof useRoute>
+  route: ReturnType<typeof useRoute>,
+  on_playlist = false
 ) => {
   const menu = useContextStore();
-  const options = () =>
-    trackContext(track, useModalStore, useQueueStore, route);
+  const options = () => trackContext(track, route, on_playlist);
 
   menu.showContextMenu(e, options, ContextSrc.Track);
 
@@ -50,7 +50,7 @@ export const showAlbumContextMenu = (e: MouseEvent, flag: Ref<boolean>) => {
   const menu = useContextStore();
 
   const options = () =>
-    albumContextItems(useQueueStore, useAlbumStore, useModalStore);
+    albumContextItems();
   menu.showContextMenu(e, options, ContextSrc.AHeader);
 
   flagWatcher(menu, flag);

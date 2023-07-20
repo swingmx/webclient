@@ -53,18 +53,19 @@ interface ScrollerItem {
   props?: {};
 }
 
-const noItems: ScrollerItem = {
-  id: "Noitems",
-  component: NoItems,
-  size: 300, // somehow it doesn't work, patched with CSS
-  props: {
-    icon: playlistSvg,
-    flag: playlist.tracks.length === 0,
-    title: "No tracks in this playlist",
-    description:
-      'Add tracks to this playlist by right clicking on a track and selecting "add to playlist"',
-  },
-};
+const getNoItemsComponent = () =>
+  <ScrollerItem>{
+    id: "Noitems",
+    component: NoItems,
+    size: 300, // somehow it doesn't work, patched with CSS
+    props: {
+      icon: playlistSvg,
+      flag: playlist.tracks.length === 0,
+      title: "No tracks in this playlist",
+      description:
+        'Add tracks to this playlist by right clicking on a track and selecting "add to playlist"',
+    },
+  };
 
 const scrollerItems = computed(() => {
   const header: ScrollerItem = {
@@ -88,7 +89,7 @@ const scrollerItems = computed(() => {
     };
   });
 
-  const body = playlist.tracks.length === 0 ? [noItems] : tracks;
+  const body = playlist.tracks.length === 0 ? [getNoItemsComponent()] : tracks;
 
   return [header, ...body];
 });

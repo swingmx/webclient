@@ -3,22 +3,22 @@
     class="p-header image rounded no-scroll"
     :style="[
       {
-        background: bg,
+        background: bgColor,
         backgroundPosition: `center ${bannerPos}%`,
         height: `${heightLarge || isSmallPhone ? '24rem' : '18rem'}`,
       },
     ]"
     :class="{ border: !info.images.length }"
   >
-    <div class="gradient" v-if="!(info.image as string).endsWith('None')"></div>
+    <div class="gradient" v-if="info.has_image"></div>
     <BannerImages />
-    <Info />
+    <Info :textColor="textColor" />
     <LastUpdated />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import usePStore from "@/stores/pages/playlist";
@@ -28,7 +28,7 @@ import { paths } from "@/config";
 import BannerImages from "./Header/BannerImages.vue";
 
 import Info from "./Header/Info.vue";
-import { getBackgroundColor } from "@/utils/colortools/shift";
+import { getBackgroundColor, getTextColor } from "@/utils/colortools/shift";
 import LastUpdated from "./Header/LastUpdated.vue";
 
 const playlist = usePStore();
@@ -36,9 +36,8 @@ const playlist = usePStore();
 const imguri = paths.images.playlist;
 
 const { info, bannerPos } = storeToRefs(playlist);
-const bg = ref("");
 
-function getBg() {
+const bgColor = computed(() => {
   if (playlist.info.has_image) {
     return `url(${imguri + info.value.image})`;
   }
@@ -47,9 +46,16 @@ function getBg() {
     // @ts-ignore
     return getBackgroundColor(info.value.images[2].color);
   }
-}
+});
 
-onMounted(() => (bg.value = getBg()));
+const textColor = computed(() => {
+  if (!playlist.info.has_image && playlist.info.images.length > 2) {
+    // @ts-ignore
+    return getTextColor(playlist.info.images[2].color);
+  }
+
+  return "";
+});
 </script>
 
 <style lang="scss">

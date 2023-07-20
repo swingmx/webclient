@@ -8,6 +8,7 @@ import { openInFiles } from "@/composables/fetch/folders";
 import {
   addTrackToPlaylist,
   getAllPlaylists,
+  removeTracks,
 } from "@/composables/fetch/playlists";
 import { Option } from "@/interfaces";
 
@@ -18,24 +19,22 @@ import {
   DeleteIcon,
   FolderIcon,
   PlayNextIcon,
-  PlusIcon
+  PlusIcon,
 } from "@/icons";
-import useModalStore from "@/stores/modal";
 import useQueueStore from "@/stores/queue";
+import usePlaylistStore from "@/stores/pages/playlist";
 import { get_new_playlist_option, separator } from "./utils";
 
 /**
  * Returns a list of context menu items for a track.
  * @param  {any} track a track object.
- * @param {any} modalStore a pinia store.
  * @return {Array<Option>()} a list of context menu items.
  */
 
 export default async (
   track: Track,
-  modalStore: typeof useModalStore,
-  QueueStore: typeof useQueueStore,
-  route: ReturnType<typeof useRoute>
+  route: ReturnType<typeof useRoute>,
+  on_playlist = false
 ): Promise<Option[]> => {
   const single_artist = track.artist.length === 1;
   const single_album_artist = track.albumartist.length === 1;
@@ -62,7 +61,7 @@ export default async (
   };
 
   async function addToPlaylist() {
-    const new_playlist = get_new_playlist_option(modalStore, track);
+    const new_playlist = get_new_playlist_option(track);
     const p = await getAllPlaylists(true);
 
     let items = [new_playlist];
@@ -76,7 +75,13 @@ export default async (
       return <Option>{
         label: playlist.name,
         action: () => {
-          addTrackToPlaylist(playlist, track);
+          addTrackToPlaylist(playlist, track).then(() => {
+            if (route.name !== Routes.playlist) return;
+
+            const store = usePlaylistStore();
+            store.addTrack(track);
+            store.fetchAll(route.params.pid as string, true);
+          });
         },
       };
     });
@@ -93,7 +98,7 @@ export default async (
   const add_to_q: Option = {
     label: "Add to Queue",
     action: () => {
-      QueueStore().addTrackToQueue(track);
+      useQueueStore().addTrackToQueue(track);
     },
     icon: AddToQueueIcon,
   };
@@ -101,7 +106,7 @@ export default async (
   const play_next: Option = {
     label: "Play next",
     action: () => {
-      QueueStore().playTrackNext(track);
+      useQueueStore().playTrackNext(track);
     },
     icon: PlayNextIcon,
   };
@@ -168,17 +173,25 @@ export default async (
     icon: AlbumIcon,
   };
 
-  const del_track: Option = {
-    label: "Delete Track",
-    action: () => console.log("Delete Track"),
-    icon: DeleteIcon,
-    critical: true,
-  };
+  // const del_track: Option = {
+  //   label: "Delete Track",
+  //   action: () => console.log("Delete Track"),
+  //   icon: DeleteIcon,
+  //   critical: true,
+  // };
 
   const getRemoveFromPlaylistOption = () =>
     <Option>{
       label: "Remove From Playlist",
-      action: () => console.log("Remove from Playlist"),
+      action: () => {
+        removeTracks(parseInt(route.params.pid as string), [
+          { trackhash: track.trackhash, index: track.index },
+        ]).then(() => {
+          const store = usePlaylistStore();
+          store.removeTrackByIndex(track.index);
+          store.fetchAll(route.params.pid as string, true);
+        });
+      },
       icon: DeleteIcon,
       critical: true,
     };
@@ -200,7 +213,7 @@ export default async (
     // del_track,
   ];
 
-  if (route.name === Routes.playlist) {
+  if (route.name === Routes.playlist && on_playlist) {
     options.splice(4, 0, getRemoveFromPlaylistOption());
   }
 

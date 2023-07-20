@@ -20,12 +20,15 @@ export default defineStore("playlist-tracks", {
      * Fetches a single playlist information, and its tracks from the server
      * @param id The id of the playlist to fetch
      */
-    async fetchAll(id: string) {
+    async fetchAll(id: string, no_tracks = false) {
       this.resetBannerPos();
-      const playlist = await getPlaylist(id);
+      const playlist = await getPlaylist(id, no_tracks);
 
       this.info = playlist?.info || ({} as Playlist);
       this.bannerPos = this.info.banner_pos;
+
+      if (no_tracks) return;
+
       this.allTracks = playlist?.tracks || [];
     },
 
@@ -50,6 +53,12 @@ export default defineStore("playlist-tracks", {
     },
     minusBannerPos() {
       this.bannerPos !== 0 ? (this.bannerPos -= 5) : null;
+    },
+    removeTrackByIndex(index: number) {
+      this.allTracks.splice(index, 1);
+    },
+    addTrack(track: Track) {
+      this.allTracks.push(track);
     },
     resetArtists() {
       this.artists = [];

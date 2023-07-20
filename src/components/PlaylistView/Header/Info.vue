@@ -3,10 +3,7 @@
     <div
       class="info"
       :style="{
-        color:
-          !playlist.info.has_image && playlist.info.images.length > 2
-            ? getTextColor(playlist.info.images[2].color)
-            : '',
+        color: textColor,
       }"
     >
       <div class="btns">
@@ -26,12 +23,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { formatSeconds, useVisibility } from "@/utils";
+import { formatSeconds } from "@/utils";
 import { playSources } from "@/composables/enums";
-import { getTextColor } from "@/utils/colortools/shift";
 
 import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";
 import usePStore from "@/stores/pages/playlist";
 const playlist = usePStore();
 
+defineProps<{
+  textColor: string;
+}>();
 </script>

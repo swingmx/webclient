@@ -1,37 +1,33 @@
 import { Option } from "@/interfaces";
 import queue from "@/stores/queue";
 import album from "@/stores/pages/album";
-import modal from "@/stores/modal";
 
 import { get_new_playlist_option, separator } from "./utils";
 import { getAllPlaylists } from "@/composables/fetch/playlists";
+import { AddToQueueIcon, PlayNextIcon, PlusIcon } from "@/icons";
 
-export default async (
-  queueStore: typeof queue,
-  albumStore: typeof album,
-  modalStore: typeof modal
-) => {
+export default async () => {
   const play_next = <Option>{
     label: "Play next",
     action: () => {
-      const tracks = albumStore().tracks;
-      queueStore().insertAfterCurrent(tracks);
+      const tracks = album().tracks;
+      queue().insertAfterCurrent(tracks);
     },
-    icon: "play_next",
+    icon: PlayNextIcon,
   };
 
   const add_to_queue = <Option>{
     label: "Add to queue",
     action: () => {
-      const tracks = albumStore().tracks;
-      queueStore().addTracksToQueue(tracks);
+      const tracks = album().tracks;
+      queue().addTracksToQueue(tracks);
     },
-    icon: "add_to_queue",
+    icon: AddToQueueIcon,
   };
 
   async function addToPlaylist() {
     console.log("addToPlaylist");
-    const new_playlist = get_new_playlist_option(modalStore);
+    const new_playlist = get_new_playlist_option();
     const p = await getAllPlaylists(true);
 
     let items = [new_playlist];
@@ -57,7 +53,7 @@ export default async (
   const add_to_playlist: Option = {
     label: "Add to Playlist",
     children: await addToPlaylist(),
-    icon: "plus",
+    icon: PlusIcon,
   };
 
   return [play_next, add_to_queue, separator, add_to_playlist];

@@ -91,8 +91,8 @@ export async function addTrackToPlaylist(playlist: Playlist, track: Track) {
   );
 }
 
-export async function getPlaylist(pid: string) {
-  const uri = `${basePlaylistUrl}/${pid}`;
+export async function getPlaylist(pid: string, no_tracks = false) {
+  const uri = `${basePlaylistUrl}/${pid}?no_tracks=${no_tracks}`;
 
   interface PlaylistData {
     info: Playlist;
@@ -193,4 +193,23 @@ export async function updateBannerPos(pid: number, pos: number) {
   }
 
   new Notification("Unable to save image position", NotifType.Error);
+}
+
+export async function removeTracks(
+  pid: number,
+  tracks: { trackhash: string; index: number }[]
+) {
+  const { status } = await useAxios({
+    url: paths.api.playlist.base + `/${pid}/remove-tracks`,
+    props: {
+      tracks,
+    },
+  });
+
+  if (status === 200) {
+    new Notification("Tracks removed", NotifType.Info);
+    return;
+  }
+
+  new Notification("Unable to remove tracks", NotifType.Error);
 }

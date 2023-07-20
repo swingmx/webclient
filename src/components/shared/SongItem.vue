@@ -46,10 +46,11 @@ import TrackAlbum from "./SongItem/TrackAlbum.vue";
 import TrackDuration from "./SongItem/TrackDuration.vue";
 import { isSmall, isSmallPhone } from "@/stores/content-width";
 import { useRoute } from "vue-router";
+import { Routes } from "@/router";
 
 const context_menu_showing = ref(false);
-const queue = useQueueStore();
 
+const queue = useQueueStore();
 const route = useRoute();
 
 const props = defineProps<{
@@ -80,7 +81,13 @@ function emitUpdate() {
 }
 
 function showMenu(e: MouseEvent) {
-  showContext(e, props.track, context_menu_showing, route);
+  showContext(
+    e,
+    props.track,
+    context_menu_showing,
+    route,
+    route.name === Routes.playlist
+  );
 }
 
 function isCurrent() {

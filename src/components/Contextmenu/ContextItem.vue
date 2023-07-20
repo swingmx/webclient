@@ -16,7 +16,7 @@
   >
     <div class="icon image" v-html="option.icon"></div>
     <div class="label ellip">{{ option.label }}</div>
-    <div class="more image" v-if="option.children"></div>
+    <div class="more" v-if="option.children" v-html="ExpandIcon"></div>
     <div
       class="children rounded shadow-sm"
       v-if="option.children"
@@ -43,6 +43,7 @@ import { ref } from "vue";
 
 import { contextChildrenShowMode } from "@/composables/enums";
 import { Option } from "@/interfaces";
+import { ExpandIcon } from "@/icons";
 
 const props = defineProps<{
   option: Option;
@@ -129,8 +130,8 @@ function runChildAction(action: () => void) {
     height: 1.5rem;
     width: 1.5rem;
     position: absolute;
-    right: $small;
-    background-image: url("../../assets/icons/expand.svg");
+    right: 0;
+    transform: scale(.65);
   }
 
   .children {

@@ -59,6 +59,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
 import { showTrackContextMenu as showContext } from "@/composables/context";
 import { favType } from "@/composables/enums";
@@ -82,9 +83,10 @@ const props = defineProps<{
 const queue = useQueueStore();
 const context_on = ref(false);
 const is_fav = ref(props.track.is_favorite);
+const route = useRoute();
 
 function showMenu(e: MouseEvent) {
-  showContext(e, props.track, context_on);
+  showContext(e, props.track, context_on, route);
 }
 
 const emit = defineEmits<{
