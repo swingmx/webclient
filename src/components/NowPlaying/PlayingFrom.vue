@@ -44,6 +44,7 @@ const queue = useQueueStore();
 const context_menu_showing = ref(false);
 
 function showMenu(e: MouseEvent) {
+  if (!queue.currenttrack) return;
   showTrackContextMenu(e, queue.currenttrack, context_menu_showing);
 }
 const { name, location, icon, image } = playingFrom(queue.from);

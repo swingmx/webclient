@@ -12,20 +12,16 @@
     class="a-header rounded"
     ref="albumheaderthing"
     :style="{
-      background: album.colors[0] ? getBackgroundColor(album.colors[0]) : '',
+      background: backgroundColor,
     }"
   >
-    <!-- height: `${heightLarge ? '24rem' : '18rem'}`, -->
     <div
       class="big-img no-scroll"
       :class="`${albumHeaderSmall ? 'imgSmall' : ''} shadow-lg rounded-sm`"
     >
       <img :src="imguri.thumb.large + album.image" class="rounded-sm" />
     </div>
-    <div
-      class="info"
-      :style="{ color: album.colors[0] ? getTextColor(album.colors[0]) : '' }"
-    >
+    <div class="info" :style="{ color: textColor }">
       <div class="album-info">
         <div class="top">
           <div v-auto-animate class="h" v-if="!isSmallPhone">
@@ -94,53 +90,33 @@
               :class="{ context_menu_showing }"
               @click.prevent="showContextMenu"
             >
-              <MoreSvg />
+              <MoreSvg
+                :style="{
+                  color: textColor,
+                }"
+              />
             </button>
           </div>
         </div>
-      </div>
-      <div class="art" v-if="!isMedium && !isSmall">
-        <RouterLink
-          v-for="a in album.albumartists"
-          :to="{
-            name: Routes.artist,
-            params: { hash: a.artisthash },
-          }"
-        >
-          <img
-            :src="imguri.artist.small + a.image"
-            class="circular"
-            loading="lazy"
-            :title="a.name"
-            :style="{
-              border: `solid 4px ${
-                album.colors[0] ? getBackgroundColor(album.colors[0]) : ''
-              }`,
-            }"
-          />
-        </RouterLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { onBeforeRouteUpdate } from "vue-router";
 
 import { paths } from "@/config";
 import {
   albumHeaderSmall,
-  isMedium,
-  isSmall,
   isSmallPhone,
+  heightLarge,
 } from "@/stores/content-width";
 
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
-import useQueueStore from "@/stores/queue";
 
 import {
   getBackgroundColor,
@@ -199,6 +175,22 @@ function handleFav() {
     store.removeFavorite
   );
 }
+
+const textColor = computed((): string => {
+  if (album.value.colors[0]) {
+    return getTextColor(album.value.colors[0]);
+  }
+
+  return "";
+});
+
+const backgroundColor = computed((): string => {
+  if (album.value.colors[0]) {
+    return getBackgroundColor(album.value.colors[0]);
+  }
+
+  return "";
+});
 
 function balanceText(text: string, container_width: number) {
   if (isSmallPhone.value) return [text];
@@ -281,6 +273,11 @@ onBeforeRouteUpdate(() => {
 
     &.context_menu_showing {
       background-color: $darkblue;
+
+
+      svg {
+        color: $white !important;
+      }
     }
 
     svg {
@@ -327,36 +324,6 @@ onBeforeRouteUpdate(() => {
     height: 100%;
     align-items: flex-end;
 
-    .art {
-      display: inline-flex;
-      gap: $small;
-      max-width: 8rem;
-      flex-wrap: wrap;
-
-      .shadow-inset {
-        height: max-content;
-      }
-
-      img {
-        height: 3rem;
-        background-color: $gray;
-        margin-left: -1.5rem;
-      }
-
-      a {
-        transition: all 0.25s ease-in-out;
-      }
-
-      a:hover {
-        img {
-          z-index: 100;
-          border-color: $pink !important;
-          // margin-right: 1.5rem;
-          // border: solid 2px white !important;
-        }
-      }
-    }
-
     img {
       height: 6rem;
       aspect-ratio: 1;
@@ -386,7 +353,7 @@ onBeforeRouteUpdate(() => {
       margin-top: $smaller;
 
       .stats2 {
-        text-align: left;
+        text-align: center;
         margin: 0;
       }
 
@@ -406,7 +373,6 @@ onBeforeRouteUpdate(() => {
         div {
           font-size: 0.8rem;
           word-break: normal;
-          text-align: center;
         }
       }
 

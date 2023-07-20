@@ -6,7 +6,7 @@
     @contextmenu.prevent="showMenu"
   >
     <TrackIndex
-      v-if="!isSmallPhone"
+      v-if="!isSmall"
       :index="index"
       :is_fav="track.is_favorite"
       @add-to-fav="addToFav(track.trackhash)"
@@ -44,7 +44,7 @@ import TrackIndex from "./SongItem/TrackIndex.vue";
 import TrackTitle from "./SongItem/TrackTitle.vue";
 import TrackAlbum from "./SongItem/TrackAlbum.vue";
 import TrackDuration from "./SongItem/TrackDuration.vue";
-import { isSmallPhone } from "@/stores/content-width";
+import { isSmall, isSmallPhone } from "@/stores/content-width";
 
 const context_menu_showing = ref(false);
 const queue = useQueueStore();

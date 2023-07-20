@@ -17,8 +17,8 @@
 import useQStore from "@/stores/queue";
 
 import {
-default as NextSvg,
-default as PrevSvg,
+  default as NextSvg,
+  default as PrevSvg,
 } from "../../../assets/icons/next.svg";
 import PauseSvg from "../../../assets/icons/pause.svg";
 import PlaySvg from "../../../assets/icons/play.svg";
@@ -63,16 +63,6 @@ const q = useQStore();
 
     button:first-child {
       margin-left: $small;
-    }
-  }
-
-  @media screen and (min-width: 550px) {
-    &::before {
-      content: "";
-      position: absolute;
-      height: 1.5rem;
-      background-color: $gray4;
-      width: 1px;
     }
   }
 }

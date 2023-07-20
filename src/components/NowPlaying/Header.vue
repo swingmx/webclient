@@ -16,7 +16,6 @@
           v-motion-fade
           class="rounded"
           :src="paths.images.thumb.original + queue.currenttrack?.image"
-          @dblclick="handleFav(queue.currenttrack?.trackhash || '')"
         />
         <Bitrate />
       </RouterLink>

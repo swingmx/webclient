@@ -77,7 +77,7 @@ defineEmits<{
   gap: $small;
   align-items: center;
   font-size: small;
-
+  
   a {
     font-size: small;
   }

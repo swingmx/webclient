@@ -9,10 +9,10 @@
     @click.stop="() => {}"
   >
     <div v-tooltip v-if="artists === null || artists.length === 0">
-      <span>{{ albumartists }}</span>
+      <span class="artist">{{ albumartists }}</span>
     </div>
     <div v-tooltip v-else>
-      <template v-for="(artist, index) in artists.slice(0, 3)" :key="index">
+      <template v-for="(artist, index) in artists" :key="index">
         <RouterLink
           class="artist"
           :to="{
@@ -21,9 +21,8 @@
           }"
           >{{ `${artist.name}` }}</RouterLink
         >
-        <span class="artist" v-if="index < artists.length - 1">, </span>
-        <span class="artist" v-if="artists.length > 3 && index === 2">
-          +{{ artists.length - 3 }} more
+        <span class="artist" v-if="index < artists.length - 1"
+          >,
         </span> </template
       >&nbsp;
       <span>{{ append ? append : "" }}</span>
@@ -34,7 +33,6 @@
 <script setup lang="ts">
 import { Artist } from "@/interfaces";
 import { Routes } from "@/router";
-import artist from "@/stores/pages/artist";
 
 defineProps<{
   artists: Artist[] | null;

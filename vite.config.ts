@@ -6,6 +6,7 @@ import { VitePWA } from "vite-plugin-pwa";
 const path = require("path");
 
 export default defineConfig({
+  base: "./",
   plugins: [
     vue(),
     svgLoader(),
