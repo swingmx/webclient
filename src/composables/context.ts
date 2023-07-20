@@ -10,6 +10,7 @@ import trackContext from "@/contexts/track_context";
 import albumContextItems from "@/contexts/album";
 import useAlbumStore from "@/stores/pages/album";
 import { Store } from "pinia";
+import { useRoute } from "vue-router";
 
 let prev_track = "";
 let stop_prev_watcher = () => {};
@@ -28,10 +29,12 @@ function flagWatcher(menu: Store, flag: Ref<boolean>) {
 export const showTrackContextMenu = (
   e: MouseEvent,
   track: Track,
-  flag: Ref<boolean>
+  flag: Ref<boolean>,
+  route: ReturnType<typeof useRoute>
 ) => {
   const menu = useContextStore();
-  const options = () => trackContext(track, useModalStore, useQueueStore);
+  const options = () =>
+    trackContext(track, useModalStore, useQueueStore, route);
 
   menu.showContextMenu(e, options, ContextSrc.Track);
 

@@ -80,7 +80,8 @@ export interface Option {
   label?: string;
   action?: () => void;
   children?: Option[] | false;
-  icon?: string;
+  icon?: string
+  ;
   critical?: Boolean;
 }
 

@@ -14,7 +14,7 @@
     @click="runAction"
     ref="parentRef"
   >
-    <div class="icon image" :class="option.icon"></div>
+    <div class="icon image" v-html="option.icon"></div>
     <div class="label ellip">{{ option.label }}</div>
     <div class="more image" v-if="option.children"></div>
     <div
@@ -167,44 +167,20 @@ function runChildAction(action: () => void) {
     height: 1.25rem;
     width: 1.25rem;
     margin-right: $small;
+
+    svg {
+      height: 100%;
+      width: 100%;
+      transform: scale(1.15);
+    }
+  }
+
+  &:nth-child(2) .icon > svg {
+    transform: scale(1);
   }
 
   .label {
     width: 9rem;
-  }
-
-  .folder {
-    background-image: url("../../assets/icons/folder.svg");
-    filter: invert(100%);
-  }
-
-  .artist {
-    background-image: url("../../assets/icons/artist.svg");
-  }
-
-  .album {
-    background-image: url("../../assets/icons/album.svg");
-  }
-
-  .delete {
-    background-image: url("../../assets/icons/delete.svg");
-  }
-
-  .plus {
-    background-image: url("../../assets/icons/plus.svg");
-  }
-
-  .play_next {
-    background-image: url("../../assets/icons/add_to_queue.svg");
-  }
-
-  .add_to_queue {
-    background-image: url("../../assets/icons/add-to-queue.svg");
-    transform: scale(0.8); // reason: icon is not from same source as other
-  }
-
-  .heart {
-    background-image: url("../../assets/icons/heart.svg");
   }
 }
 </style>

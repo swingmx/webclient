@@ -1,15 +1,25 @@
-import { Routes, router as Router } from "@/router";
-import { Artist, Playlist, Track } from "@/interfaces";
+import { useRoute } from "vue-router";
 
+import { Artist, Playlist, Track } from "@/interfaces";
+import { router as Router, Routes } from "@/router";
 // @ts-ignore
 
+import { openInFiles } from "@/composables/fetch/folders";
 import {
   addTrackToPlaylist,
   getAllPlaylists,
 } from "@/composables/fetch/playlists";
 import { Option } from "@/interfaces";
-import { openInFiles } from "@/composables/fetch/folders";
 
+import {
+  AddToQueueIcon,
+  AlbumIcon,
+  ArtistIcon,
+  DeleteIcon,
+  FolderIcon,
+  PlayNextIcon,
+  PlusIcon
+} from "@/icons";
 import useModalStore from "@/stores/modal";
 import useQueueStore from "@/stores/queue";
 import { get_new_playlist_option, separator } from "./utils";
@@ -24,11 +34,13 @@ import { get_new_playlist_option, separator } from "./utils";
 export default async (
   track: Track,
   modalStore: typeof useModalStore,
-  QueueStore: typeof useQueueStore
+  QueueStore: typeof useQueueStore,
+  route: ReturnType<typeof useRoute>
 ): Promise<Option[]> => {
   const single_artist = track.artist.length === 1;
   const single_album_artist = track.albumartist.length === 1;
-  let no_playlists = false;
+
+  console.log(route.name);
 
   const goToArtist = (artists: Artist[]) => {
     if (artists.length === 1) {
@@ -75,7 +87,7 @@ export default async (
   const add_to_playlist: Option = {
     label: "Add to Playlist",
     children: await addToPlaylist(),
-    icon: "plus",
+    icon: PlusIcon,
   };
 
   const add_to_q: Option = {
@@ -83,7 +95,7 @@ export default async (
     action: () => {
       QueueStore().addTrackToQueue(track);
     },
-    icon: "add_to_queue",
+    icon: AddToQueueIcon,
   };
 
   const play_next: Option = {
@@ -91,7 +103,7 @@ export default async (
     action: () => {
       QueueStore().playTrackNext(track);
     },
-    icon: "play_next",
+    icon: PlayNextIcon,
   };
 
   const go_to_folder: Option = {
@@ -102,12 +114,12 @@ export default async (
         params: { path: track.folder },
       });
     },
-    icon: "folder",
+    icon: FolderIcon,
   };
 
   const go_to_artist: Option = {
     label: `Go to Artist`,
-    icon: "artist",
+    icon: ArtistIcon,
     action: () => {
       single_artist
         ? Router.push({
@@ -133,7 +145,7 @@ export default async (
           })
         : null;
     },
-    icon: "artist",
+    icon: ArtistIcon,
     children: goToArtist(track.albumartist),
   };
 
@@ -142,7 +154,7 @@ export default async (
     action: () => {
       openInFiles(track.filepath || track.folder || "");
     },
-    icon: "folder",
+    icon: FolderIcon,
   };
 
   const go_to_album: Option = {
@@ -153,15 +165,23 @@ export default async (
         params: { albumhash: track.albumhash },
       });
     },
-    icon: "album",
+    icon: AlbumIcon,
   };
 
   const del_track: Option = {
     label: "Delete Track",
     action: () => console.log("Delete Track"),
-    icon: "delete",
+    icon: DeleteIcon,
     critical: true,
   };
+
+  const getRemoveFromPlaylistOption = () =>
+    <Option>{
+      label: "Remove From Playlist",
+      action: () => console.log("Remove from Playlist"),
+      icon: DeleteIcon,
+      critical: true,
+    };
 
   const options: Option[] = [
     play_next,
@@ -179,6 +199,10 @@ export default async (
     // separator,
     // del_track,
   ];
+
+  if (route.name === Routes.playlist) {
+    options.splice(4, 0, getRemoveFromPlaylistOption());
+  }
 
   return options;
 };
