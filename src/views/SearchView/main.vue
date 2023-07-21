@@ -1,6 +1,6 @@
 <template>
   <div class="search-view content-page" style="padding-right: 0">
-    <div class="buttons-area" v-if="isSmallPhone">
+    <div class="buttons-area" v-if="isMobile">
       <Tabs
         :tabs="Object.values(pages)"
         :currentTab="($route.params.page as string)"
@@ -33,7 +33,7 @@ import { Routes } from "@/router";
 import { useRoute } from "vue-router";
 
 import useSearchStore from "@/stores/search";
-import { isSmallPhone } from "@/stores/content-width";
+import { isMobile, isSmallPhone } from "@/stores/content-width";
 import updatePageTitle from "@/utils/updatePageTitle";
 
 import AlbumPage from "./albums.vue";
@@ -84,13 +84,13 @@ function scrollToGridPageBottom() {
 
 function loadAlbums() {
   search.loadAlbums();
-  !isSmallPhone.value && scrollToGridPageBottom();
+  !isMobile.value && scrollToGridPageBottom();
 }
 
 function loadArtists() {
   search.loadArtists();
 
-  !isSmallPhone.value && scrollToGridPageBottom();
+  !isMobile.value && scrollToGridPageBottom();
 }
 
 function loadMore() {
@@ -137,9 +137,9 @@ onMounted(() => {
   margin-right: -0.75rem;
   position: relative;
 
-  @include smallPhone {
+  @include allPhones {
     display: grid;
-    grid-template-rows: 3rem 1fr;
+    grid-template-rows: 3.5rem 1fr;
   }
 
   .page.no-scroll {
@@ -149,7 +149,7 @@ onMounted(() => {
 
   .buttons-area {
     position: relative;
-    height: 3rem;
+    // height: 4rem;
 
     .tabheaders {
       margin: 0;

@@ -1,8 +1,8 @@
 <template>
   <div class="side-nav-container">
     <router-link
-      v-for="menu in menus"
-      :key="menu.name"
+      v-for="(menu, index) in menus"
+      :key="index"
       :to="{
         name: menu.route_name,
         params: menu?.params,
@@ -12,18 +12,12 @@
         separator: menu.separator,
       }"
     >
-      <div v-wave class="rounded-sm">
+      <div v-wave class="circular">
         <div
-          v-if="menu.separator"
-          :class="{
-            separator: menu.separator,
-          }"
-        ></div>
-        <div
-          class="nav-button"
+          class="nav-button circular"
           :class="{ active: $route.name === menu.route_name }"
           id="home-button"
-          v-else
+          v-if="!menu.separator"
         >
           <div class="in">
             <component :is="menu.icon"></component>
@@ -43,10 +37,13 @@ import { menus } from "./navitems";
 .side-nav-container {
   text-transform: capitalize;
   margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: $smaller;
 
   @include allPhones {
-    display: flex;
     justify-content: space-between;
+    flex-direction: row;
 
     .in > span {
       display: none;
@@ -58,7 +55,6 @@ import { menus } from "./navitems";
   }
 
   .nav-button {
-    border-radius: $small;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -66,8 +62,17 @@ import { menus } from "./navitems";
     position: relative;
     font-size: 14px;
     font-weight: 700;
+    transition: all 0.25s ease-out;
+
+    &.active {
+      background-color: $gray5;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
 
     &.active::before {
+      transition: all 0.25s ease-out;
+
       content: " ";
       position: absolute;
 
@@ -77,24 +82,16 @@ import { menus } from "./navitems";
       opacity: 0.75;
       height: 40%;
       width: 4px;
-      background-color: $pink;
+      background-color: white;
       border-radius: 1rem;
 
       @include allPhones {
-        top: 90%;
-        left: 50%;
-        transform: translateX(-50%);
-        height: 4px;
-        width: 40%;
+        display: none;
       }
     }
 
     &:hover {
-      background-color: $darkestblue;
-
-      &::before {
-        background-color: $white;
-      }
+      background-color: $gray;
     }
 
     .in {

@@ -54,5 +54,9 @@ defineProps<{
     transition: all 0.5s ease-in-out;
     object-fit: cover;
   }
+
+  .artist-name {
+    word-break: break-word;
+  }
 }
 </style>

@@ -1,33 +1,20 @@
 .tabheaders {
-  display: grid;
-  grid-template-columns: repeat(5, max-content);
-  justify-content: space-around;
-  margin: 1rem;
-  width: max-content;
-  background-color: $gray4;
-  height: 2.25rem;
-
-  & > * {
-    border-left: solid 1px $gray3;
-  }
+  display: flex;
+  align-items: center;
+  gap: $medium;
 
   .tab {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
+    height: 2rem;
+    text-transform: capitalize;
+    background-color: $gray5;
+    border: none;
 
     transition: all 0.3s ease;
-    padding: 0 $small;
-
-    &:first-child {
-      border-left: solid 1px transparent;
-    }
+    padding: 0 $medium;
   }
 
   .activetab {
-    background-color: $darkblue;
-    transition: all 0.3s ease;
-    border-left: solid 1px transparent;
+    background-color: white;
+    color: $gray;
   }
 }
