@@ -16,7 +16,7 @@
           <span>
             {{
               formatSeconds(
-                queue.currenttrack ? queue.currenttrack.duration : 0
+                queue.duration.full
               )
             }}
           </span>

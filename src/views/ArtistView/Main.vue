@@ -29,9 +29,9 @@ import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import {
-discographyAlbumTypes,
-dropSources,
-FromOptions,
+  discographyAlbumTypes,
+  dropSources,
+  FromOptions,
 } from "@/composables/enums";
 import { getArtistTracks } from "@/composables/fetch/artists";
 import { Album, ScrollerItem } from "@/interfaces";
@@ -214,14 +214,6 @@ const scrollerItems = computed(() => {
 });
 
 async function handlePlay(index: number) {
-  if (
-    queue.from.type == FromOptions.artist &&
-    queue.from.artisthash == store.info.artisthash
-  ) {
-    queue.play(index);
-    return;
-  }
-
   const tracks = await getArtistTracks(store.info.artisthash);
   queue.playFromArtist(store.info.artisthash, store.info.name, tracks);
   queue.play(index);

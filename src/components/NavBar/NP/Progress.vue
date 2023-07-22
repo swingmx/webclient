@@ -9,7 +9,7 @@
     @change="seek()"
     :style="{
       backgroundSize: `${
-        (time.current / (q.currenttrack?.duration || 0)) * 100
+        (time.current / (time.full || 0)) * 100
       }% 100%`,
     }"
   />

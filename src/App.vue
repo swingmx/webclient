@@ -64,7 +64,6 @@ const router = useRouter();
 const modal = useModalStore();
 const settings = useSettingsStore();
 
-queue.readQueue();
 handleShortcuts(useQStore, useModalStore);
 
 router.afterEach(() => {
@@ -73,7 +72,7 @@ router.afterEach(() => {
 
 onStartTyping((e) => {
   if (isMobile.value) return;
-  
+
   const elem = document.getElementById("globalsearch") as HTMLInputElement;
   elem.focus();
   elem.value = "";
@@ -122,6 +121,7 @@ onMounted(() => {
   }
 
   handleRootDirsPrompt();
+  queue.setGaplessPlayerCallbacks();
 });
 </script>
 
