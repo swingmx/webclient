@@ -1,4 +1,4 @@
-import { playSources } from "@/composables/enums";
+import { playSources } from "@/enums";
 import { defineStore } from "pinia";
 
 export default defineStore("navstore", {

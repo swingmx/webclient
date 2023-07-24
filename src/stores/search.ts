@@ -1,9 +1,9 @@
+import { Routes, router } from "@/router";
 import { reactive, ref } from "@vue/reactivity";
 import { useDebounce } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { watch } from "vue";
 import { useRoute } from "vue-router";
-import { router, Routes } from "@/router";
 
 import {
   loadMoreAlbums,
@@ -12,11 +12,11 @@ import {
   searchAlbums,
   searchArtists,
   searchTracks,
-} from "../composables/fetch/searchMusic";
+} from "@/requests/searchMusic";
+import waitForScrollEnd from "@/helpers/useWaitForScroll";
+import { Album, Artist, Playlist, Track } from "../interfaces";
 import useLoaderStore from "./loader";
 import useTabStore from "./tabs";
-import waitForScrollEnd from "@/composables/useWaitForScroll";
-import { Album, Artist, Playlist, Track } from "../interfaces";
 /**
  *
  * Scrolls on clicking the loadmore button

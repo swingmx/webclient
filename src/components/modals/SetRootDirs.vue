@@ -40,17 +40,17 @@
 import { onMounted, Ref, ref } from "vue";
 
 import {
-  getFolders,
-  addRootDirs,
-  getRootDirs,
-} from "@/composables/fetch/settings/rootdirs";
+addRootDirs,
+getFolders,
+getRootDirs,
+} from "@/requests/settings/rootdirs";
 
-import { createSubPaths } from "@/utils";
 import { Folder, subPath } from "@/interfaces";
 import useSettingsStore from "@/stores/settings";
+import { createSubPaths } from "@/utils";
 
-import FolderItem from "../FolderView/FolderItem.vue";
 import BreadCrumbNav from "../FolderView/BreadCrumbNav.vue";
+import FolderItem from "../FolderView/FolderItem.vue";
 
 const settings = useSettingsStore();
 

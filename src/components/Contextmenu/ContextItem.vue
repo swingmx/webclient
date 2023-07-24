@@ -41,9 +41,9 @@
 import { createPopper, Instance } from "@popperjs/core";
 import { ref } from "vue";
 
-import { contextChildrenShowMode } from "@/composables/enums";
-import { Option } from "@/interfaces";
+import { contextChildrenShowMode } from "@/enums";
 import { ExpandIcon } from "@/icons";
+import { Option } from "@/interfaces";
 
 const props = defineProps<{
   option: Option;

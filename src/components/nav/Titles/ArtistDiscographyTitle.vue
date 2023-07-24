@@ -29,9 +29,8 @@
 import { onClickOutside } from "@vueuse/core";
 
 import ArrowSvg from "@/assets/icons/expand.svg";
-import GridSvg from "@/assets/icons/grid.svg";
+import { discographyAlbumTypes as albums } from "@/enums";
 import { Ref, ref } from "vue";
-import { discographyAlbumTypes as albums } from "@/composables/enums";
 
 import useArtistDiscogStore from "@/stores/pages/artistDiscog";
 

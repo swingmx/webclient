@@ -4,13 +4,13 @@ import { Artist, Playlist, Track } from "@/interfaces";
 import { router as Router, Routes } from "@/router";
 // @ts-ignore
 
-import { openInFiles } from "@/composables/fetch/folders";
+import { Option } from "@/interfaces";
+import { openInFiles } from "@/requests/folders";
 import {
   addTrackToPlaylist,
   getAllPlaylists,
   removeTracks,
-} from "@/composables/fetch/playlists";
-import { Option } from "@/interfaces";
+} from "@/requests/playlists";
 
 import {
   AddToQueueIcon,
@@ -21,8 +21,8 @@ import {
   PlayNextIcon,
   PlusIcon,
 } from "@/icons";
-import useQueueStore from "@/stores/queue";
 import usePlaylistStore from "@/stores/pages/playlist";
+import useQueueStore from "@/stores/queue";
 import { get_new_playlist_option, separator } from "./utils";
 
 /**

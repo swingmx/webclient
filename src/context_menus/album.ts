@@ -1,10 +1,10 @@
 import { Option } from "@/interfaces";
-import queue from "@/stores/queue";
 import album from "@/stores/pages/album";
+import queue from "@/stores/queue";
 
-import { get_new_playlist_option, separator } from "./utils";
-import { getAllPlaylists } from "@/composables/fetch/playlists";
 import { AddToQueueIcon, PlayNextIcon, PlusIcon } from "@/icons";
+import { getAllPlaylists } from "@/requests/playlists";
+import { get_new_playlist_option, separator } from "./utils";
 
 export default async () => {
   const play_next = <Option>{
@@ -26,7 +26,6 @@ export default async () => {
   };
 
   async function addToPlaylist() {
-    console.log("addToPlaylist");
     const new_playlist = get_new_playlist_option();
     const p = await getAllPlaylists(true);
 

@@ -19,7 +19,7 @@ import { onMounted } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 
 import AlbumCard from "@/components/shared/AlbumCard.vue";
-import { discographyAlbumTypes } from "@/composables/enums";
+import { discographyAlbumTypes } from "@/enums";
 import useArtistDiscographyStore from "@/stores/pages/artistDiscog";
 import updatePageTitle from "@/utils/updatePageTitle";
 

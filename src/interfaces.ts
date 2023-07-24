@@ -1,4 +1,4 @@
-import { FromOptions, NotifType } from "./composables/enums";
+import { FromOptions, NotifType } from "./enums";
 
 export interface AlbumDisc {
   is_album_disc_number?: boolean;

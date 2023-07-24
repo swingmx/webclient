@@ -110,31 +110,30 @@ import { onBeforeRouteUpdate } from "vue-router";
 
 import { paths } from "@/config";
 import {
-  albumHeaderSmall,
-  isSmallPhone,
-  heightLarge,
+albumHeaderSmall,
+isSmallPhone
 } from "@/stores/content-width";
 
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
 
 import {
-  getBackgroundColor,
-  getShift,
-  getTextColor,
+getBackgroundColor,
+getShift,
+getTextColor,
 } from "@/utils/colortools/shift";
 
-import { favType, playSources } from "@/composables/enums";
+import { showAlbumContextMenu } from "@/helpers/contextMenuHandler";
+import { favType, playSources } from "@/enums";
+import favoriteHandler from "@/helpers/favoriteHandler";
 import { formatSeconds, useVisibility } from "@/utils";
 import updatePageTitle from "@/utils/updatePageTitle";
-import favoriteHandler from "@/composables/favoriteHandler";
-import { showAlbumContextMenu } from "@/composables/context";
 
+import MoreSvg from "@/assets/icons/more.svg";
+import ArtistName from "@/components/shared/ArtistName.vue";
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
-import MoreSvg from "@/assets/icons/more.svg";
-import ArtistName from "@/components/shared/ArtistName.vue";
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;

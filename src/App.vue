@@ -25,22 +25,22 @@
 
 <script setup lang="ts">
 // @libraries
+import { vElementSize } from "@vueuse/components";
+import { onStartTyping } from "@vueuse/core";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { onStartTyping } from "@vueuse/core";
-import { vElementSize } from "@vueuse/components";
 // @stores
 import {
-  content_width,
-  content_height,
-  isMobile,
+content_height,
+content_width,
+isMobile,
 } from "@/stores/content-width";
 import useModalStore from "@/stores/modal";
 import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
 
 // @utils
-import handleShortcuts from "@/composables/useKeyboard";
+import handleShortcuts from "@/helpers/useKeyboard";
 import { readLocalStorage, writeLocalStorage } from "@/utils";
 import { xl, xxl } from "./composables/useBreakpoints";
 
@@ -53,10 +53,10 @@ import Notification from "@/components/Notification.vue";
 import BottomBar from "@/components/BottomBar/BottomBar.vue";
 import NavBar from "@/components/nav/NavBar.vue";
 import RightSideBar from "@/components/RightSideBar/Main.vue";
-import LeftSidebar from "./components/NavBar/index.vue";
+import LeftSidebar from "@/components/NavBar/index.vue";
 
-import { baseApiUrl } from "./config";
-import { getRootDirs } from "./composables/fetch/settings/rootdirs";
+import { getRootDirs } from "@/requests/settings/rootdirs";
+import { baseApiUrl } from "@/config";
 // import BubbleManager from "./components/bubbles/BinManager.vue";
 
 const queue = useQStore();

@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import SongItem from "@/components/shared/SongItem.vue";
-import { dropSources } from "@/composables/enums";
+import { dropSources } from "@/enums";
 import { Track } from "@/interfaces";
 import { isMedium, isSmall } from "@/stores/content-width";
 

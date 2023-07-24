@@ -3,9 +3,9 @@ import { ComputedRef } from "vue";
 
 import { useFuse } from "@/utils";
 
-import { FuseTrackOptions } from "@/composables/enums";
-import { getPlaylist } from "@/composables/fetch/playlists";
+import { FuseTrackOptions } from "@/enums";
 import { Artist, FuseResult, Playlist, Track } from "@/interfaces";
+import { getPlaylist } from "@/requests/playlists";
 
 export default defineStore("playlist-tracks", {
   state: () => ({

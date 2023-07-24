@@ -29,12 +29,11 @@ import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import {
-  discographyAlbumTypes,
-  dropSources,
-  FromOptions,
-} from "@/composables/enums";
-import { getArtistTracks } from "@/composables/fetch/artists";
+discographyAlbumTypes,
+dropSources
+} from "@/enums";
 import { Album, ScrollerItem } from "@/interfaces";
+import { getArtistTracks } from "@/requests/artists";
 import useArtistPageStore from "@/stores/pages/artist";
 import useQueueStore from "@/stores/queue";
 

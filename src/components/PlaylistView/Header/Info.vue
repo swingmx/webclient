@@ -23,8 +23,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { playSources } from "@/enums";
 import { formatSeconds } from "@/utils";
-import { playSources } from "@/composables/enums";
 
 import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";
 import usePStore from "@/stores/pages/playlist";

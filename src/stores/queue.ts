@@ -3,12 +3,15 @@ import { defineStore } from "pinia";
 import { Ref } from "vue";
 import { NotifType, useNotifStore } from "./notification";
 
-import { dropSources, favType, FromOptions } from "../composables/enums";
-import updateMediaNotif from "../composables/mediaNotification";
-import { isFavorite } from "@/composables/fetch/favorite";
-import useSettingsStore from "./settings";
+import { isFavorite } from "@/requests/favorite";
+import { dropSources, favType, FromOptions } from "../enums";
+import updateMediaNotif from "../helpers/mediaNotification";
 import useColorStore from "./colors";
+import useSettingsStore from "./settings";
 
+import player from "@/player";
+import { fetchAlbumColor } from "@/requests/colors";
+import generateString from "@/utils/generateString";
 import {
   fromAlbum,
   fromArtist,
@@ -18,9 +21,6 @@ import {
   fromSearch,
   Track,
 } from "../interfaces";
-import { fetchAlbumColor } from "@/composables/fetch/colors";
-import player from "@/player";
-import generateString from "@/utils/generateString";
 
 function shuffle(tracks: Track[]) {
   const shuffled = tracks.slice();

@@ -1,9 +1,9 @@
-import useAxios from "./useAxios";
 import { paths } from "@/config";
-import { favType, NotifType } from "@/composables/enums";
+import { favType, NotifType } from "@/enums";
+import useAxios from "./useAxios";
 
-import { useNotifStore as notif } from "@/stores/notification";
 import { Album, Artist, Track } from "@/interfaces";
+import { useNotifStore as notif } from "@/stores/notification";
 
 export async function addFavorite(favtype: favType, itemhash: string) {
   const { data, error } = await useAxios({

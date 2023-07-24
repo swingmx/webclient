@@ -1,4 +1,4 @@
-import { NotifType, playSources } from "@/composables/enums";
+import { NotifType, playSources } from "@/enums";
 
 import { useNotifStore } from "@/stores/notification";
 import useAStore from "@/stores/pages/album";
@@ -8,8 +8,8 @@ import usePStore from "@/stores/pages/playlist";
 import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
 
-import { getAlbumTracks } from "./fetch/album";
-import { getArtistTracks } from "./fetch/artists";
+import { getAlbumTracks } from "@/requests/album";
+import { getArtistTracks } from "@/requests/artists";
 
 const queue = useQStore;
 const folder = useFStore;
@@ -32,14 +32,6 @@ export default async function play(
   const useQueue = aqueue();
 
   switch (source) {
-    // check which route the play request come from
-    // case playSources.folder:
-    //   store = store as typeof folder;
-    //   const f = store();
-
-    //   useQueue.playFromFolder(f.path, f.tracks);
-    //   useQueue.play();
-    //   break;
     case playSources.album:
       store = store as typeof album;
       const a_store = store();
@@ -108,4 +100,5 @@ async function playFromAlbumCard(
   qu.play();
 }
 
-export { utilPlayFromArtist, playFromAlbumCard };
+export { playFromAlbumCard, utilPlayFromArtist };
+

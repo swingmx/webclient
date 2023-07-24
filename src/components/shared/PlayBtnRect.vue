@@ -10,14 +10,14 @@
 </template>
 
 <script setup lang="ts">
-import { playSources } from "@/composables/enums";
-import usePlayFrom from "@/composables/usePlayFrom";
-import useFStore from "@/stores/pages/folder";
-import useAStore from "@/stores/pages/album";
-import usePStore from "@/stores/pages/playlist";
-import useArtistPageStore from "@/stores/pages/artist";
-import useQStore from "@/stores/queue";
 import playBtnSvg from "@/assets/icons/play.svg";
+import { playSources } from "@/enums";
+import usePlayFrom from "@/helpers/usePlayFrom";
+import useAStore from "@/stores/pages/album";
+import useArtistPageStore from "@/stores/pages/artist";
+import useFStore from "@/stores/pages/folder";
+import usePStore from "@/stores/pages/playlist";
+import useQStore from "@/stores/queue";
 
 defineProps<{
   source: playSources;

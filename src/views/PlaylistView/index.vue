@@ -26,22 +26,22 @@ import { computed } from "@vue/reactivity";
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
 import {
-  isMedium,
-  isSmall,
-  heightLarge,
-  isSmallPhone,
+heightLarge,
+isMedium,
+isSmall,
+isSmallPhone,
 } from "@/stores/content-width";
 import usePlaylistStore from "@/stores/pages/playlist";
 import useQueueStore from "@/stores/queue";
 
-import Header from "@/components/PlaylistView/Header.vue";
-import SongItem from "@/components/shared/SongItem.vue";
-import { updateBannerPos } from "@/composables/fetch/playlists";
-import NoItems from "@/components/shared/NoItems.vue";
 import playlistSvg from "@/assets/icons/playlist.svg";
-import { dropSources } from "@/composables/enums";
-import { onMounted, onUpdated } from "vue";
+import Header from "@/components/PlaylistView/Header.vue";
+import NoItems from "@/components/shared/NoItems.vue";
+import SongItem from "@/components/shared/SongItem.vue";
+import { dropSources } from "@/enums";
+import { updateBannerPos } from "@/requests/playlists";
 import updatePageTitle from "@/utils/updatePageTitle";
+import { onMounted, onUpdated } from "vue";
 
 const queue = useQueueStore();
 const playlist = usePlaylistStore();

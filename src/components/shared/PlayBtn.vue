@@ -5,15 +5,14 @@
 </template>
 
 <script setup lang="ts">
-import useQStore from "@/stores/queue";
 import useAlbumStore from "@/stores/pages/album";
 import usePlaylistStore from "@/stores/pages/playlist";
+import useQStore from "@/stores/queue";
 
-import { playSources } from "@/composables/enums";
-import usePlayFrom from "@/composables/usePlayFrom";
+import { playSources } from "@/enums";
 
+import { playFromAlbumCard } from "@/helpers/usePlayFrom";
 import PlaySvg from "../../assets/icons/play.svg";
-import { playFromAlbumCard } from "@/composables/usePlayFrom";
 
 const props = defineProps<{
   source: playSources;

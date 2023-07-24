@@ -78,13 +78,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 
-import { updatePlaylist } from "@/composables/fetch/playlists";
 import { paths } from "@/config";
 import { Playlist } from "@/interfaces";
+import { updatePlaylist } from "@/requests/playlists";
 import usePStore from "@/stores/pages/playlist";
 
-import ExpandSvg from "@/assets/icons/expand.svg";
 import DeleteIcon from "@/assets/icons/delete.svg";
+import ExpandSvg from "@/assets/icons/expand.svg";
 import ImageIcon from "@/assets/icons/image.svg";
 
 const pStore = usePStore();

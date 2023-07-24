@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
-import { contextChildrenShowMode } from "@/composables/enums";
 import { xxl } from "@/composables/useBreakpoints";
+import { contextChildrenShowMode } from "@/enums";
 
 export default defineStore("settings", {
   state: () => ({

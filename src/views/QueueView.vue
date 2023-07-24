@@ -15,13 +15,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import useQStore from "@/stores/queue";
-import SongList from "@/components/shared/SongList.vue";
 import NoItems from "@/components/shared/NoItems.vue";
+import SongList from "@/components/shared/SongList.vue";
+import useQStore from "@/stores/queue";
+import { onMounted } from "vue";
 
 import QueueSvg from "@/assets/icons/queue.svg";
-import { dropSources } from "@/composables/enums";
+import { dropSources } from "@/enums";
 import updatePageTitle from "@/utils/updatePageTitle";
 
 const queue = useQStore();

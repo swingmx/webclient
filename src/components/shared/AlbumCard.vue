@@ -91,7 +91,7 @@ import { paths } from "../../config";
 import { Album } from "../../interfaces";
 import PlayBtn from "./PlayBtn.vue";
 
-import { playSources } from "@/composables/enums";
+import { playSources } from "@/enums";
 import { Routes } from "@/router";
 import useAlbumStore from "@/stores/pages/album";
 import MasterFlag from "./MasterFlag.vue";

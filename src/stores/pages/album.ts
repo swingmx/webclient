@@ -1,18 +1,19 @@
-import { useFuse } from "@/utils";
-import { defineStore } from "pinia";
 import { ComputedRef } from "vue";
-import { AlbumDisc } from "./../../interfaces";
+import { defineStore } from "pinia";
 
-import { FuseTrackOptions } from "@/composables/enums";
+import { useFuse } from "@/utils";
+import { AlbumDisc } from "@/interfaces";
+import { FuseTrackOptions } from "@/enums";
 import { maxAbumCards } from "@/stores/content-width";
+import { Album, FuseResult, Track } from "@/interfaces";
+
 
 import {
   getAlbum,
   getAlbumsFromArtist,
   getAlbumVersions,
   getSimilarAlbums,
-} from "../../composables/fetch/album";
-import { Album, FuseResult, Track } from "../../interfaces";
+} from "@/requests/album";
 import { useNotifStore } from "../notification";
 
 interface Disc {

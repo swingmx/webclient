@@ -1,8 +1,17 @@
-import { getElem } from "./perks";
+function getElem(id: string, type: string) {
+  switch (type) {
+    case "class": {
+      return document.getElementsByClassName(id)[0];
+    }
+    case "id": {
+      return document.getElementById(id);
+    }
+  }
+}
 
 export default (mouseX: number, mouseY: number) => {
-  const scope = getElem("app", "id");
-  const contextMenu = getElem("context-menu", "class");
+  const scope = getElem("app", "id") as HTMLElement;
+  const contextMenu = getElem("context-menu", "class") as HTMLElement;
   // ? compute what is the mouse position relative to the container element
   // (scope)
   let { left: scopeOffsetX, top: scopeOffsetY } = scope.getBoundingClientRect();

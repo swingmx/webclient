@@ -1,7 +1,7 @@
-import { defineStore } from "pinia";
-import { discographyAlbumTypes } from "@/composables/enums";
+import { discographyAlbumTypes } from "@/enums";
 import { Album } from "@/interfaces";
-import { getArtistAlbums } from "@/composables/fetch/artists";
+import { getArtistAlbums } from "@/requests/artists";
+import { defineStore } from "pinia";
 
 export default defineStore("artistDiscography", {
   state: () => ({

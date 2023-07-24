@@ -18,9 +18,9 @@ import { Routes } from "@/router";
 import usePlaylistStore from "@/stores/pages/playlists";
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { createNewPlaylist } from "../../composables/fetch/playlists";
-import { Track } from "../../interfaces";
-import { Notification, NotifType } from "../../stores/notification";
+import { Track } from "@/interfaces";
+import { Notification, NotifType } from "@/stores/notification";
+import { createNewPlaylist } from "@/requests/playlists";
 
 const props = defineProps<{
   track?: Track;

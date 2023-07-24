@@ -1,7 +1,7 @@
-import { SettingType } from "../enums";
 import { Setting } from "@/interfaces/settings";
+import { addRootDirs as editRootDirs } from "@/requests/settings/rootdirs";
+import { SettingType } from "../enums";
 import { manageRootDirsStrings as data } from "../strings";
-import { addRootDirs as editRootDirs } from "@/composables/fetch/settings/rootdirs";
 
 import useModalStore from "@/stores/modal";
 import useSettingsStore from "@/stores/settings";

@@ -71,9 +71,9 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import { favType, playSources } from "@/composables/enums";
-import favoriteHandler from "@/composables/favoriteHandler";
 import { paths } from "@/config";
+import { favType, playSources } from "@/enums";
+import favoriteHandler from "@/helpers/favoriteHandler";
 import { heightLarge, isSmallPhone } from "@/stores/content-width";
 import useArtistPageStore from "@/stores/pages/artist";
 import { getTextColor } from "@/utils/colortools/shift";

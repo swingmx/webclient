@@ -50,18 +50,18 @@
 </template>
 
 <script setup lang="ts">
+import { deletePlaylist as delPlaylist } from "@/requests/playlists";
 import { useRouter } from "vue-router";
-import useModalStore from "../stores/modal";
-import { deletePlaylist as delPlaylist } from "@/composables/fetch/playlists";
+import useModalStore from "@/stores/modal";
 
-import SetIP from "./modals/SetIP.vue";
-import WelcomeModal from "./WelcomeModal.vue";
-import NewPlaylist from "./modals/NewPlaylist.vue";
-import SetRootDirs from "./modals/SetRootDirs.vue";
-import ConfirmModal from "./modals/ConfirmModal.vue";
-import UpdatePlaylist from "./modals/updatePlaylist.vue";
-import RootDirsPrompt from "./modals/RootDirsPrompt.vue";
 import PlusSvg from "@/assets/icons/plus.svg";
+import WelcomeModal from "./WelcomeModal.vue";
+import ConfirmModal from "./modals/ConfirmModal.vue";
+import NewPlaylist from "./modals/NewPlaylist.vue";
+import RootDirsPrompt from "./modals/RootDirsPrompt.vue";
+import SetIP from "./modals/SetIP.vue";
+import SetRootDirs from "./modals/SetRootDirs.vue";
+import UpdatePlaylist from "./modals/updatePlaylist.vue";
 
 const modal = useModalStore();
 const router = useRouter();

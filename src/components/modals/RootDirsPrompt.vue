@@ -21,12 +21,12 @@
 </template>
 
 <script setup lang="ts">
+import {
+addRootDirs,
+getRootDirs,
+} from "@/requests/settings/rootdirs";
 import useModalStore from "@/stores/modal";
 import useSettingsStore from "@/stores/settings";
-import {
-  addRootDirs,
-  getRootDirs,
-} from "@/composables/fetch/settings/rootdirs";
 import { onMounted, ref } from "vue";
 
 const settings = useSettingsStore();

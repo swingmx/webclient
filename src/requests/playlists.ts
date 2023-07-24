@@ -1,6 +1,6 @@
 import { paths } from "@/config";
-import { Artist, Playlist, Track } from "../../interfaces";
-import { Notification, NotifType } from "../../stores/notification";
+import { Artist, Playlist, Track } from "@/interfaces";
+import { Notification, NotifType } from "@/stores/notification";
 import useAxios from "./useAxios";
 
 const {

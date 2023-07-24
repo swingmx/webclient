@@ -4,11 +4,11 @@ import {
   getArtistAlbums,
   getArtistData,
   getSimilarArtists,
-} from "@/composables/fetch/artists";
+} from "@/requests/artists";
 
-import useSettingsStore from "@/stores/settings";
 import { Album, Artist, Track } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
+import useSettingsStore from "@/stores/settings";
 
 export default defineStore("artistPage", {
   state: () => ({

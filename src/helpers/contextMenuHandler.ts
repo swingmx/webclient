@@ -1,17 +1,13 @@
 import { Ref } from "vue";
-
-import useModalStore from "@/stores/modal";
-import useQueueStore from "@/stores/queue";
-import useContextStore from "@/stores/context";
-
-import { ContextSrc } from "./enums";
-import { Track } from "@/interfaces";
-import trackContext from "@/contexts/track_context";
-import albumContextItems from "@/contexts/album";
-import useAlbumStore from "@/stores/pages/album";
-
 import { Store } from "pinia";
 import { useRoute } from "vue-router";
+
+import useContextStore from "@/stores/context";
+import albumContextItems from "@/context_menus/album";
+
+import { Track } from "@/interfaces";
+import { ContextSrc } from "../enums";
+import trackContext from "@/context_menus/track";
 
 let prev_track = "";
 let stop_prev_watcher = () => {};
@@ -49,8 +45,7 @@ export const showTrackContextMenu = (
 export const showAlbumContextMenu = (e: MouseEvent, flag: Ref<boolean>) => {
   const menu = useContextStore();
 
-  const options = () =>
-    albumContextItems();
+  const options = () => albumContextItems();
   menu.showContextMenu(e, options, ContextSrc.AHeader);
 
   flagWatcher(menu, flag);

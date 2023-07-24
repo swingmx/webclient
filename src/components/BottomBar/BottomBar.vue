@@ -30,10 +30,10 @@
 </template>
 
 <script setup lang="ts">
-import { formatSeconds } from "@/utils";
-import { favType } from "@/composables/enums";
-import favoriteHandler from "@/composables/favoriteHandler";
+import { favType } from "@/enums";
+import favoriteHandler from "@/helpers/favoriteHandler";
 import { isMobile } from "@/stores/content-width";
+import { formatSeconds } from "@/utils";
 
 import useQStore from "@/stores/queue";
 

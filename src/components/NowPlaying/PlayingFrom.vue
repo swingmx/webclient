@@ -38,11 +38,11 @@
 import { ref } from "vue";
 import { RouteLocationRaw } from "vue-router";
 
-import { FromOptions } from "@/composables/enums";
+import OptionSvg from "@/assets/icons/more.svg";
+import { FromOptions } from "@/enums";
+import { showTrackContextMenu } from "@/helpers/contextMenuHandler";
 import useQueueStore from "@/stores/queue";
 import playingFrom from "@/utils/playingFrom";
-import OptionSvg from "@/assets/icons/more.svg";
-import { showTrackContextMenu } from "@/composables/context";
 import { useRoute } from "vue-router";
 
 const route = useRoute();

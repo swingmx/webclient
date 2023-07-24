@@ -24,19 +24,19 @@ import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
 import { Track } from "@/interfaces";
 
-import useQueueStore from "@/stores/queue";
 import useAlbumStore from "@/stores/pages/album";
+import useQueueStore from "@/stores/queue";
 
-import Header from "@/components/AlbumView/Header.vue";
-import SongItem from "@/components/shared/SongItem.vue";
-import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 import AlbumDiscBar from "@/components/AlbumView/AlbumDiscBar.vue";
 import AlbumsList from "@/components/AlbumView/ArtistAlbums.vue";
+import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
+import Header from "@/components/AlbumView/Header.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
+import SongItem from "@/components/shared/SongItem.vue";
 import SimilarAlbumLoader from "./SimilarAlbumLoader.vue";
 
-import { isSmall, heightLarge, isSmallPhone } from "@/stores/content-width";
-import { discographyAlbumTypes, dropSources } from "@/composables/enums";
+import { discographyAlbumTypes, dropSources } from "@/enums";
+import { heightLarge, isSmall, isSmallPhone } from "@/stores/content-width";
 
 const album = useAlbumStore();
 const queue = useQueueStore();

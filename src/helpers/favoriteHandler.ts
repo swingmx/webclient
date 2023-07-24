@@ -1,6 +1,6 @@
-import { favType } from "./enums";
-import { addFavorite, removeFavorite } from "./fetch/favorite";
+import { addFavorite, removeFavorite } from "@/requests/favorite";
 import useQueueStore from "@/stores/queue";
+import { favType } from "../enums";
 /**
  * Handles the favorite state of an item.
  * @param setter The ref to track the is_favorite state

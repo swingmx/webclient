@@ -10,10 +10,10 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import Content from "../components/SettingsView/Content.vue";
-import { getRootDirs } from "@/composables/fetch/settings/rootdirs";
+import { getRootDirs } from "@/requests/settings/rootdirs";
 import useSettingsStore from "@/stores/settings";
 import updatePageTitle from "@/utils/updatePageTitle";
+import Content from "../components/SettingsView/Content.vue";
 
 const settings = useSettingsStore();
 

@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import { discographyAlbumTypes } from "@/composables/enums";
+import { discographyAlbumTypes } from "@/enums";
 import { Album } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
 import useArtistDiscographyStore from "@/stores/pages/artistDiscog";

@@ -1,4 +1,4 @@
-import { dropSources } from "@/composables/enums";
+import { dropSources } from "@/enums";
 import { Track } from "@/interfaces";
 
 export function showDragStart(

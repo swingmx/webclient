@@ -50,14 +50,14 @@ import useLoaderStore from "@/stores/loader";
 import useFolderStore from "@/stores/pages/folder";
 import useQueueStore from "@/stores/queue";
 
-import FolderList from "@/components/FolderView/FolderList.vue";
-import SongItem from "@/components/shared/SongItem.vue";
-import { createTrackProps } from "@/utils";
-import NoItems from "@/components/shared/NoItems.vue";
 import FolderSvg from "@/assets/icons/folder.svg";
-import { dropSources } from "@/composables/enums";
-import { onMounted } from "vue";
+import FolderList from "@/components/FolderView/FolderList.vue";
+import NoItems from "@/components/shared/NoItems.vue";
+import SongItem from "@/components/shared/SongItem.vue";
+import { dropSources } from "@/enums";
+import { createTrackProps } from "@/utils";
 import updatePageTitle from "@/utils/updatePageTitle";
+import { onMounted } from "vue";
 
 const loader = useLoaderStore();
 const folder = useFolderStore();

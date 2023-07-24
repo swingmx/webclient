@@ -18,11 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import SongItem from "../shared/SongItem.vue";
+import { dropSources } from "@/enums";
 import { Track } from "@/interfaces";
 import { isMedium, isSmall } from "@/stores/content-width";
 import SeeAll from "../shared/SeeAll.vue";
-import { dropSources } from "@/composables/enums";
+import SongItem from "../shared/SongItem.vue";
 
 defineProps<{
   tracks: Track[];

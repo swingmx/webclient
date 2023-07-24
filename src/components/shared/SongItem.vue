@@ -33,20 +33,20 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from "vue";
 
-import { showTrackContextMenu as showContext } from "@/composables/context";
-import { dropSources, favType } from "@/composables/enums";
-import favoriteHandler from "@/composables/favoriteHandler";
+import { dropSources, favType } from "@/enums";
+import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
+import favoriteHandler from "@/helpers/favoriteHandler";
 import { Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
 
+import { Routes } from "@/router";
+import { isSmall } from "@/stores/content-width";
+import { useRoute } from "vue-router";
 import ArtistName from "./ArtistName.vue";
-import TrackIndex from "./SongItem/TrackIndex.vue";
-import TrackTitle from "./SongItem/TrackTitle.vue";
 import TrackAlbum from "./SongItem/TrackAlbum.vue";
 import TrackDuration from "./SongItem/TrackDuration.vue";
-import { isSmall, isSmallPhone } from "@/stores/content-width";
-import { useRoute } from "vue-router";
-import { Routes } from "@/router";
+import TrackIndex from "./SongItem/TrackIndex.vue";
+import TrackTitle from "./SongItem/TrackTitle.vue";
 
 const context_menu_showing = ref(false);
 

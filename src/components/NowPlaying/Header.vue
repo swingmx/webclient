@@ -42,15 +42,15 @@ import { paths } from "@/config";
 import { Routes } from "@/router";
 import useQueueStore from "@/stores/queue";
 
-import { dropSources, favType } from "@/composables/enums";
 import Progress from "@/components/NavBar/NP/Progress.vue";
-import Bitrate from "../NavBar/NP/Bitrate.vue";
-import SongItem from "../shared/SongItem.vue";
+import { dropSources, favType } from "@/enums";
+import favoriteHandler from "@/helpers/favoriteHandler";
 import useColorStore from "@/stores/colors";
 import { getTextColor } from "@/utils/colortools/shift";
-import PlayingFrom from "./PlayingFrom.vue";
+import Bitrate from "../NavBar/NP/Bitrate.vue";
+import SongItem from "../shared/SongItem.vue";
 import NowPlayingInfo from "./NowPlayingInfo.vue";
-import favoriteHandler from "@/composables/favoriteHandler";
+import PlayingFrom from "./PlayingFrom.vue";
 
 const queue = useQueueStore();
 const colors = useColorStore();

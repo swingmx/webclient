@@ -41,19 +41,19 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref } from "vue";
 
-import useQueueStore from "@/stores/queue";
 import { maxAbumCards } from "@/stores/content-width";
+import useQueueStore from "@/stores/queue";
 
+import { discographyAlbumTypes, dropSources } from "@/enums";
 import { Album, Artist, RecentFavResult, Track } from "@/interfaces";
-import { getAllFavs, getFavTracks } from "@/composables/fetch/favorite";
-import { discographyAlbumTypes, dropSources } from "@/composables/enums";
+import { getAllFavs, getFavTracks } from "@/requests/favorite";
 
 import HeartSvg from "@/assets/icons/heart-no-color.svg";
-import NoItems from "@/components/shared/NoItems.vue";
-import Recents from "@/components/Favorites/Recents.vue";
-import TopTracks from "@/components/ArtistView/TopTracks.vue";
 import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
+import TopTracks from "@/components/ArtistView/TopTracks.vue";
+import Recents from "@/components/Favorites/Recents.vue";
 import FeaturedArtists from "@/components/PlaylistView/ArtistsList.vue";
+import NoItems from "@/components/shared/NoItems.vue";
 import updatePageTitle from "@/utils/updatePageTitle";
 
 const description = `You can add tracks, albums and artists to your favorites by clicking the ❤️ heart icon`;

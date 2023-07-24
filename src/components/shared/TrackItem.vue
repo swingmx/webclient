@@ -61,10 +61,10 @@
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
-import { showTrackContextMenu as showContext } from "@/composables/context";
-import { favType } from "@/composables/enums";
-import favoriteHandler from "@/composables/favoriteHandler";
 import { paths } from "@/config";
+import { favType } from "@/enums";
+import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
+import favoriteHandler from "@/helpers/favoriteHandler";
 import { Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
 
