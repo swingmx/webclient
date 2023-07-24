@@ -1,7 +1,14 @@
 import { useStorage } from "@vueuse/core";
 
 const development = import.meta.env.DEV;
-const dev_url = "http://192.168.100.65:1980/";
+
+function getBaseUrl() {
+  const base_url = window.location.origin;
+  const splits = base_url.split(":");
+  return base_url.replace(splits[splits.length - 1], "1980");
+}
+
+const dev_url = getBaseUrl();
 const url = development ? dev_url : "";
 
 export const baseApiUrl = useStorage("baseApiUrl", url, sessionStorage);

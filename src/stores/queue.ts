@@ -110,6 +110,10 @@ export default defineStore("Queue", {
       player.onfinishedtrack = () => {
         this.currentindex = this.nextindex;
       };
+
+      player.onpause = () => {
+        this.playing = false;
+      };
     },
     play(index: number = 0) {
       if (this.tracklist.length === 0) return;
@@ -117,9 +121,15 @@ export default defineStore("Queue", {
       this.focusCurrentInSidebar();
 
       const track = this.tracklist[index];
-      player.gotoTrack(index);
 
-      player.play();
+      const current_index_on_player = player.getIndex();
+      if (current_index_on_player == index) {
+        player.cue();
+      } else {
+        player.gotoTrack(index);
+        player.play();
+      }
+
       fetchAlbumColor(track.albumhash).then((color) => {
         useColorStore().setTheme1Color(color);
       });
@@ -190,7 +200,6 @@ export default defineStore("Queue", {
       player.setPosition(pos * 1000);
     },
     addTracksToPlayer(tracks?: Track[]) {
-      console.log("something ?");
       const tracklist = tracks || this.tracklist;
       player.removeAllTracks();
 
@@ -203,8 +212,6 @@ export default defineStore("Queue", {
       const same_tracklist = compareTrackLists(this.tracklist, tracklist);
       if (same_tracklist) return;
 
-      console.log("Setting new queue");
-
       this.tracklist = [];
       this.tracklist.push(...tracklist);
       this.addTracksToPlayer();
@@ -214,6 +221,7 @@ export default defineStore("Queue", {
         settings.toggleRepeatMode();
       }
       this.focusCurrentInSidebar(1000);
+      console.log("set new queue");
     },
     playFromFolder(fpath: string, tracks: Track[]) {
       const name = fpath.split("/").pop();
@@ -415,6 +423,14 @@ export default defineStore("Queue", {
       store.playing = false;
 
       store.addTracksToPlayer();
+
+      if (store.tracklist.length === 0) return;
+      // player.gotoTrack(store.currentindex);
+
+      const current_index_on_player = player.getIndex();
+      if (current_index_on_player !== store.currentindex) {
+        player.gotoTrack(store.currentindex);
+      }
     },
   },
 });

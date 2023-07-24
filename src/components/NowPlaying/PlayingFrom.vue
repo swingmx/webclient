@@ -26,7 +26,11 @@
         </div>
       </div>
     </router-link>
-    <OptionSvg class="optionsvg" @click="showMenu" :class="{ context_menu_showing }" />
+    <OptionSvg
+      class="optionsvg"
+      @click="showMenu"
+      :class="{ context_menu_showing }"
+    />
   </div>
 </template>
 
@@ -39,13 +43,21 @@ import useQueueStore from "@/stores/queue";
 import playingFrom from "@/utils/playingFrom";
 import OptionSvg from "@/assets/icons/more.svg";
 import { showTrackContextMenu } from "@/composables/context";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const queue = useQueueStore();
 const context_menu_showing = ref(false);
 
 function showMenu(e: MouseEvent) {
   if (!queue.currenttrack) return;
-  showTrackContextMenu(e, queue.currenttrack, context_menu_showing);
+  showTrackContextMenu(
+    e,
+    queue.currenttrack,
+    context_menu_showing,
+    route,
+    false
+  );
 }
 const { name, location, icon, image } = playingFrom(queue.from);
 </script>
