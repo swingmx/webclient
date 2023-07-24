@@ -62,32 +62,9 @@ import { menus } from "./navitems";
     position: relative;
     font-size: 14px;
     font-weight: 700;
-    transition: all 0.25s ease-out;
 
     &.active {
       background-color: $gray5;
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-
-    &.active::before {
-      transition: all 0.25s ease-out;
-
-      content: " ";
-      position: absolute;
-
-      top: 50%;
-      transform: translateY(-50%);
-
-      opacity: 0.75;
-      height: 40%;
-      width: 4px;
-      background-color: white;
-      border-radius: 1rem;
-
-      @include allPhones {
-        display: none;
-      }
     }
 
     &:hover {

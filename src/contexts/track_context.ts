@@ -76,7 +76,12 @@ export default async (
         label: playlist.name,
         action: () => {
           addTrackToPlaylist(playlist, track).then(() => {
-            if (route.name !== Routes.playlist) return;
+            if (
+              !(
+                route.name == Routes.playlist && route.params.pid == playlist.id
+              )
+            )
+              return;
 
             const store = usePlaylistStore();
             store.addTrack(track);

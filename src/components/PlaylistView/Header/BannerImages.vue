@@ -29,6 +29,7 @@ const boxShadow = computed(() => {
 });
 
 function swapElements(items: any[]) {
+  if (!items.length) return [];
   // swap 2nd and last element by destructuring
   return [items[0], items[3], items[2], items[1]];
 }

@@ -23,7 +23,7 @@ export async function createNewPlaylist(playlist_name: string, track?: Track) {
   });
 
   if (status == 201) {
-    new Notification("Playlist created successfullly!");
+    new Notification("Playlist created successfullly!", NotifType.Success);
 
     if (track) {
       setTimeout(() => {
@@ -81,14 +81,11 @@ export async function addTrackToPlaylist(playlist: Playlist, track: Track) {
   });
 
   if (status == 409) {
-    new Notification("Track already exists in playlist");
+    new Notification("Track already exists in playlist", NotifType.Error);
     return;
   }
 
-  new Notification(
-    track.title + " added to " + playlist.name,
-    NotifType.Success
-  );
+  new Notification(track.title + " added to " + playlist.name);
 }
 
 export async function getPlaylist(pid: string, no_tracks = false) {
@@ -188,7 +185,7 @@ export async function updateBannerPos(pid: number, pos: number) {
   });
 
   if (status === 200) {
-    new Notification("Image position saved", NotifType.Info);
+    new Notification("Image position saved");
     return;
   }
 
@@ -207,7 +204,7 @@ export async function removeTracks(
   });
 
   if (status === 200) {
-    new Notification("Tracks removed", NotifType.Info);
+    new Notification("Tracks removed");
     return;
   }
 

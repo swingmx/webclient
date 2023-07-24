@@ -26,14 +26,17 @@
       @change="handleUpload"
       ref="dropZoneRef"
     />
-    <div
-      id="upload"
-      class="boxed rounded-sm"
-      @click="selectFiles"
-      tabindex="0"
-      @keydown.space.enter.stop="selectFiles"
-    >
-      <div>Click to upload cover image</div>
+    <div id="upload" class="boxed rounded-sm">
+      <div
+        class="clickable"
+        @click="selectFiles"
+        tabindex="0"
+        @keydown.space.enter.stop="selectFiles"
+      >
+        <ImageIcon />
+        Click to {{ playlist.has_image ? "update" : "upload" }} cover image
+        <br />
+      </div>
       <div
         id="update-pl-img-preview"
         class="image"
@@ -42,7 +45,12 @@
             paths.images.playlist + props.playlist.image
           })`,
         }"
-      />
+        tabindex="0"
+      >
+        <div class="delete-icon" v-if="playlist.has_image">
+          <DeleteIcon />
+        </div>
+      </div>
     </div>
     <div
       class="boxed banner-position-adjust rounded-sm"
@@ -76,6 +84,9 @@ import { Playlist } from "@/interfaces";
 import usePStore from "@/stores/pages/playlist";
 
 import ExpandSvg from "@/assets/icons/expand.svg";
+import DeleteIcon from "@/assets/icons/delete.svg";
+import ImageIcon from "@/assets/icons/image.svg";
+
 const pStore = usePStore();
 
 const props = defineProps<{
@@ -179,9 +190,10 @@ function update_playlist(e: Event) {
 
   #upload {
     width: 100%;
-    padding: $small;
-    cursor: pointer;
+    padding: $medium;
     margin-bottom: 1rem;
+    display: grid;
+    gap: $small;
 
     #update-pl-img-preview {
       width: 4.5rem;
@@ -189,6 +201,51 @@ function update_playlist(e: Event) {
       border-radius: $small;
       object-fit: cover;
       background-color: $gray4;
+      position: relative;
+    }
+
+    .clickable {
+      height: 100%;
+      width: 100%;
+      padding-right: 1rem;
+      display: flex;
+      gap: $smaller;
+      place-items: center;
+      place-content: center;
+      border-radius: $small;
+      border: dashed 1px $gray4;
+      cursor: pointer;
+
+      svg {
+        transform: scale(0.75);
+      }
+    }
+
+    .delete-icon {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.521);
+      border-radius: $small;
+      transition: all 0.2s ease-out;
+      display: flex;
+      place-content: center;
+      place-items: center;
+      cursor: pointer;
+
+      svg {
+        transition: all 0.2s ease-out;
+        transform: scale(1);
+        color: rgb(255, 255, 255);
+      }
+
+      &:hover {
+        background-color: $red;
+
+        svg {
+          transform: scale(1.25);
+        }
+      }
     }
   }
 
