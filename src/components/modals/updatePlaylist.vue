@@ -57,7 +57,7 @@
       v-if="playlist.has_image"
     >
       <div class="t-center">
-        Adjust image position - {{ pStore.bannerPos }}%
+        Adjust image position • {{ pStore.bannerPos }}%
       </div>
       <div class="buttons">
         <div @click.prevent="pStore.minusBannerPos">
@@ -180,7 +180,7 @@ function update_playlist(e: Event) {
 }
 .playlist-modal {
   .boxed {
-    border: solid 2px $gray3;
+    border: solid 2px $gray4;
     color: $gray1;
     place-items: center;
     display: grid;
@@ -190,10 +190,10 @@ function update_playlist(e: Event) {
 
   #upload {
     width: 100%;
-    padding: $medium;
-    margin-bottom: 1rem;
     display: grid;
     gap: $small;
+    border: none;
+    margin: $small 0 1rem 0;
 
     #update-pl-img-preview {
       width: 4.5rem;
