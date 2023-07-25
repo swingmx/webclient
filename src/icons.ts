@@ -19,3 +19,4 @@ export { default as SearchIcon } from "@/assets/icons/search.svg?raw";
 export { default as ShuffleIcon } from "@/assets/icons/shuffle.svg?raw";
 export { default as AddToQueueIcon } from "@/assets/icons/add-to-queue.svg?raw";
 export { default as ExpandIcon } from "@/assets/icons/expand.svg?raw";
+export { default as PlaylistIcon } from "@/assets/icons/playlist.svg?raw";

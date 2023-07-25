@@ -13,15 +13,14 @@
         </div>
       </div>
       <SearchInput :page="Routes.folder" v-if="!isSmallPhone" />
+      <!-- @click="settings.toggleFolderListMode" -->
+      <!-- v-if="!isIphoneSE" -->
       <button
-        class="toggle-list-mode"
-        @click="settings.toggleFolderListMode"
-        title="toggle list mode for folders"
-        v-auto-animate
-        v-if="!isIphoneSE"
+        class="options"
+        title="show more options"
+        @click="showContextMenu"
       >
-        <GridSvg v-if="settings.folder_list_mode" />
-        <ListSvg v-else />
+        <MoreSvg />
       </button>
     </div>
   </div>
@@ -32,16 +31,17 @@ import { useRouter } from "vue-router";
 
 import { Routes } from "@/router";
 import { subPath } from "@/interfaces";
+import useSettingsStore from "@/stores/settings";
+import { isSmallPhone } from "@/stores/content-width";
 
 import SearchInput from "@/components/shared/NavSearchInput.vue";
 import BreadCrumbNav from "@/components/FolderView/BreadCrumbNav.vue";
-import GridSvg from "@/assets/icons/grid.svg";
-import ListSvg from "@/assets/icons/playlist.svg";
-import useSettingsStore from "@/stores/settings";
-import { isSmallPhone, isIphoneSE } from "@/stores/content-width";
+import MoreSvg from "@/assets/icons/more.svg";
+import { showFolderContextMenu } from "@/helpers/contextMenuHandler";
+import { ref } from "vue";
 
 const router = useRouter();
-const settings = useSettingsStore();
+const context_menu_showing = ref(false);
 
 defineProps<{
   subPaths: subPath[];
@@ -49,6 +49,10 @@ defineProps<{
 
 function navigate(path: string) {
   router.push({ name: Routes.folder, params: { path } });
+}
+
+function showContextMenu(e: MouseEvent) {
+  showFolderContextMenu(e, context_menu_showing);
 }
 </script>
 
@@ -94,12 +98,16 @@ function navigate(path: string) {
       }
     }
 
-    .toggle-list-mode {
+    .options {
       margin-left: 1rem;
       height: 2.25rem;
       width: 2.25rem;
       aspect-ratio: 1;
       padding: 0;
+
+      svg {
+        transform: scale(1.2);
+      }
     }
   }
 }
