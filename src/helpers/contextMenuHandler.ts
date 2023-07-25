@@ -53,11 +53,15 @@ export const showAlbumContextMenu = (e: MouseEvent, flag: Ref<boolean>) => {
   flagWatcher(menu, flag);
 };
 
-export const showFolderContextMenu = (e: MouseEvent, flag: Ref<boolean>) => {
+export const showFolderContextMenu = (
+  e: MouseEvent,
+  flag: Ref<boolean>,
+  source: ContextSrc
+) => {
   const menu = useContextStore();
 
-  const options = () => folderContextMenu();
-  menu.showContextMenu(e, options, ContextSrc.Folder);
+  const options = () => folderContextMenu(source);
+  menu.showContextMenu(e, options, source);
 
   flagWatcher(menu, flag);
 };

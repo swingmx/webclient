@@ -29,7 +29,8 @@ export enum ContextSrc {
   PHeader = "PHeader",
   Track = "Track",
   AHeader = "AHeader",
-  Folder = "Folder",
+  FolderCard = "FolderCard",
+  FolderNav = "FolderNav",
 }
 
 export const FuseTrackOptions = {

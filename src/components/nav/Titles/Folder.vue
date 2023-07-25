@@ -13,10 +13,9 @@
         </div>
       </div>
       <SearchInput :page="Routes.folder" v-if="!isSmallPhone" />
-      <!-- @click="settings.toggleFolderListMode" -->
-      <!-- v-if="!isIphoneSE" -->
       <button
         class="options"
+        :class="{ 'btn-active': context_menu_showing }"
         title="show more options"
         @click="showContextMenu"
       >
@@ -31,7 +30,6 @@ import { useRouter } from "vue-router";
 
 import { Routes } from "@/router";
 import { subPath } from "@/interfaces";
-import useSettingsStore from "@/stores/settings";
 import { isSmallPhone } from "@/stores/content-width";
 
 import SearchInput from "@/components/shared/NavSearchInput.vue";
@@ -39,6 +37,7 @@ import BreadCrumbNav from "@/components/FolderView/BreadCrumbNav.vue";
 import MoreSvg from "@/assets/icons/more.svg";
 import { showFolderContextMenu } from "@/helpers/contextMenuHandler";
 import { ref } from "vue";
+import { ContextSrc } from "@/enums";
 
 const router = useRouter();
 const context_menu_showing = ref(false);
@@ -52,7 +51,7 @@ function navigate(path: string) {
 }
 
 function showContextMenu(e: MouseEvent) {
-  showFolderContextMenu(e, context_menu_showing);
+  showFolderContextMenu(e, context_menu_showing, ContextSrc.FolderNav);
 }
 </script>
 
@@ -65,7 +64,7 @@ function showContextMenu(e: MouseEvent) {
     grid-template-columns: 1fr max-content max-content;
 
     @include iphoneSE {
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr max-content;
     }
 
     .fname-wrapper {
