@@ -224,3 +224,26 @@ export async function removeBannerImage(playlistid: number) {
 
   new Notification("Unable to remove banner image", NotifType.Error);
 }
+
+export async function saveFoldeAsPlaylist(playlist_name: string, path: string) {
+  console.log(playlist_name, path);
+  const { data, status } = await useAxios({
+    url: paths.api.playlist.base + "/save-folder",
+    props: {
+      playlist_name,
+      path,
+    },
+  });
+
+  if (status === 201) {
+    new Notification("Playlist created", NotifType.Success);
+    return data.playlist_id as number;
+  }
+
+  if (status === 409) {
+    new Notification("Playlist already exists", NotifType.Error);
+    return;
+  }
+
+  new Notification("Unable to create playlist", NotifType.Error);
+}

@@ -36,6 +36,7 @@ export default defineStore("newModal", {
       const props = {
         playlist_name,
         is_save_folder: true,
+        path,
       };
       this.showModal(ModalOptions.newPlaylist, props);
     },

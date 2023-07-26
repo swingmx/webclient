@@ -20,11 +20,12 @@ import { useRoute } from "vue-router";
 
 import { Track } from "@/interfaces";
 import usePlaylistStore from "@/stores/pages/playlists";
-import { createNewPlaylist } from "@/requests/playlists";
+import { createNewPlaylist, saveFoldeAsPlaylist } from "@/requests/playlists";
 import { Notification, NotifType } from "@/stores/notification";
 
 const props = defineProps<{
   track?: Track;
+  path?: string;
   is_save_folder?: boolean;
   playlist_name?: string;
 }>();
@@ -75,7 +76,15 @@ function create(e: Event) {
     });
 
   const createFolderPlaylist = () => {
-    console.log("new folder playlist");
+    saveFoldeAsPlaylist(name, props.path as string).then((pid) => {
+      emit("hideModal");
+
+      // if (route.name !== Routes.playlists) return;
+
+      // setTimeout(() => {
+      //   playlistStore.addPlaylist(playlist);
+      // }, 600);
+    });
   };
 
   if (props.is_save_folder) {
