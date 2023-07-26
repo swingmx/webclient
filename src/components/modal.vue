@@ -15,12 +15,12 @@
       </div>
       <NewPlaylist
         v-if="modal.component == modal.options.newPlaylist"
-        :track="modal.props.track"
+        v-bind="modal.props"
         @hideModal="hideModal"
         @setTitle="setTitle"
       />
       <UpdatePlaylist
-        :playlist="modal.props"
+      v-bind="modal.props"
         v-if="modal.component == modal.options.updatePlaylist"
         @hideModal="hideModal"
         @setTitle="setTitle"
@@ -113,7 +113,7 @@ function deletePlaylist() {
   .m-content {
     width: calc(100% - 4rem);
     max-height: 40rem;
-    padding: 2rem;
+    padding: 2rem 1.25rem;
     position: relative;
     background-color: $black;
     border: solid 1px $gray5;

@@ -1,5 +1,5 @@
 <template>
-  <div class="last-updated" :class="{ lightbg: !playlist.info.image }">
+  <div class="last-updated">
     <span class="status" v-if="!isSmallPhone"
       >Last updated {{ playlist.info.last_updated }} &#160;|&#160;&#160;</span
     >
@@ -19,11 +19,11 @@ const playlist = usePStore();
 const modal = useModalStore();
 
 function editPlaylist() {
-  modal.showEditPlaylistModal(playlist.info);
+  modal.showEditPlaylistModal();
 }
 
 function deletePlaylist() {
-  modal.showDeletePlaylistModal(parseInt(playlist.info.id));
+  modal.showDeletePlaylistModal(playlist.info.id);
 }
 </script>
 
@@ -53,9 +53,5 @@ function deletePlaylist() {
     margin-bottom: -0.2rem;
     color: $red !important;
   }
-}
-
-.last-updated.lightbg {
-  background-color: $gray2;
 }
 </style>

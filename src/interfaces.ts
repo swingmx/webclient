@@ -86,7 +86,7 @@ export interface Option {
 }
 
 export interface Playlist {
-  id: string;
+  id: number;
   name: string;
   image: string | FormData;
   has_image: boolean;

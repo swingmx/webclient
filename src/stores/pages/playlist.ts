@@ -5,7 +5,7 @@ import { useFuse } from "@/utils";
 
 import { FuseTrackOptions } from "@/enums";
 import { Artist, FuseResult, Playlist, Track } from "@/interfaces";
-import { getPlaylist } from "@/requests/playlists";
+import { getPlaylist, removeBannerImage } from "@/requests/playlists";
 
 export default defineStore("playlist-tracks", {
   state: () => ({
@@ -20,7 +20,7 @@ export default defineStore("playlist-tracks", {
      * Fetches a single playlist information, and its tracks from the server
      * @param id The id of the playlist to fetch
      */
-    async fetchAll(id: string, no_tracks = false) {
+    async fetchAll(id: number, no_tracks = false) {
       this.resetBannerPos();
       const playlist = await getPlaylist(id, no_tracks);
 
@@ -32,9 +32,13 @@ export default defineStore("playlist-tracks", {
       this.allTracks = playlist?.tracks || [];
     },
 
-    // async fetchArtists(id: string) {
-    //   this.artists = await getPlaylistArtists(id);
-    // },
+    async removeBanner() {
+      const res = await removeBannerImage(this.info.id);
+
+      if (!res) return;
+
+      this.info = res;
+    },
 
     /**
      * Updates the playlist header info. This is used when the playlist is

@@ -1,11 +1,14 @@
-import { Option } from "@/interfaces";
 import * as icons from "@/icons";
 import { separator } from "./utils";
-import useSettingsStore from "@/stores/settings";
 import { ContextSrc } from "@/enums";
+import { Option } from "@/interfaces";
 
-export default async (trigger_src: ContextSrc) => {
+import useSettingsStore from "@/stores/settings";
+import useModalStore from "@/stores/modal";
+
+export default async (trigger_src: ContextSrc, path: string) => {
   const settings = useSettingsStore();
+  const modal = useModalStore();
 
   const getListModeOption = () =>
     <Option>{
@@ -46,9 +49,8 @@ export default async (trigger_src: ContextSrc) => {
 
   const save_as_playlist = <Option>{
     label: "Save as Playlist",
-    action: () => {
-      () => {};
-    },
+    action: () =>
+      modal.showSaveFolderAsPlaylistModal(path),
     icon: icons.PlaylistIcon,
   };
 

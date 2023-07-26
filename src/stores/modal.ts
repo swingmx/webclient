@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Playlist, Track } from "../interfaces";
+import { useRoute } from "vue-router";
 
 enum ModalOptions {
   newPlaylist,
@@ -9,6 +10,7 @@ enum ModalOptions {
   SetIP,
   rootDirsPrompt,
   setRootDirs,
+  saveFolderAsPlaylist,
 }
 
 export default defineStore("newModal", {
@@ -20,28 +22,34 @@ export default defineStore("newModal", {
     visible: false,
   }),
   actions: {
-    showModal(modalOption: ModalOptions) {
+    showModal(modalOption: ModalOptions, props: any = {}) {
       this.component = modalOption;
       this.visible = true;
+      this.props = props;
     },
     showNewPlaylistModal(track?: Track) {
-      if (track) {
-        this.props.track = track;
-      }
-      this.showModal(ModalOptions.newPlaylist);
+      const props = track ? { track } : {};
+      this.showModal(ModalOptions.newPlaylist, props);
     },
-    showEditPlaylistModal(playlist: Playlist) {
-      this.props = playlist;
+    showSaveFolderAsPlaylistModal(path: string) {
+      const playlist_name = path.split("/").pop();
+      const props = {
+        playlist_name,
+        is_save_folder: true,
+      };
+      this.showModal(ModalOptions.newPlaylist, props);
+    },
+    showEditPlaylistModal() {
       this.showModal(ModalOptions.updatePlaylist);
     },
     showWelcomeModal() {
       this.showModal(ModalOptions.welcome);
     },
     showDeletePlaylistModal(pid: number) {
-      this.props = {
+      const props = {
         pid: pid,
       };
-      this.showModal(ModalOptions.deletePlaylist);
+      this.showModal(ModalOptions.deletePlaylist, props);
     },
     showSetIPModal() {
       this.showModal(ModalOptions.SetIP);

@@ -70,7 +70,12 @@ function handleClick(e: MouseEvent) {
 }
 
 function showContextMenu(e: MouseEvent) {
-  showFolderContextMenu(e, context_menu_showing, ContextSrc.FolderCard);
+  showFolderContextMenu(
+    e,
+    context_menu_showing,
+    ContextSrc.FolderCard,
+    props.folder.path
+  );
 }
 </script>
 

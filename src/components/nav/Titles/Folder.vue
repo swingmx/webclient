@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import { Routes } from "@/router";
 import { subPath } from "@/interfaces";
@@ -40,6 +40,8 @@ import { ref } from "vue";
 import { ContextSrc } from "@/enums";
 
 const router = useRouter();
+const route = useRoute();
+
 const context_menu_showing = ref(false);
 
 defineProps<{
@@ -51,7 +53,12 @@ function navigate(path: string) {
 }
 
 function showContextMenu(e: MouseEvent) {
-  showFolderContextMenu(e, context_menu_showing, ContextSrc.FolderNav);
+  showFolderContextMenu(
+    e,
+    context_menu_showing,
+    ContextSrc.FolderNav,
+    route.params.path as string
+  );
 }
 </script>
 

@@ -41,13 +41,15 @@
         id="update-pl-img-preview"
         class="image"
         :style="{
-          backgroundImage: `url(${
-            paths.images.playlist + props.playlist.image
-          })`,
+          backgroundImage: `url(${paths.images.playlist + playlist.image})`,
         }"
         tabindex="0"
       >
-        <div class="delete-icon" v-if="playlist.has_image">
+        <div
+          class="delete-icon"
+          v-if="playlist.has_image"
+          @click="pStore.removeBanner()"
+        >
           <DeleteIcon />
         </div>
       </div>
@@ -79,21 +81,18 @@
 import { onMounted, ref } from "vue";
 
 import { paths } from "@/config";
-import { Playlist } from "@/interfaces";
 import { updatePlaylist } from "@/requests/playlists";
 import usePStore from "@/stores/pages/playlist";
 
 import DeleteIcon from "@/assets/icons/delete.svg";
 import ExpandSvg from "@/assets/icons/expand.svg";
 import ImageIcon from "@/assets/icons/image.svg";
+import { storeToRefs } from "pinia";
 
 const pStore = usePStore();
+const { info: playlist } = storeToRefs(pStore);
 
-const props = defineProps<{
-  playlist: Playlist;
-}>();
-
-const pname = ref(props.playlist.name);
+const pname = ref(playlist.value.name);
 
 onMounted(() => {
   (document.getElementById("modal-playlist-name-input") as HTMLElement).focus();
@@ -150,7 +149,7 @@ function update_playlist(e: Event) {
 
   const name = formData.get("name") as string;
 
-  const nameChanged = name !== props.playlist.name;
+  const nameChanged = name !== playlist.value.name;
   const imgChanged = image !== undefined;
 
   if (!nameChanged && !imgChanged) {
@@ -163,7 +162,7 @@ function update_playlist(e: Event) {
   formData.append("image", image);
 
   if (name && name.toString().trim() !== "") {
-    updatePlaylist(props.playlist.id, formData, pStore).then(() => {
+    updatePlaylist(playlist.value.id, formData, pStore).then(() => {
       emit("hideModal");
     });
   }
@@ -234,7 +233,6 @@ function update_playlist(e: Event) {
       cursor: pointer;
 
       svg {
-        transition: all 0.2s ease-out;
         transform: scale(1);
         color: rgb(255, 255, 255);
       }
@@ -244,6 +242,7 @@ function update_playlist(e: Event) {
 
         svg {
           transform: scale(1.25);
+          transform-origin: center;
         }
       }
     }

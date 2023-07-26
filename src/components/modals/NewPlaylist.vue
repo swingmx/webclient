@@ -14,22 +14,30 @@
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router";
-import usePlaylistStore from "@/stores/pages/playlists";
 import { onMounted } from "vue";
+import { Routes } from "@/router";
 import { useRoute } from "vue-router";
+
 import { Track } from "@/interfaces";
-import { Notification, NotifType } from "@/stores/notification";
+import usePlaylistStore from "@/stores/pages/playlists";
 import { createNewPlaylist } from "@/requests/playlists";
+import { Notification, NotifType } from "@/stores/notification";
 
 const props = defineProps<{
   track?: Track;
+  is_save_folder?: boolean;
+  playlist_name?: string;
 }>();
+
 const route = useRoute();
 const playlistStore = usePlaylistStore();
 
 onMounted(() => {
-  (document.getElementById("modal-playlist-name-input") as HTMLElement).focus();
+  const input_elem = document.getElementById(
+    "modal-playlist-name-input"
+  ) as HTMLInputElement;
+  input_elem.focus();
+  input_elem.value = props.playlist_name || "";
 });
 
 const emit = defineEmits<{
@@ -48,7 +56,12 @@ function create(e: Event) {
   e.preventDefault();
   const name = (e.target as any).elements["name"].value;
 
-  if (name.trim()) {
+  if (!name.trim()) {
+    new Notification("Playlist name can't be empty", NotifType.Error);
+    return;
+  }
+
+  const createNormalPlaylist = () =>
     createNewPlaylist(name, props.track).then(({ success, playlist }) => {
       emit("hideModal");
 
@@ -60,9 +73,17 @@ function create(e: Event) {
         playlistStore.addPlaylist(playlist);
       }, 600);
     });
-  } else {
-    new Notification("Playlist name can't be empty", NotifType.Error);
+
+  const createFolderPlaylist = () => {
+    console.log("new folder playlist");
+  };
+
+  if (props.is_save_folder) {
+    createFolderPlaylist();
+    return;
   }
+
+  createNormalPlaylist();
 }
 </script>
 

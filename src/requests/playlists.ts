@@ -88,7 +88,7 @@ export async function addTrackToPlaylist(playlist: Playlist, track: Track) {
   new Notification(track.title + " added to " + playlist.name);
 }
 
-export async function getPlaylist(pid: string, no_tracks = false) {
+export async function getPlaylist(pid: number, no_tracks = false) {
   const uri = `${basePlaylistUrl}/${pid}?no_tracks=${no_tracks}`;
 
   interface PlaylistData {
@@ -113,7 +113,7 @@ export async function getPlaylist(pid: string, no_tracks = false) {
 }
 
 export async function updatePlaylist(
-  pid: string,
+  pid: number,
   playlist: FormData,
   pStore: any
 ) {
@@ -144,7 +144,7 @@ export async function updatePlaylist(
  * @param pid The playlist id to fetch tracks for.
  * @returns {Promise<Artist[]>} A promise that resolves to an array of artists.
  */
-export async function getPlaylistArtists(pid: string): Promise<Artist[]> {
+export async function getPlaylistArtists(pid: number): Promise<Artist[]> {
   const { data, error } = await useAxios({
     url: playlistArtistsUrl,
     props: {
@@ -163,7 +163,7 @@ export async function getPlaylistArtists(pid: string): Promise<Artist[]> {
   return [];
 }
 
-export async function deletePlaylist(pid: string) {
+export async function deletePlaylist(pid: number) {
   const { status } = await useAxios({
     url: paths.api.playlist.base + "/delete",
     props: {
@@ -209,4 +209,18 @@ export async function removeTracks(
   }
 
   new Notification("Unable to remove tracks", NotifType.Error);
+}
+
+export async function removeBannerImage(playlistid: number) {
+  const { data, status } = await useAxios({
+    url: paths.api.playlist.base + `/${playlistid}/remove-img`,
+    get: true,
+  });
+
+  if (status === 200) {
+    new Notification("Banner image removed");
+    return data.playlist as Playlist;
+  }
+
+  new Notification("Unable to remove banner image", NotifType.Error);
 }
