@@ -1,11 +1,46 @@
 import { defineStore } from "pinia";
 import { ComputedRef } from "vue";
 
+import Vibrant from "node-vibrant";
 import { useFuse } from "@/utils";
 
 import { FuseTrackOptions } from "@/enums";
 import { Artist, FuseResult, Playlist, Track } from "@/interfaces";
 import { getPlaylist, removeBannerImage } from "@/requests/playlists";
+import { paths } from "@/config";
+import listToRgbString from "@/utils/colortools/listToRgbString";
+
+interface ColorPalette {
+  Vibrant: {
+    _rgb: [number, number, number];
+    _population: number;
+    _hsl?: [number, number, number];
+  };
+  LightVibrant: {
+    _rgb: [number, number, number];
+    _population: number;
+  };
+  DarkVibrant: {
+    _rgb: [number, number, number];
+    _population: number;
+    _hsl?: [number, number, number];
+  };
+  Muted: {
+    _rgb: [number, number, number];
+    _population: number;
+    _hsl?: [number, number, number];
+  };
+  LightMuted: {
+    _rgb: [number, number, number];
+    _population: number;
+    _hsl?: [number, number, number];
+  };
+  DarkMuted: {
+    _rgb: [number, number, number];
+    _population: number;
+    _hsl?: [number, number, number];
+  };
+}
 
 export default defineStore("playlist-tracks", {
   state: () => ({
@@ -14,6 +49,10 @@ export default defineStore("playlist-tracks", {
     bannerPos: 0,
     allTracks: <Track[]>[],
     artists: <Artist[]>[],
+    colors: {
+      bg: "",
+      btn: "",
+    },
   }),
   actions: {
     /**
@@ -25,11 +64,14 @@ export default defineStore("playlist-tracks", {
       const playlist = await getPlaylist(id, no_tracks);
 
       this.info = playlist?.info || ({} as Playlist);
+      this.info.sqr_img = true;
       this.bannerPos = this.info.banner_pos;
 
       if (no_tracks) return;
 
       this.allTracks = playlist?.tracks || [];
+
+      this.extractColors();
     },
 
     async removeBanner() {
@@ -51,6 +93,22 @@ export default defineStore("playlist-tracks", {
       this.info = info;
       this.info = { ...this.info, duration, count, images };
       this.bannerPos = this.info.banner_pos;
+    },
+    extractColors() {
+      if (!this.info.has_image) return;
+
+      const vibrant = new Vibrant(
+        paths.images.playlist + (this.info.thumb as string)
+      );
+
+      vibrant.getPalette().then((palette) => {
+        // @ts-ignore
+        this.colors.bg = listToRgbString(palette.DarkMuted?.getRgb()) || "#fff";
+
+        this.colors.btn =
+        // @ts-ignore
+          listToRgbString(palette.LightVibrant?.getRgb()) || "#fff";
+      });
     },
     plusBannerPos() {
       this.bannerPos !== 100 ? (this.bannerPos += 5) : null;

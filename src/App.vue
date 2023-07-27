@@ -15,7 +15,9 @@
     <LeftSidebar v-if="!isMobile" />
     <NavBar />
     <div id="acontent" v-element-size="updateContentElemSize">
-      <router-view />
+      <BalancerProvider>
+        <router-view />
+      </BalancerProvider>
     </div>
     <RightSideBar v-if="settings.use_sidebar && xl" />
     <BottomBar />
@@ -25,15 +27,17 @@
 
 <script setup lang="ts">
 // @libraries
-import { vElementSize } from "@vueuse/components";
-import { onStartTyping } from "@vueuse/core";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { onStartTyping } from "@vueuse/core";
+import { vElementSize } from "@vueuse/components";
+import { BalancerProvider } from "vue-wrap-balancer";
+
 // @stores
 import {
-content_height,
-content_width,
-isMobile,
+  content_height,
+  content_width,
+  isMobile,
 } from "@/stores/content-width";
 import useModalStore from "@/stores/modal";
 import useQStore from "@/stores/queue";

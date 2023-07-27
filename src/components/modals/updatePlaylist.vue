@@ -7,7 +7,6 @@
     autocomplete="off"
   >
     <label for="name">Playlist name</label>
-    <br />
     <input
       type="search"
       class="rounded-sm"
@@ -16,7 +15,8 @@
       v-model="pname"
       @keypress.enter="playlist.has_image && update_playlist"
     />
-    <br />
+
+    <label for="image">Image</label>
     <input
       type="file"
       accept="image/*"
@@ -35,7 +35,6 @@
       >
         <ImageIcon />
         Click to {{ playlist.has_image ? "update" : "upload" }} cover image
-        <br />
       </div>
       <div
         id="update-pl-img-preview"
@@ -54,6 +53,11 @@
         </div>
       </div>
     </div>
+    <label>Settings</label>
+    <div class="banner-settings rounded-sm">
+      <div>Show square cover image</div>
+      <Switch :state="playlist.sqr_img" />
+    </div>
     <div
       class="boxed banner-position-adjust rounded-sm"
       v-if="playlist.has_image"
@@ -62,22 +66,23 @@
         Adjust image position • {{ pStore.bannerPos }}%
       </div>
       <div class="buttons">
-        <div @click.prevent="pStore.minusBannerPos">
+        <button @click.prevent="pStore.minusBannerPos">
           <ExpandSvg />
-        </div>
-        <div @click.prevent="pStore.plusBannerPos">
+        </button>
+        <button @click.prevent="pStore.plusBannerPos">
           <ExpandSvg />
-        </div>
+        </button>
       </div>
     </div>
 
     <button>
-      {{ clicked ? "Updating" : "Update" }}
+      {{ clicked ? "Saving" : "Save" }}
     </button>
   </form>
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 
 import { paths } from "@/config";
@@ -87,7 +92,8 @@ import usePStore from "@/stores/pages/playlist";
 import DeleteIcon from "@/assets/icons/delete.svg";
 import ExpandSvg from "@/assets/icons/expand.svg";
 import ImageIcon from "@/assets/icons/image.svg";
-import { storeToRefs } from "pinia";
+
+import Switch from "../SettingsView/Components/Switch.vue";
 
 const pStore = usePStore();
 const { info: playlist } = storeToRefs(pStore);
@@ -178,13 +184,25 @@ function update_playlist(e: Event) {
   }
 }
 .playlist-modal {
+  #modal-playlist-name-input {
+    margin-bottom: 1rem;
+  }
+
   .boxed {
     border: solid 2px $gray4;
     color: $gray1;
     place-items: center;
     display: grid;
     grid-template-columns: 1fr max-content;
-    margin-bottom: $small;
+  }
+
+  .banner-settings {
+    background-color: $gray5;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    align-items: center;
+    margin: $small 0 1rem 0;
   }
 
   #upload {
@@ -206,7 +224,6 @@ function update_playlist(e: Event) {
     .clickable {
       height: 100%;
       width: 100%;
-      padding-right: 1rem;
       display: flex;
       gap: $smaller;
       place-items: center;
@@ -261,14 +278,13 @@ function update_playlist(e: Event) {
       display: grid;
       gap: $small;
 
-      div {
+      button {
         aspect-ratio: 1;
         height: 2rem;
-
+        width: 2rem;
+        border: none;
         background-color: $gray4;
-        border-radius: $small;
-        display: grid;
-        place-content: center;
+        padding: 0;
 
         &:first-child {
           rotate: -90deg;
@@ -279,7 +295,7 @@ function update_playlist(e: Event) {
         }
 
         &:hover {
-          background-color: $pink;
+          background-color: $blue;
         }
       }
     }

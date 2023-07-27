@@ -7,7 +7,11 @@
       }"
     >
       <div class="btns">
-        <PlayBtnRect :source="playSources.playlist" :store="usePStore" />
+        <PlayBtnRect
+          :source="playSources.playlist"
+          :store="usePStore"
+          :bg_color="btn_color"
+        />
       </div>
       <div class="duration">
         {{
@@ -17,7 +21,12 @@
         •
         {{ formatSeconds(playlist.info.duration, true) }}
       </div>
-      <div class="title ellip">{{ playlist.info.name }}</div>
+      <div
+        class="title"
+        :class="`${playlist.info.sqr_img ? 'ellip2' : 'ellip'}`"
+      >
+        <WrapBalancer>{{ playlist.info.name }}</WrapBalancer>
+      </div>
       <div class="type">Playlist</div>
     </div>
   </div>
@@ -28,9 +37,11 @@ import { formatSeconds } from "@/utils";
 
 import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";
 import usePStore from "@/stores/pages/playlist";
+
 const playlist = usePStore();
 
 defineProps<{
   textColor: string;
+  btn_color?: string;
 }>();
 </script>

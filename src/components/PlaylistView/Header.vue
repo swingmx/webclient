@@ -1,43 +1,61 @@
 <template>
   <div
-    class="p-header image rounded no-scroll"
+    class="p-header image rounded"
     :style="[
       {
-        background: bgColor,
+        background: bg,
         backgroundPosition: `center ${bannerPos}%`,
         height: `${heightLarge || isSmallPhone ? '24rem' : '18rem'}`,
       },
     ]"
-    :class="{ border: !info.images.length }"
+    :class="{ 'use-sqr_img': info.sqr_img }"
   >
-    <div class="gradient" v-if="info.has_image"></div>
+    <div class="gradient rounded" v-if="info.has_image"></div>
+    <div
+      class="album-header-ambient rounded"
+      style="height: 100%; width: 100%"
+      :style="{
+        boxShadow: colors.bg
+          ? `0 .5rem 2rem ${colors.bg}`
+          : '0 .5rem 2rem black',
+      }"
+    ></div>
     <BannerImages />
-    <Info :textColor="textColor" />
+    <div class="sqr_img" v-if="info.sqr_img">
+      <img
+        :src="paths.images.playlist + playlist.info.image"
+        class="rounded-sm"
+      />
+    </div>
+    <Info :textColor="textColor" :btn_color="colors.btn" />
     <LastUpdated />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
-import usePStore from "@/stores/pages/playlist";
 import { heightLarge, isSmallPhone } from "@/stores/content-width";
+import usePStore from "@/stores/pages/playlist";
 
 import { paths } from "@/config";
 import BannerImages from "./Header/BannerImages.vue";
 
-import Info from "./Header/Info.vue";
 import { getBackgroundColor, getTextColor } from "@/utils/colortools/shift";
+import Info from "./Header/Info.vue";
 import LastUpdated from "./Header/LastUpdated.vue";
 
 const playlist = usePStore();
 
 const imguri = paths.images.playlist;
 
-const { info, bannerPos } = storeToRefs(playlist);
+const { info, bannerPos, colors } = storeToRefs(playlist);
+const bg = computed(() => {
+  if (playlist.info.sqr_img) {
+    return colors.value.bg ? colors.value.bg : "";
+  }
 
-const bgColor = computed(() => {
   if (playlist.info.has_image) {
     return `url(${imguri + info.value.image})`;
   }
@@ -49,9 +67,9 @@ const bgColor = computed(() => {
 });
 
 const textColor = computed(() => {
-  if (!playlist.info.has_image && playlist.info.images.length > 2) {
+  if (colors.value.bg !== "") {
     // @ts-ignore
-    return getTextColor(playlist.info.images[2].color);
+    return getTextColor(colors.value.bg);
   }
 
   return "";
@@ -66,6 +84,29 @@ const textColor = computed(() => {
   background-color: $gray;
   background-position: center 50%;
   background-size: cover !important;
+  padding: 1rem;
+
+  &.use-sqr_img {
+    grid-template-columns: max-content 1fr;
+    align-items: center;
+
+    .title {
+      font-size: 3.75rem !important;
+    }
+  }
+
+  .sqr_img {
+    height: 16rem;
+    width: 16rem;
+    z-index: 100;
+    margin-right: 1rem;
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
 
   .gradient {
     position: absolute;
@@ -79,7 +120,7 @@ const textColor = computed(() => {
 
   .carddd {
     width: 100%;
-    padding: 1rem;
+    height: 100%;
     display: grid;
     z-index: 10;
 

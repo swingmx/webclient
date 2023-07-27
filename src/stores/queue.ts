@@ -241,7 +241,7 @@ export default defineStore("Queue", {
 
       this.setNewQueue(tracks);
     },
-    playFromPlaylist(pname: string, pid: string, tracks: Track[]) {
+    playFromPlaylist(pname: string, pid: number, tracks: Track[]) {
       this.from = <fromPlaylist>{
         type: FromOptions.playlist,
         name: pname,

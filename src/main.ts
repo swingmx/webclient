@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 
 import { MotionPlugin } from "@vueuse/motion";
+import WrapBalancer from "vue-wrap-balancer";
 
 import {
   RecycleScroller,
@@ -35,5 +36,6 @@ app.directive("tooltip", vTooltip);
 app.component("RecycleScroller", RecycleScroller);
 app.component("DynamicScroller", DynamicScroller);
 app.component("DynamicScrollerItem", DynamicScrollerItem);
+app.component("WrapBalancer", WrapBalancer);
 
 app.mount("#app");

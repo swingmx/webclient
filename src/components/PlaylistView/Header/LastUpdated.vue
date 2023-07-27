@@ -33,11 +33,11 @@ function deletePlaylist() {
   bottom: 1rem;
   right: 1rem;
   padding: $smaller $small;
-  background-color: $body;
-  color: rgb(255, 255, 255);
+  // background-color: $body;
+  // color: rgb(255, 255, 255);
   font-size: 0.9rem;
   border-radius: $smaller;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.479);
+  // box-shadow: 0 0 1rem rgba(0, 0, 0, 0.479);
   z-index: 12;
 
   display: flex;

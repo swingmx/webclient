@@ -62,9 +62,9 @@ export default defineStore("settings", {
     toggleFolderListMode() {
       this.folder_list_mode = !this.folder_list_mode;
     },
-    toggleShowMasterQualityFlag(){
-      this.show_master_quality_flag = !this.show_master_quality_flag
-    }
+    toggleShowMasterQualityFlag() {
+      this.show_master_quality_flag = !this.show_master_quality_flag;
+    },
   },
   getters: {
     can_extend_width(): boolean {

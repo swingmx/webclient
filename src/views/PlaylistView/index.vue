@@ -22,26 +22,28 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, onUpdated } from "vue";
 import { computed } from "@vue/reactivity";
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
 import {
-heightLarge,
-isMedium,
-isSmall,
-isSmallPhone,
+  heightLarge,
+  isMedium,
+  isSmall,
+  isSmallPhone,
 } from "@/stores/content-width";
-import usePlaylistStore from "@/stores/pages/playlist";
+import { dropSources } from "@/enums";
 import useQueueStore from "@/stores/queue";
+import usePlaylistStore from "@/stores/pages/playlist";
+
+import { updateBannerPos } from "@/requests/playlists";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 import playlistSvg from "@/assets/icons/playlist.svg";
 import Header from "@/components/PlaylistView/Header.vue";
 import NoItems from "@/components/shared/NoItems.vue";
 import SongItem from "@/components/shared/SongItem.vue";
-import { dropSources } from "@/enums";
-import { updateBannerPos } from "@/requests/playlists";
-import updatePageTitle from "@/utils/updatePageTitle";
-import { onMounted, onUpdated } from "vue";
+import AfterHeader from "@/components/PlaylistView/AfterHeader.vue";
 
 const queue = useQueueStore();
 const playlist = usePlaylistStore();
@@ -74,6 +76,12 @@ const scrollerItems = computed(() => {
     size: heightLarge.value || isSmallPhone.value ? 25 * 16 : 19 * 16,
   };
 
+  const afterHeader: ScrollerItem = {
+    id: "afterHeader",
+    component: AfterHeader,
+    size: 4 * 16,
+  };
+
   const tracks = playlist.tracks.map((track) => {
     return {
       id: track.filepath,
@@ -91,7 +99,7 @@ const scrollerItems = computed(() => {
 
   const body = playlist.tracks.length === 0 ? [getNoItemsComponent()] : tracks;
 
-  return [header, ...body];
+  return [header, afterHeader, ...body];
 });
 
 function playFromPlaylistPage(index: number) {
@@ -103,7 +111,7 @@ function playFromPlaylistPage(index: number) {
 [onBeforeRouteLeave, onBeforeRouteUpdate].forEach((guard) => {
   guard(() => {
     if (playlist.bannerPosUpdated) {
-      updateBannerPos(parseInt(playlist.info.id), playlist.bannerPos);
+      updateBannerPos(playlist.info.id, playlist.bannerPos);
     }
 
     setTimeout(() => {

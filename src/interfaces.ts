@@ -80,8 +80,7 @@ export interface Option {
   label?: string;
   action?: () => void;
   children?: Option[] | false;
-  icon?: string
-  ;
+  icon?: string;
   critical?: Boolean;
 }
 
@@ -90,6 +89,7 @@ export interface Playlist {
   name: string;
   image: string | FormData;
   has_image: boolean;
+  sqr_img: boolean;
   tracks: Track[];
   count: number;
   last_updated: string;
@@ -123,7 +123,7 @@ export interface fromAlbum {
 export interface fromPlaylist {
   type: FromOptions.playlist;
   name: string;
-  id: string;
+  id: number;
 }
 
 export interface fromSearch {

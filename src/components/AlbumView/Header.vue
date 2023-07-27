@@ -109,18 +109,15 @@ import { computed, onMounted, ref } from "vue";
 import { onBeforeRouteUpdate } from "vue-router";
 
 import { paths } from "@/config";
-import {
-albumHeaderSmall,
-isSmallPhone
-} from "@/stores/content-width";
+import { albumHeaderSmall, isSmallPhone } from "@/stores/content-width";
 
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
 
 import {
-getBackgroundColor,
-getShift,
-getTextColor,
+  getBackgroundColor,
+  getShift,
+  getTextColor,
 } from "@/utils/colortools/shift";
 
 import { showAlbumContextMenu } from "@/helpers/contextMenuHandler";
@@ -272,7 +269,6 @@ onBeforeRouteUpdate(() => {
 
     &.context_menu_showing {
       background-color: $darkblue;
-
 
       svg {
         color: $white !important;
