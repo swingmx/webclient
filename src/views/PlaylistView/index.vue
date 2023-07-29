@@ -24,7 +24,6 @@
 <script setup lang="ts">
 import { onMounted, onUpdated } from "vue";
 import { computed } from "@vue/reactivity";
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
 import {
   heightLarge,
@@ -36,7 +35,6 @@ import { dropSources } from "@/enums";
 import useQueueStore from "@/stores/queue";
 import usePlaylistStore from "@/stores/pages/playlist";
 
-import { updateBannerPos } from "@/requests/playlists";
 import updatePageTitle from "@/utils/updatePageTitle";
 
 import playlistSvg from "@/assets/icons/playlist.svg";
@@ -107,18 +105,6 @@ function playFromPlaylistPage(index: number) {
   queue.playFromPlaylist(name, id, playlist.allTracks);
   queue.play(index);
 }
-
-[onBeforeRouteLeave, onBeforeRouteUpdate].forEach((guard) => {
-  guard(() => {
-    if (playlist.bannerPosUpdated) {
-      updateBannerPos(playlist.info.id, playlist.bannerPos);
-    }
-
-    setTimeout(() => {
-      playlist.resetQuery();
-    }, 500);
-  });
-});
 
 [onMounted, onUpdated].forEach(() => {
   updatePageTitle(playlist.info.name);

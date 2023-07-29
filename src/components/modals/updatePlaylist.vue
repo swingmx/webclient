@@ -40,30 +40,35 @@
         id="update-pl-img-preview"
         class="image"
         :style="{
-          backgroundImage: `url(${paths.images.playlist + playlist.image})`,
+          backgroundImage: `url(${playlist.image})`,
         }"
         tabindex="0"
       >
         <div
           class="delete-icon"
-          v-if="playlist.has_image"
+          v-if="!image && playlist.has_image"
           @click="pStore.removeBanner()"
         >
           <DeleteIcon />
         </div>
       </div>
     </div>
-    <label>Settings</label>
-    <div class="banner-settings rounded-sm">
+    <label v-if="playlist.has_image || !playlist.settings.sqr_img"
+      >Settings</label
+    >
+    <div class="banner-settings rounded-sm" v-if="image || playlist.has_image">
       <div>Show square cover image</div>
-      <Switch :state="playlist.sqr_img" />
+      <Switch
+        :state="playlist.settings.sqr_img"
+        @click="pStore.toggleSquareImage"
+      />
     </div>
     <div
       class="boxed banner-position-adjust rounded-sm"
-      v-if="playlist.has_image"
+      v-if="playlist.has_image && !playlist.settings.sqr_img"
     >
       <div class="t-center">
-        Adjust image position • {{ pStore.bannerPos }}%
+        Adjust image position • {{ pStore.info.settings.banner_pos }}%
       </div>
       <div class="buttons">
         <button @click.prevent="pStore.minusBannerPos">
@@ -83,7 +88,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { Ref, onMounted, ref } from "vue";
 
 import { paths } from "@/config";
 import { updatePlaylist } from "@/requests/playlists";
@@ -99,6 +104,7 @@ const pStore = usePStore();
 const { info: playlist } = storeToRefs(pStore);
 
 const pname = ref(playlist.value.name);
+const image: Ref<any> = ref(null);
 
 onMounted(() => {
   (document.getElementById("modal-playlist-name-input") as HTMLElement).focus();
@@ -117,8 +123,6 @@ function selectFiles() {
   ) as HTMLInputElement;
   input.click();
 }
-
-let image: File;
 
 function handleUpload() {
   const input = document.getElementById(
@@ -139,10 +143,10 @@ function handleFile(file: File) {
   const obj_url = URL.createObjectURL(file);
 
   if (preview) {
-    preview.style.backgroundImage = `url(${obj_url})`;
+    pStore.setImage(obj_url);
   }
 
-  image = file;
+  image.value = file;
 }
 
 let clicked = ref(false);
@@ -156,7 +160,7 @@ function update_playlist(e: Event) {
   const name = formData.get("name") as string;
 
   const nameChanged = name !== playlist.value.name;
-  const imgChanged = image !== undefined;
+  const imgChanged = image.value !== undefined;
 
   if (!nameChanged && !imgChanged) {
     emit("hideModal");
@@ -165,7 +169,14 @@ function update_playlist(e: Event) {
 
   clicked.value = true;
 
-  formData.append("image", image);
+  formData.append("image", image.value);
+  formData.append(
+    "settings",
+    JSON.stringify({
+      sqr_img: pStore.info.settings.sqr_img,
+      banner_pos: pStore.info.settings.banner_pos,
+    })
+  );
 
   if (name && name.toString().trim() !== "") {
     updatePlaylist(playlist.value.id, formData, pStore).then(() => {

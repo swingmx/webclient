@@ -1,3 +1,7 @@
 export default (list: number[]) => {
-  return `rgb(${list.join(",")})`;
+  try {
+    return `rgb(${list.join(",")})`;
+  } catch (e) {
+    return "";
+  }
 };

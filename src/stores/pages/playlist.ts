@@ -10,49 +10,18 @@ import { getPlaylist, removeBannerImage } from "@/requests/playlists";
 import { paths } from "@/config";
 import listToRgbString from "@/utils/colortools/listToRgbString";
 
-interface ColorPalette {
-  Vibrant: {
-    _rgb: [number, number, number];
-    _population: number;
-    _hsl?: [number, number, number];
-  };
-  LightVibrant: {
-    _rgb: [number, number, number];
-    _population: number;
-  };
-  DarkVibrant: {
-    _rgb: [number, number, number];
-    _population: number;
-    _hsl?: [number, number, number];
-  };
-  Muted: {
-    _rgb: [number, number, number];
-    _population: number;
-    _hsl?: [number, number, number];
-  };
-  LightMuted: {
-    _rgb: [number, number, number];
-    _population: number;
-    _hsl?: [number, number, number];
-  };
-  DarkMuted: {
-    _rgb: [number, number, number];
-    _population: number;
-    _hsl?: [number, number, number];
-  };
-}
-
 export default defineStore("playlist-tracks", {
   state: () => ({
     info: <Playlist>{},
     query: "",
-    bannerPos: 0,
+    initialBannerPos: 0,
     allTracks: <Track[]>[],
     artists: <Artist[]>[],
     colors: {
       bg: "",
       btn: "",
     },
+    uploadImgUrl: "",
   }),
   actions: {
     /**
@@ -60,12 +29,13 @@ export default defineStore("playlist-tracks", {
      * @param id The id of the playlist to fetch
      */
     async fetchAll(id: number, no_tracks = false) {
+      this.resetColors();
       this.resetBannerPos();
       const playlist = await getPlaylist(id, no_tracks);
 
       this.info = playlist?.info || ({} as Playlist);
-      this.info.sqr_img = true;
-      this.bannerPos = this.info.banner_pos;
+      this.initialBannerPos = this.info.settings.banner_pos;
+      this.createImageLink();
 
       if (no_tracks) return;
 
@@ -73,13 +43,19 @@ export default defineStore("playlist-tracks", {
 
       this.extractColors();
     },
-
+    createImageLink() {
+      this.info.image = paths.images.playlist + this.info.image;
+    },
     async removeBanner() {
+      const { duration } = this.info;
       const res = await removeBannerImage(this.info.id);
 
       if (!res) return;
 
-      this.info = res;
+      this.info = { ...res, duration };
+      this.extractColors();
+
+      this.createImageLink();
     },
 
     /**
@@ -92,29 +68,59 @@ export default defineStore("playlist-tracks", {
 
       this.info = info;
       this.info = { ...this.info, duration, count, images };
-      this.bannerPos = this.info.banner_pos;
+      this.createImageLink();
+      this.extractColors();
     },
-    extractColors() {
-      if (!this.info.has_image) return;
-
-      const vibrant = new Vibrant(
-        paths.images.playlist + (this.info.thumb as string)
-      );
+    setColors(img_url: string) {
+      const vibrant = new Vibrant(img_url);
 
       vibrant.getPalette().then((palette) => {
         // @ts-ignore
-        this.colors.bg = listToRgbString(palette.DarkMuted?.getRgb()) || "#fff";
+        this.colors.bg = listToRgbString(palette.DarkMuted?.getRgb()) || "";
 
         this.colors.btn =
-        // @ts-ignore
-          listToRgbString(palette.LightVibrant?.getRgb()) || "#fff";
+          // @ts-ignore
+          listToRgbString(palette.LightVibrant?.getRgb()) || "";
       });
     },
+    extractColors(img_url?: string) {
+      if (this.info.has_image) {
+        const url =
+          img_url || paths.images.playlist + (this.info.thumb as string);
+
+        this.setColors(url);
+        return;
+      }
+
+      if (!this.info.images.length) return;
+
+      const url = paths.images.thumb.small + this.info.images[1].image;
+      this.setColors(url);
+    },
+    resetColors() {
+      this.colors = {
+        bg: "",
+        btn: "",
+      };
+    },
     plusBannerPos() {
-      this.bannerPos !== 100 ? (this.bannerPos += 5) : null;
+      this.info.settings.banner_pos !== 100
+        ? (this.info.settings.banner_pos += 5)
+        : null;
     },
     minusBannerPos() {
-      this.bannerPos !== 0 ? (this.bannerPos -= 5) : null;
+      this.info.settings.banner_pos !== 0
+        ? (this.info.settings.banner_pos -= 5)
+        : null;
+    },
+    toggleSquareImage() {
+      this.info.settings.sqr_img = !this.info.settings.sqr_img;
+    },
+    setImage(image: string) {
+      this.info.image = image;
+
+      this.extractColors(this.info.image);
+      this.info.has_image = true;
     },
     removeTrackByIndex(index: number) {
       this.allTracks.splice(index, 1);
@@ -129,7 +135,9 @@ export default defineStore("playlist-tracks", {
       this.query = "";
     },
     resetBannerPos() {
-      this.bannerPos = 50;
+      try {
+        this.info.settings.banner_pos = 50;
+      } catch (e) {}
     },
   },
   getters: {
@@ -150,7 +158,7 @@ export default defineStore("playlist-tracks", {
       return tracks;
     },
     bannerPosUpdated(): boolean {
-      return this.info.banner_pos - this.bannerPos !== 0;
+      return this.info.settings.banner_pos - this.initialBannerPos !== 0;
     },
   },
 });

@@ -4,11 +4,11 @@
     :style="[
       {
         background: bg,
-        backgroundPosition: `center ${bannerPos}%`,
+        backgroundPosition: `center ${info.settings.banner_pos}%`,
         height: `${heightLarge || isSmallPhone ? '24rem' : '18rem'}`,
       },
     ]"
-    :class="{ 'use-sqr_img': info.sqr_img }"
+    :class="{ 'use-sqr_img': info.has_image && info.settings.sqr_img }"
   >
     <div class="gradient rounded" v-if="info.has_image"></div>
     <div
@@ -20,12 +20,11 @@
           : '0 .5rem 2rem black',
       }"
     ></div>
-    <BannerImages />
-    <div class="sqr_img" v-if="info.sqr_img">
-      <img
-        :src="paths.images.playlist + playlist.info.image"
-        class="rounded-sm"
-      />
+    <div class="thumbnail-container no-scroll">
+      <BannerImages />
+    </div>
+    <div class="sqr_img" v-if="info.has_image && info.settings.sqr_img">
+      <img :src="(playlist.info.image as string)" class="rounded-sm" />
     </div>
     <Info :textColor="textColor" :btn_color="colors.btn" />
     <LastUpdated />
@@ -48,22 +47,13 @@ import LastUpdated from "./Header/LastUpdated.vue";
 
 const playlist = usePStore();
 
-const imguri = paths.images.playlist;
-
-const { info, bannerPos, colors } = storeToRefs(playlist);
+const { info, colors } = storeToRefs(playlist);
 const bg = computed(() => {
-  if (playlist.info.sqr_img) {
-    return colors.value.bg ? colors.value.bg : "";
+  if (playlist.info.has_image && !playlist.info.settings.sqr_img) {
+    return `url(${info.value.image})`;
   }
 
-  if (playlist.info.has_image) {
-    return `url(${imguri + info.value.image})`;
-  }
-
-  if (info.value.images.length > 2) {
-    // @ts-ignore
-    return getBackgroundColor(info.value.images[2].color);
-  }
+  return colors.value.bg ? colors.value.bg : "";
 });
 
 const textColor = computed(() => {
@@ -84,7 +74,13 @@ const textColor = computed(() => {
   background-color: $gray;
   background-position: center 50%;
   background-size: cover !important;
-  padding: 1rem;
+  // padding: 1rem;
+
+  .thumbnail-container {
+    height: 100% !important;
+    position: absolute;
+    width: 100%;
+  }
 
   &.use-sqr_img {
     grid-template-columns: max-content 1fr;
@@ -99,7 +95,7 @@ const textColor = computed(() => {
     height: 16rem;
     width: 16rem;
     z-index: 100;
-    margin-right: 1rem;
+    margin-left: 1rem;
 
     img {
       height: 100%;
@@ -123,6 +119,8 @@ const textColor = computed(() => {
     height: 100%;
     display: grid;
     z-index: 10;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
 
     .info {
       display: flex;
