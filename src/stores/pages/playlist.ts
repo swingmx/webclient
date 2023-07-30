@@ -34,7 +34,6 @@ export default defineStore("playlist-tracks", {
       this.info = playlist?.info || ({} as Playlist);
       // this.info.settings.sqr_img = false;
       this.initialBannerPos = this.info.settings.banner_pos;
-      console.log(this.info.settings);
       this.createImageLink();
 
       this.resetColors();
@@ -43,8 +42,6 @@ export default defineStore("playlist-tracks", {
       if (no_tracks) return;
 
       this.allTracks = playlist?.tracks || [];
-
-      console.log(this.info.settings);
     },
     createImageLink() {
       this.info.image = paths.images.playlist + this.info.image;

@@ -6,10 +6,10 @@ import {
   getSimilarArtists,
 } from "@/requests/artists";
 
+import { paths } from "@/config";
+import useSettingsStore from "@/stores/settings";
 import { Album, Artist, Track } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
-import useSettingsStore from "@/stores/settings";
-import { paths } from "@/config";
 import setColorsToStore from "@/utils/colortools/setColorsToStore";
 
 export default defineStore("artistPage", {
@@ -62,7 +62,7 @@ export default defineStore("artistPage", {
     },
     extractColors() {
       const url = paths.images.artist.large + this.info.image;
-      setColorsToStore(this, url);
+      setColorsToStore(this, url, true);
     },
     resetAlbums() {
       this.albums = [];

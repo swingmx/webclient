@@ -13,6 +13,7 @@ import {
   getAlbumVersions,
   getSimilarAlbums,
 } from "@/requests/album";
+import setColorsToStore from "@/utils/colortools/setColorsToStore";
 import { useNotifStore } from "../notification";
 import setColorsToStore from "@/utils/colortools/setColorsToStore";
 
@@ -72,6 +73,7 @@ export default defineStore("album", {
 
       this.srcTracks = album.tracks;
       this.info = album.info;
+      this.extractColors();
 
       const tracks = sortByTrackNumber(this.srcTracks);
       this.discs = createDiscs(tracks);

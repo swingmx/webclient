@@ -2,7 +2,6 @@ import { useRoute } from "vue-router";
 
 import { Artist, Playlist, Track } from "@/interfaces";
 import { router as Router, Routes } from "@/router";
-// @ts-ignore
 
 import { Option } from "@/interfaces";
 import { openInFiles } from "@/requests/folders";
@@ -58,6 +57,7 @@ export default async (
     });
   };
 
+  
   async function addToPlaylist() {
     const new_playlist = get_new_playlist_option(track);
     const p = await getAllPlaylists(true);
@@ -83,7 +83,6 @@ export default async (
               return;
 
             if (!success) return;
-
             const store = usePlaylistStore();
             store.addTrack(track);
             store.fetchAll(parseInt(route.params.pid as string), true);

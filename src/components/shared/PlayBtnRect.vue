@@ -44,9 +44,6 @@ defineProps<{
   display: flex;
   align-items: center;
   justify-content: center;
-  // transition: all 0.5s ease-in-out;
   color: $white;
-  // background-color: $pink !important;
-  // border: solid 1px $pink !important;
 }
 </style>
