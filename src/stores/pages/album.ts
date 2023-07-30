@@ -1,19 +1,19 @@
-import { ComputedRef } from "vue";
 import { defineStore } from "pinia";
+import { ComputedRef } from "vue";
 
-import { useFuse } from "@/utils";
-import { AlbumDisc } from "@/interfaces";
 import { FuseTrackOptions } from "@/enums";
+import { Album, AlbumDisc, FuseResult, Track } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
-import { Album, FuseResult, Track } from "@/interfaces";
+import { useFuse } from "@/utils";
 
-
+import { paths } from "@/config";
 import {
   getAlbum,
   getAlbumsFromArtist,
   getAlbumVersions,
   getSimilarAlbums,
 } from "@/requests/album";
+import setColorsToStore from "@/utils/colortools/setColorsToStore";
 import { useNotifStore } from "../notification";
 
 interface Disc {
@@ -56,6 +56,10 @@ export default defineStore("album", {
     similarAlbums: <Album[]>[],
     bio: null,
     discs: <Disc>{},
+    colors: {
+      bg: "",
+      btn: "",
+    },
   }),
   actions: {
     /**
@@ -68,6 +72,7 @@ export default defineStore("album", {
 
       this.srcTracks = album.tracks;
       this.info = album.info;
+      this.extractColors();
 
       const tracks = sortByTrackNumber(this.srcTracks);
       this.discs = createDiscs(tracks);
@@ -110,6 +115,10 @@ export default defineStore("album", {
         this.info.albumartists[0].artisthash,
         maxAbumCards.value
       );
+    },
+    extractColors() {
+      const url = paths.images.thumb.small + this.info.image;
+      setColorsToStore(this, url);
     },
     resetQuery() {
       this.query = "";

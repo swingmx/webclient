@@ -1,14 +1,12 @@
 import { defineStore } from "pinia";
 import { ComputedRef } from "vue";
 
-import Vibrant from "node-vibrant";
-import { useFuse } from "@/utils";
-
+import { paths } from "@/config";
 import { FuseTrackOptions } from "@/enums";
 import { Artist, FuseResult, Playlist, Track } from "@/interfaces";
 import { getPlaylist, removeBannerImage } from "@/requests/playlists";
-import { paths } from "@/config";
-import listToRgbString from "@/utils/colortools/listToRgbString";
+import { useFuse } from "@/utils";
+import setColorsToStore from "@/utils/colortools/setColorsToStore";
 
 export default defineStore("playlist-tracks", {
   state: () => ({
@@ -29,7 +27,6 @@ export default defineStore("playlist-tracks", {
      * @param id The id of the playlist to fetch
      */
     async fetchAll(id: number, no_tracks = false) {
-      this.resetColors();
       this.resetBannerPos();
       const playlist = await getPlaylist(id, no_tracks);
 
@@ -37,11 +34,12 @@ export default defineStore("playlist-tracks", {
       this.initialBannerPos = this.info.settings.banner_pos;
       this.createImageLink();
 
+      this.resetColors();
+      this.extractColors();
+
       if (no_tracks) return;
 
       this.allTracks = playlist?.tracks || [];
-
-      this.extractColors();
     },
     createImageLink() {
       this.info.image = paths.images.playlist + this.info.image;
@@ -71,31 +69,19 @@ export default defineStore("playlist-tracks", {
       this.createImageLink();
       this.extractColors();
     },
-    setColors(img_url: string) {
-      const vibrant = new Vibrant(img_url);
-
-      vibrant.getPalette().then((palette) => {
-        // @ts-ignore
-        this.colors.bg = listToRgbString(palette.DarkMuted?.getRgb()) || "";
-
-        this.colors.btn =
-          // @ts-ignore
-          listToRgbString(palette.LightVibrant?.getRgb()) || "";
-      });
-    },
     extractColors(img_url?: string) {
       if (this.info.has_image) {
         const url =
           img_url || paths.images.playlist + (this.info.thumb as string);
 
-        this.setColors(url);
+        setColorsToStore(this, url);
         return;
       }
 
       if (!this.info.images.length) return;
 
       const url = paths.images.thumb.small + this.info.images[1].image;
-      this.setColors(url);
+      setColorsToStore(this, url);
     },
     resetColors() {
       this.colors = {

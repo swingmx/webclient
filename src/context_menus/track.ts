@@ -2,7 +2,6 @@ import { useRoute } from "vue-router";
 
 import { Artist, Playlist, Track } from "@/interfaces";
 import { router as Router, Routes } from "@/router";
-// @ts-ignore
 
 import { Option } from "@/interfaces";
 import { openInFiles } from "@/requests/folders";
@@ -60,6 +59,7 @@ export default async (
     });
   };
 
+  
   async function addToPlaylist() {
     const new_playlist = get_new_playlist_option(track);
     const p = await getAllPlaylists(true);
@@ -75,17 +75,19 @@ export default async (
       return <Option>{
         label: playlist.name,
         action: () => {
-          addTrackToPlaylist(playlist, track).then(() => {
+          addTrackToPlaylist(playlist, track).then((success) => {
             if (
               !(
-                route.name == Routes.playlist && route.params.pid == playlist.id
+                route.name == Routes.playlist &&
+                parseInt(route.params.pid as string) == playlist.id
               )
             )
               return;
 
+            if (!success) return;
             const store = usePlaylistStore();
             store.addTrack(track);
-            store.fetchAll(route.params.pid as string, true);
+            store.fetchAll(parseInt(route.params.pid as string), true);
           });
         },
       };
@@ -194,7 +196,7 @@ export default async (
         ]).then(() => {
           const store = usePlaylistStore();
           store.removeTrackByIndex(track.index);
-          store.fetchAll(route.params.pid as string, true);
+          store.fetchAll(parseInt(route.params.pid as string), true);
         });
       },
       icon: DeleteIcon,

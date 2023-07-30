@@ -37,7 +37,11 @@
         </div>
       </section>
       <div class="buttons">
-        <PlayBtnRect :source="playSources.artist" :store="useArtistPageStore" />
+        <PlayBtnRect
+          :source="playSources.artist"
+          :store="useArtistPageStore"
+          :bg_color="artist.colors.btn"
+        />
         <HeartSvg
           @handleFav="handleFav"
           :state="artist.info.is_favorite"

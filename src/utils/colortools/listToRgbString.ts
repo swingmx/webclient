@@ -1,7 +1,3 @@
-export default (list: number[]) => {
-  try {
-    return `rgb(${list.join(",")})`;
-  } catch (e) {
-    return "";
-  }
+export default (list: number[] | undefined) => {
+  return list ? `rgb(${list.join(",")})` : "";
 };

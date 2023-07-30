@@ -3,16 +3,14 @@
     class="album-header-ambient rounded"
     style="height: 100%; width: 100%"
     :style="{
-      boxShadow: album.colors[0]
-        ? `0 .5rem 2rem ${album.colors[0]}`
-        : '0 .5rem 2rem black',
+      boxShadow: colors.bg ? `0 .5rem 2rem ${colors.bg}` : '0 .5rem 2rem black',
     }"
   ></div>
   <div
     class="a-header rounded"
     ref="albumheaderthing"
     :style="{
-      background: backgroundColor,
+      background: colors.bg,
     }"
   >
     <div
@@ -44,15 +42,9 @@
               :bitrate="1200"
               :text="v"
               :key="v"
-              :bg_color="
-                album.colors[0]
-                  ? getShift(album.colors[0], [80, -90])
-                  : undefined
-              "
+              :bg_color="colors.bg ? getShift(colors.bg, [90, -90]) : undefined"
               :text_color="
-                album.colors[0]
-                  ? getShift(album.colors[0], [-100, 80])
-                  : undefined
+                colors.bg ? getShift(colors.bg, [-100,  90]) : undefined
               "
               :fill="album.versions.length > 1 && index === 0"
             />
@@ -78,12 +70,16 @@
             </div>
           </div>
           <div class="buttons">
-            <PlayBtnRect :source="playSources.album" :store="useAlbumStore" />
+            <PlayBtnRect
+              :source="playSources.album"
+              :store="useAlbumStore"
+              :bg_color="colors.btn"
+            />
 
             <HeartSvg
               :state="album.is_favorite"
               @handleFav="handleFav"
-              :color="album.colors[0] ? album.colors[0] : ''"
+              :color="colors.bg ? colors.bg : ''"
             />
             <button
               class="options"
@@ -140,7 +136,7 @@ const store = useAlbumStore();
 const titleSplits = ref([""]);
 const context_menu_showing = ref(false);
 
-const { info: album } = storeToRefs(store);
+const { info: album, colors } = storeToRefs(store);
 
 defineEmits<{
   (event: "playThis"): void;
@@ -173,16 +169,8 @@ function handleFav() {
 }
 
 const textColor = computed((): string => {
-  if (album.value.colors[0]) {
-    return getTextColor(album.value.colors[0]);
-  }
-
-  return "";
-});
-
-const backgroundColor = computed((): string => {
-  if (album.value.colors[0]) {
-    return getBackgroundColor(album.value.colors[0]);
+  if (colors.value.bg) {
+    return getShift(colors.value.bg, [-100, -100]);
   }
 
   return "";
