@@ -125,7 +125,6 @@ onMounted(() => {
   }
 
   handleRootDirsPrompt();
-  queue.setGaplessPlayerCallbacks();
 });
 </script>
 

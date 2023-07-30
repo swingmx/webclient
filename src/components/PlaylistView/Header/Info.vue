@@ -23,7 +23,7 @@
       </div>
       <div
         class="title"
-        :class="`${playlist.info.sqr_img ? 'ellip2' : 'ellip'}`"
+        :class="`${playlist.info.settings.sqr_img ? 'ellip2' : 'ellip'}`"
       >
         <WrapBalancer>{{ playlist.info.name }}</WrapBalancer>
       </div>

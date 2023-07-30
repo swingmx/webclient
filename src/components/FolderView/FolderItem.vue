@@ -114,8 +114,8 @@ function showContextMenu(e: MouseEvent) {
 
     border: none;
     outline: none;
-    scale: 0.75;
     color: $darkblue;
+    transform: scale(0.75);
   }
 
   @include largePhones {

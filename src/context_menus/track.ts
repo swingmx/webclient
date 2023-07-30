@@ -39,8 +39,6 @@ export default async (
   const single_artist = track.artist.length === 1;
   const single_album_artist = track.albumartist.length === 1;
 
-  console.log(route.name);
-
   const goToArtist = (artists: Artist[]) => {
     if (artists.length === 1) {
       return false;
@@ -75,17 +73,20 @@ export default async (
       return <Option>{
         label: playlist.name,
         action: () => {
-          addTrackToPlaylist(playlist, track).then(() => {
+          addTrackToPlaylist(playlist, track).then((success) => {
             if (
               !(
-                route.name == Routes.playlist && route.params.pid == playlist.id
+                route.name == Routes.playlist &&
+                parseInt(route.params.pid as string) == playlist.id
               )
             )
               return;
 
+            if (!success) return;
+
             const store = usePlaylistStore();
             store.addTrack(track);
-            store.fetchAll(route.params.pid as string, true);
+            store.fetchAll(parseInt(route.params.pid as string), true);
           });
         },
       };
@@ -194,7 +195,7 @@ export default async (
         ]).then(() => {
           const store = usePlaylistStore();
           store.removeTrackByIndex(track.index);
-          store.fetchAll(route.params.pid as string, true);
+          store.fetchAll(parseInt(route.params.pid as string), true);
         });
       },
       icon: DeleteIcon,

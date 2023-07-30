@@ -89,14 +89,16 @@ export interface Playlist {
   name: string;
   image: string | FormData;
   has_image: boolean;
-  sqr_img: boolean;
   tracks: Track[];
   count: number;
   last_updated: string;
   thumb: string;
   duration: number;
-  has_gif: boolean;
-  banner_pos: number;
+  settings: {
+    banner_pos: number;
+    has_gif: boolean;
+    sqr_img: boolean;
+  };
   images:
     | {
         image: string;

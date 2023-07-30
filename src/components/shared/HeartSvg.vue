@@ -58,7 +58,7 @@ $bg: rgb(250, 33, 33);
 
   div {
     height: max-content;
-    scale: 1;
+    transform: scale(1);
 
     svg {
       height: 1.5rem;

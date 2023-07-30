@@ -3,15 +3,13 @@ import { defineStore } from "pinia";
 import { Ref } from "vue";
 import { NotifType, useNotifStore } from "./notification";
 
+import { dropSources, favType, FromOptions } from "@/enums";
+import updateMediaNotif from "@/helpers/mediaNotification";
 import { isFavorite } from "@/requests/favorite";
-import { dropSources, favType, FromOptions } from "../enums";
-import updateMediaNotif from "../helpers/mediaNotification";
 import useColorStore from "./colors";
 import useSettingsStore from "./settings";
 
-import player from "@/player";
 import { fetchAlbumColor } from "@/requests/colors";
-import generateString from "@/utils/generateString";
 import {
   fromAlbum,
   fromArtist,
@@ -30,27 +28,6 @@ function shuffle(tracks: Track[]) {
   }
   return shuffled;
 }
-
-const createURI = (track: Track) => {
-  return `${paths.api.files}/${track.trackhash}?filepath=${encodeURIComponent(
-    track.filepath as string
-  )}`;
-};
-
-const compareTrackLists = (a: Track[], b: Track[]) => {
-  if (a.length !== b.length) return false;
-
-  for (let i = 0; i < a.length; i++) {
-    const a_track = a[i];
-    const b_track = b[i];
-
-    if (a_track.trackhash !== b_track.trackhash) {
-      return false;
-    }
-  }
-
-  return true;
-};
 
 export type From =
   | fromFolder
@@ -75,7 +52,6 @@ export default defineStore("Queue", {
     tracklist: [] as Track[],
     queueScrollFunction: (index: number) => {},
     mousover: <Ref | null>null,
-    player_key: "",
   }),
   actions: {
     focusCurrentInSidebar(timeout = 500) {
@@ -85,85 +61,75 @@ export default defineStore("Queue", {
         }, timeout);
       }
     },
-    setGaplessPlayerCallbacks() {
-      const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-      player.onplay = async (track: string) => {
-        const instance_key = generateString(10);
-        this.player_key = instance_key;
-
-        this.playing = true;
-        updateMediaNotif();
-        const track_length = player.currentLength() / 1000; // milliseconds to seconds
-        this.duration.full = track_length;
-
-        while (this.playing) {
-          if (this.player_key !== instance_key) {
-            break;
-          }
-
-          this.duration.current = player.getPosition() / 1000;
-          await sleep(1000);
-        }
-      };
-
-      player.onfinishedtrack = () => {
-        this.currentindex = this.nextindex;
-      };
-
-      player.onpause = () => {
-        this.playing = false;
-      };
-    },
     play(index: number = 0) {
       if (this.tracklist.length === 0) return;
       this.currentindex = index;
       this.focusCurrentInSidebar();
 
       const track = this.tracklist[index];
+      const uri = `${paths.api.files}/${
+        track.trackhash
+      }?filepath=${encodeURIComponent(track.filepath as string)}`;
 
-      const current_index_on_player = player.getIndex();
-      if (current_index_on_player == index) {
-        player.cue();
-      } else {
-        player.gotoTrack(index);
-        player.play();
-      }
+      new Promise((resolve, reject) => {
+        audio.autoplay = true;
+        audio.src = uri;
+        audio.oncanplay = resolve;
+        audio.onerror = reject;
+      })
+        .then(() => {
+          this.duration.full = audio.duration;
+          audio.play().then(() => {
+            this.playing = true;
+            updateMediaNotif();
+            this.duration.full = audio.duration;
 
-      fetchAlbumColor(track.albumhash).then((color) => {
-        useColorStore().setTheme1Color(color);
-      });
+            fetchAlbumColor(track.albumhash).then((color) => {
+              useColorStore().setTheme1Color(color);
+            });
 
-      // .catch((err: ErrorEvent) => {
-      //   err.stopImmediatePropagation();
-      //   useNotifStore().showNotification(
-      //     "Can't play: " + track.title,
-      //     NotifType.Error
-      //   );
+            audio.ontimeupdate = () => {
+              this.duration.current = audio.currentTime;
+            };
 
-      //   if (this.currentindex !== this.tracklist.length - 1) {
-      //     setTimeout(() => {
-      //       if (!this.playing) return;
-      //       this.autoPlayNext();
-      //     }, 5000);
-      //   }
-      // });
+            audio.onended = () => {
+              this.autoPlayNext();
+            };
+          });
+        })
+        .catch((err: ErrorEvent) => {
+          err.stopImmediatePropagation();
+          useNotifStore().showNotification(
+            "Can't play: " + track.title,
+            NotifType.Error
+          );
+
+          if (this.currentindex !== this.tracklist.length - 1) {
+            setTimeout(() => {
+              if (!this.playing) return;
+              this.autoPlayNext();
+            }, 5000);
+          }
+        });
     },
     stop() {
       audio.src = "";
       this.playing = false;
     },
     playPause() {
-      if (player.isPlaying()) {
-        player.playpause();
-        this.playing = false;
+      if (audio.src === "") {
+        this.play(this.currentindex);
         return;
       }
 
-      player.playpause();
-      this.playing = true;
-
-      console.log(player);
+      if (audio.paused) {
+        audio.currentTime === 0 ? this.play(this.currentindex) : null;
+        audio.play();
+        this.playing = true;
+      } else {
+        audio.pause();
+        this.playing = false;
+      }
     },
     autoPlayNext() {
       const settings = useSettingsStore();
@@ -197,31 +163,35 @@ export default defineStore("Queue", {
       this.play(this.previndex);
     },
     seek(pos: number) {
-      player.setPosition(pos * 1000);
+      try {
+        audio.currentTime = pos;
+      } catch (error) {
+        if (error instanceof TypeError) {
+          console.error("Seek error: no audio");
+        }
+      }
     },
-    addTracksToPlayer(tracks?: Track[]) {
-      const tracklist = tracks || this.tracklist;
-      player.removeAllTracks();
+    readQueue() {
+      const queue = localStorage.getItem("queue");
 
-      tracklist.forEach((track) => {
-        const uri = createURI(track);
-        player.addTrack(uri);
-      });
+      if (queue) {
+        const parsed = JSON.parse(queue);
+        this.from = parsed.from;
+        this.tracklist = parsed.tracks;
+      }
     },
     setNewQueue(tracklist: Track[]) {
-      const same_tracklist = compareTrackLists(this.tracklist, tracklist);
-      if (same_tracklist) return;
+      if (this.tracklist !== tracklist) {
+        this.tracklist = [];
+        this.tracklist.push(...tracklist);
+      }
 
-      this.tracklist = [];
-      this.tracklist.push(...tracklist);
-      this.addTracksToPlayer();
       const settings = useSettingsStore();
 
       if (settings.repeat_one) {
         settings.toggleRepeatMode();
       }
       this.focusCurrentInSidebar(1000);
-      console.log("set new queue");
     },
     playFromFolder(fpath: string, tracks: Track[]) {
       const name = fpath.split("/").pop();
@@ -274,12 +244,8 @@ export default defineStore("Queue", {
 
       this.setNewQueue(tracks);
     },
-    insertTrackAtIndex(track: Track, index: number) {
-      this.tracklist.splice(index, 0, track);
-    },
     addTrackToQueue(track: Track) {
-      this.insertTrackAtIndex(track, this.tracklist.length);
-      this.addTracksToPlayer([track]);
+      this.tracklist.push(track);
 
       const Toast = useNotifStore();
       Toast.showNotification(
@@ -289,13 +255,29 @@ export default defineStore("Queue", {
     },
     playTrackNext(track: Track) {
       const Toast = useNotifStore();
+
       const nextindex = this.currentindex + 1;
+      const next: Track = this.tracklist[nextindex];
 
-      this.insertTrackAtIndex(track, nextindex);
-      const track_uri = createURI(track);
-      player.insertTrack(nextindex, track_uri);
+      // if track is already next, skip
+      if (next?.trackhash === track.trackhash) {
+        Toast.showNotification("Track is already queued", NotifType.Info);
+        return;
+      }
 
-      Toast.showNotification(`Added 1 track to queue`, NotifType.Success);
+      // if tracklist is empty or current track is last, push track
+      // else insert track after current track
+      if (this.currentindex == this.tracklist.length - 1) {
+        this.tracklist.push(track);
+      } else {
+        this.tracklist.splice(this.currentindex + 1, 0, track);
+      }
+
+      // save queue
+      Toast.showNotification(
+        `Added ${track.title} to queue`,
+        NotifType.Success
+      );
     },
     addTrackToIndex(
       source: dropSources,
@@ -324,9 +306,26 @@ export default defineStore("Queue", {
         return;
       }
 
+      const current = this.currenttrack;
+      const current_hash = current?.trackhash;
+
       this.tracklist = shuffle(this.tracklist);
-      this.addTracksToPlayer();
       // find current track after shuffle
+
+      if (this.playing) {
+        const newindex = this.tracklist.findIndex(
+          (track) => track.trackhash === current_hash
+        );
+
+        // remove current track from queue
+        this.tracklist.splice(newindex, 1);
+        // insert current track at beginning of queue
+        this.tracklist.unshift(current as Track);
+        this.currentindex = 0;
+        this.focusCurrentInSidebar();
+        return;
+      }
+
       this.currentindex = 0;
       this.play(this.currentindex);
     },
@@ -421,16 +420,6 @@ export default defineStore("Queue", {
 
       store.duration.current = 0;
       store.playing = false;
-
-      store.addTracksToPlayer();
-
-      if (store.tracklist.length === 0) return;
-      // player.gotoTrack(store.currentindex);
-
-      const current_index_on_player = player.getIndex();
-      if (current_index_on_player !== store.currentindex) {
-        player.gotoTrack(store.currentindex);
-      }
     },
   },
 });

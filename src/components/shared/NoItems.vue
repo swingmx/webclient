@@ -32,8 +32,8 @@ defineProps<{
   }
 
   svg {
-    scale: 5;
     margin-bottom: 2rem;
+    transform: scale(5);
   }
 
   & > * {

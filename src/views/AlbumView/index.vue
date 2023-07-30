@@ -30,7 +30,7 @@ import useQueueStore from "@/stores/queue";
 import AlbumDiscBar from "@/components/AlbumView/AlbumDiscBar.vue";
 import AlbumsList from "@/components/AlbumView/ArtistAlbums.vue";
 import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
-import Header from "@/components/AlbumView/Header.vue";
+import Header from "@/components/AlbumView/main.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import SimilarAlbumLoader from "./SimilarAlbumLoader.vue";
@@ -72,12 +72,6 @@ class songItem {
     this.component = track.is_album_disc_number ? AlbumDiscBar : SongItem;
   }
 }
-
-const genreBanner: ScrollerItem = {
-  id: "genre-banner",
-  component: GenreBanner,
-  size: 80,
-};
 
 const AlbumVersionsFetcher: ScrollerItem = {
   id: "otherVersionsFetcherBanner",
@@ -159,7 +153,12 @@ const scrollerItems = computed(() => {
     id: "album-header",
     component: Header,
     size: isSmallPhone.value || heightLarge.value ? 25 * 16 : 19 * 16,
-    // size: (!isSmallPhone.value) || heightLarge.value ? 25 * 16 : 19 * 16,
+  };
+
+  const genreBanner: ScrollerItem = {
+    id: "genre-banner",
+    component: GenreBanner,
+    size: 80,
   };
 
   let moreFrom = getArtistAlbumComponents();

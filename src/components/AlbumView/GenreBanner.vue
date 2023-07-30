@@ -2,7 +2,7 @@
   <div
     class="genres-banner"
     :style="{
-      color: album.info.colors ? getTextColor(album.info.colors[0]) : '',
+      color: album.colors.bg ? getShift(album.colors.bg, [100, -100]) : '',
     }"
   >
     <div class="scrollable">
@@ -13,9 +13,7 @@
         v-for="genre in album.info.genres"
         class="genre-pill rounded pad-sm"
         :style="{
-          backgroundColor: album.info.colors
-            ? getBackgroundColor(album.info.colors[0])
-            : '',
+          backgroundColor: album.colors.bg,
         }"
       >
         {{ genre }}
@@ -28,7 +26,7 @@
 import { onMounted } from "vue";
 import useAlbumStore from "@/stores/pages/album";
 
-import { getTextColor, getBackgroundColor } from "@/utils/colortools/shift";
+import { getShift } from "@/utils/colortools/shift";
 
 const album = useAlbumStore();
 

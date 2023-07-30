@@ -150,7 +150,7 @@ function handleFav() {
   .buttons {
     display: grid;
     place-items: center;
-    scale: 1.2;
+    transform: scale(1.2);
     border: none;
   }
 }

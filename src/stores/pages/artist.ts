@@ -9,6 +9,8 @@ import {
 import { Album, Artist, Track } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
 import useSettingsStore from "@/stores/settings";
+import { paths } from "@/config";
+import setColorsToStore from "@/utils/colortools/setColorsToStore";
 
 export default defineStore("artistPage", {
   state: () => ({
@@ -20,6 +22,10 @@ export default defineStore("artistPage", {
     singles: <Album[]>[],
     appearances: <Album[]>[],
     similar_artists: <Artist[]>[],
+    colors: {
+      bg: "",
+      btn: "",
+    },
   }),
   actions: {
     async getData(hash: string) {
@@ -31,6 +37,7 @@ export default defineStore("artistPage", {
 
       this.info = artist;
       this.tracks = tracks;
+      this.extractColors();
     },
     async getArtistAlbums() {
       const { albums, eps, singles, appearances, compilations } =
@@ -52,6 +59,10 @@ export default defineStore("artistPage", {
         this.info.artisthash,
         maxAbumCards.value
       );
+    },
+    extractColors() {
+      const url = paths.images.artist.large + this.info.image;
+      setColorsToStore(this, url);
     },
     resetAlbums() {
       this.albums = [];

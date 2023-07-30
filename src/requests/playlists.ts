@@ -82,10 +82,11 @@ export async function addTrackToPlaylist(playlist: Playlist, track: Track) {
 
   if (status == 409) {
     new Notification("Track already exists in playlist", NotifType.Error);
-    return;
+    return false;
   }
 
   new Notification(track.title + " added to " + playlist.name);
+  return true;
 }
 
 export async function getPlaylist(pid: number, no_tracks = false) {

@@ -20,7 +20,7 @@
   border-radius: 12px;
 
   svg {
-    scale: 1.5;
+    transform: scale(1.5);
   }
 
   .link {

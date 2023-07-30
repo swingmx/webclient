@@ -1,3 +1,3 @@
-export default (list: number[]) => {
-  return `rgb(${list.join(",")})`;
+export default (list: number[] | undefined) => {
+  return list ? `rgb(${list.join(",")})` : "";
 };

@@ -25,8 +25,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import { discographyAlbumTypes } from "@/enums";
 import { Album } from "@/interfaces";
+import { discographyAlbumTypes } from "@/enums";
 import { maxAbumCards } from "@/stores/content-width";
 import useArtistDiscographyStore from "@/stores/pages/artistDiscog";
 
@@ -45,6 +45,7 @@ defineProps<{
 }>();
 
 const artistItemsWrappers = ref<HTMLElement | null>(null);
+
 </script>
 
 <style lang="scss">
