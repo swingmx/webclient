@@ -8,7 +8,7 @@
     <TrackIndex
       v-if="!isSmall"
       :index="index"
-      :is_fav="track.is_favorite"
+      :is_fav="is_fav"
       @add-to-fav="addToFav(track.trackhash)"
     />
     <TrackTitle
@@ -31,22 +31,22 @@
 </template>
 
 <script setup lang="ts">
+import { Routes } from "@/router";
+import { useRoute } from "vue-router";
 import { onBeforeUnmount, ref, watch } from "vue";
 
-import { dropSources, favType } from "@/enums";
-import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
-import favoriteHandler from "@/helpers/favoriteHandler";
 import { Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
-
-import { Routes } from "@/router";
+import { dropSources, favType } from "@/enums";
 import { isSmall } from "@/stores/content-width";
-import { useRoute } from "vue-router";
+import favoriteHandler from "@/helpers/favoriteHandler";
+import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
+
 import ArtistName from "./ArtistName.vue";
 import TrackAlbum from "./SongItem/TrackAlbum.vue";
-import TrackDuration from "./SongItem/TrackDuration.vue";
 import TrackIndex from "./SongItem/TrackIndex.vue";
 import TrackTitle from "./SongItem/TrackTitle.vue";
+import TrackDuration from "./SongItem/TrackDuration.vue";
 
 const context_menu_showing = ref(false);
 

@@ -16,7 +16,6 @@
 <script setup lang="ts">
 import HeartSvg from "../HeartSvg.vue";
 
-
 defineProps<{
   index: number | string;
   is_fav: boolean | undefined;

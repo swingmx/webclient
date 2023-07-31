@@ -5,8 +5,8 @@
       :bitrate="1200"
       :text="v"
       :key="v"
-      :bg_color="color ? 'getShift(color, [80, -90])' : undefined"
-      :text_color="color ? 'getShift(color, [-100, 80])' : undefined"
+      :bg_color="color ? getShift(color, [80, -90]) : undefined"
+      :text_color="color ? getShift(color, [-100, 80]) : undefined"
       :fill="versions.length > 1 && index === 0"
     />
   </div>

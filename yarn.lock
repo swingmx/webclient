@@ -1422,11 +1422,6 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
   integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
-"@regosen/gapless-5@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@regosen/gapless-5/-/gapless-5-1.4.1.tgz#2c9921704ba29173e50d92b5792d83c737471a7a"
-  integrity sha512-iTlep6pIf9jGWR7QKhixkjv5/vUcqABphHkYJBl9tqOoK59YbxEnoVnQmrAeLf5ReBLcGd7BiXSuvrkzm3189A==
-
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz#04bc0608f4aa4b2e4b1aebf284344d0f68fda283"

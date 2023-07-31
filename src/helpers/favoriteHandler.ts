@@ -21,9 +21,11 @@ export default async function favoriteHandler(
     type === favType.track && itemhash === queue.currenttrackhash;
   if (flag) {
     const removed = await removeFavorite(type, itemhash);
+    console.log(removed);
     if (removed) remover();
   } else {
     const added = await addFavorite(type, itemhash);
+    console.log(added);
     if (added) setter();
   }
 
