@@ -14,11 +14,7 @@
         </div>
         <div class="time time-full">
           <span>
-            {{
-              formatSeconds(
-                queue.duration.full
-              )
-            }}
+            {{ formatSeconds(queue.duration.full) }}
           </span>
         </div>
       </div>
@@ -89,16 +85,19 @@ function handleFav() {
   }
 
   &:hover {
-    ::-moz-range-thumb {
-      height: 0.8rem;
+    #progress::-moz-range-thumb {
+      height: 1.25rem;
+      width: 1.25rem;
     }
 
-    ::-webkit-slider-thumb {
-      height: 0.8rem;
+    #progress::-webkit-slider-thumb {
+      height: 1.25rem;
+      width: 1.25rem;
     }
 
-    ::-ms-thumb {
-      height: 0.8rem;
+    #progress::-ms-thumb {
+      height: 1.25rem;
+      width: 1.25rem;
     }
   }
 

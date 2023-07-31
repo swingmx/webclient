@@ -1,21 +1,21 @@
-import { defineStore } from "pinia";
 import { ComputedRef } from "vue";
+import { defineStore } from "pinia";
 
-import { FuseTrackOptions } from "@/enums";
-import { Album, AlbumDisc, FuseResult, Track } from "@/interfaces";
-import { maxAbumCards } from "@/stores/content-width";
-import { useFuse } from "@/utils";
 
-import { paths } from "@/config";
 import {
   getAlbum,
   getAlbumsFromArtist,
   getAlbumVersions,
   getSimilarAlbums,
 } from "@/requests/album";
-import setColorsToStore from "@/utils/colortools/setColorsToStore";
+
+import { paths } from "@/config";
+import { useFuse } from "@/utils";
+import { FuseTrackOptions } from "@/enums";
 import { useNotifStore } from "../notification";
+import { maxAbumCards } from "@/stores/content-width";
 import setColorsToStore from "@/utils/colortools/setColorsToStore";
+import { Album, AlbumDisc, FuseResult, Track } from "@/interfaces";
 
 interface Disc {
   [key: string]: Track[];
@@ -76,6 +76,11 @@ export default defineStore("album", {
       this.extractColors();
 
       const tracks = sortByTrackNumber(this.srcTracks);
+
+      tracks.forEach((t, index) => {
+        console.log(t)
+      });
+      
       this.discs = createDiscs(tracks);
 
       this.srcTracks = Object.keys(this.discs).reduce(

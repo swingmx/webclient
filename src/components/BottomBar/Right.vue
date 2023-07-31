@@ -1,5 +1,6 @@
 <template>
   <div class="right-group">
+    <Volume />
     <HeartSvg
       :state="queue.currenttrack?.is_favorite"
       @handleFav="() => $emit('handleFav')"
@@ -26,14 +27,15 @@
 import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
 
-import RepeatOneSvg from "@/assets/icons/repeat-one.svg";
-import RepeatAllSvg from "@/assets/icons/repeat.svg";
 import HeartSvg from "../shared/HeartSvg.vue";
+import RepeatAllSvg from "@/assets/icons/repeat.svg";
+import RepeatOneSvg from "@/assets/icons/repeat-one.svg";
+import Volume from "./Volume.vue";
 
 const queue = useQStore();
 const settings = useSettingsStore();
 
- defineEmits<{
+defineEmits<{
   (event: "handleFav"): void;
 }>();
 </script>
@@ -42,7 +44,7 @@ const settings = useSettingsStore();
 .right-group {
   display: grid;
   justify-content: flex-end;
-  grid-template-columns: repeat(2, max-content);
+  grid-template-columns: repeat(3, max-content);
   align-items: center;
   height: 4rem;
 
@@ -52,9 +54,10 @@ const settings = useSettingsStore();
 
   button {
     padding: 0;
-    height: 3rem;
-    width: 3rem;
-    border: none;
+    height: 3rem !important;
+    width: 3rem !important;
+    background-color: red;
+    border: solid 1px transparent;
   }
 
   button.repeat {
