@@ -10,7 +10,7 @@
       <div id="test-elem"></div>
       <Versions :color="colors.bg" :versions="album.versions" />
       <Stats :album="album" />
-      <Buttons :textColor="textColor" />
+      <Buttons :textColor="textColor || ''" />
     </div>
   </div>
 </template>

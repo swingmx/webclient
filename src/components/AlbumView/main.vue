@@ -10,7 +10,7 @@
     class="a-header rounded"
     ref="albumheaderthing"
     :style="{
-      background: backgroundColor,
+      background: colors.bg ? colors.bg : '',
     }"
   >
     <div
@@ -24,8 +24,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
 
 import { paths } from "@/config";
 import { albumHeaderSmall } from "@/stores/content-width";
@@ -35,7 +35,6 @@ import useAlbumStore from "@/stores/pages/album";
 
 import useVisibility from "@/utils/useVisibility";
 import Info from "@/components/AlbumView/Header/Info.vue";
-import { getBackgroundColor } from "@/utils/colortools/shift";
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;
@@ -54,14 +53,6 @@ function handleVisibilityState(state: boolean) {
 }
 
 useVisibility(albumheaderthing, handleVisibilityState);
-
-const backgroundColor = computed((): string => {
-  if (colors.value.bg) {
-    return getBackgroundColor(colors.value.bg);
-  }
-
-  return "";
-});
 </script>
 
 <style lang="scss">
