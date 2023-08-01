@@ -41,7 +41,7 @@
         class="artist"
       />
     </div>
-    <Actions v-if="isLargerMobile" />
+    <Actions v-if="isLargerMobile" @handleFav="$emit('handleFav')" />
     <HotKeys v-if="isMobile" />
   </div>
 </template>
@@ -77,7 +77,7 @@ defineEmits<{
   gap: $small;
   align-items: center;
   font-size: small;
-  
+
   a {
     font-size: small;
   }

@@ -22,7 +22,7 @@ const playlist = usePStore();
 
 const boxShadow = computed(() => {
   if (playlist.info.images.length > 2) {
-    return `0 0 1rem ${getShift(playlist.info.images[2].color, [40, 60])}`;
+    return `0 0 1rem ${getShift((playlist.info.images[2] as any).color, [40, 60])}`;
   }
 
   return "";
@@ -42,7 +42,7 @@ function swapElements(items: any[]) {
   right: 0rem;
   top: 1rem;
   top: -4rem;
-  rotate: -30deg;
+  transform: rotate(-30deg);
 
   display: grid;
   grid: repeat(2, 1fr) / repeat(2, 1fr);

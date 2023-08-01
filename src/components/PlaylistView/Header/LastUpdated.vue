@@ -1,6 +1,6 @@
 <template>
   <div class="last-updated">
-    <span class="status" v-if="!isSmallPhone"
+    <span class="status" v-if="!isHeaderSmall"
       >Last updated {{ playlist.info.last_updated }} &#160;|&#160;&#160;</span
     >
     <div class="edit" @click="editPlaylist">Edit&#160;&#160;</div>
@@ -11,9 +11,10 @@
 <script setup lang="ts">
 import DeleteSvg from "@/assets/icons/delete.svg";
 
-import usePStore from "@/stores/pages/playlist";
+import { isHeaderSmall } from "@/stores/content-width";
+
 import useModalStore from "@/stores/modal";
-import { isSmallPhone } from "@/stores/content-width";
+import usePStore from "@/stores/pages/playlist";
 
 const playlist = usePStore();
 const modal = useModalStore();

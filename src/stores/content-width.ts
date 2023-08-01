@@ -1,12 +1,12 @@
-import { computed } from "vue";
 import { ref } from "@vue/reactivity";
 import { useWindowSize } from "@vueuse/core";
+import { computed } from "vue";
 
 const content_width = ref(0);
 const content_height = ref(0);
 
 const brk = {
-  small: 600,
+  small: 550,
   album_header_small: 700,
   medium: 950,
 };
@@ -15,7 +15,7 @@ const isSmall = computed(() => {
   return content_width.value <= brk.small;
 });
 
-const albumHeaderSmall = computed(() => {
+const isHeaderSmall = computed(() => {
   return content_width.value <= brk.album_header_small;
 });
 
@@ -55,12 +55,6 @@ export const isLargerMobile = computed(
 export const isIphoneSE = computed(() => win_width.value <= IPHONE_SE_WIDTH);
 
 export {
-  win_width,
-  content_width,
-  content_height,
-  heightLarge,
-  isSmall,
-  isMedium,
-  albumHeaderSmall,
-  maxAbumCards,
+  content_height, content_width, heightLarge, isHeaderSmall, isMedium, isSmall, maxAbumCards, win_width
 };
+

@@ -15,7 +15,7 @@
   >
     <div
       class="big-img no-scroll"
-      :class="`${albumHeaderSmall ? 'imgSmall' : ''} shadow-lg rounded-sm`"
+      :class="`${isHeaderSmall ? 'imgSmall' : ''} shadow-lg rounded-sm`"
     >
       <img :src="imguri.thumb.large + album.image" class="rounded-sm" />
     </div>
@@ -24,17 +24,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 
 import { paths } from "@/config";
-import { albumHeaderSmall } from "@/stores/content-width";
+import { isHeaderSmall } from "@/stores/content-width";
 
 import useNavStore from "@/stores/nav";
 import useAlbumStore from "@/stores/pages/album";
 
-import useVisibility from "@/utils/useVisibility";
 import Info from "@/components/AlbumView/Header/Info.vue";
+import useVisibility from "@/utils/useVisibility";
 
 const albumheaderthing = ref<any>(null);
 const imguri = paths.images;

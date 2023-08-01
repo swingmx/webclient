@@ -20,7 +20,7 @@
           : '0 .5rem 2rem black',
       }"
     ></div>
-    <div class="thumbnail-container no-scroll">
+    <div class="thumbnail-container rounded no-scroll">
       <BannerImages />
     </div>
     <div class="sqr_img" v-if="info.has_image && info.settings.sqr_img">
@@ -32,17 +32,17 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { computed } from "vue";
+import { storeToRefs } from "pinia";
 
-import { heightLarge, isSmallPhone } from "@/stores/content-width";
 import usePStore from "@/stores/pages/playlist";
-
-import BannerImages from "./Header/BannerImages.vue";
-
 import { getTextColor } from "@/utils/colortools/shift";
+import { heightLarge, isSmallPhone } from "@/stores/content-width";
+
+
 import Info from "./Header/Info.vue";
 import LastUpdated from "./Header/LastUpdated.vue";
+import BannerImages from "./Header/BannerImages.vue";
 
 const playlist = usePStore();
 
@@ -73,7 +73,6 @@ const textColor = computed(() => {
   background-color: $gray;
   background-position: center 50%;
   background-size: cover !important;
-  // padding: 1rem;
 
   .thumbnail-container {
     height: 100% !important;
@@ -87,6 +86,28 @@ const textColor = computed(() => {
 
     .title {
       font-size: 3.75rem !important;
+    }
+
+    @include smallPhone {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+      gap: 1rem;
+
+      .playlist-info {
+        height: max-content;
+      }
+
+      .sqr_img {
+        height: 13rem;
+        width: 13rem;
+        margin-top: 1rem;
+      }
+
+      .title {
+        font-size: 2rem !important;
+      }
     }
   }
 
@@ -113,55 +134,7 @@ const textColor = computed(() => {
     opacity: 0.5;
   }
 
-  .carddd {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    z-index: 10;
-    padding-bottom: 1rem;
-    padding-left: 1rem;
-
-    .info {
-      display: flex;
-      flex-direction: column-reverse;
-    }
-
-    .type {
-      font-size: small;
-      font-weight: 700;
-      // color: rgb(218, 218, 218);
-      opacity: 0.85;
-    }
-
-    .title {
-      font-size: 4rem;
-      font-weight: 1000;
-      cursor: text;
-    }
-
-    .info.is_light {
-      color: $gray5;
-
-      .type {
-        color: $pink;
-        // opacity: 0.5;
-      }
-    }
-
-    .duration {
-      font-size: 0.8rem;
-      padding: $smaller;
-      padding-left: 0;
-      font-weight: 900;
-      cursor: text;
-      opacity: 0.85;
-    }
-
-    .btns {
-      margin-top: $small;
-      display: flex;
-      gap: $small;
-    }
+  @include smallPhone {
   }
 }
 
