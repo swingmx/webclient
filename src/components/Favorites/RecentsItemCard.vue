@@ -28,7 +28,7 @@
     >
       {{ fav.type === "artist" ? fav.item.name : fav.item.title }}
     </div>
-    <div class="label" :class="{ on_artist: fav.type === 'artist' }">
+    <div class="label ellip" :class="{ on_artist: fav.type === 'artist' }">
       {{ fav.type === "album" ? fav.item.artist : "Artist" }}
     </div>
   </RouterLink>
@@ -89,16 +89,15 @@ defineProps<{
     font-size: 0.8rem;
     color: $gray1;
     font-weight: bold;
-    width: max-content;
     border-radius: 1rem;
     text-transform: capitalize;
     margin-top: -$smaller;
   }
 
   .on_artist {
-    background-color: $gray3;
+    background-color: $blue;
     padding: 0.1rem $small;
-    // opacity: 0;
+    color: $white;
   }
 
   &.artist {
@@ -108,11 +107,13 @@ defineProps<{
 
     .name {
       margin: 0 auto;
-      width: max-content;
+      width: 100%;
+      text-align: center;
     }
 
     .label {
       margin: 0 auto;
+      width: max-content;
     }
   }
 }

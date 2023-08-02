@@ -12,6 +12,7 @@
   >
     <div class="gradient rounded" v-if="info.has_image"></div>
     <div
+      v-if="!info.has_image || info.settings.sqr_img"
       class="album-header-ambient rounded"
       style="height: 100%; width: 100%"
       :style="{
@@ -38,7 +39,6 @@ import { storeToRefs } from "pinia";
 import usePStore from "@/stores/pages/playlist";
 import { getTextColor } from "@/utils/colortools/shift";
 import { heightLarge, isSmallPhone } from "@/stores/content-width";
-
 
 import Info from "./Header/Info.vue";
 import LastUpdated from "./Header/LastUpdated.vue";

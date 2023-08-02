@@ -13,7 +13,7 @@
       name="name"
       id="modal-playlist-name-input"
       v-model="pname"
-      @keypress.enter="playlist.has_image && update_playlist"
+      @keypress.enter.prevent="update_playlist"
     />
 
     <label for="image">Image</label>
@@ -71,16 +71,16 @@
         Adjust image position • {{ pStore.info.settings.banner_pos }}%
       </div>
       <div class="buttons">
-        <button @click.prevent="pStore.minusBannerPos">
+        <button @click.stop.prevent="pStore.minusBannerPos">
           <ExpandSvg />
         </button>
-        <button @click.prevent="pStore.plusBannerPos">
+        <button @click.stop.prevent="pStore.plusBannerPos">
           <ExpandSvg />
         </button>
       </div>
     </div>
 
-    <button>
+    <button type="submit">
       {{ clicked ? "Saving" : "Save" }}
     </button>
   </form>
@@ -90,7 +90,6 @@
 import { storeToRefs } from "pinia";
 import { Ref, onMounted, ref } from "vue";
 
-import { paths } from "@/config";
 import { updatePlaylist } from "@/requests/playlists";
 import usePStore from "@/stores/pages/playlist";
 

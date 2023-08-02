@@ -39,3 +39,20 @@ export async function openInFiles(path: string) {
     console.error(error);
   }
 }
+
+export async function getTracksInPath(path: string) {
+  const { data, error } = await useAxios({
+    url: paths.api.folder.base + "/tracks/all" + `?path=${path}`,
+    get: true,
+  });
+
+  if (error) {
+    console.error(error);
+  }
+
+  if (data) {
+    return data.tracks as Track[];
+  }
+
+  return <Track[]>[];
+}

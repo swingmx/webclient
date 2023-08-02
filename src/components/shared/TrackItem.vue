@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import { paths } from "@/config";
@@ -107,12 +107,16 @@ function addToFav(trackhash: string) {
   );
 }
 
-watch(
+const stop = watch(
   () => props.track.is_favorite,
   (newValue) => {
     is_fav.value = newValue;
   }
 );
+
+onBeforeUnmount(() => {
+  stop();
+});
 </script>
 
 <style lang="scss">

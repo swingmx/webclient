@@ -113,9 +113,9 @@ function addToFav(trackhash: string) {
 }
 
 const stopWatcher = watch(
-  () => props.track.is_favorite,
-  (newValue) => {
-    is_fav.value = newValue;
+  () => props.track.trackhash,
+  () => {
+    is_fav.value = props.track.is_favorite;
   }
 );
 

@@ -1,10 +1,13 @@
 import * as icons from "@/icons";
 import { separator } from "./utils";
-import { ContextSrc } from "@/enums";
+import { ContextSrc, NotifType } from "@/enums";
 import { Option } from "@/interfaces";
+import { getTracksInPath } from "@/requests/folders";
 
-import useSettingsStore from "@/stores/settings";
+import useQueueStore from "@/stores/queue";
 import useModalStore from "@/stores/modal";
+import useSettingsStore from "@/stores/settings";
+import { useNotifStore } from "@/stores/notification";
 
 export default async (trigger_src: ContextSrc, path: string) => {
   const settings = useSettingsStore();
@@ -34,7 +37,17 @@ export default async (trigger_src: ContextSrc, path: string) => {
   const add_to_queue = <Option>{
     label: "Add to Queue",
     action: () => {
-      () => {};
+      getTracksInPath(path).then((tracks) => {
+        console.log(tracks);
+        const store = useQueueStore();
+        const notif = useNotifStore();
+
+        store.addTracksToQueue(tracks);
+        notif.showNotification(
+          tracks.length + " tracks added to queue",
+          NotifType.Success
+        );
+      });
     },
     icon: icons.AddToQueueIcon,
   };
@@ -49,8 +62,7 @@ export default async (trigger_src: ContextSrc, path: string) => {
 
   const save_as_playlist = <Option>{
     label: "Save as Playlist",
-    action: () =>
-      modal.showSaveFolderAsPlaylistModal(path),
+    action: () => modal.showSaveFolderAsPlaylistModal(path),
     icon: icons.PlaylistIcon,
   };
 
