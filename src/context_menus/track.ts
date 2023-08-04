@@ -57,7 +57,6 @@ export default async (
     });
   };
 
-  
   async function addToPlaylist() {
     const new_playlist = get_new_playlist_option(track);
     const p = await getAllPlaylists(true);

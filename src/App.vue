@@ -63,7 +63,6 @@ import { getRootDirs } from "@/requests/settings/rootdirs";
 import { baseApiUrl } from "@/config";
 // import BubbleManager from "./components/bubbles/BinManager.vue";
 
-const queue = useQStore();
 const router = useRouter();
 const modal = useModalStore();
 const settings = useSettingsStore();

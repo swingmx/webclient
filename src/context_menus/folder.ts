@@ -56,7 +56,9 @@ export default async (trigger_src: ContextSrc, path: string) => {
 
   const add_to_playlist = <Option>{
     label: "Add to Playlist",
-    children: await getAddToPlaylistOptions(AddToPlaylistAction),
+    children: await getAddToPlaylistOptions(AddToPlaylistAction, {
+      path,
+    }),
     icon: icons.PlusIcon,
   };
 

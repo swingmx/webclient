@@ -144,8 +144,8 @@ export function addArtistToPlaylist(playlist: Playlist, artisthash: string) {
 
 export async function saveItemAsPlaylist(itemtype: string, props: {}) {
   const { status } = await useAxios({
-    url: paths.api.playlist.base + "/save-" + itemtype,
-    props: props,
+    url: paths.api.playlist.base + "/save-item",
+    props: { itemtype, ...props },
   });
 
   const store = useNotifStore();
@@ -164,25 +164,31 @@ export async function saveItemAsPlaylist(itemtype: string, props: {}) {
   return false;
 }
 
-export function saveAlbumAsPlaylist(name: string, albumhash: string) {
+export function saveTrackAsPlaylist(playlist_name: string, itemhash: string) {
+  return saveItemAsPlaylist("track", {
+    itemhash,
+    playlist_name,
+  });
+}
+
+export function saveAlbumAsPlaylist(playlist_name: string, itemhash: string) {
   return saveItemAsPlaylist("album", {
-    albumhash,
-    playlist_name: name,
+    itemhash,
+    playlist_name,
   });
 }
 
-export function saveFolderAsPlaylist(name: string, path: string) {
+export function saveFolderAsPlaylist(playlist_name: string, itemhash: string) {
   return saveItemAsPlaylist("folder", {
-    path,
-    playlist_name: name,
+    itemhash,
+    playlist_name,
   });
 }
 
-export function saveArtistAsPlaylist(name: string, artisthash: string) {
-  console.log(artisthash);
+export function saveArtistAsPlaylist(playlist_name: string, itemhash: string) {
   return saveItemAsPlaylist("artist", {
-    artisthash,
-    playlist_name: name,
+    itemhash,
+    playlist_name,
   });
 }
 

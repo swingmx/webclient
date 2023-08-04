@@ -22,6 +22,7 @@ import { Track } from "@/interfaces";
 import {
   saveAlbumAsPlaylist,
   saveArtistAsPlaylist,
+  saveTrackAsPlaylist,
 } from "@/requests/playlists";
 import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
 import { NotifType, Notification } from "@/stores/notification";
@@ -67,7 +68,12 @@ function create(e: Event) {
     return;
   }
 
-  const createNormalPlaylist = () =>
+  const createTrackPlaylist = () =>
+    saveTrackAsPlaylist(name, props.track?.trackhash || "").then(() => {
+      emit("hideModal");
+    });
+
+  const createEmptyPlaylist = () =>
     createNewPlaylist(name, props.track).then(({ success, playlist }) => {
       emit("hideModal");
 
@@ -109,12 +115,16 @@ function create(e: Event) {
   }
 
   if (props.artisthash) {
-    console.log(name);
     createArtistPlaylist();
     return;
   }
 
-  createNormalPlaylist();
+  if (props.track) {
+    createTrackPlaylist();
+    return;
+  }
+
+  createEmptyPlaylist();
 }
 </script>
 

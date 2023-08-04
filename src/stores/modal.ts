@@ -27,8 +27,7 @@ export default defineStore("newModal", {
       this.visible = true;
       this.props = props;
     },
-    showNewPlaylistModal(track?: Track) {
-      const props = track ? { track } : {};
+    showNewPlaylistModal(props: any = {}) {
       this.showModal(ModalOptions.newPlaylist, props);
     },
     showSaveFolderAsPlaylistModal(path: string) {

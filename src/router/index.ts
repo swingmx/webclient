@@ -88,11 +88,9 @@ const albumView = {
     state.loading.value = true;
     const store = useAlbumPageStore();
 
-    await store
-      .fetchTracksAndArtists(to.params.albumhash)
-      .then(() => {
-        state.loading.value = false;
-      });
+    await store.fetchTracksAndArtists(to.params.albumhash).then(() => {
+      state.loading.value = false;
+    });
   },
 };
 
@@ -227,8 +225,10 @@ export const Routes = {
   nowPlaying: NowPlayingView.name,
 };
 
-export const router = createRouter({
+const router = createRouter({
   mode: "hash",
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 } as RouterOptions);
+
+export { router };
