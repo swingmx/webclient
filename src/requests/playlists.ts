@@ -1,6 +1,6 @@
 import { paths } from "@/config";
 import { Artist, Playlist, Track } from "@/interfaces";
-import { NotifType, Notification } from "@/stores/notification";
+import { NotifType, Notification, useNotifStore } from "@/stores/notification";
 import useAxios from "./useAxios";
 
 const {
@@ -94,25 +94,7 @@ export async function getPlaylist(pid: number, no_tracks = false) {
   return null;
 }
 
-// export async function addTrackToPlaylist(playlist: Playlist, track: Track) {
-//   const uri = `${basePlaylistUrl}/${playlist.id}/add`;
-
-//   const { status } = await useAxios({
-//     url: uri,
-//     props: {
-//       track: track.trackhash,
-//     },
-//   });
-
-//   if (status == 409) {
-//     new Notification("Track already exists in playlist", NotifType.Error);
-//     return false;
-//   }
-
-//   new Notification(track.title + " added to " + playlist.name);
-//   return true;
-// }
-
+// ======== ADD ITEM TO PLAYLIST ========
 export async function addItemToPlaylist(playlist: Playlist, props: {}) {
   const uri = `${basePlaylistUrl}/${playlist.id}/add`;
 
@@ -150,6 +132,61 @@ export function addFolderToPlaylist(playlist: Playlist, path: string) {
     itemhash: path,
   });
 }
+
+export function addArtistToPlaylist(playlist: Playlist, artisthash: string) {
+  return addItemToPlaylist(playlist, {
+    itemtype: "artist",
+    itemhash: artisthash,
+  });
+}
+
+// ===== SAVE ITEM AS =====
+
+export async function saveItemAsPlaylist(itemtype: string, props: {}) {
+  const { status } = await useAxios({
+    url: paths.api.playlist.base + "/save-" + itemtype,
+    props: props,
+  });
+
+  const store = useNotifStore();
+
+  if (status === 201) {
+    store.showNotification("Playlist created successfully!", NotifType.Success);
+    return true;
+  }
+
+  if (status === 409) {
+    store.showNotification("Playlist already exists!", NotifType.Error);
+    return false;
+  }
+
+  store.showNotification("Something went wrong!", NotifType.Error);
+  return false;
+}
+
+export function saveAlbumAsPlaylist(name: string, albumhash: string) {
+  return saveItemAsPlaylist("album", {
+    albumhash,
+    playlist_name: name,
+  });
+}
+
+export function saveFolderAsPlaylist(name: string, path: string) {
+  return saveItemAsPlaylist("folder", {
+    path,
+    playlist_name: name,
+  });
+}
+
+export function saveArtistAsPlaylist(name: string, artisthash: string) {
+  console.log(artisthash);
+  return saveItemAsPlaylist("artist", {
+    artisthash,
+    playlist_name: name,
+  });
+}
+
+// ========== END =========
 
 export async function updatePlaylist(
   pid: number,
@@ -262,30 +299,4 @@ export async function removeBannerImage(playlistid: number) {
   }
 
   new Notification("Unable to remove banner image", NotifType.Error);
-}
-
-export async function saveFolderAsPlaylist(
-  playlist_name: string,
-  path: string
-) {
-  console.log(playlist_name, path);
-  const { data, status } = await useAxios({
-    url: paths.api.playlist.base + "/save-folder",
-    props: {
-      playlist_name,
-      path,
-    },
-  });
-
-  if (status === 201) {
-    new Notification("Playlist created", NotifType.Success);
-    return data.playlist_id as number;
-  }
-
-  if (status === 409) {
-    new Notification("Playlist already exists", NotifType.Error);
-    return;
-  }
-
-  new Notification("Unable to create playlist", NotifType.Error);
 }

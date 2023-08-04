@@ -47,14 +47,10 @@ export const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
   return data as ArtistAlbums;
 };
 
-export const getArtistTracks = async (
-  hash: string,
-  offset: number = 0,
-  limit = 6
-) => {
+export const getArtistTracks = async (hash: string) => {
   const { data, error } = await useAxios({
     get: true,
-    url: paths.api.artist + `/${hash}/tracks?offset=${offset}&limit=${limit}`,
+    url: paths.api.artist + `/${hash}/tracks`,
   });
 
   if (error) {
@@ -76,3 +72,18 @@ export const getSimilarArtists = async (hash: string, limit = 6) => {
 
   return data.artists as Artist[];
 };
+
+export async function saveArtistAsPlaylist(name: string, hash: string) {
+  const { data, error } = await useAxios({
+    url: paths.api.artist + `/${hash}/playlist`,
+    props: {
+      name,
+    },
+  });
+
+  if (error) {
+    console.error(error);
+  }
+
+  return data;
+}

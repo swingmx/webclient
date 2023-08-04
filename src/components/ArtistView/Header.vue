@@ -47,6 +47,13 @@
           :state="artist.info.is_favorite"
           :color="artist.info.colors[0] ? artist.info.colors[0] : ''"
         />
+        <button
+          class="options"
+          @click="showContext"
+          :class="{ context_menu_showing }"
+        >
+          <MoreSvg />
+        </button>
       </div>
     </div>
     <div
@@ -73,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 import { paths } from "@/config";
 import { favType, playSources } from "@/enums";
@@ -87,6 +94,8 @@ import HeartSvg from "@/components/shared/HeartSvg.vue";
 import updatePageTitle from "@/utils/updatePageTitle";
 import { onBeforeRouteUpdate } from "vue-router";
 import PlayBtnRect from "../shared/PlayBtnRect.vue";
+import MoreSvg from "@/assets/icons/more.svg";
+import { showArtistContextMenu } from "@/helpers/contextMenuHandler";
 
 const artist = useArtistPageStore();
 
@@ -99,6 +108,18 @@ function handleFav() {
     artist.removeFavorite
   );
 }
+
+const context_menu_showing = ref(false);
+
+function showContext(e: MouseEvent) {
+  showArtistContextMenu(
+    e,
+    context_menu_showing,
+    artist.info.artisthash,
+    artist.info.name
+  );
+}
+
 const updateTitle = () => updatePageTitle(artist.info.name);
 onMounted(() => updateTitle());
 onBeforeRouteUpdate(() => updateTitle());
@@ -116,6 +137,23 @@ onBeforeRouteUpdate(() => updateTitle());
   display: grid;
   grid-template-columns: 1fr minmax(min-content, 50%);
   position: relative;
+
+  .options {
+    background-color: transparent;
+    border: none;
+
+    &.context_menu_showing {
+      background-color: $darkblue;
+
+      svg {
+        color: $white !important;
+      }
+    }
+
+    svg {
+      transform: scale(1.25);
+    }
+  }
 
   .artist-img {
     // width: 100%;

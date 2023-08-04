@@ -121,36 +121,13 @@ export async function getSimilarAlbums(
   artisthash: string,
   limit: number = 5
 ): Promise<Album[]> {
-  const { data, error, status } = await useAxios({
+  const { data } = await useAxios({
     url:
       albumUrl + "/similar?" + "artisthash=" + artisthash + "&limit=" + limit,
     get: true,
   });
 
   return data.albums;
-}
-
-export async function saveAlbumAsPlaylist(name: string, albumhash: string) {
-  const { status } = await useAxios({
-    url: paths.api.playlist.base + "/save-album",
-    props: {
-      albumhash,
-      playlist_name: name,
-    },
-  });
-
-  const store = useNotifStore();
-
-  if (status === 201) {
-    store.showNotification("Playlist created", NotifType.Success);
-    return true;
-  }
-
-  if (status === 409) {
-    store.showNotification("Playlist already exists!", NotifType.Error);
-  }
-
-  return false;
 }
 
 export { getAlbumData as getAlbum, getAlbumArtists, getAlbumBio };

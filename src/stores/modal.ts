@@ -46,6 +46,13 @@ export default defineStore("newModal", {
       };
       this.showModal(ModalOptions.newPlaylist, props);
     },
+    showSaveArtistAsPlaylistModal(name: string, artisthash: string) {
+      const props = {
+        artisthash,
+        playlist_name: `This is ${name}`,
+      };
+      this.showModal(ModalOptions.newPlaylist, props);
+    },
     showEditPlaylistModal() {
       this.showModal(ModalOptions.updatePlaylist);
     },

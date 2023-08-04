@@ -28,9 +28,10 @@ export enum FromOptions {
 export enum ContextSrc {
   PHeader = "PHeader",
   Track = "Track",
-  AHeader = "AHeader",
+  AlbumHeader = "AlbumHeader",
   FolderCard = "FolderCard",
   FolderNav = "FolderNav",
+  ArtistHeader = "ArtistHeader",
 }
 
 export const FuseTrackOptions = {

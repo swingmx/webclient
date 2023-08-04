@@ -1,14 +1,15 @@
-import { Ref } from "vue";
 import { Store } from "pinia";
+import { Ref } from "vue";
 import { useRoute } from "vue-router";
 
-import { Track } from "@/interfaces";
 import { ContextSrc } from "@/enums";
+import { Track } from "@/interfaces";
 
-import useContextStore from "@/stores/context";
 import albumContextItems from "@/context_menus/album";
-import trackContext from "@/context_menus/track";
+import artistContextItems from "@/context_menus/artist";
 import folderContextMenu from "@/context_menus/folder";
+import trackContext from "@/context_menus/track";
+import useContextStore from "@/stores/context";
 
 let prev_track = "";
 let stop_prev_watcher = () => {};
@@ -42,7 +43,7 @@ export const showAlbumContextMenu = (e: MouseEvent, flag: Ref<boolean>) => {
   const menu = useContextStore();
 
   const options = () => albumContextItems();
-  menu.showContextMenu(e, options, ContextSrc.AHeader);
+  menu.showContextMenu(e, options, ContextSrc.AlbumHeader);
 
   flagWatcher(menu, flag);
 };
@@ -57,6 +58,20 @@ export const showFolderContextMenu = (
 
   const options = () => folderContextMenu(source, path);
   menu.showContextMenu(e, options, source);
+
+  flagWatcher(menu, flag);
+};
+
+export const showArtistContextMenu = (
+  e: MouseEvent,
+  flag: Ref<boolean>,
+  artisthash: string,
+  artistname: string
+) => {
+  const menu = useContextStore();
+
+  const options = () => artistContextItems(artisthash, artistname);
+  menu.showContextMenu(e, options, ContextSrc.ArtistHeader);
 
   flagWatcher(menu, flag);
 };

@@ -19,7 +19,10 @@ import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 import { Track } from "@/interfaces";
-import { saveAlbumAsPlaylist } from "@/requests/album";
+import {
+  saveAlbumAsPlaylist,
+  saveArtistAsPlaylist,
+} from "@/requests/playlists";
 import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
 import { NotifType, Notification } from "@/stores/notification";
 import usePlaylistStore from "@/stores/pages/playlists";
@@ -29,6 +32,7 @@ const props = defineProps<{
   path?: string;
   playlist_name?: string;
   albumhash?: string;
+  artisthash?: string;
 }>();
 
 const route = useRoute();
@@ -77,20 +81,20 @@ function create(e: Event) {
     });
 
   const createFolderPlaylist = () => {
-    saveFolderAsPlaylist(name, props.path as string).then((pid) => {
+    saveFolderAsPlaylist(name, props.path as string).then(() => {
       emit("hideModal");
     });
   };
 
   const createAlbumPlaylist = () => {
-    saveAlbumAsPlaylist(name, props.albumhash as string).then((pid) => {
+    saveAlbumAsPlaylist(name, props.albumhash as string).then(() => {
       emit("hideModal");
+    });
+  };
 
-      // if (route.name !== Routes.playlists) return;
-
-      // setTimeout(() => {
-      //   playlistStore.addPlaylist(playlist);
-      // }, 600);
+  const createArtistPlaylist = () => {
+    saveArtistAsPlaylist(name, props.artisthash as string).then(() => {
+      emit("hideModal");
     });
   };
 
@@ -101,6 +105,12 @@ function create(e: Event) {
 
   if (props.albumhash) {
     createAlbumPlaylist();
+    return;
+  }
+
+  if (props.artisthash) {
+    console.log(name);
+    createArtistPlaylist();
     return;
   }
 
