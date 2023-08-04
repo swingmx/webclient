@@ -22,7 +22,7 @@ import {
 } from "@/icons";
 import usePlaylistStore from "@/stores/pages/playlist";
 import useQueueStore from "@/stores/queue";
-import { get_new_playlist_option, separator } from "./utils";
+import { getAddToPlaylistOptions, separator } from "./utils";
 
 /**
  * Returns a list of context menu items for a track.
@@ -57,45 +57,28 @@ export default async (
     });
   };
 
-  async function addToPlaylist() {
-    const new_playlist = get_new_playlist_option(track);
-    const p = await getAllPlaylists(true);
+  const AddToPlaylistAction = (playlist: Playlist) => {
+    addTrackToPlaylist(playlist, track).then((success) => {
+      if (
+        !(
+          route.name == Routes.playlist &&
+          parseInt(route.params.pid as string) == playlist.id
+        )
+      )
+        return;
 
-    let items = [new_playlist];
-
-    if (p.length === 0) {
-      return items;
-    }
-
-    let playlists = <Option[]>[];
-    playlists = p.map((playlist: Playlist) => {
-      return <Option>{
-        label: playlist.name,
-        action: () => {
-          addTrackToPlaylist(playlist, track).then((success) => {
-            if (
-              !(
-                route.name == Routes.playlist &&
-                parseInt(route.params.pid as string) == playlist.id
-              )
-            )
-              return;
-
-            if (!success) return;
-            const store = usePlaylistStore();
-            store.addTrack(track);
-            store.fetchAll(parseInt(route.params.pid as string), true);
-          });
-        },
-      };
+      if (!success) return;
+      const store = usePlaylistStore();
+      store.addTrack(track);
+      store.fetchAll(parseInt(route.params.pid as string), true);
     });
-
-    return [...items, separator, ...playlists];
-  }
+  };
 
   const add_to_playlist: Option = {
     label: "Add to Playlist",
-    children: await addToPlaylist(),
+    children: await getAddToPlaylistOptions(AddToPlaylistAction, {
+      trackhash: track.trackhash,
+    }),
     icon: PlusIcon,
   };
 

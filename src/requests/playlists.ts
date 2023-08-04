@@ -14,7 +14,7 @@ const {
  * Creates a new playlist on the server.
  * @param playlist_name The name of the playlist to create.
  */
-export async function createNewPlaylist(playlist_name: string, track?: Track) {
+export async function createNewPlaylist(playlist_name: string) {
   const { data, status } = await useAxios({
     url: newPlaylistUrl,
     props: {
@@ -24,17 +24,7 @@ export async function createNewPlaylist(playlist_name: string, track?: Track) {
 
   if (status == 201) {
     new Notification("Playlist created successfullly!", NotifType.Success);
-
-    if (track) {
-      setTimeout(() => {
-        addTrackToPlaylist(data.playlist, track);
-      }, 1000);
-    }
-
-    return {
-      success: true,
-      playlist: data.playlist as Playlist,
-    };
+    return data.playlist as Playlist;
   }
 
   let message = "Something went wrong";
@@ -45,10 +35,7 @@ export async function createNewPlaylist(playlist_name: string, track?: Track) {
 
   new Notification(message, NotifType.Error);
 
-  return {
-    success: false,
-    playlist: <Playlist>{},
-  };
+  return null;
 }
 
 /**
@@ -104,11 +91,11 @@ export async function addItemToPlaylist(playlist: Playlist, props: {}) {
   });
 
   if (status == 409) {
-    new Notification("Item already exists in playlist", NotifType.Error);
+    new Notification("Track already exists in playlist", NotifType.Error);
     return false;
   }
 
-  new Notification("Item added to " + playlist.name);
+  new Notification("Added to " + playlist.name);
   return true;
 }
 
@@ -143,7 +130,7 @@ export function addArtistToPlaylist(playlist: Playlist, artisthash: string) {
 // ===== SAVE ITEM AS =====
 
 export async function saveItemAsPlaylist(itemtype: string, props: {}) {
-  const { status } = await useAxios({
+  const { status, data } = await useAxios({
     url: paths.api.playlist.base + "/save-item",
     props: { itemtype, ...props },
   });
@@ -152,7 +139,7 @@ export async function saveItemAsPlaylist(itemtype: string, props: {}) {
 
   if (status === 201) {
     store.showNotification("Playlist created successfully!", NotifType.Success);
-    return true;
+    return data.playlist as Playlist;
   }
 
   if (status === 409) {

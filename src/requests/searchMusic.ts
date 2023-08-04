@@ -38,33 +38,36 @@ async function searchArtists(query: string) {
   return await fetchData(url);
 }
 
-async function loadMoreTracks(index: number) {
+async function loadMoreTracks(index: number, query: string) {
   const response = await axios.get(loadMoreUrl, {
     params: {
       type: "tracks",
       index: index,
+      q: query,
     },
   });
 
   return response.data;
 }
 
-async function loadMoreAlbums(index: number) {
+async function loadMoreAlbums(index: number, query: string) {
   const response = await axios.get(loadMoreUrl, {
     params: {
       type: "albums",
       index: index,
+      q: query,
     },
   });
 
   return response.data;
 }
 
-async function loadMoreArtists(index: number) {
+async function loadMoreArtists(index: number, query: string) {
   const response = await axios.get(loadMoreUrl, {
     params: {
       type: "artists",
       index: index,
+      q: query,
     },
   });
 

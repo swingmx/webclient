@@ -122,7 +122,7 @@ export default defineStore("search", () => {
     loadCounter.tracks += RESULT_COUNT;
 
     startLoading();
-    loadMoreTracks(loadCounter.tracks)
+    loadMoreTracks(loadCounter.tracks, query.value)
       .then((res) => {
         tracks.value = [...tracks.value, ...res.tracks];
         tracks.more = res.more;
@@ -135,7 +135,7 @@ export default defineStore("search", () => {
     loadCounter.albums += RESULT_COUNT;
 
     startLoading();
-    loadMoreAlbums(loadCounter.albums)
+    loadMoreAlbums(loadCounter.albums, query.value)
       .then((res) => {
         albums.value = [...albums.value, ...res.albums];
         albums.more = res.more;
@@ -152,7 +152,7 @@ export default defineStore("search", () => {
     loadCounter.artists += RESULT_COUNT;
 
     startLoading();
-    loadMoreArtists(loadCounter.artists)
+    loadMoreArtists(loadCounter.artists, query.value)
       .then((res) => {
         artists.value = [...artists.value, ...res.artists];
         artists.more = res.more;
