@@ -1,7 +1,6 @@
 import { ComputedRef } from "vue";
 import { defineStore } from "pinia";
 
-
 import {
   getAlbum,
   getAlbumsFromArtist,
@@ -76,11 +75,6 @@ export default defineStore("album", {
       this.extractColors();
 
       const tracks = sortByTrackNumber(this.srcTracks);
-
-      tracks.forEach((t, index) => {
-        console.log(t)
-      });
-      
       this.discs = createDiscs(tracks);
 
       this.srcTracks = Object.keys(this.discs).reduce(

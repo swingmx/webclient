@@ -35,8 +35,14 @@ export default defineStore("newModal", {
       const playlist_name = path.split("/").pop();
       const props = {
         playlist_name,
-        is_save_folder: true,
         path,
+      };
+      this.showModal(ModalOptions.newPlaylist, props);
+    },
+    showSaveAlbumAsPlaylistModal(name: string, albumhash: string) {
+      const props = {
+        playlist_name: name,
+        albumhash,
       };
       this.showModal(ModalOptions.newPlaylist, props);
     },

@@ -1,13 +1,14 @@
 import * as icons from "@/icons";
-import { separator } from "./utils";
-import { ContextSrc, NotifType } from "@/enums";
-import { Option } from "@/interfaces";
+import { ContextSrc } from "@/enums";
+import { Option, Playlist } from "@/interfaces";
 import { getTracksInPath } from "@/requests/folders";
 
 import useQueueStore from "@/stores/queue";
 import useModalStore from "@/stores/modal";
 import useSettingsStore from "@/stores/settings";
-import { useNotifStore } from "@/stores/notification";
+
+import { addFolderToPlaylist } from "@/requests/playlists";
+import { getAddToPlaylistOptions, separator } from "./utils";
 
 export default async (trigger_src: ContextSrc, path: string) => {
   const settings = useSettingsStore();
@@ -29,7 +30,10 @@ export default async (trigger_src: ContextSrc, path: string) => {
   const play_next = <Option>{
     label: "Play next",
     action: () => {
-      () => {};
+      getTracksInPath(path).then((tracks) => {
+        const store = useQueueStore();
+        store.insertAfterCurrent(tracks);
+      });
     },
     icon: icons.PlayNextIcon,
   };
@@ -38,25 +42,21 @@ export default async (trigger_src: ContextSrc, path: string) => {
     label: "Add to Queue",
     action: () => {
       getTracksInPath(path).then((tracks) => {
-        console.log(tracks);
         const store = useQueueStore();
-        const notif = useNotifStore();
-
         store.addTracksToQueue(tracks);
-        notif.showNotification(
-          tracks.length + " tracks added to queue",
-          NotifType.Success
-        );
       });
     },
     icon: icons.AddToQueueIcon,
   };
 
+  // Action for each playlist option
+  const AddToPlaylistAction = (playlist: Playlist) => {
+    addFolderToPlaylist(playlist, path);
+  };
+
   const add_to_playlist = <Option>{
     label: "Add to Playlist",
-    action: () => {
-      () => {};
-    },
+    children: await getAddToPlaylistOptions(AddToPlaylistAction),
     icon: icons.PlusIcon,
   };
 

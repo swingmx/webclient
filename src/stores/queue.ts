@@ -253,31 +253,15 @@ export default defineStore("Queue", {
         NotifType.Success
       );
     },
+    insertTrackAtIndex(track: Track, index: number) {
+      this.tracklist.splice(index, 0, track);
+    },
     playTrackNext(track: Track) {
       const Toast = useNotifStore();
-
       const nextindex = this.currentindex + 1;
-      const next: Track = this.tracklist[nextindex];
 
-      // if track is already next, skip
-      if (next?.trackhash === track.trackhash) {
-        Toast.showNotification("Track is already queued", NotifType.Info);
-        return;
-      }
-
-      // if tracklist is empty or current track is last, push track
-      // else insert track after current track
-      if (this.currentindex == this.tracklist.length - 1) {
-        this.tracklist.push(track);
-      } else {
-        this.tracklist.splice(this.currentindex + 1, 0, track);
-      }
-
-      // save queue
-      Toast.showNotification(
-        `Added ${track.title} to queue`,
-        NotifType.Success
-      );
+      this.insertTrackAtIndex(track, nextindex);
+      Toast.showNotification(`Added 1 track to queue`, NotifType.Success);
     },
     addTrackToIndex(
       source: dropSources,
@@ -305,29 +289,11 @@ export default defineStore("Queue", {
         Toast.showNotification("Queue is too short", NotifType.Info);
         return;
       }
-
-      const current = this.currenttrack;
-      const current_hash = current?.trackhash;
-
       this.tracklist = shuffle(this.tracklist);
-      // find current track after shuffle
-
-      if (this.playing) {
-        const newindex = this.tracklist.findIndex(
-          (track) => track.trackhash === current_hash
-        );
-
-        // remove current track from queue
-        this.tracklist.splice(newindex, 1);
-        // insert current track at beginning of queue
-        this.tracklist.unshift(current as Track);
-        this.currentindex = 0;
-        this.focusCurrentInSidebar();
-        return;
-      }
 
       this.currentindex = 0;
       this.play(this.currentindex);
+      this.focusCurrentInSidebar();
     },
     removeFromQueue(index: number = 0) {
       if (index === this.currentindex) {
@@ -369,9 +335,21 @@ export default defineStore("Queue", {
     },
     addTracksToQueue(tracks: Track[]) {
       this.tracklist = this.tracklist.concat(tracks);
+
+      const Toast = useNotifStore();
+      Toast.showNotification(
+        `Added ${tracks.length} tracks to queue`,
+        NotifType.Success
+      );
     },
     insertAfterCurrent(tracks: Track[]) {
       this.tracklist.splice(this.currentindex + 1, 0, ...tracks);
+
+      const Toast = useNotifStore();
+      Toast.showNotification(
+        `Added ${tracks.length} tracks to queue`,
+        NotifType.Success
+      );
     },
   },
   getters: {

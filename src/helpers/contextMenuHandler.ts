@@ -2,11 +2,10 @@ import { Ref } from "vue";
 import { Store } from "pinia";
 import { useRoute } from "vue-router";
 
-import useContextStore from "@/stores/context";
-
 import { Track } from "@/interfaces";
 import { ContextSrc } from "@/enums";
 
+import useContextStore from "@/stores/context";
 import albumContextItems from "@/context_menus/album";
 import trackContext from "@/context_menus/track";
 import folderContextMenu from "@/context_menus/folder";
@@ -36,12 +35,7 @@ export const showTrackContextMenu = (
 
   menu.showContextMenu(e, options, ContextSrc.Track);
 
-  stop_prev_watcher();
-  // 👇 this block updates the flag on visibility change 😂
-  if (prev_track !== track.filepath) {
-    prev_track = track.filepath || "";
-    flagWatcher(menu, flag);
-  }
+  flagWatcher(menu, flag);
 };
 
 export const showAlbumContextMenu = (e: MouseEvent, flag: Ref<boolean>) => {

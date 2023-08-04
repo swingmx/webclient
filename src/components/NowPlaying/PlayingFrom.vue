@@ -51,6 +51,7 @@ const context_menu_showing = ref(false);
 
 function showMenu(e: MouseEvent) {
   if (!queue.currenttrack) return;
+
   showTrackContextMenu(
     e,
     queue.currenttrack,

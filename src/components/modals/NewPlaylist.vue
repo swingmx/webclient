@@ -14,20 +14,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { Routes } from "@/router";
+import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 import { Track } from "@/interfaces";
+import { saveAlbumAsPlaylist } from "@/requests/album";
+import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
+import { NotifType, Notification } from "@/stores/notification";
 import usePlaylistStore from "@/stores/pages/playlists";
-import { createNewPlaylist, saveFoldeAsPlaylist } from "@/requests/playlists";
-import { Notification, NotifType } from "@/stores/notification";
 
 const props = defineProps<{
   track?: Track;
   path?: string;
-  is_save_folder?: boolean;
   playlist_name?: string;
+  albumhash?: string;
 }>();
 
 const route = useRoute();
@@ -76,7 +77,13 @@ function create(e: Event) {
     });
 
   const createFolderPlaylist = () => {
-    saveFoldeAsPlaylist(name, props.path as string).then((pid) => {
+    saveFolderAsPlaylist(name, props.path as string).then((pid) => {
+      emit("hideModal");
+    });
+  };
+
+  const createAlbumPlaylist = () => {
+    saveAlbumAsPlaylist(name, props.albumhash as string).then((pid) => {
       emit("hideModal");
 
       // if (route.name !== Routes.playlists) return;
@@ -87,8 +94,13 @@ function create(e: Event) {
     });
   };
 
-  if (props.is_save_folder) {
+  if (props.path) {
     createFolderPlaylist();
+    return;
+  }
+
+  if (props.albumhash) {
+    createAlbumPlaylist();
     return;
   }
 

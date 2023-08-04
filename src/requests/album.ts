@@ -1,6 +1,6 @@
 import { paths } from "@/config";
 import { NotifType, useNotifStore } from "@/stores/notification";
-import { Album, Track } from "../../interfaces";
+import { Album, Track } from "@/interfaces";
 import useAxios from "./useAxios";
 
 const {
@@ -128,6 +128,29 @@ export async function getSimilarAlbums(
   });
 
   return data.albums;
+}
+
+export async function saveAlbumAsPlaylist(name: string, albumhash: string) {
+  const { status } = await useAxios({
+    url: paths.api.playlist.base + "/save-album",
+    props: {
+      albumhash,
+      playlist_name: name,
+    },
+  });
+
+  const store = useNotifStore();
+
+  if (status === 201) {
+    store.showNotification("Playlist created", NotifType.Success);
+    return true;
+  }
+
+  if (status === 409) {
+    store.showNotification("Playlist already exists!", NotifType.Error);
+  }
+
+  return false;
 }
 
 export { getAlbumData as getAlbum, getAlbumArtists, getAlbumBio };
