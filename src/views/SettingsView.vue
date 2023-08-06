@@ -4,6 +4,9 @@
     style="height: 100%; overflow: auto; padding-right: 1.25rem"
   >
     <Content :current="0" />
+    <div class="version t-center">
+      <span>Swing Music - v{{ VERSION }}</span>
+    </div>
   </div>
 </template>
 
@@ -14,6 +17,7 @@ import { getRootDirs } from "@/requests/settings/rootdirs";
 import useSettingsStore from "@/stores/settings";
 import updatePageTitle from "@/utils/updatePageTitle";
 import Content from "../components/SettingsView/Content.vue";
+import { VERSION } from "@/config";
 
 const settings = useSettingsStore();
 
@@ -22,3 +26,10 @@ onMounted(() => {
   getRootDirs().then((dirs) => settings.setRootDirs(dirs));
 });
 </script>
+
+<style lang="scss">
+.version {
+  margin-top: 2rem;
+  color: $gray1;
+}
+</style>

@@ -155,7 +155,6 @@ function create(e: Event) {
     width: 8rem;
     transition: all 0.25s ease-out;
     background-color: $pink;
-    border: solid 1px $pink;
   }
 }
 </style>

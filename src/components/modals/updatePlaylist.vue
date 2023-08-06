@@ -53,7 +53,7 @@
         </div>
       </div>
     </div>
-    <label v-if="playlist.has_image || !playlist.settings.sqr_img"
+    <label v-if="playlist.has_image && !playlist.settings.sqr_img"
       >Settings</label
     >
     <div class="banner-settings rounded-sm" v-if="image || playlist.has_image">

@@ -61,9 +61,5 @@ defineProps<{
   grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
   min-height: 10rem;
   padding-bottom: $small;
-
-  .album-card:hover {
-    border: solid 1px $gray3;
-  }
 }
 </style>

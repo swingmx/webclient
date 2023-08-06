@@ -1,6 +1,6 @@
 <template>
   <div class="album-stats ellip2">
-    <div class="border rounded-sm pad-sm ellip">
+    <div class="ellip">
       <ArtistName
         :artists="album.albumartists"
         :albumartists="''"
@@ -37,7 +37,8 @@ defineProps<{
 .album-stats {
   font-weight: bold;
   margin-bottom: 0.75rem;
-  font-size: 0.8rem;
+  font-size: 14px;
+  padding-left: $smaller;
 
   .artistname {
     display: -webkit-box;

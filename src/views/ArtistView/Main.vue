@@ -28,10 +28,7 @@
 import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
-import {
-discographyAlbumTypes,
-dropSources
-} from "@/enums";
+import { discographyAlbumTypes, dropSources } from "@/enums";
 import { Album, ScrollerItem } from "@/interfaces";
 import { getArtistTracks } from "@/requests/artists";
 import useArtistPageStore from "@/stores/pages/artist";
@@ -65,11 +62,15 @@ function reFetchSimilarArtists() {
   store.fetchSimilarArtists();
 }
 
-const header: ScrollerItem = {
-  id: "artist-header",
-  component: Header,
-};
-
+function getHeader() {
+  return <ScrollerItem>{
+    id: "artist-header",
+    component: Header,
+    props: {
+      artist: store.info,
+    },
+  };
+}
 const artist_albums_fetcher: ScrollerItem = {
   id: "artist-albums-fetcher",
   component: ArtistAlbumsFetcher,
@@ -154,7 +155,7 @@ function getTopTracksComponent(): ScrollerItem {
 }
 
 const scrollerItems = computed(() => {
-  let components = [header];
+  let components = [getHeader()];
 
   if (store.tracks.length > 0) {
     components.push(getTopTracksComponent());

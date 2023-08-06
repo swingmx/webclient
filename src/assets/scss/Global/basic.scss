@@ -58,9 +58,6 @@ a {
   border-radius: 10rem;
 }
 
-.border {
-  border: 1px solid $gray3;
-}
 
 .bg-primary {
   background-color: $gray4;
@@ -80,7 +77,6 @@ button {
   padding: 0 $small;
 
   background-color: $gray4;
-  border: solid 1px $gray3;
   font-weight: 700;
   cursor: pointer;
 
@@ -96,13 +92,11 @@ button {
 
   &:hover {
     background-color: $darkestblue;
-    border: solid 1px $darkblue;
   }
 }
 
 .btn-active {
   background-color: $darkestblue;
-  border: solid 1px $darkblue;
 }
 
 .btn-disabled {

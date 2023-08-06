@@ -11,7 +11,6 @@
     }"
   >
     <div class="imagegroup">
-      <div v-if="fav.type === 'album'" class="albumbar rounded-sm"></div>
       <img
         :src="
           fav.type === 'album'
@@ -53,27 +52,13 @@ defineProps<{
   display: grid;
   gap: $small;
   height: max-content;
-  border: solid 1px transparent;
 
   .imagegroup {
     position: relative;
     display: flex;
   }
 
-  .albumbar {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    // border-radius: $small 0 0 $small;
-
-    background-size: 108% 108%;
-    background-position: center;
-    mix-blend-mode: screen;
-    // background
-  }
-
   &:hover {
-    border-color: $gray3;
     background-color: $gray4;
   }
 

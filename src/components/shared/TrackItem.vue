@@ -58,19 +58,19 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { onBeforeUnmount, ref, watch } from "vue";
 
 import { paths } from "@/config";
 import { favType } from "@/enums";
-import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
-import favoriteHandler from "@/helpers/favoriteHandler";
 import { Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
+import favoriteHandler from "@/helpers/favoriteHandler";
+import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
 
-import DelSvg from "@/assets/icons/plus.svg";
-import ArtistName from "./ArtistName.vue";
 import HeartSvg from "./HeartSvg.vue";
+import ArtistName from "./ArtistName.vue";
+import DelSvg from "@/assets/icons/plus.svg";
 
 const props = defineProps<{
   track: Track;

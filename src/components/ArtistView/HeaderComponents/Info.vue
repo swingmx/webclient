@@ -24,16 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-
 import { getTextColor } from "@/utils/colortools/shift";
 
 import formatSeconds from "@/utils/useFormatSeconds";
-import useArtistPageStore from "@/stores/pages/artist";
 import Buttons from "./Buttons.vue";
+import { Artist } from "@/interfaces";
 
-const store = useArtistPageStore();
-const { info: artist } = storeToRefs(store);
+defineProps<{
+  artist: Artist;
+}>();
 </script>
 
 <style lang="scss">

@@ -88,6 +88,9 @@ export const paths = {
     },
     search: {
       base: baseApiUrl.value + "/search",
+      get top() {
+        return this.base + "/top?q=";
+      },
       get tracks() {
         return this.base + "/tracks?q=";
       },
@@ -135,3 +138,5 @@ export const paths = {
     raw: baseImgUrl + imageRoutes.raw,
   },
 };
+
+export const VERSION = "1.3.0";

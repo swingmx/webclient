@@ -134,12 +134,10 @@ onBeforeUnmount(() => {
   gap: 1rem;
   user-select: none;
   padding-left: $small;
-  border: solid 1px transparent;
   position: relative;
 
   &:hover {
     background-color: $gray5;
-    border: solid 1px $gray4;
 
     .index {
       .text {
@@ -169,6 +167,5 @@ onBeforeUnmount(() => {
 
 .songlist-item.contexton {
   background-color: $gray4 !important;
-  border: solid 1px $gray3;
 }
 </style>

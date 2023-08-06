@@ -1,37 +1,41 @@
 <template>
   <div
+    v-if="!on_sidebar"
     class="artist-header-ambient rounded"
+    :class="{ isSmallPhone }"
     style="height: 100%; width: 100%"
     :style="{
-      boxShadow: artist.info.colors.length
-        ? `0 .5rem 2rem ${artist.info.colors[0]}`
+      boxShadow: artist.colors.length
+        ? `0 .5rem 2rem ${artist.colors[0]}`
         : undefined,
     }"
   ></div>
   <div
     class="artist-page-header rounded no-scroll"
+    :class="{ isSmallPhone }"
     :style="{
       height: `${heightLarge || isSmallPhone ? '25rem' : '18rem'}`,
     }"
+    ref="artistheader"
   >
-    <Info />
+    <Info :artist="artist" />
     <div
       class="artist-img no-select"
       :style="{
         height: `${heightLarge ? '24rem' : '18rem'}`,
       }"
     >
-      <img :src="paths.images.artist.large + artist.info.image" />
+      <img :src="paths.images.artist.large + artist.image" />
     </div>
     <div
       class="gradient"
       :style="{
-        backgroundImage: artist.info.colors[0]
+        backgroundImage: artist.colors[0]
           ? `linear-gradient(${
               isSmallPhone ? '210deg' : 'to left'
             }, transparent 20%,
-      ${artist.info.colors[0]} ${isSmallPhone ? '80' : '50'}%,
-      ${artist.info.colors[0]} 100%)`
+      ${artist.colors[0]} ${isSmallPhone ? '80' : '50'}%,
+      ${artist.colors[0]} 100%)`
           : '',
       }"
     ></div>
@@ -39,21 +43,33 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { onBeforeRouteUpdate } from "vue-router";
+import { useElementSize } from "@vueuse/core";
 
 import { paths } from "@/config";
-import useArtistPageStore from "@/stores/pages/artist";
 import updatePageTitle from "@/utils/updatePageTitle";
-import { heightLarge, isSmallPhone } from "@/stores/content-width";
+import { heightLarge } from "@/stores/content-width";
 
 import Info from "./HeaderComponents/Info.vue";
+import { Artist } from "@/interfaces";
 
-const artist = useArtistPageStore();
+const props = defineProps<{
+  artist: Artist;
+  on_sidebar?: boolean;
+}>();
 
-const updateTitle = () => updatePageTitle(artist.info.name);
+function updateTitle() {
+  props.on_sidebar ? () => {} : updatePageTitle(props.artist.name);
+}
+
 onMounted(() => updateTitle());
 onBeforeRouteUpdate(() => updateTitle());
+
+const artistheader = ref(null);
+const { width } = useElementSize(artistheader);
+
+const isSmallPhone = computed(() => width.value <= 550);
 </script>
 
 <style lang="scss">
@@ -90,7 +106,7 @@ onBeforeRouteUpdate(() => updateTitle());
     height: 100%;
     width: 100%;
 
-    @include smallPhone {
+    &.isSmallPhone {
       background-image: linear-gradient(
         210deg,
         transparent 20%,
@@ -100,7 +116,7 @@ onBeforeRouteUpdate(() => updateTitle());
     }
   }
 
-  @include smallPhone {
+  &.isSmallPhone {
     display: flex;
     flex-direction: column-reverse;
     position: relative;

@@ -5,8 +5,8 @@
       <span class="app-name">Swing Music</span>
     </h3>
     <p>
-      Swing Music is a web based music player that is designed to provide a home 🏡
-      for all your local music files 💿️.
+      Swing Music is a web based music player that is designed to provide a home
+      🏡 for all your local music files 💿️.
     </p>
     <hr />
     <p class="t-center">Let there be music!</p>
@@ -17,7 +17,9 @@
       <div class="creator t-center">
         Designed and developed by
         <span class="name"
-          ><a href="https://github.com/geoffrey45">Mungai Njoroge</a>
+          ><a target="_blank" href="https://github.com/mungai-njoroge"
+            >Mungai Njoroge</a
+          >
         </span>
       </div>
     </div>
@@ -39,7 +41,7 @@
 
   .app-name {
     font-size: 1.5rem;
-    color: $red;
+    color: $pink;
   }
 
   .release {
@@ -51,10 +53,10 @@
   .bottom-banner {
     font-size: small;
     margin-top: 1rem;
-    opacity: 0.4;
+    opacity: 0.74;
 
     a {
-      color: $red;
+      color: $pink;
       cursor: pointer !important;
     }
   }

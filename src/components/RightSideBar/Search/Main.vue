@@ -20,9 +20,9 @@ import TabsWrapper from "./TabsWrapper.vue";
 
 const search = useSearchStore();
 
-const tabs = ["tracks", "albums", "artists"];
+const tabs = ["top", "tracks", "albums", "artists"];
 
-const currentTab = ref("tracks");
+const currentTab = ref("top");
 
 function switchTab(tab: string) {
   currentTab.value = tab;
@@ -40,7 +40,7 @@ function switchTab(tab: string) {
   grid-template-rows: max-content 1fr;
 
   .tabheaders {
-    padding: 1rem
+    padding: 1rem;
   }
 
   .input {

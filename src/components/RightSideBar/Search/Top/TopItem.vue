@@ -1,0 +1,168 @@
+<template>
+  <RouterLink
+    :to="{
+      name: res_type === 'artist' ? Routes.artist : Routes.album,
+      params:
+        res_type === 'artist'
+          ? { hash: item.artisthash || ' ' }
+          : { albumhash: item.albumhash || ' ' },
+    }"
+    class="top-result-album rounded"
+  >
+    <button
+      v-if="res_type === 'track'"
+      @click="showMenu"
+      :class="{ context_menu_showing }"
+    >
+      <Moresvg />
+    </button>
+    <img
+      :src="
+        res_type === 'artist'
+          ? paths.images.artist.large + item.image
+          : paths.images.thumb.large + item.image
+      "
+      alt=""
+      class="rounded-sm"
+      :class="{ circular: res_type === 'artist' }"
+    />
+    <div class="info" :class="{ 'is-artist': res_type === 'artist' }">
+      <div class="type pad-sm rounded">{{ res_type }}</div>
+      <div>
+        <h3>
+          {{ res_type === "artist" ? item.name : item.title }}
+        </h3>
+        <div class="artists flex" v-if="res_type === 'album'">
+          <span> {{ item.date }}</span> &nbsp; • &nbsp;
+          <ArtistName :artists="item.albumartists" :albumartists="''" />
+        </div>
+        <div class="artists flex" v-if="res_type === 'artist'">
+          {{ item.albumcount }}
+          {{ item.albumcount === 1 ? "album" : "albums" }} •
+          {{ item.trackcount }}
+          {{ item.trackcount === 1 ? "track" : "tracks" }}
+        </div>
+        <div class="artists flex" v-if="res_type === 'track'">
+          <ArtistName :artists="item.artist" :albumartists="item.albumartist" />
+          &nbsp; • &nbsp;
+          {{ formatSeconds(item.duration, true) }}
+        </div>
+      </div>
+    </div>
+    <div class="buttons"></div>
+  </RouterLink>
+</template>
+
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { Routes } from "@/router";
+import { storeToRefs } from "pinia";
+
+import useSearchStore from "@/stores/search";
+import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
+
+import { paths } from "@/config";
+import { formatSeconds } from "@/utils";
+import { Album, Artist, Track } from "@/interfaces";
+import ArtistName from "@/components/shared/ArtistName.vue";
+import Moresvg from "@/assets/icons/more.svg";
+import { useRoute } from "vue-router";
+
+const search = useSearchStore();
+const route = useRoute();
+
+const { top_results } = storeToRefs(search);
+
+const res_type = computed(() => {
+  return top_results.value.top_result.type;
+});
+
+type It = Album & Artist & Track;
+
+const item = computed(() => {
+  return top_results.value.top_result.item as It;
+});
+
+const context_menu_showing = ref(false);
+
+function showMenu(e: MouseEvent) {
+  showContext(e, item.value as Track, context_menu_showing, route);
+}
+</script>
+
+<style lang="scss">
+.top-result-album {
+  background-color: $gray5;
+  padding: 1rem;
+  display: grid;
+  gap: 1rem;
+  align-items: flex-end;
+  margin: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+
+  button {
+    position: absolute;
+    top: $small;
+    right: $smaller;
+    transform: rotate(90deg);
+    background-color: transparent;
+
+    svg {
+      transform: scale(1.2);
+    }
+  }
+
+  .context_menu_showing {
+    background-color: $darkestblue;
+  }
+
+  img {
+    width: 7.5rem;
+    height: 7.5rem;
+    object-fit: cover;
+  }
+
+  .type {
+    font-size: 0.8rem;
+    color: white;
+    background-color: $darkblue;
+    width: max-content;
+    padding: 2px $small;
+    text-transform: capitalize;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    .is-artist {
+      text-transform: capitalize;
+    }
+
+    .artists {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    h3 {
+      margin-bottom: $small;
+      margin-top: 1rem;
+      font-size: 1.5rem;
+    }
+  }
+  .is-artist {
+    .artists {
+      text-transform: capitalize;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    flex-direction: column-reverse;
+  }
+}
+</style>

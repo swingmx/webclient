@@ -2,7 +2,7 @@
   <RouterLink
     :to="{
       name: Routes.album,
-      params: { albumhash: album.albumhash},
+      params: { albumhash: album.albumhash },
     }"
     class="album-card"
   >
@@ -118,12 +118,11 @@ function getVersions(ver1: string[], ver2: string[] = []) {
 <style lang="scss">
 .album-card {
   flex: 0 0 10.1rem;
-  
+
   display: grid;
   gap: $small;
   padding: $medium;
   border-radius: 1rem;
-  border: solid 1px transparent;
   height: max-content;
 
   .with-img {
@@ -173,12 +172,10 @@ function getVersions(ver1: string[], ver2: string[] = []) {
 
   &:hover {
     background-color: $gray4;
-    border: solid 1px $gray5;
   }
 
   img {
     width: 100%;
-    // height: 100%;
     aspect-ratio: 1;
   }
 
