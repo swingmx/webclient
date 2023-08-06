@@ -86,18 +86,18 @@ function handleFav() {
 
   &:hover {
     #progress::-moz-range-thumb {
-      height: 1.25rem;
-      width: 1.25rem;
+      height: 1rem;
+      width: 1rem;
     }
 
     #progress::-webkit-slider-thumb {
-      height: 1.25rem;
-      width: 1.25rem;
+      height: 1rem;
+      width: 1rem;
     }
 
     #progress::-ms-thumb {
-      height: 1.25rem;
-      width: 1.25rem;
+      height: 1rem;
+      width: 1rem;
     }
   }
 

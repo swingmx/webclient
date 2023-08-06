@@ -1,12 +1,12 @@
-// @ts-ignore
-import { Gapless5, CrossfadeShape, LogLevel } from "@regosen/gapless-5";
+const audio = new Audio();
+audio.autoplay = false;
 
-const player = new Gapless5({
-  loadLimit: 2,
-  crossfade: 3000,
-  crossfadeShape: CrossfadeShape.EqualPower,
-  useWebAudio: false,
-  // logLevel: LogLevel.Debug,
-});
+export function setVolume(new_value: number) {
+  audio.volume = new_value;
+}
 
-export default player;
+export function setMute(new_value: boolean) {
+  audio.muted = new_value;
+}
+
+export default audio;

@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 
 import { xxl } from "@/composables/useBreakpoints";
 import { contextChildrenShowMode } from "@/enums";
+import { setMute, setVolume } from "@/player";
 
 export default defineStore("settings", {
   state: () => ({
@@ -16,6 +17,8 @@ export default defineStore("settings", {
     root_dirs: <string[]>[],
     folder_list_mode: false,
     show_master_quality_flag: true,
+    volume: 1.0,
+    mute: false,
   }),
   actions: {
     toggleUseNPImg() {
@@ -64,6 +67,19 @@ export default defineStore("settings", {
     },
     toggleShowMasterQualityFlag() {
       this.show_master_quality_flag = !this.show_master_quality_flag;
+    },
+    // volume
+    setVolume(new_value: number) {
+      setVolume(new_value);
+      this.volume = new_value;
+    },
+    toggleMute() {
+      this.mute = !this.mute;
+      setMute(this.mute);
+    },
+    initializeVolume() {
+      setVolume(this.volume);
+      setMute(this.mute);
     },
   },
   getters: {

@@ -40,15 +40,6 @@ export default defineStore("search", () => {
   const route = useRoute();
   const debouncedQuery = useDebounce(query, 500);
   const { startLoading, stopLoading } = useLoaderStore();
-  const in_quotes = () => {
-    // check if the query is in quotes
-    return (
-      (debouncedQuery.value.startsWith('"') &&
-        debouncedQuery.value.endsWith('"')) ||
-      (debouncedQuery.value.startsWith("'") &&
-        debouncedQuery.value.endsWith("'"))
-    );
-  };
 
   const currentTab = ref("top");
   const RESULT_COUNT = 12;
@@ -98,7 +89,7 @@ export default defineStore("search", () => {
   function fetchTopResults(query: string) {
     if (!query) return;
 
-    searchTopResults(query, in_quotes()).then((res) => {
+    searchTopResults(query).then((res) => {
       top_results.top_result = res.top_result;
       top_results.tracks = res.tracks;
       top_results.albums = res.albums;
@@ -113,7 +104,7 @@ export default defineStore("search", () => {
   function fetchTracks(query: string) {
     if (!query) return;
 
-    searchTracks(query, in_quotes()).then((data) => {
+    searchTracks(query).then((data) => {
       let scrollable = document.getElementById(
         "songlist-scroller"
       ) as HTMLElement;
@@ -133,7 +124,7 @@ export default defineStore("search", () => {
   function fetchAlbums(query: string) {
     if (!query) return;
 
-    searchAlbums(query, in_quotes()).then((res) => {
+    searchAlbums(query).then((res) => {
       albums.value = res.albums;
       albums.more = res.more;
       albums.query = query;
@@ -143,7 +134,7 @@ export default defineStore("search", () => {
   function fetchArtists(query: string) {
     if (!query) return;
 
-    searchArtists(query, in_quotes()).then((res) => {
+    searchArtists(query).then((res) => {
       artists.value = res.artists;
       artists.more = res.more;
       artists.query = query;
@@ -154,7 +145,7 @@ export default defineStore("search", () => {
     loadCounter.tracks += RESULT_COUNT;
 
     startLoading();
-    loadMoreTracks(loadCounter.tracks, query.value, in_quotes())
+    loadMoreTracks(loadCounter.tracks, query.value)
       .then((res) => {
         tracks.value = [...tracks.value, ...res.tracks];
         tracks.more = res.more;
@@ -167,7 +158,7 @@ export default defineStore("search", () => {
     loadCounter.albums += RESULT_COUNT;
 
     startLoading();
-    loadMoreAlbums(loadCounter.albums, query.value, in_quotes())
+    loadMoreAlbums(loadCounter.albums, query.value)
       .then((res) => {
         albums.value = [...albums.value, ...res.albums];
         albums.more = res.more;
@@ -184,7 +175,7 @@ export default defineStore("search", () => {
     loadCounter.artists += RESULT_COUNT;
 
     startLoading();
-    loadMoreArtists(loadCounter.artists, query.value, in_quotes())
+    loadMoreArtists(loadCounter.artists, query.value)
       .then((res) => {
         artists.value = [...artists.value, ...res.artists];
         artists.more = res.more;

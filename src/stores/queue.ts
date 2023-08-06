@@ -3,12 +3,13 @@ import { defineStore } from "pinia";
 import { Ref } from "vue";
 import { NotifType, useNotifStore } from "./notification";
 
+import audio from "@/player";
+import useColorStore from "./colors";
 import { dropSources, favType, FromOptions } from "@/enums";
 import updateMediaNotif from "@/helpers/mediaNotification";
 import { isFavorite } from "@/requests/favorite";
-import useColorStore from "./colors";
-import useSettingsStore from "./settings";
 
+import useSettingsStore from "./settings";
 import { fetchAlbumColor } from "@/requests/colors";
 import {
   fromAlbum,
@@ -36,9 +37,6 @@ export type From =
   | fromSearch
   | fromArtist
   | fromFav;
-
-let audio = new Audio();
-audio.autoplay = false;
 
 export default defineStore("Queue", {
   state: () => ({
@@ -319,6 +317,7 @@ export default defineStore("Queue", {
         this.currentindex -= 1;
       }
     },
+    // called from app.vue
     setScrollFunction(
       cb: (index: number) => void,
       mousover: Ref<boolean> | null
@@ -326,6 +325,7 @@ export default defineStore("Queue", {
       this.queueScrollFunction = cb;
       this.mousover = mousover;
     },
+    // called from app.vue
     toggleFav(index: number) {
       const track = this.tracklist[index];
 
@@ -351,6 +351,7 @@ export default defineStore("Queue", {
         NotifType.Success
       );
     },
+
   },
   getters: {
     next(): Track {

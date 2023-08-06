@@ -7,46 +7,45 @@ const {
   tracks: searchTracksUrl,
   albums: searchAlbumsUrl,
   artists: searchArtistsUrl,
-  load: loadMoreUrl_,
+  load: loadMoreUrl,
 } = paths.api.search;
 
-const loadMoreUrl = loadMoreUrl_ + "?in_quotes=";
 /**
  * Fetch data from url
  * @param url url to fetch json from
  * @returns promise that resolves to the JSON
  */
-async function fetchData(url: string, in_quotes = false) {
+async function fetchData(url: string) {
   const { data } = await useAxios({
-    url: url + `&in_quotes=${in_quotes}`,
+    url: url,
     get: true,
   });
 
   return data;
 }
 
-async function searchTopResults(query: string, in_quotes = false) {
+async function searchTopResults(query: string) {
   const url = searchTopResultsUrl + encodeURIComponent(query.trim());
-  return await fetchData(url, in_quotes);
+  return await fetchData(url);
 }
 
-async function searchTracks(query: string, in_quotes = false) {
+async function searchTracks(query: string) {
   const url = searchTracksUrl + encodeURIComponent(query.trim());
-  return await fetchData(url, in_quotes);
+  return await fetchData(url);
 }
 
-async function searchAlbums(query: string, in_quotes = false) {
+async function searchAlbums(query: string) {
   const url = searchAlbumsUrl + encodeURIComponent(query.trim());
-  return await fetchData(url, in_quotes);
+  return await fetchData(url);
 }
 
-async function searchArtists(query: string, in_quotes = false) {
+async function searchArtists(query: string) {
   const url = searchArtistsUrl + encodeURIComponent(query.trim());
-  return await fetchData(url, in_quotes);
+  return await fetchData(url);
 }
 
-async function loadMoreTracks(index: number, query: string, in_quotes = false) {
-  const response = await axios.get(loadMoreUrl + `${in_quotes}`, {
+async function loadMoreTracks(index: number, query: string) {
+  const response = await axios.get(loadMoreUrl, {
     params: {
       type: "tracks",
       index: index,
@@ -57,8 +56,8 @@ async function loadMoreTracks(index: number, query: string, in_quotes = false) {
   return response.data;
 }
 
-async function loadMoreAlbums(index: number, query: string, in_quotes = false) {
-  const response = await axios.get(loadMoreUrl + `${in_quotes}`, {
+async function loadMoreAlbums(index: number, query: string) {
+  const response = await axios.get(loadMoreUrl, {
     params: {
       type: "albums",
       index: index,
@@ -69,12 +68,8 @@ async function loadMoreAlbums(index: number, query: string, in_quotes = false) {
   return response.data;
 }
 
-async function loadMoreArtists(
-  index: number,
-  query: string,
-  in_quotes = false
-) {
-  const response = await axios.get(loadMoreUrl + `${in_quotes}`, {
+async function loadMoreArtists(index: number, query: string) {
+  const response = await axios.get(loadMoreUrl, {
     params: {
       type: "artists",
       index: index,

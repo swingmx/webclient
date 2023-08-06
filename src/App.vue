@@ -117,6 +117,7 @@ function handleRootDirsPrompt() {
 
 onMounted(() => {
   handleWelcomeModal();
+  settings.initializeVolume();
 
   if (baseApiUrl.value === null) {
     modal.showSetIPModal();

@@ -5,7 +5,7 @@ input[type="range"] {
   width: calc(100% - 2px);
   height: 0.3rem;
   border-radius: 5px;
-  background: $gray4 linear-gradient(37deg, $pink, $pink) no-repeat;
+  background: $gray4 linear-gradient(37deg, white, white) no-repeat;
   background-size: 100% 100%;
 
   &::-webkit-slider-thumb {
@@ -14,7 +14,7 @@ input[type="range"] {
     height: 0;
     width: 0.8rem;
     border-radius: 50%;
-    background: $pink;
+    background: white;
   }
 
   &::-moz-range-thumb {
@@ -23,7 +23,7 @@ input[type="range"] {
 
     height: 0;
     border-radius: 50%;
-    background: $pink;
+    background: white;
     border: none;
   }
 
@@ -34,7 +34,7 @@ input[type="range"] {
     height: 0;
     width: 0.8rem;
     border-radius: 50%;
-    background: $pink;
+    background: white;
     border: none;
   }
 }
