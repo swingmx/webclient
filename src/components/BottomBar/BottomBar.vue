@@ -73,14 +73,17 @@ function handleFav() {
   }
 
   button {
-    height: 2rem;
-    width: 2rem;
     background: transparent;
     border-radius: $small;
+    width: 3rem;
 
     &:hover {
       border: solid 1px $gray3 !important;
       background-color: $gray !important;
+    }
+
+    @include allPhones {
+      height: 3rem;
     }
   }
 

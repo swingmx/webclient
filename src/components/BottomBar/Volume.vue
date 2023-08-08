@@ -34,6 +34,7 @@ const changeVolume = (event: Event) => {
 };
 
 const handleMouseWheel = (event: WheelEvent) => {
+  event.preventDefault();
   const delta = event.deltaY / 1000;
   let newVolume = settings.volume - delta / 3;
 
@@ -96,7 +97,7 @@ const handleMouseWheel = (event: WheelEvent) => {
 
   &:hover {
     .dialog {
-      transition-delay: 0s;
+      transition-delay: 0.25s;
       visibility: visible;
     }
   }

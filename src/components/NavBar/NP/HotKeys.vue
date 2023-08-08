@@ -53,7 +53,7 @@ const q = useQStore();
   }
 
   button:nth-child(2) {
-    width: 100%;
+    width: 4rem;
   }
 
   @include allPhones {

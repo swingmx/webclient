@@ -4,6 +4,7 @@
     <HeartSvg
       :state="queue.currenttrack?.is_favorite"
       @handleFav="() => $emit('handleFav')"
+      v-if="!hideHeart"
     />
     <button
       class="repeat"
@@ -35,6 +36,10 @@ import Volume from "./Volume.vue";
 const queue = useQStore();
 const settings = useSettingsStore();
 
+defineProps<{
+  hideHeart?: boolean;
+}>();
+
 defineEmits<{
   (event: "handleFav"): void;
 }>();
@@ -53,11 +58,15 @@ defineEmits<{
   }
 
   button {
-    padding: 0;
     height: 3rem !important;
     width: 3rem !important;
-    background-color: red;
+    background-color: transparent;
     border: solid 1px transparent;
+
+    &:hover {
+      border: solid 1px $gray3 !important;
+      background-color: $gray !important;
+    }
   }
 
   button.repeat {

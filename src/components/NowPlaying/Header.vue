@@ -21,6 +21,7 @@
       </RouterLink>
       <NowPlayingInfo @handle-fav="handleFav" />
       <Progress />
+      <Buttons @handleFav="() => {}" :hide-heart="true" v-if="isSmallPhone" />
     </div>
     <h3 v-if="queue.currenttrack">Now Playing</h3>
     <SongItem
@@ -51,15 +52,17 @@ import Bitrate from "../NavBar/NP/Bitrate.vue";
 import SongItem from "../shared/SongItem.vue";
 import NowPlayingInfo from "./NowPlayingInfo.vue";
 import PlayingFrom from "./PlayingFrom.vue";
+import Buttons from "../BottomBar/Right.vue";
+import { isMobile, isSmallPhone } from "@/stores/content-width";
 
 const queue = useQueueStore();
 const colors = useColorStore();
 
-function handleFav(trackhash: string) {
+function handleFav() {
   favoriteHandler(
     queue.currenttrack?.is_favorite,
     favType.track,
-    trackhash,
+    queue.currenttrack?.trackhash || "",
     () => null,
     () => null
   );

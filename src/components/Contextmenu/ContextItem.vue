@@ -44,6 +44,7 @@ import { ref } from "vue";
 import { contextChildrenShowMode } from "@/enums";
 import { ExpandIcon } from "@/icons";
 import { Option } from "@/interfaces";
+import { isSmallPhone } from "@/stores/content-width";
 
 const props = defineProps<{
   option: Option;
@@ -73,9 +74,9 @@ function showChildren() {
       placement: "right-start",
       modifiers: [
         {
-          name: "offset",
+          name: "flip",
           options: {
-            offset: [-5, -2],
+            fallbackPlacements: ["left-start", "auto"],
           },
         },
       ],
@@ -131,14 +132,17 @@ function runChildAction(action: () => void) {
     width: 1.5rem;
     position: absolute;
     right: 0;
-    transform: scale(.65);
+    transform: scale(0.65);
   }
 
   .children {
     position: absolute;
     width: 12rem;
     z-index: 10;
-
+    // max-height: 16rem;
+    overflow-y: auto;
+    transform: scale(0);
+    max-height: calc(100vh / 2);
     background-color: $context;
     transform: scale(0);
     padding: $medium;
@@ -156,12 +160,6 @@ function runChildAction(action: () => void) {
 
   &:hover {
     background: $darkestblue;
-  }
-
-  .children {
-    transform: scale(0);
-    overflow: hidden;
-    max-height: calc(100vh - 10rem);
   }
 
   .icon {
