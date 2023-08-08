@@ -1,34 +1,41 @@
 <template>
-  <button class="play-btn circular shadow-sm" @click.prevent.stop="handlePlay">
+  <button class="play-btn circular" @click.prevent.stop="handlePlay">
     <PlaySvg />
   </button>
 </template>
 
 <script setup lang="ts">
-import useAlbumStore from "@/stores/pages/album";
-import usePlaylistStore from "@/stores/pages/playlist";
-import useQStore from "@/stores/queue";
-
+import { Track } from "@/interfaces";
 import { playSources } from "@/enums";
+import { playFromAlbumCard, playFromArtistCard } from "@/helpers/usePlayFrom";
 
-import { playFromAlbumCard } from "@/helpers/usePlayFrom";
-import PlaySvg from "../../assets/icons/play.svg";
+import PlaySvg from "@/assets/icons/play.svg";
+import useQueueStore from "@/stores/queue";
 
 const props = defineProps<{
-  source: playSources;
+  source: playSources | null;
   albumHash?: string;
   albumName?: string;
-  store: typeof useAlbumStore | typeof usePlaylistStore;
+  artisthash?: string;
+  artistname?: string;
+  track?: Track;
 }>();
 
 function handlePlay() {
   switch (props.source) {
     case playSources.album:
-      playFromAlbumCard(
-        useQStore,
-        props.albumHash || "",
-        props.albumName || ""
-      );
+      playFromAlbumCard(props.albumHash || "", props.albumName || "");
+      break;
+
+    case playSources.artist:
+      playFromArtistCard(props.artisthash || "", props.artistname || "");
+      break;
+
+    case playSources.track:
+      // insert after current and play
+      const queue = useQueueStore();
+      queue.insertAfterCurrent([props.track as Track]);
+      queue.play(queue.nextindex);
       break;
 
     default:
@@ -41,8 +48,9 @@ function handlePlay() {
 .play-btn {
   aspect-ratio: 1;
   padding: 0;
-  background: $black;
-  border: solid 1px $gray;
+  background: $darkblue;
+  display: grid;
+  place-items: center;
 
   svg {
     transition: none;

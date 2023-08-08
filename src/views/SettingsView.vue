@@ -29,7 +29,7 @@ onMounted(() => {
 
 <style lang="scss">
 .version {
-  margin-top: 2rem;
+  margin: 2rem 0;
   color: $gray1;
 }
 </style>

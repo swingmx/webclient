@@ -9,13 +9,6 @@
     }"
     class="top-result-album rounded"
   >
-    <button
-      v-if="res_type === 'track'"
-      @click="showMenu"
-      :class="{ context_menu_showing }"
-    >
-      <Moresvg />
-    </button>
     <img
       :src="
         res_type === 'artist'
@@ -49,7 +42,31 @@
         </div>
       </div>
     </div>
-    <div class="buttons"></div>
+    <div class="buttons">
+      <span v-if="res_type !== 'track'"></span>
+      <button
+        v-if="res_type === 'track'"
+        @click="showMenu"
+        :class="{ context_menu_showing }"
+        class="context-menu-button"
+      >
+        <Moresvg />
+      </button>
+      <PlayBtn
+        :source="
+          res_type == 'album'
+            ? playSources.album
+            : res_type == 'artist'
+            ? playSources.artist
+            : playSources.track
+        "
+        :albumHash="item.albumhash"
+        :albumName="item.title"
+        :artisthash="item.artisthash"
+        :artistname="item.name"
+        :track="item"
+      />
+    </div>
   </RouterLink>
 </template>
 
@@ -57,6 +74,7 @@
 import { computed, ref } from "vue";
 import { Routes } from "@/router";
 import { storeToRefs } from "pinia";
+import { useRoute } from "vue-router";
 
 import useSearchStore from "@/stores/search";
 import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
@@ -66,7 +84,9 @@ import { formatSeconds } from "@/utils";
 import { Album, Artist, Track } from "@/interfaces";
 import ArtistName from "@/components/shared/ArtistName.vue";
 import Moresvg from "@/assets/icons/more.svg";
-import { useRoute } from "vue-router";
+
+import { playSources } from "@/enums";
+import PlayBtn from "@/components/shared/PlayBtn.vue";
 
 const search = useSearchStore();
 const route = useRoute();
@@ -101,10 +121,22 @@ function showMenu(e: MouseEvent) {
   margin-bottom: 2rem;
   position: relative;
 
-  button {
+  .buttons {
     position: absolute;
-    top: $small;
-    right: $smaller;
+    right: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem $medium;
+
+    .play-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+
+  .context-menu-button {
     transform: rotate(90deg);
     background-color: transparent;
 

@@ -97,7 +97,7 @@ export interface Playlist {
   settings: {
     banner_pos: number;
     has_gif: boolean;
-    sqr_img: boolean;
+    square_img: boolean;
   };
   images:
     | {

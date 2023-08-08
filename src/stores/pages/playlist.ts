@@ -32,7 +32,6 @@ export default defineStore("playlist-tracks", {
       const playlist = await getPlaylist(id, no_tracks);
 
       this.info = playlist?.info || ({} as Playlist);
-      // this.info.settings.sqr_img = false;
       this.initialBannerPos = this.info.settings.banner_pos;
       this.createImageLink();
 
@@ -106,7 +105,7 @@ export default defineStore("playlist-tracks", {
         : null;
     },
     toggleSquareImage() {
-      this.info.settings.sqr_img = !this.info.settings.sqr_img;
+      this.info.settings.square_img = !this.info.settings.square_img;
     },
     setImage(image: string) {
       this.info.image = image;

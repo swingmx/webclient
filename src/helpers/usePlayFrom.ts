@@ -11,55 +11,7 @@ import useSettingsStore from "@/stores/settings";
 import { getAlbumTracks } from "@/requests/album";
 import { getArtistTracks } from "@/requests/artists";
 
-const queue = useQStore;
-const folder = useFStore;
-const album = useAStore;
-const playlist = usePStore;
-const artist = useArtistPageStore;
-
-type store =
-  | typeof queue
-  | typeof folder
-  | typeof album
-  | typeof playlist
-  | typeof artist;
-
-export default async function play(
-  source: playSources,
-  aqueue: typeof queue,
-  store: store
-) {
-  const useQueue = aqueue();
-
-  switch (source) {
-    case playSources.album:
-      store = store as typeof album;
-      const a_store = store();
-
-      useQueue.playFromAlbum(
-        a_store.info.title,
-        a_store.info.albumhash,
-        a_store.srcTracks
-      );
-      useQueue.play();
-      break;
-    case playSources.playlist:
-      store = store as typeof playlist;
-      const p = store();
-
-      if (p.tracks.length === 0) return;
-
-      useQueue.playFromPlaylist(p.info.name, p.info.id, p.tracks);
-      useQueue.play();
-      break;
-
-    case playSources.artist:
-      store = store as typeof artist;
-      utilPlayFromArtist(useQStore, useArtistPageStore, 0);
-  }
-}
-
-async function utilPlayFromArtist(
+export async function utilPlayFromArtist(
   queue: typeof useQStore,
   artist: typeof useArtistPageStore,
   index: number = 0
@@ -82,12 +34,8 @@ async function utilPlayFromArtist(
   qu.play(index);
 }
 
-async function playFromAlbumCard(
-  queue: typeof useQStore,
-  albumhash: string,
-  albumname: string
-) {
-  const qu = queue();
+export async function playFromAlbumCard(albumhash: string, albumname: string) {
+  const qu = useQStore();
 
   const tracks = await getAlbumTracks(albumhash);
 
@@ -100,5 +48,49 @@ async function playFromAlbumCard(
   qu.play();
 }
 
-export { playFromAlbumCard, utilPlayFromArtist };
+export async function playFromArtistCard(
+  artisthash: string,
+  artistname: string
+) {
+  const queue = useQStore();
+  const tracks = await getArtistTracks(artisthash);
 
+  if (tracks.length === 0) {
+    useNotifStore().showNotification(
+      "Artist tracks not found",
+      NotifType.Error
+    );
+    return;
+  }
+
+  queue.playFromArtist(artisthash, artistname, tracks);
+  queue.play();
+}
+
+export const playFrom = async (source: playSources) => {
+  const useQueue = useQStore();
+
+  switch (source) {
+    case playSources.album:
+      const a_store = useAStore();
+
+      useQueue.playFromAlbum(
+        a_store.info.title,
+        a_store.info.albumhash,
+        a_store.srcTracks
+      );
+      useQueue.play();
+      break;
+    case playSources.playlist:
+      const p = usePStore();
+
+      if (p.tracks.length === 0) return;
+
+      useQueue.playFromPlaylist(p.info.name, p.info.id, p.tracks);
+      useQueue.play();
+      break;
+
+    case playSources.artist:
+      utilPlayFromArtist(useQStore, useArtistPageStore, 0);
+  }
+};

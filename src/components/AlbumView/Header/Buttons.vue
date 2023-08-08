@@ -1,10 +1,6 @@
 <template>
   <div class="album-buttons">
-    <PlayBtnRect
-      :source="playSources.album"
-      :store="useAlbumStore"
-      :bg_color="colors.btn"
-    />
+    <PlayBtnRect :source="playSources.album" :bg_color="colors.btn" />
 
     <HeartSvg
       :state="album.is_favorite"

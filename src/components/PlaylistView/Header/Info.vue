@@ -6,11 +6,7 @@
     }"
   >
     <div class="btns">
-      <PlayBtnRect
-        :source="playSources.playlist"
-        :store="usePStore"
-        :bg_color="btn_color"
-      />
+      <PlayBtnRect :source="playSources.playlist" :bg_color="btn_color" />
     </div>
     <div class="duration">
       {{
@@ -23,7 +19,7 @@
     <div
       class="title"
       :class="`${
-        playlist.info.settings.sqr_img && isSmall ? 'ellip' : 'ellip2'
+        playlist.info.settings.square_img && isSmall ? 'ellip' : 'ellip2'
       }`"
     >
       {{ playlist.info.name }}
@@ -45,6 +41,8 @@ defineProps<{
   textColor: string;
   btn_color?: string;
 }>();
+
+console.log(playlist.info)
 </script>
 
 <style lang="scss">

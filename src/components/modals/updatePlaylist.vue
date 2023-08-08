@@ -53,19 +53,19 @@
         </div>
       </div>
     </div>
-    <label v-if="playlist.has_image && !playlist.settings.sqr_img"
+    <label v-if="playlist.has_image && !playlist.settings.square_img"
       >Settings</label
     >
     <div class="banner-settings rounded-sm" v-if="image || playlist.has_image">
       <div>Show square cover image</div>
       <Switch
-        :state="playlist.settings.sqr_img || false"
+        :state="playlist.settings.square_img || false"
         @click="pStore.toggleSquareImage"
       />
     </div>
     <div
       class="boxed banner-position-adjust rounded-sm"
-      v-if="playlist.has_image && !playlist.settings.sqr_img"
+      v-if="playlist.has_image && !playlist.settings.square_img"
     >
       <div class="t-center">
         Adjust image position • {{ pStore.info.settings.banner_pos }}%
@@ -173,7 +173,7 @@ function update_playlist(e: Event) {
   formData.append(
     "settings",
     JSON.stringify({
-      sqr_img: pStore.info.settings.sqr_img,
+      square_img: pStore.info.settings.square_img,
       banner_pos: pStore.info.settings.banner_pos,
     })
   );

@@ -1,9 +1,8 @@
 <template>
-  <button class="speaker">
+  <button class="speaker" @wheel="handleMouseWheel">
     <div class="icon" @click="settings.toggleMute">
       <VolumeMuteSvg v-if="settings.mute || settings.volume == 0.0" />
-      <VolumeFullSvg v-else-if="settings.volume > 0.75" />
-      <VolumeMidSvg v-else-if="settings.volume > 0.5" />
+      <VolumeMidSvg v-else-if="settings.volume > 0.75" />
       <VolumeLowSvg v-else-if="settings.volume > 0" />
     </div>
     <div class="dialog rounded-sm pad-sm">
@@ -25,7 +24,6 @@
 import useSettingsStore from "@/stores/settings";
 import VolumeMuteSvg from "@/assets/icons/volume-mute.svg";
 import VolumeLowSvg from "@/assets/icons/volume-low.svg";
-import VolumeFullSvg from "@/assets/icons/volume-full.svg";
 import VolumeMidSvg from "@/assets/icons/volume-mid.svg";
 
 const settings = useSettingsStore();
@@ -33,6 +31,21 @@ const settings = useSettingsStore();
 const changeVolume = (event: Event) => {
   const target = event.target as HTMLInputElement;
   settings.setVolume(parseFloat(target.value));
+};
+
+const handleMouseWheel = (event: WheelEvent) => {
+  const delta = event.deltaY / 1000;
+  let newVolume = settings.volume - delta / 3;
+
+  if (newVolume > 1) {
+    newVolume = 1;
+  }
+
+  if (newVolume < 0) {
+    newVolume = 0;
+  }
+
+  settings.setVolume(newVolume);
 };
 </script>
 
@@ -61,6 +74,7 @@ const changeVolume = (event: Event) => {
     visibility: hidden;
     transition: visibility 0.2s ease-in;
     transition-delay: 0.25s;
+    cursor: default;
 
     input {
       width: max-content;

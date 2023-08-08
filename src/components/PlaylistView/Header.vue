@@ -8,11 +8,11 @@
         height: `${heightLarge || isSmallPhone ? '24rem' : '18rem'}`,
       },
     ]"
-    :class="{ 'use-sqr_img': info.has_image && info.settings.sqr_img }"
+    :class="{ 'use-sqr_img': info.has_image && info.settings.square_img }"
   >
     <div class="gradient rounded" v-if="info.has_image"></div>
     <div
-      v-if="!info.has_image || info.settings.sqr_img"
+      v-if="!info.has_image || info.settings.square_img"
       class="album-header-ambient rounded"
       style="height: 100%; width: 100%"
       :style="{
@@ -24,7 +24,7 @@
     <div class="thumbnail-container rounded no-scroll">
       <BannerImages />
     </div>
-    <div class="sqr_img" v-if="info.has_image && info.settings.sqr_img">
+    <div class="sqr_img" v-if="info.has_image && info.settings.square_img">
       <img :src="(playlist.info.image as string)" class="rounded-sm" />
     </div>
     <Info :textColor="textColor" :btn_color="colors.btn" />
@@ -48,7 +48,7 @@ const playlist = usePStore();
 
 const { info, colors } = storeToRefs(playlist);
 const bg = computed(() => {
-  if (playlist.info.has_image && !playlist.info.settings.sqr_img) {
+  if (playlist.info.has_image && !playlist.info.settings.square_img) {
     return `url(${info.value.image})`;
   }
 

@@ -5,6 +5,7 @@ export enum playSources {
   folder,
   artist,
   favorite,
+  track,
 }
 
 export enum NotifType {

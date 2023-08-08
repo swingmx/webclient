@@ -2,7 +2,7 @@
   <button
     v-wave
     class="playbtnrect shadow-sm circular btn-active"
-    @click="usePlayFrom(source, useQStore, store)"
+    @click="playFrom(source)"
     :style="{
       backgroundColor: bg_color ? bg_color : '',
       borderColor: bg_color ? bg_color : '',
@@ -15,25 +15,14 @@
 </template>
 
 <script setup lang="ts">
-import playBtnSvg from "@/assets/icons/play.svg";
 import { playSources } from "@/enums";
-import usePlayFrom from "@/helpers/usePlayFrom";
-import useAStore from "@/stores/pages/album";
-import useArtistPageStore from "@/stores/pages/artist";
-import useFStore from "@/stores/pages/folder";
-import usePStore from "@/stores/pages/playlist";
-import useQStore from "@/stores/queue";
-
 import { getShift } from "@/utils/colortools/shift";
+
+import { playFrom } from "@/helpers/usePlayFrom";
+import playBtnSvg from "@/assets/icons/play.svg";
 
 defineProps<{
   source: playSources;
-  store:
-    | typeof useQStore
-    | typeof useFStore
-    | typeof useAStore
-    | typeof usePStore
-    | typeof useArtistPageStore;
   bg_color?: string;
 }>();
 </script>

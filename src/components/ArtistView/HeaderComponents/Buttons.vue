@@ -1,10 +1,6 @@
 <template>
   <div class="artist-buttons">
-    <PlayBtnRect
-      :source="playSources.artist"
-      :store="useArtistPageStore"
-      :bg_color="artist.colors.btn"
-    />
+    <PlayBtnRect :source="playSources.artist" :bg_color="artist.colors.btn" />
     <HeartSvg
       @handleFav="handleFav"
       :state="artist.info.is_favorite"
