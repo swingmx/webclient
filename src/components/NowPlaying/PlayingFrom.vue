@@ -107,6 +107,8 @@ const { name, location, icon, image } = playingFrom(queue.from);
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: $gray;
+    border: solid 1px $gray4;
   }
 
   .type {

@@ -15,7 +15,7 @@ export default () => {
 
     navigator.mediaSession.metadata = new window.MediaMetadata({
       title: track.title,
-      artist: track.artist.map((a) => a.name).join(", "),
+      artist: track.artists.map((a) => a.name).join(", "),
       artwork: [
         {
           src: url + track.image,

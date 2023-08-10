@@ -12,9 +12,11 @@
         {{ artist.trackcount }} Track{{
           `${artist.trackcount == 1 ? "" : "s"}`
         }}
-        • {{ artist.albumcount }} Album{{
-          `${artist.albumcount == 1 ? "" : "s"}`
-        }}
+        <span v-if="artist.albumcount">
+          • {{ artist.albumcount }} Album{{
+            `${artist.albumcount == 1 ? "" : "s"}`
+          }}
+        </span>
         •
         {{ formatSeconds(artist.duration, true) }}
       </div>

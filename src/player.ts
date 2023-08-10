@@ -1,5 +1,4 @@
 const audio = new Audio();
-audio.autoplay = false;
 
 export function setVolume(new_value: number) {
   audio.volume = new_value;

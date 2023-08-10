@@ -16,30 +16,24 @@ export const menus = [
     icon: FolderSvg,
   },
   {
-    name: "playlists",
-    route_name: Routes.playlists,
-    icon: PlaylistSvg,
-  },
-
-  {
-    separator: true,
-  },
-  {
-    name: "favorites",
-    route_name: Routes.favorites,
-    icon: HeartSvg,
-  },
-  // {
-  //   name: "Now Playing",
-  //   route_name: Routes.nowPlaying,
-  //   icon: QueueSvg,
-  // },
-  {
     name: "search",
     route_name: Routes.search,
     params: { page: "tracks" },
     query: () => ({ q: useSearchStore().query }),
     icon: SearchSvg,
+  },
+  {
+    separator: true,
+  },
+  {
+    name: "playlists",
+    route_name: Routes.playlists,
+    icon: PlaylistSvg,
+  },
+  {
+    name: "favorites",
+    route_name: Routes.favorites,
+    icon: HeartSvg,
   },
   {
     separator: true,

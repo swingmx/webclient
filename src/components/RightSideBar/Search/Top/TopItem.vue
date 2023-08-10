@@ -36,7 +36,7 @@
           {{ item.trackcount === 1 ? "track" : "tracks" }}
         </div>
         <div class="artists flex" v-if="res_type === 'track'">
-          <ArtistName :artists="item.artist" :albumartists="item.albumartist" />
+          <ArtistName :artists="item.artists" :albumartists="item.albumartists" />
           &nbsp; • &nbsp;
           {{ formatSeconds(item.duration, true) }}
         </div>

@@ -11,6 +11,12 @@
         childrenShowMode === contextChildrenShowMode.hover &&
         hideChildren()
     "
+    @touchstart="
+      (e) => {
+        e.preventDefault();
+        option.children && childrenShown ? hideChildren() : showChildren();
+      }
+    "
     @click="runAction"
     ref="parentRef"
   >
@@ -44,7 +50,6 @@ import { ref } from "vue";
 import { contextChildrenShowMode } from "@/enums";
 import { ExpandIcon } from "@/icons";
 import { Option } from "@/interfaces";
-import { isSmallPhone } from "@/stores/content-width";
 
 const props = defineProps<{
   option: Option;

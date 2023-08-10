@@ -31,8 +31,8 @@
       <hr />
       <div class="artist">
         <ArtistName
-          :artists="track.artist"
-          :albumartists="track.albumartist"
+          :artists="track.artists"
+          :albumartists="track.albumartists"
           :smaller="true"
         />
       </div>

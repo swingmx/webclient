@@ -18,7 +18,6 @@ import ArtistTracksView from "@/views/ArtistTracks.vue";
 import ArtistDiscographyView from "@/views/ArtistDiscography.vue";
 import SettingsView from "@/views/SettingsView.vue";
 import SearchView from "@/views/SearchView";
-import QueueView from "@/views/QueueView.vue";
 import FavoritesView from "@/views/Favorites.vue";
 import FavoriteAlbums from "@/views/FavoriteAlbums.vue";
 import FavoriteTracks from "@/views/FavoriteTracks.vue";
@@ -145,12 +144,6 @@ const search = {
   component: SearchView,
 };
 
-const queue = {
-  path: "/queue",
-  name: "QueueView",
-  component: QueueView,
-};
-
 const favorites = {
   path: "/favorites",
   name: "FavoritesView",
@@ -193,7 +186,6 @@ const routes = [
   artistDiscography,
   settings,
   search,
-  queue,
   notFound,
   ArtistTracks,
   favorites,
@@ -215,7 +207,6 @@ export const Routes = {
   artistDiscography: artistDiscography.name,
   settings: settings.name,
   search: search.name,
-  queue: queue.name,
   notFound: notFound.name,
   artistTracks: ArtistTracks.name,
   favorites: favorites.name,

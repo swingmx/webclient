@@ -1,6 +1,7 @@
 <template>
   <div class="topnav">
     <div class="left">
+      <!-- back/forward -->
       <NavButtons />
 
       <div class="info">

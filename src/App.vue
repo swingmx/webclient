@@ -57,7 +57,7 @@ import Notification from "@/components/Notification.vue";
 import BottomBar from "@/components/BottomBar/BottomBar.vue";
 import NavBar from "@/components/nav/NavBar.vue";
 import RightSideBar from "@/components/RightSideBar/Main.vue";
-import LeftSidebar from "@/components/NavBar/index.vue";
+import LeftSidebar from "@/components/LeftSidebar/index.vue";
 
 import { getRootDirs } from "@/requests/settings/rootdirs";
 import { baseApiUrl } from "@/config";
@@ -131,20 +131,6 @@ onMounted(() => {
 <style lang="scss">
 @import "./assets/scss/mixins.scss";
 
-.l-sidebar {
-  position: relative;
-
-  .withlogo {
-    padding: 1rem;
-  }
-
-  .l-album-art {
-    width: calc(100% - 2rem);
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 1rem;
-  }
-}
 
 .r-sidebar {
   &::-webkit-scrollbar {

@@ -3,8 +3,8 @@
     <div class="text">
       <div class="title">{{ queue.currenttrack?.title || "Swing Music" }}</div>
       <ArtistName
-        :artists="queue.currenttrack?.artist || null"
-        :albumartists="queue.currenttrack?.albumartist || ''"
+        :artists="queue.currenttrack?.artists || null"
+        :albumartists="queue.currenttrack?.albumartists || ''"
         v-if="queue.currenttrack"
       />
       <span class="artist rickroll" v-else>

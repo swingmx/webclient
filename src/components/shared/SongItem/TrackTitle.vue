@@ -16,7 +16,7 @@
         <MasterFlag :bitrate="track.bitrate" />
       </div>
       <div class="isSmallArtists" style="display: none">
-        <ArtistName :artists="track.artist" :albumartists="track.albumartist" />
+        <ArtistName :artists="track.artists" :albumartists="track.albumartists" />
       </div>
     </div>
   </div>

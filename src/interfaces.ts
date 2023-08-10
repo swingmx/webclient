@@ -9,8 +9,8 @@ export interface Track extends AlbumDisc {
   id: string;
   title: string;
   album?: string;
-  artist: Artist[];
-  albumartist: Artist[];
+  artists: Artist[];
+  albumartists: Artist[];
   albumhash?: string;
   folder?: string;
   filepath?: string;

@@ -135,6 +135,9 @@ const textColor = computed(() => {
   }
 
   @include smallPhone {
+    .title {
+      font-size: 2.5rem !important;
+    }
   }
 }
 

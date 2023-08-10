@@ -6,19 +6,18 @@ import { router as Router, Routes } from "@/router";
 import { Option } from "@/interfaces";
 import { openInFiles } from "@/requests/folders";
 import {
-  addTrackToPlaylist,
-  getAllPlaylists,
-  removeTracks,
+    addTrackToPlaylist,
+    removeTracks
 } from "@/requests/playlists";
 
 import {
-  AddToQueueIcon,
-  AlbumIcon,
-  ArtistIcon,
-  DeleteIcon,
-  FolderIcon,
-  PlayNextIcon,
-  PlusIcon,
+    AddToQueueIcon,
+    AlbumIcon,
+    ArtistIcon,
+    DeleteIcon,
+    FolderIcon,
+    PlayNextIcon,
+    PlusIcon,
 } from "@/icons";
 import usePlaylistStore from "@/stores/pages/playlist";
 import useQueueStore from "@/stores/queue";
@@ -35,8 +34,8 @@ export default async (
   route: ReturnType<typeof useRoute>,
   on_playlist = false
 ): Promise<Option[]> => {
-  const single_artist = track.artist.length === 1;
-  const single_album_artist = track.albumartist.length === 1;
+  const single_artist = track.artists.length === 1;
+  const single_album_artist = track.albumartists.length === 1;
 
   const goToArtist = (artists: Artist[]) => {
     if (artists.length === 1) {
@@ -117,12 +116,12 @@ export default async (
         ? Router.push({
             name: Routes.artist,
             params: {
-              hash: track.artist[0].artisthash,
+              hash: track.artists[0].artisthash,
             },
           })
         : null;
     },
-    children: goToArtist(track.artist),
+    children: goToArtist(track.artists),
   };
 
   const go_to_alb_artist: Option = {
@@ -132,13 +131,13 @@ export default async (
         ? Router.push({
             name: Routes.artist,
             params: {
-              hash: track.albumartist[0].artisthash,
+              hash: track.albumartists[0].artisthash,
             },
           })
         : null;
     },
     icon: ArtistIcon,
-    children: goToArtist(track.albumartist),
+    children: goToArtist(track.albumartists),
   };
 
   const open_in_explorer: Option = {

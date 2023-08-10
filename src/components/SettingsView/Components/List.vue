@@ -12,8 +12,8 @@
       </div>
     </div>
     <div v-if="!items.length" class="option-list-item" style="opacity: 0.5">
-      Root directories not configured. Use the "Configure" button above
-      to configure
+      Root directories not configured. Use the "Configure" button above to
+      configure
     </div>
   </div>
 </template>
@@ -68,10 +68,6 @@ const icon = getIcon();
       align-items: center;
       font-family: "SF Mono", monospace;
       font-size: 0.9rem;
-    }
-
-    &:hover {
-      background-color: $gray4;
     }
 
     span {

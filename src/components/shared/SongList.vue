@@ -8,7 +8,7 @@
       class="scroller"
       id="songlist-scroller"
       style="height: 100%"
-      :items="tracks.map((track) => ({ track, id: Math.random() }))"
+      :items="tracks.map((track, index) => ({ track, id: index }))"
       :item-size="itemHeight"
       key-field="id"
       v-slot="{ item, index }"
@@ -50,7 +50,6 @@ const itemHeight = 64;
 </script>
 
 <style lang="scss">
-
 .queue-view-virtual-scroller.is_queue {
   .songlist-item.current {
     background-color: $darkestblue !important;

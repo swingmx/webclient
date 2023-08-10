@@ -34,9 +34,9 @@
         <MasterFlag :bitrate="queue.currenttrack?.bitrate || 0" />
       </div>
       <ArtistName
-        :artists="queue.currenttrack?.artist || []"
+        :artists="queue.currenttrack?.artists || []"
         :albumartists="
-          queue.currenttrack?.albumartist || 'Welcome to Swing Music'
+          queue.currenttrack?.albumartists || 'Welcome to Swing Music'
         "
         class="artist"
       />
@@ -47,19 +47,20 @@
 </template>
 
 <script setup lang="ts">
-import ArtistName from "@/components/shared/ArtistName.vue";
 import { paths } from "@/config";
 import { Routes } from "@/router";
-import useColorStore from "@/stores/colors";
-import { isLargerMobile, isMobile } from "@/stores/content-width";
 import { getShift } from "@/utils/colortools/shift";
 
 import useQStore from "@/stores/queue";
+import useColorStore from "@/stores/colors";
 import useSettingsStore from "@/stores/settings";
-import HotKeys from "../NavBar/NP/HotKeys.vue";
+import { isLargerMobile, isMobile } from "@/stores/content-width";
+
+import Actions from "./Right.vue";
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
-import Actions from "./Right.vue";
+import HotKeys from "../LeftSidebar/NP/HotKeys.vue";
+import ArtistName from "@/components/shared/ArtistName.vue";
 
 const queue = useQStore();
 const settings = useSettingsStore();

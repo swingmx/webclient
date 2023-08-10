@@ -43,17 +43,17 @@ import { paths } from "@/config";
 import { Routes } from "@/router";
 import useQueueStore from "@/stores/queue";
 
-import Progress from "@/components/NavBar/NP/Progress.vue";
+import Progress from "@/components/LeftSidebar/NP/Progress.vue";
 import { dropSources, favType } from "@/enums";
 import favoriteHandler from "@/helpers/favoriteHandler";
 import useColorStore from "@/stores/colors";
 import { getTextColor } from "@/utils/colortools/shift";
-import Bitrate from "../NavBar/NP/Bitrate.vue";
+import Bitrate from "../LeftSidebar/NP/Bitrate.vue";
 import SongItem from "../shared/SongItem.vue";
 import NowPlayingInfo from "./NowPlayingInfo.vue";
 import PlayingFrom from "./PlayingFrom.vue";
 import Buttons from "../BottomBar/Right.vue";
-import { isMobile, isSmallPhone } from "@/stores/content-width";
+import { isSmallPhone } from "@/stores/content-width";
 
 const queue = useQueueStore();
 const colors = useColorStore();
@@ -72,11 +72,16 @@ function handleFav() {
 <style lang="scss">
 .now-playing-header {
   padding-bottom: 1rem;
+  position: relative;
 
   .centered {
     margin: 0 auto;
     width: 26rem;
     max-width: 100%;
+  }
+
+  .right-group {
+    margin: 0 auto;
   }
 
   .np-image {

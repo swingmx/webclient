@@ -45,15 +45,11 @@ import QueueSvg from "@/assets/icons/queue.svg";
 const itemHeight = 64;
 const queue = useQStore();
 const mouseover = ref(false);
-const items = ref([
-  { id: "1", text: "abc" },
-  { id: "2", text: "def" },
-]);
 
 const scrollerItems = computed(() => {
-  return queue.tracklist.map((track) => ({
+  return queue.tracklist.map((track, index) => ({
     track,
-    id: Math.random(),
+    id: index,
   }));
 });
 

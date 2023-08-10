@@ -4,7 +4,7 @@
     v-if="q.currenttrack?.bitrate"
     title="file type • bitrate"
   >
-    {{ q.currenttrack.filetype }} • {{ q.currenttrack.bitrate }}
+    {{ q.currenttrack.filepath?.split('.').pop() }} • {{ q.currenttrack.bitrate }}
   </div>
 </template>
 

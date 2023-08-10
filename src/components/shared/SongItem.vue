@@ -18,7 +18,7 @@
       @play="emitUpdate"
     />
     <div class="song-artists">
-      <ArtistName :artists="track.artist" :albumartists="track.albumartist" />
+      <ArtistName :artists="track.artists" :albumartists="track.albumartists" />
     </div>
 
     <TrackAlbum

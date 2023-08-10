@@ -16,13 +16,22 @@
       •
       {{ formatSeconds(playlist.info.duration, true) }}
     </div>
+    <div ref="test_elem"></div>
     <div
       class="title"
       :class="`${
         playlist.info.settings.square_img && isSmall ? 'ellip' : 'ellip2'
       }`"
     >
-      {{ playlist.info.name }}
+      <span
+        v-for="t in balanceText(
+          playlist.info.name,
+          test_elem?.offsetWidth || 0
+        )"
+      >
+        {{ t }}
+        <br />
+      </span>
     </div>
     <div class="type">Playlist</div>
   </div>
@@ -34,6 +43,8 @@ import { isSmall } from "@/stores/content-width";
 
 import usePStore from "@/stores/pages/playlist";
 import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";
+import { balanceText } from "@/utils/balanceText";
+import { Ref, ref } from "vue";
 
 const playlist = usePStore();
 
@@ -42,7 +53,7 @@ defineProps<{
   btn_color?: string;
 }>();
 
-console.log(playlist.info)
+const test_elem: Ref<HTMLElement | null> = ref(null);
 </script>
 
 <style lang="scss">

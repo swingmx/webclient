@@ -33,9 +33,9 @@ import { formatSeconds } from "@/utils";
 
 import useQStore from "@/stores/queue";
 
-import HotKeys from "@/components/NavBar/NP/HotKeys.vue";
-import Progress from "@/components/NavBar/NP/Progress.vue";
-import Navigation from "@/components/NavBar/Navigation.vue";
+import HotKeys from "@/components/LeftSidebar/NP/HotKeys.vue";
+import Progress from "@/components/LeftSidebar/NP/Progress.vue";
+import Navigation from "@/components/LeftSidebar/Navigation.vue";
 
 import LeftGroup from "./Left.vue";
 import RightGroup from "./Right.vue";

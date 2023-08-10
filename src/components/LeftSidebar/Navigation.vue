@@ -36,10 +36,10 @@ import { menus } from "./navitems";
 <style lang="scss">
 .side-nav-container {
   text-transform: capitalize;
-  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: $smaller;
+  overflow: hidden;
 
   @include allPhones {
     justify-content: space-between;

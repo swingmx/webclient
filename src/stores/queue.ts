@@ -61,6 +61,7 @@ export default defineStore("Queue", {
     },
     play(index: number = 0) {
       if (this.tracklist.length === 0) return;
+
       this.currentindex = index;
       this.focusCurrentInSidebar();
 
@@ -71,7 +72,9 @@ export default defineStore("Queue", {
 
       new Promise((resolve, reject) => {
         audio.autoplay = true;
+        audio.pause();
         audio.src = uri;
+
         audio.oncanplay = resolve;
         audio.onerror = reject;
       })
@@ -351,7 +354,6 @@ export default defineStore("Queue", {
         NotifType.Success
       );
     },
-
   },
   getters: {
     next(): Track {
