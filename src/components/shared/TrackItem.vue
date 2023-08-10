@@ -1,4 +1,3 @@
-<!-- Track component used in the right sidebar -->
 <template>
   <div
     class="track-item"

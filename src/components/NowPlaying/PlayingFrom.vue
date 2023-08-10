@@ -2,7 +2,7 @@
   <div class="now-playing-top">
     <router-link
       class="now-playling-from-link"
-      :to="(location as RouteLocationRaw)"
+      :to="(data.location as RouteLocationRaw)"
       title="Go to Play Source"
     >
       <div class="from">
@@ -11,18 +11,18 @@
             queue.from.type === FromOptions.album ||
             queue.from.type === FromOptions.artist
           "
-          :src="image + '.webp'"
+          :src="data.image + '.webp'"
           :alt="`Now Playing ${queue.from.type} image`"
           :class="`${
             queue.from.type === FromOptions.artist ? 'circular' : 'rounded-sm'
           }`"
         />
         <div class="from-icon border rounded-sm" v-else>
-          <component :is="icon"></component>
+          <component :is="data.icon"></component>
         </div>
         <div class="pad-sm">
           <div class="type">{{ queue.from.type }}</div>
-          <div class="ellip2">{{ name }}</div>
+          <div class="ellip2">{{ data.name }}</div>
         </div>
       </div>
     </router-link>
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { RouteLocationRaw } from "vue-router";
 
 import OptionSvg from "@/assets/icons/more.svg";
@@ -47,6 +47,7 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const queue = useQueueStore();
+
 const context_menu_showing = ref(false);
 
 function showMenu(e: MouseEvent) {
@@ -60,7 +61,11 @@ function showMenu(e: MouseEvent) {
     false
   );
 }
-const { name, location, icon, image } = playingFrom(queue.from);
+
+const data = computed(() => {
+  const { name, location, icon, image } = playingFrom(queue.from);
+  return { name, location, icon, image };
+});
 </script>
 
 <style lang="scss">
