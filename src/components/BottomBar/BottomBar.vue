@@ -2,7 +2,7 @@
   <div class="b-bar">
     <LeftGroup @handleFav="handleFav" />
     <div class="center">
-      <div class="with-time" v-if="!isMobile">
+      <div v-if="!isMobile" class="with-time">
         <div class="time time-current">
           <span>
             {{ formatSeconds(queue.duration.current || 0) }}
@@ -20,7 +20,7 @@
       </div>
       <Progress />
     </div>
-    <RightGroup @handleFav="handleFav" v-if="!isMobile" />
+    <RightGroup v-if="!isMobile" @handleFav="handleFav" />
     <Navigation v-else />
   </div>
 </template>
@@ -35,7 +35,7 @@ import useQStore from "@/stores/queue";
 
 import HotKeys from "@/components/LeftSidebar/NP/HotKeys.vue";
 import Progress from "@/components/LeftSidebar/NP/Progress.vue";
-import Navigation from "@/components/LeftSidebar/Navigation.vue";
+import Navigation from "@/components/LeftSidebar/NavButtons.vue";
 
 import LeftGroup from "./Left.vue";
 import RightGroup from "./Right.vue";

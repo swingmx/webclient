@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import Navigation from "@/components/LeftSidebar/Navigation.vue";
+import Navigation from "@/components/LeftSidebar/NavButtons.vue";
 import Logo from "@/components/Logo.vue";
 import NowPlayingImage from "./NowPlayingImg.vue";
 

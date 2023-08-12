@@ -4,9 +4,9 @@
       :title="'No results'"
       :description="'We can\'t find any results for your search.'"
       :icon="SearchSvg"
-      :flag="search.top_results.top_result.type == null"
+      :flag="!search.top_results.top_result"
     />
-    <div v-if="search.top_results.top_result.type">
+    <div v-if="search.top_results.top_result">
       <h3 class="h3">Top Result</h3>
       <TopItem />
     </div>

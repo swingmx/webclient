@@ -34,7 +34,7 @@ export default function formatSeconds(
       _mm = `${mm} Minutes`;
     }
 
-    if (mm < 1 && hh < 1) {
+    if (mm < 1 && hh < 1 && ss > 0) {
       return `${_ss} Seconds`;
     }
 

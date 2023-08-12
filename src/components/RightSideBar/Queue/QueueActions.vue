@@ -15,17 +15,23 @@
       >
         <ClearSvg />
       </button>
+      <button @click="modal.showSaveQueueAsPlaylistModal">
+        Save {{ isSmallPhone ? "" : "As Playlist" }}
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import useQueueStore from "../../../stores/queue";
+import useQueueStore from "@/stores/queue";
+import useModalStore from "@/stores/modal";
 
 import ClearSvg from "@/assets/icons/delete.svg";
 import ShuffleSvg from "@/assets/icons/shuffle.svg";
+import { isSmallPhone } from "@/stores/content-width";
 
 const queue = useQueueStore();
+const modal = useModalStore();
 </script>
 
 <style lang="scss">
@@ -50,6 +56,8 @@ const queue = useQueueStore();
   }
 
   .right {
+    display: flex;
+    gap: $small;
     .go-to-source {
       padding: 0 $smaller;
     }

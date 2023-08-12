@@ -55,7 +55,7 @@ interface scrollerItem {
 
 const scrollerItems = computed(() => {
   const items: scrollerItem[] = search.tracks.value.map((track, index) => ({
-    id: track.filepath,
+    id: index,
     component: SongItem,
     props: {
       track,
@@ -65,6 +65,7 @@ const scrollerItems = computed(() => {
   }));
 
   items.push({
+    // set to random to force re-render
     id: Math.random(),
     component: FetchMore,
     props: {

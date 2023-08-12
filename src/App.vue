@@ -73,7 +73,7 @@ router.afterEach(() => {
   (document.getElementById("acontent") as HTMLElement).scrollTo(0, 0);
 });
 
-onStartTyping((e) => {
+onStartTyping(() => {
   if (isMobile.value) return;
 
   const elem = document.getElementById("globalsearch") as HTMLInputElement;
@@ -130,7 +130,6 @@ onMounted(() => {
 
 <style lang="scss">
 @import "./assets/scss/mixins.scss";
-
 
 .r-sidebar {
   &::-webkit-scrollbar {

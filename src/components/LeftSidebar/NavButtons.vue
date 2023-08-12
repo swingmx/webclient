@@ -14,13 +14,13 @@
     >
       <div v-wave class="circular">
         <div
+          v-if="!menu.separator"
+          id="home-button"
           class="nav-button circular"
           :class="{ active: $route.name === menu.route_name }"
-          id="home-button"
-          v-if="!menu.separator"
         >
           <div class="in">
-            <component :is="menu.icon"></component>
+            <component :is="menu.icon" />
             <span>{{ menu.name }}</span>
           </div>
         </div>

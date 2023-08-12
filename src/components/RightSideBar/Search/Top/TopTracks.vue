@@ -24,7 +24,6 @@ const search = useSearchStore();
 const queue = useQueueStore();
 
 function handlePlay(track: Track) {
-  console.log(search.query)
   queue.clearQueue();
   queue.playFromSearch(search.query, [track]);
   queue.play(0);

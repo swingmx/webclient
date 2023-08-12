@@ -15,7 +15,6 @@ export function balanceText(text: string, container_width: number) {
   document.body.removeChild(tempElem);
 
   const ratio = tempWidth / container_width;
-  console.log(ratio);
 
   if (ratio < 1 || ratio > 1.75) {
     // text fits properly or overflows 2 lines.

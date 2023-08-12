@@ -1,12 +1,12 @@
 <template>
-  <form @submit="create" class="playlist-modal">
+  <form class="playlist-modal" @submit="create">
     <label for="name">Playlist name</label>
     <br />
     <input
+      id="modal-playlist-name-input"
       type="search"
       class="rounded-sm"
       name="name"
-      id="modal-playlist-name-input"
     />
     <br /><br />
     <button type="submit">Create</button>
@@ -14,19 +14,19 @@
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router";
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 
-import { Playlist, Track } from "@/interfaces";
 import {
   saveAlbumAsPlaylist,
   saveArtistAsPlaylist,
+  saveQueueAsPlaylist,
   saveTrackAsPlaylist,
 } from "@/requests/playlists";
 import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
 import { NotifType, Notification } from "@/stores/notification";
 import usePlaylistStore from "@/stores/pages/playlists";
+import useQueueStore from "@/stores/queue";
 
 const props = defineProps<{
   trackhash?: string;
@@ -34,6 +34,7 @@ const props = defineProps<{
   playlist_name?: string;
   albumhash?: string;
   artisthash?: string;
+  is_queue?: boolean;
 }>();
 
 const route = useRoute();
@@ -68,28 +69,14 @@ function create(e: Event) {
     return;
   }
 
-  function addPlaylistToPage(playlist: Playlist) {
-    if (route.name !== Routes.playlists) return;
-
-    setTimeout(() => {
-      playlistStore.addPlaylist(playlist);
-    }, 600);
-  }
-
   const createTrackPlaylist = () =>
-    saveTrackAsPlaylist(name, props?.trackhash || "").then((playlist) => {
+    saveTrackAsPlaylist(name, props?.trackhash || "").then(() => {
       emit("hideModal");
-
-      if (!playlist) return;
-      addPlaylistToPage(playlist);
     });
 
   const createEmptyPlaylist = () =>
-    createNewPlaylist(name).then((playlist) => {
+    createNewPlaylist(name).then(() => {
       emit("hideModal");
-
-      if (!playlist) return;
-      addPlaylistToPage(playlist);
     });
 
   const createFolderPlaylist = () => {
@@ -110,6 +97,15 @@ function create(e: Event) {
     });
   };
 
+  const createQueuePlaylist = () => {
+    const queue = useQueueStore();
+    const trackhashes = queue.tracklist.map((track) => track.trackhash);
+    const itemhash = trackhashes.join(",");
+
+    saveQueueAsPlaylist(name, itemhash).then(() => {
+      emit("hideModal");
+    });
+  };
   if (props.path) {
     createFolderPlaylist();
     return;
@@ -127,6 +123,11 @@ function create(e: Event) {
 
   if (props.trackhash) {
     createTrackPlaylist();
+    return;
+  }
+
+  if (props.is_queue) {
+    createQueuePlaylist();
     return;
   }
 

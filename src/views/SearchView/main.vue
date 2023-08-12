@@ -33,7 +33,7 @@ import { Routes } from "@/router";
 import { useRoute } from "vue-router";
 
 import useSearchStore from "@/stores/search";
-import { isMobile, isSmallPhone } from "@/stores/content-width";
+import { isMobile } from "@/stores/content-width";
 import updatePageTitle from "@/utils/updatePageTitle";
 
 import AlbumPage from "./albums.vue";

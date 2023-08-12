@@ -1,6 +1,4 @@
 import { defineStore } from "pinia";
-import { Playlist, Track } from "../interfaces";
-import { useRoute } from "vue-router";
 
 enum ModalOptions {
   newPlaylist,
@@ -49,6 +47,12 @@ export default defineStore("newModal", {
       const props = {
         artisthash,
         playlist_name: `This is ${name}`,
+      };
+      this.showModal(ModalOptions.newPlaylist, props);
+    },
+    showSaveQueueAsPlaylistModal() {
+      const props = {
+        is_queue: true,
       };
       this.showModal(ModalOptions.newPlaylist, props);
     },

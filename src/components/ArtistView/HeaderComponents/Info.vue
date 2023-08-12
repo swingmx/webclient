@@ -9,16 +9,20 @@
       <div class="card-title">Artist</div>
       <div class="artist-name ellip2">{{ artist.name }}</div>
       <div class="stats">
-        {{ artist.trackcount }} Track{{
-          `${artist.trackcount == 1 ? "" : "s"}`
-        }}
+        <span v-if="artist.trackcount">
+          {{ artist.trackcount }} Track{{
+            `${artist.trackcount == 1 ? "" : "s"}`
+          }}
+        </span>
+        {{ artist.albumcount && artist.trackcount ? "•" : "" }}
         <span v-if="artist.albumcount">
-          • {{ artist.albumcount }} Album{{
+          {{ artist.albumcount }} Album{{
             `${artist.albumcount == 1 ? "" : "s"}`
           }}
         </span>
-        •
-        {{ formatSeconds(artist.duration, true) }}
+        <span v-if="artist.duration">
+          {{ ` • ${formatSeconds(artist.duration, true)}` }}
+        </span>
       </div>
     </section>
     <Buttons />
