@@ -25,18 +25,21 @@
         <h3>
           {{ res_type === "artist" ? item.name : item.title }}
         </h3>
-        <div class="artists flex" v-if="res_type === 'album'">
+        <div v-if="res_type === 'album'" class="artists flex">
           <span> {{ item.date }}</span> &nbsp; • &nbsp;
           <ArtistName :artists="item.albumartists" :albumartists="''" />
         </div>
-        <div class="artists flex" v-if="res_type === 'artist'">
+        <div v-if="res_type === 'artist'" class="artists flex">
           {{ item.albumcount }}
           {{ item.albumcount === 1 ? "album" : "albums" }} •
           {{ item.trackcount }}
           {{ item.trackcount === 1 ? "track" : "tracks" }}
         </div>
-        <div class="artists flex" v-if="res_type === 'track'">
-          <ArtistName :artists="item.artists" :albumartists="item.albumartists" />
+        <div v-if="res_type === 'track'" class="artists flex">
+          <ArtistName
+            :artists="item.artists"
+            :albumartists="item.albumartists"
+          />
           &nbsp; • &nbsp;
           {{ formatSeconds(item.duration, true) }}
         </div>
@@ -46,9 +49,9 @@
       <span v-if="res_type !== 'track'"></span>
       <button
         v-if="res_type === 'track'"
-        @click="showMenu"
         :class="{ context_menu_showing }"
         class="context-menu-button"
+        @click="showMenu"
       >
         <Moresvg />
       </button>
@@ -60,8 +63,8 @@
             ? playSources.artist
             : playSources.track
         "
-        :albumHash="item.albumhash"
-        :albumName="item.title"
+        :album-hash="item.albumhash"
+        :album-name="item.title"
         :artisthash="item.artisthash"
         :artistname="item.name"
         :track="item"
@@ -133,6 +136,14 @@ function showMenu(e: MouseEvent) {
     .play-btn {
       width: 2.5rem;
       height: 2.5rem;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+  }
+
+  &:hover {
+    .play-btn {
+      opacity: 1;
     }
   }
 

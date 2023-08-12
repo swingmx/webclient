@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="parentRef"
     class="context-item"
     @mouseenter="
       option.children &&
@@ -11,27 +12,31 @@
         childrenShowMode === contextChildrenShowMode.hover &&
         hideChildren()
     "
+    @click="runAction"
     @touchstart="
       (e) => {
         e.preventDefault();
-        option.children && childrenShown ? hideChildren() : showChildren();
+        if (option.children) {
+          childrenShown ? hideChildren() : showChildren();
+          return;
+        }
+
+        runAction();
       }
     "
-    @click="runAction"
-    ref="parentRef"
   >
     <div class="icon image" v-html="option.icon"></div>
     <div class="label ellip">{{ option.label }}</div>
-    <div class="more" v-if="option.children" v-html="ExpandIcon"></div>
+    <div v-if="option.children" class="more" v-html="ExpandIcon"></div>
     <div
-      class="children rounded shadow-sm"
       v-if="option.children"
       ref="childRef"
+      class="children rounded shadow-sm"
     >
       <div
-        class="context-item"
         v-for="child in option.children"
         :key="child.label"
+        class="context-item"
         :class="[{ critical: child.critical }, child.type]"
         @click="child.action && runChildAction(child.action)"
       >
@@ -144,14 +149,15 @@ function runChildAction(action: () => void) {
     position: absolute;
     width: 12rem;
     z-index: 10;
-    // max-height: 16rem;
     overflow-y: auto;
+    overflow-x: hidden;
     transform: scale(0);
-    max-height: calc(100vh / 2);
     background-color: $context;
     transform: scale(0);
     padding: $medium;
-    border: solid 1px $gray2;
+    border: solid 1px $gray3;
+
+    max-height: calc(100vh / 2);
 
     .context-item {
       padding: $small 1rem;

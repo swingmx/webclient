@@ -24,15 +24,15 @@ const settings = useSettingsStore();
   width: 15rem;
   grid-area: l-sidebar;
   display: grid;
-  grid-template-rows: 3.75rem 1fr 13rem;
+  grid-template-rows: 3.75rem 1fr max-content;
   border-right: solid 1px $gray5;
   position: relative;
   padding: 1rem;
-  gap: 1rem;
 
   .scrollable {
     height: 100%;
     overflow-y: scroll;
+    padding: 1rem 0;
   }
 }
 </style>

@@ -15,8 +15,6 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useRoute } from "vue-router";
-
 import {
   saveAlbumAsPlaylist,
   saveArtistAsPlaylist,
@@ -25,7 +23,6 @@ import {
 } from "@/requests/playlists";
 import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
 import { NotifType, Notification } from "@/stores/notification";
-import usePlaylistStore from "@/stores/pages/playlists";
 import useQueueStore from "@/stores/queue";
 
 const props = defineProps<{
@@ -36,9 +33,6 @@ const props = defineProps<{
   artisthash?: string;
   is_queue?: boolean;
 }>();
-
-const route = useRoute();
-const playlistStore = usePlaylistStore();
 
 onMounted(() => {
   const input_elem = document.getElementById(

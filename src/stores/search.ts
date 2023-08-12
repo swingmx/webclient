@@ -2,7 +2,7 @@ import { watch } from "vue";
 import { defineStore } from "pinia";
 import { useRoute } from "vue-router";
 import { Routes, router } from "@/router";
-import { reactive, ref } from "@vue/reactivity";
+import { reactive, ref } from "vue";
 import { useDebounce } from "@vueuse/core";
 
 import {
