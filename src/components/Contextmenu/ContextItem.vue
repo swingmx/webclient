@@ -62,6 +62,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
+  // eslint-disable-next-line no-unused-vars
   (event: "hideContextMenu"): void;
 }>();
 
@@ -186,7 +187,7 @@ function runChildAction(action: () => void) {
   }
 
   &:nth-child(2) .icon > svg {
-    transform: scale(1);
+    transform: scale(0.9);
   }
 
   .label {

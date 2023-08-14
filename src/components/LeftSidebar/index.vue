@@ -33,6 +33,8 @@ const settings = useSettingsStore();
     height: 100%;
     overflow-y: scroll;
     padding: 1rem 0;
+
+    @include hideScrollbars;
   }
 }
 </style>

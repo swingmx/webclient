@@ -1,19 +1,19 @@
 <template>
   <div
-    class="context-menu rounded shadow-lg no-select"
-    ref="contextMenuRef"
     id="context-menu"
+    ref="contextMenuRef"
+    class="context-menu rounded shadow-lg no-select"
     :style="{
       visibility: context.visible ? 'visible' : 'hidden',
     }"
   >
     <ContextItem
-      class="context-item"
       v-for="option in context.options"
       :key="option.label"
+      class="context-item"
       :class="[{ critical: option.critical }, option.type]"
       :option="option"
-      :childrenShowMode="settings.contextChildrenShowMode"
+      :children-show-mode="settings.contextChildrenShowMode"
       @hideContextMenu="context.hideContextMenu()"
     />
   </div>
@@ -42,7 +42,7 @@ context.$subscribe((mutation, state) => {
       }
       watcher = onClickOutside(
         contextMenuRef,
-        (e) => {
+        () => {
           context.hideContextMenu();
         },
         {

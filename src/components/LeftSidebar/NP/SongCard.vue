@@ -9,13 +9,10 @@
     }"
     :exit="{ opacity: 0, scale: 0.9 }"
   >
-    <div class="sidebar-songcard rounded-sm" v-wave>
+    <div v-wave class="sidebar-songcard rounded-sm">
       <router-link
         :to="{
           name: Routes.nowPlaying,
-          query: {
-            tab: 'queue',
-          },
         }"
       >
         <img
@@ -30,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { Motion } from "motion/vue"
+import { Motion } from "motion/vue";
 import useQueueStore from "@/stores/queue";
 
 import { paths } from "@/config";

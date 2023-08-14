@@ -24,7 +24,7 @@ export default async (trigger_src: ContextSrc, path: string) => {
   // if trigger source is folder nav, show list mode option
   let items =
     trigger_src === ContextSrc.FolderNav
-      ? [getListModeOption(), separator]
+      ? [separator, getListModeOption()]
       : [];
 
   const play_next = <Option>{
@@ -69,11 +69,11 @@ export default async (trigger_src: ContextSrc, path: string) => {
   };
 
   return [
-    ...items,
     play_next,
     add_to_queue,
     separator,
     add_to_playlist,
     save_as_playlist,
+    ...items,
   ];
 };
