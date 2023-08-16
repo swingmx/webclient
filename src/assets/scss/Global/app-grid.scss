@@ -88,7 +88,7 @@ $g-border: solid 1px $gray5;
 
   @include allPhones {
     grid-template-columns: 1fr;
-    grid-template-rows: max-content 1fr 8.5rem;
+    grid-template-rows: max-content 1fr 9.5rem;
     grid-template-areas:
       "nav"
       "content"

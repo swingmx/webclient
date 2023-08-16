@@ -3,27 +3,21 @@
     <router-link
       v-for="(menu, index) in menus"
       :key="index"
+      v-wave
       :to="{
         name: menu.route_name,
         params: menu?.params,
         query: menu.query && menu.query(),
       }"
+      class="circular nav-item"
       :class="{
         separator: menu.separator,
+        active: $route.name === menu.route_name,
       }"
     >
-      <div v-wave class="circular">
-        <div
-          v-if="!menu.separator"
-          id="home-button"
-          class="nav-button circular"
-          :class="{ active: $route.name === menu.route_name }"
-        >
-          <div class="in">
-            <component :is="menu.icon" />
-            <span>{{ menu.name }}</span>
-          </div>
-        </div>
+      <div v-if="!menu.separator">
+        <component :is="menu.icon" />
+        <span>{{ menu.name }}</span>
       </div>
     </router-link>
   </div>
@@ -41,27 +35,17 @@ import { menus } from "./navitems";
   gap: $smaller;
   overflow: hidden;
 
-  @include allPhones {
-    justify-content: space-between;
-    flex-direction: row;
-
-    .in > span {
-      display: none;
-    }
-
-    .separator {
-      display: none;
-    }
-  }
-
-  .nav-button {
+  .nav-item {
+    width: 100%;
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
     padding: $small 0;
-    position: relative;
     font-size: 14px;
-    font-weight: 700;
+
+    & > div {
+      display: flex;
+      align-items: center;
+    }
 
     &.active {
       background-color: $gray5;
@@ -70,14 +54,27 @@ import { menus } from "./navitems";
     &:hover {
       background-color: $gray;
     }
+  }
 
-    .in {
-      display: flex;
-      align-items: center;
+  .nav-item.separator {
+    height: 1px;
+    padding: 0;
+  }
 
-      & > * {
-        background-size: 1.5rem;
-      }
+  @include allPhones {
+    justify-content: space-between;
+    flex-direction: row;
+
+    .nav-item {
+      justify-content: center;
+    }
+
+    .nav-item span {
+      display: none;
+    }
+
+    .separator {
+      display: none;
     }
   }
 

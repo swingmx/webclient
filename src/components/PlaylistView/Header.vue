@@ -10,7 +10,7 @@
     ]"
     :class="{ 'use-sqr_img': info.has_image && info.settings.square_img }"
   >
-    <div class="gradient rounded" v-if="info.has_image"></div>
+    <div v-if="info.has_image" class="gradient rounded"></div>
     <div
       v-if="!info.has_image || info.settings.square_img"
       class="album-header-ambient rounded"
@@ -24,10 +24,10 @@
     <div class="thumbnail-container rounded no-scroll">
       <BannerImages />
     </div>
-    <div class="sqr_img" v-if="info.has_image && info.settings.square_img">
+    <div v-if="info.has_image && info.settings.square_img" class="sqr_img">
       <img :src="(playlist.info.image as string)" class="rounded-sm" />
     </div>
-    <Info :textColor="textColor" :btn_color="colors.btn" />
+    <Info :text-color="textColor" :btn_color="colors.btn" />
     <LastUpdated />
   </div>
 </template>

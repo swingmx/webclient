@@ -16,6 +16,9 @@ html {
 
   & > * {
     overflow: visible !important;
+    -webkit-tap-highlight-color: transparent; /* Webkit browsers like Safari */
+    tap-highlight-color: transparent; /* Some Android browsers */
+    outline: none;
   }
 }
 

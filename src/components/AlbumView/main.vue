@@ -7,8 +7,8 @@
     }"
   ></div>
   <div
-    class="a-header rounded"
     ref="albumheaderthing"
+    class="a-header rounded"
     :style="{
       background: colors.bg ? colors.bg : '',
     }"
@@ -45,6 +45,7 @@ const store = useAlbumStore();
 const { info: album, colors } = storeToRefs(store);
 
 defineEmits<{
+  // eslint-disable-next-line no-unused-vars
   (event: "playThis"): void;
 }>();
 

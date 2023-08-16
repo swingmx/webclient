@@ -64,8 +64,8 @@ function handleFav() {
 
   @include allPhones {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(3, 1fr);
-    padding: 0 1rem $small 1rem;
+    grid-template-rows: max-content 1.5rem max-content;
+    padding: 0 1rem $medium 1rem;
 
     .center > input {
       height: 2px !important;
@@ -129,6 +129,7 @@ function handleFav() {
 
     @include allPhones {
       width: 100% !important;
+      margin-bottom: $small;
     }
 
     .time {
@@ -148,7 +149,7 @@ function handleFav() {
     }
   }
 
-  // hotkeys
+  // hotkey
   .buttons {
     display: grid;
     place-items: center;

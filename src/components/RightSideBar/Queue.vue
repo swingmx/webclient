@@ -12,20 +12,20 @@
       :icon="QueueSvg"
     />
     <RecycleScroller
-      class="scroller"
       id="queue-scrollable"
+      v-slot="{ item, index }"
+      class="scroller"
       style="height: 100%"
       :items="scrollerItems"
       :item-size="itemHeight"
       key-field="id"
-      v-slot="{ item, index }"
     >
       <TrackItem
         :index="index"
         :track="item.track"
-        :isCurrent="index === queue.currentindex"
-        :isCurrentPlaying="index === queue.currentindex && queue.playing"
-        :isQueueTrack="true"
+        :is-current="index === queue.currentindex"
+        :is-current-playing="index === queue.currentindex && queue.playing"
+        :is-queue-track="true"
         @playThis="playFromQueue(index)"
       />
     </RecycleScroller>

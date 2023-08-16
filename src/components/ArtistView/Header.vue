@@ -11,12 +11,12 @@
     }"
   ></div>
   <div
+    ref="artistheader"
     class="artist-page-header rounded no-scroll"
     :class="{ isSmallPhone }"
     :style="{
       height: `${heightLarge || isSmallPhone ? '25rem' : '18rem'}`,
     }"
-    ref="artistheader"
   >
     <Info :artist="artist" />
     <div
@@ -25,7 +25,7 @@
         height: `${heightLarge ? '24rem' : '18rem'}`,
       }"
     >
-      <img :src="paths.images.artist.large + artist.image" />
+      <img id="artist-avatar" :src="paths.images.artist.large + artist.image" />
     </div>
     <div
       class="gradient"

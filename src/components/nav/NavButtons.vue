@@ -33,7 +33,7 @@ import ArrowSvg from "../../assets/icons/right-arrow.svg";
 
     svg {
       transform: scale(1.25);
-      transition: all .2s;
+      transition: all 0.2s;
 
       &:active {
         transform: scale(1);

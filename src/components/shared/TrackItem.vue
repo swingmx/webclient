@@ -47,7 +47,7 @@
       <div
         v-if="isQueueTrack"
         class="remove-track"
-        title="remove from queue"
+        title="Remove from queue"
         @click.stop="queue.removeFromQueue(index)"
       >
         <DelSvg />
@@ -143,15 +143,19 @@ onBeforeUnmount(() => {
   .float-buttons {
     opacity: 0;
     gap: $small;
+    & > * {
+      cursor: pointer;
+    }
 
     .heart-button {
       width: 2rem;
       height: 2rem;
       padding: 0;
       border: none;
+      background-color: transparent;
 
-      &:hover {
-        background-color: pink;
+      svg {
+        color: white;
       }
     }
 
@@ -165,7 +169,6 @@ onBeforeUnmount(() => {
 
       &:hover {
         border-radius: 1rem;
-        background-color: $red;
       }
     }
 

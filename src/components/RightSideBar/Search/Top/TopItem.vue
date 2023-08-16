@@ -51,7 +51,7 @@
         v-if="res_type === 'track'"
         :class="{ context_menu_showing }"
         class="context-menu-button"
-        @click="showMenu"
+        @click.prevent="showMenu"
       >
         <Moresvg />
       </button>

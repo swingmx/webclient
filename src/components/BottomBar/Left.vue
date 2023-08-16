@@ -1,5 +1,5 @@
 <template>
-  <div class="left-group" v-auto-animate>
+  <div v-auto-animate class="left-group">
     <HeartSvg
       v-if="settings.use_np_img && !isMobile"
       :state="queue.currenttrack?.is_favorite"

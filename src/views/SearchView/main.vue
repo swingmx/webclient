@@ -1,9 +1,9 @@
 <template>
   <div class="search-view content-page" style="padding-right: 0">
-    <div class="buttons-area" v-if="isMobile">
+    <div v-if="isMobile" class="buttons-area">
       <Tabs
-        :tabs="Object.values(pages)"
-        :currentTab="($route.params.page as string)"
+        :tabs="pages"
+        :current-tab="($route.params.page as string)"
         @switchTab="(tab: string) => {
         $router.replace({ name: Routes.search, params: { page: tab }, query: {
           q: search.query,
@@ -12,7 +12,7 @@
       }"
       />
     </div>
-    <div ref="page" class="page no-scroll" v-auto-animate>
+    <div ref="page" v-auto-animate class="page no-scroll">
       <component :is="component" />
     </div>
     <button
@@ -45,22 +45,18 @@ const page = ref<HTMLElement>();
 
 const search = useSearchStore();
 
-enum pages {
-  tracks = "tracks",
-  albums = "albums",
-  artists = "artists",
-}
+const pages = ["top", "tracks", "albums", "artists"];
 
 const route = useRoute();
 
 const component = computed(() => {
   switch (route.params.page) {
-    case pages.tracks:
+    case pages[1]:
       return TracksPage;
-    case pages.albums:
+    case pages[2]:
       return AlbumPage;
 
-    case pages.artists:
+    case pages[3]:
       return ArtistPage;
 
     default:
@@ -95,14 +91,14 @@ function loadArtists() {
 
 function loadMore() {
   switch (route.params.page) {
-    case pages.tracks:
+    case pages[1]:
       loadTracks();
       break;
-    case pages.albums:
+    case pages[2]:
       loadAlbums();
       break;
 
-    case pages.artists:
+    case pages[3]:
       loadArtists();
       break;
     default:
@@ -112,14 +108,14 @@ function loadMore() {
 
 const canLoadMore = computed(() => {
   switch (route.params.page) {
-    case pages.tracks:
+    case pages[1]:
       return search.tracks.more;
-    case pages.albums:
+    case pages[2]:
       return search.albums.more;
-    case pages.artists:
+    case pages[3]:
       return search.artists.more;
     default:
-      false;
+      return false;
   }
 });
 

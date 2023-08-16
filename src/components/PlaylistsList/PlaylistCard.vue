@@ -4,11 +4,12 @@
     class="p-card rounded no-scroll"
   >
     <div
-      class="image-grid rounded-sm no-scroll"
       v-if="!playlist.has_image && playlist.images.length"
+      class="image-grid rounded-sm no-scroll"
     >
       <img
-        v-for="img in playlist.images"
+        v-for="(img, index) in playlist.images"
+        :key="index"
         :src="paths.images.thumb.large + img"
       />
     </div>
@@ -45,6 +46,7 @@ const props = defineProps<{
   grid-template-rows: 1fr max-content;
   padding: 1rem;
   gap: $small;
+  user-select: none;
 
   .image-grid {
     display: grid;

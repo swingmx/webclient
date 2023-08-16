@@ -1,10 +1,10 @@
 <template>
   <div class="nav-search-input">
     <SearchInput :on_nav="true" />
-    <div class="buttons-area" v-if="!isMobile">
+    <div v-if="!isMobile" class="buttons-area">
       <Tabs
         :tabs="tabs"
-        :currentTab="($route.params.page as string)"
+        :current-tab="($route.params.page as string)"
         @switchTab="(tab: string) => {
         $router.replace({ name: Routes.search, params: { page: tab }, query: {
           q: search.query,
@@ -25,7 +25,7 @@ import useSearchStore from "@/stores/search";
 import { isMobile } from "@/stores/content-width";
 
 const search = useSearchStore();
-const tabs = ["tracks", "albums", "artists"];
+const tabs = ["top", "tracks", "albums", "artists"];
 </script>
 
 <style lang="scss">
@@ -44,7 +44,7 @@ const tabs = ["tracks", "albums", "artists"];
   .buttons-area {
     position: relative;
     height: 100%;
-    width: 14rem;
+    width: 18rem;
   }
 
   #right-tabs {

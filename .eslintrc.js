@@ -16,6 +16,8 @@ module.exports = {
     "vue/multi-word-component-names": "off",
     "vue/v-on-event-hyphenation": "off",
     "vue/no-v-html": "off",
+    "no-unused-vars": "off",
+    "vue/prop-name-casing": "off",
   },
   parser: "vue-eslint-parser",
   parserOptions: {

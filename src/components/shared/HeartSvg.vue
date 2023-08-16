@@ -2,11 +2,11 @@
   <button
     v-wave
     class="heart-button circular"
-    @click="!no_emit && $emit('handleFav')"
     :style="{
       color: color ? getTextColor(color) : '',
       border: color ? `solid 1px ${getShift(color, [25, -25])}` : '',
     }"
+    @click="!no_emit && $emit('handleFav')"
   >
     <Motion
       :initial="{
@@ -41,6 +41,7 @@ defineProps<{
 }>();
 
 defineEmits<{
+  // eslint-disable-next-line no-unused-vars
   (event: "handleFav"): void;
 }>();
 </script>
@@ -52,9 +53,10 @@ $bg: rgb(250, 33, 33);
   align-items: center;
   gap: $smaller;
   border: none;
-  background: transparent;
   color: $bg;
   aspect-ratio: 1.5;
+  background: rgba(255, 255, 255, 0.13);
+
 
   div {
     height: max-content;
