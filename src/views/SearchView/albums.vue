@@ -1,10 +1,10 @@
 <template>
-    <NoItems
-      :title="'No album results'"
-      :description="desc"
-      :icon="SearchSvg"
-      :flag="!search.albums.value.length"
-    />
+  <NoItems
+    :title="'No album results'"
+    :description="desc"
+    :icon="SearchSvg"
+    :flag="!search.albums.value.length"
+  />
   <div class="search-albums-view grid-page">
     <AlbumCard
       v-for="album in search.albums.value"
@@ -33,11 +33,6 @@ const desc = computed(() =>
 <style lang="scss">
 .search-albums-view.grid-page {
   padding-right: $small;
-
   overflow: auto;
-
-  .album-card:hover {
-    border: solid 1px $gray3;
-  }
 }
 </style>

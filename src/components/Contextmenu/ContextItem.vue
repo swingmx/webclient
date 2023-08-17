@@ -4,26 +4,17 @@
     class="context-item"
     @mouseenter="
       option.children &&
+        !isSmall &&
         childrenShowMode === contextChildrenShowMode.hover &&
         showChildren()
     "
     @mouseleave="
       option.children &&
+        !isSmall &&
         childrenShowMode === contextChildrenShowMode.hover &&
         hideChildren()
     "
     @click="runAction"
-    @touchstart="
-      (e) => {
-        e.preventDefault();
-        if (option.children) {
-          childrenShown ? hideChildren() : showChildren();
-          return;
-        }
-
-        runAction();
-      }
-    "
   >
     <div class="icon image" v-html="option.icon"></div>
     <div class="label ellip">{{ option.label }}</div>
@@ -55,6 +46,7 @@ import { ref } from "vue";
 import { contextChildrenShowMode } from "@/enums";
 import { ExpandIcon } from "@/icons";
 import { Option } from "@/interfaces";
+import { isSmall } from "@/stores/content-width";
 
 const props = defineProps<{
   option: Option;

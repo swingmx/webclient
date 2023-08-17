@@ -42,7 +42,8 @@ context.$subscribe((mutation, state) => {
       }
       watcher = onClickOutside(
         contextMenuRef,
-        () => {
+        (e: any) => {
+          if (e.type == "pointerup") return;
           context.hideContextMenu();
         },
         {

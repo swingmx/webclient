@@ -2,14 +2,13 @@
   <div class="right-group">
     <Volume />
     <HeartSvg
+      v-if="!hideHeart"
       :state="queue.currenttrack?.is_favorite"
       @handleFav="() => $emit('handleFav')"
-      v-if="!hideHeart"
     />
     <button
       class="repeat"
       :class="{ 'repeat-disabled': settings.no_repeat }"
-      @click="settings.toggleRepeatMode"
       :title="
         settings.repeat_all
           ? 'Repeat all'
@@ -17,6 +16,7 @@
           ? 'No repeat'
           : 'Repeat one'
       "
+      @click="settings.toggleRepeatMode"
     >
       <RepeatOneSvg v-if="settings.repeat_one" />
       <RepeatAllSvg v-else />

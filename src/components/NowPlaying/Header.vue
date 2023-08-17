@@ -21,7 +21,15 @@
       </RouterLink>
       <NowPlayingInfo @handle-fav="handleFav" />
       <Progress />
-      <Buttons @handleFav="() => {}" :hide-heart="true" v-if="isSmallPhone" />
+      <div class="below-progress">
+        <div class="time">
+          {{ formatSeconds(queue.duration.current) }}
+        </div>
+        <Buttons v-if="isSmallPhone" :hide-heart="true" @handleFav="() => {}" />
+        <div class="time">
+          {{ formatSeconds(queue.duration.full) }}
+        </div>
+      </div>
     </div>
     <h3 v-if="queue.currenttrack">Now Playing</h3>
     <SongItem
@@ -29,11 +37,11 @@
       :track="queue.currenttrack"
       :index="queue.currentindex + 1"
       :source="dropSources.folder"
-      @play-this="() => {}"
       :style="{
         backgroundColor: colors.theme1,
         color: getTextColor(colors.theme1),
       }"
+      @play-this="() => {}"
     />
   </div>
 </template>
@@ -54,6 +62,7 @@ import NowPlayingInfo from "./NowPlayingInfo.vue";
 import PlayingFrom from "./PlayingFrom.vue";
 import Buttons from "../BottomBar/Right.vue";
 import { isSmallPhone } from "@/stores/content-width";
+import { formatSeconds } from "@/utils";
 
 const queue = useQueueStore();
 const colors = useColorStore();
@@ -74,14 +83,25 @@ function handleFav() {
   padding-bottom: 1rem;
   position: relative;
 
+  .below-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .time {
+      font-size: 12px;
+      background-color: $gray3;
+      padding: 0 $smaller;
+      min-width: 2.5rem;
+      text-align: center;
+      border-radius: $smaller;
+    }
+  }
+
   .centered {
     margin: 0 auto;
     width: 26rem;
     max-width: 100%;
-  }
-
-  .right-group {
-    margin: 0 auto;
   }
 
   .np-image {

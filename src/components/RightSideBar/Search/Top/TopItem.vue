@@ -7,7 +7,7 @@
           ? { hash: item.artisthash || ' ' }
           : { albumhash: item.albumhash || ' ' },
     }"
-    class="top-result-album rounded"
+    class="top-result-item rounded"
   >
     <img
       :src="
@@ -114,7 +114,7 @@ function showMenu(e: MouseEvent) {
 </script>
 
 <style lang="scss">
-.top-result-album {
+.top-result-item {
   background-color: $gray5;
   padding: 1rem;
   display: grid;

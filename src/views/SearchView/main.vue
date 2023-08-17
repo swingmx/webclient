@@ -16,7 +16,7 @@
       <component :is="component" />
     </div>
     <button
-      v-if="$route.params.page !== 'tracks'"
+      v-if="$route.params.page !== 'tracks' && $route.params.page !== 'top'"
       class="load-more"
       :class="{ load_disabled: !canLoadMore }"
       @click="canLoadMore && loadMore()"
@@ -39,6 +39,8 @@ import updatePageTitle from "@/utils/updatePageTitle";
 import AlbumPage from "./albums.vue";
 import ArtistPage from "./artists.vue";
 import TracksPage from "./tracks.vue";
+import TopTracks from "./TopResults.vue";
+
 import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
 
 const page = ref<HTMLElement>();
@@ -51,6 +53,8 @@ const route = useRoute();
 
 const component = computed(() => {
   switch (route.params.page) {
+    case pages[0]:
+      return TopTracks;
     case pages[1]:
       return TracksPage;
     case pages[2]:

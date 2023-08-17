@@ -18,6 +18,7 @@ import waitForScrollEnd from "@/helpers/useWaitForScroll";
 import { Album, Artist, Playlist, Track } from "../interfaces";
 import useLoaderStore from "./loader";
 import useTabStore from "./tabs";
+import { maxAbumCards } from "./content-width";
 /**
  *
  * Scrolls on clicking the loadmore button
@@ -88,8 +89,14 @@ export default defineStore("search", () => {
 
   function fetchTopResults(query: string) {
     if (!query) return;
+    let limit = 3;
 
-    searchTopResults(query).then((res) => {
+    if (route.name == Routes.search) {
+      limit = maxAbumCards.value;
+    }
+
+    searchTopResults(query, limit).then((res) => {
+      console.log(limit);
       top_results.top_result = res.top_result;
       top_results.tracks = res.tracks;
       top_results.albums = res.albums;

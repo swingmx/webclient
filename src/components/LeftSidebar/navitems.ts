@@ -17,7 +17,7 @@ export const menus = [
   {
     name: "search",
     route_name: Routes.search,
-    params: { page: "tracks" },
+    params: { page: "top" },
     query: () => ({ q: useSearchStore().query }),
     icon: SearchSvg,
   },

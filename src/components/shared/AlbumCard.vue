@@ -17,51 +17,46 @@
       <PlayBtn
         :store="useAlbumStore"
         :source="playSources.album"
-        :albumHash="album.albumhash"
-        :albumName="album.title"
+        :album-hash="album.albumhash"
+        :album-name="album.title"
       />
     </div>
     <div>
-      <h4 class="title ellip">
+      <h4 v-tooltip class="title ellip">
         {{ album.title }}
       </h4>
       <div
+        v-if="!hide_artists"
         class="artist ellip"
         @click.prevent.stop="() => {}"
-        v-if="!hide_artists"
       >
         <template v-if="show_date"> {{ album.date }} </template>
         <span
           v-if="
-            show_date &&
-            artist_page &&
-            album.albumartists[0].artisthash != $route.params.hash
+            (has_featured && artist_page) || (show_date && artists.length > 0)
           "
         >
           •
         </span>
         <RouterLink
-          v-if="
-            !show_date ||
-            (artist_page &&
-              album.albumartists[0].artisthash != $route.params.hash)
-          "
+          v-if="!show_date || (artist_page && artists.length > 0)"
           :to="{
             name: Routes.artist,
-            params: { hash: album.albumartists[0].artisthash },
+            params: { hash: artists[0].artisthash },
           }"
         >
-          {{ album.albumartists[0].name }}
+          {{ `${artists[0].name}` }}
         </RouterLink>
       </div>
 
+      <!-- when showing other versions -->
       <div
-        class="artist ellip"
         v-if="
           album.versions.length === 0 &&
           hide_artists &&
           $route.name === Routes.album
         "
+        class="artist ellip"
       >
         {{ album.date }}
         {{
@@ -70,16 +65,17 @@
             : ""
         }}
       </div>
+      <!-- end -->
 
-      <div class="versions" v-if="album.versions.length">
+      <div v-if="album.versions.length" class="versions">
         <MasterFlag
           v-for="v in getVersions(
             album.versions,
             useAlbumStore().info.versions
           )"
+          :key="v"
           :bitrate="1200"
           :text="v"
-          :key="v"
         />
       </div>
     </div>
@@ -87,17 +83,22 @@
 </template>
 
 <script setup lang="ts">
-import { paths } from "../../config";
+import { computed } from "vue";
+import { Routes } from "@/router";
+import { useRoute } from "vue-router";
+
 import { Album } from "../../interfaces";
 import PlayBtn from "./PlayBtn.vue";
 
+import { paths } from "../../config";
 import { playSources } from "@/enums";
-import { Routes } from "@/router";
 import useAlbumStore from "@/stores/pages/album";
 import MasterFlag from "./MasterFlag.vue";
 
 const imguri = paths.images.thumb.large;
-defineProps<{
+const route = useRoute();
+
+const props = defineProps<{
   album: Album;
   show_date?: boolean;
   artist_page?: boolean;
@@ -113,6 +114,22 @@ function getVersions(ver1: string[], ver2: string[] = []) {
 
   return ver1.slice(0, 1);
 }
+
+const has_featured = computed((x) => {
+  return props.album.albumartists.length > 1;
+});
+
+const artists = computed(() => {
+  const albumartists = props.album.albumartists.filter(
+    (x) => x.artisthash != route.params.hash
+  );
+
+  if (albumartists.length > 0) {
+    return albumartists;
+  }
+
+  return props.album.albumartists;
+});
 </script>
 
 <style lang="scss">

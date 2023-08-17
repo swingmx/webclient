@@ -24,8 +24,9 @@ async function fetchData(url: string) {
   return data;
 }
 
-async function searchTopResults(query: string) {
-  const url = searchTopResultsUrl + encodeURIComponent(query.trim());
+async function searchTopResults(query: string, limit: number) {
+  const url =
+    searchTopResultsUrl + encodeURIComponent(query.trim()) + `&limit=${limit}`;
   return await fetchData(url);
 }
 
