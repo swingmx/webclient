@@ -141,7 +141,7 @@ useVisibility(albumheaderthing, handleVisibilityState);
 
     .album-stats > div {
       border: none;
-      margin: 0 auto;
+      margin: $small auto;
     }
 
     .versions {

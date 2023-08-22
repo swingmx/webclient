@@ -4,12 +4,13 @@ import { useRoute } from "vue-router";
 
 import { ContextSrc } from "@/enums";
 import { Track } from "@/interfaces";
+import useContextStore from "@/stores/context";
 
 import albumContextItems from "@/context_menus/album";
 import artistContextItems from "@/context_menus/artist";
-import folderContextMenu from "@/context_menus/folder";
-import trackContext from "@/context_menus/track";
-import useContextStore from "@/stores/context";
+import folderContextItems from "@/context_menus/folder";
+import trackContextItems from "@/context_menus/track";
+import queueContextItems from "@/context_menus/queue";
 
 let prev_track = "";
 let stop_prev_watcher = () => {};
@@ -32,7 +33,7 @@ export const showTrackContextMenu = (
   on_playlist = false
 ) => {
   const menu = useContextStore();
-  const options = () => trackContext(track, route, on_playlist);
+  const options = () => trackContextItems(track, route, on_playlist);
 
   menu.showContextMenu(e, options, ContextSrc.Track);
 
@@ -56,7 +57,7 @@ export const showFolderContextMenu = (
 ) => {
   const menu = useContextStore();
 
-  const options = () => folderContextMenu(source, path);
+  const options = () => folderContextItems(source, path);
   menu.showContextMenu(e, options, source);
 
   flagWatcher(menu, flag);
@@ -72,6 +73,15 @@ export const showArtistContextMenu = (
 
   const options = () => artistContextItems(artisthash, artistname);
   menu.showContextMenu(e, options, ContextSrc.ArtistHeader);
+
+  flagWatcher(menu, flag);
+};
+
+export const showQueueContextMenu = (e: MouseEvent, flag: Ref<boolean>) => {
+  const menu = useContextStore();
+
+  const options = () => queueContextItems();
+  menu.showContextMenu(e, options, ContextSrc.Queue);
 
   flagWatcher(menu, flag);
 };

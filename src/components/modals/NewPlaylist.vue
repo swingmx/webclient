@@ -15,15 +15,15 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
+
 import {
   saveAlbumAsPlaylist,
   saveArtistAsPlaylist,
-  saveQueueAsPlaylist,
   saveTrackAsPlaylist,
 } from "@/requests/playlists";
-import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
-import { NotifType, Notification } from "@/stores/notification";
 import useQueueStore from "@/stores/queue";
+import { NotifType, Notification } from "@/stores/notification";
+import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
 
 const props = defineProps<{
   trackhash?: string;
@@ -96,7 +96,7 @@ function create(e: Event) {
     const trackhashes = queue.tracklist.map((track) => track.trackhash);
     const itemhash = trackhashes.join(",");
 
-    saveQueueAsPlaylist(name, itemhash).then(() => {
+    saveTrackAsPlaylist(name, itemhash).then(() => {
       emit("hideModal");
     });
   };

@@ -5,19 +5,16 @@ import { router as Router, Routes } from "@/router";
 
 import { Option } from "@/interfaces";
 import { openInFiles } from "@/requests/folders";
-import {
-    addTrackToPlaylist,
-    removeTracks
-} from "@/requests/playlists";
+import { addTracksToPlaylist, removeTracks } from "@/requests/playlists";
 
 import {
-    AddToQueueIcon,
-    AlbumIcon,
-    ArtistIcon,
-    DeleteIcon,
-    FolderIcon,
-    PlayNextIcon,
-    PlusIcon,
+  AddToQueueIcon,
+  AlbumIcon,
+  ArtistIcon,
+  DeleteIcon,
+  FolderIcon,
+  PlayNextIcon,
+  PlusIcon,
 } from "@/icons";
 import usePlaylistStore from "@/stores/pages/playlist";
 import useQueueStore from "@/stores/queue";
@@ -57,7 +54,7 @@ export default async (
   };
 
   const AddToPlaylistAction = (playlist: Playlist) => {
-    addTrackToPlaylist(playlist, track).then((success) => {
+    addTracksToPlaylist(playlist, [track]).then((success) => {
       if (
         !(
           route.name == Routes.playlist &&
@@ -77,6 +74,7 @@ export default async (
     label: "Add to Playlist",
     children: await getAddToPlaylistOptions(AddToPlaylistAction, {
       trackhash: track.trackhash,
+      playlist_name: track.title + ' Radio',
     }),
     icon: PlusIcon,
   };

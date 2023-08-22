@@ -99,10 +99,10 @@ export async function addItemToPlaylist(playlist: Playlist, props: {}) {
   return true;
 }
 
-export function addTrackToPlaylist(playlist: Playlist, track: Track) {
+export function addTracksToPlaylist(playlist: Playlist, tracks: Track[]) {
   return addItemToPlaylist(playlist, {
-    itemtype: "track",
-    itemhash: track.trackhash,
+    itemtype: "tracks",
+    itemhash: tracks.map((t) => t.trackhash).join(","),
   });
 }
 
@@ -152,7 +152,7 @@ export async function saveItemAsPlaylist(itemtype: string, props: {}) {
 }
 
 export function saveTrackAsPlaylist(playlist_name: string, itemhash: string) {
-  return saveItemAsPlaylist("track", {
+  return saveItemAsPlaylist("tracks", {
     itemhash,
     playlist_name,
   });
@@ -174,13 +174,6 @@ export function saveFolderAsPlaylist(playlist_name: string, itemhash: string) {
 
 export function saveArtistAsPlaylist(playlist_name: string, itemhash: string) {
   return saveItemAsPlaylist("artist", {
-    itemhash,
-    playlist_name,
-  });
-}
-
-export function saveQueueAsPlaylist(playlist_name: string, itemhash: string) {
-  return saveItemAsPlaylist("queue", {
     itemhash,
     playlist_name,
   });

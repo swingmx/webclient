@@ -50,9 +50,10 @@ export default defineStore("newModal", {
       };
       this.showModal(ModalOptions.newPlaylist, props);
     },
-    showSaveQueueAsPlaylistModal() {
+    showSaveQueueAsPlaylistModal(name: string) {
       const props = {
         is_queue: true,
+        playlist_name: name,
       };
       this.showModal(ModalOptions.newPlaylist, props);
     },

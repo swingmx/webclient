@@ -8,30 +8,31 @@
     </div>
     <div class="right">
       <button
-        v-wave
-        class="go-to-source action"
-        href="#"
-        @click="queue.clearQueue"
+        :class="{ 'btn-active': context_showing }"
+        @click="showContextMenu"
       >
-        <ClearSvg />
-      </button>
-      <button @click="modal.showSaveQueueAsPlaylistModal">
-        Save {{ isSmallPhone ? "" : "As Playlist" }}
+        <OptionsSvg />
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import useQueueStore from "@/stores/queue";
-import useModalStore from "@/stores/modal";
 
-import ClearSvg from "@/assets/icons/delete.svg";
+import OptionsSvg from "@/assets/icons/more.svg";
 import ShuffleSvg from "@/assets/icons/shuffle.svg";
-import { isSmallPhone } from "@/stores/content-width";
+import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
 
 const queue = useQueueStore();
-const modal = useModalStore();
+const context_showing = ref(false);
+
+function showContextMenu(e: MouseEvent) {
+  if (!queue.tracklist.length) return;
+
+  showQueueContextMenu(e, context_showing);
+}
 </script>
 
 <style lang="scss">
@@ -55,11 +56,11 @@ const modal = useModalStore();
     }
   }
 
-  .right {
-    display: flex;
-    gap: $small;
-    .go-to-source {
-      padding: 0 $smaller;
+  .right > button {
+    padding: 0 $smaller;
+
+    svg {
+      transform: scale(1.2) rotate(90deg);
     }
   }
 }
