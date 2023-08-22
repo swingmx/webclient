@@ -9,8 +9,16 @@ import HeartSvg from "@/assets/icons/heart.fill.svg";
 import PlaylistSvg from "@/assets/icons/playlist.svg";
 import SearchSvg from "@/assets/icons/search.svg";
 import { paths } from "@/config";
+import { RouteLocationRaw } from "vue-router";
 
-export default (source: From) => {
+interface PlayingFrom {
+  name: string;
+  icon: string;
+  location: RouteLocationRaw;
+  image?: string;
+}
+
+export default (source: From): PlayingFrom => {
   switch (source.type) {
     case FromOptions.album:
       return {
@@ -58,8 +66,10 @@ export default (source: From) => {
         location: {
           name: Routes.search,
           params: {
-            query: source.query,
-            page: "tracks",
+            page: "top",
+          },
+          query: {
+            q: source.query,
           },
         },
         image: "",
@@ -89,6 +99,6 @@ export default (source: From) => {
       };
 
     default:
-      return { name: "👻 No source", location: {} };
+      return { name: "👻 No source", location: {}, icon: "" };
   }
 };

@@ -252,22 +252,6 @@ export async function deletePlaylist(pid: number) {
   }
 }
 
-export async function updateBannerPos(pid: number, pos: number) {
-  const { status } = await useAxios({
-    url: paths.api.playlist.base + `/${pid}/set-image-pos`,
-    props: {
-      pos,
-    },
-  });
-
-  if (status === 200) {
-    new Notification("Image position saved");
-    return;
-  }
-
-  new Notification("Unable to save image position", NotifType.Error);
-}
-
 export async function removeTracks(
   pid: number,
   tracks: { trackhash: string; index: number }[]
@@ -299,4 +283,17 @@ export async function removeBannerImage(playlistid: number) {
   }
 
   new Notification("Unable to remove banner image", NotifType.Error);
+}
+
+export async function pinUnpinPlaylist(pid: number) {
+  const { status } = await useAxios({
+    url: paths.api.playlist.base + `/${pid}/pin_unpin`,
+    get: true,
+  });
+
+  if (status === 200) {
+    return true;
+  }
+
+  return false;
 }

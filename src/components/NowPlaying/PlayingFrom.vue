@@ -17,7 +17,7 @@
             queue.from.type === FromOptions.artist ? 'circular' : 'rounded-sm'
           }`"
         />
-        <div class="from-icon border rounded-sm" v-else>
+        <div v-else class="from-icon border rounded-sm">
           <component :is="data.icon"></component>
         </div>
         <div class="pad-sm">
@@ -28,8 +28,8 @@
     </router-link>
     <OptionSvg
       class="optionsvg"
-      @click="showMenu"
       :class="{ context_menu_showing }"
+      @click="showMenu"
     />
   </div>
 </template>

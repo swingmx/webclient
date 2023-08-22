@@ -1,6 +1,6 @@
 <template>
   <div
-    class="p-header image rounded"
+    class="p-header image rounded-lg"
     :style="[
       {
         background: bg,
@@ -8,12 +8,23 @@
         height: `${heightLarge || isSmallPhone ? '24rem' : '18rem'}`,
       },
     ]"
-    :class="{ 'use-sqr_img': info.has_image && info.settings.square_img }"
+    :class="{ 'use-sqr_img': info.settings.square_img || !info.has_image }"
   >
-    <div v-if="info.has_image" class="gradient rounded"></div>
+    <div
+      class="float"
+      :style="{
+        color: textColor,
+      }"
+      @click="pinPlaylist(info.id)"
+    >
+      <PinFillSvg v-if="info.pinned" />
+      <PinSvg v-else />
+    </div>
+
+    <div v-if="info.has_image" class="gradient rounded-lg"></div>
     <div
       v-if="!info.has_image || info.settings.square_img"
-      class="album-header-ambient rounded"
+      class="album-header-ambient rounded-lg"
       style="height: 100%; width: 100%"
       :style="{
         boxShadow: colors.bg
@@ -21,12 +32,10 @@
           : '0 .5rem 2rem black',
       }"
     ></div>
-    <div class="thumbnail-container rounded no-scroll">
-      <BannerImages />
-    </div>
     <div v-if="info.has_image && info.settings.square_img" class="sqr_img">
       <img :src="(playlist.info.image as string)" class="rounded-sm" />
     </div>
+    <BannerImages v-else class="sqr_img rounded-sm" />
     <Info :text-color="textColor" :btn_color="colors.btn" />
     <LastUpdated />
   </div>
@@ -43,6 +52,9 @@ import { heightLarge, isSmallPhone } from "@/stores/content-width";
 import Info from "./Header/Info.vue";
 import LastUpdated from "./Header/LastUpdated.vue";
 import BannerImages from "./Header/BannerImages.vue";
+import PinSvg from "@/assets/icons/pin.svg";
+import PinFillSvg from "@/assets/icons/pin.fill.svg";
+import { pinUnpinPlaylist } from "@/requests/playlists";
 
 const playlist = usePStore();
 
@@ -52,6 +64,7 @@ const bg = computed(() => {
     return `url(${info.value.image})`;
   }
 
+  // return "";
   return colors.value.bg ? colors.value.bg : "";
 });
 
@@ -63,6 +76,15 @@ const textColor = computed(() => {
 
   return "";
 });
+
+function pinPlaylist(pid: number) {
+  console.log("success");
+  pinUnpinPlaylist(pid).then((success) => {
+    if (success) {
+      playlist.info.pinned = !playlist.info.pinned;
+    }
+  });
+}
 </script>
 
 <style lang="scss">
@@ -70,19 +92,27 @@ const textColor = computed(() => {
   display: grid;
   grid-template-columns: 1fr;
   position: relative;
-  background-color: $gray;
   background-position: center 50%;
   background-size: cover !important;
+  padding-bottom: 1rem;
 
-  .thumbnail-container {
-    height: 100% !important;
+  .album-header-ambient {
     position: absolute;
-    width: 100%;
+    opacity: 0.25;
+  }
+
+  .float {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    transform: scale(0.75);
+    z-index: 100;
+    cursor: pointer;
   }
 
   &.use-sqr_img {
     grid-template-columns: max-content 1fr;
-    align-items: center;
+    align-items: flex-end;
 
     .title {
       font-size: 3.75rem !important;
@@ -139,9 +169,5 @@ const textColor = computed(() => {
       font-size: 2.5rem !important;
     }
   }
-}
-
-.p-header.border {
-  border: solid 1px $gray4;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="!on_sidebar"
-    class="artist-header-ambient rounded"
+    class="artist-header-ambient rounded-lg"
     :class="{ isSmallPhone }"
     style="height: 100%; width: 100%"
     :style="{
@@ -12,7 +12,7 @@
   ></div>
   <div
     ref="artistheader"
-    class="artist-page-header rounded no-scroll"
+    class="artist-page-header rounded-lg no-scroll"
     :class="{ isSmallPhone }"
     :style="{
       height: `${heightLarge || isSmallPhone ? '25rem' : '18rem'}`,

@@ -1,5 +1,8 @@
-// TEXT
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
 
+// TEXT
 .t-center {
   text-align: center;
 }
@@ -54,10 +57,13 @@ a {
   border-radius: $medium;
 }
 
+.rounded-lg {
+  border-radius: 1.25rem;
+}
+
 .circular {
   border-radius: 10rem;
 }
-
 
 .bg-primary {
   background-color: $gray4;

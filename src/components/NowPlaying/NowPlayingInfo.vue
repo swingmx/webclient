@@ -3,11 +3,11 @@
     <div class="text">
       <div class="title">{{ queue.currenttrack?.title || "Swing Music" }}</div>
       <ArtistName
+        v-if="queue.currenttrack"
         :artists="queue.currenttrack?.artists || null"
         :albumartists="queue.currenttrack?.albumartists || ''"
-        v-if="queue.currenttrack"
       />
-      <span class="artist rickroll" v-else>
+      <span v-else class="artist author">
         <a href="https://github.com/mungai-njoroge" target="_blank"
           >built by @mungai-njoroge ↗</a
         >
@@ -47,7 +47,15 @@ defineEmits<{
     color: $gray1;
   }
 
-  .rickroll {
+  .heart-button {
+    background-color: $gray;
+
+    &:hover {
+      background-color: $gray4;
+    }
+  }
+
+  .author {
     & > * {
       color: $gray1 !important;
     }

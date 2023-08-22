@@ -28,6 +28,7 @@
           playlist.info.name,
           test_elem?.offsetWidth || 0
         )"
+        :key="t"
       >
         {{ t }}
         <br />
@@ -62,7 +63,7 @@ const test_elem: Ref<HTMLElement | null> = ref(null);
   height: 100%;
   display: grid;
   z-index: 10;
-  padding: 0 1rem 1rem 1rem;
+  padding-left: 1.25rem;
   display: flex;
   flex-direction: column-reverse;
 

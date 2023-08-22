@@ -1,8 +1,9 @@
 import { defineStore } from "pinia";
 
 import { xxl } from "@/composables/useBreakpoints";
-import { contextChildrenShowMode } from "@/enums";
+import { NotifType, contextChildrenShowMode } from "@/enums";
 import { setMute, setVolume } from "@/player";
+import { useNotifStore } from "../notification";
 
 export default defineStore("settings", {
   state: () => ({
@@ -19,6 +20,7 @@ export default defineStore("settings", {
     show_master_quality_flag: true,
     volume: 1.0,
     mute: false,
+    hidden_radios_unlocked: false,
   }),
   actions: {
     toggleUseNPImg() {
@@ -80,6 +82,24 @@ export default defineStore("settings", {
     initializeVolume() {
       setVolume(this.volume);
       setMute(this.mute);
+    },
+    isRadioTime() {
+      const date = new Date();
+      const hour = date.getHours();
+
+      // "... right time"
+      return hour >= 19 && hour <= 23;
+    },
+    unlockHiddenRadios() {
+      if (!this.isRadioTime()) return;
+      if (!this.hidden_radios_unlocked) {
+        useNotifStore().showNotification(
+          "Internet Radios Unlocked!",
+          NotifType.Success
+        );
+      }
+
+      this.hidden_radios_unlocked = true;
     },
   },
   getters: {

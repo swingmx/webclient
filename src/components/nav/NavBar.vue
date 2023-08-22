@@ -9,7 +9,10 @@
           v-if="$route.name == Routes.settings"
           :text="'Settings'"
         />
-        <FolderTitle v-if="$route.name == Routes.folder" :subPaths="subPaths" />
+        <FolderTitle
+          v-if="$route.name == Routes.folder"
+          :sub-paths="subPaths"
+        />
         <SearchTitle v-if="$route.name == Routes.search" />
         <PlaylistsTitle v-if="$route.name == Routes.playlists" />
         <QueueTitle v-if="$route.name == Routes.nowPlaying" />
@@ -66,7 +69,7 @@ watch(
   () => route.name,
   (newRoute) => {
     switch (newRoute) {
-      case Routes.folder:
+      case Routes.folder: {
         let oldpath = "";
         [oldpath, subPaths.value] = createSubPaths(
           route.params.path as string,
@@ -83,6 +86,7 @@ watch(
           }
         );
         break;
+      }
       default:
         break;
     }

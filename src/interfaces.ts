@@ -84,6 +84,13 @@ export interface Option {
   critical?: Boolean;
 }
 
+export interface PlaylistSettings {
+  banner_pos: number;
+  has_gif: boolean;
+  square_img: boolean;
+  pinned: boolean;
+}
+
 export interface Playlist {
   id: number;
   name: string;
@@ -94,17 +101,21 @@ export interface Playlist {
   last_updated: string;
   thumb: string;
   duration: number;
-  settings: {
-    banner_pos: number;
-    has_gif: boolean;
-    square_img: boolean;
-  };
+  settings: PlaylistSettings;
+  pinned: boolean;
   images:
     | {
         image: string;
         color: string;
       }[] // for playlist page
     | string[]; // for playlist list page
+}
+
+export interface Radio {
+  name: string;
+  image: string;
+  src: string;
+  genres: string[];
 }
 
 export interface Notif {

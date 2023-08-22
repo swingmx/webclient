@@ -1,7 +1,9 @@
 <template>
   <div class="side-nav-container">
     <router-link
-      v-for="(menu, index) in menus"
+      v-for="(menu, index) in menus.filter((i) =>
+        i.unlock_key ? i.unlock_key() : true
+      )"
       :key="index"
       v-wave
       :to="{
@@ -16,7 +18,7 @@
       }"
     >
       <div v-if="!menu.separator">
-        <component :is="menu.icon" />
+        <component :is="menu.icon" :class="menu.class" />
         <span>{{ menu.name }}</span>
       </div>
     </router-link>
@@ -83,6 +85,10 @@ import { menus } from "./navitems";
     border-radius: $small;
     transform: scale(0.9);
     opacity: 0.75;
+  }
+  
+  svg.radiosvg {
+    transform: scale(0.7);
   }
 }
 </style>

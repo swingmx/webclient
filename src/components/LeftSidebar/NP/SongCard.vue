@@ -1,6 +1,6 @@
 <template>
   <Motion
-    :key="q.currenttrack?.filepath"
+    :key="q.currenttrack?.trackhash"
     :initial="{ opacity: 0, scale: 0.9 }"
     :animate="{
       opacity: 1,

@@ -7,23 +7,23 @@ import usePlaylistPageStore from "@/stores/pages/playlist";
 import usePlaylistListPageStore from "@/stores/pages/playlists";
 import useArtistPageStore from "@/stores/pages/artist";
 
-import FolderView from "@/views/FolderView.vue";
-import PlaylistListView from "@/views/PlaylistList.vue";
-import PlaylistView from "@/views/PlaylistView/index.vue";
-import AlbumsExplorer from "@/views/AlbumsExplorer.vue";
-import AlbumView from "@/views/AlbumView/index.vue";
-import ArtistExplorer from "@/views/ArtistsExplorer.vue";
-import ArtistView from "@/views/ArtistView";
-import ArtistTracksView from "@/views/ArtistTracks.vue";
-import ArtistDiscographyView from "@/views/ArtistDiscography.vue";
-import SettingsView from "@/views/SettingsView.vue";
-import SearchView from "@/views/SearchView";
-import FavoritesView from "@/views/Favorites.vue";
-import FavoriteAlbums from "@/views/FavoriteAlbums.vue";
-import FavoriteTracks from "@/views/FavoriteTracks.vue";
-import FavoriteArtists from "@/views/FavoriteArtists.vue";
-import NotFound from "@/views/NotFound.vue";
-import NowPlaying from "@/views/NowPlaying";
+const FolderView = () => import("@/views/FolderView.vue");
+const PlaylistListView = () => import("@/views/PlaylistList.vue");
+const PlaylistView = () => import("@/views/PlaylistView/index.vue");
+const AlbumsExplorer = () => import("@/views/AlbumsExplorer.vue");
+const AlbumView = () => import("@/views/AlbumView/index.vue");
+const ArtistExplorer = () => import("@/views/ArtistsExplorer.vue");
+const ArtistView = () => import("@/views/ArtistView");
+const ArtistTracksView = () => import("@/views/ArtistTracks.vue");
+const ArtistDiscographyView = () => import("@/views/ArtistDiscography.vue");
+const SettingsView = () => import("@/views/SettingsView.vue");
+const SearchView = () => import("@/views/SearchView");
+const FavoritesView = () => import("@/views/Favorites.vue");
+const FavoriteAlbums = () => import("@/views/FavoriteAlbums.vue");
+const FavoriteTracks = () => import("@/views/FavoriteTracks.vue");
+const FavoriteArtists = () => import("@/views/FavoriteArtists.vue");
+const NotFound = () => import("@/views/NotFound.vue");
+const NowPlaying = () => import("@/views/NowPlaying");
 
 const home = {
   path: "/",
@@ -168,6 +168,12 @@ const favoriteArtists = {
   component: FavoriteArtists,
 };
 
+const HiddenView = {
+  path: "/hidden",
+  name: "HiddenView",
+  component: () => import("@/views/Hidden/Radios"),
+};
+
 const notFound = {
   name: "NotFound",
   path: "/:pathMatch(.*)",
@@ -193,6 +199,7 @@ const routes = [
   favoriteTracks,
   favoriteArtists,
   NowPlayingView,
+  HiddenView,
 ];
 
 export const Routes = {
@@ -214,6 +221,7 @@ export const Routes = {
   favoriteTracks: favoriteTracks.name,
   favoriteArtists: favoriteArtists.name,
   nowPlaying: NowPlayingView.name,
+  hidden: HiddenView.name,
 };
 
 const router = createRouter({

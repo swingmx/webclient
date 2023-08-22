@@ -5,11 +5,11 @@
     style="height: 100%"
   >
     <RecycleScroller
+      v-slot="{ item }"
       class="scroller"
       :items="scrollerItems"
       :item-size="null"
       key-field="id"
-      v-slot="{ item }"
       style="height: 100%"
     >
       <component
@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUpdated } from "vue";
-import { computed } from "@vue/reactivity";
+import { computed } from "vue";
 
 import {
   heightLarge,
@@ -71,7 +71,7 @@ const scrollerItems = computed(() => {
   const header: ScrollerItem = {
     id: "header",
     component: Header,
-    size: heightLarge.value || isSmallPhone.value ? 25 * 16 : 19 * 16,
+    size: heightLarge.value || isSmallPhone.value ? 25 * 16 : 18 * 16,
   };
 
   const afterHeader: ScrollerItem = {

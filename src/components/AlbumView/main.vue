@@ -1,6 +1,6 @@
 <template>
   <div
-    class="album-header-ambient rounded"
+    class="album-header-ambient rounded-lg"
     style="height: 100%; width: 100%"
     :style="{
       boxShadow: colors.bg ? `0 .5rem 2rem ${colors.bg}` : '0 .5rem 2rem black',
@@ -8,7 +8,7 @@
   ></div>
   <div
     ref="albumheaderthing"
-    class="a-header rounded"
+    class="a-header rounded-lg"
     :style="{
       background: colors.bg ? colors.bg : '',
     }"

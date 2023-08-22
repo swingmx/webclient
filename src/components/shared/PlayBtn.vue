@@ -11,6 +11,7 @@ import { playFromAlbumCard, playFromArtistCard } from "@/helpers/usePlayFrom";
 
 import PlaySvg from "@/assets/icons/play.svg";
 import useQueueStore from "@/stores/queue";
+import useSearchStore from "@/stores/search";
 
 const props = defineProps<{
   source: playSources | null;
@@ -31,12 +32,18 @@ function handlePlay() {
       playFromArtistCard(props.artisthash || "", props.artistname || "");
       break;
 
-    case playSources.track:
+    case playSources.track: {
       // insert after current and play
+      if (!props.track) break;
+
       const queue = useQueueStore();
-      queue.insertAfterCurrent([props.track as Track]);
-      queue.play(queue.nextindex);
+      const search = useSearchStore();
+
+      queue.clearQueue();
+      queue.playFromSearch(search.query, [props.track]);
+      queue.play();
       break;
+    }
 
     default:
       break;

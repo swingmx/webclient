@@ -56,6 +56,7 @@ const search = useSearchStore();
     margin-right: 1.25rem;
     display: grid;
     grid-template-columns: 26rem 1fr;
+    margin-bottom: 2rem;
     gap: $medium;
 
     @include allPhones {
@@ -64,7 +65,7 @@ const search = useSearchStore();
   }
 
   h3 {
-    margin: $medium;
+    margin: $small;
   }
 
   .top-result-item {
@@ -74,10 +75,6 @@ const search = useSearchStore();
     h3 {
       margin-left: 0;
     }
-  }
-
-  .right-search-top-tracks {
-    margin-bottom: 1rem;
   }
 
   .track-item {

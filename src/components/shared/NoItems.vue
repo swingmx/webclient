@@ -1,5 +1,5 @@
 <template>
-  <div class="nothing rounded" v-if="flag">
+  <div v-if="flag" class="nothing rounded">
     <div>
       <component :is="icon" />
       <h3>{{ title }}</h3>
@@ -31,8 +31,11 @@ defineProps<{
     word-break: break-word;
   }
 
+  h3 {
+    margin-top: 2.75rem;
+  }
+
   svg {
-    margin-bottom: 2rem;
     transform: scale(5);
   }
 

@@ -1,6 +1,5 @@
 <template>
-  <div class="playlists-nav">
-    <SimpleNav :text="'Playlists'" />
+  <div v-if="isSmall" class="playlists-nav">
     <div class="buttons">
       <button @click="showNewPlaylistModal()"><PlusSvg /> New Playlist</button>
     </div>
@@ -8,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import SimpleNav from "./SimpleNav.vue";
-import PlusSvg from "../../../assets/icons/plus.svg";
+import PlusSvg from "@/assets/icons/plus.svg";
+import { isSmall } from "@/stores/content-width";
 
 import useModalStore from "@/stores/modal";
 const { showNewPlaylistModal } = useModalStore();
@@ -17,9 +16,8 @@ const { showNewPlaylistModal } = useModalStore();
 
 <style lang="scss">
 .playlists-nav {
-  display: grid;
-  grid-template-columns: 1fr max-content;
-  align-items: center;
+  display: flex;
+  justify-content: flex-end;
 
   button {
     padding-right: $small;
