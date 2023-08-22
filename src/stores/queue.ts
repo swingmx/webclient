@@ -161,6 +161,11 @@ export default defineStore("Queue", {
       this.play(this.nextindex);
     },
     playPrev() {
+      if (audio.currentTime > 3) {
+        audio.currentTime = 0;
+        return;
+      }
+
       this.play(this.previndex);
     },
     seek(pos: number) {
