@@ -74,3 +74,27 @@ export enum dropSources {
   artist = "artist",
   favorite = "favorite",
 }
+
+export enum DbSettingKeys {
+  root_dirs = "root_dirs",
+  exclude_dirs = "exclude_dirs",
+  artist_separators = "artist_separators",
+  extract_feat = "extract_feat",
+  remove_prod = "remove_prod",
+  clean_album_title = "clean_album_title",
+  show_album_version = "show_album_version",
+  remove_remaster = "remove_remaster",
+  merge_albums = "merge_albums",
+}
+
+export interface DBSettings {
+  root_dirs: string[];
+  exclude_dirs: string[];
+  artist_separators: string[];
+  extract_feat: boolean;
+  remove_prod: boolean;
+  clean_album_title: boolean;
+  show_album_version: boolean;
+  remove_remaster: boolean;
+  merge_albums: boolean;
+}

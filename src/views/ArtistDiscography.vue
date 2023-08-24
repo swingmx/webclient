@@ -5,10 +5,10 @@
         v-for="album in artist.toShow.sort(
           (a, b) => parseInt(b.date) - parseInt(a.date)
         )"
-        :album="album"
         :key="album.albumhash"
+        :album="album"
         :artist_page="true"
-        :show_date="artist.page != discographyAlbumTypes.appearances"
+        :show_date="true"
       />
     </div>
   </div>

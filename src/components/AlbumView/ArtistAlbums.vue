@@ -10,13 +10,13 @@
         "
       />
     </h3>
-    <div class="cards" ref="artistItemsWrappers">
+    <div ref="artistItemsWrappers" class="cards">
       <AlbumCard
         v-for="a in albums"
+        :key="a.albumhash"
         :album="a"
         :show_date="show_date"
         :artist_page="artist_page"
-        :hide_artists="hide_artists"
       />
     </div>
   </div>
@@ -41,11 +41,9 @@ defineProps<{
   route: string;
   show_date?: boolean;
   artist_page?: boolean;
-  hide_artists?: boolean;
 }>();
 
 const artistItemsWrappers = ref<HTMLElement | null>(null);
-
 </script>
 
 <style lang="scss">

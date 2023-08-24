@@ -6,7 +6,7 @@
       class="scroller"
       style="height: 100%"
     >
-      <template v-slot="{ item, index, active }">
+      <template #default="{ item, index, active }">
         <DynamicScrollerItem
           :item="item"
           :active="active"
@@ -14,8 +14,8 @@
           :data-index="index"
         >
           <component
-            :key="index"
             :is="item.component"
+            :key="index"
             v-bind="item.props"
           ></component>
         </DynamicScrollerItem>
@@ -121,6 +121,7 @@ function createAbumComponent(
       break;
     case AlbumType.APPEARANCES:
       albumType = discographyAlbumTypes.appearances;
+      break;
 
     default:
       break;
@@ -135,6 +136,7 @@ function createAbumComponent(
       artisthash: route.params.hash,
       show_date,
       artist_page: true,
+      hide_artists: !(AlbumType.APPEARANCES === title),
       route: `/artists/${store.info.artisthash}/discography?artist=${store.info.name}`,
     },
   };

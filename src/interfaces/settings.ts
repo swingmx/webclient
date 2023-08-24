@@ -7,6 +7,7 @@ export interface SettingOption {
 
 export interface Setting {
   title: string;
+  desc?: string;
   type: SettingType;
   options?: SettingOption[];
   inactive?: () => boolean;

@@ -13,7 +13,7 @@ defineProps<{
 <style lang="scss">
 .switch {
   height: 1.5rem;
-  background-color: $gray3;
+  background-color: rgb(26, 39, 97);
   width: 2.5rem;
   padding: $smaller;
   position: relative;

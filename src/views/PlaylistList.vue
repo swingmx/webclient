@@ -55,7 +55,7 @@ import updatePageTitle from "@/utils/updatePageTitle";
 import { isMedium, isSmall, maxAbumCards } from "@/stores/content-width";
 
 import NoItems from "@/components/shared/NoItems.vue";
-import Header from "@/components/Radios/Header.vue";
+import Header from "@/components/Radios/GenericHeader.vue";
 import PlaylistSvg from "@/assets/icons/playlist-1.svg";
 import PlaylistCardGroup from "@/components/PlaylistsList/PlaylistCardGroup.vue";
 import PlusSvg from "@/assets/icons/plus.svg";

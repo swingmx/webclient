@@ -1,7 +1,10 @@
+/* eslint-disable no-undef */
+
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import svgLoader from "vite-svg-loader";
 import { VitePWA } from "vite-plugin-pwa";
+import viteCompression from "vite-plugin-compression";
 
 const path = require("path");
 
@@ -82,6 +85,9 @@ export default defineConfig({
         background_color: "rgba(0, 0, 0, 0.95)",
       },
     }),
+    viteCompression({
+      threshold: 150,
+    }),
   ],
   resolve: {
     alias: {
@@ -94,5 +100,10 @@ export default defineConfig({
         additionalData: `@import "@/assets/scss/_variables.scss", "@/assets/scss/_mixins.scss";`,
       },
     },
+  },
+  build: {
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 1500,
+    emptyOutDir: true,
   },
 });

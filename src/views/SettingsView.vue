@@ -3,33 +3,27 @@
     class="settingspage content-page"
     style="height: 100%; overflow: auto; padding-right: 1.25rem"
   >
+
     <Content :current="0" />
-    <div class="version t-center">
-      <span>Swing Music - v{{ VERSION }}</span>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import { getRootDirs } from "@/requests/settings/rootdirs";
 import useSettingsStore from "@/stores/settings";
+import { getAllSettings } from "@/requests/settings";
 import updatePageTitle from "@/utils/updatePageTitle";
-import Content from "../components/SettingsView/Content.vue";
-import { VERSION } from "@/config";
 
-const settings = useSettingsStore();
+import Content from "../components/SettingsView/Content.vue";
+
+const store = useSettingsStore();
 
 onMounted(() => {
+  console.log("SettingsView mounted");
   updatePageTitle("Settings");
-  getRootDirs().then((dirs) => settings.setRootDirs(dirs));
+  getAllSettings().then(({ settings }) => {
+    store.mapDbSettings(settings);
+  });
 });
 </script>
-
-<style lang="scss">
-.version {
-  margin: 2rem 0;
-  color: $gray1;
-}
-</style>

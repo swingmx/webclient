@@ -1,5 +1,5 @@
 <template>
-  <button class="speaker" @wheel="handleMouseWheel">
+  <button class="speaker" @wheel.passive="handleMouseWheel">
     <div class="icon" @click="settings.toggleMute">
       <VolumeMuteSvg v-if="settings.mute || settings.volume == 0.0" />
       <VolumeMidSvg v-else-if="settings.volume > 0.75" />
@@ -7,9 +7,9 @@
     </div>
     <div class="dialog rounded-sm pad-sm">
       <input
+        id="volume"
         type="range"
         name="volume"
-        id="volume"
         max="1"
         min="0"
         step="0.01"

@@ -25,21 +25,11 @@
       <h4 v-tooltip class="title ellip">
         {{ album.title }}
       </h4>
-      <div
-        v-if="!hide_artists"
-        class="artist ellip"
-        @click.prevent.stop="() => {}"
-      >
+      <div class="artist ellip" @click.prevent.stop="() => {}">
         <template v-if="show_date"> {{ album.date }} </template>
-        <span
-          v-if="
-            (has_featured && artist_page) || (show_date && artists.length > 0)
-          "
-        >
-          •
-        </span>
+        <span v-if="show_date && artists.length > 0"> • </span>
         <RouterLink
-          v-if="!show_date || (artist_page && artists.length > 0)"
+          v-if="artists.length > 0"
           :to="{
             name: Routes.artist,
             params: { hash: artists[0].artisthash },
@@ -50,7 +40,7 @@
       </div>
 
       <!-- when showing other versions -->
-      <div
+      <!-- <div
         v-if="
           album.versions.length === 0 &&
           hide_artists &&
@@ -64,7 +54,12 @@
             ? ` • ${album.albumartists[1].name}`
             : ""
         }}
-      </div>
+      </div> -->
+      <!-- <div v-else>
+        <div class="artist ellip">
+          {{ album.date }}
+        </div>
+      </div> -->
       <!-- end -->
 
       <div v-if="album.versions.length" class="versions">
@@ -115,20 +110,12 @@ function getVersions(ver1: string[], ver2: string[] = []) {
   return ver1.slice(0, 1);
 }
 
-const has_featured = computed((x) => {
-  return props.album.albumartists.length > 1;
-});
-
 const artists = computed(() => {
-  const albumartists = props.album.albumartists.filter(
-    (x) => x.artisthash != route.params.hash
-  );
+  const albumartists = props.artist_page
+    ? props.album.albumartists.filter((x) => x.artisthash != route.params.hash)
+    : props.album.albumartists;
 
-  if (albumartists.length > 0) {
-    return albumartists;
-  }
-
-  return props.album.albumartists;
+  return albumartists;
 });
 </script>
 

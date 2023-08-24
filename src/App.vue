@@ -109,7 +109,8 @@ function handleRootDirsPrompt() {
   getRootDirs().then((dirs) => {
     if (dirs.length === 0) {
       modal.showRootDirsPromptModal();
-    } else {
+    }
+     else {
       settings.setRootDirs(dirs);
     }
   });

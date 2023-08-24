@@ -2,37 +2,42 @@
   <div class="settingsgroup">
     <div v-if="group.title || group.desc" class="info">
       <h4 v-if="group.title">{{ group.title }}</h4>
-      <div class="desc" v-if="group.desc">{{ group.desc }}</div>
+      <div v-if="group.desc" class="desc">{{ group.desc }}</div>
     </div>
     <div class="setting rounded pad-lg">
       <div
-        class="setting-item"
         v-for="(setting, index) in group.settings"
         :key="index"
+        class="setting-item"
         :class="{
           inactive: setting.inactive && setting.inactive(),
           'is-list': setting.type === SettingType.list,
         }"
       >
         <div
-          class="title ellip"
+          class="text"
           @click="
             setting.defaultAction ? setting.defaultAction() : setting.action()
           "
         >
-          {{ setting.title }}
+          <div class="title ellip">
+            {{ setting.title }}
+          </div>
+          <div v-if="setting.desc" class="desc">
+            {{ setting.desc }}
+          </div>
         </div>
         <div class="options">
           <Switch
             v-if="setting.type == SettingType.binary"
-            @click="setting.action()"
             :state="setting.state && setting.state()"
+            @click="setting.action()"
           />
           <Select
             v-if="setting.type === SettingType.select"
             :options="setting.options"
             :source="setting.state !== null ? setting.state : () => ''"
-            :setterFn="setting.action"
+            :setter-fn="setting.action"
           />
           <button
             v-if="setting.type === SettingType.button"
@@ -43,9 +48,9 @@
         </div>
 
         <List
+          v-if="setting.type === SettingType.list"
           icon="folder"
           :items="setting.state !== null ? setting.state() : []"
-          v-if="setting.type === SettingType.list"
         />
       </div>
     </div>
@@ -68,8 +73,11 @@ defineProps<{
 <style lang="scss">
 .settingsgroup {
   display: grid;
+  // grid-template-columns: 20rem 1fr;
   gap: $small;
   margin-top: 2rem;
+  border-bottom: solid 1px $gray;
+  padding-bottom: 2rem;
 
   &:first-child {
     margin-top: 0;
@@ -77,6 +85,7 @@ defineProps<{
 
   .info {
     margin-left: $smaller;
+    margin-bottom: $small;
   }
 
   h4 {
@@ -90,9 +99,8 @@ defineProps<{
 
   .setting {
     background-color: $gray;
-    display: grid;
-    gap: 1rem;
-
+    // display: grid;
+    // gap: 1rem;
 
     .inactive {
       opacity: 0.5;
@@ -103,12 +111,40 @@ defineProps<{
   .setting > * {
     display: grid;
     grid-template-columns: 1fr max-content;
+  }
 
-    .title {
+  .setting-item {
+    user-select: none;
+    border-bottom: solid 1px $gray5;
+    padding: $medium 0;
+
+    .options {
       margin: auto 0;
-      user-select: none;
-      cursor: pointer;
     }
+
+    .text {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: self-start;
+
+      .title {
+        margin: auto 0;
+      }
+
+      .desc {
+        margin-top: $smaller;
+      }
+    }
+  }
+
+  .setting-item:first-child {
+    padding-top: 0;
+  }
+
+  .setting-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
 }
 </style>

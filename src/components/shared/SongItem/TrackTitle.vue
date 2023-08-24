@@ -1,10 +1,10 @@
 <template>
   <div class="tracktitle flex">
-    <div @click.prevent="$emit('play')" class="thumbnail">
+    <div class="thumbnail" @click.prevent="$emit('play')">
       <img :src="imguri + track.image" class="album-art image rounded-sm" />
       <div
-        class="now-playing-track-indicator image"
         v-if="is_current"
+        class="now-playing-track-indicator image"
         :class="{ last_played: !is_current_playing }"
       ></div>
     </div>

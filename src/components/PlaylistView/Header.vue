@@ -35,7 +35,7 @@
     <div v-if="info.has_image && info.settings.square_img" class="sqr_img">
       <img :src="(playlist.info.image as string)" class="rounded-sm" />
     </div>
-    <BannerImages v-else class="sqr_img rounded-sm" />
+    <BannerImages v-if="!info.has_image" class="sqr_img rounded-sm" />
     <Info :text-color="textColor" :btn_color="colors.btn" />
     <LastUpdated />
   </div>

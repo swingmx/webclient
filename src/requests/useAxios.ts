@@ -6,7 +6,7 @@ import useLoaderStore from "@/stores/loader";
 export default async (args: FetchProps) => {
   let data: any = null;
   let error: string | null = null;
-  let status: number | null = null;
+  let status: number = 0;
 
   function getAxios() {
     if (args.get) {

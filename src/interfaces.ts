@@ -114,7 +114,7 @@ export interface Playlist {
 export interface Radio {
   name: string;
   image: string;
-  src: string;
+  stream: string;
   genres: string[];
 }
 

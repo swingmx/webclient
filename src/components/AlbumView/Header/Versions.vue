@@ -2,9 +2,9 @@
   <div class="versions">
     <MasterFlag
       v-for="(v, index) in versions"
+      :key="v"
       :bitrate="1200"
       :text="v"
-      :key="v"
       :bg_color="color ? getShift(color, [80, -90]) : undefined"
       :text_color="color ? getShift(color, [-100, 80]) : undefined"
       :fill="versions.length > 1 && index === 0"
@@ -21,5 +21,3 @@ defineProps<{
   versions: string[];
 }>();
 </script>
-
-<style scoped></style>

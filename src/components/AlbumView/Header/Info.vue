@@ -2,15 +2,15 @@
   <div class="album-info" :style="{ color: textColor }">
     <div class="top">
       <AlbumType :album="album" />
-      <div class="title ellip2" id="albumheadertitle">
-        <span v-for="t in titleSplits">{{ t }}<br /></span>
+      <div id="albumheadertitle" class="title ellip2">
+        <span v-for="t in titleSplits" :key="t">{{ t }}<br /></span>
       </div>
     </div>
     <div class="bottom">
       <div id="test-elem"></div>
       <Versions :color="colors.bg" :versions="album.versions" />
       <Stats :album="album" />
-      <Buttons :textColor="textColor || ''" />
+      <Buttons :text-color="textColor || ''" />
     </div>
   </div>
 </template>

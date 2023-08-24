@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "serve": "vite preview",
-    "build": "vite build --emptyOutDir",
+    "build": "vite build",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo-fill.svg",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },
@@ -42,7 +42,9 @@
     "eslint-plugin-vue": "^9.17.0",
     "typescript": "^5.0.4",
     "vite": "^3.0.4",
+    "vite-plugin-compression": "^0.5.1",
     "vite-plugin-pwa": "^0.16.4",
+    "vite-plugin-singlefile": "^0.13.5",
     "vite-svg-loader": "^4.0.0",
     "vue-virtual-draglist": "^3.0.4"
   },
