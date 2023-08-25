@@ -1,8 +1,8 @@
 <template>
   <div class="list-items">
-    <div class="option-list-item" v-for="i in items" :key="i.title">
+    <div v-for="i in items" :key="i.title" class="option-list-item">
       <div class="with-icon">
-        <component :is="icon" />
+        <component :is="icon_" />
         <div class="text ellip">
           {{ i.title }}
         </div>
@@ -40,7 +40,7 @@ function getIcon() {
   }
 }
 
-const icon = getIcon();
+const icon_ = getIcon();
 </script>
 
 <style lang="scss">

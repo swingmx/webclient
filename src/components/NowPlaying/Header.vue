@@ -17,7 +17,6 @@
           class="rounded"
           :src="paths.images.thumb.original + queue.currenttrack?.image"
         />
-        <Bitrate />
       </RouterLink>
       <NowPlayingInfo @handle-fav="handleFav" />
       <Progress />
@@ -56,7 +55,6 @@ import { dropSources, favType } from "@/enums";
 import favoriteHandler from "@/helpers/favoriteHandler";
 import useColorStore from "@/stores/colors";
 import { getTextColor } from "@/utils/colortools/shift";
-import Bitrate from "../LeftSidebar/NP/Bitrate.vue";
 import SongItem from "../shared/SongItem.vue";
 import NowPlayingInfo from "./NowPlayingInfo.vue";
 import PlayingFrom from "./PlayingFrom.vue";

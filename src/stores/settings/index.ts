@@ -26,6 +26,7 @@ export default defineStore("settings", {
     clean_titles: true,
     hide_remaster: true,
     merge_albums: false,
+    separators: <string[]>[],
   }),
   actions: {
     mapDbSettings(settings: DBSettings) {
@@ -35,6 +36,10 @@ export default defineStore("settings", {
       this.clean_titles = settings.clean_album_title;
       this.hide_remaster = settings.remove_remaster;
       this.merge_albums = settings.merge_albums;
+      this.separators = settings.artist_separators;
+    },
+    setArtistSeparators(separators: string[]) {
+      this.separators = separators;
     },
     // now playing 👇
     toggleUseNPImg() {

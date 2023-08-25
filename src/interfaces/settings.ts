@@ -21,6 +21,7 @@ export interface SettingGroup {
   title?: string;
   desc?: string;
   settings: Setting[];
+  show_if?: () => boolean;
 }
 
 export interface SettingCategory {

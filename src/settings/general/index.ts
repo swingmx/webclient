@@ -6,6 +6,8 @@ import nowPlaying from "./now-playing-group";
 import sidebarSettings from "./sidebar";
 import rootDirSettings from "./root-dirs";
 import albums from "./albums";
+import separators from "./separators";
+import useSettingsStore from "@/stores/settings";
 
 const npStrings = strings.nowPlayingStrings;
 const rootRootStrings = strings.manageRootDirsStrings;
@@ -33,9 +35,18 @@ export default {
       settings: [...rootDirSettings],
     },
     {
+      // null means settings table is not created yet
+      show_if: () => useSettingsStore().feat !== null,
       title: "Album and tracks",
       desc: "Settings relating to tracks and album titles",
       settings: [...albums],
+    },
+    {
+      // null means settings table is not created yet
+      show_if: () => useSettingsStore().feat !== null,
+      title: "Separators",
+      desc: "Customize artist separators",
+      settings: [separators],
     },
   ],
 } as SettingCategory;

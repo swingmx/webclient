@@ -1,5 +1,5 @@
 <template>
-  <div class="settingsgroup">
+  <div v-if="group.show_if ? group.show_if() : true" class="settingsgroup">
     <div v-if="group.title || group.desc" class="info">
       <h4 v-if="group.title">{{ group.title }}</h4>
       <div v-if="group.desc" class="desc">{{ group.desc }}</div>
@@ -52,6 +52,11 @@
           icon="folder"
           :items="setting.state !== null ? setting.state() : []"
         />
+        <SeparatorsInput
+          v-if="setting.type === SettingType.separators_input && setting.action"
+          :submit="setting.action"
+          :default="setting.state ? setting.state : () => []"
+        />
       </div>
     </div>
   </div>
@@ -64,6 +69,7 @@ import { SettingGroup } from "@/interfaces/settings";
 import Switch from "./Components/Switch.vue";
 import Select from "./Components/Select.vue";
 import List from "./Components/List.vue";
+import SeparatorsInput from "./Components/SeparatorsInput.vue";
 
 defineProps<{
   group: SettingGroup;
