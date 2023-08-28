@@ -10,7 +10,6 @@ import useArtistPageStore from "@/stores/pages/artist";
 const FolderView = () => import("@/views/FolderView.vue");
 const PlaylistListView = () => import("@/views/PlaylistList.vue");
 const PlaylistView = () => import("@/views/PlaylistView/index.vue");
-const AlbumsExplorer = () => import("@/views/AlbumsExplorer.vue");
 const AlbumView = () => import("@/views/AlbumView/index.vue");
 const ArtistExplorer = () => import("@/views/ArtistsExplorer.vue");
 const ArtistView = () => import("@/views/ArtistView");
@@ -71,12 +70,6 @@ const playlistView = {
         state.loading.value = false;
       });
   },
-};
-
-const albums = {
-  path: "/albums",
-  name: "AlbumsView",
-  component: AlbumsExplorer,
 };
 
 const albumView = {
@@ -185,7 +178,6 @@ const routes = [
   folder,
   playlists,
   playlistView,
-  albums,
   albumView,
   artists,
   artistView,
@@ -207,7 +199,6 @@ export const Routes = {
   folder: folder.name,
   playlists: playlists.name,
   playlist: playlistView.name,
-  albums: albums.name,
   album: albumView.name,
   artists: artists.name,
   artist: artistView.name,

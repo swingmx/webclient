@@ -54,6 +54,7 @@ defineEmits<{
     .album-art {
       width: 3rem;
       height: 3rem;
+      object-fit: contain;
       cursor: pointer;
       z-index: 20;
     }

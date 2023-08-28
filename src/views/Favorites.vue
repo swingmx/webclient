@@ -1,27 +1,27 @@
 <template>
   <div class="content-page favorites-page">
-    <div class="fav-recents" v-if="recentFavs.length">
+    <div v-if="recentFavs.length" class="fav-recents">
       <Recents :favs="recentFavs" />
     </div>
-    <div class="fav-tracks" v-if="favTracks.length">
+    <div v-if="favTracks.length" class="fav-tracks">
       <TopTracks
         :tracks="favTracks"
         :route="'/favorites/tracks'"
         :title="'Tracks ❤️'"
-        :playHandler="handlePlay"
+        :play-handler="handlePlay"
         :source="dropSources.favorite"
       />
     </div>
-    <div class="fav-albums" v-if="favAlbums.length">
+    <div v-if="favAlbums.length" class="fav-albums">
       <ArtistAlbums
         :albums="favAlbums"
-        :albumType="discographyAlbumTypes.albums"
+        :album-type="discographyAlbumTypes.albums"
         :title="'Albums ❤️'"
         :route="'/favorites/albums'"
       />
     </div>
 
-    <div class="fav-artists" v-if="favArtists.length">
+    <div v-if="favArtists.length" class="fav-artists">
       <FeaturedArtists
         :artists="favArtists"
         :title="'Artists ❤️'"
@@ -101,6 +101,10 @@ async function handlePlay(index: number) {
 
   h3 {
     margin-top: 0;
+  }
+
+  .nothing h3 {
+    margin-top: 3rem;
   }
 
   .fav-tracks {

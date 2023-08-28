@@ -1,11 +1,11 @@
 <template>
   <div class="album-virtual-scroller v-scroll-page" :class="{ isSmall }">
     <RecycleScroller
+      v-slot="{ item }"
       class="scroller"
       :items="scrollerItems"
       :item-size="null"
       key-field="id"
-      v-slot="{ item }"
     >
       <div :style="{ maxHeight: `${item.size}px` }">
         <component
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "@vue/reactivity";
+import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
 import { Track } from "@/interfaces";

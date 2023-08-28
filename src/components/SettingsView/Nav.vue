@@ -1,6 +1,6 @@
 <template>
   <div class="settingsnav">
-    <button @click="resetStorate">
+    <button @click="resetClient">
       &nbsp;&nbsp; Reset client &nbsp;&nbsp;
     </button>
   </div>
@@ -11,7 +11,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-const resetStorate = () => {
+const resetClient = () => {
   localStorage.clear();
   router.go(0);
 };

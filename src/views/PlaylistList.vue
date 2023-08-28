@@ -120,7 +120,11 @@ const playlists = computed(() => {
   }
 
   .nothing {
-    height: 16rem;
+    height: max-content;
+
+    svg {
+      margin-bottom: 0;
+    }
   }
 }
 </style>

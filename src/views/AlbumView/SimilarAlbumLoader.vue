@@ -3,7 +3,6 @@
     v-if="store.similarAlbums.length"
     :albums="store.similarAlbums"
     :title="'Related Albums'"
-    :route="'#'"
   />
 </template>
 

@@ -3,7 +3,7 @@
     <h3>
       <span>{{ title }}</span>
       <SeeAll
-        v-if="maxAbumCards - 1 <= albums.length"
+        v-if="route && maxAbumCards - 1 <= albums.length"
         :route="route"
         @click="
           !favorites ? useArtistDiscographyStore().setPage(albumType) : null
@@ -38,7 +38,7 @@ defineProps<{
   albums: Album[];
   albumType?: discographyAlbumTypes;
   favorites?: boolean;
-  route: string;
+  route?: string;
   show_date?: boolean;
   artist_page?: boolean;
 }>();

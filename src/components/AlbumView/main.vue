@@ -81,15 +81,14 @@ useVisibility(albumheaderthing, handleVisibilityState);
   align-items: flex-end;
 
   .big-img {
-    width: 16rem;
     height: 16rem;
     display: flex;
     align-items: flex-end;
 
     img {
       height: 16rem;
-      aspect-ratio: 1;
-      object-fit: cover;
+      max-width: 16rem;
+      object-fit: contain;
     }
   }
 

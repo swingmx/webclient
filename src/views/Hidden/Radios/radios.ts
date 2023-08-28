@@ -63,4 +63,46 @@ export const radios = <Radio[]>[
       "https://e-cdns-images.dzcdn.net/images/misc/981a75b7c813593f698062230287b116/264x264-000000-80-0-0.jpg",
     genres: ["Pop"],
   },
+  {
+    name: "CJ Country",
+    image:
+      "https://e-cdns-images.dzcdn.net/images/misc/f49c0852c0c34fc6ad1201bfd961c900/264x264-000000-80-0-0.jpg",
+    genres: ["Country"],
+  },
+  {
+    name: "Radio Country Live",
+    image:
+      "https://e-cdns-images.dzcdn.net/images/misc/73f68e6fefbd9e22dd1b2f1adb770372/264x264-000000-80-0-0.jpg",
+    genres: ["Country"],
+  },
+  {
+    name: "181.FM 80s Country",
+    image:
+      "https://e-cdns-images.dzcdn.net/images/misc/8f7367cf33dc697bd620f49f9bae4428/264x264-000000-80-0-0.jpg",
+    genres: ["Country"],
+  },
+  {
+    name: "Y96 Hot Country Hits",
+    image:
+      "https://e-cdns-images.dzcdn.net/images/misc/1635e229072d54cd5673883021343fd5/264x264-000000-80-0-0.jpg",
+    genres: ["Country"],
+  },
+  {
+    name: "181.FM 90s Country",
+    image:
+      "https://e-cdns-images.dzcdn.net/images/misc/8f7367cf33dc697bd620f49f9bae4428/264x264-000000-80-0-0.jpg",
+    genres: ["Country"],
+  },
+  {
+    name: "104.9 Max Country",
+    image:
+      "https://e-cdns-images.dzcdn.net/images/misc/59aee0ca59ca84dd2c20995fc7f3f2b7/264x264-000000-80-0-0.jpg",
+    genres: ["Country"],
+  },
+  {
+    name: "011.FM 90s Country",
+    image:
+      "https://e-cdns-images.dzcdn.net/images/misc/13d4291f6f77745a1a057d5fbe97b7c0/264x264-000000-80-0-0.jpg",
+    genres: ["Country"],
+  },
 ];

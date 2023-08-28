@@ -1,6 +1,7 @@
 <template>
   <div class="radiogroup">
     <h3>{{ heading }}</h3>
+    <div class="tagline">{{ tagline }}</div>
     <div class="cards">
       <RadioCard v-for="r in radios" :key="r.name" :radio="r" />
     </div>
@@ -14,6 +15,7 @@ import RadioCard from "@/components/Radios/RadioCard.vue";
 defineProps<{
   radios: Radio[];
   heading: string;
+  tagline: string
 }>();
 </script>
 
@@ -28,6 +30,13 @@ defineProps<{
 
   h3 {
     margin-left: $small;
+    margin-bottom: $small;
+  }
+
+  .tagline {
+    margin-left: $small;
+    font-size: 14px;
+    margin-bottom: 1rem;
   }
 }
 </style>

@@ -106,17 +106,11 @@ function handleFav() {
     position: relative;
     margin-bottom: 1rem;
 
-    .bitrate {
-      position: absolute;
-      bottom: 1rem;
-      left: 1rem;
-    }
-
     img {
       width: 100%;
       height: 100%;
       max-width: 30rem;
-      aspect-ratio: 1;
+      // aspect-ratio: 1;
       object-fit: cover;
     }
   }

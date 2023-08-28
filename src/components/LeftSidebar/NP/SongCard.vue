@@ -18,7 +18,7 @@
         <img
           :src="imguri + q.currenttrack?.image"
           alt=""
-          class="l-image rounded-sm force-lm"
+          class="l-image rounded-sm"
         />
       </router-link>
       <Bitrate />
@@ -28,29 +28,31 @@
 
 <script setup lang="ts">
 import { Motion } from "motion/vue";
-import useQueueStore from "@/stores/queue";
+import { Routes } from "@/router";
 
 import { paths } from "@/config";
+import useQueueStore from "@/stores/queue";
+
 import Bitrate from "./Bitrate.vue";
-import { Routes } from "@/router";
 
 const imguri = paths.images.thumb.large;
 const q = useQueueStore();
 </script>
 
 <style lang="scss">
+.l-image {
+  width: 100%;
+}
+
 .sidebar-songcard {
   width: 100%;
   position: relative;
   width: 13rem;
-  height: 13rem;
 
   img {
     cursor: pointer;
     width: 100%;
     height: auto;
-    aspect-ratio: 1;
-    object-fit: cover;
   }
 }
 </style>

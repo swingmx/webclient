@@ -5,16 +5,16 @@
       <Navigation />
     </div>
 
-    <NowPlayingImage v-if="settings.use_np_img" />
+    <SongCard v-if="settings.use_np_img" />
   </div>
 </template>
 
 <script setup lang="ts">
-import Navigation from "@/components/LeftSidebar/NavButtons.vue";
-import Logo from "@/components/Logo.vue";
-import NowPlayingImage from "./NowPlayingImg.vue";
-
 import useSettingsStore from "@/stores/settings";
+
+import Logo from "@/components/Logo.vue";
+import SongCard from "./NP/SongCard.vue";
+import Navigation from "@/components/LeftSidebar/NavButtons.vue";
 
 const settings = useSettingsStore();
 </script>
