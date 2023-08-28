@@ -105,10 +105,14 @@ export default defineStore("Queue", {
             NotifType.Error
           );
 
+          // if not last track, try to play next
           if (this.currentindex !== this.tracklist.length - 1) {
+            if (!this.playing) return;
+
             setTimeout(() => {
-              if (!this.playing) return;
-              this.autoPlayNext();
+              // if track changed, don't play next
+              if (this.currenttrack.trackhash !== track.trackhash) return;
+              this.playNext();
             }, 5000);
           }
         });

@@ -16,7 +16,6 @@ defineProps<{
   opacity: 0.75;
 
   a:hover {
-    cursor: pointer !important;
     text-decoration: underline;
   }
 }

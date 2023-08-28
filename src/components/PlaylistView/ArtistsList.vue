@@ -1,7 +1,7 @@
 <template>
   <div class="card-list-scroll-x">
-    <h3>{{ title }} <SeeAll :route="route" /></h3>
-    <div class="cards" ref="artistItemswrappers">
+    <h3>{{ title }} <SeeAll v-if="route" :route="route" /></h3>
+    <div ref="artistItemswrappers" class="cards">
       <ArtistCard
         v-for="artist in artists.slice(0, maxAbumCards)"
         :key="artist.image"
