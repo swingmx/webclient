@@ -6,7 +6,7 @@ import { Album, Artist, Track } from "@/interfaces";
 import { useNotifStore as notif } from "@/stores/notification";
 
 export async function addFavorite(favtype: favType, itemhash: string) {
-  const { data, error } = await useAxios({
+  const { error } = await useAxios({
     url: paths.api.addFavorite,
     props: {
       type: favtype,
@@ -15,19 +15,15 @@ export async function addFavorite(favtype: favType, itemhash: string) {
   });
 
   if (error) {
-    notif().showNotification("Something funny happened!", NotifType.Error);
+    notif().showNotification("An error occured!", NotifType.Error);
     return false;
-  }
-
-  if (data) {
-    notif().showNotification("Added to favorites!", NotifType.Success);
   }
 
   return true;
 }
 
 export async function removeFavorite(favtype: favType, itemhash: string) {
-  const { data, error } = await useAxios({
+  const { error } = await useAxios({
     url: paths.api.removeFavorite,
     props: {
       type: favtype,
@@ -36,12 +32,8 @@ export async function removeFavorite(favtype: favType, itemhash: string) {
   });
 
   if (error) {
-    notif().showNotification("Something funny happened!", NotifType.Error);
+    notif().showNotification("An error occured!", NotifType.Error);
     return false;
-  }
-
-  if (data) {
-    notif().showNotification("Removed from favorites!", NotifType.Error);
   }
 
   return true;

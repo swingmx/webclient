@@ -3,31 +3,25 @@
     <h3 class="t-center">Where do you want to look for music?</h3>
     <div class="options-group">
       <div
-        class="option"
         v-for="option in options"
         :key="option.id"
-        :class="{
-          active: option.active,
-        }"
-        @click="option.action()"
         v-motion-slide-bottom
+        class="option"
+        @click="option.action()"
       >
         <b>{{ option.title }}</b>
         <div class="info">{{ option.info }}</div>
-        <div class="check" v-if="option.active">✅</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-addRootDirs,
-getRootDirs,
-} from "@/requests/settings/rootdirs";
+import { onMounted, ref } from "vue";
+
 import useModalStore from "@/stores/modal";
 import useSettingsStore from "@/stores/settings";
-import { onMounted, ref } from "vue";
+import { addRootDirs, getRootDirs } from "@/requests/settings/rootdirs";
 
 const settings = useSettingsStore();
 
@@ -50,7 +44,6 @@ onMounted(() => {
           id: "$home",
           title: "Home directory",
           info: "Scan all folders in your home directory.",
-          active: settings.root_dirs[0] === "$home",
           delay: 0,
           action: () =>
             addRootDirs(["$home"], [])
@@ -59,13 +52,10 @@ onMounted(() => {
         },
         {
           id: "wtf",
-          title: "Customize root directories",
+          title: "Specific directories",
           info: "Select folders to scan for music.",
           delay: 0.1,
           action: () => modal.showSetRootDirsModal(),
-          active:
-            settings.root_dirs[0] !== "$home" &&
-            settings.root_dirs[0] !== undefined,
         },
       ];
     });
@@ -75,10 +65,6 @@ onMounted(() => {
 <style lang="scss">
 .root-dirs-prompt {
   height: 14rem;
-
-  .option.active {
-    background-color: #3f6bac38;
-  }
 
   .option {
     padding: 1.25rem;
@@ -95,15 +81,6 @@ onMounted(() => {
     .info {
       margin-top: $smaller;
       font-size: small;
-    }
-
-    .check {
-      position: absolute;
-      right: 1.25rem;
-      top: 0;
-      bottom: 0;
-      margin: auto;
-      height: max-content;
     }
   }
 }

@@ -23,7 +23,7 @@ import SeeAll from "../shared/SeeAll.vue";
 defineProps<{
   artists: Artist[];
   title: string;
-  route: string;
+  route?: string;
 }>();
 
 const artistItemswrappers = ref<HTMLElement | null>(null);

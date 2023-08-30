@@ -11,7 +11,7 @@
         class="setting-item"
         :class="{
           inactive: setting.inactive && setting.inactive(),
-          'is-list': setting.type === SettingType.list,
+          'is-list': setting.type === SettingType.root_dirs,
         }"
       >
         <div
@@ -20,8 +20,16 @@
             setting.defaultAction ? setting.defaultAction() : setting.action()
           "
         >
-          <div class="title ellip">
-            {{ setting.title }}
+          <div class="title">
+            <span class="ellip">
+              {{ setting.title }}
+            </span>
+            <button
+              v-if="setting.type == SettingType.root_dirs"
+              @click="setting.action"
+            >
+              <ReloadSvg /> reload
+            </button>
           </div>
           <div v-if="setting.desc" class="desc">
             {{ setting.desc }}
@@ -48,7 +56,7 @@
         </div>
 
         <List
-          v-if="setting.type === SettingType.list"
+          v-if="setting.type === SettingType.root_dirs"
           icon="folder"
           :items="setting.state !== null ? setting.state() : []"
         />
@@ -70,6 +78,7 @@ import Switch from "./Components/Switch.vue";
 import Select from "./Components/Select.vue";
 import List from "./Components/List.vue";
 import SeparatorsInput from "./Components/SeparatorsInput.vue";
+import ReloadSvg from "@/assets/icons/reload.svg";
 
 defineProps<{
   group: SettingGroup;
@@ -136,6 +145,13 @@ defineProps<{
 
       .title {
         margin: auto 0;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+
+        button > svg {
+          transform: scale(0.65);
+        }
       }
 
       .desc {

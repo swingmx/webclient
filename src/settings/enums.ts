@@ -4,5 +4,5 @@ export enum SettingType {
   multiselect,
   binary,
   button,
-  list,
+  root_dirs,
 }

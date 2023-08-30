@@ -67,7 +67,10 @@ const merge_album_versions: Setting = {
   title: "Merge album versions",
   desc: "All versions of the same album will be merged into one album",
   type: SettingType.binary,
-  state: () => settings().merge_albums,
+  state: () => {
+    const settings = useSettingsStore();
+    return settings.clean_titles && settings.merge_albums;
+  },
   action: () => {
     const settings = useSettingsStore();
     setSetting(setting.merge_albums, !settings.merge_albums).then(

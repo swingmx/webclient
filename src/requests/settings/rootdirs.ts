@@ -64,3 +64,17 @@ export async function getFolders(folder: string = "$home") {
   }
   return data.folders as Folder[];
 }
+
+export async function triggerScan() {
+  const { error } = await useAxios({
+    url: paths.api.settings.trigger_scan,
+    get: true,
+  });
+
+  if (error) {
+    useNotifStore().showNotification("Error triggering scan", NotifType.Error);
+    return;
+  }
+
+  useNotifStore().showNotification("Rescan started", NotifType.Success);
+}

@@ -121,6 +121,9 @@ export const paths = {
       get remove_root_dir() {
         return this.base + "/remove-root-dirs";
       },
+      get trigger_scan() {
+        return this.base + "/trigger-scan";
+      },
     },
     files: baseApiUrl.value + "/file",
   },

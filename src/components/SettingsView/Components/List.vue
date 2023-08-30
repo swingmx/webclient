@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="icon" @click="i.action">
-        <span>{{ i.buttontext }}</span>
+        <DeleteSvg />
       </div>
     </div>
     <div v-if="!items.length" class="option-list-item" style="opacity: 0.5">
@@ -19,12 +19,12 @@
 </template>
 
 <script setup lang="ts">
-import FolderSvg from "../../../assets/icons/folder.svg";
+import FolderSvg from "@/assets/icons/folder.svg";
+import DeleteSvg from "@/assets/icons/delete.svg";
 
 const props = defineProps<{
   items: {
     title: string;
-    buttontext: string;
     action: () => void;
   }[];
   icon: "folder";
@@ -70,13 +70,8 @@ const icon_ = getIcon();
       font-size: 0.9rem;
     }
 
-    span {
-      color: white;
+    .icon {
       cursor: pointer;
-      background-color: $red;
-      padding: $smaller $small;
-      border-radius: 6px;
-      z-index: 20;
     }
   }
 }
