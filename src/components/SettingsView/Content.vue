@@ -22,7 +22,7 @@ import { VERSION } from "@/config";
 import settingGroups from "@/settings";
 
 import Group from "./Group.vue";
-import GenericHeader from "@/components/Radios/GenericHeader.vue";
+import GenericHeader from "@/components/shared/GenericHeader.vue";
 import LogoSvg from "@/assets/icons/logo.svg";
 
 defineProps<{

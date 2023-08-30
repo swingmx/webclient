@@ -161,12 +161,6 @@ const favoriteArtists = {
   component: FavoriteArtists,
 };
 
-const HiddenView = {
-  path: "/hidden",
-  name: "HiddenView",
-  component: () => import("@/views/Hidden/Radios"),
-};
-
 const notFound = {
   name: "NotFound",
   path: "/:pathMatch(.*)",
@@ -191,7 +185,6 @@ const routes = [
   favoriteTracks,
   favoriteArtists,
   NowPlayingView,
-  HiddenView,
 ];
 
 export const Routes = {
@@ -212,7 +205,6 @@ export const Routes = {
   favoriteTracks: favoriteTracks.name,
   favoriteArtists: favoriteArtists.name,
   nowPlaying: NowPlayingView.name,
-  hidden: HiddenView.name,
 };
 
 const router = createRouter({
