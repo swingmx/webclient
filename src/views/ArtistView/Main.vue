@@ -205,7 +205,7 @@ const scrollerItems = computed(() => {
       component: SimilarArtists,
       props: {
         artists: store.similar_artists,
-        title: "You Might Like",
+        title: "Similar Artists",
       },
     };
     components.push(SimilarArtistsComponent);

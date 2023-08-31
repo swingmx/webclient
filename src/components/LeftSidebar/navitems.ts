@@ -1,13 +1,11 @@
 import { Routes } from "@/router";
 import useSearchStore from "@/stores/search";
-import useSettingsStore from "@/stores/settings";
 
 import FolderSvg from "@/assets/icons/folder-1.svg";
 import HeartSvg from "@/assets/icons/heart.svg";
 import PlaylistSvg from "@/assets/icons/playlist-1.svg";
 import SearchSvg from "@/assets/icons/search.svg";
 import SettingsSvg from "@/assets/icons/settings.svg";
-import RadioSvg from "@/assets/icons/radio.svg";
 
 export const menus = [
   {
@@ -38,13 +36,6 @@ export const menus = [
   },
   {
     separator: true,
-  },
-  {
-    name: "Radios",
-    route_name: Routes.hidden,
-    icon: RadioSvg,
-    unlock_key: () => useSettingsStore().hidden_radios_unlocked,
-    class: "radiosvg",
   },
   {
     name: "settings",
