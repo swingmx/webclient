@@ -46,6 +46,7 @@ export default defineStore("Queue", {
     },
     currentindex: 0,
     playing: false,
+    buffering: false,
     from: {} as From,
     tracklist: [] as Track[],
     queueScrollFunction: (index: number) => {},
@@ -71,6 +72,7 @@ export default defineStore("Queue", {
       }?filepath=${encodeURIComponent(track.filepath as string)}`;
 
       new Promise((resolve, reject) => {
+        this.buffering = true;
         audio.autoplay = true;
         audio.pause();
         audio.src = uri;
@@ -80,6 +82,8 @@ export default defineStore("Queue", {
       })
         .then(() => {
           this.duration.full = audio.duration;
+          this.buffering = false;
+
           audio.play().then(() => {
             this.playing = true;
             updateMediaNotif();

@@ -5,7 +5,8 @@
     </button>
     <button @click.prevent="q.playPause">
       <PauseSvg v-if="q.playing" />
-      <PlaySvg v-else />
+      <Spinner v-else-if="q.buffering" />
+      <PlaySvg v-else/>
     </button>
     <button @click.prevent="q.playNext">
       <NextSvg />
@@ -19,9 +20,10 @@ import useQStore from "@/stores/queue";
 import {
   default as NextSvg,
   default as PrevSvg,
-} from "../../../assets/icons/next.svg";
-import PauseSvg from "../../../assets/icons/pause.svg";
-import PlaySvg from "../../../assets/icons/play.svg";
+} from "@/assets/icons/next.svg";
+import PauseSvg from "@/assets/icons/pause.svg";
+import PlaySvg from "@/assets/icons/play.svg";
+import Spinner from "@/components/shared/Spinner.vue";
 
 const q = useQStore();
 </script>
