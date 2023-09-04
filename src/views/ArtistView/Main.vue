@@ -39,6 +39,7 @@ import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import Header from "@/components/ArtistView/Header.vue";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
 import SimilarArtists from "@/components/PlaylistView/ArtistsList.vue";
+import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 
 const store = useArtistPageStore();
 const queue = useQueueStore();
@@ -66,11 +67,9 @@ function getHeader() {
   return <ScrollerItem>{
     id: "artist-header",
     component: Header,
-    props: {
-      artist: store.info,
-    },
   };
 }
+
 const artist_albums_fetcher: ScrollerItem = {
   id: "artist-albums-fetcher",
   component: ArtistAlbumsFetcher,
@@ -157,6 +156,13 @@ function getTopTracksComponent(): ScrollerItem {
 }
 
 const scrollerItems = computed(() => {
+  const genreBanner = <ScrollerItem>{
+    id: "artist-genres",
+    component: GenreBanner,
+    props: {
+      source: "artist",
+    },
+  };
   let components = [getHeader()];
 
   if (store.tracks.length > 0) {
@@ -197,7 +203,7 @@ const scrollerItems = computed(() => {
     components.push(appearances);
   }
 
-  components = [...components, similar_artists_fetcher];
+  components = [...components, genreBanner, similar_artists_fetcher];
 
   if (store.similar_artists.length > 0) {
     const SimilarArtistsComponent = {

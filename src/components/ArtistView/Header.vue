@@ -5,9 +5,7 @@
     :class="{ isSmallPhone }"
     style="height: 100%; width: 100%"
     :style="{
-      boxShadow: artist.colors.length
-        ? `0 .5rem 2rem ${artist.colors[0]}`
-        : undefined,
+      boxShadow: colors.bg.length ? `0 .5rem 2rem ${colors.bg}` : undefined,
     }"
   ></div>
   <div
@@ -25,17 +23,21 @@
         height: `${heightLarge ? '24rem' : '18rem'}`,
       }"
     >
-      <img id="artist-avatar" :src="paths.images.artist.large + artist.image" />
+      <img
+        id="artist-avatar"
+        :src="paths.images.artist.large + artist.image"
+        @load="store.setBgColor"
+      />
     </div>
     <div
       class="gradient"
       :style="{
-        backgroundImage: artist.colors[0]
+        backgroundImage: colors.bg
           ? `linear-gradient(${
               isSmallPhone ? '210deg' : 'to left'
             }, transparent 20%,
-      ${artist.colors[0]} ${isSmallPhone ? '80' : '50'}%,
-      ${artist.colors[0]} 100%)`
+      ${colors.bg} ${isSmallPhone ? '80' : '50'}%,
+      ${colors.bg} 100%)`
           : '',
       }"
     ></div>
@@ -52,15 +54,18 @@ import updatePageTitle from "@/utils/updatePageTitle";
 import { heightLarge } from "@/stores/content-width";
 
 import Info from "./HeaderComponents/Info.vue";
-import { Artist } from "@/interfaces";
+import useArtistStore from "@/stores/pages/artist";
+import { storeToRefs } from "pinia";
 
+const store = useArtistStore();
 const props = defineProps<{
-  artist: Artist;
   on_sidebar?: boolean;
 }>();
 
+const { info: artist, colors } = storeToRefs(store);
+
 function updateTitle() {
-  props.on_sidebar ? () => {} : updatePageTitle(props.artist.name);
+  props.on_sidebar ? () => {} : updatePageTitle(artist.value.name);
 }
 
 onMounted(() => updateTitle());

@@ -26,17 +26,20 @@ export default defineStore("artistPage", {
       bg: "",
       btn: "",
     },
+    genres: <string[]>[],
   }),
   actions: {
     async getData(hash: string) {
       const settings = useSettingsStore();
-      const { artist, tracks } = await getArtistData(
+      const { artist, tracks, genres } = await getArtistData(
         hash,
         settings.artist_top_tracks_count
       );
 
       this.info = artist;
       this.tracks = tracks;
+      this.genres = genres;
+
       this.extractColors();
     },
     async getArtistAlbums() {
@@ -63,6 +66,10 @@ export default defineStore("artistPage", {
     extractColors() {
       const url = paths.images.artist.large + this.info.image;
       setColorsToStore(this, url, true);
+    },
+    setBgColor() {
+      const colors = this.info.colors;
+      this.colors.bg = colors[0] ? colors[0] : "";
     },
     resetAlbums() {
       this.albums = [];

@@ -7,6 +7,7 @@ export const getArtistData = async (hash: string, limit: number = 5) => {
   interface ArtistData {
     artist: Artist;
     tracks: Track[];
+    genres: string[];
   }
 
   const { data, error, status } = await useAxios({

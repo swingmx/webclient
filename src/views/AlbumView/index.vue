@@ -159,6 +159,9 @@ const scrollerItems = computed(() => {
     id: "genre-banner",
     component: GenreBanner,
     size: 80,
+    props: {
+      source: "album",
+    },
   };
 
   let moreFrom = getArtistAlbumComponents();

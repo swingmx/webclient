@@ -2,18 +2,19 @@
   <div
     class="genres-banner"
     :style="{
-      color: album.colors.bg ? getShift(album.colors.bg, [100, -100]) : '',
+      color: color ? getShift(color, [100, -100]) : '',
     }"
   >
     <div class="scrollable">
       <div class="rounded pad-sm genre-pill">
-        {{ album.info.genres.length ? "Genres" : "No genres" }}
+        {{ genres.length ? "Genres" : "No genres" }}
       </div>
       <div
-        v-for="genre in album.info.genres"
+        v-for="genre in genres"
+        :key="genre"
         class="genre-pill rounded pad-sm"
         :style="{
-          backgroundColor: album.colors.bg,
+          backgroundColor: color,
         }"
       >
         {{ genre }}
@@ -23,23 +24,42 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import useAlbumStore from "@/stores/pages/album";
+import useArtistStore from "@/stores/pages/artist";
 
 import { getShift } from "@/utils/colortools/shift";
 
 const album = useAlbumStore();
+const store = useArtistStore();
 
-onMounted(async () => {
-  // onMounted, fetch data to be used in the component below this one.
-  const album = useAlbumStore();
-  await album.fetchArtistAlbums();
+const props = defineProps<{
+  source: string;
+}>();
+
+const genres = computed(() => {
+  return props.source === "album" ? album.info.genres : store.genres;
 });
+
+const color = computed(() => {
+  return props.source === "album" ? album.colors.btn : "";
+});
+
+const hookAction = async () => {
+  if (props.source === "album") {
+    // fetch data to be used in the component below this one.
+    await album.fetchArtistAlbums();
+    return;
+  }
+};
+
+onMounted(hookAction);
 </script>
 
 <style lang="scss">
 .genres-banner {
   margin-top: 2rem;
+  padding-bottom: 2rem;
   font-size: 0.9rem;
   padding-left: $medium;
   text-transform: capitalize;

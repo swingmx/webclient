@@ -7,7 +7,7 @@ import { DbSettingKeys } from "@/enums";
 
 export default <Setting>{
   title: "Enter separators separated by a comma",
-  desc: `These will also be used to separate genres`,
+  desc: `These will be used to separate artists and album artists`,
   state: () => {
     const store = useSettingsStore();
 
