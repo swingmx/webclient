@@ -85,6 +85,7 @@ export enum DbSettingKeys {
   show_album_version = "show_album_version",
   remove_remaster = "remove_remaster",
   merge_albums = "merge_albums",
+  show_albums_as_singles = "show_albums_as_singles",
 }
 
 export interface DBSettings {
@@ -97,4 +98,5 @@ export interface DBSettings {
   show_album_version: boolean;
   remove_remaster: boolean;
   merge_albums: boolean;
+  show_albums_as_singles: boolean;
 }

@@ -26,6 +26,7 @@ export default defineStore("settings", {
     clean_titles: true,
     hide_remaster: true,
     merge_albums: false,
+    show_albums_as_singles: false,
     separators: <string[]>[],
   }),
   actions: {
@@ -37,6 +38,7 @@ export default defineStore("settings", {
       this.hide_remaster = settings.remove_remaster;
       this.merge_albums = settings.merge_albums;
       this.separators = settings.artist_separators;
+      this.show_albums_as_singles = settings.show_albums_as_singles;
     },
     setArtistSeparators(separators: string[]) {
       this.separators = separators;
@@ -106,6 +108,9 @@ export default defineStore("settings", {
     },
     toggleMergeAlbumVersions() {
       this.merge_albums = !this.merge_albums;
+    },
+    toggleShowAlbumAsSingle() {
+      this.show_albums_as_singles = !this.show_albums_as_singles;
     },
     // volume 👇
     setVolume(new_value: number) {

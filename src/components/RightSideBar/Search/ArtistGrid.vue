@@ -1,9 +1,9 @@
 <template>
-  <div class="artists-results" v-auto-animate>
+  <div v-auto-animate class="artists-results">
     <div>
       <div
-        class="search-results-grid"
         v-if="album_grid == true && search.albums.value.length"
+        class="search-results-grid"
       >
         <AlbumCard
           v-for="a in search.albums.value"
@@ -12,8 +12,8 @@
         />
       </div>
       <div
-        class="search-results-grid"
         v-else-if="!album_grid && search.artists.value.length"
+        class="search-results-grid"
       >
         <ArtistCard
           v-for="artist in search.artists.value"
@@ -58,7 +58,7 @@ defineProps<{
 
 .search-results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
   min-height: 10rem;
   padding-bottom: $small;
 }

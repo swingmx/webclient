@@ -7,33 +7,7 @@ import useSettingsStore from "@/stores/settings";
 
 const settings = useSettingsStore;
 
-const process_featured_artists: Setting = {
-  title: "Featured artists",
-  desc: "Remove featured artists from titles and merge them with other artists",
-  type: SettingType.binary,
-  state: () => settings().feat,
-  action: () => {
-    const settings = useSettingsStore();
-    setSetting(setting.extract_feat, !settings.feat).then(({ status }) => {
-      status === 200 && settings.toggleProcessFeaturedArtists();
-    });
-  },
-};
-
-const remove_prod_by: Setting = {
-  title: "Hide 'prod.'",
-  desc: "Remove 'prod.' from track titles",
-  type: SettingType.binary,
-  state: () => settings().prodby,
-  action: () => {
-    const settings = useSettingsStore();
-    setSetting(setting.remove_prod, !settings.prodby).then(({ status }) => {
-      status === 200 && settings.toggleRemoveProdBy();
-    });
-  },
-};
-
-const clean_track_titles: Setting = {
+const clean_album_titles: Setting = {
   title: "Clean album titles",
   desc: "Remove bracketed text from titles and process it separately if possible",
   type: SettingType.binary,
@@ -43,21 +17,6 @@ const clean_track_titles: Setting = {
     setSetting(setting.clean_album_title, !settings.clean_titles).then(
       ({ status }) => {
         status === 200 && settings.toggleCleanTrackTitles();
-      }
-    );
-  },
-};
-
-const remove_remaster_info_from_titles: Setting = {
-  title: "Hide remaster info",
-  desc: "Remove remaster information from track titles if possible",
-  type: SettingType.binary,
-  state: () => settings().hide_remaster,
-  action: () => {
-    const settings = useSettingsStore();
-    setSetting(setting.remove_remaster, !settings.hide_remaster).then(
-      ({ status }) => {
-        status === 200 && settings.toggleRemoveRemasterInfoFromTitles();
       }
     );
   },
@@ -82,10 +41,24 @@ const merge_album_versions: Setting = {
   inactive: () => !settings().clean_titles,
 };
 
+const show_albums_as_singles: Setting = {
+  title: "Mark albums with one track as singles",
+  desc: "Require an album to have at least two tracks",
+  type: SettingType.binary,
+  state: () => useSettingsStore().show_albums_as_singles,
+  action: () => {
+    const settings = useSettingsStore();
+    setSetting(
+      setting.show_albums_as_singles,
+      !settings.show_albums_as_singles
+    ).then(({ status }) => {
+      status === 200 && settings.toggleShowAlbumAsSingle();
+    });
+  },
+};
+
 export default [
-  process_featured_artists,
-  remove_remaster_info_from_titles,
-  remove_prod_by,
-  clean_track_titles,
+  clean_album_titles,
   merge_album_versions,
+  show_albums_as_singles,
 ];

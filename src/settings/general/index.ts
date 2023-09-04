@@ -8,6 +8,7 @@ import rootDirSettings from "./root-dirs";
 import albums from "./albums";
 import separators from "./separators";
 import useSettingsStore from "@/stores/settings";
+import tracks from "./tracks";
 
 const npStrings = strings.nowPlayingStrings;
 const rootRootStrings = strings.manageRootDirsStrings;
@@ -37,8 +38,15 @@ export default {
     {
       // null means settings table is not created yet
       show_if: () => useSettingsStore().feat !== null,
-      title: "Album and tracks",
-      desc: "Settings relating to tracks and album titles",
+      title: "Track settings",
+      desc: "Settings relating to track information",
+      settings: [...tracks],
+    },
+    {
+      // null means settings table is not created yet
+      show_if: () => useSettingsStore().feat !== null,
+      title: "Album settings",
+      desc: "Settings relating to album information",
       settings: [...albums],
     },
     {
