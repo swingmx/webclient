@@ -42,6 +42,7 @@ import {
 import useModalStore from "@/stores/modal";
 import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
+import useQueueStore from "@/stores/queue";
 
 // @utils
 import handleShortcuts from "@/helpers/useKeyboard";
@@ -64,6 +65,7 @@ import { baseApiUrl } from "@/config";
 // import BubbleManager from "./components/bubbles/BinManager.vue";
 
 const router = useRouter();
+const queue = useQueueStore();
 const modal = useModalStore();
 const settings = useSettingsStore();
 
@@ -109,14 +111,14 @@ function handleRootDirsPrompt() {
   getRootDirs().then((dirs) => {
     if (dirs.length === 0) {
       modal.showRootDirsPromptModal();
-    }
-     else {
+    } else {
       settings.setRootDirs(dirs);
     }
   });
 }
 
 onMounted(() => {
+  queue.startBufferingStatusWatcher();
   handleWelcomeModal();
   settings.initializeVolume();
 

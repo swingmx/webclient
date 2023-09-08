@@ -46,7 +46,7 @@ export default defineStore("Queue", {
     },
     currentindex: 0,
     playing: false,
-    buffering: false,
+    buffering: true,
     from: {} as From,
     tracklist: [] as Track[],
     queueScrollFunction: (index: number) => {},
@@ -63,6 +63,7 @@ export default defineStore("Queue", {
     play(index: number = 0) {
       if (this.tracklist.length === 0) return;
 
+      this.playing = true;
       this.currentindex = index;
       this.focusCurrentInSidebar();
 
@@ -72,7 +73,6 @@ export default defineStore("Queue", {
       }?filepath=${encodeURIComponent(track.filepath as string)}`;
 
       new Promise((resolve, reject) => {
-        this.buffering = true;
         audio.autoplay = true;
         audio.pause();
         audio.src = uri;
@@ -82,10 +82,8 @@ export default defineStore("Queue", {
       })
         .then(() => {
           this.duration.full = audio.duration;
-          this.buffering = false;
 
           audio.play().then(() => {
-            this.playing = true;
             updateMediaNotif();
             this.duration.full = audio.duration;
 
@@ -93,9 +91,6 @@ export default defineStore("Queue", {
               useColorStore().setTheme1Color(color);
             });
 
-            audio.ontimeupdate = () => {
-              this.duration.current = audio.currentTime;
-            };
 
             audio.onended = () => {
               this.autoPlayNext();
@@ -121,9 +116,45 @@ export default defineStore("Queue", {
           }
         });
     },
-    stop() {
-      audio.src = "";
-      this.playing = false;
+    startBufferingStatusWatcher() {
+      audio.ontimeupdate = () => {
+        this.duration.current = audio.currentTime;
+
+        const date = new Date();
+        sourceTime = date.getTime();
+      };
+
+      let sourceTime = 0;
+      let lastTime = 0;
+
+      const compare = () => {
+        const difference = Math.abs(sourceTime - lastTime);
+
+        // I WROTE THIS CODE WHILE EXHAUSTED, PLEASE REVIEW IT LATER WITH A CLEAR HEAD
+
+        if (difference > 600 && this.playing) {
+          this.buffering = true;
+          return;
+        }
+
+        this.buffering = false;
+      };
+
+      const updateTime = () => {
+        if (!this.playing) return;
+        const date = new Date();
+        lastTime = date.getTime();
+        compare();
+      };
+
+      setInterval(() => {
+        if (!this.playing) {
+          this.buffering = false;
+          return;
+        }
+
+        updateTime();
+      }, 100);
     },
     playPause() {
       if (audio.src === "") {
@@ -157,6 +188,7 @@ export default defineStore("Queue", {
       const resetQueue = () => {
         this.currentindex = 0;
         audio.src = "";
+        audio.pause();
         this.playing = false;
 
         updateMediaNotif();

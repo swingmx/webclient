@@ -19,7 +19,6 @@ import Content from "../components/SettingsView/Content.vue";
 const store = useSettingsStore();
 
 onMounted(() => {
-  console.log("SettingsView mounted");
   updatePageTitle("Settings");
   getAllSettings().then(({ settings }) => {
     store.mapDbSettings(settings);

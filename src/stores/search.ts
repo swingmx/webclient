@@ -96,7 +96,6 @@ export default defineStore("search", () => {
     }
 
     searchTopResults(query, limit).then((res) => {
-      console.log(limit);
       top_results.top_result = res.top_result;
       top_results.tracks = res.tracks;
       top_results.albums = res.albums;

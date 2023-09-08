@@ -72,6 +72,7 @@ export default defineStore("artistPage", {
       this.colors.bg = colors[0] ? colors[0] : "";
     },
     resetAlbums() {
+      this.colors.bg = "";
       this.albums = [];
       this.eps = [];
       this.singles = [];

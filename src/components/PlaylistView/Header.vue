@@ -78,7 +78,6 @@ const textColor = computed(() => {
 });
 
 function pinPlaylist(pid: number) {
-  console.log("success");
   pinUnpinPlaylist(pid).then((success) => {
     if (success) {
       playlist.info.pinned = !playlist.info.pinned;
