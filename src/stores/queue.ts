@@ -81,6 +81,7 @@ export default defineStore("Queue", {
         audio.onerror = reject;
       })
         .then(() => {
+          audio.currentTime = 0;
           this.duration.full = audio.duration;
 
           audio.play().then(() => {
@@ -90,7 +91,6 @@ export default defineStore("Queue", {
             fetchAlbumColor(track.albumhash).then((color) => {
               useColorStore().setTheme1Color(color);
             });
-
 
             audio.onended = () => {
               this.autoPlayNext();
@@ -141,12 +141,14 @@ export default defineStore("Queue", {
       };
 
       const updateTime = () => {
+        console.log(sourceTime);
         if (!this.playing) return;
         const date = new Date();
         lastTime = date.getTime();
         compare();
       };
 
+      // Loader will misbehave on HMR because of multiple setInterval calls
       setInterval(() => {
         if (!this.playing) {
           this.buffering = false;

@@ -19,12 +19,19 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
   window.addEventListener("keydown", (e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
     if (e.altKey) return;
-    if (e.shiftKey) return;
 
     let ctrlKey = e.ctrlKey;
+    const shiftKey = e.shiftKey;
+
+    const selection = window.getSelection()?.toString();
 
     function FocusedOnInput(target: HTMLElement) {
-      return target.tagName === "INPUT" || target.tagName === "TEXTAREA";
+      const targett = target as HTMLInputElement;
+
+      return (
+        (targett.tagName === "INPUT" && targett.type === "search") ||
+        targett.tagName === "TEXTAREA"
+      );
     }
 
     if (FocusedOnInput(target)) {
@@ -40,7 +47,15 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
     switch (e.key) {
       case "ArrowRight":
         {
+          if (shiftKey && selection) return;
+          if (shiftKey) {
+            e.preventDefault();
+            q.seek(q.duration.current + 10);
+            return;
+          }
+
           setTimeout(() => {
+            // fire event after 1 second
             key_down_fired = false;
           }, 1000);
 
@@ -50,6 +65,13 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
 
       case "ArrowLeft":
         {
+          if (shiftKey && selection) return;
+          if (shiftKey) {
+            e.preventDefault();
+            q.seek(q.duration.current - 10);
+            return;
+          }
+
           q.playPrev();
 
           setTimeout(() => {
@@ -72,6 +94,7 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
         if (!ctrlKey) return;
         e.preventDefault();
         focusPageSearchBox();
+        break;
       }
 
       case "Escape": {

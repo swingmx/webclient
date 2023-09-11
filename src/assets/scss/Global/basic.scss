@@ -96,6 +96,10 @@ button {
     }
   }
 
+  &:focus {
+    outline: none;
+  }
+
   &:hover {
     background-color: $darkestblue;
   }
