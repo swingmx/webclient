@@ -10,7 +10,6 @@ import updateMediaNotif from "@/helpers/mediaNotification";
 import { isFavorite } from "@/requests/favorite";
 
 import useSettingsStore from "./settings";
-import { fetchAlbumColor } from "@/requests/colors";
 import {
   fromAlbum,
   fromArtist,
@@ -88,9 +87,11 @@ export default defineStore("Queue", {
             updateMediaNotif();
             this.duration.full = audio.duration;
 
-            fetchAlbumColor(track.albumhash).then((color) => {
-              useColorStore().setTheme1Color(color);
-            });
+            useColorStore().setTheme1Color(
+              paths.images.thumb.small + this.currenttrack.image
+            );
+            // fetchAlbumColor(track.albumhash).then((color) => {
+            // });
 
             audio.onended = () => {
               this.autoPlayNext();
@@ -141,7 +142,6 @@ export default defineStore("Queue", {
       };
 
       const updateTime = () => {
-        console.log(sourceTime);
         if (!this.playing) return;
         const date = new Date();
         lastTime = date.getTime();

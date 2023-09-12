@@ -55,7 +55,7 @@ const search = useSearchStore();
   .header {
     margin-right: 1.25rem;
     display: grid;
-    grid-template-columns: 26rem 1fr;
+    grid-template-columns: max-content 1fr;
     margin-bottom: 2rem;
     gap: $medium;
 

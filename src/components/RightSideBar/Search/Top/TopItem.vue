@@ -123,6 +123,8 @@ function showMenu(e: MouseEvent) {
   margin: 1rem;
   margin-bottom: 2rem;
   position: relative;
+  min-width: 22rem;
+  max-width: 27rem;
 
   .buttons {
     position: absolute;

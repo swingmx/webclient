@@ -26,11 +26,7 @@
         </div>
       </div>
     </router-link>
-    <OptionSvg
-      class="optionsvg"
-      :class="{ context_menu_showing }"
-      @click="showMenu"
-    />
+
   </div>
 </template>
 
@@ -38,29 +34,14 @@
 import { computed, ref } from "vue";
 import { RouteLocationRaw } from "vue-router";
 
-import OptionSvg from "@/assets/icons/more.svg";
 import { FromOptions } from "@/enums";
-import { showTrackContextMenu } from "@/helpers/contextMenuHandler";
 import useQueueStore from "@/stores/queue";
 import playingFrom from "@/utils/playingFrom";
-import { useRoute } from "vue-router";
 
-const route = useRoute();
 const queue = useQueueStore();
 
-const context_menu_showing = ref(false);
 
-function showMenu(e: MouseEvent) {
-  if (!queue.currenttrack) return;
 
-  showTrackContextMenu(
-    e,
-    queue.currenttrack,
-    context_menu_showing,
-    route,
-    false
-  );
-}
 
 const data = computed(() => {
   const { name, location, icon, image } = playingFrom(queue.from);
@@ -75,19 +56,7 @@ const data = computed(() => {
   align-items: center;
   margin-bottom: 1rem;
 
-  .optionsvg {
-    transform: scale(1.5) rotate(90deg);
-    border-radius: $small;
 
-    &:hover {
-      background-color: $gray3;
-      cursor: pointer;
-    }
-  }
-
-  svg.context_menu_showing {
-    background-color: $gray3;
-  }
 }
 
 .now-playling-from-link {

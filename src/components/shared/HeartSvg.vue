@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { Motion } from "motion/vue"
+import { Motion } from "motion/vue";
 
 import HeartFillSvg from "@/assets/icons/heart.fill.svg";
 import HeartSvg from "@/assets/icons/heart.svg";
@@ -47,7 +47,7 @@ defineEmits<{
 </script>
 
 <style lang="scss">
-$bg: rgb(250, 33, 33);
+$bg: rgb(255, 255, 255);
 
 .heart-button {
   align-items: center;
@@ -56,7 +56,6 @@ $bg: rgb(250, 33, 33);
   color: $bg;
   aspect-ratio: 1.5;
   background: rgba(255, 255, 255, 0.13);
-
 
   div {
     height: max-content;

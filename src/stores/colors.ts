@@ -1,15 +1,25 @@
 import { defineStore } from "pinia";
-// @ts-ignore
-import { brightness } from "@nextcss/color-tools";
-import rgb2Hex from "@/utils/colortools/rgb2Hex";
+import Vibrant from "node-vibrant";
+import listToRgbString from "@/utils/colortools/listToRgbString";
+
+async function getImageColor(url: string) {
+  const vibrant = new Vibrant(url);
+
+  const palette = await vibrant.getPalette();
+  const lightvibrant = listToRgbString(palette.LightVibrant?.getRgb()) || "";
+
+  return { lightvibrant };
+}
 
 export default defineStore("SwingMusicColors", {
   state: () => ({
     theme1: "",
+    theme2: "",
   }),
   actions: {
-    setTheme1Color(color: string) {
-      this.theme1 = color;
+    async setTheme1Color(url: string) {
+      const { lightvibrant } = await getImageColor(url);
+      this.theme1 = lightvibrant;
     },
   },
   persist: true,
