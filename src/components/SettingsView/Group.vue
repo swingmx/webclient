@@ -6,7 +6,9 @@
     </div>
     <div class="setting rounded pad-lg">
       <div
-        v-for="(setting, index) in group.settings"
+        v-for="(setting, index) in group.settings.filter((s) =>
+          s.show_if ? s.show_if() : true
+        )"
         :key="index"
         class="setting-item"
         :class="{

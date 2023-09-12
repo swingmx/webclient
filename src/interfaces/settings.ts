@@ -15,6 +15,7 @@ export interface Setting {
   state: (() => any) | null;
   button_text?: () => string;
   defaultAction?: () => void;
+  show_if?: () => boolean;
 }
 
 export interface SettingGroup {
