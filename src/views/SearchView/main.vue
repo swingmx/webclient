@@ -27,10 +27,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-
 import { Routes } from "@/router";
 import { useRoute } from "vue-router";
+import { computed, onMounted, ref } from "vue";
 
 import useSearchStore from "@/stores/search";
 import { isMobile } from "@/stores/content-width";
@@ -40,7 +39,6 @@ import AlbumPage from "./albums.vue";
 import ArtistPage from "./artists.vue";
 import TracksPage from "./tracks.vue";
 import TopTracks from "./TopResults.vue";
-
 import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
 
 const page = ref<HTMLElement>();

@@ -2,7 +2,9 @@
   <div v-if="flag" class="nothing rounded">
     <div>
       <component :is="icon" />
-      <h3>{{ title }}</h3>
+      <div class="nothingtitle">
+        <b>{{ title }}</b>
+      </div>
       <p>
         {{ description }}
       </p>
@@ -31,8 +33,9 @@ defineProps<{
     word-break: break-word;
   }
 
-  h3 {
+  .nothingtitle {
     margin-top: 2.75rem;
+    font-size: 1.15rem;
   }
 
   svg {

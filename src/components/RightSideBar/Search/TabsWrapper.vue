@@ -2,17 +2,17 @@
   <div id="right-tabs" :class="{ tabContent: tabContent }">
     <div class="tabheaders">
       <button
-        class="tab circular"
         v-for="tab in tabs"
         :key="tab"
-        @click="$emit('switchTab', tab)"
+        class="tab circular"
         :class="{ activetab: tab === currentTab }"
+        @click="$emit('switchTab', tab)"
       >
         {{ tab }}
       </button>
     </div>
 
-    <div id="tab-content" v-auto-animate v-if="tabContent">
+    <div v-if="tabContent" id="tab-content" v-auto-animate>
       <slot />
     </div>
   </div>

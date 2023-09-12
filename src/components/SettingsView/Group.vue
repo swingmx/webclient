@@ -30,7 +30,7 @@
               v-if="setting.type == SettingType.root_dirs"
               @click="setting.action"
             >
-              <ReloadSvg /> reload
+              <ReloadSvg /> rescan
             </button>
           </div>
           <div v-if="setting.desc" class="desc">

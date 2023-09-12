@@ -2,9 +2,10 @@
   <div class="artist-separators-input">
     <form @submit.prevent="submitInput">
       <input
-        v-model="input"
+        ref="separatorinput"
         type="search"
         class="rounded-sm"
+        @input="updateInput"
       />
       <div class="preview">
         <span
@@ -23,8 +24,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { Ref, computed, ref, watch } from "vue";
 
+const separatorinput: Ref<HTMLInputElement | null> = ref(null);
 const input = ref("");
 
 const props = defineProps<{
@@ -32,7 +34,6 @@ const props = defineProps<{
   submit: (input: string) => void;
 }>();
 
-let default_input_list = <string[]>[];
 const splitInput = (input: string) => {
   const i = input
     .trim()
@@ -45,13 +46,20 @@ const splitInput = (input: string) => {
 
   return [",", ...unique];
 };
+
+const updateInput = (e: Event) => {
+  input.value = (e.target as HTMLInputElement).value;
+};
+
+const default_input_list = computed(() => splitInput(default_input.value));
+
 function submitInput() {
   // check if input has changed
   function joinAndSort(arr: string[]) {
     return arr.slice(1).sort().join(",");
   }
 
-  const default_ = joinAndSort(default_input_list);
+  const default_ = joinAndSort(default_input_list.value);
   const preview_ = joinAndSort(preview_items.value);
 
   if (preview_ == default_) return;
@@ -60,13 +68,15 @@ function submitInput() {
 }
 
 const preview_items = computed(() => splitInput(input.value));
+const default_input = computed(() =>
+  props.default() ? props.default().join(", ") : ""
+);
 
-onMounted(() => {
-  const default_ = props.default();
-  if (!default_) return;
+watch(props.default, (newval, _) => {
+  const text = newval.join(", ");
 
-  input.value = default_.join(", ");
-  default_input_list = splitInput(input.value);
+  if (separatorinput.value) separatorinput.value.value = text;
+  input.value = text;
 });
 </script>
 
