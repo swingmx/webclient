@@ -20,10 +20,10 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
     const target = e.target as HTMLElement;
     if (e.altKey) return;
 
-    let ctrlKey = e.ctrlKey;
+    const ctrlKey = e.ctrlKey;
     const shiftKey = e.shiftKey;
 
-    const selection = window.getSelection()?.toString();
+    const no_text_selection = !window.getSelection()?.toString();
 
     function FocusedOnInput(target: HTMLElement) {
       const targett = target as HTMLInputElement;
@@ -32,6 +32,11 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
         (targett.tagName === "INPUT" && targett.type === "search") ||
         targett.tagName === "TEXTAREA"
       );
+    }
+
+    function triggerSeek() {
+      if (shiftKey) return false;
+      if (ctrlKey) return true;
     }
 
     if (FocusedOnInput(target)) {
@@ -47,8 +52,9 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
     switch (e.key) {
       case "ArrowRight":
         {
-          if (shiftKey && selection) return;
-          if (shiftKey) {
+          const doSeek = triggerSeek();
+
+          if (doSeek) {
             e.preventDefault();
             q.seek(q.duration.current + 10);
             return;
@@ -59,20 +65,25 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
             key_down_fired = false;
           }, 1000);
 
-          q.playNext();
+          if (no_text_selection) {
+            q.playNext();
+          }
         }
         break;
 
       case "ArrowLeft":
         {
-          if (shiftKey && selection) return;
-          if (shiftKey) {
+          const doSeek = triggerSeek();
+
+          if (doSeek) {
             e.preventDefault();
             q.seek(q.duration.current - 10);
             return;
           }
 
-          q.playPrev();
+          if (no_text_selection) {
+            q.playPrev();
+          }
 
           setTimeout(() => {
             key_down_fired = false;
