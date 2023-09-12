@@ -21,5 +21,3 @@ defineProps<{
   onSearchPage?: boolean;
 }>();
 </script>
-
-<style lang="scss"></style>

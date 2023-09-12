@@ -25,7 +25,7 @@ defineProps<{
 <style lang="scss">
 .right-search-top-albums-or-artists {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
   padding: $small $smaller;
   gap: $small 0;
   margin-bottom: 2rem;
