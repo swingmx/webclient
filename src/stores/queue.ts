@@ -80,6 +80,12 @@ export default defineStore("Queue", {
         audio.onerror = reject;
       })
         .then(() => {
+          // paused before playback started
+          if (!this.playing) {
+            audio.pause();
+            return;
+          }
+
           audio.currentTime = 0;
           this.duration.full = audio.duration;
 
@@ -118,6 +124,9 @@ export default defineStore("Queue", {
         });
     },
     startBufferingStatusWatcher() {
+      let sourceTime = 0;
+      let lastTime = 0;
+
       audio.ontimeupdate = () => {
         this.duration.current = audio.currentTime;
 
@@ -125,11 +134,15 @@ export default defineStore("Queue", {
         sourceTime = date.getTime();
       };
 
-      let sourceTime = 0;
-      let lastTime = 0;
+      audio.onplay = () => {
+        // reset sourceTime to prevent false positives
+        const date = new Date();
+        sourceTime = date.getTime();
+      };
 
       const compare = () => {
         const difference = Math.abs(sourceTime - lastTime);
+        console.log(difference);
 
         // I WROTE THIS CODE WHILE EXHAUSTED, PLEASE REVIEW IT LATER WITH A CLEAR HEAD
 
@@ -164,14 +177,17 @@ export default defineStore("Queue", {
         return;
       }
 
-      if (audio.paused) {
+      if (audio.paused && !this.playing) {
         audio.currentTime === 0 ? this.play(this.currentindex) : null;
-        audio.play();
+        audio.play().catch(() => {
+          // do nothing
+        });
         this.playing = true;
-      } else {
-        audio.pause();
-        this.playing = false;
+        return;
       }
+
+      audio.pause();
+      this.playing = false;
     },
     autoPlayNext() {
       const settings = useSettingsStore();
