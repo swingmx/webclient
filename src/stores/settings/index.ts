@@ -28,6 +28,8 @@ export default defineStore("settings", {
     merge_albums: false,
     show_albums_as_singles: false,
     separators: <string[]>[],
+
+    useCircularArtistImg: true,
   }),
   actions: {
     mapDbSettings(settings: DBSettings) {

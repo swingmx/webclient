@@ -5,22 +5,26 @@
     :class="{ isSmallPhone }"
     style="height: 100%; width: 100%"
     :style="{
-      boxShadow: colors.bg.length ? `0 .5rem 2rem ${colors.bg}` : undefined,
+      boxShadow: !useCircularImage
+        ? colors.bg.length
+          ? `0 .5rem 2rem ${colors.bg}`
+          : undefined
+        : undefined,
     }"
   ></div>
   <div
     ref="artistheader"
     class="artist-page-header rounded-lg no-scroll"
-    :class="{ isSmallPhone }"
+    :class="{ isSmallPhone, useCircularImage }"
     :style="{
-      height: `${heightLarge || isSmallPhone ? '25rem' : '18rem'}`,
+      height: `${isSmallPhone ? '25rem' : containerHeight}`,
     }"
   >
-    <Info :artist="artist" />
+    <Info :artist="artist" :use-circular-image="useCircularImage" />
     <div
       class="artist-img no-select"
       :style="{
-        height: `${heightLarge ? '24rem' : '18rem'}`,
+        height: containerHeight,
       }"
     >
       <img
@@ -30,13 +34,12 @@
       />
     </div>
     <div
+      v-if="!useCircularImage"
       class="gradient"
       :style="{
         backgroundImage: colors.bg
-          ? `linear-gradient(${
-              isSmallPhone ? '210deg' : 'to left'
-            }, transparent 20%,
-      ${colors.bg} ${isSmallPhone ? '80' : '50'}%,
+          ? `linear-gradient(${gradientDirection}, transparent 20%,
+      ${colors.bg} ${gradientWidth}%,
       ${colors.bg} 100%)`
           : '',
       }"
@@ -45,19 +48,22 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 import { onBeforeRouteUpdate } from "vue-router";
 import { useElementSize } from "@vueuse/core";
+import useSettingsStore from "@/stores/settings";
 
 import { paths } from "@/config";
 import updatePageTitle from "@/utils/updatePageTitle";
-import { heightLarge } from "@/stores/content-width";
 
 import Info from "./HeaderComponents/Info.vue";
 import useArtistStore from "@/stores/pages/artist";
-import { storeToRefs } from "pinia";
+import { getShift } from "@/utils/colortools/shift";
 
 const store = useArtistStore();
+const settings = useSettingsStore();
+
 const props = defineProps<{
   on_sidebar?: boolean;
 }>();
@@ -75,6 +81,22 @@ const artistheader = ref(null);
 const { width } = useElementSize(artistheader);
 
 const isSmallPhone = computed(() => width.value <= 550);
+const useCircularImage = computed(
+  () =>
+    !isSmallPhone.value && (settings.useCircularArtistImg || width.value >= 995)
+);
+
+const gradientDirection = computed(() =>
+  isSmallPhone.value ? "210deg" : "to left"
+);
+
+const gradientWidth = computed(() => {
+  return isSmallPhone.value ? "80" : "50";
+});
+
+const containerHeight = computed(() => {
+  return useCircularImage.value ? "13rem" : "18rem";
+});
 </script>
 
 <style lang="scss">
@@ -91,12 +113,34 @@ const isSmallPhone = computed(() => width.value <= 550);
   position: relative;
 
   .artist-img {
+    display: flex;
+    align-items: flex-end;
+    order: 1;
+
     img {
       height: 100%;
       width: 100%;
       aspect-ratio: 1;
       object-fit: cover;
       object-position: 0% 20%;
+      float: right;
+    }
+  }
+
+  &.useCircularImage {
+    grid-template-columns: min-content 1fr;
+
+    .artist-img {
+      padding: 1rem;
+      order: -1;
+      z-index: 10;
+
+      img {
+        border-radius: 50%;
+        height: calc(100% - 0rem);
+        width: unset;
+        aspect-ratio: 1;
+      }
     }
   }
 

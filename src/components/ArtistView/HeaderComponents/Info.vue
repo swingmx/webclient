@@ -2,7 +2,11 @@
   <div
     class="artist-info"
     :style="{
-      color: artist.colors[0] ? getTextColor(artist.colors[0]) : undefined,
+      color: !useCircularImage
+        ? artist.colors[0]
+          ? getTextColor(artist.colors[0])
+          : undefined
+        : undefined,
     }"
   >
     <section class="text">
@@ -38,6 +42,7 @@ import { Artist } from "@/interfaces";
 
 defineProps<{
   artist: Artist;
+  useCircularImage?: boolean;
 }>();
 </script>
 
