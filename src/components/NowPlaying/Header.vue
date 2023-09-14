@@ -19,12 +19,12 @@
         />
       </RouterLink>
       <NowPlayingInfo @handle-fav="handleFav" />
-      <Progress />
-      <div class="below-progress">
+      <Progress v-if="isSmallPhone"/>
+      <div v-if="isSmallPhone" class="below-progress">
         <div class="time">
           {{ formatSeconds(queue.duration.current) }}
         </div>
-        <Buttons v-if="isSmallPhone" :hide-heart="true" @handleFav="() => {}" />
+        <Buttons :hide-heart="true" @handleFav="() => {}" />
         <div class="time">
           {{ formatSeconds(queue.duration.full) }}
         </div>
@@ -85,6 +85,7 @@ function handleFav() {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 1rem;
 
     .time {
       font-size: 12px;
@@ -117,7 +118,6 @@ function handleFav() {
 
   #progress {
     margin-top: 1rem;
-    margin-bottom: 1rem;
     margin-right: 0;
 
     &::-moz-range-thumb {

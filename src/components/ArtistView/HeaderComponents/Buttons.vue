@@ -2,14 +2,20 @@
   <div class="artist-buttons">
     <PlayBtnRect :source="playSources.artist" :bg_color="artist.colors.btn" />
     <HeartSvg
-      @handleFav="handleFav"
       :state="artist.info.is_favorite"
-      :color="artist.info.colors[0] ? artist.info.colors[0] : ''"
+      :color="
+        !useCircularImage
+          ? artist.info.colors[0]
+            ? artist.info.colors[0]
+            : ''
+          : ''
+      "
+      @handleFav="handleFav"
     />
     <button
       class="options"
-      @click="showContext"
       :class="{ context_menu_showing }"
+      @click="showContext"
     >
       <MoreSvg />
     </button>
@@ -27,6 +33,10 @@ import useArtistPageStore from "@/stores/pages/artist";
 import MoreSvg from "@/assets/icons/more.svg";
 import HeartSvg from "@/components/shared/HeartSvg.vue";
 import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";
+
+defineProps<{
+  useCircularImage?: boolean;
+}>();
 
 const artist = useArtistPageStore();
 const context_menu_showing = ref(false);

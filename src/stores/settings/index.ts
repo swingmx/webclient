@@ -19,7 +19,6 @@ export default defineStore("settings", {
     folder_list_mode: false,
     volume: 1.0,
     mute: false,
-    hidden_radios_unlocked: false,
 
     feat: true,
     prodby: true,
@@ -29,7 +28,7 @@ export default defineStore("settings", {
     show_albums_as_singles: false,
     separators: <string[]>[],
 
-    useCircularArtistImg: true,
+    useCircularArtistImg: false,
   }),
   actions: {
     mapDbSettings(settings: DBSettings) {
@@ -127,24 +126,8 @@ export default defineStore("settings", {
       setVolume(this.volume);
       setMute(this.mute);
     },
-    // radios 👇
-    isRadioTime() {
-      const date = new Date();
-      const hour = date.getHours();
-
-      // "... right time"
-      return hour >= 19 && hour <= 23;
-    },
-    unlockHiddenRadios() {
-      if (!this.isRadioTime()) return;
-      if (!this.hidden_radios_unlocked) {
-        useNotifStore().showNotification(
-          "Internet Radios Unlocked!",
-          NotifType.Success
-        );
-      }
-
-      this.hidden_radios_unlocked = true;
+    toggleUseCircularArtistImg() {
+      this.useCircularArtistImg = !this.useCircularArtistImg;
     },
   },
   getters: {

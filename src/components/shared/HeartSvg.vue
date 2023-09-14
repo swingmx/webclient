@@ -4,10 +4,9 @@
     class="heart-button circular"
     :style="{
       color: color ? getTextColor(color) : '',
-      border: color ? `solid 1px ${getShift(color, [25, -25])}` : '',
     }"
     @click="!no_emit && $emit('handleFav')"
-  >
+    >
     <Motion
       :initial="{
         opacity: 0,

@@ -11,7 +11,12 @@
   >
     <section class="text">
       <div class="card-title">Artist</div>
-      <div class="artist-name ellip2">{{ artist.name }}</div>
+      <div
+        class="artist-name"
+        :class="`${useCircularImage ? 'ellip' : 'ellip2'}`"
+      >
+        {{ artist.name }}
+      </div>
       <div class="stats">
         <span v-if="artist.trackcount">
           {{ artist.trackcount }} Track{{
@@ -29,7 +34,7 @@
         </span>
       </div>
     </section>
-    <Buttons />
+    <Buttons :use-circular-image="useCircularImage" />
   </div>
 </template>
 

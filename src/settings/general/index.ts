@@ -1,3 +1,5 @@
+import useSettingsStore from "@/stores/settings";
+
 import { SettingCategory } from "@/interfaces/settings";
 import * as strings from "../strings";
 import contextChildrenShowMode from "./context-children-show-mode";
@@ -7,8 +9,8 @@ import sidebarSettings from "./sidebar";
 import rootDirSettings from "./root-dirs";
 import albums from "./albums";
 import separators from "./separators";
-import useSettingsStore from "@/stores/settings";
 import tracks from "./tracks";
+import circularArtistImg from "./circular-artist-img";
 
 const npStrings = strings.nowPlayingStrings;
 const rootRootStrings = strings.manageRootDirsStrings;
@@ -17,11 +19,12 @@ export default {
   title: "General",
   groups: [
     {
-      title: "General Settings",
+      title: "UI Settings",
       desc: "Settings for various parts of the user interface.",
       settings: [
         ...sidebarSettings,
         ...extendWidth,
+        circularArtistImg,
         ...contextChildrenShowMode,
       ],
     },
