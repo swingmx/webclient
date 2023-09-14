@@ -1,36 +1,36 @@
 <template>
   <form
-    @submit.prevent="update_playlist"
     id="playlist-update-modal"
     class="playlist-modal"
     enctype="multipart/form-data"
     autocomplete="off"
+    @submit.prevent="update_playlist"
   >
     <label for="name">Playlist name</label>
     <input
+      id="modal-playlist-name-input"
+      v-model="pname"
       type="search"
       class="rounded-sm"
       name="name"
-      id="modal-playlist-name-input"
-      v-model="pname"
       @keypress.enter.prevent="update_playlist"
     />
 
     <label for="image">Image</label>
     <input
+      id="update-pl-image-upload"
+      ref="dropZoneRef"
       type="file"
       accept="image/*"
       name="image"
-      id="update-pl-image-upload"
       style="display: none"
       @change="handleUpload"
-      ref="dropZoneRef"
     />
     <div id="upload" class="boxed rounded-sm">
       <div
         class="clickable"
-        @click="selectFiles"
         tabindex="0"
+        @click="selectFiles"
         @keydown.space.enter.stop="selectFiles"
       >
         <ImageIcon />
@@ -45,8 +45,8 @@
         tabindex="0"
       >
         <div
-          class="delete-icon"
           v-if="!image && playlist.has_image"
+          class="delete-icon"
           @click="pStore.removeBanner()"
         >
           <DeleteIcon />
@@ -56,7 +56,7 @@
     <label v-if="playlist.has_image && !playlist.settings.square_img"
       >Settings</label
     >
-    <div class="banner-settings rounded-sm" v-if="image || playlist.has_image">
+    <div v-if="image || playlist.has_image" class="banner-settings rounded-sm">
       <div>Show square cover image</div>
       <Switch
         :state="playlist.settings.square_img || false"
@@ -64,8 +64,8 @@
       />
     </div>
     <div
-      class="boxed banner-position-adjust rounded-sm"
       v-if="playlist.has_image && !playlist.settings.square_img"
+      class="boxed banner-position-adjust rounded-sm"
     >
       <div class="t-center">
         Adjust image position • {{ pStore.info.settings.banner_pos }}%
@@ -170,13 +170,7 @@ function update_playlist(e: Event) {
   clicked.value = true;
 
   formData.append("image", image.value);
-  formData.append(
-    "settings",
-    JSON.stringify({
-      square_img: pStore.info.settings.square_img,
-      banner_pos: pStore.info.settings.banner_pos,
-    })
-  );
+  formData.append("settings", JSON.stringify(pStore.info.settings));
 
   if (name && name.toString().trim() !== "") {
     updatePlaylist(playlist.value.id, formData, pStore).then(() => {

@@ -128,7 +128,9 @@ export default defineStore("playlist-tracks", {
     resetBannerPos() {
       try {
         this.info.settings.banner_pos = 50;
-      } catch (e) {}
+      } catch (e) {
+        /* empty */
+      }
     },
   },
   getters: {
