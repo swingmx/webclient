@@ -1,5 +1,5 @@
 <template>
-  <div v-auto-animate class="albumtype" v-if="!isSmallPhone">
+  <div v-if="!isSmallPhone" v-auto-animate class="albumtype">
     <span v-if="album.is_soundtrack">Soundtrack</span>
     <span v-else-if="album.is_live">Concert</span>
     <span v-else-if="album.is_compilation">Compilation</span>

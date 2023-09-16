@@ -82,6 +82,8 @@ export default defineConfig({
             ],
           },
         ],
+        start_url: "/",
+        display: "standalone",
         background_color: "rgba(0, 0, 0, 0.95)",
       },
     }),

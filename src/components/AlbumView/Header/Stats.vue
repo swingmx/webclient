@@ -5,17 +5,11 @@
         :artists="album.albumartists"
         :albumartists="''"
         :small="true"
-        :append="
-          !isSmallPhone
-            ? `• ${album.date}  •  ${album.count} ${
-                album.count === 1 ? 'Track' : 'Tracks'
-              }  •  ${formatSeconds(album.duration, true)}`
-            : ''
-        "
+        :append="!isSmallPhone ? statsText : ''"
       />
     </div>
-    <div class="stats2" v-if="isSmallPhone">
-      {{ album.date }} • {{ album.count }} Tracks •
+    <div v-if="isSmallPhone" class="stats2">
+      {{ album.date }} {{ !album.is_single ? `• ${album.count} Tracks` : "" }} •
       {{ formatSeconds(album.duration, true) }}
     </div>
   </div>
@@ -27,10 +21,22 @@ import { formatSeconds } from "@/utils";
 import { isSmallPhone } from "@/stores/content-width";
 
 import ArtistName from "@/components/shared/ArtistName.vue";
+import { computed } from "vue";
 
-defineProps<{
+const props = defineProps<{
   album: Album;
 }>();
+
+const statsText = computed(() => {
+  const is_single = props.album.is_single;
+
+  // hide track count if it's a single, also add an s to track if it's plural
+  return `• ${props.album.date} ${
+    !is_single
+      ? `• ${props.album.count} Track${props.album.count > 1 ? "s" : ""}`
+      : ""
+  } • ${formatSeconds(props.album.duration, true)}`;
+});
 </script>
 
 <style lang="scss">
