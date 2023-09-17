@@ -80,7 +80,7 @@ defineProps<{
   }
 
   .on_artist {
-    background-color: $gray3;
+    background-color: $gray5;
     padding: 0.1rem $small;
     color: $white;
   }
