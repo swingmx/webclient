@@ -142,9 +142,6 @@ export default defineStore("Queue", {
 
       const compare = () => {
         const difference = Math.abs(sourceTime - lastTime);
-        console.log(difference);
-
-        // I WROTE THIS CODE WHILE EXHAUSTED, PLEASE REVIEW IT LATER WITH A CLEAR HEAD
 
         if (difference > 600 && this.playing) {
           this.buffering = true;
