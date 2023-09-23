@@ -1,7 +1,7 @@
-import { NotifType, useNotifStore } from "@/stores/notification";
 import { paths } from "@/config";
+import { Album, Artist, Track } from "@/interfaces";
+import { NotifType, useNotifStore } from "@/stores/notification";
 import useAxios from "./useAxios";
-import { Artist, Track, Album } from "@/interfaces";
 
 export const getArtistData = async (hash: string, limit: number = 5) => {
   interface ArtistData {
@@ -30,8 +30,7 @@ export const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
   interface ArtistAlbums {
     artistname: string;
     albums: Album[];
-    eps: Album[];
-    singles: Album[];
+    singles_and_eps: Album[];
     appearances: Album[];
     compilations: Album[];
   }

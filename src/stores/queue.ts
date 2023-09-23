@@ -120,7 +120,10 @@ export default defineStore("Queue", {
               if (this.currenttrack.trackhash !== track.trackhash) return;
               this.playNext();
             }, 5000);
+            return;
           }
+
+          this.playing = false;
         });
     },
     startBufferingStatusWatcher() {

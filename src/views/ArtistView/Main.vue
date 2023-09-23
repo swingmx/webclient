@@ -92,8 +92,7 @@ const similar_artists_fetcher: ScrollerItem = {
 
 enum AlbumType {
   ALBUMS = "Albums",
-  EPS = "EPs",
-  SINGLES = "Singles",
+  SINGLES = "EP & Singles",
   APPEARANCES = "Appearances",
   COMPILATIONS = "Compilations",
 }
@@ -108,9 +107,6 @@ function createAbumComponent(
   switch (title) {
     case AlbumType.ALBUMS:
       albumType = discographyAlbumTypes.albums;
-      break;
-    case AlbumType.EPS:
-      albumType = discographyAlbumTypes.eps;
       break;
     case AlbumType.SINGLES:
       albumType = discographyAlbumTypes.singles;
@@ -179,11 +175,6 @@ const scrollerItems = computed(() => {
   if (store.singles.length > 0) {
     const singles = createAbumComponent(AlbumType.SINGLES, store.singles);
     components.push(singles);
-  }
-
-  if (store.eps.length > 0) {
-    const eps = createAbumComponent(AlbumType.EPS, store.eps);
-    components.push(eps);
   }
 
   if (store.compilations.length > 0) {

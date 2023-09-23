@@ -7,9 +7,9 @@ import {
 } from "@/requests/artists";
 
 import { paths } from "@/config";
-import useSettingsStore from "@/stores/settings";
 import { Album, Artist, Track } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
+import useSettingsStore from "@/stores/settings";
 import setColorsToStore from "@/utils/colortools/setColorsToStore";
 
 export default defineStore("artistPage", {
@@ -43,12 +43,11 @@ export default defineStore("artistPage", {
       this.extractColors();
     },
     async getArtistAlbums() {
-      const { albums, eps, singles, appearances, compilations } =
+      const { albums, singles_and_eps, appearances, compilations } =
         await getArtistAlbums(this.info.artisthash, maxAbumCards.value);
 
       this.albums = albums;
-      this.eps = eps;
-      this.singles = singles;
+      this.singles = singles_and_eps;
       this.appearances = appearances;
       this.compilations = compilations;
     },

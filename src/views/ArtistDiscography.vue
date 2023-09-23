@@ -18,13 +18,13 @@
 import { onMounted } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 
-import AlbumCard from "@/components/shared/AlbumCard.vue";
-import { discographyAlbumTypes } from "@/enums";
-import useArtistDiscographyStore from "@/stores/pages/artistDiscog";
 import updatePageTitle from "@/utils/updatePageTitle";
+import useArtistDiscographyStore from "@/stores/pages/artistDiscog";
 
-const artist = useArtistDiscographyStore();
+import AlbumCard from "@/components/shared/AlbumCard.vue";
+
 const route = useRoute();
+const artist = useArtistDiscographyStore();
 
 onMounted(() => {
   updatePageTitle("Discography" + (route.params.artist || ""));

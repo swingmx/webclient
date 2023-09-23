@@ -87,5 +87,9 @@ export async function isFavorite(itemhash: string, type: favType) {
     get: true,
   });
 
-  return data.is_favorite as boolean;
+  try {
+    return data.is_favorite as boolean;
+  } catch (error) {
+    return false;
+  }
 }
