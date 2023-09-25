@@ -15,6 +15,7 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
+import { useRoute } from "vue-router";
 
 import {
   saveAlbumAsPlaylist,
@@ -24,6 +25,7 @@ import {
 import useQueueStore from "@/stores/queue";
 import { NotifType, Notification } from "@/stores/notification";
 import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
+import usePlaylistStore from "@/stores/pages/playlists";
 
 const props = defineProps<{
   trackhash?: string;
@@ -33,6 +35,9 @@ const props = defineProps<{
   artisthash?: string;
   is_queue?: boolean;
 }>();
+
+const store = usePlaylistStore();
+const route = useRoute();
 
 onMounted(() => {
   const input_elem = document.getElementById(
@@ -64,29 +69,44 @@ function create(e: Event) {
   }
 
   const createTrackPlaylist = () =>
-    saveTrackAsPlaylist(name, props?.trackhash || "").then(() => {
+    saveTrackAsPlaylist(name, props?.trackhash || "").then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
       emit("hideModal");
     });
 
   const createEmptyPlaylist = () =>
-    createNewPlaylist(name).then(() => {
+    createNewPlaylist(name).then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
       emit("hideModal");
     });
 
   const createFolderPlaylist = () => {
-    saveFolderAsPlaylist(name, props.path as string).then(() => {
+    saveFolderAsPlaylist(name, props.path as string).then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
       emit("hideModal");
     });
   };
 
   const createAlbumPlaylist = () => {
-    saveAlbumAsPlaylist(name, props.albumhash as string).then(() => {
+    saveAlbumAsPlaylist(name, props.albumhash as string).then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
       emit("hideModal");
     });
   };
 
   const createArtistPlaylist = () => {
-    saveArtistAsPlaylist(name, props.artisthash as string).then(() => {
+    saveArtistAsPlaylist(name, props.artisthash as string).then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
       emit("hideModal");
     });
   };
@@ -96,7 +116,10 @@ function create(e: Event) {
     const trackhashes = queue.tracklist.map((track) => track.trackhash);
     const itemhash = trackhashes.join(",");
 
-    saveTrackAsPlaylist(name, itemhash).then(() => {
+    saveTrackAsPlaylist(name, itemhash).then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
       emit("hideModal");
     });
   };

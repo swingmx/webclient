@@ -36,7 +36,7 @@
       <img :src="(playlist.info.image as string)" class="rounded-sm" />
     </div>
     <BannerImages
-      v-if="!info.has_image && useSqrImg"
+      v-if="playlist.info.count && !info.has_image && useSqrImg"
       class="sqr_img rounded-sm"
     />
     <Info :text-color="textColor" :btn_color="colors.btn" />
@@ -50,14 +50,14 @@ import { storeToRefs } from "pinia";
 
 import usePStore from "@/stores/pages/playlist";
 import { getTextColor } from "@/utils/colortools/shift";
+import { pinUnpinPlaylist } from "@/requests/playlists";
 import { heightLarge, isSmallPhone } from "@/stores/content-width";
 
 import Info from "./Header/Info.vue";
+import PinSvg from "@/assets/icons/pin.svg";
 import LastUpdated from "./Header/LastUpdated.vue";
 import BannerImages from "./Header/BannerImages.vue";
-import PinSvg from "@/assets/icons/pin.svg";
 import PinFillSvg from "@/assets/icons/pin.fill.svg";
-import { pinUnpinPlaylist } from "@/requests/playlists";
 
 const playlist = usePStore();
 
@@ -72,7 +72,7 @@ const bg = computed(() => {
       return `url(${info.value.image})`;
     }
   }
-  
+
   return colors.value.bg ? colors.value.bg : "";
 });
 

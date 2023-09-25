@@ -12,7 +12,6 @@ export default defineStore("playlists", {
      */
     async fetchAll() {
       const playlists = await getAllPlaylists();
-
       this.playlists = playlists;
     },
     /**
@@ -21,8 +20,9 @@ export default defineStore("playlists", {
      * @returns void
      */
     addPlaylist(playlist: Playlist) {
-      // add at the beginning
-      this.playlists.unshift(playlist);
+      setTimeout(() => {
+        this.playlists.unshift(playlist);
+      }, 250);
     },
   },
 });

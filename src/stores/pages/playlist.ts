@@ -119,6 +119,7 @@ export default defineStore("playlist-tracks", {
     addTrack(track: Track) {
       this.allTracks.push(track);
     },
+    
     resetArtists() {
       this.artists = [];
     },
