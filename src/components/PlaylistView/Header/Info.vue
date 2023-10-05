@@ -26,7 +26,8 @@
       <span
         v-for="t in balanceText(
           playlist.info.name,
-          test_elem?.offsetWidth || 0
+          test_elem?.offsetWidth || 0,
+          '4rem'
         )"
         :key="t"
       >

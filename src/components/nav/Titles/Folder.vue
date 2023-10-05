@@ -9,10 +9,10 @@
               $router.push({ name: Routes.folder, params: { path: '$home' } })
             "
           ></div>
-          <BreadCrumbNav :subPaths="subPaths" @navigate="navigate" />
+          <BreadCrumbNav :sub-paths="subPaths" @navigate="navigate" />
         </div>
       </div>
-      <SearchInput :page="Routes.folder" v-if="!isSmallPhone" />
+      <SearchInput v-if="!isSmallPhone" :page="Routes.folder" />
       <button
         class="options"
         :class="{ 'btn-active': context_menu_showing }"

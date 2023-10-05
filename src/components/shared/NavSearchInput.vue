@@ -1,21 +1,22 @@
 <template>
   <div class="header-input-wrapper rounded-sm" :class="{ showInput: clicked }">
     <button
-      class="search-btn"
       id="page-search-trigger"
+      v-wave
+      class="search-btn"
       :class="{ 'btn-active': clicked }"
       @click="handleFocus"
-      v-wave
     >
       <SearchSvg />
     </button>
     <input
+      id="page-search"
+      ref="inputRef"
+      v-model.trim="query"
       class="header-input pad-sm rounded-sm"
       :class="{ showInput: clicked }"
       :placeholder="currentEmoji"
-      v-model.trim="query"
-      id="page-search"
-      ref="inputRef"
+      type="search"
     />
   </div>
 </template>
@@ -56,7 +57,6 @@ function handleFocus() {
     inputRef.value?.blur();
     resetQuery();
   }
-
 }
 
 function getRef() {
