@@ -1,12 +1,9 @@
 <template>
   <div class="p-after-header">
-    <div>Tracks</div>
+    <div>All Tracks</div>
   </div>
 </template>
 
-<script setup lang="ts">
-import LastUpdated from "./Header/LastUpdated.vue";
-</script>
 
 <style lang="scss">
 .p-after-header {

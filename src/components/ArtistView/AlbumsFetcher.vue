@@ -4,12 +4,11 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
+import { onBeforeRouteUpdate } from "vue-router";
 
 const props = defineProps<{
   fetch_callback: () => void;
   reset_callback: () => void;
-  clear_callback: () => void;
 }>();
 
 onMounted(async () => {
@@ -18,9 +17,5 @@ onMounted(async () => {
 
 onBeforeRouteUpdate(() => {
   props.reset_callback();
-});
-
-onBeforeRouteLeave(() => {
-  props.clear_callback();
 });
 </script>

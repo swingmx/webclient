@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import { Track } from "@/interfaces";
 
@@ -40,6 +40,7 @@ import { heightLarge, isSmall, isSmallPhone } from "@/stores/content-width";
 
 const album = useAlbumStore();
 const queue = useQueueStore();
+const route = useRoute();
 
 interface ScrollerItem {
   id: string | undefined;
@@ -48,7 +49,8 @@ interface ScrollerItem {
     | typeof SongItem
     | typeof GenreBanner
     | typeof AlbumsList
-    | typeof AlbumsFetcher;
+    | typeof AlbumsFetcher
+    | typeof SimilarAlbumLoader;
   props?: any;
   size: number;
 }
@@ -82,7 +84,6 @@ const AlbumVersionsFetcher: ScrollerItem = {
       album.resetOtherVersions();
       album.fetchAlbumVersions();
     },
-    clear_callback: album.resetOtherVersions,
   },
   size: 2,
 };
@@ -96,7 +97,6 @@ const SimilarAlbumsFetcher: ScrollerItem = {
       album.resetSimilarAlbums();
       album.fetchSimilarAlbums();
     },
-    clear_callback: album.resetSimilarAlbums,
   },
   size: 2,
 };
@@ -182,7 +182,10 @@ const scrollerItems = computed(() => {
   components.push(...moreFrom);
   components.push(SimilarAlbumsFetcher);
 
-  if (album.similarAlbums.length > 0) {
+  if (
+    album.fetched_hash === route.params.albumhash &&
+    album.similarAlbums.length
+  ) {
     components.push({
       id: "similarAlbums",
       component: SimilarAlbumLoader,

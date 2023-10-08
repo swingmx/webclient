@@ -76,7 +76,6 @@ const artist_albums_fetcher: ScrollerItem = {
   props: {
     fetch_callback: fetchArtistAlbums,
     reset_callback: reFetchArtistAlbums,
-    clear_callback: store.resetAlbums,
   },
 };
 
@@ -86,7 +85,6 @@ const similar_artists_fetcher: ScrollerItem = {
   props: {
     fetch_callback: fetchSimilarArtists,
     reset_callback: reFetchSimilarArtists,
-    clear_callback: store.resetSimilarArtists,
   },
 };
 
@@ -196,7 +194,10 @@ const scrollerItems = computed(() => {
 
   components = [...components, genreBanner, similar_artists_fetcher];
 
-  if (store.similar_artists.length > 0) {
+  if (
+    store.fetched_hash === route.params.hash &&
+    store.similar_artists.length > 0
+  ) {
     const SimilarArtistsComponent = {
       id: "similar-artists",
       component: SimilarArtists,

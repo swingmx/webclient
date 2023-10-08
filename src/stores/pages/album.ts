@@ -60,6 +60,7 @@ export default defineStore("album", {
       bg: "",
       btn: "",
     },
+    fetched_hash: "",
   }),
   actions: {
     /**
@@ -111,12 +112,14 @@ export default defineStore("album", {
       );
     },
     async fetchSimilarAlbums() {
-      if (this.similarAlbums.length) return;
+      if (this.fetched_hash === this.info.albumhash) return;
 
       this.similarAlbums = await getSimilarAlbums(
         this.info.albumartists[0].artisthash,
         maxAbumCards.value
       );
+
+      this.fetched_hash = this.info.albumhash;
     },
     extractColors() {
       const url = paths.images.thumb.small + this.info.image;
