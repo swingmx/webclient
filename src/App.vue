@@ -12,10 +12,12 @@
     }"
     :style="{ maxWidth: `${content_height > 1080 ? '2220px' : '1720px'}` }"
   >
-    <LeftSidebar />
+    <LeftSidebar v-if="!isMobile" />
     <NavBar />
     <div id="acontent" v-element-size="updateContentElemSize">
-      <router-view />
+      <BalancerProvider>
+        <router-view />
+      </BalancerProvider>
     </div>
     <RightSideBar v-if="settings.use_sidebar && xl" />
     <BottomBar />
@@ -25,19 +27,25 @@
 
 <script setup lang="ts">
 // @libraries
-import { vElementSize } from "@vueuse/components";
-import { onStartTyping } from "@vueuse/core";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { onStartTyping } from "@vueuse/core";
+import { vElementSize } from "@vueuse/components";
+import { BalancerProvider } from "vue-wrap-balancer";
 
 // @stores
-import { content_width, content_height } from "@/stores/content-width";
+import {
+  content_height,
+  content_width,
+  isMobile,
+} from "@/stores/content-width";
 import useModalStore from "@/stores/modal";
 import useQStore from "@/stores/queue";
 import useSettingsStore from "@/stores/settings";
+import useQueueStore from "@/stores/queue";
 
 // @utils
-import handleShortcuts from "@/composables/useKeyboard";
+import handleShortcuts from "@/helpers/useKeyboard";
 import { readLocalStorage, writeLocalStorage } from "@/utils";
 import { xl, xxl } from "./composables/useBreakpoints";
 
@@ -50,24 +58,26 @@ import Notification from "@/components/Notification.vue";
 import BottomBar from "@/components/BottomBar/BottomBar.vue";
 import NavBar from "@/components/nav/NavBar.vue";
 import RightSideBar from "@/components/RightSideBar/Main.vue";
-import LeftSidebar from "./components/LeftSidebar/index.vue";
-import { baseApiUrl } from "./config";
-import { getRootDirs } from "./composables/fetch/settings/rootdirs";
+import LeftSidebar from "@/components/LeftSidebar/index.vue";
+
+import { getRootDirs } from "@/requests/settings/rootdirs";
+import { baseApiUrl } from "@/config";
 // import BubbleManager from "./components/bubbles/BinManager.vue";
 
-const queue = useQStore();
 const router = useRouter();
+const queue = useQueueStore();
 const modal = useModalStore();
 const settings = useSettingsStore();
 
-queue.readQueue();
 handleShortcuts(useQStore, useModalStore);
 
 router.afterEach(() => {
   (document.getElementById("acontent") as HTMLElement).scrollTo(0, 0);
 });
 
-onStartTyping((e) => {
+onStartTyping(() => {
+  if (isMobile.value) return;
+
   const elem = document.getElementById("globalsearch") as HTMLInputElement;
   elem.focus();
   elem.value = "";
@@ -108,7 +118,9 @@ function handleRootDirsPrompt() {
 }
 
 onMounted(() => {
+  queue.startBufferingStatusWatcher();
   handleWelcomeModal();
+  settings.initializeVolume();
 
   if (baseApiUrl.value === null) {
     modal.showSetIPModal();
@@ -121,21 +133,6 @@ onMounted(() => {
 
 <style lang="scss">
 @import "./assets/scss/mixins.scss";
-
-.l-sidebar {
-  position: relative;
-
-  .withlogo {
-    padding: 1rem;
-  }
-
-  .l-album-art {
-    width: calc(100% - 2rem);
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 1rem;
-  }
-}
 
 .r-sidebar {
   &::-webkit-scrollbar {

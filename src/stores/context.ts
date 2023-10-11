@@ -1,7 +1,7 @@
-import { defineStore } from "pinia";
-import { Option } from "../interfaces";
-import { ContextSrc } from "../composables/enums";
 import { createPopper, VirtualElement } from "@popperjs/core";
+import { defineStore } from "pinia";
+import { ContextSrc } from "../enums";
+import { Option } from "../interfaces";
 
 function generateGetBoundingClientRect(x = 0, y = 0) {
   return () => ({
@@ -60,7 +60,7 @@ export default defineStore("context-menu", {
               this.src = src;
             },
           });
-        })
+        });
     },
     hideContextMenu() {
       this.visible = false;

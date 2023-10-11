@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import ArtistGrid from "./ArtistGrid.vue";
 import TracksGrid from "./TracksGrid.vue";
+import TopResults from "./TopResults.vue";
 
 const props = defineProps<{
   name: string;
@@ -12,6 +13,11 @@ const props = defineProps<{
 
 function getComponent() {
   switch (props.name) {
+    case "top":
+      return {
+        component: TopResults,
+      };
+
     case "tracks":
       return {
         component: TracksGrid,

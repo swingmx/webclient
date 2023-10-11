@@ -1,14 +1,13 @@
 <template>
   <div class="modal" v-if="modal.visible">
     <div class="bg" @click="modal.hideModal"></div>
-    <Motion
+    <div
       class="m-content rounded"
       :style="{
         maxWidth:
           modal.component == modal.options.setRootDirs ? '56rem' : '30rem',
       }"
-      :initial="{ opacity: 0, y: -20 }"
-      :animate="{ opacity: 1, y: 0 }"
+      v-motion-slide-top
     >
       <div class="heading">{{ modal.title }}</div>
       <div class="close circular" @click="modal.hideModal">
@@ -16,12 +15,12 @@
       </div>
       <NewPlaylist
         v-if="modal.component == modal.options.newPlaylist"
-        :track="modal.props.track"
+        v-bind="modal.props"
         @hideModal="hideModal"
         @setTitle="setTitle"
       />
       <UpdatePlaylist
-        :playlist="modal.props"
+      v-bind="modal.props"
         v-if="modal.component == modal.options.updatePlaylist"
         @hideModal="hideModal"
         @setTitle="setTitle"
@@ -46,23 +45,23 @@
         v-if="modal.component == modal.options.rootDirsPrompt"
         @hideModal="hideModal"
       />
-    </Motion>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { deletePlaylist as delPlaylist } from "@/requests/playlists";
 import { useRouter } from "vue-router";
-import useModalStore from "../stores/modal";
-import { deletePlaylist as delPlaylist } from "@/composables/fetch/playlists";
+import useModalStore from "@/stores/modal";
 
-import SetIP from "./modals/SetIP.vue";
-import WelcomeModal from "./WelcomeModal.vue";
-import NewPlaylist from "./modals/NewPlaylist.vue";
-import SetRootDirs from "./modals/SetRootDirs.vue";
-import ConfirmModal from "./modals/ConfirmModal.vue";
-import UpdatePlaylist from "./modals/updatePlaylist.vue";
-import RootDirsPrompt from "./modals/RootDirsPrompt.vue";
 import PlusSvg from "@/assets/icons/plus.svg";
+import WelcomeModal from "./WelcomeModal.vue";
+import ConfirmModal from "./modals/ConfirmModal.vue";
+import NewPlaylist from "./modals/NewPlaylist.vue";
+import RootDirsPrompt from "./modals/RootDirsPrompt.vue";
+import SetIP from "./modals/SetIP.vue";
+import SetRootDirs from "./modals/SetRootDirs.vue";
+import UpdatePlaylist from "./modals/updatePlaylist.vue";
 
 const modal = useModalStore();
 const router = useRouter();
@@ -114,10 +113,14 @@ function deletePlaylist() {
   .m-content {
     width: calc(100% - 4rem);
     max-height: 40rem;
-    padding: 2rem;
+    padding: 2rem 1.25rem;
     position: relative;
     background-color: $black;
-    border: solid 1px $gray5;
+
+    @include smallPhone {
+      width: calc(100% - 2rem);
+      padding: 2rem 1rem;
+    }
 
     .close {
       position: absolute;

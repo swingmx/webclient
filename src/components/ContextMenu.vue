@@ -1,19 +1,19 @@
 <template>
   <div
-    class="context-menu rounded shadow-lg no-select"
-    ref="contextMenuRef"
     id="context-menu"
+    ref="contextMenuRef"
+    class="context-menu rounded shadow-lg no-select"
     :style="{
-      opacity: context.visible ? '1' : '0',
+      visibility: context.visible ? 'visible' : 'hidden',
     }"
   >
     <ContextItem
-      class="context-item"
       v-for="option in context.options"
       :key="option.label"
+      class="context-item"
       :class="[{ critical: option.critical }, option.type]"
       :option="option"
-      :childrenShowMode="settings.contextChildrenShowMode"
+      :children-show-mode="settings.contextChildrenShowMode"
       @hideContextMenu="context.hideContextMenu()"
     />
   </div>
@@ -42,7 +42,8 @@ context.$subscribe((mutation, state) => {
       }
       watcher = onClickOutside(
         contextMenuRef,
-        (e) => {
+        (e: any) => {
+          if (e.type == "pointerup") return;
           context.hideContextMenu();
         },
         {
@@ -64,7 +65,7 @@ context.$subscribe((mutation, state) => {
   position: fixed;
   top: 0;
   left: 0;
-  width: 12rem;
+  width: 12.5rem;
   z-index: 10000 !important;
   transform: scale(0);
   height: min-content;
@@ -77,11 +78,17 @@ context.$subscribe((mutation, state) => {
   .separator {
     height: 1px;
     padding: 0;
+    margin-left: -$medium;
+    width: calc(100% + $medium * 2);
+    pointer-events: none;
   }
 
   .critical {
+    color: $red;
+
     &:hover {
       background-color: $red;
+      color: $white;
     }
   }
 }

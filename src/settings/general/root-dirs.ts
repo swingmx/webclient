@@ -1,7 +1,10 @@
-import { SettingType } from "../enums";
 import { Setting } from "@/interfaces/settings";
+import {
+  addRootDirs as editRootDirs,
+  triggerScan,
+} from "@/requests/settings/rootdirs";
+import { SettingType } from "../enums";
 import { manageRootDirsStrings as data } from "../strings";
-import { addRootDirs as editRootDirs } from "@/composables/fetch/settings/rootdirs";
 
 import useModalStore from "@/stores/modal";
 import useSettingsStore from "@/stores/settings";
@@ -21,18 +24,18 @@ const change_root_dirs: Setting = {
 
 const list_root_dirs: Setting = {
   title: text.list_root_dirs,
-  type: SettingType.list,
+  type: SettingType.root_dirs,
   state: () =>
     useSettingsStore().root_dirs.map((d) => ({
       title: d,
-      buttontext: "remove",
       action: () => {
         editRootDirs([], [d]).then((all_dirs) => {
           useSettingsStore().setRootDirs(all_dirs);
         });
       },
     })),
-  action: () => {},
+  defaultAction: () => {},
+  action: () => triggerScan(),
 };
 
 export default [change_root_dirs, list_root_dirs];

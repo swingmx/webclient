@@ -9,37 +9,40 @@
               $router.push({ name: Routes.folder, params: { path: '$home' } })
             "
           ></div>
-          <BreadCrumbNav :subPaths="subPaths" @navigate="navigate" />
+          <BreadCrumbNav :sub-paths="subPaths" @navigate="navigate" />
         </div>
       </div>
-      <SearchInput :page="Routes.folder" />
+      <SearchInput v-if="!isSmallPhone" :page="Routes.folder" />
       <button
-        class="toggle-list-mode"
-        @click="settings.toggleFolderListMode"
-        title="toggle list mode for folders"
-        v-auto-animate
+        class="options"
+        :class="{ 'btn-active': context_menu_showing }"
+        title="show more options"
+        @click="showContextMenu"
       >
-        <GridSvg v-if="settings.folder_list_mode" />
-        <ListSvg v-else />
+        <MoreSvg />
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import { Routes } from "@/router";
 import { subPath } from "@/interfaces";
+import { isSmallPhone } from "@/stores/content-width";
 
 import SearchInput from "@/components/shared/NavSearchInput.vue";
 import BreadCrumbNav from "@/components/FolderView/BreadCrumbNav.vue";
-import GridSvg from "@/assets/icons/grid.svg";
-import ListSvg from "@/assets/icons/playlist.svg";
-import useSettingsStore from "@/stores/settings";
+import MoreSvg from "@/assets/icons/more.svg";
+import { showFolderContextMenu } from "@/helpers/contextMenuHandler";
+import { ref } from "vue";
+import { ContextSrc } from "@/enums";
 
 const router = useRouter();
-const settings = useSettingsStore();
+const route = useRoute();
+
+const context_menu_showing = ref(false);
 
 defineProps<{
   subPaths: subPath[];
@@ -47,6 +50,15 @@ defineProps<{
 
 function navigate(path: string) {
   router.push({ name: Routes.folder, params: { path } });
+}
+
+function showContextMenu(e: MouseEvent) {
+  showFolderContextMenu(
+    e,
+    context_menu_showing,
+    ContextSrc.FolderNav,
+    route.params.path as string
+  );
 }
 </script>
 
@@ -57,6 +69,10 @@ function navigate(path: string) {
   .folder {
     display: grid;
     grid-template-columns: 1fr max-content max-content;
+
+    @include iphoneSE {
+      grid-template-columns: 1fr max-content;
+    }
 
     .fname-wrapper {
       width: 100%;
@@ -88,12 +104,16 @@ function navigate(path: string) {
       }
     }
 
-    .toggle-list-mode {
+    .options {
       margin-left: 1rem;
       height: 2.25rem;
       width: 2.25rem;
       aspect-ratio: 1;
       padding: 0;
+
+      svg {
+        transform: scale(1.2);
+      }
     }
   }
 }

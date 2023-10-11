@@ -1,11 +1,11 @@
 <template>
   <div class="album-virtual-scroller v-scroll-page" :class="{ isSmall }">
     <RecycleScroller
+      v-slot="{ item }"
       class="scroller"
       :items="scrollerItems"
       :item-size="null"
       key-field="id"
-      v-slot="{ item }"
     >
       <div :style="{ maxHeight: `${item.size}px` }">
         <component
@@ -19,8 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "@vue/reactivity";
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
+import { computed } from "vue";
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import { Track } from "@/interfaces";
 
@@ -28,16 +28,19 @@ import useAlbumStore from "@/stores/pages/album";
 import useQueueStore from "@/stores/queue";
 
 import AlbumDiscBar from "@/components/AlbumView/AlbumDiscBar.vue";
-import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
+import AlbumsList from "@/components/AlbumView/ArtistAlbums.vue";
 import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
-import Header from "@/components/AlbumView/Header.vue";
+import Header from "@/components/AlbumView/main.vue";
+import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import SongItem from "@/components/shared/SongItem.vue";
+import SimilarAlbumLoader from "./SimilarAlbumLoader.vue";
 
-import { isSmall, heightLarge } from "@/stores/content-width";
-import { discographyAlbumTypes, dropSources } from "@/composables/enums";
+import { discographyAlbumTypes, dropSources } from "@/enums";
+import { heightLarge, isSmall, isSmallPhone } from "@/stores/content-width";
 
 const album = useAlbumStore();
 const queue = useQueueStore();
+const route = useRoute();
 
 interface ScrollerItem {
   id: string | undefined;
@@ -45,7 +48,9 @@ interface ScrollerItem {
     | typeof Header
     | typeof SongItem
     | typeof GenreBanner
-    | typeof ArtistAlbums;
+    | typeof AlbumsList
+    | typeof AlbumsFetcher
+    | typeof SimilarAlbumLoader;
   props?: any;
   size: number;
 }
@@ -70,10 +75,30 @@ class songItem {
   }
 }
 
-const genreBanner: ScrollerItem = {
-  id: "genre-banner",
-  component: GenreBanner,
-  size: 80,
+const AlbumVersionsFetcher: ScrollerItem = {
+  id: "otherVersionsFetcherBanner",
+  component: AlbumsFetcher,
+  props: {
+    fetch_callback: album.fetchAlbumVersions,
+    reset_callback: () => {
+      album.resetOtherVersions();
+      album.fetchAlbumVersions();
+    },
+  },
+  size: 2,
+};
+
+const SimilarAlbumsFetcher: ScrollerItem = {
+  id: "similarAlbumsFetcherBanner",
+  component: AlbumsFetcher,
+  props: {
+    fetch_callback: album.fetchSimilarAlbums,
+    reset_callback: () => {
+      album.resetSimilarAlbums();
+      album.fetchSimilarAlbums();
+    },
+  },
+  size: 2,
 };
 
 function getSongItems() {
@@ -92,7 +117,7 @@ function getArtistAlbumComponents(): ScrollerItem[] {
 
     return {
       id: artisthash,
-      component: ArtistAlbums,
+      component: AlbumsList,
       props: {
         artisthash,
         albums: ar.albums,
@@ -100,22 +125,75 @@ function getArtistAlbumComponents(): ScrollerItem[] {
         albumType: discographyAlbumTypes.all,
         route: `/artists/${artisthash}/discography`,
       },
-      size: 20 * 16,
+      size: 19 * 16,
     };
   });
+}
+
+function getAlbumVersionsComponent(): ScrollerItem | null {
+  if (album.otherVersions.length == 0) return null;
+
+  return {
+    id: "otherVersions",
+    component: AlbumsList,
+    props: {
+      artisthash: album.info.albumartists[0].artisthash,
+      albums: album.otherVersions,
+      title: "Other versions",
+      albumType: discographyAlbumTypes.albums,
+      route: `/artists/${album.info.albumartists[0].artisthash}/discography`,
+      hide_artists: true,
+    },
+    size: 18 * 16,
+  };
 }
 
 const scrollerItems = computed(() => {
   const header: ScrollerItem = {
     id: "album-header",
     component: Header,
-    size: heightLarge.value ? 25 * 16 : 19 * 16,
+    size: isSmallPhone.value || heightLarge.value ? 25 * 16 : 19 * 16,
+  };
+
+  const genreBanner: ScrollerItem = {
+    id: "genre-banner",
+    component: GenreBanner,
+    size: 80,
+    props: {
+      source: "album",
+    },
   };
 
   let moreFrom = getArtistAlbumComponents();
   moreFrom = moreFrom.filter((item) => item.id !== undefined);
+  const otherVersionsComponent = getAlbumVersionsComponent();
 
-  return [header, ...getSongItems(), genreBanner, ...moreFrom];
+  let components = [
+    header,
+    ...getSongItems(),
+    genreBanner,
+    AlbumVersionsFetcher,
+  ];
+
+  if (otherVersionsComponent !== null) {
+    components.push(otherVersionsComponent);
+  }
+
+  components.push(...moreFrom);
+  components.push(SimilarAlbumsFetcher);
+
+  if (
+    album.fetched_hash === route.params.albumhash &&
+    album.similarAlbums.length
+  ) {
+    components.push({
+      id: "similarAlbums",
+      component: SimilarAlbumLoader,
+      size: 19 * 16,
+    });
+  }
+
+  return components;
 });
 
 function playFromAlbum(index: number) {
@@ -125,7 +203,7 @@ function playFromAlbum(index: number) {
 }
 
 onBeforeRouteUpdate(async (to) => {
-  await album.fetchTracksAndArtists(to.params.hash.toString()).then(() => {
+  await album.fetchTracksAndArtists(to.params.albumhash.toString()).then(() => {
     album.resetQuery();
     album.resetAlbumArtists();
     album.fetchArtistAlbums();
@@ -146,7 +224,7 @@ onBeforeRouteLeave(() => {
   overflow: visible;
 
   .songlist-item {
-    grid-template-columns: 1.75rem 1.5fr 1fr 2.5rem 2.5rem;
+    grid-template-columns: 1.75rem 1.5fr 1fr 5.5rem;
   }
 }
 </style>

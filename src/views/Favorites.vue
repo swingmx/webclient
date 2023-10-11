@@ -1,24 +1,27 @@
 <template>
   <div class="content-page favorites-page">
-    <div class="fav-albums" v-if="favAlbums.length">
-      <ArtistAlbums
-        :albums="favAlbums"
-        :albumType="discographyAlbumTypes.albums"
-        :title="'Albums ❤️'"
-        :route="'/favorites/albums'"
-      />
+    <div v-if="recentFavs.length" class="fav-recents">
+      <Recents :favs="recentFavs" />
     </div>
-    <div class="fav-tracks" v-if="favTracks.length">
+    <div v-if="favTracks.length" class="fav-tracks">
       <TopTracks
         :tracks="favTracks"
         :route="'/favorites/tracks'"
         :title="'Tracks ❤️'"
-        :playHandler="handlePlay"
+        :play-handler="handlePlay"
         :source="dropSources.favorite"
       />
     </div>
+    <div v-if="favAlbums.length" class="fav-albums">
+      <ArtistAlbums
+        :albums="favAlbums"
+        :album-type="discographyAlbumTypes.albums"
+        :title="'Albums ❤️'"
+        :route="'/favorites/albums'"
+      />
+    </div>
 
-    <div class="fav-artists" v-if="favArtists.length">
+    <div v-if="favArtists.length" class="fav-artists">
       <FeaturedArtists
         :artists="favArtists"
         :title="'Artists ❤️'"
@@ -38,22 +41,26 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref } from "vue";
 
-import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
-import TopTracks from "@/components/ArtistView/TopTracks.vue";
-import FeaturedArtists from "@/components/PlaylistView/ArtistsList.vue";
-import { discographyAlbumTypes, dropSources } from "@/composables/enums";
-import { getAllFavs, getFavTracks } from "@/composables/fetch/favorite";
-import { Album, Artist, Track } from "@/interfaces";
-import useQueueStore from "@/stores/queue";
 import { maxAbumCards } from "@/stores/content-width";
+import useQueueStore from "@/stores/queue";
+
+import { discographyAlbumTypes, dropSources } from "@/enums";
+import { Album, Artist, RecentFavResult, Track } from "@/interfaces";
+import { getAllFavs, getFavTracks } from "@/requests/favorite";
 
 import HeartSvg from "@/assets/icons/heart-no-color.svg";
+import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
+import TopTracks from "@/components/ArtistView/TopTracks.vue";
+import Recents from "@/components/Favorites/Recents.vue";
+import FeaturedArtists from "@/components/PlaylistView/ArtistsList.vue";
 import NoItems from "@/components/shared/NoItems.vue";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 const description = `You can add tracks, albums and artists to your favorites by clicking the ❤️ heart icon`;
 
 const queue = useQueueStore();
 
+const recentFavs: Ref<RecentFavResult[]> = ref([]);
 const favAlbums: Ref<Album[]> = ref([]);
 const favTracks: Ref<Track[]> = ref([]);
 const favArtists: Ref<Artist[]> = ref([]);
@@ -61,9 +68,11 @@ const favArtists: Ref<Artist[]> = ref([]);
 const noFavs = ref(false);
 
 onMounted(() => {
+  updatePageTitle("Favorites");
   const max = maxAbumCards.value;
   getAllFavs(6, max, max)
     .then((favs) => {
+      recentFavs.value = favs.recents;
       favAlbums.value = favs.albums;
       favTracks.value = favs.tracks;
       favArtists.value = favs.artists;
@@ -87,11 +96,15 @@ async function handlePlay(index: number) {
 .favorites-page {
   height: 100%;
   overflow: auto;
-  padding-bottom: 4rem;
+  padding-bottom: 2rem;
   padding-right: 1rem;
 
   h3 {
     margin-top: 0;
+  }
+
+  .nothing h3 {
+    margin-top: 3rem;
   }
 
   .fav-tracks {

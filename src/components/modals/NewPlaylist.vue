@@ -1,12 +1,12 @@
 <template>
-  <form @submit="create" class="playlist-modal">
+  <form class="playlist-modal" @submit="create">
     <label for="name">Playlist name</label>
     <br />
     <input
+      id="modal-playlist-name-input"
       type="search"
       class="rounded-sm"
       name="name"
-      id="modal-playlist-name-input"
     />
     <br /><br />
     <button type="submit">Create</button>
@@ -14,22 +14,37 @@
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router";
-import usePlaylistStore from "@/stores/pages/playlists";
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { createNewPlaylist } from "../../composables/fetch/playlists";
-import { Track } from "../../interfaces";
-import { Notification, NotifType } from "../../stores/notification";
+
+import {
+  saveAlbumAsPlaylist,
+  saveArtistAsPlaylist,
+  saveTrackAsPlaylist,
+} from "@/requests/playlists";
+import useQueueStore from "@/stores/queue";
+import { NotifType, Notification } from "@/stores/notification";
+import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
+import usePlaylistStore from "@/stores/pages/playlists";
 
 const props = defineProps<{
-  track?: Track;
+  trackhash?: string;
+  path?: string;
+  playlist_name?: string;
+  albumhash?: string;
+  artisthash?: string;
+  is_queue?: boolean;
 }>();
+
+const store = usePlaylistStore();
 const route = useRoute();
-const playlistStore = usePlaylistStore();
 
 onMounted(() => {
-  (document.getElementById("modal-playlist-name-input") as HTMLElement).focus();
+  const input_elem = document.getElementById(
+    "modal-playlist-name-input"
+  ) as HTMLInputElement;
+  input_elem.focus();
+  input_elem.value = props.playlist_name || "";
 });
 
 const emit = defineEmits<{
@@ -48,21 +63,92 @@ function create(e: Event) {
   e.preventDefault();
   const name = (e.target as any).elements["name"].value;
 
-  if (name.trim()) {
-    createNewPlaylist(name, props.track).then(({ success, playlist }) => {
-      emit("hideModal");
-
-      if (!success) return;
-
-      if (route.name !== Routes.playlists) return;
-
-      setTimeout(() => {
-        playlistStore.addPlaylist(playlist);
-      }, 600);
-    });
-  } else {
+  if (!name.trim()) {
     new Notification("Playlist name can't be empty", NotifType.Error);
+    return;
   }
+
+  const createTrackPlaylist = () =>
+    saveTrackAsPlaylist(name, props?.trackhash || "").then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
+      emit("hideModal");
+    });
+
+  const createEmptyPlaylist = () =>
+    createNewPlaylist(name).then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
+      emit("hideModal");
+    });
+
+  const createFolderPlaylist = () => {
+    saveFolderAsPlaylist(name, props.path as string).then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
+      emit("hideModal");
+    });
+  };
+
+  const createAlbumPlaylist = () => {
+    saveAlbumAsPlaylist(name, props.albumhash as string).then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
+      emit("hideModal");
+    });
+  };
+
+  const createArtistPlaylist = () => {
+    saveArtistAsPlaylist(name, props.artisthash as string).then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
+      emit("hideModal");
+    });
+  };
+
+  const createQueuePlaylist = () => {
+    const queue = useQueueStore();
+    const trackhashes = queue.tracklist.map((track) => track.trackhash);
+    const itemhash = trackhashes.join(",");
+
+    saveTrackAsPlaylist(name, itemhash).then((res) => {
+      if (res) {
+        store.addPlaylist(res);
+      }
+      emit("hideModal");
+    });
+  };
+  if (props.path) {
+    createFolderPlaylist();
+    return;
+  }
+
+  if (props.albumhash) {
+    createAlbumPlaylist();
+    return;
+  }
+
+  if (props.artisthash) {
+    createArtistPlaylist();
+    return;
+  }
+
+  if (props.trackhash) {
+    createTrackPlaylist();
+    return;
+  }
+
+  if (props.is_queue) {
+    createQueuePlaylist();
+    return;
+  }
+
+  createEmptyPlaylist();
 }
 </script>
 
@@ -87,7 +173,6 @@ function create(e: Event) {
     width: 8rem;
     transition: all 0.25s ease-out;
     background-color: $pink;
-    border: solid 1px $pink;
   }
 }
 </style>

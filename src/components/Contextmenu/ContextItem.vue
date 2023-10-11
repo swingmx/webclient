@@ -1,31 +1,33 @@
 <template>
   <div
+    ref="parentRef"
     class="context-item"
     @mouseenter="
       option.children &&
+        !isSmall &&
         childrenShowMode === contextChildrenShowMode.hover &&
         showChildren()
     "
     @mouseleave="
       option.children &&
+        !isSmall &&
         childrenShowMode === contextChildrenShowMode.hover &&
         hideChildren()
     "
     @click="runAction"
-    ref="parentRef"
   >
-    <div class="icon image" :class="option.icon"></div>
+    <div class="icon image" v-html="option.icon"></div>
     <div class="label ellip">{{ option.label }}</div>
-    <div class="more image" v-if="option.children"></div>
+    <div v-if="option.children" class="more" v-html="ExpandIcon"></div>
     <div
-      class="children rounded shadow-sm"
       v-if="option.children"
       ref="childRef"
+      class="children rounded shadow-sm"
     >
       <div
-        class="context-item"
         v-for="child in option.children"
         :key="child.label"
+        class="context-item"
         :class="[{ critical: child.critical }, child.type]"
         @click="child.action && runChildAction(child.action)"
       >
@@ -41,8 +43,10 @@
 import { createPopper, Instance } from "@popperjs/core";
 import { ref } from "vue";
 
-import { contextChildrenShowMode } from "@/composables/enums";
+import { contextChildrenShowMode } from "@/enums";
+import { ExpandIcon } from "@/icons";
 import { Option } from "@/interfaces";
+import { isSmall } from "@/stores/content-width";
 
 const props = defineProps<{
   option: Option;
@@ -50,6 +54,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
+  // eslint-disable-next-line no-unused-vars
   (event: "hideContextMenu"): void;
 }>();
 
@@ -72,9 +77,9 @@ function showChildren() {
       placement: "right-start",
       modifiers: [
         {
-          name: "offset",
+          name: "flip",
           options: {
-            offset: [-5, -2],
+            fallbackPlacements: ["left-start", "auto"],
           },
         },
       ],
@@ -129,18 +134,23 @@ function runChildAction(action: () => void) {
     height: 1.5rem;
     width: 1.5rem;
     position: absolute;
-    right: $small;
-    background-image: url("../../assets/icons/expand.svg");
+    right: 0;
+    transform: scale(0.65);
   }
 
   .children {
     position: absolute;
     width: 12rem;
-
+    z-index: 10;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transform: scale(0);
     background-color: $context;
     transform: scale(0);
     padding: $medium;
-    border: solid 1px $gray;
+    border: solid 1px $gray3;
+
+    max-height: calc(100vh / 2);
 
     .context-item {
       padding: $small 1rem;
@@ -156,54 +166,24 @@ function runChildAction(action: () => void) {
     background: $darkestblue;
   }
 
-  .children {
-    transform: scale(0);
-    overflow: hidden;
-    max-height: calc(100vh - 10rem);
-  }
-
   .icon {
     height: 1.25rem;
     width: 1.25rem;
     margin-right: $small;
+
+    svg {
+      height: 100%;
+      width: 100%;
+      transform: scale(1.15);
+    }
+  }
+
+  &:nth-child(2) .icon > svg {
+    transform: scale(0.9);
   }
 
   .label {
     width: 9rem;
-  }
-
-  .folder {
-    background-image: url("../../assets/icons/folder.svg");
-    filter: invert(100%);
-  }
-
-  .artist {
-    background-image: url("../../assets/icons/artist.svg");
-  }
-
-  .album {
-    background-image: url("../../assets/icons/album.svg");
-  }
-
-  .delete {
-    background-image: url("../../assets/icons/delete.svg");
-  }
-
-  .plus {
-    background-image: url("../../assets/icons/plus.svg");
-  }
-
-  .play_next {
-    background-image: url("../../assets/icons/add_to_queue.svg");
-  }
-
-  .add_to_queue {
-    background-image: url("../../assets/icons/add-to-queue.svg");
-    transform: scale(0.8); // reason: icon is not from same source as other
-  }
-
-  .heart {
-    background-image: url("../../assets/icons/heart.svg");
   }
 }
 </style>

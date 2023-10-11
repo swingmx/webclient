@@ -28,15 +28,15 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import useQueueStore from "@/stores/queue";
-import useSearchStore from "@/stores/search";
-import { isMedium, isSmall } from "@/stores/content-width";
-import SongItem from "@/components/shared/SongItem.vue";
 import FetchMore from "@/components/SearchPage/FetchMore.vue";
 import NoItems from "@/components/shared/NoItems.vue";
+import SongItem from "@/components/shared/SongItem.vue";
+import { isMedium, isSmall } from "@/stores/content-width";
+import useQueueStore from "@/stores/queue";
+import useSearchStore from "@/stores/search";
 
 import SearchSvg from "@/assets/icons/search.svg";
-import { dropSources } from "@/composables/enums";
+import { dropSources } from "@/enums";
 
 const search = useSearchStore();
 const queue = useQueueStore();
@@ -55,7 +55,7 @@ interface scrollerItem {
 
 const scrollerItems = computed(() => {
   const items: scrollerItem[] = search.tracks.value.map((track, index) => ({
-    id: track.filepath,
+    id: index,
     component: SongItem,
     props: {
       track,
@@ -65,6 +65,7 @@ const scrollerItems = computed(() => {
   }));
 
   items.push({
+    // set to random to force re-render
     id: Math.random(),
     component: FetchMore,
     props: {

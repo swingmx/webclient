@@ -7,23 +7,22 @@ import usePlaylistPageStore from "@/stores/pages/playlist";
 import usePlaylistListPageStore from "@/stores/pages/playlists";
 import useArtistPageStore from "@/stores/pages/artist";
 
-import FolderView from "@/views/FolderView.vue";
-import PlaylistListView from "@/views/PlaylistList.vue";
-import PlaylistView from "@/views/PlaylistView/index.vue";
-import AlbumsExplorer from "@/views/AlbumsExplorer.vue";
-import AlbumView from "@/views/AlbumView/index.vue";
-import ArtistExplorer from "@/views/ArtistsExplorer.vue";
-import ArtistView from "@/views/ArtistView";
-import ArtistTracksView from "@/views/ArtistTracks.vue";
-import ArtistDiscographyView from "@/views/ArtistDiscography.vue";
-import SettingsView from "@/views/SettingsView.vue";
-import SearchView from "@/views/SearchView";
-import QueueView from "@/views/QueueView.vue";
-import FavoritesView from "@/views/Favorites.vue";
-import FavoriteAlbums from "@/views/FavoriteAlbums.vue";
-import FavoriteTracks from "@/views/FavoriteTracks.vue";
-import FavoriteArtists from "@/views/FavoriteArtists.vue";
-import NotFound from "@/views/NotFound.vue";
+const FolderView = () => import("@/views/FolderView.vue");
+const PlaylistListView = () => import("@/views/PlaylistList.vue");
+const PlaylistView = () => import("@/views/PlaylistView/index.vue");
+const AlbumView = () => import("@/views/AlbumView/index.vue");
+const ArtistExplorer = () => import("@/views/ArtistsExplorer.vue");
+const ArtistView = () => import("@/views/ArtistView");
+const ArtistTracksView = () => import("@/views/ArtistTracks.vue");
+const ArtistDiscographyView = () => import("@/views/ArtistDiscography.vue");
+const SettingsView = () => import("@/views/SettingsView.vue");
+const SearchView = () => import("@/views/SearchView");
+const FavoritesView = () => import("@/views/Favorites.vue");
+const FavoriteAlbums = () => import("@/views/FavoriteAlbums.vue");
+const FavoriteTracks = () => import("@/views/FavoriteTracks.vue");
+const FavoriteArtists = () => import("@/views/FavoriteArtists.vue");
+const NotFound = () => import("@/views/NotFound.vue");
+const NowPlaying = () => import("@/views/NowPlaying");
 
 const home = {
   path: "/",
@@ -73,21 +72,15 @@ const playlistView = {
   },
 };
 
-const albums = {
-  path: "/albums",
-  name: "AlbumsView",
-  component: AlbumsExplorer,
-};
-
 const albumView = {
-  path: "/albums/:hash",
+  path: "/albums/:albumhash",
   name: "AlbumView",
   component: AlbumView,
   beforeEnter: async (to: any) => {
     state.loading.value = true;
     const store = useAlbumPageStore();
 
-    await store.fetchTracksAndArtists(to.params.hash).then(() => {
+    await store.fetchTracksAndArtists(to.params.albumhash).then(() => {
       state.loading.value = false;
     });
   },
@@ -114,6 +107,12 @@ const artistView = {
   },
 };
 
+const NowPlayingView = {
+  path: "/nowplaying",
+  name: "NowPlaying",
+  component: NowPlaying,
+};
+
 const ArtistTracks = {
   path: "/artists/:hash/tracks",
   name: "ArtistTracks",
@@ -136,12 +135,6 @@ const search = {
   path: "/search/:page",
   name: "SearchView",
   component: SearchView,
-};
-
-const queue = {
-  path: "/queue",
-  name: "QueueView",
-  component: QueueView,
 };
 
 const favorites = {
@@ -179,20 +172,19 @@ const routes = [
   folder,
   playlists,
   playlistView,
-  albums,
   albumView,
   artists,
   artistView,
   artistDiscography,
   settings,
   search,
-  queue,
   notFound,
   ArtistTracks,
   favorites,
   favoriteAlbums,
   favoriteTracks,
   favoriteArtists,
+  NowPlayingView,
 ];
 
 export const Routes = {
@@ -200,24 +192,25 @@ export const Routes = {
   folder: folder.name,
   playlists: playlists.name,
   playlist: playlistView.name,
-  albums: albums.name,
   album: albumView.name,
   artists: artists.name,
   artist: artistView.name,
   artistDiscography: artistDiscography.name,
   settings: settings.name,
   search: search.name,
-  queue: queue.name,
   notFound: notFound.name,
   artistTracks: ArtistTracks.name,
   favorites: favorites.name,
   favoriteAlbums: favoriteAlbums.name,
   favoriteTracks: favoriteTracks.name,
   favoriteArtists: favoriteArtists.name,
+  nowPlaying: NowPlayingView.name,
 };
 
-export const router = createRouter({
+const router = createRouter({
   mode: "hash",
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 } as RouterOptions);
+
+export { router };

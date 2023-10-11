@@ -21,7 +21,7 @@
       class="scroller"
       style="height: 100%"
     >
-      <template v-slot="{ item, index, active }">
+      <template #default="{ item, index, active }">
         <DynamicScrollerItem
           :item="item"
           :active="active"
@@ -29,8 +29,8 @@
           :data-index="index"
         >
           <component
-            :key="index"
             :is="item.component"
+            :key="index"
             v-bind="item.props"
             @playThis="playFromPage(item.props.index - 1)"
           ></component>
@@ -41,7 +41,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "@vue/reactivity";
+import { onMounted } from "vue";
+import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
 import { Track } from "@/interfaces";
@@ -49,13 +50,14 @@ import { isMedium, isSmall } from "@/stores/content-width";
 import useLoaderStore from "@/stores/loader";
 import useFolderStore from "@/stores/pages/folder";
 import useQueueStore from "@/stores/queue";
-
-import FolderList from "@/components/FolderView/FolderList.vue";
-import SongItem from "@/components/shared/SongItem.vue";
+import { dropSources } from "@/enums";
 import { createTrackProps } from "@/utils";
-import NoItems from "@/components/shared/NoItems.vue";
+import updatePageTitle from "@/utils/updatePageTitle";
+
 import FolderSvg from "@/assets/icons/folder.svg";
-import { dropSources } from "@/composables/enums";
+import FolderList from "@/components/FolderView/FolderList.vue";
+import NoItems from "@/components/shared/NoItems.vue";
+import SongItem from "@/components/shared/SongItem.vue";
 
 const loader = useLoaderStore();
 const folder = useFolderStore();
@@ -119,6 +121,8 @@ onBeforeRouteUpdate((to, from) => {
 onBeforeRouteLeave(() => {
   setTimeout(() => folder.resetQuery(), 500);
 });
+
+onMounted(() => updatePageTitle("Folders"));
 </script>
 
 <!-- <style lang="scss">

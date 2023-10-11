@@ -1,22 +1,19 @@
 <template>
-  <div class="artist-albums">
+  <div class="card-list-scroll-x">
     <h3>
-      <span>{{ title }} </span>
+      <span>{{ title }}</span>
       <SeeAll
-        v-if="maxAbumCards - 1 <= albums.length"
+        v-if="route && maxAbumCards - 1 <= albums.length"
         :route="route"
         @click="
           !favorites ? useArtistDiscographyStore().setPage(albumType) : null
         "
       />
     </h3>
-    <div class="cards">
+    <div ref="artistItemsWrappers" class="cards">
       <AlbumCard
-        v-for="a in artist_page
-          ? albums
-              .slice(0, maxAbumCards)
-              .sort((a, b) => parseInt(b.date) - parseInt(a.date))
-          : albums.slice(0, maxAbumCards)"
+        v-for="a in albums"
+        :key="a.albumhash"
         :album="a"
         :show_date="show_date"
         :artist_page="artist_page"
@@ -26,9 +23,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+
 import { Album } from "@/interfaces";
+import { discographyAlbumTypes } from "@/enums";
 import { maxAbumCards } from "@/stores/content-width";
-import { discographyAlbumTypes } from "@/composables/enums";
 import useArtistDiscographyStore from "@/stores/pages/artistDiscog";
 
 import AlbumCard from "../shared/AlbumCard.vue";
@@ -39,29 +38,35 @@ defineProps<{
   albums: Album[];
   albumType?: discographyAlbumTypes;
   favorites?: boolean;
-  route: string;
+  route?: string;
   show_date?: boolean;
   artist_page?: boolean;
 }>();
+
+const artistItemsWrappers = ref<HTMLElement | null>(null);
 </script>
 
 <style lang="scss">
-.artist-albums {
+.card-list-scroll-x {
   overflow: hidden;
-  max-height: 18rem;
 
   h3 {
     display: grid;
     grid-template-columns: 1fr max-content;
     align-items: baseline;
     padding: 0 $medium;
-    margin-bottom: $small;
+    margin-bottom: $medium;
   }
 
   .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
-    gap: 5rem 0;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    flex-direction: row;
+    padding-bottom: 2rem;
+
+    @include hideScrollbars;
   }
 
   .album-card {

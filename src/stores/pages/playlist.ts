@@ -3,35 +3,59 @@ import { ComputedRef } from "vue";
 
 import { useFuse } from "@/utils";
 
-import { FuseTrackOptions } from "@/composables/enums";
-import { getPlaylist } from "@/composables/fetch/playlists";
+import { paths } from "@/config";
+import { FuseTrackOptions } from "@/enums";
 import { Artist, FuseResult, Playlist, Track } from "@/interfaces";
+import { getPlaylist, removeBannerImage } from "@/requests/playlists";
+import setColorsToStore from "@/utils/colortools/setColorsToStore";
 
 export default defineStore("playlist-tracks", {
   state: () => ({
     info: <Playlist>{},
     query: "",
-    bannerPos: 0,
+    initialBannerPos: 0,
     allTracks: <Track[]>[],
     artists: <Artist[]>[],
+    colors: {
+      bg: "",
+      btn: "",
+    },
+    uploadImgUrl: "",
   }),
   actions: {
     /**
      * Fetches a single playlist information, and its tracks from the server
      * @param id The id of the playlist to fetch
      */
-    async fetchAll(id: string) {
+    async fetchAll(id: number, no_tracks = false) {
       this.resetBannerPos();
-      const playlist = await getPlaylist(id);
+      const playlist = await getPlaylist(id, no_tracks);
 
       this.info = playlist?.info || ({} as Playlist);
-      this.bannerPos = this.info.banner_pos;
+      this.initialBannerPos = this.info.settings.banner_pos;
+      this.createImageLink();
+
+      this.resetColors();
+      this.extractColors();
+
+      if (no_tracks) return;
+
       this.allTracks = playlist?.tracks || [];
     },
+    createImageLink() {
+      this.info.image = paths.images.playlist + this.info.image;
+    },
+    async removeBanner() {
+      const { duration } = this.info;
+      const res = await removeBannerImage(this.info.id);
 
-    // async fetchArtists(id: string) {
-    //   this.artists = await getPlaylistArtists(id);
-    // },
+      if (!res) return;
+
+      this.info = { ...res, duration };
+      this.extractColors();
+
+      this.createImageLink();
+    },
 
     /**
      * Updates the playlist header info. This is used when the playlist is
@@ -43,14 +67,59 @@ export default defineStore("playlist-tracks", {
 
       this.info = info;
       this.info = { ...this.info, duration, count, images };
-      this.bannerPos = this.info.banner_pos;
+      this.createImageLink();
+      this.extractColors();
+    },
+
+    extractColors(img_url?: string) {
+      if (this.info.has_image) {
+        const url =
+          img_url || paths.images.playlist + (this.info.thumb as string);
+
+        setColorsToStore(this, url);
+        return;
+      }
+
+      if (!this.info.images.length) return;
+
+      const url = paths.images.thumb.small + this.info.images[1].image;
+      setColorsToStore(this, url);
+    },
+    setInitialBannerPos() {
+      this.info.settings.banner_pos = 50;
+    },
+    resetColors() {
+      this.colors = {
+        bg: "",
+        btn: "",
+      };
     },
     plusBannerPos() {
-      this.bannerPos !== 100 ? (this.bannerPos += 5) : null;
+      this.info.settings.banner_pos !== 100
+        ? (this.info.settings.banner_pos += 5)
+        : null;
     },
     minusBannerPos() {
-      this.bannerPos !== 0 ? (this.bannerPos -= 5) : null;
+      this.info.settings.banner_pos !== 0
+        ? (this.info.settings.banner_pos -= 5)
+        : null;
     },
+    toggleSquareImage() {
+      this.info.settings.square_img = !this.info.settings.square_img;
+    },
+    setImage(image: string) {
+      this.info.image = image;
+
+      this.extractColors(this.info.image);
+      this.info.has_image = true;
+    },
+    removeTrackByIndex(index: number) {
+      this.allTracks.splice(index, 1);
+    },
+    addTrack(track: Track) {
+      this.allTracks.push(track);
+    },
+    
     resetArtists() {
       this.artists = [];
     },
@@ -58,7 +127,11 @@ export default defineStore("playlist-tracks", {
       this.query = "";
     },
     resetBannerPos() {
-      this.bannerPos = 50;
+      try {
+        this.info.settings.banner_pos = 50;
+      } catch (e) {
+        /* empty */
+      }
     },
   },
   getters: {
@@ -79,7 +152,7 @@ export default defineStore("playlist-tracks", {
       return tracks;
     },
     bannerPosUpdated(): boolean {
-      return this.info.banner_pos - this.bannerPos !== 0;
+      return this.info.settings.banner_pos - this.initialBannerPos !== 0;
     },
   },
 });

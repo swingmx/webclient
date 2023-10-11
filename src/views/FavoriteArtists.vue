@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { getFavArtists } from "@/composables/fetch/favorite";
+import { getFavArtists } from "@/requests/favorite";
 import { onMounted, Ref, ref } from "vue";
 
 import ArtistCard from "@/components/shared/ArtistCard.vue";

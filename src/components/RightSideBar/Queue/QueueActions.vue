@@ -8,24 +8,31 @@
     </div>
     <div class="right">
       <button
-        v-wave
-        class="go-to-source action"
-        href="#"
-        @click="queue.clearQueue"
+        :class="{ 'btn-active': context_showing }"
+        @click="showContextMenu"
       >
-        <ClearSvg />
+        <OptionsSvg />
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import useQueueStore from "../../../stores/queue";
+import { ref } from "vue";
+import useQueueStore from "@/stores/queue";
 
-import ClearSvg from "@/assets/icons/delete.svg";
+import OptionsSvg from "@/assets/icons/more.svg";
 import ShuffleSvg from "@/assets/icons/shuffle.svg";
+import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
 
 const queue = useQueueStore();
+const context_showing = ref(false);
+
+function showContextMenu(e: MouseEvent) {
+  if (!queue.tracklist.length) return;
+
+  showQueueContextMenu(e, context_showing);
+}
 </script>
 
 <style lang="scss">
@@ -49,9 +56,11 @@ const queue = useQueueStore();
     }
   }
 
-  .right {
-    .go-to-source {
-      padding: 0 $smaller;
+  .right > button {
+    padding: 0 $smaller;
+
+    svg {
+      transform: scale(1.2) rotate(90deg);
     }
   }
 }

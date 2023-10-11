@@ -1,37 +1,98 @@
 <template>
-  <div class="carddd">
-    <div
-      class="info"
-      :style="{
-        color:
-          !playlist.info.has_image && playlist.info.images.length > 2
-            ? getTextColor(playlist.info.images[2].color)
-            : '',
-      }"
-    >
-      <div class="btns">
-        <PlayBtnRect :source="playSources.playlist" :store="usePStore" />
-      </div>
-      <div class="duration">
-        {{
-          playlist.info.count +
-          ` ${playlist.info.count == 1 ? "Track" : "Tracks"}`
-        }}
-        •
-        {{ formatSeconds(playlist.info.duration, true) }}
-      </div>
-      <div class="title ellip">{{ playlist.info.name }}</div>
-      <div class="type">Playlist</div>
+  <div
+    class="playlist-info"
+    :style="{
+      color: textColor,
+    }"
+  >
+    <div class="btns">
+      <PlayBtnRect :source="playSources.playlist" :bg_color="btn_color" />
     </div>
+    <div class="duration">
+      {{
+        playlist.info.count +
+        ` ${playlist.info.count == 1 ? "Track" : "Tracks"}`
+      }}
+      •
+      {{ formatSeconds(playlist.info.duration, true) }}
+    </div>
+    <div ref="test_elem"></div>
+    <div
+      class="title"
+      :class="`${
+        playlist.info.settings.square_img && isSmall ? 'ellip' : 'ellip2'
+      }`"
+    >
+      <span
+        v-for="t in balanceText(
+          playlist.info.name,
+          test_elem?.offsetWidth || 0,
+          '4rem'
+        )"
+        :key="t"
+      >
+        {{ t }}
+        <br />
+      </span>
+    </div>
+    <div class="type">Playlist</div>
   </div>
 </template>
 <script setup lang="ts">
-import { formatSeconds, useVisibility } from "@/utils";
-import { playSources } from "@/composables/enums";
-import { getTextColor } from "@/utils/colortools/shift";
+import { playSources } from "@/enums";
+import { formatSeconds } from "@/utils";
+import { isSmall } from "@/stores/content-width";
 
-import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";
 import usePStore from "@/stores/pages/playlist";
+import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";
+import { balanceText } from "@/utils/balanceText";
+import { Ref, ref } from "vue";
+
 const playlist = usePStore();
 
+defineProps<{
+  textColor: string;
+  btn_color?: string;
+}>();
+
+const test_elem: Ref<HTMLElement | null> = ref(null);
 </script>
+
+<style lang="scss">
+.playlist-info {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  z-index: 10;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column-reverse;
+
+  .type {
+    font-size: small;
+    font-weight: 700;
+    opacity: 0.85;
+  }
+
+  .title {
+    font-size: 4rem;
+    font-weight: 1000;
+    cursor: text;
+  }
+
+  .duration {
+    font-size: 0.8rem;
+    padding: $smaller;
+    padding-left: 0;
+    font-weight: 900;
+    cursor: text;
+    opacity: 0.85;
+  }
+
+  .btns {
+    margin-top: $small;
+    display: flex;
+    gap: $small;
+  }
+}
+</style>

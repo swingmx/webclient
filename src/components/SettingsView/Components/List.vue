@@ -1,30 +1,30 @@
 <template>
   <div class="list-items">
-    <div class="option-list-item" v-for="i in items" :key="i.title">
+    <div v-for="i in items" :key="i.title" class="option-list-item">
       <div class="with-icon">
-        <component :is="icon" />
+        <component :is="icon_" />
         <div class="text ellip">
           {{ i.title }}
         </div>
       </div>
       <div class="icon" @click="i.action">
-        <span>{{ i.buttontext }}</span>
+        <DeleteSvg />
       </div>
     </div>
     <div v-if="!items.length" class="option-list-item" style="opacity: 0.5">
-      Root directories not configured. Use the "modify" button above to
+      Root directories not configured. Use the "Configure" button above to
       configure
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import FolderSvg from "../../../assets/icons/folder.svg";
+import FolderSvg from "@/assets/icons/folder.svg";
+import DeleteSvg from "@/assets/icons/delete.svg";
 
 const props = defineProps<{
   items: {
     title: string;
-    buttontext: string;
     action: () => void;
   }[];
   icon: "folder";
@@ -40,7 +40,7 @@ function getIcon() {
   }
 }
 
-const icon = getIcon();
+const icon_ = getIcon();
 </script>
 
 <style lang="scss">
@@ -70,17 +70,8 @@ const icon = getIcon();
       font-size: 0.9rem;
     }
 
-    &:hover {
-      background-color: $gray4;
-    }
-
-    span {
-      color: white;
+    .icon {
       cursor: pointer;
-      background-color: $red;
-      padding: $smaller $small;
-      border-radius: 6px;
-      z-index: 20;
     }
   }
 }

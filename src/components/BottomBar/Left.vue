@@ -1,17 +1,17 @@
 <template>
-  <div class="left-group" v-auto-animate>
+  <div v-auto-animate class="left-group">
     <HeartSvg
-      v-if="settings.use_np_img"
+      v-if="settings.use_np_img && !isMobile"
       :state="queue.currenttrack?.is_favorite"
-      @handleFav="emit('handleFav')"
+      @handleFav="$emit('handleFav')"
     />
     <RouterLink
       v-else
-      title="go to album"
+      title="Go to Now Playing"
       :to="{
-        name: Routes.album,
-        params: {
-          hash: queue.currenttrack?.albumhash || ' ',
+        name: Routes.nowPlaying,
+        query: {
+          tab: 'queue',
         },
       }"
     >
@@ -27,40 +27,46 @@
         color: getShift(colors.theme1, [0, -170]),
       }"
     >
-      <ArtistName
-        :artists="queue.currenttrack?.artist || []"
-        :albumartists="
-          queue.currenttrack?.albumartist || 'Welcome to Swing Music'
-        "
-        class="artist"
-      />
       <div v-tooltip class="title">
         <span class="ellip">
           {{ queue.currenttrack?.title || "Hello there" }}
         </span>
         <MasterFlag :bitrate="queue.currenttrack?.bitrate || 0" />
       </div>
+      <ArtistName
+        :artists="queue.currenttrack?.artists || []"
+        :albumartists="
+          queue.currenttrack?.albumartists || 'Welcome to Swing Music'
+        "
+        class="artist"
+      />
     </div>
+    <Actions v-if="isLargerMobile" @handleFav="$emit('handleFav')" />
+    <HotKeys v-if="isMobile" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router";
 import { paths } from "@/config";
-import ArtistName from "@/components/shared/ArtistName.vue";
+import { Routes } from "@/router";
 import { getShift } from "@/utils/colortools/shift";
-import useColorStore from "@/stores/colors";
 
-import useSettingsStore from "@/stores/settings";
 import useQStore from "@/stores/queue";
+import useColorStore from "@/stores/colors";
+import useSettingsStore from "@/stores/settings";
+import { isLargerMobile, isMobile } from "@/stores/content-width";
+
+import Actions from "./Right.vue";
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
+import HotKeys from "../LeftSidebar/NP/HotKeys.vue";
+import ArtistName from "@/components/shared/ArtistName.vue";
 
 const queue = useQStore();
 const settings = useSettingsStore();
 const colors = useColorStore();
 
-const emit = defineEmits<{
+defineEmits<{
   (e: "handleFav"): void;
 }>();
 </script>
@@ -68,7 +74,6 @@ const emit = defineEmits<{
 <style lang="scss">
 .left-group {
   display: grid;
-  padding-left: 1rem;
   grid-template-columns: max-content 1fr;
   gap: $small;
   align-items: center;
@@ -103,6 +108,19 @@ const emit = defineEmits<{
       display: flex;
       align-items: center;
     }
+  }
+  @include allPhones {
+    height: 4rem;
+    grid-template-columns: max-content 1fr max-content;
+
+    .heart-button {
+      height: max-content;
+      border: none !important;
+    }
+  }
+
+  @media screen and (min-width: 550px) {
+    grid-template-columns: max-content 1fr max-content max-content;
   }
 }
 </style>

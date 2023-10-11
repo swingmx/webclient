@@ -8,28 +8,29 @@
       :style="{
         backgroundColor: is_checked ? '#234ece' : '',
       }"
+      :class="{ context_menu_showing }"
+      @contextmenu.prevent="(e) => (!folder_page ? null : showContextMenu(e))"
       v-auto-animate
     >
-      <div class="check" v-if="!folder_page">
-        <CheckSvg v-if="!is_checked && mouse_over" />
-        <CheckFilledSvg v-if="is_checked" />
-      </div>
-
-      <FolderSvg v-if="!folder.is_sym" />
       <SymLinkSvg v-if="folder.is_sym" />
+      <FolderSvg v-else />
       <div class="info">
         <div class="f-item-text ellip">{{ folder.name }}</div>
         <div class="f-count" v-if="folder.count">
           {{ folder.count + ` File${folder.count == 1 ? "" : "s"}` }}
         </div>
       </div>
+      <div class="check" v-if="!folder_page">
+        <CheckSvg v-if="!is_checked && mouse_over" />
+        <CheckFilledSvg v-if="is_checked" />
+      </div>
     </div>
   </router-link>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { Routes } from "@/router";
+import { ref } from "vue";
 
 import { Folder } from "@/interfaces";
 
@@ -38,6 +39,8 @@ import SymLinkSvg from "@/assets/icons/symlink.svg";
 
 import CheckFilledSvg from "@/assets/icons/check.filled.svg";
 import CheckSvg from "@/assets/icons/square.svg";
+import { showFolderContextMenu } from "@/helpers/contextMenuHandler";
+import { ContextSrc } from "@/enums";
 
 const props = defineProps<{
   folder: Folder;
@@ -51,6 +54,7 @@ const emit = defineEmits<{
 }>();
 
 const mouse_over = ref(false);
+const context_menu_showing = ref(false);
 
 function handleClick(e: MouseEvent) {
   e.preventDefault();
@@ -64,6 +68,15 @@ function handleClick(e: MouseEvent) {
     emit("navigate");
   }
 }
+
+function showContextMenu(e: MouseEvent) {
+  showFolderContextMenu(
+    e,
+    context_menu_showing,
+    ContextSrc.FolderCard,
+    props.folder.path
+  );
+}
 </script>
 
 <style lang="scss">
@@ -75,33 +88,38 @@ function handleClick(e: MouseEvent) {
   background-color: $gray;
   border-radius: $medium;
   position: relative;
+  padding: 0 0 0 1rem;
+  gap: $small;
+
+  &.context_menu_showing {
+    background-color: $gray4;
+  }
+
+  svg {
+    color: $gray1;
+  }
 
   .f-count {
     font-size: $medium;
     font-weight: 700;
     color: $gray1;
-    margin-top: $smaller;
+    white-space: nowrap;
   }
 
   .check {
     z-index: 10;
     position: absolute;
     top: $smaller;
-    right: -$smaller;
+    right: $smaller;
 
     border: none;
     outline: none;
-    scale: 0.75;
     color: $darkblue;
+    transform: scale(0.75);
   }
 
-  @include phone-only {
+  @include largePhones {
     height: 4rem;
-  }
-
-  svg {
-    margin: 0 $small 0 1rem;
-    color: $gray1;
   }
 
   .f-item-text {
@@ -109,7 +127,9 @@ function handleClick(e: MouseEvent) {
   }
 
   &:hover {
-    background: $gray3;
+    .options {
+      display: block;
+    }
   }
 }
 </style>

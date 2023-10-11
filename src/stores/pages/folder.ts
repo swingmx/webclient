@@ -3,9 +3,9 @@ import { ComputedRef } from "vue";
 
 import { useFuse } from "@/utils";
 
-import { FuseTrackOptions } from "@/composables/enums";
-import fetchThem from "@/composables/fetch/folders";
+import { FuseTrackOptions } from "@/enums";
 import { Folder, FuseResult, Track } from "@/interfaces";
+import { getFiles } from "@/requests/folders";
 
 export default defineStore("FolderDirs&Tracks", {
   state: () => ({
@@ -16,7 +16,7 @@ export default defineStore("FolderDirs&Tracks", {
   }),
   actions: {
     async fetchAll(path: string) {
-      const { tracks, folders } = await fetchThem(path);
+      const { tracks, folders } = await getFiles(path);
 
       [this.path, this.allDirs, this.allTracks] = [path, folders, tracks];
     },

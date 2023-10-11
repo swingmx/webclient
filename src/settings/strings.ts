@@ -11,7 +11,7 @@ interface S {
 
 export const nowPlayingStrings = {
   title: "Now playing",
-  desc: "Settings related to the current song",
+  desc: "Settings relating to the current song",
   settings: {
     album_art: "Show album art on the left sidebar",
   },
@@ -19,7 +19,7 @@ export const nowPlayingStrings = {
 
 export const appWidthStrings = {
   settings: {
-    extend: "Extend app to full screen width",
+    extend: "Full width",
   },
 } as S;
 
@@ -37,7 +37,7 @@ export const contextChildrenShowModeStrings = <S>{
 
 export const showMasterFlag = <S>{
   settings: {
-    show_flag: "Show M (Master) flag on track with bitrate higher than 1024 Kbps",
+    show_flag: "Master flag",
   },
 };
 
@@ -47,7 +47,7 @@ export const showFoldersAsStrings = <S>{
 
 export const manageRootDirsStrings = <S>{
   title: "Root directories",
-  desc: "Settings related to your root directories",
+  desc: "Settings relating to your root directories",
   settings: {
     change: "Change your root directories",
     list_root_dirs: "Current root directories",

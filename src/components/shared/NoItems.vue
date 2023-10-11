@@ -1,8 +1,10 @@
 <template>
-  <div class="nothing rounded" v-if="flag">
+  <div v-if="flag" class="nothing rounded">
     <div>
       <component :is="icon" />
-      <h3>{{ title }}</h3>
+      <div class="nothingtitle">
+        <b>{{ title }}</b>
+      </div>
       <p>
         {{ description }}
       </p>
@@ -22,7 +24,7 @@ defineProps<{
 <style lang="scss">
 .nothing {
   height: 100%;
-  width: 25rem;
+  max-width: 25rem;
   margin: 0 auto;
   display: grid;
   opacity: 0.5;
@@ -31,9 +33,13 @@ defineProps<{
     word-break: break-word;
   }
 
+  .nothingtitle {
+    margin-top: 2.75rem;
+    font-size: 1.15rem;
+  }
+
   svg {
-    scale: 5;
-    margin-bottom: 2rem;
+    transform: scale(5);
   }
 
   & > * {

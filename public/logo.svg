@@ -1,4 +1,20 @@
-<svg width="118" height="118" viewBox="0 0 118 118" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="59" cy="59" r="57.5" stroke="#FF2171" stroke-width="3"/>
-<path d="M59.5118 62.9828C65.9124 62.9828 72.2055 62.6018 77.3811 61.8344C81.5487 61.2062 82.8644 58.1137 81.4561 53.7443L73.7855 29.5747C72.3743 25.1017 68.7741 23 63.8107 23H55.1892C50.2259 23 46.6257 25.1017 45.2145 29.5747L37.5439 53.7443C36.1356 58.1137 37.4513 61.2062 41.6189 61.8344C46.7945 62.6018 53.0875 62.9828 59.5118 62.9828ZM59.5118 58.0762C54.1754 58.0762 49.0021 57.7818 43.5558 57.1664C42.1608 57.0191 41.9873 56.1769 42.4268 54.7242L49.6984 31.4809C50.4479 29.0507 52.4363 27.8778 55.1892 27.8778H63.8107C66.5636 27.8778 68.552 29.0507 69.3253 31.4809L76.5732 54.7242C77.0127 56.1769 76.8392 57.0191 75.4443 57.1664C69.9977 57.7818 64.8246 58.0762 59.5118 58.0762ZM56.8364 60.82V92.9501H62.1687V60.82H56.8364ZM46.3949 94.9817H72.605C73.8519 94.9817 74.705 94.0842 74.705 92.7793C74.705 90.363 72.7351 88.6848 69.7747 88.6848H49.2253C46.2648 88.6848 44.3238 90.363 44.3238 92.7793C44.3238 94.0842 45.148 94.9817 46.3949 94.9817Z" fill="#FF2171"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="28" height="28"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14 27.6441C21.5354 27.6441 27.6441 21.5354 27.6441 14C27.6441 6.46458 21.5354 0.355927 14 0.355927C6.46461 0.355927 0.355957 6.46458 0.355957 14C0.355957 21.5354 6.46461 27.6441 14 27.6441Z" fill="black"></path>
+<g filter="url(#filter0_d_16_11)">
+<path d="M14.1221 14.9372C15.6529 14.9372 17.1518 14.8463 18.3804 14.6644C19.3548 14.517 19.66 13.7979 19.329 12.7716L17.499 7.00511C17.1672 5.94913 16.3182 5.45764 15.1465 5.45764H13.0908C11.9191 5.45764 11.07 5.94913 10.7383 7.00511L8.90825 12.7716C8.57724 13.7979 8.88246 14.517 9.85688 14.6644C11.0855 14.8463 12.5856 14.9372 14.1221 14.9372ZM13.4838 14.451V22.1166H14.756V14.451H13.4838ZM10.9926 22.6014H17.2447C17.5434 22.6014 17.7469 22.3873 17.7469 22.0759C17.7469 21.4994 17.277 21.099 16.5694 21.099H11.6679C10.9603 21.099 10.4973 21.4994 10.4973 22.0759C10.4973 22.3873 10.6939 22.6014 10.9926 22.6014Z" fill="white"></path>
+</g>
+<defs>
+<filter id="SvgjsFilter1000" x="4.77966" y="2.45764" width="18.678" height="25.1438" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+<feOffset dy="1"></feOffset>
+<feGaussianBlur stdDeviation="2"></feGaussianBlur>
+<feComposite in2="hardAlpha" operator="out"></feComposite>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"></feColorMatrix>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_16_11"></feBlend>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_16_11" result="shape"></feBlend>
+</filter>
+</defs>
+</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>

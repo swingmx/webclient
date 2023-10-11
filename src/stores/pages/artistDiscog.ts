@@ -1,7 +1,7 @@
-import { defineStore } from "pinia";
-import { discographyAlbumTypes } from "@/composables/enums";
+import { discographyAlbumTypes } from "@/enums";
 import { Album } from "@/interfaces";
-import { getArtistAlbums } from "@/composables/fetch/artists";
+import { getArtistAlbums } from "@/requests/artists";
+import { defineStore } from "pinia";
 
 export default defineStore("artistDiscography", {
   state: () => ({
@@ -11,7 +11,6 @@ export default defineStore("artistDiscography", {
     toShow: <Album[]>[],
 
     albums: <Album[]>[],
-    eps: <Album[]>[],
     singles: <Album[]>[],
     appearances: <Album[]>[],
     compilations: <Album[]>[],
@@ -22,9 +21,6 @@ export default defineStore("artistDiscography", {
       switch (page) {
         case discographyAlbumTypes.albums:
           this.toShow = this.albums;
-          break;
-        case discographyAlbumTypes.eps:
-          this.toShow = this.eps;
           break;
         case discographyAlbumTypes.singles:
           this.toShow = this.singles;
@@ -37,11 +33,14 @@ export default defineStore("artistDiscography", {
           break;
         default:
           this.toShow = this.albums.concat(
-            this.eps,
             this.singles,
-            this.appearances
+            this.appearances,
+            this.compilations
           );
+          break;
       }
+
+      // remove undefined
     },
     setPage(page: discographyAlbumTypes | undefined) {
       // @ts-ignore
@@ -51,8 +50,7 @@ export default defineStore("artistDiscography", {
       getArtistAlbums(artisthash, 0, true)
         .then((data) => {
           this.albums = data.albums;
-          this.eps = data.eps;
-          this.singles = data.singles;
+          this.singles = data.singles_and_eps;
           this.appearances = data.appearances;
           this.artistname = data.artistname;
           this.compilations = data.compilations;
@@ -61,7 +59,6 @@ export default defineStore("artistDiscography", {
     },
     resetAlbums() {
       this.albums = [];
-      this.eps = [];
       this.singles = [];
       this.appearances = [];
 

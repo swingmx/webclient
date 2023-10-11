@@ -1,20 +1,18 @@
 <template>
   <div id="right-tabs" :class="{ tabContent: tabContent }">
-    <div class="tab-buttons-wrapper">
-      <div class="tabheaders rounded-sm no-scroll">
-        <div
-          class="tab"
-          v-for="tab in tabs"
-          :key="tab"
-          @click="emit('switchTab', tab)"
-          :class="{ activetab: tab === currentTab }"
-        >
-          {{ tab }}
-        </div>
-      </div>
+    <div class="tabheaders">
+      <button
+        v-for="tab in tabs"
+        :key="tab"
+        class="tab circular"
+        :class="{ activetab: tab === currentTab }"
+        @click="$emit('switchTab', tab)"
+      >
+        {{ tab }}
+      </button>
     </div>
 
-    <div id="tab-content" v-auto-animate v-if="tabContent">
+    <div v-if="tabContent" id="tab-content" v-auto-animate>
       <slot />
     </div>
   </div>
@@ -27,7 +25,7 @@ defineProps<{
   tabContent?: boolean;
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
   (e: "switchTab", tab: string): void;
 }>();
 </script>

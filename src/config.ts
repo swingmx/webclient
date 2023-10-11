@@ -1,7 +1,14 @@
 import { useStorage } from "@vueuse/core";
 
 const development = import.meta.env.DEV;
-const dev_url = "http://localhost:1970";
+
+function getBaseUrl() {
+  const base_url = window.location.origin;
+  const splits = base_url.split(":");
+  return base_url.replace(splits[splits.length - 1], "1980");
+}
+
+const dev_url = getBaseUrl();
 const url = development ? dev_url : "";
 
 export const baseApiUrl = useStorage("baseApiUrl", url, sessionStorage);
@@ -24,6 +31,7 @@ const imageRoutes = {
   thumb: {
     large: "/t/",
     small: "/t/s/",
+    original: "/t/o/",
   },
   artist: {
     large: "/a/",
@@ -58,7 +66,13 @@ export const paths = {
     get albumsByArtistUrl() {
       return this.album + "/from-artist";
     },
-    folder: baseApiUrl.value + "/folder",
+    get albumVersions() {
+      return this.album + "/versions";
+    },
+    folder: {
+      base: baseApiUrl.value + "/folder",
+      showInFiles: baseApiUrl.value + "/folder/show-in-files",
+    },
     dir_browser: baseApiUrl.value + "/folder/dir-browser",
     playlist: {
       base: baseApiUrl.value + "/playlist",
@@ -74,6 +88,9 @@ export const paths = {
     },
     search: {
       base: baseApiUrl.value + "/search",
+      get top() {
+        return this.base + "/top?q=";
+      },
       get tracks() {
         return this.base + "/tracks?q=";
       },
@@ -104,6 +121,9 @@ export const paths = {
       get remove_root_dir() {
         return this.base + "/remove-root-dirs";
       },
+      get trigger_scan() {
+        return this.base + "/trigger-scan";
+      },
     },
     files: baseApiUrl.value + "/file",
   },
@@ -111,6 +131,7 @@ export const paths = {
     thumb: {
       small: baseImgUrl + imageRoutes.thumb.small,
       large: baseImgUrl + imageRoutes.thumb.large,
+      original: baseImgUrl + imageRoutes.thumb.original,
     },
     artist: {
       small: baseImgUrl + imageRoutes.artist.small,
@@ -120,3 +141,5 @@ export const paths = {
     raw: baseImgUrl + imageRoutes.raw,
   },
 };
+
+export const VERSION = "1.3.0";

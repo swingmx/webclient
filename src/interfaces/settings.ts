@@ -7,6 +7,7 @@ export interface SettingOption {
 
 export interface Setting {
   title: string;
+  desc?: string;
   type: SettingType;
   options?: SettingOption[];
   inactive?: () => boolean;
@@ -14,12 +15,14 @@ export interface Setting {
   state: (() => any) | null;
   button_text?: () => string;
   defaultAction?: () => void;
+  show_if?: () => boolean;
 }
 
 export interface SettingGroup {
   title?: string;
   desc?: string;
   settings: Setting[];
+  show_if?: () => boolean;
 }
 
 export interface SettingCategory {

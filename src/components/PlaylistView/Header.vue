@@ -1,54 +1,101 @@
 <template>
   <div
-    class="p-header image rounded no-scroll"
+    class="p-header image rounded-lg"
     :style="[
       {
         background: bg,
-        backgroundPosition: `center ${bannerPos}%`,
-        height: `${heightLarge ? '24rem' : '18rem'}`,
+        backgroundPosition: `center ${info.settings.banner_pos}%`,
+        height: `${heightLarge || isSmallPhone ? '24rem' : '18rem'}`,
       },
     ]"
-    :class="{ border: !info.images.length }"
+    :class="{ 'use-sqr_img': useSqrImg }"
   >
-    <div class="gradient" v-if="!(info.image as string).endsWith('None')"></div>
-    <BannerImages />
-    <Info />
+    <div
+      class="float"
+      :style="{
+        color: textColor,
+      }"
+      @click="pinPlaylist(info.id)"
+    >
+      <PinFillSvg v-if="info.pinned" />
+      <PinSvg v-else />
+    </div>
+
+    <div v-if="info.has_image" class="gradient rounded-lg"></div>
+    <div
+      v-if="!info.has_image || info.settings.square_img"
+      class="album-header-ambient rounded-lg"
+      style="height: 100%; width: 100%"
+      :style="{
+        boxShadow: colors.bg
+          ? `0 .5rem 2rem ${colors.bg}`
+          : '0 .5rem 2rem black',
+      }"
+    ></div>
+    <div v-if="info.has_image && useSqrImg" class="sqr_img">
+      <img :src="(playlist.info.image as string)" class="rounded-sm" />
+    </div>
+    <BannerImages
+      v-if="playlist.info.count && !info.has_image && useSqrImg"
+      class="sqr_img rounded-sm"
+    />
+    <Info :text-color="textColor" :btn_color="colors.btn" />
     <LastUpdated />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import usePStore from "@/stores/pages/playlist";
-import { heightLarge } from "@/stores/content-width";
-
-import { paths } from "@/config";
-import BannerImages from "./Header/BannerImages.vue";
+import { getTextColor } from "@/utils/colortools/shift";
+import { pinUnpinPlaylist } from "@/requests/playlists";
+import { heightLarge, isSmallPhone } from "@/stores/content-width";
 
 import Info from "./Header/Info.vue";
-import { getBackgroundColor } from "@/utils/colortools/shift";
+import PinSvg from "@/assets/icons/pin.svg";
 import LastUpdated from "./Header/LastUpdated.vue";
+import BannerImages from "./Header/BannerImages.vue";
+import PinFillSvg from "@/assets/icons/pin.fill.svg";
 
 const playlist = usePStore();
 
-const imguri = paths.images.playlist;
+const { info, colors } = storeToRefs(playlist);
 
-const { info, bannerPos } = storeToRefs(playlist);
-const bg = ref("");
-
-function getBg() {
+const bg = computed(() => {
   if (playlist.info.has_image) {
-    return `url(${imguri + info.value.image})`;
+    if (
+      isSmallPhone.value ||
+      (!playlist.info.settings.square_img && !isSmallPhone.value)
+    ) {
+      return `url(${info.value.image})`;
+    }
   }
 
-  if (info.value.images.length > 2) {
-    return getBackgroundColor(info.value.images[2].color);
+  return colors.value.bg ? colors.value.bg : "";
+});
+
+const useSqrImg = computed(
+  () => !playlist.info.has_image || !bg.value.startsWith("url")
+);
+
+const textColor = computed(() => {
+  if (colors.value.bg !== "") {
+    // @ts-ignore
+    return getTextColor(colors.value.bg);
   }
+
+  return "";
+});
+
+function pinPlaylist(pid: number) {
+  pinUnpinPlaylist(pid).then((success) => {
+    if (success) {
+      playlist.info.pinned = !playlist.info.pinned;
+    }
+  });
 }
-
-onMounted(() => (bg.value = getBg()));
 </script>
 
 <style lang="scss">
@@ -56,8 +103,67 @@ onMounted(() => (bg.value = getBg()));
   display: grid;
   grid-template-columns: 1fr;
   position: relative;
-  background-color: $gray;
   background-position: center 50%;
+  background-size: cover !important;
+  padding-bottom: 1rem;
+
+  .album-header-ambient {
+    position: absolute;
+    opacity: 0.25;
+  }
+
+  .float {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    transform: scale(0.75);
+    z-index: 100;
+    cursor: pointer;
+  }
+
+  &.use-sqr_img {
+    grid-template-columns: max-content 1fr;
+    align-items: flex-end;
+
+    .title {
+      font-size: 3.75rem !important;
+    }
+
+    @include smallPhone {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+      gap: 1rem;
+
+      .playlist-info {
+        height: max-content;
+      }
+
+      .sqr_img {
+        height: 13rem;
+        width: 13rem;
+        margin-top: 1rem;
+      }
+
+      .title {
+        font-size: 2rem !important;
+      }
+    }
+  }
+
+  .sqr_img {
+    height: 16rem;
+    width: 16rem;
+    z-index: 100;
+    margin-left: 1rem;
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
 
   .gradient {
     position: absolute;
@@ -69,106 +175,10 @@ onMounted(() => (bg.value = getBg()));
     opacity: 0.5;
   }
 
-  .playlist-banner-images {
-    width: 21rem;
-    position: absolute;
-    right: 0;
-    top: -10rem;
-    rotate: -40deg;
-
-    display: flex;
-    flex-wrap: wrap;
-    gap: $medium;
-    transition: all 0.2s ease-in-out;
-
-    img {
-      height: 9rem;
-      transition: all 0.2s ease-in-out;
-    }
-  }
-
-  .last-updated {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    padding: $smaller $small;
-    background-color: $body;
-    color: rgb(255, 255, 255);
-    font-size: 0.9rem;
-    border-radius: $smaller;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.479);
-    z-index: 12;
-
-    display: flex;
-    align-items: center;
-
-    .edit {
-      cursor: pointer;
-      color: $brown;
-    }
-
-    svg {
-      transform: scale(0.75);
-      margin-bottom: -0.2rem;
-      color: $red !important;
-    }
-  }
-
-  .last-updated.lightbg {
-    background-color: $gray2;
-  }
-
-  .carddd {
-    width: 100%;
-    padding: 1rem;
-    display: grid;
-    z-index: 10;
-
-    .info {
-      display: flex;
-      flex-direction: column-reverse;
-    }
-
-    .type {
-      font-size: small;
-      font-weight: 700;
-      // color: rgb(218, 218, 218);
-      opacity: 0.85;
-    }
-
+  @include smallPhone {
     .title {
-      font-size: 4rem;
-      font-weight: 1000;
-      cursor: text;
-    }
-
-    .info.is_light {
-      color: $gray5;
-
-      .type {
-        color: $pink;
-        // opacity: 0.5;
-      }
-    }
-
-    .duration {
-      font-size: 0.8rem;
-      padding: $smaller;
-      padding-left: 0;
-      font-weight: 900;
-      cursor: text;
-      opacity: 0.85;
-    }
-
-    .btns {
-      margin-top: $small;
-      display: flex;
-      gap: $small;
+      font-size: 2.5rem !important;
     }
   }
-}
-
-.p-header.border {
-  border: solid 1px $gray4;
 }
 </style>

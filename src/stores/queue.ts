@@ -3,12 +3,13 @@ import { defineStore } from "pinia";
 import { Ref } from "vue";
 import { NotifType, useNotifStore } from "./notification";
 
-import { dropSources, favType, FromOptions } from "../composables/enums";
-import updateMediaNotif from "../composables/mediaNotification";
-import { isFavorite } from "@/composables/fetch/favorite";
-import useSettingsStore from "./settings";
+import audio from "@/player";
 import useColorStore from "./colors";
+import { dropSources, favType, FromOptions } from "@/enums";
+import updateMediaNotif from "@/helpers/mediaNotification";
+import { isFavorite } from "@/requests/favorite";
 
+import useSettingsStore from "./settings";
 import {
   fromAlbum,
   fromArtist,
@@ -18,7 +19,6 @@ import {
   fromSearch,
   Track,
 } from "../interfaces";
-import { fetchAlbumColor } from "@/composables/fetch/colors";
 
 function shuffle(tracks: Track[]) {
   const shuffled = tracks.slice();
@@ -29,16 +29,13 @@ function shuffle(tracks: Track[]) {
   return shuffled;
 }
 
-type From =
+export type From =
   | fromFolder
   | fromAlbum
   | fromPlaylist
   | fromSearch
   | fromArtist
   | fromFav;
-
-let audio = new Audio();
-audio.autoplay = false;
 
 export default defineStore("Queue", {
   state: () => ({
@@ -48,6 +45,7 @@ export default defineStore("Queue", {
     },
     currentindex: 0,
     playing: false,
+    buffering: true,
     from: {} as From,
     tracklist: [] as Track[],
     queueScrollFunction: (index: number) => {},
@@ -63,6 +61,8 @@ export default defineStore("Queue", {
     },
     play(index: number = 0) {
       if (this.tracklist.length === 0) return;
+
+      this.playing = true;
       this.currentindex = index;
       this.focusCurrentInSidebar();
 
@@ -73,23 +73,31 @@ export default defineStore("Queue", {
 
       new Promise((resolve, reject) => {
         audio.autoplay = true;
+        audio.pause();
         audio.src = uri;
+
         audio.oncanplay = resolve;
         audio.onerror = reject;
       })
         .then(() => {
+          // paused before playback started
+          if (!this.playing) {
+            audio.pause();
+            return;
+          }
+
+          audio.currentTime = 0;
           this.duration.full = audio.duration;
+
           audio.play().then(() => {
-            this.playing = true;
             updateMediaNotif();
+            this.duration.full = audio.duration;
 
-            fetchAlbumColor(track.albumhash).then((color) => {
-              useColorStore().setTheme1Color(color);
-            });
-
-            audio.ontimeupdate = () => {
-              this.duration.current = audio.currentTime;
-            };
+            useColorStore().setTheme1Color(
+              paths.images.thumb.small + this.currenttrack.image
+            );
+            // fetchAlbumColor(track.albumhash).then((color) => {
+            // });
 
             audio.onended = () => {
               this.autoPlayNext();
@@ -103,17 +111,65 @@ export default defineStore("Queue", {
             NotifType.Error
           );
 
+          // if not last track, try to play next
           if (this.currentindex !== this.tracklist.length - 1) {
+            if (!this.playing) return;
+
             setTimeout(() => {
-              if (!this.playing) return;
-              this.autoPlayNext();
+              // if track changed, don't play next
+              if (this.currenttrack.trackhash !== track.trackhash) return;
+              this.playNext();
             }, 5000);
+            return;
           }
+
+          this.playing = false;
         });
     },
-    stop() {
-      audio.src = "";
-      this.playing = false;
+    startBufferingStatusWatcher() {
+      let sourceTime = 0;
+      let lastTime = 0;
+
+      audio.ontimeupdate = () => {
+        this.duration.current = audio.currentTime;
+
+        const date = new Date();
+        sourceTime = date.getTime();
+      };
+
+      audio.onplay = () => {
+        // reset sourceTime to prevent false positives
+        const date = new Date();
+        sourceTime = date.getTime();
+      };
+
+      const compare = () => {
+        const difference = Math.abs(sourceTime - lastTime);
+
+        if (difference > 600 && this.playing) {
+          this.buffering = true;
+          return;
+        }
+
+        this.buffering = false;
+      };
+
+      const updateTime = () => {
+        if (!this.playing) return;
+        const date = new Date();
+        lastTime = date.getTime();
+        compare();
+      };
+
+      // Loader will misbehave on HMR because of multiple setInterval calls
+      setInterval(() => {
+        if (!this.playing) {
+          this.buffering = false;
+          return;
+        }
+
+        updateTime();
+      }, 100);
     },
     playPause() {
       if (audio.src === "") {
@@ -121,14 +177,17 @@ export default defineStore("Queue", {
         return;
       }
 
-      if (audio.paused) {
+      if (audio.paused && !this.playing) {
         audio.currentTime === 0 ? this.play(this.currentindex) : null;
-        audio.play();
+        audio.play().catch(() => {
+          // do nothing
+        });
         this.playing = true;
-      } else {
-        audio.pause();
-        this.playing = false;
+        return;
       }
+
+      audio.pause();
+      this.playing = false;
     },
     autoPlayNext() {
       const settings = useSettingsStore();
@@ -147,6 +206,7 @@ export default defineStore("Queue", {
       const resetQueue = () => {
         this.currentindex = 0;
         audio.src = "";
+        audio.pause();
         this.playing = false;
 
         updateMediaNotif();
@@ -159,6 +219,11 @@ export default defineStore("Queue", {
       this.play(this.nextindex);
     },
     playPrev() {
+      if (audio.currentTime > 3) {
+        audio.currentTime = 0;
+        return;
+      }
+
       this.play(this.previndex);
     },
     seek(pos: number) {
@@ -197,7 +262,7 @@ export default defineStore("Queue", {
       this.from = <fromFolder>{
         type: FromOptions.folder,
         path: fpath,
-        name: "Folder: " + (name?.trim() === "" ? fpath : name),
+        name: name?.trim() === "" ? fpath : name,
       };
       this.setNewQueue(tracks);
     },
@@ -210,7 +275,7 @@ export default defineStore("Queue", {
 
       this.setNewQueue(tracks);
     },
-    playFromPlaylist(pname: string, pid: string, tracks: Track[]) {
+    playFromPlaylist(pname: string, pid: number, tracks: Track[]) {
       this.from = <fromPlaylist>{
         type: FromOptions.playlist,
         name: pname,
@@ -252,31 +317,15 @@ export default defineStore("Queue", {
         NotifType.Success
       );
     },
+    insertTrackAtIndex(track: Track, index: number) {
+      this.tracklist.splice(index, 0, track);
+    },
     playTrackNext(track: Track) {
       const Toast = useNotifStore();
-
       const nextindex = this.currentindex + 1;
-      const next: Track = this.tracklist[nextindex];
 
-      // if track is already next, skip
-      if (next?.trackhash === track.trackhash) {
-        Toast.showNotification("Track is already queued", NotifType.Info);
-        return;
-      }
-
-      // if tracklist is empty or current track is last, push track
-      // else insert track after current track
-      if (this.currentindex == this.tracklist.length - 1) {
-        this.tracklist.push(track);
-      } else {
-        this.tracklist.splice(this.currentindex + 1, 0, track);
-      }
-
-      // save queue
-      Toast.showNotification(
-        `Added ${track.title} to queue`,
-        NotifType.Success
-      );
+      this.insertTrackAtIndex(track, nextindex);
+      Toast.showNotification(`Added 1 track to queue`, NotifType.Success);
     },
     addTrackToIndex(
       source: dropSources,
@@ -284,7 +333,6 @@ export default defineStore("Queue", {
       newIndex: number,
       oldIndex: number
     ) {
-      console.log(source);
       if (source === dropSources.queue) {
         this.tracklist.splice(oldIndex, 1);
         this.tracklist.splice(newIndex, 0, track);
@@ -305,29 +353,11 @@ export default defineStore("Queue", {
         Toast.showNotification("Queue is too short", NotifType.Info);
         return;
       }
-
-      const current = this.currenttrack;
-      const current_hash = current?.trackhash;
-
       this.tracklist = shuffle(this.tracklist);
-      // find current track after shuffle
-
-      if (this.playing) {
-        const newindex = this.tracklist.findIndex(
-          (track) => track.trackhash === current_hash
-        );
-
-        // remove current track from queue
-        this.tracklist.splice(newindex, 1);
-        // insert current track at beginning of queue
-        this.tracklist.unshift(current as Track);
-        this.currentindex = 0;
-        this.focusCurrentInSidebar();
-        return;
-      }
 
       this.currentindex = 0;
       this.play(this.currentindex);
+      this.focusCurrentInSidebar();
     },
     removeFromQueue(index: number = 0) {
       if (index === this.currentindex) {
@@ -353,6 +383,7 @@ export default defineStore("Queue", {
         this.currentindex -= 1;
       }
     },
+    // called from app.vue
     setScrollFunction(
       cb: (index: number) => void,
       mousover: Ref<boolean> | null
@@ -360,6 +391,7 @@ export default defineStore("Queue", {
       this.queueScrollFunction = cb;
       this.mousover = mousover;
     },
+    // called from app.vue
     toggleFav(index: number) {
       const track = this.tracklist[index];
 
@@ -367,9 +399,27 @@ export default defineStore("Queue", {
         track.is_favorite = !track.is_favorite;
       }
     },
+    addTracksToQueue(tracks: Track[]) {
+      this.tracklist = this.tracklist.concat(tracks);
+
+      const Toast = useNotifStore();
+      Toast.showNotification(
+        `Added ${tracks.length} tracks to queue`,
+        NotifType.Success
+      );
+    },
+    insertAfterCurrent(tracks: Track[]) {
+      this.tracklist.splice(this.currentindex + 1, 0, ...tracks);
+
+      const Toast = useNotifStore();
+      Toast.showNotification(
+        `Added ${tracks.length} tracks to queue`,
+        NotifType.Success
+      );
+    },
   },
   getters: {
-    next(): Track | undefined {
+    next(): Track {
       if (this.currentindex == this.tracklist.length - 1) {
         return this.tracklist[0];
       } else {
@@ -383,7 +433,7 @@ export default defineStore("Queue", {
         return this.tracklist[this.currentindex - 1];
       }
     },
-    currenttrack(): Track | undefined {
+    currenttrack(): Track {
       const current = this.tracklist[this.currentindex];
 
       isFavorite(current?.trackhash || "", favType.track).then((is_fav) => {

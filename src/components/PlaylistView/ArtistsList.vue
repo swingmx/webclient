@@ -1,10 +1,7 @@
 <template>
-  <div class="f-artists">
-    <h3>
-      {{ title }}
-      <SeeAll :route="route" />
-    </h3>
-    <div class="artist-list">
+  <div class="card-list-scroll-x">
+    <h3>{{ title }} <SeeAll v-if="route" :route="route" /></h3>
+    <div ref="artistItemswrappers" class="cards">
       <ArtistCard
         v-for="artist in artists.slice(0, maxAbumCards)"
         :key="artist.image"
@@ -15,35 +12,19 @@
 </template>
 
 <script setup lang="ts">
-import ArtistCard from "@/components/shared/ArtistCard.vue";
+import { ref } from "vue";
+
 import { Artist } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
+
+import ArtistCard from "@/components/shared/ArtistCard.vue";
 import SeeAll from "../shared/SeeAll.vue";
 
 defineProps<{
   artists: Artist[];
   title: string;
-  route: string;
+  route?: string;
 }>();
+
+const artistItemswrappers = ref<HTMLElement | null>(null);
 </script>
-
-<style lang="scss">
-.f-artists {
-  overflow: hidden;
-  max-height: 17rem;
-
-  h3 {
-    display: flex;
-    justify-content: space-between;
-    padding-left: $medium;
-    align-items: baseline;
-    margin-bottom: $small;
-  }
-
-  .artist-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
-    gap: 10rem 0;
-  }
-}
-</style>

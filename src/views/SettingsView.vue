@@ -10,11 +10,18 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import Content from "../components/SettingsView/Content.vue";
-import { getRootDirs } from "@/composables/fetch/settings/rootdirs";
 import useSettingsStore from "@/stores/settings";
+import { getAllSettings } from "@/requests/settings";
+import updatePageTitle from "@/utils/updatePageTitle";
 
-const settings = useSettingsStore();
+import Content from "../components/SettingsView/Content.vue";
 
-onMounted(() => getRootDirs().then((dirs) => settings.setRootDirs(dirs)));
+const store = useSettingsStore();
+
+onMounted(() => {
+  updatePageTitle("Settings");
+  getAllSettings().then(({ settings }) => {
+    store.mapDbSettings(settings);
+  });
+});
 </script>

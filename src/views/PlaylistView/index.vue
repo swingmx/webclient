@@ -5,11 +5,11 @@
     style="height: 100%"
   >
     <RecycleScroller
+      v-slot="{ item }"
       class="scroller"
       :items="scrollerItems"
       :item-size="null"
       key-field="id"
-      v-slot="{ item }"
       style="height: 100%"
     >
       <component
@@ -22,19 +22,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "@vue/reactivity";
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
+import { onMounted, onUpdated } from "vue";
+import { computed } from "vue";
 
-import { isMedium, isSmall, heightLarge } from "@/stores/content-width";
-import usePlaylistStore from "@/stores/pages/playlist";
+import {
+  heightLarge,
+  isMedium,
+  isSmall,
+  isSmallPhone,
+} from "@/stores/content-width";
+import { dropSources } from "@/enums";
 import useQueueStore from "@/stores/queue";
+import usePlaylistStore from "@/stores/pages/playlist";
 
-import Header from "@/components/PlaylistView/Header.vue";
-import SongItem from "@/components/shared/SongItem.vue";
-import { updateBannerPos } from "@/composables/fetch/playlists";
-import NoItems from "@/components/shared/NoItems.vue";
+import updatePageTitle from "@/utils/updatePageTitle";
+
 import playlistSvg from "@/assets/icons/playlist.svg";
-import { dropSources } from "@/composables/enums";
+import Header from "@/components/PlaylistView/Header.vue";
+import NoItems from "@/components/shared/NoItems.vue";
+import SongItem from "@/components/shared/SongItem.vue";
+import AfterHeader from "@/components/PlaylistView/AfterHeader.vue";
 
 const queue = useQueueStore();
 const playlist = usePlaylistStore();
@@ -46,24 +53,31 @@ interface ScrollerItem {
   props?: {};
 }
 
-const noItems: ScrollerItem = {
-  id: "Noitems",
-  component: NoItems,
-  size: 300, // somehow it doesn't work, patched with CSS
-  props: {
-    icon: playlistSvg,
-    flag: playlist.tracks.length === 0,
-    title: "No tracks in this playlist",
-    description:
-      'Add tracks to this playlist by right clicking on a track and selecting "add to playlist"',
-  },
-};
+const getNoItemsComponent = () =>
+  <ScrollerItem>{
+    id: "Noitems",
+    component: NoItems,
+    size: 300, // somehow it doesn't work, patched with CSS
+    props: {
+      icon: playlistSvg,
+      flag: playlist.tracks.length === 0,
+      title: "No tracks in this playlist",
+      description:
+        'Add tracks to this playlist by right clicking on a track and selecting "add to playlist"',
+    },
+  };
 
 const scrollerItems = computed(() => {
   const header: ScrollerItem = {
     id: "header",
     component: Header,
-    size: heightLarge.value ? 25 * 16 : 19 * 16,
+    size: heightLarge.value || isSmallPhone.value ? 25 * 16 : 18 * 16,
+  };
+
+  const afterHeader: ScrollerItem = {
+    id: "afterHeader",
+    component: AfterHeader,
+    size: 4 * 16,
   };
 
   const tracks = playlist.tracks.map((track) => {
@@ -81,9 +95,9 @@ const scrollerItems = computed(() => {
     };
   });
 
-  const body = playlist.tracks.length === 0 ? [noItems] : tracks;
+  const body = playlist.tracks.length === 0 ? [getNoItemsComponent()] : tracks;
 
-  return [header, ...body];
+  return [header, afterHeader, ...body];
 });
 
 function playFromPlaylistPage(index: number) {
@@ -92,16 +106,8 @@ function playFromPlaylistPage(index: number) {
   queue.play(index);
 }
 
-[onBeforeRouteLeave, onBeforeRouteUpdate].forEach((guard) => {
-  guard(() => {
-    if (playlist.bannerPosUpdated) {
-      updateBannerPos(parseInt(playlist.info.id), playlist.bannerPos);
-    }
-
-    setTimeout(() => {
-      playlist.resetQuery();
-    }, 500);
-  });
+[onMounted, onUpdated].forEach(() => {
+  updatePageTitle(playlist.info.name);
 });
 </script>
 

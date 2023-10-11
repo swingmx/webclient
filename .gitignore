@@ -23,4 +23,8 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
+# TODO
+TODO.md
+
 __pycache__
+dev-dist/*

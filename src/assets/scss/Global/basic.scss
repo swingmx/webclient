@@ -1,5 +1,8 @@
-// TEXT
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
 
+// TEXT
 .t-center {
   text-align: center;
 }
@@ -54,12 +57,12 @@ a {
   border-radius: $medium;
 }
 
-.circular {
-  border-radius: 10rem;
+.rounded-lg {
+  border-radius: 1.25rem;
 }
 
-.border {
-  border: 1px solid $gray3;
+.circular {
+  border-radius: 10rem;
 }
 
 .bg-primary {
@@ -80,7 +83,6 @@ button {
   padding: 0 $small;
 
   background-color: $gray4;
-  border: solid 1px $gray3;
   font-weight: 700;
   cursor: pointer;
 
@@ -94,15 +96,17 @@ button {
     }
   }
 
+  &:focus {
+    outline: none;
+  }
+
   &:hover {
     background-color: $darkestblue;
-    border: solid 1px $darkblue;
   }
 }
 
 .btn-active {
   background-color: $darkestblue;
-  border: solid 1px $darkblue;
 }
 
 .btn-disabled {

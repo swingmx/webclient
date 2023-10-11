@@ -1,8 +1,8 @@
 export enum SettingType {
-  text,
+  separators_input,
   select,
   multiselect,
   binary,
   button,
-  list
+  root_dirs,
 }

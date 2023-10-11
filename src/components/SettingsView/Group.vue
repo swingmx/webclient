@@ -1,38 +1,53 @@
 <template>
-  <div class="settingsgroup">
+  <div v-if="group.show_if ? group.show_if() : true" class="settingsgroup">
     <div v-if="group.title || group.desc" class="info">
       <h4 v-if="group.title">{{ group.title }}</h4>
-      <div class="desc" v-if="group.desc">{{ group.desc }}</div>
+      <div v-if="group.desc" class="desc">{{ group.desc }}</div>
     </div>
     <div class="setting rounded pad-lg">
       <div
-        class="setting-item"
-        v-for="(setting, index) in group.settings"
+        v-for="(setting, index) in group.settings.filter((s) =>
+          s.show_if ? s.show_if() : true
+        )"
         :key="index"
+        class="setting-item"
         :class="{
           inactive: setting.inactive && setting.inactive(),
-          'is-list': setting.type === SettingType.list,
+          'is-list': setting.type === SettingType.root_dirs,
         }"
       >
         <div
-          class="title ellip"
+          class="text"
           @click="
             setting.defaultAction ? setting.defaultAction() : setting.action()
           "
         >
-          {{ setting.title }}
+          <div class="title">
+            <span class="ellip">
+              {{ setting.title }}
+            </span>
+            <button
+              v-if="setting.type == SettingType.root_dirs"
+              @click="setting.action"
+            >
+              <ReloadSvg /> rescan
+            </button>
+          </div>
+          <div v-if="setting.desc" class="desc">
+            {{ setting.desc }}
+          </div>
         </div>
         <div class="options">
           <Switch
             v-if="setting.type == SettingType.binary"
-            @click="setting.action()"
             :state="setting.state && setting.state()"
+            @click="setting.action()"
           />
           <Select
             v-if="setting.type === SettingType.select"
             :options="setting.options"
             :source="setting.state !== null ? setting.state : () => ''"
-            :setterFn="setting.action"
+            :setter-fn="setting.action"
           />
           <button
             v-if="setting.type === SettingType.button"
@@ -43,9 +58,14 @@
         </div>
 
         <List
+          v-if="setting.type === SettingType.root_dirs"
           icon="folder"
           :items="setting.state !== null ? setting.state() : []"
-          v-if="setting.type === SettingType.list"
+        />
+        <SeparatorsInput
+          v-if="setting.type === SettingType.separators_input && setting.action"
+          :submit="setting.action"
+          :default="setting.state ? setting.state : () => []"
         />
       </div>
     </div>
@@ -59,6 +79,8 @@ import { SettingGroup } from "@/interfaces/settings";
 import Switch from "./Components/Switch.vue";
 import Select from "./Components/Select.vue";
 import List from "./Components/List.vue";
+import SeparatorsInput from "./Components/SeparatorsInput.vue";
+import ReloadSvg from "@/assets/icons/reload.svg";
 
 defineProps<{
   group: SettingGroup;
@@ -68,8 +90,11 @@ defineProps<{
 <style lang="scss">
 .settingsgroup {
   display: grid;
+  // grid-template-columns: 20rem 1fr;
   gap: $small;
   margin-top: 2rem;
+  border-bottom: solid 1px $gray;
+  padding-bottom: 2rem;
 
   &:first-child {
     margin-top: 0;
@@ -77,6 +102,7 @@ defineProps<{
 
   .info {
     margin-left: $smaller;
+    margin-bottom: $small;
   }
 
   h4 {
@@ -90,9 +116,8 @@ defineProps<{
 
   .setting {
     background-color: $gray;
-    display: grid;
-    gap: 1rem;
-    border: solid 1px $gray5;
+    // display: grid;
+    // gap: 1rem;
 
     .inactive {
       opacity: 0.5;
@@ -103,12 +128,47 @@ defineProps<{
   .setting > * {
     display: grid;
     grid-template-columns: 1fr max-content;
+  }
 
-    .title {
+  .setting-item {
+    user-select: none;
+    border-bottom: solid 1px $gray5;
+    padding: $medium 0;
+
+    .options {
       margin: auto 0;
-      user-select: none;
-      cursor: pointer;
     }
+
+    .text {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: self-start;
+
+      .title {
+        margin: auto 0;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+
+        button > svg {
+          transform: scale(0.65);
+        }
+      }
+
+      .desc {
+        margin-top: $smaller;
+      }
+    }
+  }
+
+  .setting-item:first-child {
+    padding-top: 0;
+  }
+
+  .setting-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
 }
 </style>

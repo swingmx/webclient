@@ -1,64 +1,46 @@
 <template>
   <div
-    class="artist-header-ambient rounded"
+    v-if="!on_sidebar"
+    class="artist-header-ambient rounded-lg"
+    :class="{ isSmallPhone }"
     style="height: 100%; width: 100%"
     :style="{
-      boxShadow: artist.info.colors.length
-        ? `0 .5rem 2rem ${artist.info.colors[0]}`
+      boxShadow: !useCircularImage
+        ? colors.bg.length
+          ? `0 .5rem 2rem ${colors.bg}`
+          : undefined
         : undefined,
     }"
   ></div>
   <div
-    class="artist-page-header rounded no-scroll"
+    ref="artistheader"
+    class="artist-page-header rounded-lg no-scroll"
+    :class="{ isSmallPhone, useCircularImage }"
     :style="{
-      height: `${heightLarge ? '24rem' : '18rem'}`,
+      height: `${isSmallPhone ? '25rem' : containerHeight}`,
     }"
   >
-    <div
-      class="artist-info"
-      :style="{
-        color: artist.info.colors[0]
-          ? getTextColor(artist.info.colors[0])
-          : undefined,
-      }"
-    >
-      <!-- :class="{
-        nocontrast: artist.info.colors ? isLight(artist.info.colors[0]) : false,
-      }" -->
-      <section class="text">
-        <div class="card-title">Artist</div>
-        <div class="artist-name ellip2">{{ artist.info.name }}</div>
-        <div class="stats">
-          {{ artist.info.trackcount }} Track{{
-            `${artist.info.trackcount == 1 ? "" : "s"}`
-          }}
-          • {{ artist.info.albumcount }} Album{{
-            `${artist.info.albumcount == 1 ? "" : "s"}`
-          }}
-          •
-          {{ formatSeconds(artist.info.duration, true) }}
-        </div>
-      </section>
-      <div class="buttons">
-        <PlayBtnRect :source="playSources.artist" :store="useArtistPageStore" />
-        <HeartSvg @handleFav="handleFav" :state="artist.info.is_favorite" />
-      </div>
-    </div>
+    <Info :artist="artist" :use-circular-image="useCircularImage" />
     <div
       class="artist-img no-select"
       :style="{
-        height: `${heightLarge ? '24rem' : '18rem'}`,
+        height: containerHeight,
       }"
     >
-      <img :src="paths.images.artist.large + artist.info.image" />
+      <img
+        id="artist-avatar"
+        :src="paths.images.artist.large + artist.image"
+        @load="store.setBgColor"
+      />
     </div>
     <div
+      v-if="!useCircularImage"
       class="gradient"
       :style="{
-        backgroundImage: artist.info.colors[0]
-          ? `linear-gradient(to left, transparent 30%,
-      ${artist.info.colors[0]} 50%,
-      ${artist.info.colors[0]} 100%)`
+        backgroundImage: colors.bg
+          ? `linear-gradient(${gradientDirection}, transparent 20%,
+      ${colors.bg} ${gradientWidth}%,
+      ${colors.bg} 100%)`
           : '',
       }"
     ></div>
@@ -66,30 +48,55 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { computed, onMounted, ref } from "vue";
+import { onBeforeRouteUpdate } from "vue-router";
+import { useElementSize } from "@vueuse/core";
+import useSettingsStore from "@/stores/settings";
+
 import { paths } from "@/config";
-import useArtistPageStore from "@/stores/pages/artist";
-import formatSeconds from "@/utils/useFormatSeconds";
-import { isLight } from "@/composables/colors/album";
-import { favType, playSources } from "@/composables/enums";
-import favoriteHandler from "@/composables/favoriteHandler";
-import { heightLarge } from "@/stores/content-width";
+import updatePageTitle from "@/utils/updatePageTitle";
 
-import { getTextColor } from "@/utils/colortools/shift";
+import Info from "./HeaderComponents/Info.vue";
+import useArtistStore from "@/stores/pages/artist";
+import { getShift } from "@/utils/colortools/shift";
 
-import PlayBtnRect from "../shared/PlayBtnRect.vue";
-import HeartSvg from "@/components/shared/HeartSvg.vue";
+const store = useArtistStore();
+const settings = useSettingsStore();
 
-const artist = useArtistPageStore();
+const props = defineProps<{
+  on_sidebar?: boolean;
+}>();
 
-function handleFav() {
-  favoriteHandler(
-    artist.info.is_favorite,
-    favType.artist,
-    artist.info.artisthash,
-    artist.makeFavorite,
-    artist.removeFavorite
-  );
+const { info: artist, colors } = storeToRefs(store);
+
+function updateTitle() {
+  props.on_sidebar ? () => {} : updatePageTitle(artist.value.name);
 }
+
+onMounted(() => updateTitle());
+onBeforeRouteUpdate(() => updateTitle());
+
+const artistheader = ref(null);
+const { width } = useElementSize(artistheader);
+
+const isSmallPhone = computed(() => width.value <= 550);
+const useCircularImage = computed(
+  () =>
+    !isSmallPhone.value && (settings.useCircularArtistImg || width.value >= 995)
+);
+
+const gradientDirection = computed(() =>
+  isSmallPhone.value ? "210deg" : "to left"
+);
+
+const gradientWidth = computed(() => {
+  return isSmallPhone.value ? "80" : "50";
+});
+
+const containerHeight = computed(() => {
+  return useCircularImage.value ? "13rem" : "18rem";
+});
 </script>
 
 <style lang="scss">
@@ -106,7 +113,9 @@ function handleFav() {
   position: relative;
 
   .artist-img {
-    // width: 100%;
+    display: flex;
+    align-items: flex-end;
+    order: 1;
 
     img {
       height: 100%;
@@ -114,61 +123,66 @@ function handleFav() {
       aspect-ratio: 1;
       object-fit: cover;
       object-position: 0% 20%;
+      float: right;
+    }
+  }
+
+  &.useCircularImage {
+    grid-template-columns: min-content 1fr;
+
+    .artist-img {
+      padding: 1rem;
+      order: -1;
+      z-index: 10;
+
+      img {
+        border-radius: 50%;
+        height: calc(100% - 0rem);
+        width: unset;
+        aspect-ratio: 1;
+      }
     }
   }
 
   .gradient {
     position: absolute;
-    background-image: linear-gradient(to left, transparent 10%, $gray 50%, $gray 100%);
+    background-image: linear-gradient(
+      to left,
+      transparent 10%,
+      $gray 50%,
+      $gray 100%
+    );
     height: 100%;
     width: 100%;
+
+    &.isSmallPhone {
+      background-image: linear-gradient(
+        210deg,
+        transparent 20%,
+        $gray 80%,
+        $gray 100%
+      );
+    }
   }
 
-  .artist-info {
-    z-index: 1;
-    padding: 1rem;
-    padding-right: 0;
-
+  &.isSmallPhone {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    flex-direction: column-reverse;
+    position: relative;
 
-    gap: 1rem;
+    .artist-img {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      height: 100% !important;
 
-    .text {
-      display: flex;
-      flex-direction: column;
-      gap: $small;
-    }
-
-    .card-title {
-      font-size: small;
-      font-weight: 700;
-    }
-
-    .artist-name {
-      font-size: 3.5rem;
-      font-weight: bold;
-      word-wrap: break-word;
-    }
-
-    .stats {
-      font-size: small;
-      font-weight: 700;
-    }
-  }
-
-  .artist-info.nocontrast {
-    color: $black;
-  }
-
-  .buttons {
-    display: flex;
-    gap: $small;
-
-    .heart-button {
-      background-color: pink !important;
-      border-color: pink;
+      img {
+        height: 100%;
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        object-position: 0% 20%;
+      }
     }
   }
 }

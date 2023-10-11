@@ -7,22 +7,23 @@
     <div class="tracks" :class="{ isSmall, isMedium }">
       <SongItem
         v-for="(song, index) in tracks"
+        :key="index"
         :track="song"
         :index="index + 1"
-        @playThis="playHandler(index)"
         :source="source"
+        @playThis="playHandler(index)"
       />
     </div>
-    <div class="error" v-if="!tracks.length">No tracks</div>
+    <div v-if="!tracks.length" class="error">No tracks</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import SongItem from "../shared/SongItem.vue";
+import { dropSources } from "@/enums";
 import { Track } from "@/interfaces";
 import { isMedium, isSmall } from "@/stores/content-width";
 import SeeAll from "../shared/SeeAll.vue";
-import { dropSources } from "@/composables/enums";
+import SongItem from "../shared/SongItem.vue";
 
 defineProps<{
   tracks: Track[];

@@ -1,7 +1,6 @@
 <template>
-  <div
+  <span
     style="width: fit-content"
-    v-tooltip
     class="artistname ellip"
     :style="{
       width: 'fit-content',
@@ -9,11 +8,11 @@
     }"
     @click.stop="() => {}"
   >
-    <div v-if="artists === null || artists.length === 0">
-      <span>{{ albumartists }}</span>
+    <div v-tooltip v-if="artists === null || artists.length === 0">
+      <span class="artist">{{ albumartists }}</span>
     </div>
-    <div v-else>
-      <template v-for="(artist, index) in artists" :key="artist.artisthash">
+    <div v-tooltip v-else>
+      <template v-for="(artist, index) in artists" :key="index">
         <RouterLink
           class="artist"
           :to="{
@@ -22,19 +21,23 @@
           }"
           >{{ `${artist.name}` }}</RouterLink
         >
-        <span>{{ index === artists.length - 1 ? "" : ",&nbsp;" }}</span>
-      </template>
+        <span class="artist" v-if="index < artists.length - 1"
+          >,
+        </span> </template
+      >&nbsp;
+      <span>{{ append ? append : "" }}</span>
     </div>
-  </div>
+  </span>
 </template>
 
 <script setup lang="ts">
 import { Artist } from "@/interfaces";
 import { Routes } from "@/router";
 
-const props = defineProps<{
+defineProps<{
   artists: Artist[] | null;
   albumartists: Artist[] | string | null;
+  append?: string;
   small?: boolean;
   smaller?: boolean;
 }>();

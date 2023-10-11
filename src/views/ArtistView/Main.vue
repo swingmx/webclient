@@ -6,7 +6,7 @@
       class="scroller"
       style="height: 100%"
     >
-      <template v-slot="{ item, index, active }">
+      <template #default="{ item, index, active }">
         <DynamicScrollerItem
           :item="item"
           :active="active"
@@ -14,8 +14,8 @@
           :data-index="index"
         >
           <component
-            :key="index"
             :is="item.component"
+            :key="index"
             v-bind="item.props"
           ></component>
         </DynamicScrollerItem>
@@ -25,46 +25,72 @@
 </template>
 
 <script setup lang="ts">
-import Header from "@/components/ArtistView/Header.vue";
-import TopTracks from "@/components/ArtistView/TopTracks.vue";
-import useArtistPageStore from "@/stores/pages/artist";
-import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
-import ArtistAlbumsFetcher from "@/components/ArtistView/ArtistAlbumsFetcher.vue";
 import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
-import { Album } from "@/interfaces";
-import {
-  discographyAlbumTypes,
-  dropSources,
-  FromOptions,
-} from "@/composables/enums";
+
+import { discographyAlbumTypes, dropSources } from "@/enums";
+import { Album, ScrollerItem } from "@/interfaces";
+import { getArtistTracks } from "@/requests/artists";
+import useArtistPageStore from "@/stores/pages/artist";
 import useQueueStore from "@/stores/queue";
-import { getArtistTracks } from "@/composables/fetch/artists";
+
+import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
+import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
+import Header from "@/components/ArtistView/Header.vue";
+import TopTracks from "@/components/ArtistView/TopTracks.vue";
+import SimilarArtists from "@/components/PlaylistView/ArtistsList.vue";
+import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 
 const store = useArtistPageStore();
 const queue = useQueueStore();
 const route = useRoute();
 
-interface ScrollerItem {
-  id: string | number;
-  component: any;
-  props?: Record<string, unknown>;
+function fetchArtistAlbums() {
+  store.getArtistAlbums();
 }
 
-const header: ScrollerItem = {
-  id: "artist-header",
-  component: Header,
-};
+function reFetchArtistAlbums() {
+  store.resetAlbums();
+  store.getArtistAlbums();
+}
+
+function fetchSimilarArtists() {
+  store.fetchSimilarArtists();
+}
+
+function reFetchSimilarArtists() {
+  store.resetSimilarArtists();
+  store.fetchSimilarArtists();
+}
+
+function getHeader() {
+  return <ScrollerItem>{
+    id: "artist-header",
+    component: Header,
+  };
+}
 
 const artist_albums_fetcher: ScrollerItem = {
   id: "artist-albums-fetcher",
   component: ArtistAlbumsFetcher,
+  props: {
+    fetch_callback: fetchArtistAlbums,
+    reset_callback: reFetchArtistAlbums,
+  },
+};
+
+const similar_artists_fetcher: ScrollerItem = {
+  id: "similar-artist-fetcher",
+  component: ArtistAlbumsFetcher,
+  props: {
+    fetch_callback: fetchSimilarArtists,
+    reset_callback: reFetchSimilarArtists,
+  },
 };
 
 enum AlbumType {
   ALBUMS = "Albums",
-  EPS = "EPs",
-  SINGLES = "Singles",
+  SINGLES = "EP & Singles",
   APPEARANCES = "Appearances",
   COMPILATIONS = "Compilations",
 }
@@ -80,9 +106,6 @@ function createAbumComponent(
     case AlbumType.ALBUMS:
       albumType = discographyAlbumTypes.albums;
       break;
-    case AlbumType.EPS:
-      albumType = discographyAlbumTypes.eps;
-      break;
     case AlbumType.SINGLES:
       albumType = discographyAlbumTypes.singles;
       break;
@@ -91,6 +114,7 @@ function createAbumComponent(
       break;
     case AlbumType.APPEARANCES:
       albumType = discographyAlbumTypes.appearances;
+      break;
 
     default:
       break;
@@ -105,6 +129,7 @@ function createAbumComponent(
       artisthash: route.params.hash,
       show_date,
       artist_page: true,
+      hide_artists: !(AlbumType.APPEARANCES === title),
       route: `/artists/${store.info.artisthash}/discography?artist=${store.info.name}`,
     },
   };
@@ -125,7 +150,14 @@ function getTopTracksComponent(): ScrollerItem {
 }
 
 const scrollerItems = computed(() => {
-  let components = [header];
+  const genreBanner = <ScrollerItem>{
+    id: "artist-genres",
+    component: GenreBanner,
+    props: {
+      source: "artist",
+    },
+  };
+  let components = [getHeader()];
 
   if (store.tracks.length > 0) {
     components.push(getTopTracksComponent());
@@ -141,11 +173,6 @@ const scrollerItems = computed(() => {
   if (store.singles.length > 0) {
     const singles = createAbumComponent(AlbumType.SINGLES, store.singles);
     components.push(singles);
-  }
-
-  if (store.eps.length > 0) {
-    const eps = createAbumComponent(AlbumType.EPS, store.eps);
-    components.push(eps);
   }
 
   if (store.compilations.length > 0) {
@@ -165,18 +192,27 @@ const scrollerItems = computed(() => {
     components.push(appearances);
   }
 
+  components = [...components, genreBanner, similar_artists_fetcher];
+
+  if (
+    store.fetched_hash === route.params.hash &&
+    store.similar_artists.length > 0
+  ) {
+    const SimilarArtistsComponent = {
+      id: "similar-artists",
+      component: SimilarArtists,
+      props: {
+        artists: store.similar_artists,
+        title: "Similar Artists",
+      },
+    };
+    components.push(SimilarArtistsComponent);
+  }
+
   return components;
 });
 
 async function handlePlay(index: number) {
-  if (
-    queue.from.type == FromOptions.artist &&
-    queue.from.artisthash == store.info.artisthash
-  ) {
-    queue.play(index);
-    return;
-  }
-
   const tracks = await getArtistTracks(store.info.artisthash);
   queue.playFromArtist(store.info.artisthash, store.info.name, tracks);
   queue.play(index);
@@ -195,12 +231,11 @@ onBeforeRouteLeave(async () => {
 
 <style lang="scss">
 .artist-page {
-  .artist-albums {
+  .card-list-scroll-x {
     padding-top: 1rem;
   }
 
   .section-title {
-    margin: 1rem;
     padding-left: 1rem;
   }
 }

@@ -1,5 +1,3 @@
-<!-- Track component used in app body -->
-
 <template>
   <div
     class="songlist-item rounded-sm"
@@ -7,89 +5,53 @@
     @dblclick.prevent="emitUpdate"
     @contextmenu.prevent="showMenu"
   >
-    <div
-      class="index t-center ellip"
-      @click.prevent="addToFav(track.trackhash)"
-      @dblclick.prevent.stop="() => {}"
-    >
-      <div class="text">
-        {{ index }}
-      </div>
-      <div class="heart-icon">
-        <HeartSvg :state="is_fav" :no_emit="true" />
-      </div>
-    </div>
-    <div class="flex">
-      <div @click.prevent="emitUpdate" class="thumbnail">
-        <img :src="imguri + track.image" class="album-art image rounded-sm" />
-        <div
-          class="now-playing-track-indicator image"
-          v-if="isCurrent()"
-          :class="{ last_played: !isCurrentPlaying() }"
-        ></div>
-      </div>
-      <div v-tooltip class="song-title">
-        <div class="with-flag" @click.prevent="emitUpdate">
-          <span class="title ellip">
-            {{ track.title }}
-          </span>
-          <MasterFlag :bitrate="track.bitrate" />
-        </div>
-        <div class="isSmallArtists" style="display: none">
-          <ArtistName
-            :artists="track.artist"
-            :albumartists="track.albumartist"
-          />
-        </div>
-      </div>
-    </div>
+    <TrackIndex
+      v-if="!isSmall"
+      :index="index"
+      :is_fav="is_fav"
+      @add-to-fav="addToFav(track.trackhash)"
+    />
+    <TrackTitle
+      :track="track"
+      :is_current="isCurrent()"
+      :is_current_playing="isCurrentPlaying()"
+      @play="emitUpdate"
+    />
     <div class="song-artists">
-      <ArtistName :artists="track.artist" :albumartists="track.albumartist" />
+      <ArtistName :artists="track.artists" :albumartists="track.albumartists" />
     </div>
-    <router-link
-      v-if="!hide_album"
-      class="song-album ellip"
-      v-tooltip
-      :to="{
-        name: 'AlbumView',
-        params: {
-          hash: track.albumhash || 'Unknown',
-        },
-      }"
-    >
-      {{ track.album }}
-    </router-link>
-    <div class="song-duration">{{ formatSeconds(track.duration) }}</div>
-    <div
-      class="options-icon circular"
-      @click.stop="showMenu"
-      @dblclick.stop="() => {}"
-    >
-      <OptionSvg />
-    </div>
+
+    <TrackAlbum
+      :album="track.album || 'Unknown'"
+      :albumhash="track.albumhash || ''"
+      :hide_album="hide_album || false"
+    />
+    <TrackDuration :duration="track.duration || 0" @showMenu="showMenu" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { Routes } from "@/router";
+import { useRoute } from "vue-router";
 import { onBeforeUnmount, ref, watch } from "vue";
 
-import { showTrackContextMenu as showContext } from "@/composables/context";
-import { favType } from "@/composables/enums";
-import favoriteHandler from "@/composables/favoriteHandler";
-import { paths } from "@/config";
 import { Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
-import { formatSeconds } from "@/utils";
+import { dropSources, favType } from "@/enums";
+import { isSmall } from "@/stores/content-width";
+import favoriteHandler from "@/helpers/favoriteHandler";
+import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
 
-import OptionSvg from "@/assets/icons/more.svg";
 import ArtistName from "./ArtistName.vue";
-import HeartSvg from "./HeartSvg.vue";
-import MasterFlag from "./MasterFlag.vue";
-import { dropSources } from "@/composables/enums";
+import TrackAlbum from "./SongItem/TrackAlbum.vue";
+import TrackIndex from "./SongItem/TrackIndex.vue";
+import TrackTitle from "./SongItem/TrackTitle.vue";
+import TrackDuration from "./SongItem/TrackDuration.vue";
 
-const imguri = paths.images.thumb.small;
 const context_menu_showing = ref(false);
+
 const queue = useQueueStore();
+const route = useRoute();
 
 const props = defineProps<{
   track: Track;
@@ -119,7 +81,13 @@ function emitUpdate() {
 }
 
 function showMenu(e: MouseEvent) {
-  showContext(e, props.track, context_menu_showing);
+  showContext(
+    e,
+    props.track,
+    context_menu_showing,
+    route,
+    route.name === Routes.playlist
+  );
 }
 
 function isCurrent() {
@@ -144,79 +112,32 @@ function addToFav(trackhash: string) {
   );
 }
 
-const stop = watch(
-  () => props.track.is_favorite,
-  (newValue) => {
-    is_fav.value = newValue;
+const stopWatcher = watch(
+  () => props.track.trackhash,
+  () => {
+    is_fav.value = props.track.is_favorite;
   }
 );
 
 onBeforeUnmount(() => {
-  stop();
+  stopWatcher();
 });
 </script>
 
 <style lang="scss">
 .songlist-item {
   display: grid;
-  grid-template-columns: 1.75rem 2fr 1fr 1.5fr 2.5rem 2.5rem;
+  grid-template-columns: 1.75rem 2fr 1fr 1.5fr 5.5rem;
   align-items: center;
   justify-content: flex-start;
   height: $song-item-height;
   gap: 1rem;
   user-select: none;
   padding-left: $small;
-  border: solid 1px transparent;
   position: relative;
-
-  // .top-drop,
-  // .bottom-drop {
-  //   display: flex;
-  //   align-items: center;
-
-  //   z-index: 20;
-  //   position: absolute;
-  //   height: 32px;
-  //   width: 100%;
-  //   left: 0;
-
-  //   &.active {
-  //     &::before {
-  //       content: "";
-  //       position: absolute;
-  //       height: 1px;
-  //       width: 100%;
-  //       background-color: $red;
-  //       left: 0;
-  //       top: 50%;
-  //     }
-  //   }
-  // }
-
-  // .top-drop {
-  //   top: -16px;
-  // }
-
-  // .bottom-drop {
-  //   bottom: -16px;
-  // }
-
-  .song-title {
-    .with-flag {
-      display: flex;
-      align-items: center;
-    }
-
-    cursor: pointer;
-
-    .title {
-      margin-bottom: 2px;
-    }
-  }
 
   &:hover {
     background-color: $gray5;
-    border: solid 1px $gray4;
 
     .index {
       .text {
@@ -234,111 +155,9 @@ onBeforeUnmount(() => {
     }
   }
 
-  .song-album {
-    max-width: max-content;
-
-    cursor: pointer !important;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
   .song-artists {
     width: fit-content;
     max-width: 100%;
-  }
-
-  .index {
-    font-size: 0.8rem;
-    width: 100%;
-    position: relative;
-    height: 3rem;
-    display: flex;
-    justify-content: center;
-
-    .text {
-      opacity: 0.5;
-      display: block;
-      margin: auto 0;
-      transition: all 0.25s;
-      width: 100%;
-    }
-
-    .heart-icon {
-      position: absolute;
-      left: -2px;
-      display: grid;
-      height: 100%;
-      align-content: center;
-      transition: all 0.2s;
-      transform: translateX(-1.5rem);
-
-      button {
-        border: none;
-        width: 2rem;
-        height: 2rem;
-        padding: 0;
-      }
-    }
-  }
-
-  .song-duration {
-    font-size: small;
-    text-align: left;
-  }
-
-  .options-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 1;
-    width: 2rem;
-
-    svg {
-      stroke: $white;
-    }
-
-    &:hover {
-      background-color: $gray3;
-    }
-  }
-
-  .flex {
-    position: relative;
-    align-items: center;
-
-    .thumbnail {
-      margin-right: $small;
-      display: flex;
-    }
-
-    .album-art {
-      width: 3rem;
-      height: 3rem;
-      cursor: pointer;
-      z-index: 20;
-    }
-
-    .now-playing-track-indicator {
-      position: absolute;
-      left: $small;
-      top: $small;
-      z-index: 20;
-    }
-  }
-
-  td {
-    height: 4rem;
-    padding: $small;
-  }
-
-  td:first-child {
-    border-radius: $small 0 0 $small;
-  }
-
-  td:nth-child(2) {
-    border-radius: 0 $small $small 0;
   }
 }
 
@@ -348,6 +167,5 @@ onBeforeUnmount(() => {
 
 .songlist-item.contexton {
   background-color: $gray4 !important;
-  border: solid 1px $gray3;
 }
 </style>

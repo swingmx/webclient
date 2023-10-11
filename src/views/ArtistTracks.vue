@@ -23,17 +23,17 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
 import { computed, onMounted, Ref, ref } from "vue";
+import { useRoute } from "vue-router";
 
 import { Track } from "@/interfaces";
-import { createTrackProps } from "@/utils";
+import { getArtistTracks } from "@/requests/artists";
 import { isMedium, isSmall } from "@/stores/content-width";
-import { getArtistTracks } from "@/composables/fetch/artists";
 import useQueueStore from "@/stores/queue";
+import { createTrackProps } from "@/utils";
 
 import SongItem from "@/components/shared/SongItem.vue";
-import { dropSources, FromOptions } from "@/composables/enums";
+import { dropSources, FromOptions } from "@/enums";
 
 const itemHeight = 64;
 const route = useRoute();
@@ -50,10 +50,10 @@ onMounted(() => {
 });
 
 const scrollerItems = computed(() => {
-  return tracks.value.map((track) => {
+  return tracks.value.map((track, index) => {
     return {
       track,
-      id: track.filepath,
+      id: index,
       props: createTrackProps(track),
     };
   });

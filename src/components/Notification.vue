@@ -1,9 +1,10 @@
 <template>
-  <div class="toasts" v-if="notifStore.notifs">
+  <div v-if="notifStore.notifs" class="toasts">
     <div
+      v-for="notif in notifStore.notifs"
+      :key="notif.text"
       class="new-notif rounded-sm"
       :class="notif.type"
-      v-for="notif in notifStore.notifs"
     >
       <component :is="getSvg(notif.type)" class="notif-icon" />
       <div class="notif-text ellip">{{ notif.text }}</div>
@@ -14,11 +15,11 @@
 <script setup lang="ts">
 import { useNotifStore, NotifType } from "../stores/notification";
 
-import ErrorSvg from "../assets/icons/toast/error.svg";
+import HeartSvg from "../assets/icons/heart.svg";
 import InfoSvg from "../assets/icons/toast/info.svg";
 import SuccessSvg from "../assets/icons/toast/ok.svg";
+import ErrorSvg from "../assets/icons/toast/error.svg";
 import WorkingSvg from "../assets/icons/toast/working.svg";
-import HeartSvg from "../assets/icons/heart.svg";
 
 const notifStore = useNotifStore();
 
@@ -40,9 +41,9 @@ function getSvg(notif: NotifType) {
 <style lang="scss">
 .toasts {
   position: fixed;
-  bottom: 2rem;
+  bottom: 6rem;
   left: 50%;
-  translate: -50%;
+  transform: translate(-50%);
   z-index: 100;
   display: flex;
   flex-direction: column-reverse;
@@ -50,7 +51,7 @@ function getSvg(notif: NotifType) {
 }
 
 .new-notif {
-  width: 20rem;
+  width: 18rem;
   height: 4rem;
   background-color: $gray;
   display: grid;
@@ -68,26 +69,23 @@ function getSvg(notif: NotifType) {
 }
 
 .new-notif.error {
-  $bg: rgb(236, 31, 31);
-  $bg1: rgba(236, 31, 31, 0.15);
-  background-image: linear-gradient(275deg, $bg, $bg1 74%);
+  $bg: rgb(197, 72, 72);
+  background-color: $bg;
 }
 
-.new-notif.info, .new-notif.favorite {
+.new-notif.info,
+.new-notif.favorite {
   $bg: rgb(28, 102, 238);
-  $bg1: rgba(31, 144, 236, 0.15);
-  background-image: linear-gradient(275deg, $bg, $bg1 74%);
+  background-color: $bg;
 }
 
 .new-notif.success {
   $bg: rgb(5, 167, 53);
-  $bg1: rgba(5, 167, 54, 0.15);
-  background-image: linear-gradient(275deg, $bg, $bg1 74%);
+  background-color: $bg;
 }
 
 .new-notif.working {
   $bg: $gray4;
-  $bg1: rgba(128, 128, 128, 0.151);
-  background-image: linear-gradient(275deg, $bg, $bg1 74%);
+  background-color: $bg;
 }
 </style>

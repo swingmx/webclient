@@ -1,6 +1,6 @@
 <template>
   <Motion
-    :key="q.currenttrack?.filepath"
+    :key="q.currenttrack?.trackhash"
     :initial="{ opacity: 0, scale: 0.9 }"
     :animate="{
       opacity: 1,
@@ -9,66 +9,50 @@
     }"
     :exit="{ opacity: 0, scale: 0.9 }"
   >
-    <div class="sidebar-songcard rounded-sm" v-wave>
+    <div v-wave class="sidebar-songcard rounded-sm">
       <router-link
         :to="{
-          name: 'AlbumView',
-          params: {
-            hash: q.currenttrack?.albumhash ? q.currenttrack.albumhash : ' ',
-          },
+          name: Routes.nowPlaying,
         }"
       >
         <img
           :src="imguri + q.currenttrack?.image"
           alt=""
-          class="l-image rounded-sm force-lm"
+          class="l-image rounded-sm"
         />
       </router-link>
-      <div
-        id="bitrate"
-        v-if="q.currenttrack?.bitrate"
-        title="file type • bitrate"
-      >
-        {{ q.currenttrack.filetype }} • {{ q.currenttrack.bitrate }}
-      </div>
+      <Bitrate />
     </div>
   </Motion>
 </template>
 
 <script setup lang="ts">
-import useQueueStore from "@/stores/queue";
+import { Motion } from "motion/vue";
+import { Routes } from "@/router";
 
 import { paths } from "@/config";
+import useQueueStore from "@/stores/queue";
+
+import Bitrate from "./Bitrate.vue";
 
 const imguri = paths.images.thumb.large;
 const q = useQueueStore();
 </script>
 
 <style lang="scss">
+.l-image {
+  width: 100%;
+}
+
 .sidebar-songcard {
   width: 100%;
   position: relative;
   width: 13rem;
-  height: 13rem;
 
   img {
     cursor: pointer;
     width: 100%;
     height: auto;
-    aspect-ratio: 1;
-    object-fit: cover;
-  }
-
-  #bitrate {
-    position: absolute;
-    font-size: 0.75rem;
-    width: max-content;
-    padding: 0.2rem 0.35rem;
-    bottom: $medium;
-    left: $small;
-    background-color: $gray4;
-    border-radius: $smaller;
-    text-transform: uppercase;
   }
 }
 </style>

@@ -1,14 +1,20 @@
-import { useFuse } from "@/utils";
-import { defineStore } from "pinia";
 import { ComputedRef } from "vue";
-import { AlbumDisc } from "./../../interfaces";
+import { defineStore } from "pinia";
 
-import { FuseTrackOptions } from "@/composables/enums";
-import { maxAbumCards } from "@/stores/content-width";
+import {
+  getAlbum,
+  getAlbumsFromArtist,
+  getAlbumVersions,
+  getSimilarAlbums,
+} from "@/requests/album";
 
-import { getAlbum, getAlbumsFromArtist } from "../../composables/fetch/album";
-import { Album, FuseResult, Track } from "../../interfaces";
+import { paths } from "@/config";
+import { useFuse } from "@/utils";
+import { FuseTrackOptions } from "@/enums";
 import { useNotifStore } from "../notification";
+import { maxAbumCards } from "@/stores/content-width";
+import setColorsToStore from "@/utils/colortools/setColorsToStore";
+import { Album, AlbumDisc, FuseResult, Track } from "@/interfaces";
 
 interface Disc {
   [key: string]: Track[];
@@ -46,20 +52,28 @@ export default defineStore("album", {
     info: <Album>{},
     srcTracks: <Track[]>[],
     albumArtists: <{ artisthash: string; albums: Album[] }[]>[],
+    otherVersions: <Album[]>[],
+    similarAlbums: <Album[]>[],
     bio: null,
     discs: <Disc>{},
+    colors: {
+      bg: "",
+      btn: "",
+    },
+    fetched_hash: "",
   }),
   actions: {
     /**
      * Fetches a single album information, artists and its tracks from the server
      * using the title and album-artist of the album.
-     * @param hash title of the album
+     * @param albumhash title of the album
      */
-    async fetchTracksAndArtists(hash: string) {
-      const album = await getAlbum(hash, useNotifStore);
+    async fetchTracksAndArtists(albumhash: string) {
+      const album = await getAlbum(albumhash, useNotifStore);
 
       this.srcTracks = album.tracks;
       this.info = album.info;
+      this.extractColors();
 
       const tracks = sortByTrackNumber(this.srcTracks);
       this.discs = createDiscs(tracks);
@@ -76,6 +90,8 @@ export default defineStore("album", {
       this.srcTracks.forEach((t, index) => {
         t.master_index = index;
       });
+
+      this.extractColors();
     },
     async fetchArtistAlbums() {
       const albumartists = this.info.albumartists;
@@ -85,14 +101,41 @@ export default defineStore("album", {
       this.albumArtists = await getAlbumsFromArtist(
         albumartisthashes.join(),
         maxAbumCards.value,
-        this.info.albumhash
+        this.info.base_title
       );
+    },
+    async fetchAlbumVersions() {
+      this.otherVersions = await getAlbumVersions(
+        this.info.og_title,
+        this.info.base_title,
+        this.info.albumartists[0].artisthash
+      );
+    },
+    async fetchSimilarAlbums() {
+      if (this.fetched_hash === this.info.albumhash) return;
+
+      this.similarAlbums = await getSimilarAlbums(
+        this.info.albumartists[0].artisthash,
+        maxAbumCards.value
+      );
+
+      this.fetched_hash = this.info.albumhash;
+    },
+    extractColors() {
+      const url = paths.images.thumb.small + this.info.image;
+      setColorsToStore(this, url);
     },
     resetQuery() {
       this.query = "";
     },
     resetAlbumArtists() {
       this.albumArtists = [];
+    },
+    resetOtherVersions() {
+      this.otherVersions = [];
+    },
+    resetSimilarAlbums() {
+      this.similarAlbums = [];
     },
     makeFavorite() {
       this.info.is_favorite = true;

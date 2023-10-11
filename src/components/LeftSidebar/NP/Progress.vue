@@ -6,12 +6,12 @@
     min="0"
     :max="time.full"
     step="0.1"
-    @change="seek()"
     :style="{
       backgroundSize: `${
-        (time.current / (q.currenttrack?.duration || 0)) * 100
+        (time.current / (time.full || 0)) * 100
       }% 100%`,
     }"
+    @change="seek"
   />
 </template>
 
@@ -21,8 +21,9 @@ import useQStore from "@/stores/queue";
 const q = useQStore();
 
 const { duration: time } = q;
-const seek = () => {
-  const elem = document.getElementById("progress") as HTMLInputElement;
+
+const seek = (e: Event) => {
+  const elem = e.target as HTMLInputElement;
   const value = elem.value;
 
   q.seek(value as unknown as number);

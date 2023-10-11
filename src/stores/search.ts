@@ -1,9 +1,9 @@
-import { reactive, ref } from "@vue/reactivity";
-import { useDebounce } from "@vueuse/core";
-import { defineStore } from "pinia";
 import { watch } from "vue";
+import { defineStore } from "pinia";
 import { useRoute } from "vue-router";
-import { router, Routes } from "@/router";
+import { Routes, router } from "@/router";
+import { reactive, ref } from "vue";
+import { useDebounce } from "@vueuse/core";
 
 import {
   loadMoreAlbums,
@@ -11,12 +11,14 @@ import {
   loadMoreTracks,
   searchAlbums,
   searchArtists,
+  searchTopResults,
   searchTracks,
-} from "../composables/fetch/searchMusic";
+} from "@/requests/searchMusic";
+import waitForScrollEnd from "@/helpers/useWaitForScroll";
+import { Album, Artist, Playlist, Track } from "../interfaces";
 import useLoaderStore from "./loader";
 import useTabStore from "./tabs";
-import waitForScrollEnd from "@/composables/useWaitForScroll";
-import { Album, Artist, Playlist, Track } from "../interfaces";
+import { maxAbumCards } from "./content-width";
 /**
  *
  * Scrolls on clicking the loadmore button
@@ -36,11 +38,11 @@ function scrollOnLoad() {
 export default defineStore("search", () => {
   // @ts-ignore
   const query = ref("");
+  const route = useRoute();
   const debouncedQuery = useDebounce(query, 500);
   const { startLoading, stopLoading } = useLoaderStore();
-  const route = useRoute();
 
-  const currentTab = ref("tracks");
+  const currentTab = ref("top");
   const RESULT_COUNT = 12;
 
   const loadCounter = reactive({
@@ -48,6 +50,17 @@ export default defineStore("search", () => {
     albums: 0,
     artists: 0,
     playlists: 0,
+  });
+
+  const top_results = reactive({
+    query: "",
+    top_result: {
+      type: <null | string>null,
+      item: <Track | Album | Artist>{},
+    },
+    tracks: <Track[]>[],
+    albums: <Album[]>[],
+    artists: <Artist[]>[],
   });
 
   const tracks = reactive({
@@ -73,6 +86,22 @@ export default defineStore("search", () => {
     value: <Playlist[]>[],
     more: false,
   });
+
+  function fetchTopResults(query: string) {
+    if (!query) return;
+    let limit = 3;
+
+    if (route.name == Routes.search) {
+      limit = maxAbumCards.value;
+    }
+
+    searchTopResults(query, limit).then((res) => {
+      top_results.top_result = res.top_result;
+      top_results.tracks = res.tracks;
+      top_results.albums = res.albums;
+      top_results.artists = res.artists;
+    });
+  }
 
   /**
    * Searches for tracks, albums and artists
@@ -122,7 +151,7 @@ export default defineStore("search", () => {
     loadCounter.tracks += RESULT_COUNT;
 
     startLoading();
-    loadMoreTracks(loadCounter.tracks)
+    loadMoreTracks(loadCounter.tracks, query.value)
       .then((res) => {
         tracks.value = [...tracks.value, ...res.tracks];
         tracks.more = res.more;
@@ -135,7 +164,7 @@ export default defineStore("search", () => {
     loadCounter.albums += RESULT_COUNT;
 
     startLoading();
-    loadMoreAlbums(loadCounter.albums)
+    loadMoreAlbums(loadCounter.albums, query.value)
       .then((res) => {
         albums.value = [...albums.value, ...res.albums];
         albums.more = res.more;
@@ -152,7 +181,7 @@ export default defineStore("search", () => {
     loadCounter.artists += RESULT_COUNT;
 
     startLoading();
-    loadMoreArtists(loadCounter.artists)
+    loadMoreArtists(loadCounter.artists, query.value)
       .then((res) => {
         artists.value = [...artists.value, ...res.artists];
         artists.more = res.more;
@@ -190,6 +219,9 @@ export default defineStore("search", () => {
       }
 
       switch (currentTab.value) {
+        case "top":
+          fetchTopResults(newQuery);
+          break;
         case "tracks":
           fetchTracks(newQuery);
           break;
@@ -212,6 +244,10 @@ export default defineStore("search", () => {
       const current_query: string = query.value;
 
       switch (newTab) {
+        case "top":
+          if (top_results.query == current_query) break;
+          fetchTopResults(current_query);
+          break;
         case "tracks":
           if (tracks.query == current_query) break;
           fetchTracks(current_query);
@@ -238,6 +274,7 @@ export default defineStore("search", () => {
   }
 
   return {
+    top_results,
     tracks,
     albums,
     artists,

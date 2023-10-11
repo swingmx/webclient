@@ -1,13 +1,13 @@
 <template>
   <div class="gsearch-input">
-    <div id="ginner" tabindex="0" ref="inputRef">
+    <div id="ginner" ref="inputRef" tabindex="0">
       <button
         v-auto-animate
         :title="
           tabs.current === tabs.tabs.search ? 'back to queue' : 'go to search'
         "
-        @click.prevent="handleButton"
         :class="{ no_bg: on_nav }"
+        @click.prevent="handleButton"
       >
         <SearchSvg v-if="on_nav || tabs.current === tabs.tabs.queue" />
         <BackSvg v-else-if="tabs.current === tabs.tabs.search" />
@@ -16,7 +16,7 @@
         id="globalsearch"
         v-model.trim="search.query"
         placeholder="Start typing to search"
-        type="text"
+        type="search"
         autocomplete="off"
         @blur.prevent="removeFocusedClass"
         @focus.prevent="addFocusedClass"

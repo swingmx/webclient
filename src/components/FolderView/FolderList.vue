@@ -1,7 +1,9 @@
 <template>
   <div
     class="f-container rounded-sm"
-    :class="{ 'list-mode': settings.folder_list_mode }"
+    :class="{
+      'list-mode': isIphoneSE ? true : settings.folder_list_mode,
+    }"
   >
     <div id="f-items" class="rounded">
       <FolderItem
@@ -18,6 +20,9 @@
 import { Folder } from "@/interfaces";
 import FolderItem from "./FolderItem.vue";
 import useSettingsStore from "@/stores/settings";
+import { isIphoneSE } from "@/stores/content-width";
+
+import { ref } from "vue";
 
 defineProps<{
   folders: Folder[];
@@ -38,27 +43,30 @@ const settings = useSettingsStore();
 }
 
 .f-item:hover {
-  // cursor: pointer;
-  background-color: $gray5;
+  background-color: $gray4;
 }
 
 .f-container.list-mode > #f-items {
   grid-template-columns: 1fr;
   gap: 0;
-  // border: solid 1px $gray;
-  // padding: 1rem;
 
   .f-item {
     transition: none;
     height: 3.25rem;
     border-radius: $small;
     background-color: transparent;
+    padding-left: $small;
 
-    .f-count {
-      position: absolute;
-      right: 1.25rem;
-      bottom: 50%;
-      translate: 0 50%;
+    .options {
+      display: block;
+      background-color: transparent !important;
+    }
+
+    .info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-right: $small;
     }
 
     &:hover {
@@ -67,5 +75,3 @@ const settings = useSettingsStore();
   }
 }
 </style>
-
-<!-- TODO: ADD BUTTON TO TOGGLE LIST MODE -->

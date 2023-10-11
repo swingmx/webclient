@@ -1,42 +1,28 @@
 <template>
-  <router-link class="swing-logo" :to="{ name: 'Home' }">
-    <div class="link">
-      <img src="/logo-fill.svg" alt="" />
-      <div>Swing <br />Music</div>
-    </div>
+  <router-link class="swing-logo rounded-md" :to="{ name: 'Home' }">
+    <LogoSvg /> <span>Swing Music</span>
   </router-link>
 </template>
 
+<script setup lang="ts">
+import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
+</script>
+
 <style lang="scss">
 .swing-logo {
-  background-color: $gray4;
-  padding: $medium;
+  background-image: linear-gradient(37deg, rgb(29, 28, 28), transparent);
+  padding-left: 1rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: $small;
-  cursor: pointer !important;
-  line-height: 1rem;
-  border-radius: 12px;
+  gap: $medium;
+  border: solid 1px $gray5;
 
   svg {
-    scale: 1.5;
+    transform: scale(1.25);
   }
 
-  .link {
-    display: flex;
-    align-items: center;
-    gap: $small;
-  }
-
-  span {
-    font-size: 1rem;
-    font-weight: 600;
-    color: $white;
-  }
-
-  img {
-    height: 2.25rem;
+  &:hover {
+    background-color: $gray5;
   }
 }
 </style>

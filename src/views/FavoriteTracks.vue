@@ -12,11 +12,11 @@
 import { Ref, ref } from "vue";
 
 import { Track } from "@/interfaces";
+import { getFavTracks } from "@/requests/favorite";
 import useQueueStore from "@/stores/queue";
-import { getFavTracks } from "@/composables/fetch/favorite";
 
 import SongList from "@/components/shared/SongList.vue";
-import { dropSources } from "@/composables/enums";
+import { dropSources } from "@/enums";
 
 const tracks: Ref<Track[]> = ref([]);
 const queue = useQueueStore();

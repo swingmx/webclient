@@ -1,29 +1,28 @@
-<!-- Track component used in the right sidebar -->
 <template>
   <div
+    v-wave="{
+      duration: 0.35,
+    }"
     class="track-item"
-    @click="playThis(track)"
     :class="[
       {
         currentInQueue: isCurrent,
       },
       { contexton: context_on },
     ]"
+    @click="playThis(track)"
     @contextmenu.prevent="showMenu"
-    v-wave="{
-      duration: 0.35,
-    }"
   >
     <div class="album-art">
       <img :src="paths.images.thumb.small + track.image" class="rounded-sm" />
       <div
-        class="now-playing-track-indicator image"
         v-if="isCurrent"
+        class="now-playing-track-indicator image"
         :class="{ last_played: !isCurrentPlaying }"
       ></div>
     </div>
     <div class="tags">
-      <div class="title" v-tooltip>
+      <div v-tooltip class="title">
         <span class="ellip">
           {{ track.title }}
         </span>
@@ -31,8 +30,8 @@
       <hr />
       <div class="artist">
         <ArtistName
-          :artists="track.artist"
-          :albumartists="track.albumartist"
+          :artists="track.artists"
+          :albumartists="track.albumartists"
           :smaller="true"
         />
       </div>
@@ -48,7 +47,7 @@
       <div
         v-if="isQueueTrack"
         class="remove-track"
-        title="remove from queue"
+        title="Remove from queue"
         @click.stop="queue.removeFromQueue(index)"
       >
         <DelSvg />
@@ -58,17 +57,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import { onBeforeUnmount, ref, watch } from "vue";
 
 import { paths } from "@/config";
+import { favType } from "@/enums";
 import { Track } from "@/interfaces";
 import useQueueStore from "@/stores/queue";
-import { favType } from "@/composables/enums";
-import favoriteHandler from "@/composables/favoriteHandler";
-import { showTrackContextMenu as showContext } from "@/composables/context";
+import favoriteHandler from "@/helpers/favoriteHandler";
+import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
 
 import HeartSvg from "./HeartSvg.vue";
-import MasterFlag from "./MasterFlag.vue";
 import ArtistName from "./ArtistName.vue";
 import DelSvg from "@/assets/icons/plus.svg";
 
@@ -83,9 +82,10 @@ const props = defineProps<{
 const queue = useQueueStore();
 const context_on = ref(false);
 const is_fav = ref(props.track.is_favorite);
+const route = useRoute();
 
 function showMenu(e: MouseEvent) {
-  showContext(e, props.track, context_on);
+  showContext(e, props.track, context_on, route);
 }
 
 const emit = defineEmits<{
@@ -106,12 +106,16 @@ function addToFav(trackhash: string) {
   );
 }
 
-watch(
+const stop = watch(
   () => props.track.is_favorite,
   (newValue) => {
     is_fav.value = newValue;
   }
 );
+
+onBeforeUnmount(() => {
+  stop();
+});
 </script>
 
 <style lang="scss">
@@ -139,15 +143,19 @@ watch(
   .float-buttons {
     opacity: 0;
     gap: $small;
+    & > * {
+      cursor: pointer;
+    }
 
     .heart-button {
       width: 2rem;
       height: 2rem;
       padding: 0;
       border: none;
+      background-color: transparent;
 
-      &:hover {
-        background-color: pink;
+      svg {
+        color: white;
       }
     }
 
@@ -161,7 +169,6 @@ watch(
 
       &:hover {
         border-radius: 1rem;
-        background-color: $red;
       }
     }
 
@@ -203,6 +210,7 @@ watch(
   img {
     width: 3rem;
     height: 3rem;
+    object-fit: contain;
   }
 
   .artist {

@@ -5,8 +5,27 @@
 }
 
 // media query mixins
-@mixin phone-only {
-  @media (max-width: 599px) {
+@mixin smallPhone {
+  @media (max-width: 550px) {
+    @content;
+  }
+}
+
+@mixin iphoneSE {
+  @media (max-width: 386px) {
+    @content;
+  }
+}
+
+@mixin allPhones {
+  @media (max-width: 900px) {
+    @content;
+  }
+}
+
+@mixin largePhones {
+  // 550px <= width < 900px
+  @media (min-width: 550px) {
     @content;
   }
 }
@@ -32,5 +51,15 @@
 @mixin for-desktop-up {
   @media (min-width: 1800px) {
     @content;
+  }
+}
+
+// hide scrollbar
+@mixin hideScrollbars {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+
+  &::-webkit-scrollbar {
+    display: none !important;
   }
 }

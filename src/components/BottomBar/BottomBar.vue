@@ -2,7 +2,7 @@
   <div class="b-bar">
     <LeftGroup @handleFav="handleFav" />
     <div class="center">
-      <div class="with-time">
+      <div v-if="!isMobile" class="with-time">
         <div class="time time-current">
           <span>
             {{ formatSeconds(queue.duration.current || 0) }}
@@ -14,59 +14,33 @@
         </div>
         <div class="time time-full">
           <span>
-            {{
-              formatSeconds(
-                queue.currenttrack ? queue.currenttrack.duration : 0
-              )
-            }}
+            {{ formatSeconds(queue.duration.full) }}
           </span>
         </div>
       </div>
       <Progress />
     </div>
-
-    <div class="right-group">
-      <HeartSvg
-        :state="queue.currenttrack?.is_favorite"
-        @handleFav="handleFav"
-      />
-      <button
-        class="repeat"
-        :class="{ 'repeat-disabled': settings.no_repeat }"
-        @click="settings.toggleRepeatMode"
-        :title="
-          settings.repeat_all
-            ? 'Repeat all'
-            : settings.no_repeat
-            ? 'No repeat'
-            : 'Repeat one'
-        "
-      >
-        <RepeatOneSvg v-if="settings.repeat_one" />
-        <RepeatAllSvg v-else />
-      </button>
-    </div>
+    <RightGroup v-if="!isMobile" @handleFav="handleFav" />
+    <Navigation v-else />
   </div>
 </template>
 
 <script setup lang="ts">
+import { favType } from "@/enums";
+import favoriteHandler from "@/helpers/favoriteHandler";
+import { isMobile } from "@/stores/content-width";
 import { formatSeconds } from "@/utils";
-import { favType } from "@/composables/enums";
-import favoriteHandler from "@/composables/favoriteHandler";
 
 import useQStore from "@/stores/queue";
-import useSettingsStore from "@/stores/settings";
 
 import HotKeys from "@/components/LeftSidebar/NP/HotKeys.vue";
 import Progress from "@/components/LeftSidebar/NP/Progress.vue";
+import Navigation from "@/components/LeftSidebar/NavButtons.vue";
 
-import HeartSvg from "../shared/HeartSvg.vue";
-import RepeatAllSvg from "@/assets/icons/repeat.svg";
-import RepeatOneSvg from "@/assets/icons/repeat-one.svg";
 import LeftGroup from "./Left.vue";
+import RightGroup from "./Right.vue";
 
 const queue = useQStore();
-const settings = useSettingsStore();
 
 function handleFav() {
   favoriteHandler(
@@ -86,32 +60,47 @@ function handleFav() {
   grid-template-columns: 1fr max-content 1fr;
   align-items: center;
   z-index: 1;
+  padding: 0 1rem;
+
+  @include allPhones {
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1.5rem max-content;
+    padding: 0 1rem $medium 1rem;
+
+    .center > input {
+      height: 2px !important;
+    }
+  }
 
   button {
-    height: 2rem;
-    width: 2rem;
     background: transparent;
     border-radius: $small;
+    width: 3rem;
 
     &:hover {
       border: solid 1px $gray3 !important;
       background-color: $gray !important;
     }
+
+    @include allPhones {
+      height: 3rem;
+    }
   }
 
-  gap: 1rem;
-
   &:hover {
-    ::-moz-range-thumb {
-      height: 0.8rem;
+    #progress::-moz-range-thumb {
+      height: 1rem;
+      width: 1rem;
     }
 
-    ::-webkit-slider-thumb {
-      height: 0.8rem;
+    #progress::-webkit-slider-thumb {
+      height: 1rem;
+      width: 1rem;
     }
 
-    ::-ms-thumb {
-      height: 0.8rem;
+    #progress::-ms-thumb {
+      height: 1rem;
+      width: 1rem;
     }
   }
 
@@ -138,6 +127,11 @@ function handleFav() {
       width: 20rem !important;
     }
 
+    @include allPhones {
+      width: 100% !important;
+      margin-bottom: $small;
+    }
+
     .time {
       font-size: $medium;
       height: fit-content;
@@ -155,42 +149,12 @@ function handleFav() {
     }
   }
 
-  // hotkeys
+  // hotkey
   .buttons {
     display: grid;
     place-items: center;
-    scale: 1.2;
+    transform: scale(1.2);
     border: none;
-  }
-}
-
-.right-group {
-  display: grid;
-  justify-content: flex-end;
-  grid-template-columns: repeat(2, max-content);
-  align-items: center;
-  height: 4rem;
-  padding-right: 2rem;
-
-  button {
-    padding: 0;
-    height: 3rem;
-    width: 3rem;
-    border: none;
-  }
-
-  button.repeat {
-    background-color: transparent;
-
-    svg {
-      transform: scale(0.75);
-    }
-  }
-
-  button.repeat.repeat-disabled {
-    svg {
-      opacity: 0.25;
-    }
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="last-updated" :class="{ lightbg: !playlist.info.image }">
-    <span class="status"
+  <div class="last-updated">
+    <span class="status" v-if="!isHeaderSmall"
       >Last updated {{ playlist.info.last_updated }} &#160;|&#160;&#160;</span
     >
     <div class="edit" @click="editPlaylist">Edit&#160;&#160;</div>
@@ -11,17 +11,48 @@
 <script setup lang="ts">
 import DeleteSvg from "@/assets/icons/delete.svg";
 
-import usePStore from "@/stores/pages/playlist";
+import { isHeaderSmall } from "@/stores/content-width";
+
 import useModalStore from "@/stores/modal";
+import usePStore from "@/stores/pages/playlist";
 
 const playlist = usePStore();
 const modal = useModalStore();
 
 function editPlaylist() {
-  modal.showEditPlaylistModal(playlist.info);
+  modal.showEditPlaylistModal();
 }
 
 function deletePlaylist() {
-  modal.showDeletePlaylistModal(parseInt(playlist.info.id));
+  modal.showDeletePlaylistModal(playlist.info.id);
 }
 </script>
+
+<style lang="scss">
+.last-updated {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  padding: $smaller $small;
+  // background-color: $body;
+  // color: rgb(255, 255, 255);
+  font-size: 0.9rem;
+  border-radius: $smaller;
+  // box-shadow: 0 0 1rem rgba(0, 0, 0, 0.479);
+  z-index: 12;
+
+  display: flex;
+  align-items: center;
+
+  .edit {
+    cursor: pointer;
+    color: $brown;
+  }
+
+  svg {
+    transform: scale(0.75);
+    margin-bottom: -0.2rem;
+    color: $red !important;
+  }
+}
+</style>

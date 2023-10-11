@@ -7,6 +7,7 @@ function rgbToArray(rgb: string): number[] | null {
 }
 
 export default function rgb2Hex(rgb: string): string {
+  if (rgb.startsWith("#")) return rgb;
   const rgb_array = rgbToArray(rgb);
 
   if (!rgb_array) return "";

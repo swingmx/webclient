@@ -2,8 +2,8 @@ import { Setting } from "@/interfaces/settings";
 import { SettingType } from "@/settings/enums";
 import { contextChildrenShowModeStrings as showModeStr } from "./../strings";
 
+import { contextChildrenShowMode as mode } from "@/enums";
 import useSettingsStore from "@/stores/settings";
-import { contextChildrenShowMode as mode } from "@/composables/enums";
 
 const settings = useSettingsStore;
 

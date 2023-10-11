@@ -5,10 +5,10 @@
         v-for="album in artist.toShow.sort(
           (a, b) => parseInt(b.date) - parseInt(a.date)
         )"
-        :album="album"
         :key="album.albumhash"
+        :album="album"
         :artist_page="true"
-        :show_date="artist.page != discographyAlbumTypes.appearances"
+        :show_date="true"
       />
     </div>
   </div>
@@ -18,14 +18,16 @@
 import { onMounted } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 
-import AlbumCard from "@/components/shared/AlbumCard.vue";
-import { discographyAlbumTypes } from "@/composables/enums";
+import updatePageTitle from "@/utils/updatePageTitle";
 import useArtistDiscographyStore from "@/stores/pages/artistDiscog";
 
-const artist = useArtistDiscographyStore();
+import AlbumCard from "@/components/shared/AlbumCard.vue";
+
 const route = useRoute();
+const artist = useArtistDiscographyStore();
 
 onMounted(() => {
+  updatePageTitle("Discography" + (route.params.artist || ""));
   artist.fetchAlbums(route.params.hash as string);
 });
 

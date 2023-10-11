@@ -1,14 +1,12 @@
 <template>
-  <div
-    class="hotkeys rounded-sm no-scroll"
-
-  >
+  <div class="hotkeys no-scroll">
     <button @click.prevent="q.playPrev">
       <PrevSvg />
     </button>
     <button @click.prevent="q.playPause">
-      <PauseSvg v-if="q.playing" />
-      <PlaySvg v-else />
+      <Spinner v-if="q.buffering && q.playing" />
+      <PauseSvg v-else-if="q.playing" />
+      <PlaySvg v-else/>
     </button>
     <button @click.prevent="q.playNext">
       <NextSvg />
@@ -22,12 +20,12 @@ import useQStore from "@/stores/queue";
 import {
   default as NextSvg,
   default as PrevSvg,
-} from "../../../assets/icons/next.svg";
-import PauseSvg from "../../../assets/icons/pause.svg";
-import PlaySvg from "../../../assets/icons/play.svg";
+} from "@/assets/icons/next.svg";
+import PauseSvg from "@/assets/icons/pause.svg";
+import PlaySvg from "@/assets/icons/play.svg";
+import Spinner from "@/components/shared/Spinner.vue";
 
 const q = useQStore();
-
 </script>
 
 <style lang="scss">
@@ -36,12 +34,13 @@ const q = useQStore();
   grid-template-columns: 1fr 4rem 1fr;
   gap: 1rem;
   height: 100%;
+  align-items: center;
 
   button {
     height: 100%;
     padding: 0;
     background: none;
-    border: none;
+    border: 1px solid transparent;
     border-radius: 0;
 
     &:hover {
@@ -56,7 +55,17 @@ const q = useQStore();
   }
 
   button:nth-child(2) {
-    width: 100%;
+    width: 4rem;
+  }
+
+  @include allPhones {
+    grid-template-columns: 1fr max-content 1fr;
+    position: relative;
+    margin-right: -$small;
+
+    button:first-child {
+      margin-left: $small;
+    }
   }
 }
 </style>

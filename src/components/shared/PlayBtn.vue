@@ -1,36 +1,49 @@
 <template>
-  <button class="play-btn circular shadow-sm" @click.prevent.stop="handlePlay">
+  <button class="play-btn circular" @click.prevent.stop="handlePlay">
     <PlaySvg />
   </button>
 </template>
 
 <script setup lang="ts">
-import useQStore from "@/stores/queue";
-import useAlbumStore from "@/stores/pages/album";
-import usePlaylistStore from "@/stores/pages/playlist";
+import { Track } from "@/interfaces";
+import { playSources } from "@/enums";
+import { playFromAlbumCard, playFromArtistCard } from "@/helpers/usePlayFrom";
 
-import { playSources } from "@/composables/enums";
-import usePlayFrom from "@/composables/usePlayFrom";
-
-import PlaySvg from "../../assets/icons/play.svg";
-import { playFromAlbumCard } from "@/composables/usePlayFrom";
+import PlaySvg from "@/assets/icons/play.svg";
+import useQueueStore from "@/stores/queue";
+import useSearchStore from "@/stores/search";
 
 const props = defineProps<{
-  source: playSources;
+  source: playSources | null;
   albumHash?: string;
   albumName?: string;
-  store: typeof useAlbumStore | typeof usePlaylistStore;
+  artisthash?: string;
+  artistname?: string;
+  track?: Track;
 }>();
 
 function handlePlay() {
   switch (props.source) {
     case playSources.album:
-      playFromAlbumCard(
-        useQStore,
-        props.albumHash || "",
-        props.albumName || ""
-      );
+      playFromAlbumCard(props.albumHash || "", props.albumName || "");
       break;
+
+    case playSources.artist:
+      playFromArtistCard(props.artisthash || "", props.artistname || "");
+      break;
+
+    case playSources.track: {
+      // insert after current and play
+      if (!props.track) break;
+
+      const queue = useQueueStore();
+      const search = useSearchStore();
+
+      queue.clearQueue();
+      queue.playFromSearch(search.query, [props.track]);
+      queue.play();
+      break;
+    }
 
     default:
       break;
@@ -42,8 +55,9 @@ function handlePlay() {
 .play-btn {
   aspect-ratio: 1;
   padding: 0;
-  background: $black;
-  border: solid 1px $gray;
+  background: $darkblue;
+  display: grid;
+  place-items: center;
 
   svg {
     transition: none;
