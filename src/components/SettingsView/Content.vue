@@ -23,7 +23,7 @@ import settingGroups from "@/settings";
 
 import Group from "./Group.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
-import LogoSvg from "@/assets/icons/logo.svg";
+import LogoSvg from "@/assets/icons/logos/logo-light.svg";
 
 defineProps<{
   current: number;

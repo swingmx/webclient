@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import LogoSvg from "@/assets/icons/logo-fill.svg";
+import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
 </script>
 
 <style lang="scss">

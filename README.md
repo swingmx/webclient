@@ -26,6 +26,14 @@ yarn dev
 yarn build
 ```
 
+---
+### Generating PWA favicons
+
+```sh
+yarn generate-pwa-assets
+```
+---
+
 
 ### Contributing
 
