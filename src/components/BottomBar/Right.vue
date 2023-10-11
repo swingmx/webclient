@@ -1,11 +1,6 @@
 <template>
   <div class="right-group">
     <Volume />
-    <HeartSvg
-      v-if="!hideHeart"
-      :state="queue.currenttrack?.is_favorite"
-      @handleFav="() => $emit('handleFav')"
-    />
     <button
       class="repeat"
       :class="{ 'repeat-disabled': settings.no_repeat }"
@@ -21,6 +16,11 @@
       <RepeatOneSvg v-if="settings.repeat_one" />
       <RepeatAllSvg v-else />
     </button>
+    <HeartSvg
+      v-if="!hideHeart"
+      :state="queue.currenttrack?.is_favorite"
+      @handleFav="() => $emit('handleFav')"
+    />
   </div>
 </template>
 
