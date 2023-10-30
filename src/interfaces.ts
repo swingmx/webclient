@@ -13,7 +13,7 @@ export interface Track extends AlbumDisc {
   albumartists: Artist[];
   albumhash?: string;
   folder?: string;
-  filepath?: string;
+  filepath: string;
   duration?: number;
   bitrate: number;
   image: string;

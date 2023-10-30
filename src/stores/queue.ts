@@ -9,6 +9,7 @@ import { dropSources, favType, FromOptions } from "@/enums";
 import updateMediaNotif from "@/helpers/mediaNotification";
 import { isFavorite } from "@/requests/favorite";
 import lyrics from "./lyrics";
+import tabs from "./tabs";
 
 import useSettingsStore from "./settings";
 import {
@@ -66,7 +67,8 @@ export default defineStore("Queue", {
       this.playing = true;
       this.currentindex = index;
       this.focusCurrentInSidebar();
-      lyrics().getLyrics(this.currenttrack.filepath || "");
+
+      const tab = tabs();
 
       const track = this.tracklist[index];
       const uri = `${paths.api.files}/${
@@ -98,8 +100,13 @@ export default defineStore("Queue", {
             useColorStore().setTheme1Color(
               paths.images.thumb.small + this.currenttrack.image
             );
-            // fetchAlbumColor(track.albumhash).then((color) => {
-            // });
+
+            if (tab.current == tab.tabs.lyrics) {
+              lyrics().getLyrics(
+                this.currenttrack.filepath || "",
+                this.currenttrack.trackhash
+              );
+            }
 
             audio.onended = () => {
               this.autoPlayNext();
@@ -134,13 +141,15 @@ export default defineStore("Queue", {
       const store = lyrics();
 
       audio.ontimeupdate = () => {
-        const millis = Math.round(audio.currentTime * 1000);
-        const diff = store.nextLineTime - millis;
+        if (tabs().current == tabs().tabs.lyrics) {
+          const millis = Math.round(audio.currentTime * 1000);
+          const diff = store.nextLineTime - millis;
 
-        if (diff < 1200) {
-          // set timer to next line
-          if (!store.ticking) {
-            store.setNextLineTimer(diff);
+          if (diff < 1200) {
+            // set timer to next line
+            if (!store.ticking) {
+              store.setNextLineTimer(diff);
+            }
           }
         }
 
@@ -240,6 +249,9 @@ export default defineStore("Queue", {
       this.play(this.previndex);
     },
     seek(pos: number) {
+      if (tabs().current == tabs().tabs.lyrics) {
+        lyrics().setCurrentLine(lyrics().calculateCurrentLine(pos) - 1);
+      }
       try {
         audio.currentTime = pos;
       } catch (error) {

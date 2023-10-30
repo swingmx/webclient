@@ -12,7 +12,7 @@
       />
     </div>
     <div class="close">
-      <button><ExpandSvg /> Back</button>
+      <button @click="tabs.switchToQueue"><ExpandSvg /> Back</button>
     </div>
   </div>
 
@@ -21,6 +21,12 @@
     id="sidelyrics"
     :style="{ background: colors.theme2 }"
   >
+    <NoItems
+      :description="'You don\'t have synced lyrics for this song'"
+      :icon="LyricsSvg"
+      :flag="!lyrics.lyrics || lyrics.lyrics.length == 0"
+      :title="'Lyrics Not Found'"
+    />
     <div v-for="(line, index) in lyrics.lyrics" :key="line.time" class="lines">
       <div
         :id="`lyricsline-${index}`"
@@ -30,7 +36,7 @@
           seenLine: index < lyrics.currentLine,
           paragraphEnd: checkIsParagraphEnd(index, line),
         }"
-        @click="seek(line.time, index)"
+        @click="queue.seek(line.time / 1000)"
       >
         {{ line.text }}
       </div>
@@ -44,16 +50,20 @@ import { onMounted } from "vue";
 import useQueue from "@/stores/queue";
 import useLyrics from "@/stores/lyrics";
 import useColors from "@/stores/colors";
+import useTabs from "@/stores/tabs";
 
 import { paths } from "@/config";
 import { LyricsLine } from "@/interfaces";
 
 import ArtistName from "../shared/ArtistName.vue";
 import ExpandSvg from "@/assets/icons/expand.svg";
+import NoItems from "../shared/NoItems.vue";
+import LyricsSvg from "@/assets/icons/lyrics2.svg";
 
 const queue = useQueue();
 const lyrics = useLyrics();
 const colors = useColors();
+const tabs = useTabs();
 
 function checkIsParagraphEnd(index: number, line: LyricsLine) {
   if (line.text == "") return true;
@@ -70,20 +80,15 @@ function checkIsParagraphEnd(index: number, line: LyricsLine) {
   return false;
 }
 
-function seek(time: number, index: number) {
-  queue.seek(time / 1000);
-  lyrics.setCurrentLine(index);
-}
-
 onMounted(() => {
   if (!queue.currenttrack) return;
-  lyrics.getLyrics(queue.currenttrack.filepath || "");
+  lyrics.getLyrics(queue.currenttrack.filepath, queue.currenttrack.trackhash);
 });
 </script>
 
 <style lang="scss">
 .lyricsinfo {
-  padding: $medium;
+  padding: $medium 1.75rem;
   display: grid;
   grid-template-columns: max-content 1fr max-content;
   gap: $small;
@@ -118,6 +123,12 @@ onMounted(() => {
   overflow: scroll;
   background-color: rgb(122, 122, 122);
 
+  .nothing {
+    svg {
+      margin-bottom: 1rem;
+    }
+  }
+
   .lines {
     height: max-content;
     font-weight: 900;
@@ -143,7 +154,7 @@ onMounted(() => {
   }
 
   .seenLine {
-    color: rgba(255, 255, 255, 0.726);
+    color: rgba(255, 255, 255, 0.774);
   }
 
   .paragraphEnd {

@@ -8,18 +8,23 @@ export default defineStore("lyrics", {
     lyrics: <LyricsLine[]>[],
     currentLine: -1,
     ticking: false,
+    currentTrack: "",
   }),
   actions: {
-    getLyrics(filepath: string) {
-      getLyrics(filepath).then((data) => {
-        this.lyrics = data.lyrics;
-        this.currentLine = -1;
+    getLyrics(filepath: string, trackhash: string) {
+      if (this.currentTrack === trackhash) {
+        return;
+      }
 
-        setTimeout(() => {
-          this.scrollToCurrentLine(
-            this.currentLine === -1 ? 0 : this.currentLine
-          );
-        }, 500);
+      getLyrics(filepath, trackhash).then((data) => {
+        try {
+          this.lyrics = data.lyrics;
+        } catch {
+          this.lyrics = <LyricsLine[]>[];
+        }
+
+        this.currentTrack = trackhash;
+        this.sync();
       });
     },
     setNextLineTimer(duration: number) {
@@ -31,10 +36,11 @@ export default defineStore("lyrics", {
           this.ticking = false;
           this.scrollToCurrentLine();
         }
-      }, duration - 400);
+      }, duration - 250);
     },
     setCurrentLine(line: number) {
       this.currentLine = line;
+      this.scrollToCurrentLine();
     },
     scrollToCurrentLine(line: number = -1) {
       let lineToScroll = this.currentLine;
@@ -53,9 +59,26 @@ export default defineStore("lyrics", {
         });
       }
     },
+    calculateCurrentLine(time: number) {
+      if (!this.lyrics) return -1;
+      const millis = time * 1000;
+
+      const closest = this.lyrics.reduce((prev, curr) => {
+        return Math.abs(curr.time - millis) < Math.abs(prev.time - millis)
+          ? curr
+          : prev;
+      });
+
+      return this.lyrics.indexOf(closest);
+    },
+    sync() {
+      const line = this.calculateCurrentLine(queue().duration.current);
+      this.setCurrentLine(line);
+    },
   },
   getters: {
     nextLineTime(): number {
+      if (!this.lyrics) return 0;
       if (this.lyrics.length > this.currentLine + 1) {
         return this.lyrics[this.currentLine + 1].time;
       }

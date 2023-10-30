@@ -1,5 +1,6 @@
 import { focusElemByClass } from "@/utils";
 import { defineStore } from "pinia";
+import lyrics from "./lyrics";
 
 const tablist = {
   home: "home",
@@ -11,7 +12,7 @@ const tablist = {
 export default defineStore("tabs", {
   state: () => ({
     tabs: tablist,
-    current: tablist.lyrics,
+    current: tablist.queue,
   }),
   actions: {
     changeTab(tab: string) {
@@ -30,6 +31,12 @@ export default defineStore("tabs", {
     },
     switchToHome() {
       this.changeTab(tablist.home);
+    },
+    switchToLyrics() {
+      this.changeTab(tablist.lyrics);
+      setTimeout(() => {
+        lyrics().sync();
+      }, 500);
     },
   },
 });

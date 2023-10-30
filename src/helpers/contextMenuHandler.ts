@@ -12,7 +12,6 @@ import folderContextItems from "@/context_menus/folder";
 import trackContextItems from "@/context_menus/track";
 import queueContextItems from "@/context_menus/queue";
 
-let prev_track = "";
 let stop_prev_watcher = () => {};
 
 function flagWatcher(menu: Store, flag: Ref<boolean>) {

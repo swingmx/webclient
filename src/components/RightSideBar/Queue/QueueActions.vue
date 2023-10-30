@@ -7,7 +7,9 @@
       </button>
     </div>
     <div class="right">
+      <button class="lyrics" @click="tabs.switchToLyrics"><LyricsSvg /></button>
       <button
+        class="menu"
         :class="{ 'btn-active': context_showing }"
         @click="showContextMenu"
       >
@@ -20,12 +22,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import useQueueStore from "@/stores/queue";
+import useTabs from "@/stores/tabs";
 
 import OptionsSvg from "@/assets/icons/more.svg";
 import ShuffleSvg from "@/assets/icons/shuffle.svg";
 import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
+import LyricsSvg from "@/assets/icons/lyrics.svg";
 
 const queue = useQueueStore();
+const tabs = useTabs();
 const context_showing = ref(false);
 
 function showContextMenu(e: MouseEvent) {
@@ -56,11 +61,22 @@ function showContextMenu(e: MouseEvent) {
     }
   }
 
-  .right > button {
-    padding: 0 $smaller;
+  .right {
+    display: flex;
+    gap: $medium;
 
-    svg {
-      transform: scale(1.2) rotate(90deg);
+    .lyrics {
+      svg {
+        transform: scale(0.75);
+      }
+    }
+
+    .menu {
+      padding: 0 $smaller;
+
+      svg {
+        transform: scale(1.2) rotate(90deg);
+      }
     }
   }
 }
