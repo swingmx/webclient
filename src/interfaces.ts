@@ -216,3 +216,8 @@ export interface ScrollerItem {
   component: any;
   props?: Record<string, unknown>;
 }
+
+export interface LyricsLine {
+  time: number;
+  text: string;
+}

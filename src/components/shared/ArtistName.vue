@@ -8,10 +8,10 @@
     }"
     @click.stop="() => {}"
   >
-    <div v-tooltip v-if="artists === null || artists.length === 0">
+    <div v-if="artists === null || artists.length === 0" v-tooltip>
       <span class="artist">{{ albumartists }}</span>
     </div>
-    <div v-tooltip v-else>
+    <div v-else v-tooltip>
       <template v-for="(artist, index) in artists" :key="index">
         <RouterLink
           class="artist"
@@ -21,7 +21,7 @@
           }"
           >{{ `${artist.name}` }}</RouterLink
         >
-        <span class="artist" v-if="index < artists.length - 1"
+        <span v-if="index < artists.length - 1" class="artist"
           >,
         </span> </template
       >&nbsp;

@@ -7,8 +7,9 @@ async function getImageColor(url: string) {
 
   const palette = await vibrant.getPalette();
   const lightvibrant = listToRgbString(palette.LightVibrant?.getRgb()) || "";
+  const darkvibrant = listToRgbString(palette.Muted?.getRgb()) || "";
 
-  return { lightvibrant };
+  return { lightvibrant, darkvibrant };
 }
 
 export default defineStore("SwingMusicColors", {
@@ -18,8 +19,9 @@ export default defineStore("SwingMusicColors", {
   }),
   actions: {
     async setTheme1Color(url: string) {
-      const { lightvibrant } = await getImageColor(url);
+      const { lightvibrant, darkvibrant} = await getImageColor(url);
       this.theme1 = lightvibrant;
+      this.theme2 = darkvibrant 
     },
   },
   persist: true,

@@ -2,9 +2,9 @@
   <div class="right-search">
     <TabsWrapper
       :tabs="tabs"
+      :current-tab="currentTab"
+      :tab-content="true"
       @switchTab="switchTab"
-      :currentTab="currentTab"
-      :tabContent="true"
     >
       <Tab :name="currentTab" />
     </TabsWrapper>

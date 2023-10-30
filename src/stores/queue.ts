@@ -8,6 +8,7 @@ import useColorStore from "./colors";
 import { dropSources, favType, FromOptions } from "@/enums";
 import updateMediaNotif from "@/helpers/mediaNotification";
 import { isFavorite } from "@/requests/favorite";
+import lyrics from "./lyrics";
 
 import useSettingsStore from "./settings";
 import {
@@ -65,6 +66,7 @@ export default defineStore("Queue", {
       this.playing = true;
       this.currentindex = index;
       this.focusCurrentInSidebar();
+      lyrics().getLyrics(this.currenttrack.filepath || "");
 
       const track = this.tracklist[index];
       const uri = `${paths.api.files}/${
@@ -129,8 +131,19 @@ export default defineStore("Queue", {
     startBufferingStatusWatcher() {
       let sourceTime = 0;
       let lastTime = 0;
+      const store = lyrics();
 
       audio.ontimeupdate = () => {
+        const millis = Math.round(audio.currentTime * 1000);
+        const diff = store.nextLineTime - millis;
+
+        if (diff < 1200) {
+          // set timer to next line
+          if (!store.ticking) {
+            store.setNextLineTimer(diff);
+          }
+        }
+
         this.duration.current = audio.currentTime;
 
         const date = new Date();

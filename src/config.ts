@@ -51,6 +51,7 @@ export const paths = {
     favArtists: baseApiUrl.value + "/artists/favorite",
     isFavorite: baseApiUrl.value + "/favorites/check",
     artist: baseApiUrl.value + "/artist",
+    lyrics: baseApiUrl.value + "/lyrics",
     get addFavorite() {
       return this.favorite + "/add";
     },

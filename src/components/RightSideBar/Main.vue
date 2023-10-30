@@ -1,15 +1,18 @@
 <template>
   <div class="r-sidebar">
     <SearchInput />
-    <div v-auto-animate class="r-content no-scroll" >
-      <div class="r-dash" v-if="tabs.current === tabs.tabs.home">
+    <div v-auto-animate class="r-content no-scroll">
+      <div v-if="tabs.current === tabs.tabs.home" class="r-dash">
         <DashBoard />
       </div>
-      <div class="r-search" v-if="tabs.current === tabs.tabs.search">
+      <div v-if="tabs.current === tabs.tabs.search" class="r-search">
         <Search />
       </div>
-      <div class="r-queue" v-if="tabs.current === tabs.tabs.queue">
+      <div v-if="tabs.current === tabs.tabs.queue" class="r-queue">
         <Queue />
+      </div>
+      <div v-if="tabs.current === tabs.tabs.lyrics" class="r-lyrics">
+        <Lyrics />
       </div>
     </div>
   </div>
@@ -21,6 +24,7 @@ import DashBoard from "./Home/Main.vue";
 import Queue from "./Queue.vue";
 import Search from "./Search/Main.vue";
 import SearchInput from "./SearchInput.vue";
+import Lyrics from "./Lyrics.vue";
 
 const tabs = useTabStore();
 </script>
@@ -59,6 +63,13 @@ const tabs = useTabStore();
       overflow: hidden;
       display: grid;
       gap: $small;
+      grid-template-rows: max-content 1fr;
+    }
+
+    .r-lyrics {
+      height: 100%;
+      overflow: hidden;
+      display: grid;
       grid-template-rows: max-content 1fr;
     }
   }

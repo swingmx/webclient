@@ -5,12 +5,13 @@ const tablist = {
   home: "home",
   queue: "queue",
   search: "search",
+  lyrics: "lyrics",
 };
 
 export default defineStore("tabs", {
   state: () => ({
     tabs: tablist,
-    current: tablist.queue,
+    current: tablist.lyrics,
   }),
   actions: {
     changeTab(tab: string) {
