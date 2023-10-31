@@ -26,7 +26,6 @@
         </div>
       </div>
     </router-link>
-    <button @click="getL">Lyrics</button>
   </div>
 </template>
 
@@ -37,7 +36,6 @@ import { RouteLocationRaw } from "vue-router";
 import { FromOptions } from "@/enums";
 import useQueueStore from "@/stores/queue";
 import playingFrom from "@/utils/playingFrom";
-import getLyrics from "@/requests/lyrics";
 
 const queue = useQueueStore();
 
@@ -45,12 +43,6 @@ const data = computed(() => {
   const { name, location, icon, image } = playingFrom(queue.from);
   return { name, location, icon, image };
 });
-
-function getL() {
-  getLyrics(queue.currenttrack.filepath || "").then((res) => {
-    console.log(res);
-  });
-}
 </script>
 
 <style lang="scss">

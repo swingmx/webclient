@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
-import { LyricsLine } from "@/interfaces";
-import getLyrics from "@/requests/lyrics";
 import queue from "./queue";
+
+import { LyricsLine } from "@/interfaces";
+import { getLyrics, checkExists } from "@/requests/lyrics";
 
 export default defineStore("lyrics", {
   state: () => ({
@@ -9,6 +10,7 @@ export default defineStore("lyrics", {
     currentLine: -1,
     ticking: false,
     currentTrack: "",
+    exists: false,
   }),
   actions: {
     getLyrics(filepath: string, trackhash: string) {
@@ -25,6 +27,12 @@ export default defineStore("lyrics", {
 
         this.currentTrack = trackhash;
         this.sync();
+      });
+    },
+    checkExists(filepath: string, trackhash: string) {
+      checkExists(filepath, trackhash).then((data) => {
+        this.exists = data.filepath !== null;
+        console.log(this.exists);
       });
     },
     setNextLineTimer(duration: number) {

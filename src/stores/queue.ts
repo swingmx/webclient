@@ -103,7 +103,12 @@ export default defineStore("Queue", {
 
             if (tab.current == tab.tabs.lyrics) {
               lyrics().getLyrics(
-                this.currenttrack.filepath || "",
+                this.currenttrack.filepath,
+                this.currenttrack.trackhash
+              );
+            } else {
+              lyrics().checkExists(
+                this.currenttrack.filepath,
                 this.currenttrack.trackhash
               );
             }
