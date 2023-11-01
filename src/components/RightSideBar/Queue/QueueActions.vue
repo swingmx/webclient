@@ -8,11 +8,12 @@
     </div>
     <div class="right">
       <button
+        v-if="onNowPlaying"
         class="lyrics"
         :class="{ showStatus: lyrics.exists }"
-        @click="tabs.switchToLyrics"
+        @click="onNowPlaying ? tabs.npToggleTab() : tabs.switchToLyrics()"
       >
-        <LyricsSvg />
+        <LyricsSvg /> Lyrics
       </button>
       <button
         class="menu"
@@ -34,11 +35,15 @@ import useLyrics from "@/stores/lyrics";
 import OptionsSvg from "@/assets/icons/more.svg";
 import ShuffleSvg from "@/assets/icons/shuffle.svg";
 import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
-import LyricsSvg from "@/assets/icons/lyrics2.svg";
+import LyricsSvg from "@/assets/icons/lyrics.svg";
 
 const tabs = useTabs();
 const lyrics = useLyrics();
 const queue = useQueueStore();
+
+defineProps<{
+  onNowPlaying?: boolean;
+}>();
 
 const context_showing = ref(false);
 
@@ -78,7 +83,7 @@ function showContextMenu(e: MouseEvent) {
       position: relative;
 
       svg {
-        transform: scale(0.75);
+        transform: scale(0.6);
       }
     }
 
@@ -87,7 +92,7 @@ function showContextMenu(e: MouseEvent) {
         content: "";
         height: $small;
         width: $small;
-        background-color: $indigo;
+        background-color: $gray1;
         border-radius: 50%;
         color: $green;
         position: absolute;

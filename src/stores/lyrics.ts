@@ -15,9 +15,11 @@ export default defineStore("lyrics", {
   actions: {
     getLyrics(filepath: string, trackhash: string) {
       if (this.currentTrack === trackhash) {
+        this.sync();
         return;
       }
 
+      this.currentLine = -1;
       getLyrics(filepath, trackhash).then((data) => {
         try {
           this.lyrics = data.lyrics;
@@ -26,13 +28,19 @@ export default defineStore("lyrics", {
         }
 
         this.currentTrack = trackhash;
+        if (this.currentLine == -1) {
+          setTimeout(() => {
+            this.scrollToContainerTop();
+          }, 400);
+          return;
+        }
+
         this.sync();
       });
     },
     checkExists(filepath: string, trackhash: string) {
       checkExists(filepath, trackhash).then((data) => {
         this.exists = data.filepath !== null;
-        console.log(this.exists);
       });
     },
     setNextLineTimer(duration: number) {
@@ -44,11 +52,14 @@ export default defineStore("lyrics", {
           this.ticking = false;
           this.scrollToCurrentLine();
         }
-      }, duration - 250);
+      }, duration - 300);
     },
     setCurrentLine(line: number) {
       this.currentLine = line;
-      this.scrollToCurrentLine();
+
+      setTimeout(() => {
+        this.scrollToCurrentLine();
+      }, 400);
     },
     scrollToCurrentLine(line: number = -1) {
       let lineToScroll = this.currentLine;
@@ -58,6 +69,16 @@ export default defineStore("lyrics", {
       }
 
       const elem = document.getElementById(`lyricsline-${lineToScroll}`);
+      if (elem) {
+        elem.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+          inline: "start",
+        });
+      }
+    },
+    scrollToContainerTop() {
+      const elem = document.getElementById("sidelyrics");
 
       if (elem) {
         elem.scrollIntoView({
@@ -77,7 +98,7 @@ export default defineStore("lyrics", {
           : prev;
       });
 
-      return this.lyrics.indexOf(closest);
+      return this.lyrics.indexOf(closest) - 1;
     },
     sync() {
       const line = this.calculateCurrentLine(queue().duration.current);

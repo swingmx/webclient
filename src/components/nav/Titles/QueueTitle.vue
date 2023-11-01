@@ -1,6 +1,6 @@
 <template>
   <div class="nav-queue-title">
-    <QueueActions />
+    <QueueActions :on-now-playing="true" />
   </div>
 </template>
 
@@ -17,7 +17,6 @@ import QueueActions from "@/components/RightSideBar/Queue/QueueActions.vue";
   .queue-actions {
     margin: 0;
     width: 100%;
-    
   }
 }
 </style>

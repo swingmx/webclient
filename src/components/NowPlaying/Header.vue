@@ -1,6 +1,6 @@
 <template>
   <div class="now-playing-header">
-    <div class="centered">
+    <div v-if="tabs.nowplaying == tabs.tabs.thumbnail" class="centered">
       <PlayingFrom />
       <RouterLink
         :to="{
@@ -19,7 +19,7 @@
         />
       </RouterLink>
       <NowPlayingInfo @handle-fav="handleFav" />
-      <Progress v-if="isSmallPhone"/>
+      <Progress v-if="isSmallPhone" />
       <div v-if="isSmallPhone" class="below-progress">
         <div class="time">
           {{ formatSeconds(queue.duration.current) }}
@@ -29,6 +29,9 @@
           {{ formatSeconds(queue.duration.full) }}
         </div>
       </div>
+    </div>
+    <div v-else id="nplyrics">
+      <Lyrics :on-now-playing="true" />
     </div>
     <h3 v-if="queue.currenttrack">Now Playing</h3>
     <SongItem
@@ -49,6 +52,7 @@
 import { paths } from "@/config";
 import { Routes } from "@/router";
 import useQueueStore from "@/stores/queue";
+import useTabs from "@/stores/tabs";
 
 import Progress from "@/components/LeftSidebar/NP/Progress.vue";
 import { dropSources, favType } from "@/enums";
@@ -61,7 +65,9 @@ import PlayingFrom from "./PlayingFrom.vue";
 import Buttons from "../BottomBar/Right.vue";
 import { isSmallPhone } from "@/stores/content-width";
 import { formatSeconds } from "@/utils";
+import Lyrics from "../RightSideBar/Lyrics/Body.vue";
 
+const tabs = useTabs();
 const queue = useQueueStore();
 const colors = useColorStore();
 
@@ -80,6 +86,30 @@ function handleFav() {
 .now-playing-header {
   padding-bottom: 1rem;
   position: relative;
+
+  #nplyrics {
+    height: 100%;
+    max-height: 43rem;
+    overflow: auto;
+    border-radius: $small;
+    @include hideScrollbars;
+    margin-top: $medium;
+
+    .lyricsinfo {
+      padding: $small 0;
+      position: unset;
+      margin: 0;
+    }
+
+    #sidelyrics {
+      padding: 2rem 7rem;
+      font-size: 3rem;
+
+      br {
+        display: none;
+      }
+    }
+  }
 
   .below-progress {
     display: flex;

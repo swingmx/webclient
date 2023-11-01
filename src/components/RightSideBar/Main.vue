@@ -11,20 +11,17 @@
       <div v-if="tabs.current === tabs.tabs.queue" class="r-queue">
         <Queue />
       </div>
-      <div v-if="tabs.current === tabs.tabs.lyrics" class="r-lyrics">
-        <Lyrics />
-      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import useTabStore from "../../stores/tabs";
-import DashBoard from "./Home/Main.vue";
+import useTabStore from "@/stores/tabs";
+
 import Queue from "./Queue.vue";
 import Search from "./Search/Main.vue";
+import DashBoard from "./Home/Main.vue";
 import SearchInput from "./SearchInput.vue";
-import Lyrics from "./Lyrics.vue";
 
 const tabs = useTabStore();
 </script>
@@ -63,13 +60,6 @@ const tabs = useTabStore();
       overflow: hidden;
       display: grid;
       gap: $small;
-      grid-template-rows: max-content 1fr;
-    }
-
-    .r-lyrics {
-      height: 100%;
-      overflow: hidden;
-      display: grid;
       grid-template-rows: max-content 1fr;
     }
   }

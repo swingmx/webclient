@@ -1,17 +1,19 @@
-import { paths } from "@/config";
-import { defineStore } from "pinia";
 import { Ref } from "vue";
+import { defineStore } from "pinia";
+
+import { paths } from "@/config";
 import { NotifType, useNotifStore } from "./notification";
 
 import audio from "@/player";
-import useColorStore from "./colors";
 import { dropSources, favType, FromOptions } from "@/enums";
 import updateMediaNotif from "@/helpers/mediaNotification";
 import { isFavorite } from "@/requests/favorite";
-import lyrics from "./lyrics";
-import tabs from "./tabs";
 
-import useSettingsStore from "./settings";
+import useTabs from "./tabs";
+import useLyrics from "./lyrics";
+import useColors from "./colors";
+import useSettings from "./settings";
+
 import {
   fromAlbum,
   fromArtist,
@@ -20,7 +22,7 @@ import {
   fromPlaylist,
   fromSearch,
   Track,
-} from "../interfaces";
+} from "@/interfaces";
 
 function shuffle(tracks: Track[]) {
   const shuffled = tracks.slice();
@@ -68,7 +70,7 @@ export default defineStore("Queue", {
       this.currentindex = index;
       this.focusCurrentInSidebar();
 
-      const tab = tabs();
+      const tab = useTabs();
 
       const track = this.tracklist[index];
       const uri = `${paths.api.files}/${
@@ -90,28 +92,34 @@ export default defineStore("Queue", {
             return;
           }
 
-          audio.currentTime = 0;
+          // audio.currentTime = 0;
           this.duration.full = audio.duration;
 
           audio.play().then(() => {
+            const colors = useColors();
+            const lyrics = useLyrics();
+
             updateMediaNotif();
             this.duration.full = audio.duration;
 
-            useColorStore().setTheme1Color(
+            colors.setTheme1Color(
               paths.images.thumb.small + this.currenttrack.image
             );
 
-            if (tab.current == tab.tabs.lyrics) {
-              lyrics().getLyrics(
-                this.currenttrack.filepath,
-                this.currenttrack.trackhash
-              );
-            } else {
-              lyrics().checkExists(
+            if (
+              tab.current == tab.tabs.lyrics ||
+              tab.nowplaying == tab.tabs.lyrics
+            ) {
+              lyrics.getLyrics(
                 this.currenttrack.filepath,
                 this.currenttrack.trackhash
               );
             }
+
+            lyrics.checkExists(
+              this.currenttrack.filepath,
+              this.currenttrack.trackhash
+            );
 
             audio.onended = () => {
               this.autoPlayNext();
@@ -143,17 +151,26 @@ export default defineStore("Queue", {
     startBufferingStatusWatcher() {
       let sourceTime = 0;
       let lastTime = 0;
-      const store = lyrics();
+
+      const tabs = useTabs();
+      const lyrics = useLyrics();
 
       audio.ontimeupdate = () => {
-        if (tabs().current == tabs().tabs.lyrics) {
+        if (
+          tabs.current == tabs.tabs.lyrics ||
+          tabs.nowplaying == tabs.tabs.lyrics
+        ) {
           const millis = Math.round(audio.currentTime * 1000);
-          const diff = store.nextLineTime - millis;
+          const diff = lyrics.nextLineTime - millis;
 
           if (diff < 1200) {
             // set timer to next line
-            if (!store.ticking) {
-              store.setNextLineTimer(diff);
+            if (
+              lyrics.lyrics &&
+              !(lyrics.lyrics.length <= lyrics.currentLine + 1) &&
+              !lyrics.ticking
+            ) {
+              lyrics.setNextLineTimer(diff);
             }
           }
         }
@@ -217,7 +234,7 @@ export default defineStore("Queue", {
       this.playing = false;
     },
     autoPlayNext() {
-      const settings = useSettingsStore();
+      const settings = useSettings();
       const is_last = this.currentindex === this.tracklist.length - 1;
 
       if (settings.repeat_one) {
@@ -243,26 +260,54 @@ export default defineStore("Queue", {
       !is_last ? this.play(this.currentindex + 1) : resetQueue();
     },
     playNext() {
+      const tabs = useTabs();
+      const lyrics = useLyrics();
+
       this.play(this.nextindex);
+      if (
+        tabs.current == tabs.tabs.lyrics ||
+        tabs.nowplaying == tabs.tabs.lyrics
+      ) {
+        lyrics.scrollToContainerTop();
+      }
     },
     playPrev() {
+      const tabs = useTabs();
+      const lyrics = useLyrics();
+
+      if (
+        tabs.current == tabs.tabs.lyrics ||
+        tabs.nowplaying == tabs.tabs.lyrics
+      ) {
+        lyrics.scrollToContainerTop();
+      }
       if (audio.currentTime > 3) {
         audio.currentTime = 0;
+        lyrics.setCurrentLine(-1);
         return;
       }
 
       this.play(this.previndex);
     },
     seek(pos: number) {
-      if (tabs().current == tabs().tabs.lyrics) {
-        lyrics().setCurrentLine(lyrics().calculateCurrentLine(pos) - 1);
-      }
+      const tabs = useTabs();
+      const lyrics = useLyrics();
+
       try {
         audio.currentTime = pos;
+        this.duration.current = pos;
       } catch (error) {
         if (error instanceof TypeError) {
           console.error("Seek error: no audio");
         }
+      }
+
+      if (
+        tabs.current == tabs.tabs.lyrics ||
+        tabs.nowplaying == tabs.tabs.lyrics
+      ) {
+        const line = lyrics.calculateCurrentLine(pos);
+        lyrics.setCurrentLine(line);
       }
     },
     readQueue() {
@@ -280,7 +325,7 @@ export default defineStore("Queue", {
         this.tracklist.push(...tracklist);
       }
 
-      const settings = useSettingsStore();
+      const settings = useSettings();
 
       if (settings.repeat_one) {
         settings.toggleRepeatMode();

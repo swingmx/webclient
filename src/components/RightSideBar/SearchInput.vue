@@ -10,7 +10,7 @@
         @click.prevent="handleButton"
       >
         <SearchSvg v-if="on_nav || tabs.current === tabs.tabs.queue" />
-        <BackSvg v-else-if="tabs.current === tabs.tabs.search" />
+        <BackSvg v-else />
       </button>
       <input
         id="globalsearch"
@@ -56,7 +56,7 @@ function removeFocusedClass() {
 function handleButton() {
   if (props.on_nav) return;
 
-  if (tabs.current === tabs.tabs.search) {
+  if (tabs.current === tabs.tabs.search || tabs.current === tabs.tabs.lyrics) {
     tabs.switchToQueue();
   } else {
     tabs.switchToSearch();
