@@ -13,6 +13,9 @@
       <router-link
         :to="{
           name: Routes.nowPlaying,
+          params: {
+            tab: 'home',
+          },
         }"
       >
         <img

@@ -1,6 +1,6 @@
 <template>
   <div class="now-playing-header">
-    <div v-if="tabs.nowplaying == tabs.tabs.thumbnail" class="centered">
+    <div v-if="$route.params.tab == 'home'" class="centered">
       <PlayingFrom />
       <RouterLink
         :to="{
@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-    <div v-else id="nplyrics">
+    <div v-if="$route.params.tab == 'lyrics'" id="nplyrics">
       <Lyrics :on-now-playing="true" />
     </div>
     <h3 v-if="queue.currenttrack">Now Playing</h3>

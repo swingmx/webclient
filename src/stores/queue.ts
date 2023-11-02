@@ -106,10 +106,7 @@ export default defineStore("Queue", {
               paths.images.thumb.small + this.currenttrack.image
             );
 
-            if (
-              tab.current == tab.tabs.lyrics ||
-              tab.nowplaying == tab.tabs.lyrics
-            ) {
+            if (tab.nowplaying == tab.tabs.lyrics) {
               lyrics.getLyrics(
                 this.currenttrack.filepath,
                 this.currenttrack.trackhash
@@ -156,10 +153,7 @@ export default defineStore("Queue", {
       const lyrics = useLyrics();
 
       audio.ontimeupdate = () => {
-        if (
-          tabs.current == tabs.tabs.lyrics ||
-          tabs.nowplaying == tabs.tabs.lyrics
-        ) {
+        if (tabs.nowplaying == tabs.tabs.lyrics) {
           const millis = Math.round(audio.currentTime * 1000);
           const diff = lyrics.nextLineTime - millis;
 
@@ -264,10 +258,7 @@ export default defineStore("Queue", {
       const lyrics = useLyrics();
 
       this.play(this.nextindex);
-      if (
-        tabs.current == tabs.tabs.lyrics ||
-        tabs.nowplaying == tabs.tabs.lyrics
-      ) {
+      if (tabs.nowplaying == tabs.tabs.lyrics) {
         lyrics.scrollToContainerTop();
       }
     },
@@ -275,10 +266,7 @@ export default defineStore("Queue", {
       const tabs = useTabs();
       const lyrics = useLyrics();
 
-      if (
-        tabs.current == tabs.tabs.lyrics ||
-        tabs.nowplaying == tabs.tabs.lyrics
-      ) {
+      if (tabs.nowplaying == tabs.tabs.lyrics) {
         lyrics.scrollToContainerTop();
       }
       if (audio.currentTime > 3) {
@@ -302,10 +290,7 @@ export default defineStore("Queue", {
         }
       }
 
-      if (
-        tabs.current == tabs.tabs.lyrics ||
-        tabs.nowplaying == tabs.tabs.lyrics
-      ) {
+      if (tabs.nowplaying == tabs.tabs.lyrics) {
         const line = lyrics.calculateCurrentLine(pos);
         lyrics.setCurrentLine(line);
       }

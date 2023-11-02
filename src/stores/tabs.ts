@@ -14,7 +14,7 @@ export default defineStore("tabs", {
   state: () => ({
     tabs: tablist,
     current: tablist.queue,
-    nowplaying: tablist.lyrics,
+    nowplaying: tablist.thumbnail,
   }),
   actions: {
     changeTab(tab: string) {
@@ -34,17 +34,11 @@ export default defineStore("tabs", {
     switchToHome() {
       this.changeTab(tablist.home);
     },
-    switchToLyrics() {
-      this.changeTab(tablist.lyrics);
-      setTimeout(() => {
-        lyrics().sync();
-      }, 500);
+    npSwitchToLyrics() {
+      this.nowplaying = tablist.lyrics;
     },
-    npToggleTab() {
-      this.nowplaying =
-        this.nowplaying === tablist.thumbnail
-          ? tablist.lyrics
-          : tablist.thumbnail;
+    npSwitchToThumbnail() {
+      this.nowplaying = tablist.thumbnail;
     },
   },
 });

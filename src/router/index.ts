@@ -108,7 +108,7 @@ const artistView = {
 };
 
 const NowPlayingView = {
-  path: "/nowplaying",
+  path: "/nowplaying/:tab",
   name: "NowPlaying",
   component: NowPlaying,
 };

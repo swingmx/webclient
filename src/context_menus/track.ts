@@ -183,17 +183,13 @@ export default async (
   const options: Option[] = [
     play_next,
     add_to_q,
-    separator,
     add_to_playlist,
-    separator,
     go_to_album,
     go_to_folder,
-    separator,
     go_to_artist,
     go_to_alb_artist,
     separator,
     open_in_explorer,
-    // separator,
     // del_track,
   ];
 

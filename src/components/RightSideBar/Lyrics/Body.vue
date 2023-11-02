@@ -29,15 +29,17 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onBeforeUnmount, onMounted } from "vue";
 
 import useQueue from "@/stores/queue";
 import useLyrics from "@/stores/lyrics";
 import useColors from "@/stores/colors";
+import useTabs from "@/stores/tabs";
 
 import { LyricsLine } from "@/interfaces";
 import LyricsHead from "./Head.vue";
 
+const tabs = useTabs();
 const queue = useQueue();
 const lyrics = useLyrics();
 const colors = useColors();
@@ -64,6 +66,11 @@ function checkIsParagraphEnd(index: number, line: LyricsLine) {
 onMounted(() => {
   if (!queue.currenttrack) return;
   lyrics.getLyrics(queue.currenttrack.filepath, queue.currenttrack.trackhash);
+  tabs.npSwitchToLyrics();
+});
+
+onBeforeUnmount(() => {
+  tabs.npSwitchToThumbnail();
 });
 </script>
 
