@@ -25,8 +25,17 @@
         :albumartists="queue.currenttrack.albumartists"
       />
     </div>
-    <div v-if="lyrics.lyrics && !lyrics.synced" class="lyricstype">
-      unsynced
+    <div class="right">
+      <div class="lyricsversion">
+        <DropDown
+          :items="plugin.all_versions"
+          :current="plugin.current_version"
+          component_key="lyricsplugin"
+        />
+      </div>
+      <div v-if="lyrics.lyrics && !lyrics.synced" class="lyricstype">
+        unsynced
+      </div>
     </div>
   </div>
 </template>
@@ -38,9 +47,12 @@ import useLyrics from "@/stores/lyrics";
 import { paths } from "@/config";
 import { Routes } from "@/router";
 import ArtistName from "../../shared/ArtistName.vue";
+import DropDown from "@/components/shared/DropDown.vue";
+import useLyricsPlugin from "@/stores/plugins/lyrics";
 
 const queue = useQueue();
 const lyrics = useLyrics();
+const plugin = useLyricsPlugin();
 
 defineProps<{
   bgColor: string;
