@@ -37,7 +37,7 @@
     <div v-if="!lyrics.lyrics || lyrics.lyrics.length == 0" class="nolyrics">
       <div>You don't have</div>
       <div>the lyrics for this song</div>
-      <PluginFind />
+      <PluginFind v-if="settings.use_lyrics_plugin" />
     </div>
   </div>
 </template>
@@ -45,10 +45,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted } from "vue";
 
+import useTabs from "@/stores/tabs";
 import useQueue from "@/stores/queue";
 import useLyrics from "@/stores/lyrics";
 import useColors from "@/stores/colors";
-import useTabs from "@/stores/tabs";
+import useSettings from "@/stores/settings";
 
 import { LyricsLine } from "@/interfaces";
 import LyricsHead from "./Head.vue";
@@ -59,6 +60,7 @@ const tabs = useTabs();
 const queue = useQueue();
 const lyrics = useLyrics();
 const colors = useColors();
+const settings = useSettings();
 
 defineProps<{
   onNowPlaying?: boolean;

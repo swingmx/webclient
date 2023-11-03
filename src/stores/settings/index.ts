@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
 
 import { xxl } from "@/composables/useBreakpoints";
-import { DBSettings, NotifType, contextChildrenShowMode } from "@/enums";
+import { DBSettings, contextChildrenShowMode } from "@/enums";
 import { setMute, setVolume } from "@/player";
-import { useNotifStore } from "../notification";
 
 export default defineStore("settings", {
   state: () => ({
@@ -29,6 +28,9 @@ export default defineStore("settings", {
     separators: <string[]>[],
 
     useCircularArtistImg: false,
+
+    // plugins
+    use_lyrics_plugin: false,
   }),
   actions: {
     mapDbSettings(settings: DBSettings) {
@@ -128,6 +130,9 @@ export default defineStore("settings", {
     },
     toggleUseCircularArtistImg() {
       this.useCircularArtistImg = !this.useCircularArtistImg;
+    },
+    toggleLyricsPlugin() {
+      this.use_lyrics_plugin = !this.use_lyrics_plugin;
     },
   },
   getters: {

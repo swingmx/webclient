@@ -11,6 +11,7 @@ export default defineStore("lyricsplugin", {
     current_version: "",
     loading: false,
     error: "",
+    enabled: false,
   }),
   actions: {
     searchLyrics() {

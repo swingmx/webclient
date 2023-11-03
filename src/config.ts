@@ -144,4 +144,4 @@ export const paths = {
   },
 };
 
-export const VERSION = "1.3.0";
+export const VERSION = "1.3.3";

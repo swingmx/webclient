@@ -23,6 +23,7 @@ export interface SettingGroup {
   desc?: string;
   settings: Setting[];
   show_if?: () => boolean;
+  experimental?: boolean;
 }
 
 export interface SettingCategory {

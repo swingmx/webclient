@@ -1,6 +1,6 @@
 <template>
   <div class="right-group">
-    <LyricsButton v-if="lyrics.exists" />
+    <LyricsButton v-if="settings.use_lyrics_plugin || lyrics.exists" />
     <Volume />
     <button
       class="repeat"

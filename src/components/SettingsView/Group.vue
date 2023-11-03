@@ -1,7 +1,12 @@
 <template>
   <div v-if="group.show_if ? group.show_if() : true" class="settingsgroup">
     <div v-if="group.title || group.desc" class="info">
-      <h4 v-if="group.title">{{ group.title }}</h4>
+      <h4 v-if="group.title">
+        {{ group.title
+        }}<span v-if="group.experimental" class="experimental circular">
+          {{ group.experimental ? "experimental" : "" }}
+        </span>
+      </h4>
       <div v-if="group.desc" class="desc">{{ group.desc }}</div>
     </div>
     <div class="setting rounded pad-lg">
@@ -95,6 +100,15 @@ defineProps<{
   margin-top: 2rem;
   border-bottom: solid 1px $gray;
   padding-bottom: 2rem;
+
+  .experimental {
+    font-size: 12px;
+    margin-left: $small;
+    opacity: 0.5;
+    border: solid 1px $yellow;
+    color: $yellow;
+    padding: 0 $smaller;
+  }
 
   &:first-child {
     margin-top: 0;
