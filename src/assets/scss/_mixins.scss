@@ -37,7 +37,7 @@
 }
 
 @mixin tablet-portrait {
-  @media (max-width: 810) {
+  @media (max-width: 810px) {
     @content;
   }
 }

@@ -1,5 +1,9 @@
 <template>
-  <div v-if="queue.currenttrack" class="lyricsinfo" :style="{ background: colors.theme2 }">
+  <div
+    v-if="queue.currenttrack"
+    class="lyricsinfo"
+    :style="{ background: bgColor }"
+  >
     <RouterLink
       :to="{
         name: Routes.album,
@@ -21,31 +25,40 @@
         :albumartists="queue.currenttrack.albumartists"
       />
     </div>
+    <div v-if="lyrics.lyrics && !lyrics.synced" class="lyricstype">
+      unsynced
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { paths } from "@/config";
-import ArtistName from "../../shared/ArtistName.vue";
 import useQueue from "@/stores/queue";
-import { Routes } from "@/router";
-import useColors from "@/stores/colors";
+import useLyrics from "@/stores/lyrics";
 
-const colors = useColors();
+import { paths } from "@/config";
+import { Routes } from "@/router";
+import ArtistName from "../../shared/ArtistName.vue";
+
 const queue = useQueue();
+const lyrics = useLyrics();
+
+defineProps<{
+  bgColor: string;
+}>();
 </script>
 
 <style lang="scss">
 .lyricsinfo {
-    padding: $medium 1.5rem;
+  padding: $medium 1.5rem;
   font-size: 1rem;
   display: grid;
   grid-template-columns: max-content 1fr max-content;
   gap: $small;
-  align-items: flex-end;
+  align-items: center;
   position: sticky;
   top: -$medium;
   margin: -1.5rem;
+  z-index: 1;
 
   img {
     height: 2.5rem;
@@ -58,6 +71,14 @@ const queue = useQueue();
 
   .title {
     font-size: 14px;
+  }
+
+  .lyricstype {
+    border-radius: $smaller;
+    font-size: 12px;
+    padding: $smaller $small;
+    background-color: $white;
+    color: $black;
   }
 }
 </style>

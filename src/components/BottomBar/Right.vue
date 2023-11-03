@@ -1,5 +1,6 @@
 <template>
   <div class="right-group">
+    <LyricsButton v-if="lyrics.exists" />
     <Volume />
     <button
       class="repeat"
@@ -25,16 +26,19 @@
 </template>
 
 <script setup lang="ts">
-import useQStore from "@/stores/queue";
-import useSettingsStore from "@/stores/settings";
+import useQueue from "@/stores/queue";
+import useSettings from "@/stores/settings";
+import useLyrics from "@/stores/lyrics";
 
 import HeartSvg from "../shared/HeartSvg.vue";
 import RepeatAllSvg from "@/assets/icons/repeat.svg";
 import RepeatOneSvg from "@/assets/icons/repeat-one.svg";
 import Volume from "./Volume.vue";
+import LyricsButton from "../shared/LyricsButton.vue";
 
-const queue = useQStore();
-const settings = useSettingsStore();
+const queue = useQueue();
+const lyrics = useLyrics();
+const settings = useSettings();
 
 defineProps<{
   hideHeart?: boolean;
@@ -49,7 +53,7 @@ defineEmits<{
 .right-group {
   display: grid;
   justify-content: flex-end;
-  grid-template-columns: repeat(3, max-content);
+  grid-template-columns: repeat(4, max-content);
   align-items: center;
   height: 4rem;
 
@@ -69,9 +73,8 @@ defineEmits<{
     }
   }
 
-  button.repeat {
-    background-color: transparent;
-
+  .lyrics,
+  .repeat {
     svg {
       transform: scale(0.75);
     }

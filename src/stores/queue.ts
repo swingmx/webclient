@@ -152,23 +152,32 @@ export default defineStore("Queue", {
       const tabs = useTabs();
       const lyrics = useLyrics();
 
-      audio.ontimeupdate = () => {
-        if (tabs.nowplaying == tabs.tabs.lyrics) {
-          const millis = Math.round(audio.currentTime * 1000);
-          const diff = lyrics.nextLineTime - millis;
+      const tick = () => {
+        if (!lyrics.exists || tabs.nowplaying !== tabs.tabs.lyrics) return;
 
-          if (diff < 1200) {
-            // set timer to next line
-            if (
-              lyrics.lyrics &&
-              !(lyrics.lyrics.length <= lyrics.currentLine + 1) &&
-              !lyrics.ticking
-            ) {
-              lyrics.setNextLineTimer(diff);
-            }
-          }
+        const millis = Math.round(audio.currentTime * 1000);
+        const diff = lyrics.nextLineTime - millis;
+
+        if (diff < 0) {
+          const line = lyrics.calculateCurrentLine(audio.currentTime);
+          lyrics.setCurrentLine(line + 1, false);
+          return;
         }
 
+        if (diff < 1200) {
+          // set timer to next line
+          if (
+            lyrics.lyrics &&
+            !(lyrics.lyrics.length <= lyrics.currentLine + 1) &&
+            !lyrics.ticking
+          ) {
+            lyrics.setNextLineTimer(diff);
+          }
+        }
+      };
+
+      audio.ontimeupdate = () => {
+        tick();
         this.duration.current = audio.currentTime;
 
         const date = new Date();
@@ -267,6 +276,7 @@ export default defineStore("Queue", {
       const lyrics = useLyrics();
 
       if (tabs.nowplaying == tabs.tabs.lyrics) {
+        console.log("scrolling to top");
         lyrics.scrollToContainerTop();
       }
       if (audio.currentTime > 3) {

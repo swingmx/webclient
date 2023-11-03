@@ -39,10 +39,10 @@ import {
   content_width,
   isMobile,
 } from "@/stores/content-width";
-import useModalStore from "@/stores/modal";
-import useQStore from "@/stores/queue";
-import useSettingsStore from "@/stores/settings";
-import useQueueStore from "@/stores/queue";
+import useModal from "@/stores/modal";
+import useQueue from "@/stores/queue";
+import useLyrics from "@/stores/lyrics";
+import useSettings from "@/stores/settings";
 
 // @utils
 import handleShortcuts from "@/helpers/useKeyboard";
@@ -64,12 +64,13 @@ import { getRootDirs } from "@/requests/settings/rootdirs";
 import { baseApiUrl } from "@/config";
 // import BubbleManager from "./components/bubbles/BinManager.vue";
 
+const queue = useQueue();
+const modal = useModal();
+const lyrics = useLyrics();
 const router = useRouter();
-const queue = useQueueStore();
-const modal = useModalStore();
-const settings = useSettingsStore();
+const settings = useSettings();
 
-handleShortcuts(useQStore, useModalStore);
+handleShortcuts(useQueue, useModal);
 
 router.afterEach(() => {
   (document.getElementById("acontent") as HTMLElement).scrollTo(0, 0);
@@ -128,6 +129,13 @@ onMounted(() => {
   }
 
   handleRootDirsPrompt();
+
+  if (queue.currenttrack) {
+    lyrics.checkExists(
+      queue.currenttrack.filepath,
+      queue.currenttrack.trackhash
+    );
+  }
 });
 </script>
 

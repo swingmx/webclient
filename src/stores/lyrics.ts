@@ -3,6 +3,7 @@ import queue from "./queue";
 
 import { LyricsLine } from "@/interfaces";
 import { getLyrics, checkExists } from "@/requests/lyrics";
+import useTabs from "./tabs";
 
 export default defineStore("lyrics", {
   state: () => ({
@@ -11,20 +12,30 @@ export default defineStore("lyrics", {
     ticking: false,
     currentTrack: "",
     exists: false,
+    synced: true,
+    copyright: "",
   }),
   actions: {
-    getLyrics(filepath: string, trackhash: string) {
-      if (this.currentTrack === trackhash) {
+    async getLyrics(filepath: string, trackhash: string, force = false) {
+      if (!force && this.currentTrack === trackhash) {
         this.sync();
         return;
       }
 
       this.currentLine = -1;
+      this.copyright = "";
+      this.synced = true;
+
       getLyrics(filepath, trackhash).then((data) => {
         try {
+          this.synced = data.synced;
           this.lyrics = data.lyrics;
+          this.copyright = data.copyright;
+          this.exists = true;
         } catch {
+          this.synced = false;
           this.lyrics = <LyricsLine[]>[];
+          this.copyright = "";
         }
 
         this.currentTrack = trackhash;
@@ -39,8 +50,14 @@ export default defineStore("lyrics", {
       });
     },
     checkExists(filepath: string, trackhash: string) {
+      const tabs = useTabs();
+
+      if (tabs.nowplaying !== tabs.tabs.lyrics) {
+        this.lyrics = <LyricsLine[]>[];
+      }
+
       checkExists(filepath, trackhash).then((data) => {
-        this.exists = data.filepath !== null;
+        this.exists = data.exists;
       });
     },
     setNextLineTimer(duration: number) {
@@ -54,9 +71,11 @@ export default defineStore("lyrics", {
         }
       }, duration - 300);
     },
-    setCurrentLine(line: number) {
+    setCurrentLine(line: number, scroll = true) {
       this.currentLine = line;
+      this.ticking = false;
 
+      if (!scroll) return;
       setTimeout(() => {
         this.scrollToCurrentLine();
       }, 400);
@@ -72,7 +91,7 @@ export default defineStore("lyrics", {
       if (elem) {
         elem.scrollIntoView({
           behavior: "smooth",
-          block: "end",
+          block: "center",
           inline: "start",
         });
       }
@@ -81,17 +100,16 @@ export default defineStore("lyrics", {
       const elem = document.getElementById("sidelyrics");
 
       if (elem) {
-        elem.scrollIntoView({
+        elem.scroll({
+          top: 0,
           behavior: "smooth",
-          block: "start",
-          inline: "start",
         });
       }
     },
     calculateCurrentLine(time: number) {
-      if (!this.lyrics) return -1;
-      const millis = time * 1000;
+      if (!this.synced || !this.lyrics) return -1;
 
+      const millis = time * 1000;
       const closest = this.lyrics.reduce((prev, curr) => {
         return Math.abs(curr.time - millis) < Math.abs(prev.time - millis)
           ? curr

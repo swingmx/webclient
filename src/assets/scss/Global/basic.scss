@@ -170,3 +170,23 @@ button {
   position: absolute;
   left: -20rem;
 }
+
+
+.spinner {
+  border: solid 3px rgb(0, 0, 0);
+  border-top: solid 3px transparent;
+  border-left: solid 3px transparent;
+  border-radius: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  animation: spin 0.45s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

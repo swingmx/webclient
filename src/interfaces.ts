@@ -8,7 +8,7 @@ export interface AlbumDisc {
 export interface Track extends AlbumDisc {
   id: string;
   title: string;
-  album?: string;
+  album: string;
   artists: Artist[];
   albumartists: Artist[];
   albumhash?: string;

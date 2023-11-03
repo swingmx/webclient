@@ -2,34 +2,48 @@
   <div
     v-if="queue.currenttrack"
     id="sidelyrics"
-    :style="{ background: colors.theme2 }"
+    :style="{ background: bgColor }"
   >
-    <LyricsHead />
-    <br />
-    <div
-      v-for="(line, index) in lyrics.lyrics"
-      :id="`lyricsline-${index}`"
-      :key="line.time"
-      class="line"
-      :class="{
-        currentLine: index == lyrics.currentLine,
-        seenLine: index < lyrics.currentLine,
-        paragraphEnd: checkIsParagraphEnd(index, line),
-      }"
-      @click="queue.seek(line.time / 1000)"
-    >
-      {{ line.text }}
+    <LyricsHead :bg-color="bgColor" />
+    <div v-if="lyrics.synced" class="synced">
+      <div class="openingline"></div>
+      <div
+        v-for="(line, index) in lyrics.lyrics"
+        :id="`lyricsline-${index}`"
+        :key="line.time"
+        class="line"
+        :class="{
+          currentLine: index == lyrics.currentLine,
+          seenLine: index < lyrics.currentLine,
+          paragraphEnd: checkIsParagraphEnd(index, line),
+          opacity_25: index <= lyrics.currentLine - 3,
+          opacity_5: index == lyrics.currentLine - 2,
+          opacity_75: index == lyrics.currentLine - 1,
+        }"
+        @click="queue.seek(line.time / 1000)"
+      >
+        {{ line.text }}
+      </div>
+    </div>
+    <div v-if="!lyrics.synced" class="unsynced">
+      <div class="openingline"></div>
+      <div v-for="(line, index) in lyrics.lyrics" :key="index" class="line">
+        {{ line }}
+      </div>
+    </div>
+    <div v-if="lyrics.copyright && lyrics.lyrics" class="copyright">
+      {{ lyrics.copyright }}
     </div>
     <div v-if="!lyrics.lyrics || lyrics.lyrics.length == 0" class="nolyrics">
       <div>You don't have</div>
-      <div>synced lyrics for this song</div>
+      <div>the lyrics for this song</div>
+      <PluginFind />
     </div>
-    <div class="endline"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted } from "vue";
+import { computed, onBeforeUnmount, onMounted } from "vue";
 
 import useQueue from "@/stores/queue";
 import useLyrics from "@/stores/lyrics";
@@ -38,6 +52,8 @@ import useTabs from "@/stores/tabs";
 
 import { LyricsLine } from "@/interfaces";
 import LyricsHead from "./Head.vue";
+import PluginFind from "./Plugins/Find.vue";
+import { getShift } from "@/utils/colortools/shift";
 
 const tabs = useTabs();
 const queue = useQueue();
@@ -47,6 +63,10 @@ const colors = useColors();
 defineProps<{
   onNowPlaying?: boolean;
 }>();
+
+const bgColor = computed(() => {
+  return getShift(colors.theme2, [-20, -20]);
+});
 
 function checkIsParagraphEnd(index: number, line: LyricsLine) {
   if (line.text == "") return true;
@@ -63,9 +83,14 @@ function checkIsParagraphEnd(index: number, line: LyricsLine) {
   return false;
 }
 
+function fetchLyrics() {
+  const track = queue.currenttrack;
+  lyrics.getLyrics(track.filepath, track.trackhash);
+}
+
 onMounted(() => {
   if (!queue.currenttrack) return;
-  lyrics.getLyrics(queue.currenttrack.filepath, queue.currenttrack.trackhash);
+  fetchLyrics();
   tabs.npSwitchToLyrics();
 });
 
@@ -76,41 +101,38 @@ onBeforeUnmount(() => {
 
 <style lang="scss">
 #sidelyrics {
-  padding: $medium 1.5rem;
+  padding: $medium 5rem;
   height: 100%;
   overflow: scroll;
   background-color: rgb(122, 122, 122);
   scroll-margin-top: 15rem;
   font-weight: 900;
-  font-size: 1.5rem;
+  font-size: 3rem;
   position: relative;
   @include hideScrollbars;
+  margin-right: -1rem;
+
+  @include tablet-portrait {
+    font-size: 2rem !important;
+    padding: $medium 1.5rem;
+  }
 
   .nolyrics {
     color: rgba(255, 255, 255, 0.521);
     margin-top: 2rem;
   }
 
-  .nothing {
-    svg {
-      margin-bottom: 1rem;
-    }
-  }
-
   .line {
-    scroll-margin-bottom: 20rem;
     margin-top: 1rem;
     color: #000;
     cursor: pointer;
     width: fit-content;
+    opacity: 1;
+    transition: opacity 2s ease-in-out;
 
     &:hover {
       color: white;
     }
-  }
-
-  .endline {
-    height: 10rem;
   }
 
   .currentLine {
@@ -123,6 +145,29 @@ onBeforeUnmount(() => {
 
   .paragraphEnd {
     margin-bottom: 3rem;
+  }
+
+  .openingline {
+    margin-top: 3.5rem;
+  }
+
+  .opacity_75 {
+    opacity: 0.9;
+  }
+
+  .opacity_5 {
+    opacity: 0.8;
+  }
+
+  .opacity_25 {
+    opacity: 0.7;
+  }
+
+  .copyright {
+    font-size: 12px;
+    margin: 2rem 0;
+    opacity: 0.9;
+    text-transform: uppercase;
   }
 }
 </style>

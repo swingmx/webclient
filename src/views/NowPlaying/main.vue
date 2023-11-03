@@ -1,5 +1,9 @@
 <template>
-  <div class="now-playing-view v-scroll-page" :class="{ isSmall, isMedium }">
+  <div
+    v-if="$route.params.tab == 'home'"
+    class="now-playing-view v-scroll-page"
+    :class="{ isSmall, isMedium }"
+  >
     <DynamicScroller
       :items="scrollerItems"
       :min-item-size="64"
@@ -23,6 +27,7 @@
       </template>
     </DynamicScroller>
   </div>
+  <LyricsBody v-if="$route.params.tab == 'lyrics'" />
 </template>
 
 <script setup lang="ts">
@@ -35,6 +40,7 @@ import useQueueStore from "@/stores/queue";
 import SongItem from "@/components/shared/SongItem.vue";
 import updatePageTitle from "@/utils/updatePageTitle";
 import Tabs from "@/components/NowPlaying/Tabs.vue";
+import LyricsBody from "@/components/RightSideBar/Lyrics/Body.vue";
 
 const header: ScrollerItem = {
   id: "header",

@@ -10,8 +10,8 @@
       title="Go to Now Playing"
       :to="{
         name: Routes.nowPlaying,
-        query: {
-          tab: 'queue',
+        params: {
+          tab: 'home',
         },
       }"
     >

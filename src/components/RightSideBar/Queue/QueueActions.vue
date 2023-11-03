@@ -7,20 +7,6 @@
       </button>
     </div>
     <div class="right">
-      <RouterLink
-        :to="{
-          name: Routes.nowPlaying,
-          params: { tab },
-        }"
-      >
-        <button
-          v-if="onNowPlaying"
-          class="lyrics"
-          :class="{ showStatus: lyrics.exists }"
-        >
-          <LyricsSvg /> Lyrics
-        </button>
-      </RouterLink>
       <button
         class="menu"
         :class="{ 'btn-active': context_showing }"
@@ -33,26 +19,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import useQueueStore from "@/stores/queue";
-import useLyrics from "@/stores/lyrics";
-import { Routes } from "@/router";
+import { ref } from "vue";
+import useQueue from "@/stores/queue";
 
 import OptionsSvg from "@/assets/icons/more.svg";
 import ShuffleSvg from "@/assets/icons/shuffle.svg";
+
 import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
-import LyricsSvg from "@/assets/icons/lyrics.svg";
 
-const lyrics = useLyrics();
-const queue = useQueueStore();
-const route = useRoute();
-const router = useRouter();
-
-defineProps<{
-  onNowPlaying?: boolean;
-}>();
-
+const queue = useQueue();
 const context_showing = ref(false);
 
 function showContextMenu(e: MouseEvent) {
@@ -60,14 +35,6 @@ function showContextMenu(e: MouseEvent) {
 
   showQueueContextMenu(e, context_showing);
 }
-
-const tab = computed(() => {
-  if (route.params.tab == "lyrics") {
-    return "home";
-  }
-
-  return "lyrics";
-});
 </script>
 
 <style lang="scss">
