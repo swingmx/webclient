@@ -1,49 +1,48 @@
 import { defineStore } from "pinia";
 
-import useQueue from "@/stores/queue";
 import useLyrics from "@/stores/lyrics";
+import useQueue from "@/stores/queue";
 
-import findLyrics from "@/requests/plugins/lyrics";
+import { findLyrics } from "@/requests/plugins/lyrics";
 
 export default defineStore("lyricsplugin", {
   state: () => ({
-    all_versions: [],
-    current_version: "",
     loading: false,
     error: "",
     enabled: false,
   }),
   actions: {
     searchLyrics() {
+      this.loading = true;
+
       const queue = useQueue();
       const lyrics = useLyrics();
+
       const track = queue.currenttrack;
+      const track_title = track.artists.map((artist) => artist.name).join(", ");
 
-      findLyrics(
-        track.title,
-        track.artists.map((artist) => artist.name).join(", "),
-        track.filepath,
-        track.album
-      ).then((data) => {
-        if (data && data.all) {
-          this.all_versions = data.all;
-          this.current_version = data.all[0];
-        }
+      findLyrics(track.title, track_title, track.filepath, track.album)
+        .then((data) => {
+          if (data && data.downloaded) {
+            return lyrics.getLyrics(true);
+          }
 
-        if (data && data.downloaded) {
-          lyrics.getLyrics(track.filepath, track.trackhash, true).then(() => {
-            this.loading = false;
-          });
-          return;
-        }
+          throw new Error("No lyrics found!");
+        })
+        .then(() => {
+          this.loading = false;
+          setTimeout(() => {
+            lyrics.scrollToCurrentLine();
+          }, 400);
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.error = error.message;
 
-        this.loading = false;
-        this.error = "No lyrics found!";
-
-        setTimeout(() => {
-          this.error = "";
-        }, 5000);
-      });
+          setTimeout(() => {
+            this.error = "";
+          }, 5000);
+        });
     },
   },
 });

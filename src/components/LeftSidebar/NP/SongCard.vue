@@ -16,6 +16,7 @@
           params: {
             tab: 'home',
           },
+          replace: true,
         }"
       >
         <img

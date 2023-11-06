@@ -1,13 +1,8 @@
 <template>
   <div class="smdropdown buttons" :class="component_key">
     <div v-auto-animate="{ duration: 10 }" class="select rounded-sm">
-      <button class="selected" @click.prevent="showDropDown = !showDropDown">
-        <DropDownTrack
-          v-if="component_key == 'lyricsplugin'"
-          :item="current"
-          :hide-img="true"
-        />
-        <span v-else class="ellip">{{ current }}</span>
+      <button class="selected" @click.prevent="handleOpener">
+        <span class="ellip">{{ current }}</span>
         <ArrowSvg />
       </button>
       <div
@@ -19,12 +14,10 @@
           v-for="a in items"
           :key="a"
           class="option"
+          :class="{ current: current == a }"
           @click.prevent="handleClick(a)"
         >
-          <DropDownTrack v-if="component_key == 'lyricsplugin'" :item="a" />
-          <span v-else>
-            {{ a }}
-          </span>
+          {{ a }}
         </div>
       </div>
     </div>
@@ -35,7 +28,6 @@ import { Ref, ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
 
 import ArrowSvg from "@/assets/icons/expand.svg";
-import DropDownTrack from "@/components/Plugins/Lyrics/DropDownTrack.vue";
 
 const showDropDown = ref(false);
 const dropOptionsRef: Ref<HTMLElement | undefined> = ref();
@@ -49,6 +41,10 @@ defineProps<{
 const emit = defineEmits<{
   (event: "itemClicked", item: any): void;
 }>();
+
+const handleOpener = () => {
+  showDropDown.value = !showDropDown.value;
+};
 
 const handleClick = (item: any) => {
   emit("itemClicked", item);
@@ -94,12 +90,11 @@ onClickOutside(dropOptionsRef, (e) => {
 
     .option {
       padding: $small;
-      border-bottom: 1px solid $gray4;
       width: 7.5rem;
+      border-radius: $smaller;
+      margin: 0 $smaller;
 
       &:hover {
-        border-radius: $smaller;
-        border-bottom: 1px solid transparent;
         background-color: $darkestblue;
       }
 
@@ -107,15 +102,10 @@ onClickOutside(dropOptionsRef, (e) => {
         border-bottom: none;
       }
     }
-  }
-}
-.lyricsplugin {
-  .select {
-    width: 14rem;
-  }
 
-  .option {
-    width: 13.5rem !important;
+    .current {
+      background-color: $gray5;
+    }
   }
 }
 </style>

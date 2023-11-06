@@ -1,6 +1,6 @@
 <template>
   <div class="nav-queue-title">
-    <QueueActions />
+    <QueueActions :on-now-playing="true" />
   </div>
 </template>
 

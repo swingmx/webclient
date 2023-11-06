@@ -22,12 +22,13 @@
 import { ref } from "vue";
 import useQueue from "@/stores/queue";
 
+import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
+
 import OptionsSvg from "@/assets/icons/more.svg";
 import ShuffleSvg from "@/assets/icons/shuffle.svg";
 
-import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
-
 const queue = useQueue();
+
 const context_showing = ref(false);
 
 function showContextMenu(e: MouseEvent) {
@@ -35,6 +36,10 @@ function showContextMenu(e: MouseEvent) {
 
   showQueueContextMenu(e, context_showing);
 }
+
+defineProps<{
+  onNowPlaying?: boolean;
+}>();
 </script>
 
 <style lang="scss">
@@ -44,6 +49,20 @@ function showContextMenu(e: MouseEvent) {
   gap: $small;
   margin: 1rem;
   margin-bottom: 0;
+
+  .lyricsversion {
+    display: flex;
+    gap: 1rem;
+
+    .save {
+      background-color: transparent;
+    }
+
+    // hide on screens less than 600px
+    @media screen and (max-width: 600px) {
+      display: none;
+    }
+  }
 
   .left {
     display: flex;

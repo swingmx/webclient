@@ -26,18 +26,7 @@
       />
     </div>
     <div class="right">
-      <div class="lyricsversion">
-        <DropDown
-          v-if="settings.use_lyrics_plugin && plugin.all_versions.length"
-          :items="plugin.all_versions"
-          :current="plugin.current_version"
-          component_key="lyricsplugin"
-        />
-      </div>
-      <div
-        v-if="!settings.use_lyrics_plugin && lyrics.lyrics && !lyrics.synced"
-        class="lyricstype"
-      >
+      <div v-if="lyrics.lyrics.length && !lyrics.synced" class="lyricstype">
         unsynced
       </div>
     </div>
@@ -47,18 +36,13 @@
 <script setup lang="ts">
 import useQueue from "@/stores/queue";
 import useLyrics from "@/stores/lyrics";
-import useSettings from "@/stores/settings";
 
 import { paths } from "@/config";
 import { Routes } from "@/router";
 import ArtistName from "../../shared/ArtistName.vue";
-import DropDown from "@/components/shared/DropDown.vue";
-import useLyricsPlugin from "@/stores/plugins/lyrics";
 
 const queue = useQueue();
 const lyrics = useLyrics();
-const plugin = useLyricsPlugin();
-const settings = useSettings();
 
 defineProps<{
   bgColor: string;

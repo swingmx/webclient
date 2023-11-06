@@ -107,10 +107,7 @@ export default defineStore("Queue", {
             );
 
             if (tab.nowplaying == tab.tabs.lyrics) {
-              lyrics.getLyrics(
-                this.currenttrack.filepath,
-                this.currenttrack.trackhash
-              );
+              lyrics.getLyrics();
             }
 
             lyrics.checkExists(
@@ -263,22 +260,11 @@ export default defineStore("Queue", {
       !is_last ? this.play(this.currentindex + 1) : resetQueue();
     },
     playNext() {
-      const tabs = useTabs();
-      const lyrics = useLyrics();
-
       this.play(this.nextindex);
-      if (tabs.nowplaying == tabs.tabs.lyrics) {
-        lyrics.scrollToContainerTop();
-      }
     },
     playPrev() {
-      const tabs = useTabs();
       const lyrics = useLyrics();
 
-      if (tabs.nowplaying == tabs.tabs.lyrics) {
-        console.log("scrolling to top");
-        lyrics.scrollToContainerTop();
-      }
       if (audio.currentTime > 3) {
         audio.currentTime = 0;
         lyrics.setCurrentLine(-1);

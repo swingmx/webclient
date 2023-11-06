@@ -1,9 +1,10 @@
 <template>
   <button
     class="pluginfindlyricsbtn circular"
+    :class="{ showError: plugin.error }"
     @click="!plugin.error ? plugin.searchLyrics() : null"
   >
-    {{ plugin.error ? plugin.error : "Find on the internet" }}
+    {{ plugin.error ? plugin.error : "Search online" }}
     <span v-if="plugin.loading" class="spinner"></span>
   </button>
 </template>
@@ -29,6 +30,14 @@ const plugin = useLyricsPlugin();
 
   .spinner {
     margin-left: $medium;
+    height: 1rem;
+    width: 1rem;
+  }
+
+  &.showError {
+    background-color: transparent;
+    color: $white;
+    border: solid 2px;
   }
 }
 </style>

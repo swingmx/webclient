@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
-import queue from "./queue";
+
+import useQueue from "./queue";
+import useTabs from "./tabs";
 
 import { LyricsLine } from "@/interfaces";
-import { getLyrics, checkExists } from "@/requests/lyrics";
-import useTabs from "./tabs";
+import { checkExists, getLyrics } from "@/requests/lyrics";
 
 export default defineStore("lyrics", {
   state: () => ({
@@ -14,10 +15,14 @@ export default defineStore("lyrics", {
     exists: false,
     synced: true,
     copyright: "",
+    user_scrolled: false,
   }),
   actions: {
-    async getLyrics(filepath: string, trackhash: string, force = false) {
-      if (!force && this.currentTrack === trackhash) {
+    async getLyrics(force = false) {
+      const queue = useQueue();
+      const track = queue.currenttrack;
+
+      if (!force && this.currentTrack === track.trackhash) {
         this.sync();
         return;
       }
@@ -26,28 +31,43 @@ export default defineStore("lyrics", {
       this.copyright = "";
       this.synced = true;
 
-      getLyrics(filepath, trackhash).then((data) => {
-        try {
+      getLyrics(track.filepath, track.trackhash)
+        .then((data) => {
+          this.currentTrack = track.trackhash;
+
+          if (data.error) {
+            throw new Error(data.error);
+          }
+
           this.synced = data.synced;
           this.lyrics = data.lyrics;
           this.copyright = data.copyright;
           this.exists = true;
-        } catch {
-          this.synced = false;
+        })
+        .then(async () => {
+          const line = this.calculateCurrentLine();
+
+          if (line == -1) {
+            return this.scrollToContainerTop();
+          }
+
+          this.scrollToCurrentLine();
+        })
+        .catch(() => {
+          this.exists = false;
           this.lyrics = <LyricsLine[]>[];
           this.copyright = "";
-        }
+        });
+    },
+    scrollToContainerTop() {
+      const container = document.getElementById("sidelyrics");
 
-        this.currentTrack = trackhash;
-        if (this.currentLine == -1) {
-          setTimeout(() => {
-            this.scrollToContainerTop();
-          }, 400);
-          return;
-        }
-
-        this.sync();
-      });
+      if (container) {
+        container.scroll({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
     },
     checkExists(filepath: string, trackhash: string) {
       const tabs = useTabs();
@@ -64,7 +84,7 @@ export default defineStore("lyrics", {
       this.ticking = true;
 
       setTimeout(() => {
-        if (queue().playing) {
+        if (useQueue().playing) {
           this.currentLine++;
           this.ticking = false;
           this.scrollToCurrentLine();
@@ -87,29 +107,32 @@ export default defineStore("lyrics", {
         lineToScroll = line;
       }
 
-      const elem = document.getElementById(`lyricsline-${lineToScroll}`);
-      if (elem) {
-        elem.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-          inline: "start",
-        });
-      }
-    },
-    scrollToContainerTop() {
-      const elem = document.getElementById("sidelyrics");
+      const third = window.innerHeight / 3;
+      const two_thirds = third * 2;
 
-      if (elem) {
-        elem.scroll({
-          top: 0,
-          behavior: "smooth",
-        });
+      const elem = document.getElementById(`lyricsline-${lineToScroll}`);
+      if (!elem) return;
+
+      const { y } = elem.getBoundingClientRect();
+
+      if (this.user_scrolled && (y < third || y > two_thirds)) {
+        return;
       }
+
+      this.setUserScrolled(false);
+      elem.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "start",
+      });
     },
-    calculateCurrentLine(time: number) {
+    calculateCurrentLine() {
+      const queue = useQueue();
+      const duration = queue.duration.current;
+
       if (!this.synced || !this.lyrics) return -1;
 
-      const millis = time * 1000;
+      const millis = duration * 1000;
       const closest = this.lyrics.reduce((prev, curr) => {
         return Math.abs(curr.time - millis) < Math.abs(prev.time - millis)
           ? curr
@@ -119,8 +142,18 @@ export default defineStore("lyrics", {
       return this.lyrics.indexOf(closest) - 1;
     },
     sync() {
-      const line = this.calculateCurrentLine(queue().duration.current);
+      const line = this.calculateCurrentLine();
       this.setCurrentLine(line);
+    },
+    setLyrics(lyrics: LyricsLine[]) {
+      this.lyrics = lyrics;
+      this.synced = true;
+      this.exists = true;
+
+      this.setCurrentLine(this.currentLine);
+    },
+    setUserScrolled(value: boolean) {
+      this.user_scrolled = value;
     },
   },
   getters: {

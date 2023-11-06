@@ -1,7 +1,7 @@
 import { paths } from "@/config";
 import useAxios from "../useAxios";
 
-export default async function findLyrics(
+export async function findLyrics(
   title: string,
   artist: string,
   filepath: string,

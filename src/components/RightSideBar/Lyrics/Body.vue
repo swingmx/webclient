@@ -3,10 +3,11 @@
     v-if="queue.currenttrack"
     id="sidelyrics"
     :style="{ background: bgColor }"
+    @wheel="onScroll"
   >
     <LyricsHead :bg-color="bgColor" />
     <div v-if="lyrics.synced" class="synced">
-      <div class="openingline"></div>
+      <div id="lyricsline--1"></div>
       <div
         v-for="(line, index) in lyrics.lyrics"
         :id="`lyricsline-${index}`"
@@ -26,7 +27,7 @@
       </div>
     </div>
     <div v-if="!lyrics.synced" class="unsynced">
-      <div class="openingline"></div>
+      <div id="lyricsline--1"></div>
       <div v-for="(line, index) in lyrics.lyrics" :key="index" class="line">
         {{ line }}
       </div>
@@ -52,9 +53,10 @@ import useColors from "@/stores/colors";
 import useSettings from "@/stores/settings";
 
 import { LyricsLine } from "@/interfaces";
+import { getShift } from "@/utils/colortools/shift";
+
 import LyricsHead from "./Head.vue";
 import PluginFind from "./Plugins/Find.vue";
-import { getShift } from "@/utils/colortools/shift";
 
 const tabs = useTabs();
 const queue = useQueue();
@@ -65,6 +67,10 @@ const settings = useSettings();
 defineProps<{
   onNowPlaying?: boolean;
 }>();
+
+const onScroll = (e: Event) => {
+  lyrics.setUserScrolled(true);
+};
 
 const bgColor = computed(() => {
   return getShift(colors.theme2, [-20, -20]);
@@ -86,8 +92,7 @@ function checkIsParagraphEnd(index: number, line: LyricsLine) {
 }
 
 function fetchLyrics() {
-  const track = queue.currenttrack;
-  lyrics.getLyrics(track.filepath, track.trackhash);
+  lyrics.getLyrics();
 }
 
 onMounted(() => {
@@ -149,7 +154,7 @@ onBeforeUnmount(() => {
     margin-bottom: 3rem;
   }
 
-  .openingline {
+  #lyricsline--1 {
     margin-top: 3.5rem;
   }
 
