@@ -17,6 +17,7 @@
           params: {
             tab: group.title.toLowerCase(),
           },
+          replace: true,
         }"
       >
         {{ group.title }}

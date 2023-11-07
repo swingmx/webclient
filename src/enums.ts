@@ -88,6 +88,13 @@ export enum DbSettingKeys {
   show_albums_as_singles = "show_albums_as_singles",
 }
 
+interface Plugin {
+  active: boolean;
+  description: string;
+  name: string;
+  settings: any;
+}
+
 export interface DBSettings {
   root_dirs: string[];
   exclude_dirs: string[];
@@ -99,4 +106,5 @@ export interface DBSettings {
   remove_remaster: boolean;
   merge_albums: boolean;
   show_albums_as_singles: boolean;
+  plugins: Plugin[];
 }

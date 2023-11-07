@@ -7,7 +7,7 @@
       :class="notif.type"
     >
       <component :is="getSvg(notif.type)" class="notif-icon" />
-      <div class="notif-text ellip">{{ notif.text }}</div>
+      <div class="notif-text">{{ notif.text }}</div>
     </div>
   </div>
 </template>

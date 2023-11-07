@@ -27,10 +27,10 @@
 
 <script setup lang="ts">
 // @libraries
+import { vElementSize } from "@vueuse/components";
+import { onStartTyping } from "@vueuse/core";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { onStartTyping } from "@vueuse/core";
-import { vElementSize } from "@vueuse/components";
 import { BalancerProvider } from "vue-wrap-balancer";
 
 // @stores
@@ -39,9 +39,9 @@ import {
   content_width,
   isMobile,
 } from "@/stores/content-width";
+import useLyrics from "@/stores/lyrics";
 import useModal from "@/stores/modal";
 import useQueue from "@/stores/queue";
-import useLyrics from "@/stores/lyrics";
 import useSettings from "@/stores/settings";
 
 // @utils
@@ -56,12 +56,13 @@ import Notification from "@/components/Notification.vue";
 
 // @app-grid-components
 import BottomBar from "@/components/BottomBar/BottomBar.vue";
+import LeftSidebar from "@/components/LeftSidebar/index.vue";
 import NavBar from "@/components/nav/NavBar.vue";
 import RightSideBar from "@/components/RightSideBar/Main.vue";
-import LeftSidebar from "@/components/LeftSidebar/index.vue";
+import { getAllSettings } from "@/requests/settings";
 
-import { getRootDirs } from "@/requests/settings/rootdirs";
 import { baseApiUrl } from "@/config";
+import { getRootDirs } from "@/requests/settings/rootdirs";
 // import BubbleManager from "./components/bubbles/BinManager.vue";
 
 const queue = useQueue();
@@ -129,6 +130,14 @@ onMounted(() => {
   }
 
   handleRootDirsPrompt();
+
+  getAllSettings()
+    .then(({ settings: data }) => {
+      settings.mapDbSettings(data);
+    })
+    .then(() => {
+      if (settings.use_lyrics_plugin) return;
+    });
 
   if (queue.currenttrack) {
     lyrics.checkExists(

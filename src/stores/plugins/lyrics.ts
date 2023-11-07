@@ -9,7 +9,6 @@ export default defineStore("lyricsplugin", {
   state: () => ({
     loading: false,
     error: "",
-    enabled: false,
   }),
   actions: {
     searchLyrics() {

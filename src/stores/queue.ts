@@ -77,25 +77,21 @@ export default defineStore("Queue", {
         track.trackhash
       }?filepath=${encodeURIComponent(track.filepath as string)}`;
 
-      new Promise((resolve, reject) => {
-        audio.autoplay = true;
-        audio.pause();
-        audio.src = uri;
+      audio.autoplay = true;
+      audio.pause();
+      audio.src = uri;
 
-        audio.oncanplay = resolve;
-        audio.onerror = reject;
-      })
-        .then(() => {
-          // paused before playback started
-          if (!this.playing) {
-            audio.pause();
-            return;
-          }
+      const playEventHandler = () => {
+        if (!this.playing) {
+          audio.pause();
+          return;
+        }
 
-          // audio.currentTime = 0;
-          this.duration.full = audio.duration;
+        this.duration.full = audio.duration;
 
-          audio.play().then(() => {
+        audio
+          .play()
+          .then(() => {
             const colors = useColors();
             const lyrics = useLyrics();
 
@@ -118,29 +114,50 @@ export default defineStore("Queue", {
             audio.onended = () => {
               this.autoPlayNext();
             };
+          })
+          .catch((e) => {
+            const Toast = useNotifStore();
+            if (e instanceof DOMException) {
+              this.playPause();
+
+              return Toast.showNotification(
+                "Tap anywhere in the page and try again (autoplay blocked))",
+                NotifType.Error
+              );
+            }
+
+            Toast.showNotification(
+              "Can't play: " + track.title,
+              NotifType.Error
+            );
           });
-        })
-        .catch((err: ErrorEvent) => {
+      };
+
+      const errorEventHandler = (err: Event | string) => {
+        if (typeof err != "string") {
           err.stopImmediatePropagation();
-          useNotifStore().showNotification(
-            "Can't play: " + track.title,
-            NotifType.Error
-          );
+        }
 
-          // if not last track, try to play next
-          if (this.currentindex !== this.tracklist.length - 1) {
-            if (!this.playing) return;
+        useNotifStore().showNotification(
+          "Can't play: " + track.title,
+          NotifType.Error
+        );
 
-            setTimeout(() => {
-              // if track changed, don't play next
-              if (this.currenttrack.trackhash !== track.trackhash) return;
-              this.playNext();
-            }, 5000);
-            return;
-          }
+        if (this.currentindex !== this.tracklist.length - 1) {
+          if (!this.playing) return;
 
-          this.playing = false;
-        });
+          setTimeout(() => {
+            if (this.currenttrack.trackhash !== track.trackhash) return;
+            this.playNext();
+          }, 5000);
+          return;
+        }
+
+        this.playing = false;
+      };
+
+      audio.oncanplay = playEventHandler;
+      audio.onerror = errorEventHandler;
     },
     startBufferingStatusWatcher() {
       let sourceTime = 0;
@@ -156,7 +173,7 @@ export default defineStore("Queue", {
         const diff = lyrics.nextLineTime - millis;
 
         if (diff < 0) {
-          const line = lyrics.calculateCurrentLine(audio.currentTime);
+          const line = lyrics.calculateCurrentLine();
           lyrics.setCurrentLine(line + 1, false);
           return;
         }
@@ -287,7 +304,7 @@ export default defineStore("Queue", {
       }
 
       if (tabs.nowplaying == tabs.tabs.lyrics) {
-        const line = lyrics.calculateCurrentLine(pos);
+        const line = lyrics.calculateCurrentLine();
         lyrics.setCurrentLine(line);
       }
     },

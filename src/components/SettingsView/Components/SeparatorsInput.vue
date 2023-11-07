@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { Ref, computed, onMounted, ref } from "vue";
 
 const separatorinput: Ref<HTMLInputElement | null> = ref(null);
 const input = ref("");

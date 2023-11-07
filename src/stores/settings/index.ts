@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { xxl } from "@/composables/useBreakpoints";
 import { DBSettings, contextChildrenShowMode } from "@/enums";
 import { setMute, setVolume } from "@/player";
+import { pluginSetActive, updatePluginSettings } from "@/requests/plugins";
 
 export default defineStore("settings", {
   state: () => ({
@@ -27,10 +28,14 @@ export default defineStore("settings", {
     show_albums_as_singles: false,
     separators: <string[]>[],
 
+    // client
     useCircularArtistImg: false,
 
     // plugins
-    use_lyrics_plugin: false,
+    use_lyrics_plugin: <boolean | undefined>false,
+    lyrics_plugin_settings: {
+      auto_download: false,
+    },
   }),
   actions: {
     mapDbSettings(settings: DBSettings) {
@@ -42,6 +47,16 @@ export default defineStore("settings", {
       this.merge_albums = settings.merge_albums;
       this.separators = settings.artist_separators;
       this.show_albums_as_singles = settings.show_albums_as_singles;
+
+      this.use_lyrics_plugin = settings.plugins.find(
+        (p) => p.name === "lyrics_finder"
+      )?.active;
+
+      if (this.use_lyrics_plugin) {
+        this.lyrics_plugin_settings = settings.plugins.find(
+          (p) => p.name === "lyrics_finder"
+        )?.settings;
+      }
     },
     setArtistSeparators(separators: string[]) {
       this.separators = separators;
@@ -132,7 +147,19 @@ export default defineStore("settings", {
       this.useCircularArtistImg = !this.useCircularArtistImg;
     },
     toggleLyricsPlugin() {
-      this.use_lyrics_plugin = !this.use_lyrics_plugin;
+      const state = this.use_lyrics_plugin ? 0 : 1;
+      pluginSetActive("lyrics_finder", state).then(() => {
+        this.use_lyrics_plugin = !this.use_lyrics_plugin;
+      });
+    },
+    toggleLyricsAutoDownload() {
+      const state = this.lyrics_plugin_settings.auto_download ? false : true;
+
+      updatePluginSettings("lyrics_finder", {
+        auto_download: state,
+      }).then(() => {
+        this.lyrics_plugin_settings.auto_download = state;
+      });
     },
   },
   getters: {
