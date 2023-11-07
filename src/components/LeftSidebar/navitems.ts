@@ -40,6 +40,7 @@ export const menus = [
   {
     name: "settings",
     route_name: Routes.settings,
+    params: { tab: "general" },
     icon: SettingsSvg,
   },
 ];

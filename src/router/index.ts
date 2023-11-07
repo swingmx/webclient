@@ -126,7 +126,7 @@ const artistDiscography = {
 };
 
 const settings = {
-  path: "/settings",
+  path: "/settings/:tab",
   name: "SettingsView",
   component: SettingsView,
 };

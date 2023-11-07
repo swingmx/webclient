@@ -3,7 +3,7 @@
     class="settingspage content-page"
     style="height: 100%; overflow: auto; padding-right: 1.25rem"
   >
-    <Content :current="0" />
+    <Content />
   </div>
 </template>
 

@@ -7,19 +7,24 @@
       </template>
     </GenericHeader>
     <div class="s-tabs">
-      <div
-        v-for="(group, index) in settingGroups"
-        :key="index"
+      <RouterLink
+        v-for="group in settingGroups"
+        :key="group.title"
         class="tab"
-        :class="{ active: currentTab === index }"
-        @click="currentTab = index"
+        :class="{ active: currentTab?.title === group.title }"
+        :to="{
+          name: Routes.settings,
+          params: {
+            tab: group.title.toLowerCase(),
+          },
+        }"
       >
         {{ group.title }}
         <div class="indicator"></div>
-      </div>
+      </RouterLink>
     </div>
     <Group
-      v-for="(group, index) in settingGroups[currentTab].groups"
+      v-for="(group, index) in currentTab?.groups"
       :key="index"
       :group="group"
     />
@@ -30,15 +35,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { VERSION } from "@/config";
 import settingGroups from "@/settings";
 
 import Group from "./Group.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
 import LogoSvg from "@/assets/icons/logos/logo-light.svg";
+import { Routes } from "@/router";
+import { useRoute } from "vue-router";
 
-const currentTab = ref(1);
+const route = useRoute();
+
+const currentTab = computed(() => {
+  const tab = route.params.tab;
+  return settingGroups.find((group) => group.title.toLowerCase() === tab);
+});
 </script>
 
 <style lang="scss">
