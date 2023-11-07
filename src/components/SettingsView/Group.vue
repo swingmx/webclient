@@ -70,7 +70,7 @@
         <SeparatorsInput
           v-if="setting.type === SettingType.separators_input && setting.action"
           :submit="setting.action"
-          :default="setting.state ? setting.state : () => []"
+          :default="setting.state ? setting.state() : []"
         />
       </div>
     </div>

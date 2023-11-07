@@ -24,13 +24,13 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, computed, ref, watch } from "vue";
+import { Ref, computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 const separatorinput: Ref<HTMLInputElement | null> = ref(null);
 const input = ref("");
 
 const props = defineProps<{
-  default: () => string[];
+  default: string[];
   submit: (input: string) => void;
 }>();
 
@@ -69,14 +69,16 @@ function submitInput() {
 
 const preview_items = computed(() => splitInput(input.value));
 const default_input = computed(() =>
-  props.default() ? props.default().join(", ") : ""
+  props.default ? props.default.join(", ") : ""
 );
 
-watch(props.default, (newval, _) => {
-  const text = newval.join(", ");
-
-  if (separatorinput.value) separatorinput.value.value = text;
+onMounted(() => {
+  const text = props.default.join(", ");
   input.value = text;
+
+  if (separatorinput.value) {
+    separatorinput.value.value = text;
+  }
 });
 </script>
 
