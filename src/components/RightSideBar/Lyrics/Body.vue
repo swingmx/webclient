@@ -16,7 +16,6 @@
         :class="{
           currentLine: index == lyrics.currentLine,
           seenLine: index < lyrics.currentLine,
-          paragraphEnd: checkIsParagraphEnd(index, line),
           opacity_25: index <= lyrics.currentLine - 3,
           opacity_5: index == lyrics.currentLine - 2,
           opacity_75: index == lyrics.currentLine - 1,
@@ -76,21 +75,6 @@ const bgColor = computed(() => {
   return getShift(colors.theme2, [-20, -20]);
 });
 
-function checkIsParagraphEnd(index: number, line: LyricsLine) {
-  if (line.text == "") return true;
-  if (index == lyrics.lyrics.length - 1) return false;
-
-  const nextLine = lyrics.lyrics[index + 1];
-
-  if (nextLine.text == "") return false;
-  if (nextLine.time - line.time > 6000) {
-    if (line.text.split(" ").length > 4) return false;
-    return true;
-  }
-
-  return false;
-}
-
 function fetchLyrics() {
   lyrics.getLyrics();
 }
@@ -148,10 +132,6 @@ onBeforeUnmount(() => {
 
   .seenLine {
     color: rgba(255, 255, 255, 0.774);
-  }
-
-  .paragraphEnd {
-    margin-bottom: 3rem;
   }
 
   #lyricsline--1 {

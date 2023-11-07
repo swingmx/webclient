@@ -1,13 +1,13 @@
 <template>
-  <div class="modal" v-if="modal.visible">
+  <div v-if="modal.visible" class="modal">
     <div class="bg" @click="modal.hideModal"></div>
     <div
+      v-motion-slide-top
       class="m-content rounded"
       :style="{
         maxWidth:
           modal.component == modal.options.setRootDirs ? '56rem' : '30rem',
       }"
-      v-motion-slide-top
     >
       <div class="heading">{{ modal.title }}</div>
       <div class="close circular" @click="modal.hideModal">
@@ -20,8 +20,8 @@
         @setTitle="setTitle"
       />
       <UpdatePlaylist
-      v-bind="modal.props"
-        v-if="modal.component == modal.options.updatePlaylist"
+      v-if="modal.component == modal.options.updatePlaylist"
+        v-bind="modal.props"
         @hideModal="hideModal"
         @setTitle="setTitle"
       />
@@ -29,14 +29,10 @@
       <div v-if="modal.component == modal.options.deletePlaylist">
         <ConfirmModal
           :text="'Are you sure you want to permanently delete this playlist?'"
-          :cancelAction="modal.hideModal"
-          :confirmAction="deletePlaylist"
+          :cancel-action="modal.hideModal"
+          :confirm-action="deletePlaylist"
         />
       </div>
-      <SetIP
-        v-if="modal.component == modal.options.SetIP"
-        @setTitle="setTitle"
-      />
       <SetRootDirs
         v-if="modal.component == modal.options.setRootDirs"
         @hideModal="hideModal"
@@ -59,7 +55,6 @@ import WelcomeModal from "./WelcomeModal.vue";
 import ConfirmModal from "./modals/ConfirmModal.vue";
 import NewPlaylist from "./modals/NewPlaylist.vue";
 import RootDirsPrompt from "./modals/RootDirsPrompt.vue";
-import SetIP from "./modals/SetIP.vue";
 import SetRootDirs from "./modals/SetRootDirs.vue";
 import UpdatePlaylist from "./modals/updatePlaylist.vue";
 

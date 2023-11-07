@@ -16,6 +16,20 @@ const auto_download_lyrics = <Setting>{
   type: SettingType.binary,
   state: () => useSettings().lyrics_plugin_settings.auto_download,
   action: () => useSettings().toggleLyricsAutoDownload(),
+  show_if: () => useSettings().use_lyrics_plugin,
 };
 
-export default [toggle_lyrics_plugin, auto_download_lyrics];
+const auto_download_on_unsynced = <Setting>{
+  title: "Overide unsynced lyrics",
+  desc: "Automatically download lyrics even if unsynced lyrics are locally available",
+  type: SettingType.binary,
+  state: () => useSettings().lyrics_plugin_settings.overide_unsynced,
+  action: () => useSettings().toggleLyricsOverideUnsynced(),
+  show_if: () => useSettings().lyrics_plugin_settings.auto_download,
+};
+
+export default [
+  toggle_lyrics_plugin,
+  auto_download_lyrics,
+  auto_download_on_unsynced,
+];

@@ -2,9 +2,19 @@ import { defineStore } from "pinia";
 
 import useQueue from "./queue";
 import useTabs from "./tabs";
+import useLyricsPlugin from "./plugins/lyrics";
+import useSettings from "./settings";
 
 import { LyricsLine } from "@/interfaces";
 import { checkExists, getLyrics } from "@/requests/lyrics";
+
+// a custom error class called HasNoSyncedLyricsError
+class HasUnSyncedLyricsError extends Error {
+  constructor() {
+    super("Lyrics are not synced");
+    this.name = "HasNoSyncedLyricsError";
+  }
+}
 
 export default defineStore("lyrics", {
   state: () => ({
@@ -43,6 +53,10 @@ export default defineStore("lyrics", {
           this.lyrics = data.lyrics;
           this.copyright = data.copyright;
           this.exists = true;
+
+          if (this.lyrics.length && !this.synced) {
+            throw new HasUnSyncedLyricsError();
+          }
         })
         .then(async () => {
           const line = this.calculateCurrentLine();
@@ -53,10 +67,23 @@ export default defineStore("lyrics", {
 
           this.scrollToCurrentLine();
         })
-        .catch(() => {
+        .catch((e) => {
+          const settings = useSettings();
+          const plugin = useLyricsPlugin();
+
+          // catch HasUnSyncedLyricsError instance
+          if (e instanceof HasUnSyncedLyricsError) {
+            if (!settings.lyrics_plugin_settings.overide_unsynced) return;
+            plugin.searchLyrics();
+          }
+
           this.exists = false;
           this.lyrics = <LyricsLine[]>[];
           this.copyright = "";
+
+          if (settings.lyrics_plugin_settings.auto_download) {
+            plugin.searchLyrics();
+          }
         });
     },
     scrollToContainerTop() {

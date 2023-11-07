@@ -35,6 +35,7 @@ export default defineStore("settings", {
     use_lyrics_plugin: <boolean | undefined>false,
     lyrics_plugin_settings: {
       auto_download: false,
+      overide_unsynced: false,
     },
   }),
   actions: {
@@ -156,9 +157,20 @@ export default defineStore("settings", {
       const state = this.lyrics_plugin_settings.auto_download ? false : true;
 
       updatePluginSettings("lyrics_finder", {
+        ...this.lyrics_plugin_settings,
         auto_download: state,
       }).then(() => {
         this.lyrics_plugin_settings.auto_download = state;
+      });
+    },
+    toggleLyricsOverideUnsynced() {
+      const state = this.lyrics_plugin_settings.overide_unsynced ? false : true;
+
+      updatePluginSettings("lyrics_finder", {
+        ...this.lyrics_plugin_settings,
+        overide_unsynced: state,
+      }).then(() => {
+        this.lyrics_plugin_settings.overide_unsynced = state;
       });
     },
   },
@@ -175,6 +187,10 @@ export default defineStore("settings", {
       let store = context.store;
       store.root_dirs = [];
       store.root_dir_set = false;
+
+      // reset plugin settings
+      store.use_lyrics_plugin = false;
+      store.lyrics_plugin_settings = {};
     },
   },
 });

@@ -61,7 +61,6 @@ import NavBar from "@/components/nav/NavBar.vue";
 import RightSideBar from "@/components/RightSideBar/Main.vue";
 import { getAllSettings } from "@/requests/settings";
 
-import { baseApiUrl } from "@/config";
 import { getRootDirs } from "@/requests/settings/rootdirs";
 // import BubbleManager from "./components/bubbles/BinManager.vue";
 
@@ -123,11 +122,6 @@ onMounted(() => {
   queue.startBufferingStatusWatcher();
   handleWelcomeModal();
   settings.initializeVolume();
-
-  if (baseApiUrl.value === null) {
-    modal.showSetIPModal();
-    return;
-  }
 
   handleRootDirsPrompt();
 
