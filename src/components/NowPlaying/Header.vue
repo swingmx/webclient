@@ -30,17 +30,13 @@
         </div>
       </div>
     </div>
-    <h3 v-if="queue.currenttrack">Now Playing</h3>
+    <h3 v-if="queue.next">Up Next</h3>
     <SongItem
-      v-if="queue.currenttrack"
-      :track="queue.currenttrack"
-      :index="queue.currentindex + 1"
+      v-if="queue.next"
+      :track="queue.next"
+      :index="queue.nextindex + 1"
       :source="dropSources.folder"
-      :style="{
-        backgroundColor: colors.theme1,
-        color: getTextColor(colors.theme1),
-      }"
-      @play-this="() => {}"
+      @play-this="queue.playNext"
     />
   </div>
 </template>
@@ -49,21 +45,18 @@
 import { paths } from "@/config";
 import { Routes } from "@/router";
 import useQueueStore from "@/stores/queue";
-
-import Progress from "@/components/LeftSidebar/NP/Progress.vue";
+import { formatSeconds } from "@/utils";
 import { dropSources, favType } from "@/enums";
+import { isSmallPhone } from "@/stores/content-width";
 import favoriteHandler from "@/helpers/favoriteHandler";
-import useColorStore from "@/stores/colors";
-import { getTextColor } from "@/utils/colortools/shift";
-import SongItem from "../shared/SongItem.vue";
-import NowPlayingInfo from "./NowPlayingInfo.vue";
+
 import PlayingFrom from "./PlayingFrom.vue";
 import Buttons from "../BottomBar/Right.vue";
-import { isSmallPhone } from "@/stores/content-width";
-import { formatSeconds } from "@/utils";
+import SongItem from "../shared/SongItem.vue";
+import NowPlayingInfo from "./NowPlayingInfo.vue";
+import Progress from "@/components/LeftSidebar/NP/Progress.vue";
 
 const queue = useQueueStore();
-const colors = useColorStore();
 
 function handleFav() {
   favoriteHandler(

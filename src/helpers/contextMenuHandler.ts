@@ -17,6 +17,10 @@ let stop_prev_watcher = () => {};
 function flagWatcher(menu: Store, flag: Ref<boolean>) {
   stop_prev_watcher();
 
+  if (flag.value) {
+    return (flag.value = false);
+  }
+
   // watch for context menu visibility and reset flag
   stop_prev_watcher = menu.$subscribe((mutation, state) => {
     //@ts-ignore

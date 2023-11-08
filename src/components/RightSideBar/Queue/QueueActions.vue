@@ -81,28 +81,6 @@ defineProps<{
     display: flex;
     gap: $medium;
 
-    .lyrics {
-      position: relative;
-
-      svg {
-        transform: scale(0.6);
-      }
-    }
-
-    .showStatus {
-      &::after {
-        content: "";
-        height: $small;
-        width: $small;
-        background-color: $gray1;
-        border-radius: 50%;
-        color: $green;
-        position: absolute;
-        top: -2px;
-        right: -2px;
-      }
-    }
-
     .menu {
       padding: 0 $smaller;
 
