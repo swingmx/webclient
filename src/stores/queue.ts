@@ -103,17 +103,17 @@ export default defineStore("Queue", {
             );
 
             if (tab.nowplaying == tab.tabs.lyrics) {
-              lyrics.getLyrics();
+              return lyrics.getLyrics();
             }
 
-            lyrics.checkExists(
-              this.currenttrack.filepath,
-              this.currenttrack.trackhash
-            );
+            const settings = useSettings();
 
-            audio.onended = () => {
-              this.autoPlayNext();
-            };
+            if (!settings.use_lyrics_plugin) {
+              lyrics.checkExists(
+                this.currenttrack.filepath,
+                this.currenttrack.trackhash
+              );
+            }
           })
           .catch((e) => {
             const Toast = useNotifStore();
@@ -146,10 +146,8 @@ export default defineStore("Queue", {
         if (this.currentindex !== this.tracklist.length - 1) {
           if (!this.playing) return;
 
-          setTimeout(() => {
-            if (this.currenttrack.trackhash !== track.trackhash) return;
-            this.playNext();
-          }, 5000);
+          if (this.currenttrack.trackhash !== track.trackhash) return;
+          this.playNext();
           return;
         }
 
@@ -202,6 +200,10 @@ export default defineStore("Queue", {
         // reset sourceTime to prevent false positives
         const date = new Date();
         sourceTime = date.getTime();
+      };
+
+      audio.onended = () => {
+        this.autoPlayNext();
       };
 
       const compare = () => {

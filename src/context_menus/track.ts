@@ -18,7 +18,7 @@ import {
 } from "@/icons";
 import usePlaylistStore from "@/stores/pages/playlist";
 import useQueueStore from "@/stores/queue";
-import { getAddToPlaylistOptions, separator } from "./utils";
+import { getAddToPlaylistOptions } from "./utils";
 
 /**
  * Returns a list of context menu items for a track.
@@ -74,7 +74,7 @@ export default async (
     label: "Add to Playlist",
     children: await getAddToPlaylistOptions(AddToPlaylistAction, {
       trackhash: track.trackhash,
-      playlist_name: track.title + ' Radio',
+      playlist_name: track.title + " Radio",
     }),
     icon: PlusIcon,
   };
@@ -188,7 +188,6 @@ export default async (
     go_to_folder,
     go_to_artist,
     go_to_alb_artist,
-    separator,
     open_in_explorer,
     // del_track,
   ];

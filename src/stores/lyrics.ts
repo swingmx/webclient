@@ -109,7 +109,6 @@ export default defineStore("lyrics", {
     },
     setNextLineTimer(duration: number) {
       this.ticking = true;
-
       setTimeout(() => {
         if (useQueue().playing) {
           this.currentLine++;
@@ -176,6 +175,7 @@ export default defineStore("lyrics", {
       this.lyrics = lyrics;
       this.synced = true;
       this.exists = true;
+      this.currentTrack = useQueue().currenttrackhash;
 
       this.setCurrentLine(this.currentLine);
     },

@@ -8,7 +8,7 @@ import useModalStore from "@/stores/modal";
 import useSettingsStore from "@/stores/settings";
 
 import { addFolderToPlaylist } from "@/requests/playlists";
-import { getAddToPlaylistOptions, separator } from "./utils";
+import { getAddToPlaylistOptions } from "./utils";
 
 export default async (trigger_src: ContextSrc, path: string) => {
   const settings = useSettingsStore();
@@ -22,10 +22,7 @@ export default async (trigger_src: ContextSrc, path: string) => {
     };
 
   // if trigger source is folder nav, show list mode option
-  let items =
-    trigger_src === ContextSrc.FolderNav
-      ? [separator, getListModeOption()]
-      : [];
+  let items = trigger_src === ContextSrc.FolderNav ? [getListModeOption()] : [];
 
   const play_next = <Option>{
     label: "Play next",
@@ -68,12 +65,5 @@ export default async (trigger_src: ContextSrc, path: string) => {
     icon: icons.PlaylistIcon,
   };
 
-  return [
-    play_next,
-    add_to_queue,
-    separator,
-    add_to_playlist,
-    save_as_playlist,
-    ...items,
-  ];
+  return [play_next, add_to_queue, add_to_playlist, save_as_playlist, ...items];
 };

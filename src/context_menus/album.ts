@@ -4,7 +4,7 @@ import album from "@/stores/pages/album";
 
 import { Option, Playlist } from "@/interfaces";
 import { addAlbumToPlaylist } from "@/requests/playlists";
-import { getAddToPlaylistOptions, separator } from "./utils";
+import { getAddToPlaylistOptions, get_find_on_social } from "./utils";
 import { AddToQueueIcon, PlayNextIcon, PlaylistIcon, PlusIcon } from "@/icons";
 
 export default async () => {
@@ -60,8 +60,8 @@ export default async () => {
   return [
     play_next,
     add_to_queue,
-    separator,
     add_to_playlist,
     save_as_playlist,
+    get_find_on_social(),
   ];
 };

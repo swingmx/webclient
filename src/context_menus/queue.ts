@@ -3,7 +3,7 @@ import { Option, Playlist } from "@/interfaces";
 import { addTracksToPlaylist } from "@/requests/playlists";
 import useModalStore from "@/stores/modal";
 import useQueueStore, { From } from "@/stores/queue";
-import { getAddToPlaylistOptions, separator } from "./utils";
+import { getAddToPlaylistOptions } from "./utils";
 import { FromOptions } from "@/enums";
 
 function getQueueName(from: From) {
@@ -56,5 +56,5 @@ export default async () => {
     icon: PlusIcon,
   };
 
-  return [clearQueue, addToPlaylist, separator, saveAsPlaylist];
+  return [clearQueue, addToPlaylist, saveAsPlaylist];
 };

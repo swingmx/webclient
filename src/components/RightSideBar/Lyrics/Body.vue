@@ -51,7 +51,6 @@ import useLyrics from "@/stores/lyrics";
 import useColors from "@/stores/colors";
 import useSettings from "@/stores/settings";
 
-import { LyricsLine } from "@/interfaces";
 import { getShift } from "@/utils/colortools/shift";
 
 import LyricsHead from "./Head.vue";
@@ -100,8 +99,9 @@ onBeforeUnmount(() => {
   font-weight: 900;
   font-size: 3rem;
   position: relative;
+  overflow-x: hidden;
   @include hideScrollbars;
-  margin-right: -1rem;
+  margin-right: -0.75rem;
 
   @include tablet-portrait {
     font-size: 2rem !important;
@@ -152,7 +152,7 @@ onBeforeUnmount(() => {
 
   .copyright {
     font-size: 12px;
-    margin: 2rem 0;
+    padding: 2rem 0;
     opacity: 0.9;
     text-transform: uppercase;
   }

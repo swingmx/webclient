@@ -3,11 +3,11 @@
     :to="{
       name: Routes.nowPlaying,
       params: { tab },
-      replace: true,
+      replace: $route.name === Routes.nowPlaying ? true : false,
     }"
   >
     <button class="lyrics" :class="{ showStatus: lyrics.exists }">
-      <LyricsSvg /> {{ showText ? "Lyrics" : "" }} 
+      <LyricsSvg /> {{ showText ? "Lyrics" : "" }}
     </button>
   </RouterLink>
 </template>
