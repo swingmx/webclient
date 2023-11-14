@@ -124,10 +124,3 @@ onBeforeRouteLeave(() => {
 
 onMounted(() => updatePageTitle("Folders"));
 </script>
-
-<!-- <style lang="scss">
-.folder-view {
-  background-color: $red;
-  padding-left: 0 !important;
-}
-</style> -->
