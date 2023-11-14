@@ -153,6 +153,8 @@ export default defineStore("lyrics", {
       });
     },
     calculateCurrentLine() {
+      if (!this.lyrics.length) return -1;
+
       const queue = useQueue();
       const duration = queue.duration.current;
 

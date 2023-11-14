@@ -82,10 +82,7 @@ onMounted(() => {
   if (!queue.currenttrack) return;
   fetchLyrics();
   tabs.npSwitchToLyrics();
-});
-
-onBeforeUnmount(() => {
-  tabs.npSwitchToThumbnail();
+  lyrics.scrollToCurrentLine();
 });
 </script>
 

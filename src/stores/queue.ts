@@ -147,7 +147,9 @@ export default defineStore("Queue", {
           if (!this.playing) return;
 
           if (this.currenttrack.trackhash !== track.trackhash) return;
-          this.playNext();
+          setTimeout(() => {
+            this.playNext();
+          }, 3000);
           return;
         }
 

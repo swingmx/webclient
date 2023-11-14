@@ -1,20 +1,16 @@
 <template>
-  <RouterLink
-    :to="{
-      name: Routes.nowPlaying,
-      params: { tab },
-      replace: $route.name === Routes.nowPlaying ? true : false,
-    }"
+  <button
+    class="lyrics"
+    :class="{ showStatus: lyrics.exists }"
+    @click="handleClick"
   >
-    <button class="lyrics" :class="{ showStatus: lyrics.exists }">
-      <LyricsSvg /> {{ showText ? "Lyrics" : "" }}
-    </button>
-  </RouterLink>
+    <LyricsSvg /> {{ showText ? "Lyrics" : "" }}
+  </button>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 import { Routes } from "@/router";
 import useLyrics from "@/stores/lyrics";
@@ -23,14 +19,23 @@ import LyricsSvg from "@/assets/icons/lyrics.svg";
 defineProps<{
   showText?: boolean;
 }>();
-const route = useRoute();
-const lyrics = useLyrics();
 
-const tab = computed(() => {
-  if (route.params.tab == "lyrics") {
-    return "home";
+const route = useRoute();
+const router = useRouter();
+
+const lyrics = useLyrics();
+let prevRoute = ref(route.name);
+
+function handleClick() {
+  if (route.name === Routes.nowPlaying && route.params.tab === "lyrics") {
+    return router.back();
   }
 
-  return "lyrics";
-});
+  router.push({
+    name: Routes.nowPlaying,
+    params: { tab: "lyrics" },
+  });
+
+  prevRoute.value = route.name;
+}
 </script>
