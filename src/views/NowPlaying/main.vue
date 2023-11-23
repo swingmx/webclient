@@ -33,10 +33,12 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { ScrollerItem } from "@/interfaces";
+
+import useQueueStore from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
 import { isMedium, isSmall } from "@/stores/content-width";
 
 import Header from "@/components/NowPlaying/Header.vue";
-import useQueueStore from "@/stores/queue";
 import SongItem from "@/components/shared/SongItem.vue";
 import updatePageTitle from "@/utils/updatePageTitle";
 import Tabs from "@/components/NowPlaying/Tabs.vue";
@@ -53,6 +55,7 @@ const tabs: ScrollerItem = {
 };
 
 const queue = useQueueStore();
+const store = useTracklist();
 
 function playFromQueue(index: number) {
   queue.play(index);
@@ -61,7 +64,7 @@ function playFromQueue(index: number) {
 const scrollerItems = computed(() => {
   const items = [header, tabs];
 
-  const trackComponents = queue.tracklist.map((track, index) => {
+  const trackComponents = store.tracklist.map((track, index) => {
     return {
       id: index,
       component: SongItem,
@@ -71,7 +74,7 @@ const scrollerItems = computed(() => {
         isCurrent: index === queue.currentindex,
         isCurrentPlaying: index === queue.currentindex && queue.playing,
         isQueueTrack: true,
-        source: queue.from.type,
+        source: store.from.type,
       },
     };
   });

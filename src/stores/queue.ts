@@ -5,7 +5,7 @@ import { paths } from "@/config";
 import { NotifType, useNotifStore } from "./notification";
 
 import audio from "@/player";
-import { dropSources, favType, FromOptions } from "@/enums";
+import { dropSources, favType } from "@/enums";
 import updateMediaNotif from "@/helpers/mediaNotification";
 import { isFavorite } from "@/requests/favorite";
 
@@ -13,6 +13,7 @@ import useTabs from "./tabs";
 import useLyrics from "./lyrics";
 import useColors from "./colors";
 import useSettings from "./settings";
+import useTracklist from "./queue/tracklist";
 
 import {
   fromAlbum,
@@ -23,15 +24,6 @@ import {
   fromSearch,
   Track,
 } from "@/interfaces";
-
-function shuffle(tracks: Track[]) {
-  const shuffled = tracks.slice();
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
 
 export type From =
   | fromFolder
@@ -50,8 +42,6 @@ export default defineStore("Queue", {
     currentindex: 0,
     playing: false,
     buffering: true,
-    from: {} as From,
-    tracklist: [] as Track[],
     queueScrollFunction: (index: number) => {},
     mousover: <Ref | null>null,
   }),
@@ -64,7 +54,9 @@ export default defineStore("Queue", {
       }
     },
     play(index: number = 0) {
-      if (this.tracklist.length === 0) return;
+      // TODO: extract this into a separate util file
+      const { tracklist } = useTracklist();
+      if (tracklist.length === 0) return;
 
       this.playing = true;
       this.currentindex = index;
@@ -72,7 +64,7 @@ export default defineStore("Queue", {
 
       const tab = useTabs();
 
-      const track = this.tracklist[index];
+      const track = tracklist[index];
       const uri = `${paths.api.files}/${
         track.trackhash
       }?filepath=${encodeURIComponent(track.filepath as string)}`;
@@ -143,7 +135,7 @@ export default defineStore("Queue", {
           NotifType.Error
         );
 
-        if (this.currentindex !== this.tracklist.length - 1) {
+        if (this.currentindex !== tracklist.length - 1) {
           if (!this.playing) return;
 
           if (this.currenttrack.trackhash !== track.trackhash) return;
@@ -160,6 +152,7 @@ export default defineStore("Queue", {
       audio.onerror = errorEventHandler;
     },
     startBufferingStatusWatcher() {
+      // TODO: move this to a separate util file
       let sourceTime = 0;
       let lastTime = 0;
 
@@ -256,7 +249,8 @@ export default defineStore("Queue", {
     },
     autoPlayNext() {
       const settings = useSettings();
-      const is_last = this.currentindex === this.tracklist.length - 1;
+      const { tracklist } = useTracklist();
+      const is_last = this.currentindex === tracklist.length - 1;
 
       if (settings.repeat_one) {
         this.play(this.currentindex);
@@ -312,137 +306,37 @@ export default defineStore("Queue", {
         lyrics.setCurrentLine(line);
       }
     },
-    readQueue() {
-      const queue = localStorage.getItem("queue");
 
-      if (queue) {
-        const parsed = JSON.parse(queue);
-        this.from = parsed.from;
-        this.tracklist = parsed.tracks;
-      }
-    },
-    setNewQueue(tracklist: Track[]) {
-      if (this.tracklist !== tracklist) {
-        this.tracklist = [];
-        this.tracklist.push(...tracklist);
-      }
-
-      const settings = useSettings();
-
-      if (settings.repeat_one) {
-        settings.toggleRepeatMode();
-      }
-      this.focusCurrentInSidebar(1000);
-    },
-    playFromFolder(fpath: string, tracks: Track[]) {
-      const name = fpath.split("/").pop();
-      this.from = <fromFolder>{
-        type: FromOptions.folder,
-        path: fpath,
-        name: name?.trim() === "" ? fpath : name,
-      };
-      this.setNewQueue(tracks);
-    },
-    playFromAlbum(aname: string, albumhash: string, tracks: Track[]) {
-      this.from = <fromAlbum>{
-        type: FromOptions.album,
-        name: aname,
-        albumhash: albumhash,
-      };
-
-      this.setNewQueue(tracks);
-    },
-    playFromPlaylist(pname: string, pid: number, tracks: Track[]) {
-      this.from = <fromPlaylist>{
-        type: FromOptions.playlist,
-        name: pname,
-        id: pid,
-      };
-
-      this.setNewQueue(tracks);
-    },
-    playFromSearch(query: string, tracks: Track[]) {
-      this.from = <fromSearch>{
-        type: FromOptions.search,
-        query: query,
-      };
-
-      this.setNewQueue(tracks);
-    },
-    playFromArtist(artisthash: string, artistname: string, tracks: Track[]) {
-      this.from = <fromArtist>{
-        type: FromOptions.artist,
-        artisthash: artisthash,
-        artistname: artistname,
-      };
-
-      this.setNewQueue(tracks);
-    },
-    playFromFav(tracks: Track[]) {
-      this.from = <fromFav>{
-        type: FromOptions.favorite,
-      };
-
-      this.setNewQueue(tracks);
-    },
-    addTrackToQueue(track: Track) {
-      this.tracklist.push(track);
-
-      const Toast = useNotifStore();
-      Toast.showNotification(
-        `Added ${track.title} to queue`,
-        NotifType.Success
-      );
-    },
-    insertTrackAtIndex(track: Track, index: number) {
-      this.tracklist.splice(index, 0, track);
-    },
     playTrackNext(track: Track) {
       const Toast = useNotifStore();
-      const nextindex = this.currentindex + 1;
+      const { insertAt } = useTracklist();
 
-      this.insertTrackAtIndex(track, nextindex);
+      const nextindex = this.currentindex + 1;
+      insertAt(track, nextindex);
       Toast.showNotification(`Added 1 track to queue`, NotifType.Success);
     },
-    addTrackToIndex(
-      source: dropSources,
-      track: Track,
-      newIndex: number,
-      oldIndex: number
-    ) {
-      if (source === dropSources.queue) {
-        this.tracklist.splice(oldIndex, 1);
-        this.tracklist.splice(newIndex, 0, track);
-        return;
-      }
-
-      // else, just insert track at newIndex
-      this.tracklist.splice(newIndex, 0, track);
-    },
     clearQueue() {
-      this.tracklist = [] as Track[];
+      const store = useTracklist();
+      store.clearList();
       this.currentindex = 0;
-      this.from = <From>{};
     },
     shuffleQueue() {
-      const Toast = useNotifStore();
-      if (this.tracklist.length < 2) {
-        Toast.showNotification("Queue is too short", NotifType.Info);
-        return;
-      }
-      this.tracklist = shuffle(this.tracklist);
+      const store = useTracklist();
+      store.shuffleList();
 
       this.currentindex = 0;
       this.play(this.currentindex);
       this.focusCurrentInSidebar();
     },
     removeFromQueue(index: number = 0) {
+      const { tracklist, removeByIndex } = useTracklist();
+
       if (index === this.currentindex) {
-        const is_last = index === this.tracklist.length - 1;
+        const is_last = index === tracklist.length - 1;
         const was_playing = this.playing;
 
         audio.src = "";
-        this.tracklist.splice(index, 1);
+        // this.tracklist.splice(index, 1);
 
         if (is_last) {
           this.currentindex = 0;
@@ -454,7 +348,7 @@ export default defineStore("Queue", {
         return;
       }
 
-      this.tracklist.splice(index, 1);
+      removeByIndex(index);
 
       if (index < this.currentindex) {
         this.currentindex -= 1;
@@ -468,50 +362,27 @@ export default defineStore("Queue", {
       this.queueScrollFunction = cb;
       this.mousover = mousover;
     },
-    // called from app.vue
-    toggleFav(index: number) {
-      const track = this.tracklist[index];
-
-      if (track) {
-        track.is_favorite = !track.is_favorite;
-      }
-    },
-    addTracksToQueue(tracks: Track[]) {
-      this.tracklist = this.tracklist.concat(tracks);
-
-      const Toast = useNotifStore();
-      Toast.showNotification(
-        `Added ${tracks.length} tracks to queue`,
-        NotifType.Success
-      );
-    },
-    insertAfterCurrent(tracks: Track[]) {
-      this.tracklist.splice(this.currentindex + 1, 0, ...tracks);
-
-      const Toast = useNotifStore();
-      Toast.showNotification(
-        `Added ${tracks.length} tracks to queue`,
-        NotifType.Success
-      );
-    },
   },
   getters: {
     next(): Track {
-      if (this.currentindex == this.tracklist.length - 1) {
-        return this.tracklist[0];
+      const { tracklist } = useTracklist();
+      if (this.currentindex == tracklist.length - 1) {
+        return tracklist[0];
       } else {
-        return this.tracklist[this.currentindex + 1];
+        return tracklist[this.currentindex + 1];
       }
     },
     prev(): Track | undefined {
+      const { tracklist } = useTracklist();
       if (this.currentindex === 0) {
-        return this.tracklist[this.tracklist.length - 1];
+        return tracklist[tracklist.length - 1];
       } else {
-        return this.tracklist[this.currentindex - 1];
+        return tracklist[this.currentindex - 1];
       }
     },
     currenttrack(): Track {
-      const current = this.tracklist[this.currentindex];
+      const { tracklist } = useTracklist();
+      const current = tracklist[this.currentindex];
 
       isFavorite(current?.trackhash || "", favType.track).then((is_fav) => {
         if (current) {
@@ -525,12 +396,14 @@ export default defineStore("Queue", {
       return this.currenttrack?.trackhash || "";
     },
     previndex(): number {
+      const { tracklist } = useTracklist();
       return this.currentindex === 0
-        ? this.tracklist.length - 1
+        ? tracklist.length - 1
         : this.currentindex - 1;
     },
     nextindex(): number {
-      return this.currentindex === this.tracklist.length - 1
+      const { tracklist } = useTracklist();
+      return this.currentindex === tracklist.length - 1
         ? 0
         : this.currentindex + 1;
     },

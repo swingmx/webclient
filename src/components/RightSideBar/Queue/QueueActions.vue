@@ -21,6 +21,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import useQueue from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
 
 import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
 
@@ -28,11 +29,12 @@ import OptionsSvg from "@/assets/icons/more.svg";
 import ShuffleSvg from "@/assets/icons/shuffle.svg";
 
 const queue = useQueue();
+const { tracklist } = useTracklist();
 
 const context_showing = ref(false);
 
 function showContextMenu(e: MouseEvent) {
-  if (!queue.tracklist.length) return;
+  if (!tracklist.length) return;
 
   showQueueContextMenu(e, context_showing);
 }

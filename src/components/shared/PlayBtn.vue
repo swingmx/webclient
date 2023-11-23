@@ -10,7 +10,8 @@ import { playSources } from "@/enums";
 import { playFromAlbumCard, playFromArtistCard } from "@/helpers/usePlayFrom";
 
 import PlaySvg from "@/assets/icons/play.svg";
-import useQueueStore from "@/stores/queue";
+import useQueue from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
 import useSearchStore from "@/stores/search";
 
 const props = defineProps<{
@@ -36,11 +37,12 @@ function handlePlay() {
       // insert after current and play
       if (!props.track) break;
 
-      const queue = useQueueStore();
+      const queue = useQueue();
       const search = useSearchStore();
+      const tracklist = useTracklist();
 
       queue.clearQueue();
-      queue.playFromSearch(search.query, [props.track]);
+      tracklist.setFromSearch(search.query, [props.track]);
       queue.play();
       break;
     }

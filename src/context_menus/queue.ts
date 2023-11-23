@@ -1,10 +1,12 @@
-import { DeleteIcon, PlaylistIcon, PlusIcon } from "@/icons";
-import { Option, Playlist } from "@/interfaces";
-import { addTracksToPlaylist } from "@/requests/playlists";
 import useModalStore from "@/stores/modal";
-import useQueueStore, { From } from "@/stores/queue";
-import { getAddToPlaylistOptions } from "./utils";
+import useQueue, { From } from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
+
 import { FromOptions } from "@/enums";
+import { Option, Playlist } from "@/interfaces";
+import { getAddToPlaylistOptions } from "./utils";
+import { addTracksToPlaylist } from "@/requests/playlists";
+import { DeleteIcon, PlaylistIcon, PlusIcon } from "@/icons";
 
 function getQueueName(from: From) {
   switch (from.type) {
@@ -26,12 +28,12 @@ function getQueueName(from: From) {
 }
 
 export default async () => {
-  const queue = useQueueStore();
+  const store = useTracklist();
 
   const clearQueue: Option = {
     label: "Clear queue",
     action: () => {
-      useQueueStore().clearQueue();
+      useQueue().clearQueue();
     },
     icon: DeleteIcon,
   };
@@ -39,19 +41,19 @@ export default async () => {
   const saveAsPlaylist: Option = {
     label: "Save as playlist",
     action: () => {
-      useModalStore().showSaveQueueAsPlaylistModal(getQueueName(queue.from));
+      useModalStore().showSaveQueueAsPlaylistModal(getQueueName(store.from));
     },
     icon: PlaylistIcon,
   };
 
   const AddToPlaylistAction = (playlist: Playlist) => {
-    addTracksToPlaylist(playlist, queue.tracklist);
+    addTracksToPlaylist(playlist, store.tracklist);
   };
 
   const addToPlaylist: Option = {
     label: "Add to Playlist",
     children: await getAddToPlaylistOptions(AddToPlaylistAction, {
-      trackhash: queue.tracklist.map((t) => t.trackhash).join(","),
+      trackhash: store.tracklist.map((t) => t.trackhash).join(","),
     }),
     icon: PlusIcon,
   };

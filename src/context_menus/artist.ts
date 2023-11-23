@@ -1,5 +1,5 @@
 import modal from "@/stores/modal";
-import queue from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
 
 import { getArtistTracks } from "@/requests/artists";
 import { addArtistToPlaylist } from "@/requests/playlists";
@@ -13,7 +13,7 @@ export default async (artisthash: string, artistname: string) => {
     label: "Play next",
     action: () => {
       getArtistTracks(artisthash).then((tracks) => {
-        const store = queue();
+        const store = useTracklist();
         store.insertAfterCurrent(tracks);
       });
     },
@@ -24,8 +24,8 @@ export default async (artisthash: string, artistname: string) => {
     label: "Add to queue",
     action: () => {
       getArtistTracks(artisthash).then((tracks) => {
-        const store = queue();
-        store.addTracksToQueue(tracks);
+        const store = useTracklist();
+        store.addTracks(tracks);
       });
     },
     icon: AddToQueueIcon,

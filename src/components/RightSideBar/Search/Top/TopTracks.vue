@@ -17,15 +17,17 @@ import { Track } from "@/interfaces";
 
 import useQueueStore from "@/stores/queue";
 import useSearchStore from "@/stores/search";
+import useTracklist from "@/stores/queue/tracklist";
 
 import TrackItem from "@/components/shared/TrackItem.vue";
 
 const search = useSearchStore();
 const queue = useQueueStore();
+const tracklist = useTracklist();
 
 function handlePlay(track: Track) {
   queue.clearQueue();
-  queue.playFromSearch(search.query, [track]);
+  tracklist.setFromSearch(search.query, [track]);
   queue.play(0);
 }
 </script>

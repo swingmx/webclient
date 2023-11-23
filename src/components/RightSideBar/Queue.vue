@@ -6,7 +6,7 @@
     @mouseout="mouseover = false"
   >
     <NoItems
-      :flag="!queue.tracklist.length"
+      :flag="!store.tracklist.length"
       :title="'No songs in queue'"
       :description="'When you start playing songs, they will appear here.'"
       :icon="QueueSvg"
@@ -36,18 +36,20 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 import useQStore from "@/stores/queue";
+import useTracklist  from "@/stores/queue/tracklist";
 
-import TrackItem from "@/components/shared/TrackItem.vue";
-import QueueActions from "./Queue/QueueActions.vue";
 import NoItems from "../shared/NoItems.vue";
+import QueueActions from "./Queue/QueueActions.vue";
+import TrackItem from "@/components/shared/TrackItem.vue";
 import QueueSvg from "@/assets/icons/queue.svg";
 
 const itemHeight = 64;
 const queue = useQStore();
+const store = useTracklist();
 const mouseover = ref(false);
 
 const scrollerItems = computed(() => {
-  return queue.tracklist.map((track, index) => ({
+  return store.tracklist.map((track, index) => ({
     track,
     id: index,
   }));

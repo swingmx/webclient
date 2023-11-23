@@ -32,14 +32,17 @@ import FetchMore from "@/components/SearchPage/FetchMore.vue";
 import NoItems from "@/components/shared/NoItems.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import { isMedium, isSmall } from "@/stores/content-width";
-import useQueueStore from "@/stores/queue";
-import useSearchStore from "@/stores/search";
+
+import useQueue from "@/stores/queue";
+import useSearch from "@/stores/search";
+import useTracklist from "@/stores/queue/tracklist";
 
 import SearchSvg from "@/assets/icons/search.svg";
 import { dropSources } from "@/enums";
 
-const search = useSearchStore();
-const queue = useQueueStore();
+const queue = useQueue();
+const search = useSearch();
+const tracklist = useTracklist();
 
 const desc = computed(() =>
   search.query === ""
@@ -77,7 +80,7 @@ const scrollerItems = computed(() => {
 });
 
 function playFromSearch(index: number) {
-  queue.playFromSearch(search.query, search.tracks.value);
+  tracklist.setFromSearch(search.query, search.tracks.value);
   queue.play(index);
 }
 </script>

@@ -1,6 +1,6 @@
-import modal from "@/stores/modal";
-import queue from "@/stores/queue";
-import album from "@/stores/pages/album";
+import useModal from "@/stores/modal";
+import useAlbum from "@/stores/pages/album";
+import useTracklist from "@/stores/queue/tracklist";
 
 import { Option, Playlist } from "@/interfaces";
 import { addAlbumToPlaylist } from "@/requests/playlists";
@@ -11,10 +11,10 @@ export default async () => {
   const play_next = <Option>{
     label: "Play next",
     action: () => {
-      const tracks = album().tracks.filter(
+      const tracks = useAlbum().tracks.filter(
         (track) => !track.is_album_disc_number
       );
-      queue().insertAfterCurrent(tracks);
+      useTracklist().insertAfterCurrent(tracks);
     },
     icon: PlayNextIcon,
   };
@@ -22,24 +22,24 @@ export default async () => {
   const add_to_queue = <Option>{
     label: "Add to queue",
     action: () => {
-      const tracks = album().tracks.filter(
+      const tracks = useAlbum().tracks.filter(
         (track) => !track.is_album_disc_number
       );
-      queue().addTracksToQueue(tracks);
+      useTracklist().addTracks(tracks);
     },
     icon: AddToQueueIcon,
   };
 
   // Action for each playlist option
   const AddToPlaylistAction = (playlist: Playlist) => {
-    const store = album();
+    const store = useAlbum();
     addAlbumToPlaylist(playlist, store.info.albumhash);
   };
 
   const add_to_playlist: Option = {
     label: "Add to Playlist",
     children: await getAddToPlaylistOptions(AddToPlaylistAction, {
-      albumhash: album().info.albumhash,
+      albumhash: useAlbum().info.albumhash,
     }),
     icon: PlusIcon,
   };
@@ -47,11 +47,12 @@ export default async () => {
   const save_as_playlist: Option = {
     label: "Save as Playlist",
     action: () => {
-      const modal_s = modal();
-      const album_s = album();
-      modal_s.showSaveAlbumAsPlaylistModal(
-        album_s.info.title,
-        album_s.info.albumhash
+      const modal = useModal();
+      const album = useAlbum();
+
+      modal.showSaveAlbumAsPlaylistModal(
+        album.info.title,
+        album.info.albumhash
       );
     },
     icon: PlaylistIcon,

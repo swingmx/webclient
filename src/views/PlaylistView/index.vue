@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUpdated } from "vue";
 import { computed } from "vue";
+import { onMounted, onUpdated } from "vue";
 
 import {
   heightLarge,
@@ -32,7 +32,8 @@ import {
   isSmallPhone,
 } from "@/stores/content-width";
 import { dropSources } from "@/enums";
-import useQueueStore from "@/stores/queue";
+import useQueue from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
 import usePlaylistStore from "@/stores/pages/playlist";
 
 import updatePageTitle from "@/utils/updatePageTitle";
@@ -43,7 +44,8 @@ import NoItems from "@/components/shared/NoItems.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import AfterHeader from "@/components/PlaylistView/AfterHeader.vue";
 
-const queue = useQueueStore();
+const queue = useQueue();
+const tracklist = useTracklist();
 const playlist = usePlaylistStore();
 
 interface ScrollerItem {
@@ -102,7 +104,7 @@ const scrollerItems = computed(() => {
 
 function playFromPlaylistPage(index: number) {
   const { name, id } = playlist.info;
-  queue.playFromPlaylist(name, id, playlist.allTracks);
+  tracklist.setFromPlaylist(name, id, playlist.allTracks);
   queue.play(index);
 }
 

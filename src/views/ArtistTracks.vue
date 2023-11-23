@@ -5,39 +5,42 @@
     style="height: 100%"
   >
     <RecycleScroller
+      v-slot="{ item, index }"
       class="scroller"
       style="height: 100%"
       :items="scrollerItems"
       :item-size="itemHeight"
       key-field="id"
-      v-slot="{ item, index }"
     >
       <SongItem
         :track="item.track"
         :index="index + 1"
-        @playThis="playFromPage(index)"
         :source="dropSources.artist"
+        @playThis="playFromPage(index)"
       />
     </RecycleScroller>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref } from "vue";
 import { useRoute } from "vue-router";
+import { computed, onMounted, Ref, ref } from "vue";
+
+import useQueue from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
 
 import { Track } from "@/interfaces";
+import { createTrackProps } from "@/utils";
+import { dropSources, FromOptions } from "@/enums";
 import { getArtistTracks } from "@/requests/artists";
 import { isMedium, isSmall } from "@/stores/content-width";
-import useQueueStore from "@/stores/queue";
-import { createTrackProps } from "@/utils";
 
 import SongItem from "@/components/shared/SongItem.vue";
-import { dropSources, FromOptions } from "@/enums";
 
 const itemHeight = 64;
 const route = useRoute();
-const queue = useQueueStore();
+const queue = useQueue();
+const tracklist = useTracklist();
 
 const tracks: Ref<Track[]> = ref([]);
 
@@ -63,12 +66,12 @@ async function playFromPage(index: number) {
   const hash = route.params.hash as string;
   const artist = route.query.artist as string;
 
-  if (queue.from.type == FromOptions.artist && queue.from.artisthash == hash) {
+  if (tracklist.from.type == FromOptions.artist && tracklist.from.artisthash == hash) {
     queue.play(index);
     return;
   }
 
-  queue.playFromArtist(hash, artist, tracks.value);
+  tracklist.setFromArtist(hash, artist, tracks.value);
   queue.play(index);
 }
 </script>

@@ -28,11 +28,13 @@
 import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
-import { discographyAlbumTypes, dropSources } from "@/enums";
-import { Album, ScrollerItem } from "@/interfaces";
+import useQueue from "@/stores/queue";
 import { getArtistTracks } from "@/requests/artists";
-import useArtistPageStore from "@/stores/pages/artist";
-import useQueueStore from "@/stores/queue";
+import useArtist from "@/stores/pages/artist";
+
+import { Album, ScrollerItem } from "@/interfaces";
+import useTracklist from "@/stores/queue/tracklist";
+import { discographyAlbumTypes, dropSources } from "@/enums";
 
 import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
 import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
@@ -41,9 +43,11 @@ import TopTracks from "@/components/ArtistView/TopTracks.vue";
 import SimilarArtists from "@/components/PlaylistView/ArtistsList.vue";
 import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 
-const store = useArtistPageStore();
-const queue = useQueueStore();
 const route = useRoute();
+
+const queue = useQueue();
+const tracklist = useTracklist();
+const store = useArtist();
 
 function fetchArtistAlbums() {
   store.getArtistAlbums();
@@ -214,7 +218,7 @@ const scrollerItems = computed(() => {
 
 async function handlePlay(index: number) {
   const tracks = await getArtistTracks(store.info.artisthash);
-  queue.playFromArtist(store.info.artisthash, store.info.name, tracks);
+  tracklist.setFromArtist(store.info.artisthash, store.info.name, tracks);
   queue.play(index);
 }
 

@@ -41,8 +41,9 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref } from "vue";
 
-import { maxAbumCards } from "@/stores/content-width";
 import useQueueStore from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
+import { maxAbumCards } from "@/stores/content-width";
 
 import { discographyAlbumTypes, dropSources } from "@/enums";
 import { Album, Artist, RecentFavResult, Track } from "@/interfaces";
@@ -59,6 +60,7 @@ import updatePageTitle from "@/utils/updatePageTitle";
 const description = `You can add tracks, albums and artists to your favorites by clicking the ❤️ heart icon`;
 
 const queue = useQueueStore();
+const tracklist = useTracklist();
 
 const recentFavs: Ref<RecentFavResult[]> = ref([]);
 const favAlbums: Ref<Album[]> = ref([]);
@@ -87,7 +89,7 @@ onMounted(() => {
 
 async function handlePlay(index: number) {
   const tracks = await getFavTracks(0);
-  queue.playFromFav(tracks);
+  tracklist.setFromFav(tracks);
   queue.play(index);
 }
 </script>

@@ -3,16 +3,16 @@ import { ContextSrc } from "@/enums";
 import { Option, Playlist } from "@/interfaces";
 import { getTracksInPath } from "@/requests/folders";
 
-import useQueueStore from "@/stores/queue";
-import useModalStore from "@/stores/modal";
-import useSettingsStore from "@/stores/settings";
+import useModal from "@/stores/modal";
+import useSettings from "@/stores/settings";
+import useTracklist from "@/stores/queue/tracklist";
 
 import { addFolderToPlaylist } from "@/requests/playlists";
 import { getAddToPlaylistOptions } from "./utils";
 
 export default async (trigger_src: ContextSrc, path: string) => {
-  const settings = useSettingsStore();
-  const modal = useModalStore();
+  const settings = useSettings();
+  const modal = useModal();
 
   const getListModeOption = () =>
     <Option>{
@@ -28,7 +28,7 @@ export default async (trigger_src: ContextSrc, path: string) => {
     label: "Play next",
     action: () => {
       getTracksInPath(path).then((tracks) => {
-        const store = useQueueStore();
+        const store = useTracklist();
         store.insertAfterCurrent(tracks);
       });
     },
@@ -39,8 +39,8 @@ export default async (trigger_src: ContextSrc, path: string) => {
     label: "Add to Queue",
     action: () => {
       getTracksInPath(path).then((tracks) => {
-        const store = useQueueStore();
-        store.addTracksToQueue(tracks);
+        const store = useTracklist();
+        store.addTracks(tracks);
       });
     },
     icon: icons.AddToQueueIcon,

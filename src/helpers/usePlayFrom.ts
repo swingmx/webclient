@@ -1,41 +1,44 @@
 import { NotifType, playSources } from "@/enums";
 
-import { useNotifStore } from "@/stores/notification";
-import useAStore from "@/stores/pages/album";
-import useArtistPageStore from "@/stores/pages/artist";
-import useFStore from "@/stores/pages/folder";
-import usePStore from "@/stores/pages/playlist";
-import useQStore from "@/stores/queue";
+import useQueue from "@/stores/queue";
+import useAlbum from "@/stores/pages/album";
+import useArtist from "@/stores/pages/artist";
+import usePlaylist from "@/stores/pages/playlist";
 import useSettingsStore from "@/stores/settings";
+import useTracklist from "@/stores/queue/tracklist";
+import { useNotifStore } from "@/stores/notification";
 
 import { getAlbumTracks } from "@/requests/album";
 import { getArtistTracks } from "@/requests/artists";
 
-export async function utilPlayFromArtist(
-  queue: typeof useQStore,
-  artist: typeof useArtistPageStore,
-  index: number = 0
-) {
-  const qu = queue();
-  const ar = artist();
+export async function utilPlayFromArtist(index: number = 0) {
+  const queue = useQueue();
+  const artist = useArtist();
+  const tracklist = useTracklist();
+
   const settings = useSettingsStore();
 
-  if (ar.tracks.length === 0) return;
+  if (artist.tracks.length === 0) return;
 
-  if (ar.info.trackcount <= settings.artist_top_tracks_count) {
-    qu.playFromArtist(ar.info.artisthash, ar.info.name, ar.tracks);
-    qu.play();
+  if (artist.info.trackcount <= settings.artist_top_tracks_count) {
+    tracklist.setFromArtist(
+      artist.info.artisthash,
+      artist.info.name,
+      artist.tracks
+    );
+    queue.play();
     return;
   }
 
-  const tracks = await getArtistTracks(ar.info.artisthash);
+  const tracks = await getArtistTracks(artist.info.artisthash);
 
-  qu.playFromArtist(ar.info.artisthash, ar.info.name, tracks);
-  qu.play(index);
+  tracklist.setFromArtist(artist.info.artisthash, artist.info.name, tracks);
+  queue.play(index);
 }
 
 export async function playFromAlbumCard(albumhash: string, albumname: string) {
-  const qu = useQStore();
+  const queue = useQueue();
+  const tracklist = useTracklist();
 
   const tracks = await getAlbumTracks(albumhash);
 
@@ -44,15 +47,16 @@ export async function playFromAlbumCard(albumhash: string, albumname: string) {
     return;
   }
 
-  qu.playFromAlbum(albumname, albumhash, tracks);
-  qu.play();
+  tracklist.setFromAlbum(albumname, albumhash, tracks);
+  queue.play();
 }
 
 export async function playFromArtistCard(
   artisthash: string,
   artistname: string
 ) {
-  const queue = useQStore();
+  const queue = useQueue();
+  const tracklist = useTracklist();
   const tracks = await getArtistTracks(artisthash);
 
   if (tracks.length === 0) {
@@ -63,34 +67,41 @@ export async function playFromArtistCard(
     return;
   }
 
-  queue.playFromArtist(artisthash, artistname, tracks);
+  tracklist.setFromArtist(artisthash, artistname, tracks);
   queue.play();
 }
 
 export const playFrom = async (source: playSources) => {
-  const useQueue = useQStore();
+  const queue = useQueue();
+  const tracklist = useTracklist();
 
   switch (source) {
-    case playSources.album:
-      const a_store = useAStore();
+    case playSources.album: {
+      const album = useAlbum();
 
-      useQueue.playFromAlbum(
-        a_store.info.title,
-        a_store.info.albumhash,
-        a_store.srcTracks
+      tracklist.setFromAlbum(
+        album.info.title,
+        album.info.albumhash,
+        album.srcTracks
       );
-      useQueue.play();
+      queue.play();
       break;
-    case playSources.playlist:
-      const p = usePStore();
+    }
+    case playSources.playlist: {
+      const playlist = usePlaylist();
 
-      if (p.tracks.length === 0) return;
+      if (playlist.tracks.length === 0) return;
 
-      useQueue.playFromPlaylist(p.info.name, p.info.id, p.tracks);
-      useQueue.play();
+      tracklist.setFromPlaylist(
+        playlist.info.name,
+        playlist.info.id,
+        playlist.tracks
+      );
+      queue.play();
       break;
+    }
 
     case playSources.artist:
-      utilPlayFromArtist(useQStore, useArtistPageStore, 0);
+      utilPlayFromArtist(0);
   }
 };

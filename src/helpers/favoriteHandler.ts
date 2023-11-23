@@ -1,6 +1,9 @@
-import { addFavorite, removeFavorite } from "@/requests/favorite";
-import useQueueStore from "@/stores/queue";
+import useQueue from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
+
 import { favType } from "../enums";
+import { addFavorite, removeFavorite } from "@/requests/favorite";
+import tracklist from "@/stores/queue/tracklist";
 /**
  * Handles the favorite state of an item.
  * @param setter The ref to track the is_favorite state
@@ -16,7 +19,9 @@ export default async function favoriteHandler(
 ) {
   if (itemhash == "") return;
 
-  const queue = useQueueStore();
+  const queue = useQueue();
+  const tracklist = useTracklist();
+
   const is_current =
     type === favType.track && itemhash === queue.currenttrackhash;
   if (flag) {
@@ -28,6 +33,6 @@ export default async function favoriteHandler(
   }
 
   if (is_current) {
-    queue.toggleFav(queue.currentindex);
+    tracklist.toggleFav(queue.currentindex);
   }
 }

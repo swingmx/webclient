@@ -30,14 +30,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { RouteLocationRaw } from "vue-router";
 
+import useTracklist from "@/stores/queue/tracklist";
+
 import { FromOptions } from "@/enums";
-import useQueueStore from "@/stores/queue";
 import playingFrom from "@/utils/playingFrom";
 
-const queue = useQueueStore();
+const queue = useTracklist();
 
 const data = computed(() => {
   const { name, location, icon, image } = playingFrom(queue.from);

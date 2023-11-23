@@ -45,23 +45,26 @@ import { onMounted } from "vue";
 import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
-import { Track } from "@/interfaces";
+import useQueue from "@/stores/queue";
+import useLoader from "@/stores/loader";
+import useFolder from "@/stores/pages/folder";
+import useTracklist from "@/stores/queue/tracklist";
 import { isMedium, isSmall } from "@/stores/content-width";
-import useLoaderStore from "@/stores/loader";
-import useFolderStore from "@/stores/pages/folder";
-import useQueueStore from "@/stores/queue";
+
+import { Track } from "@/interfaces";
 import { dropSources } from "@/enums";
 import { createTrackProps } from "@/utils";
 import updatePageTitle from "@/utils/updatePageTitle";
 
 import FolderSvg from "@/assets/icons/folder.svg";
-import FolderList from "@/components/FolderView/FolderList.vue";
 import NoItems from "@/components/shared/NoItems.vue";
 import SongItem from "@/components/shared/SongItem.vue";
+import FolderList from "@/components/FolderView/FolderList.vue";
 
-const loader = useLoaderStore();
-const folder = useFolderStore();
-const queue = useQueueStore();
+const queue = useQueue();
+const loader = useLoader();
+const folder = useFolder();
+const tracklist = useTracklist();
 
 interface ScrollerItem {
   id: string | undefined;
@@ -101,7 +104,7 @@ const scrollerItems = computed(() => {
 });
 
 function playFromPage(index: number) {
-  queue.playFromFolder(folder.path, folder.allTracks);
+  tracklist.setFromFolder(folder.path, folder.allTracks);
   queue.play(index);
 }
 
