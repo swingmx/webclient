@@ -1,31 +1,33 @@
 <template>
   <div class="hotkeys no-scroll">
-    <button @click.prevent="q.playPrev">
+    <button @click.prevent="queue.playPrev">
       <PrevSvg />
     </button>
-    <button @click.prevent="q.playPause">
-      <Spinner v-if="q.buffering && q.playing" />
-      <PauseSvg v-else-if="q.playing" />
-      <PlaySvg v-else/>
+    <button @click.prevent="queue.playPause">
+      <Spinner v-if="buffering && queue.playing" />
+      <PauseSvg v-else-if="queue.playing" />
+      <PlaySvg v-else />
     </button>
-    <button @click.prevent="q.playNext">
+    <button @click.prevent="queue.playNext">
       <NextSvg />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { usePlayer } from "@/stores/player";
 import useQStore from "@/stores/queue";
 
 import {
-  default as NextSvg,
-  default as PrevSvg,
+default as NextSvg,
+default as PrevSvg,
 } from "@/assets/icons/next.svg";
 import PauseSvg from "@/assets/icons/pause.svg";
 import PlaySvg from "@/assets/icons/play.svg";
 import Spinner from "@/components/shared/Spinner.vue";
 
-const q = useQStore();
+const queue = useQStore();
+const { buffering } = usePlayer();
 </script>
 
 <style lang="scss">

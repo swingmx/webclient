@@ -119,7 +119,6 @@ function handleRootDirsPrompt() {
 }
 
 onMounted(() => {
-  queue.startBufferingStatusWatcher();
   handleWelcomeModal();
   settings.initializeVolume();
 

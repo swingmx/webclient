@@ -2,8 +2,8 @@ import { defineStore } from "pinia";
 
 import { xxl } from "@/composables/useBreakpoints";
 import { DBSettings, contextChildrenShowMode } from "@/enums";
-import { setMute, setVolume } from "@/player";
 import { pluginSetActive, updatePluginSettings } from "@/requests/plugins";
+import { usePlayer } from "@/stores/player";
 
 export default defineStore("settings", {
   state: () => ({
@@ -133,14 +133,18 @@ export default defineStore("settings", {
     },
     // volume 👇
     setVolume(new_value: number) {
+      const { setVolume } = usePlayer();
+
       setVolume(new_value);
       this.volume = new_value;
     },
     toggleMute() {
       this.mute = !this.mute;
+      const { setMute } = usePlayer();
       setMute(this.mute);
     },
     initializeVolume() {
+      const { setVolume, setMute } = usePlayer();
       setVolume(this.volume);
       setMute(this.mute);
     },

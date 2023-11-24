@@ -1,6 +1,9 @@
-import { FromOptions } from "@/enums";
 import { Routes } from "@/router";
-import { From } from "@/stores/queue";
+import { RouteLocationRaw } from "vue-router";
+
+import { FromOptions } from "@/enums";
+import { paths } from "@/config";
+import { From } from "@/stores/queue/tracklist";
 
 import AlbumSvg from "@/assets/icons/album.svg";
 import ArtistSvg from "@/assets/icons/artist.svg";
@@ -8,8 +11,6 @@ import FolderSvg from "@/assets/icons/folder.svg";
 import HeartSvg from "@/assets/icons/heart.fill.svg";
 import PlaylistSvg from "@/assets/icons/playlist.svg";
 import SearchSvg from "@/assets/icons/search.svg";
-import { paths } from "@/config";
-import { RouteLocationRaw } from "vue-router";
 
 interface PlayingFrom {
   name: string;

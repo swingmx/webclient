@@ -36,7 +36,8 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 import useQStore from "@/stores/queue";
-import useTracklist  from "@/stores/queue/tracklist";
+import useInterface from "@/stores/interface";
+import useTracklist from "@/stores/queue/tracklist";
 
 import NoItems from "../shared/NoItems.vue";
 import QueueActions from "./Queue/QueueActions.vue";
@@ -47,6 +48,8 @@ const itemHeight = 64;
 const queue = useQStore();
 const store = useTracklist();
 const mouseover = ref(false);
+
+const { focusCurrentInSidebar, setScrollFunction } = useInterface();
 
 const scrollerItems = computed(() => {
   return store.tracklist.map((track, index) => ({
@@ -72,12 +75,12 @@ function scrollToCurrent() {
 }
 
 onMounted(() => {
-  queue.setScrollFunction(scrollToCurrent, mouseover);
-  queue.focusCurrentInSidebar();
+  setScrollFunction(scrollToCurrent, mouseover);
+  focusCurrentInSidebar();
 });
 
 onBeforeUnmount(() => {
-  queue.setScrollFunction(() => {}, null);
+  setScrollFunction(() => {}, null);
 });
 </script>
 

@@ -1,6 +1,6 @@
+import useQueue from "@/stores/queue";
 import useModalStore from "@/stores/modal";
-import useQueue, { From } from "@/stores/queue";
-import useTracklist from "@/stores/queue/tracklist";
+import useTracklist, { From } from "@/stores/queue/tracklist";
 
 import { FromOptions } from "@/enums";
 import { Option, Playlist } from "@/interfaces";

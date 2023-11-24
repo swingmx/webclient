@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 
-import useSettings from "@/stores/settings";
 import useQueue from "@/stores/queue";
+import useInterface from "@/stores/interface";
+import useSettings from "@/stores/settings";
 import { useNotifStore, NotifType } from "@/stores/notification";
 
 import {
@@ -57,7 +58,9 @@ export default defineStore("tracklist", {
       if (settings.repeat_one) {
         settings.toggleRepeatMode();
       }
-      //   this.focusCurrentInSidebar(1000);
+
+      const { focusCurrentInSidebar } = useInterface();
+      focusCurrentInSidebar(1000);
     },
     setFromFolder(path: string, tracks: Track[]) {
       const name = path.split("/").pop();
