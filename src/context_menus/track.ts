@@ -18,6 +18,7 @@ import {
 } from "@/icons";
 import usePlaylistStore from "@/stores/pages/playlist";
 import useQueueStore from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
 import { getAddToPlaylistOptions } from "./utils";
 
 /**
@@ -82,7 +83,7 @@ export default async (
   const add_to_q: Option = {
     label: "Add to Queue",
     action: () => {
-      useQueueStore().addTrackToQueue(track);
+      useTracklist().addTrack(track);
     },
     icon: AddToQueueIcon,
   };
