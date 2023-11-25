@@ -29,6 +29,7 @@
       :key="index"
       :group="group"
     />
+    <About v-if="currentTab?.title === 'About'" />
     <div class="version t-center">
       <LogoSvg /> <span>Swing Music - v{{ VERSION }}</span>
     </div>
@@ -36,16 +37,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
+import { Routes } from "@/router";
+import { useRoute } from "vue-router";
+
 import { VERSION } from "@/config";
 import settingGroups from "@/settings";
 
 import Group from "./Group.vue";
-import GenericHeader from "@/components/shared/GenericHeader.vue";
+import About from "./About.vue";
 import LogoSvg from "@/assets/icons/logos/logo-light.svg";
-import { Routes } from "@/router";
-import { useRoute } from "vue-router";
-
+import GenericHeader from "@/components/shared/GenericHeader.vue";
 const route = useRoute();
 
 const currentTab = computed(() => {
