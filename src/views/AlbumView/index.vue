@@ -24,8 +24,9 @@ import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import { Track } from "@/interfaces";
 
-import useAlbumStore from "@/stores/pages/album";
 import useQueueStore from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist"
+import useAlbumStore from "@/stores/pages/album";
 
 import AlbumDiscBar from "@/components/AlbumView/AlbumDiscBar.vue";
 import AlbumsList from "@/components/AlbumView/ArtistAlbums.vue";
@@ -40,6 +41,7 @@ import { heightLarge, isSmall, isSmallPhone } from "@/stores/content-width";
 
 const album = useAlbumStore();
 const queue = useQueueStore();
+const tracklist = useTracklist();
 const route = useRoute();
 
 interface ScrollerItem {
@@ -198,7 +200,7 @@ const scrollerItems = computed(() => {
 
 function playFromAlbum(index: number) {
   const { title, albumhash } = album.info;
-  queue.playFromAlbum(title, albumhash, album.srcTracks);
+  tracklist.setFromAlbum(title, albumhash, album.srcTracks);
   queue.play(index);
 }
 
