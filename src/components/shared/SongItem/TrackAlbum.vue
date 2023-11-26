@@ -1,8 +1,8 @@
 <template>
   <router-link
     v-if="!hide_album"
-    class="song-album ellip"
     v-tooltip
+    class="song-album ellip"
     :to="{
       name: 'AlbumView',
       params: {

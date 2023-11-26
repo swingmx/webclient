@@ -1,26 +1,26 @@
 <template>
   <router-link :to="{ name: Routes.folder, params: { path: folder.path } }">
     <div
+      v-auto-animate
       class="f-item"
-      @click="(e) => (folder_page ? null : handleClick(e))"
-      @mouseover="mouse_over = true"
-      @mouseleave="mouse_over = false"
       :style="{
         backgroundColor: is_checked ? '#234ece' : '',
       }"
       :class="{ context_menu_showing }"
+      @click="(e) => (folder_page ? null : handleClick(e))"
+      @mouseover="mouse_over = true"
+      @mouseleave="mouse_over = false"
       @contextmenu.prevent="(e) => (!folder_page ? null : showContextMenu(e))"
-      v-auto-animate
     >
       <SymLinkSvg v-if="folder.is_sym" />
       <FolderSvg v-else />
       <div class="info">
         <div class="f-item-text ellip">{{ folder.name }}</div>
-        <div class="f-count" v-if="folder.count">
+        <div v-if="folder.count" class="f-count">
           {{ folder.count + ` File${folder.count == 1 ? "" : "s"}` }}
         </div>
       </div>
-      <div class="check" v-if="!folder_page">
+      <div v-if="!folder_page" class="check">
         <CheckSvg v-if="!is_checked && mouse_over" />
         <CheckFilledSvg v-if="is_checked" />
       </div>

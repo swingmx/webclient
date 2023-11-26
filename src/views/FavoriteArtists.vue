@@ -3,8 +3,8 @@
     <div class="scrollable">
       <ArtistCard
         v-for="artist in artists"
-        :artist="artist"
         :key="artist.artisthash"
+        :artist="artist"
       />
     </div>
   </div>

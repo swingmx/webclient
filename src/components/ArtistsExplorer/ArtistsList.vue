@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="all-albums">
-      <div class="item rounded" v-for="artist in artists" :key="artist">
+      <div v-for="artist in artists" :key="artist" class="item rounded">
         <div class="album-art image rounded"></div>
         <div class="name t-center ellip">{{ artist.name }}</div>
       </div>

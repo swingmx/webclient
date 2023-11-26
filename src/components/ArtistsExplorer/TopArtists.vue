@@ -2,7 +2,7 @@
   <div class="top-artists">
     <div class="heading">TOP ARTISTS</div>
     <div class="items">
-      <div class="item rounded" v-for="artist in artists" :key="artist">
+      <div v-for="artist in artists" :key="artist" class="item rounded">
         <div class="image"></div>
         <div class="info">
           <div class="name ellip">{{ artist.name }}</div>

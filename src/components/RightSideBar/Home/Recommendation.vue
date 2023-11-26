@@ -2,7 +2,7 @@
   <div class="r-tracks rounded bg-primary">
     <div class="heading">Similar tracks</div>
     <div class="tracks">
-      <div class="song-item" v-for="song in songs" :key="song.artist">
+      <div v-for="song in songs" :key="song.artist" class="song-item">
         <img src="" class="rounded" loading="lazy"/>
         <div class="tags">
           <div class="title">{{ song.title }}</div>

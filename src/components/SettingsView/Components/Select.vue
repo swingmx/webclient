@@ -1,9 +1,9 @@
 <template>
   <div class="setting-select rounded-sm no-scroll">
     <div
-      class="option"
       v-for="option in optionsWithActive"
       :key="option.title"
+      class="option"
       :class="{ active: option.active }"
       @click="setterFn(option.value)"
     >

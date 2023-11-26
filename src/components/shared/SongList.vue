@@ -5,23 +5,23 @@
     style="height: 100%"
   >
     <RecycleScroller
-      class="scroller"
       id="songlist-scroller"
+      v-slot="{ item, index }"
+      class="scroller"
       style="height: 100%"
       :items="tracks.map((track, index) => ({ track, id: index }))"
       :item-size="itemHeight"
       key-field="id"
-      v-slot="{ item, index }"
     >
       <SongItem
         :track="item.track"
         :index="index + 1"
         :is_queue_track="is_queue"
-        @playThis="handlePlay(index)"
         :is_last="index == tracks.length - 1"
         :droppable="false"
-        @trackDropped="dropHandler"
         :source="source"
+        @playThis="handlePlay(index)"
+        @trackDropped="dropHandler"
       />
     </RecycleScroller>
   </div>

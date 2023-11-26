@@ -1,7 +1,7 @@
 <template>
   <div
-    class="album_disc_header no-select"
     v-if="album_disc.is_album_disc_number"
+    class="album_disc_header no-select"
   >
     <div class="disc_number">Disc {{ album_disc.album_page_disc_number }}</div>
     <div></div>

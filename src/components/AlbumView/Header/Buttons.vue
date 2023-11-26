@@ -4,8 +4,8 @@
 
     <HeartSvg
       :state="album.is_favorite"
-      @handleFav="handleFav"
       :color="colors.bg ? colors.bg : ''"
+      @handleFav="handleFav"
     />
     <button
       class="options"

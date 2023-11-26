@@ -1,5 +1,5 @@
 <template>
-  <button id="option-drop" @click.stop.prevent="showDropdown" class="btn-more">
+  <button id="option-drop" class="btn-more" @click.stop.prevent="showDropdown">
     <MoreSvg />
   </button>
 </template>

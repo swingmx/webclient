@@ -1,6 +1,6 @@
 <template>
   <div class="last-updated">
-    <span class="status" v-if="!isHeaderSmall"
+    <span v-if="!isHeaderSmall" class="status"
       >Last updated {{ playlist.info.last_updated }} &#160;|&#160;&#160;</span
     >
     <div class="edit" @click="editPlaylist">Edit&#160;&#160;</div>

@@ -1,10 +1,10 @@
 <template>
   <div class="morexx">
     <button
-      @click.prevent="loader()"
       :class="{
         load_disabled: !can_load_more,
       }"
+      @click.prevent="loader()"
     >
       <div class="text">Load More</div>
     </button>

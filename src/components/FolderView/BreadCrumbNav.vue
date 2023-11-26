@@ -1,9 +1,9 @@
 <template>
   <div class="breadcrumb-nav">
     <div
-      class="path"
       v-for="path in subPaths"
       :key="path.path"
+      class="path"
       :class="{ inthisfolder: path.active }"
       @click.prevent="$emit('navigate', path.path)"
     >

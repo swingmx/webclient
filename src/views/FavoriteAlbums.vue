@@ -3,8 +3,8 @@
     <div class="scrollable">
       <AlbumCard
         v-for="album in albums"
-        :album="album"
         :key="album.albumhash"
+        :album="album"
       />
     </div>
   </div>

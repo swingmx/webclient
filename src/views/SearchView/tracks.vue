@@ -9,11 +9,11 @@
     <div :class="{ isSmall, isMedium }" style="height: 100%">
       <RecycleScroller
         id="songlist-scroller"
+        v-slot="{ item, index }"
         style="height: 100%"
         :items="scrollerItems"
         :item-size="64"
         key-field="id"
-        v-slot="{ item, index }"
       >
         <component
           :is="item.component"

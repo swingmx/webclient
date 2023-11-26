@@ -17,10 +17,10 @@
           }"
         ></div>
         <div
+          v-else
+          id="home-button"
           class="nav-button"
           :class="{ active: $route.name === menu.route_name }"
-          id="home-button"
-          v-else
       >
           <div class="in">
             <component :is="menu.icon"></component>

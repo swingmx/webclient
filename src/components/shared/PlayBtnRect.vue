@@ -2,12 +2,12 @@
   <button
     v-wave
     class="playbtnrect shadow-sm circular btn-active"
-    @click="playFrom(source)"
     :style="{
       backgroundColor: bg_color ? bg_color : '',
       borderColor: bg_color ? bg_color : '',
       color: bg_color ? getShift(bg_color, [100, 100]) : '',
     }"
+    @click="playFrom(source)"
   >
     <playBtnSvg />
     <div class="text">Play</div>

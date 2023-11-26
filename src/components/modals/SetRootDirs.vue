@@ -1,9 +1,9 @@
 <template>
   <br /><br />
   <div style="position: relative">
-    <div class="bread-nav rounded-sm" id="bread-nav">
+    <div id="bread-nav" class="bread-nav rounded-sm">
       &nbsp;&nbsp;<span @click="fetchDirs('$root')">📁</span
-      >&nbsp;&nbsp;<BreadCrumbNav :subPaths="subPaths" @navigate="fetchDirs" />
+      >&nbsp;&nbsp;<BreadCrumbNav :sub-paths="subPaths" @navigate="fetchDirs" />
     </div>
     <div class="set-root-dirs-browser">
       <h4 v-if="no_more_dirs">
@@ -16,11 +16,11 @@
             v-for="dir in dirs"
             :key="dir.name"
             :folder="dir"
-            @navigate="fetchDirs(dir.path)"
-            @check="handleCheck(dir.path)"
             :is_checked="
               selected.filter((p) => p == dir.path).length > 0 ? true : false
             "
+            @navigate="fetchDirs(dir.path)"
+            @check="handleCheck(dir.path)"
           />
         </div>
       </div>
