@@ -70,7 +70,7 @@ const modal = useModal();
 const lyrics = useLyrics();
 const router = useRouter();
 const settings = useSettings();
-const tracker = useTracker();
+useTracker();
 
 handleShortcuts(useQueue, useModal);
 
@@ -85,6 +85,14 @@ onStartTyping(() => {
   elem.focus();
   elem.value = "";
 });
+
+function getContentSize() {
+  const elem = document.getElementById("acontent") as HTMLElement;
+  return {
+    width: elem.offsetWidth,
+    height: elem.offsetHeight,
+  };
+}
 
 function updateContentElemSize({
   width,
@@ -121,6 +129,9 @@ function handleRootDirsPrompt() {
 }
 
 onMounted(() => {
+  const { width, height } = getContentSize();
+  updateContentElemSize({ width, height });
+
   handleWelcomeModal();
   settings.initializeVolume();
 

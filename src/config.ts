@@ -121,6 +121,15 @@ export const paths = {
       },
     },
     files: base_url + "/file",
+    home: {
+      base: base_url + "/home",
+      get recentlyAdded() {
+        return this.base + "/recents/added";
+      },
+      get recentlyPlayed() {
+        return this.base + "/recents/played";
+      },
+    },
   },
   images: {
     thumb: {

@@ -22,6 +22,7 @@
       />
     </div>
     <div>
+      <div v-if="show_help" class="rhelp album">NEW ALBUM</div>
       <h4 v-tooltip class="title ellip">
         {{ album.title }}
       </h4>
@@ -38,30 +39,6 @@
           {{ `${artists[0].name}` }}
         </RouterLink>
       </div>
-
-      <!-- when showing other versions -->
-      <!-- <div
-        v-if="
-          album.versions.length === 0 &&
-          hide_artists &&
-          $route.name === Routes.album
-        "
-        class="artist ellip"
-      >
-        {{ album.date }}
-        {{
-          album.albumartists.length > 1
-            ? ` • ${album.albumartists[1].name}`
-            : ""
-        }}
-      </div> -->
-      <!-- <div v-else>
-        <div class="artist ellip">
-          {{ album.date }}
-        </div>
-      </div> -->
-      <!-- end -->
-
       <div v-if="album.versions.length" class="versions">
         <MasterFlag
           v-for="v in getVersions(
@@ -98,6 +75,7 @@ const props = defineProps<{
   show_date?: boolean;
   artist_page?: boolean;
   hide_artists?: boolean;
+  show_help?: boolean;
 }>();
 
 function getVersions(ver1: string[], ver2: string[] = []) {

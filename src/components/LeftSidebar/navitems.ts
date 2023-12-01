@@ -6,8 +6,14 @@ import HeartSvg from "@/assets/icons/heart.svg";
 import PlaylistSvg from "@/assets/icons/playlist-1.svg";
 import SearchSvg from "@/assets/icons/search.svg";
 import SettingsSvg from "@/assets/icons/settings.svg";
+import HomeSvg from "@/assets/icons/home.svg";
 
 export const menus = [
+  {
+    name: "home",
+    route_name: Routes.Home,
+    icon: HomeSvg,
+  },
   {
     name: "folders",
     route_name: Routes.folder,

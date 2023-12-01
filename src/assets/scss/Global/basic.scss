@@ -171,7 +171,6 @@ button {
   left: -20rem;
 }
 
-
 .spinner {
   border: solid 3px rgb(0, 0, 0);
   border-top: solid 3px transparent;
@@ -188,5 +187,34 @@ button {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+.card-list-scroll-x {
+  overflow: hidden;
+
+  h3 {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    align-items: baseline;
+    padding: 0 $medium;
+    margin-bottom: $medium;
+  }
+
+  .cards {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    flex-direction: row;
+    padding-bottom: 2rem;
+
+    @include hideScrollbars;
+  }
+
+  .album-card {
+    &:hover {
+      background-color: $gray;
+    }
   }
 }

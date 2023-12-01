@@ -7,6 +7,8 @@ import usePlaylistPageStore from "@/stores/pages/playlist";
 import usePlaylistListPageStore from "@/stores/pages/playlists";
 import useArtistPageStore from "@/stores/pages/artist";
 
+import HomeView from "@/views/HomeView";
+
 const FolderView = () => import("@/views/FolderView.vue");
 const PlaylistListView = () => import("@/views/PlaylistList.vue");
 const PlaylistView = () => import("@/views/PlaylistView/index.vue");
@@ -23,12 +25,6 @@ const FavoriteTracks = () => import("@/views/FavoriteTracks.vue");
 const FavoriteArtists = () => import("@/views/FavoriteArtists.vue");
 const NotFound = () => import("@/views/NotFound.vue");
 const NowPlaying = () => import("@/views/NowPlaying");
-
-const home = {
-  path: "/",
-  name: "Home",
-  redirect: "/folder/$home",
-};
 
 const folder = {
   path: "/folder/:path",
@@ -167,8 +163,13 @@ const notFound = {
   component: NotFound,
 };
 
+const Home = {
+  path: "/",
+  name: "Home",
+  component: HomeView,
+};
+
 const routes = [
-  home,
   folder,
   playlists,
   playlistView,
@@ -185,10 +186,10 @@ const routes = [
   favoriteTracks,
   favoriteArtists,
   NowPlayingView,
+  Home,
 ];
 
 export const Routes = {
-  home: home.name,
   folder: folder.name,
   playlists: playlists.name,
   playlist: playlistView.name,
@@ -205,6 +206,7 @@ export const Routes = {
   favoriteTracks: favoriteTracks.name,
   favoriteArtists: favoriteArtists.name,
   nowPlaying: NowPlayingView.name,
+  Home: Home.name,
 };
 
 const router = createRouter({

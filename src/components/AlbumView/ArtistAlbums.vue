@@ -10,7 +10,7 @@
         "
       />
     </h3>
-    <div ref="artistItemsWrappers" class="cards">
+    <div class="cards">
       <AlbumCard
         v-for="a in albums"
         :key="a.albumhash"
@@ -23,8 +23,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
 import { Album } from "@/interfaces";
 import { discographyAlbumTypes } from "@/enums";
 import { maxAbumCards } from "@/stores/content-width";
@@ -42,37 +40,4 @@ defineProps<{
   show_date?: boolean;
   artist_page?: boolean;
 }>();
-
-const artistItemsWrappers = ref<HTMLElement | null>(null);
 </script>
-
-<style lang="scss">
-.card-list-scroll-x {
-  overflow: hidden;
-
-  h3 {
-    display: grid;
-    grid-template-columns: 1fr max-content;
-    align-items: baseline;
-    padding: 0 $medium;
-    margin-bottom: $medium;
-  }
-
-  .cards {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    flex-direction: row;
-    padding-bottom: 2rem;
-
-    @include hideScrollbars;
-  }
-
-  .album-card {
-    &:hover {
-      background-color: $gray;
-    }
-  }
-}
-</style>

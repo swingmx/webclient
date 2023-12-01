@@ -26,14 +26,22 @@ const isMedium = computed(() => {
 const heightLarge = computed(() => content_height.value > 1080);
 
 const paddings = 32;
-const album_card_with = 10 * 16;
+const album_card_with = ref(10.1 * 16);
+
+const elemclass = "hlistitem";
 
 const maxAbumCards = computed(() => {
-  const max =
-    Math.floor((content_width.value - paddings) / album_card_with) + 1;
+  const elems = document.getElementsByClassName(elemclass);
+  let width = album_card_with.value;
 
-  if (max < 6) return 7;
+  if (elems.length > 0) {
+    width = elems[0].clientWidth;
+  }
 
+  const max = Math.round((content_width.value - paddings) / width);
+
+  if (max == 0) return 7;
+  console.log("max", max);
   return max;
 });
 
@@ -55,6 +63,13 @@ export const isLargerMobile = computed(
 export const isIphoneSE = computed(() => win_width.value <= IPHONE_SE_WIDTH);
 
 export {
-  content_height, content_width, heightLarge, isHeaderSmall, isMedium, isSmall, maxAbumCards, win_width
+  album_card_with,
+  content_height,
+  content_width,
+  heightLarge,
+  isHeaderSmall,
+  isMedium,
+  isSmall,
+  maxAbumCards,
+  win_width,
 };
-
