@@ -19,6 +19,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "src/**/*.svg"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "src/**/*.svg", "public/workers/logtrack.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

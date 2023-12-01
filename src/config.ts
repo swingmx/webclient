@@ -93,6 +93,12 @@ export const paths = {
         return this.base + "/loadmore";
       },
     },
+    logger: {
+      base: base_url + "/logger",
+      get logTrack() {
+        return this.base + "/track/log";
+      },
+    },
     colors: {
       base: base_url + "/colors",
       get album() {

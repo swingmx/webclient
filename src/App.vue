@@ -43,6 +43,7 @@ import useLyrics from "@/stores/lyrics";
 import useModal from "@/stores/modal";
 import useQueue from "@/stores/queue";
 import useSettings from "@/stores/settings";
+import useTracker from "@/stores/tracker";
 
 // @utils
 import handleShortcuts from "@/helpers/useKeyboard";
@@ -69,6 +70,7 @@ const modal = useModal();
 const lyrics = useLyrics();
 const router = useRouter();
 const settings = useSettings();
+const tracker = useTracker();
 
 handleShortcuts(useQueue, useModal);
 
