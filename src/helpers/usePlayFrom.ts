@@ -10,6 +10,9 @@ import { useNotifStore } from "@/stores/notification";
 
 import { getAlbumTracks } from "@/requests/album";
 import { getArtistTracks } from "@/requests/artists";
+import { getFiles } from "@/requests/folders";
+import { getPlaylist } from "@/requests/playlists";
+import { Track } from "@/interfaces";
 
 export async function utilPlayFromArtist(index: number = 0) {
   const queue = useQueue();
@@ -71,6 +74,44 @@ export async function playFromArtistCard(
   queue.play();
 }
 
+export async function playFromFolderCard(folderpath: string) {
+  const queue = useQueue();
+  const tracklist = useTracklist();
+
+  const data = await getFiles(folderpath, true);
+  const tracks = data.tracks;
+
+  if (tracks.length === 0) {
+    useNotifStore().showNotification(
+      "Folder tracks not found",
+      NotifType.Error
+    );
+    return;
+  }
+
+  tracklist.setFromFolder(folderpath, tracks);
+  queue.play();
+}
+
+export async function playFromPlaylist(id: string, track?: Track) {
+  const queue = useQueue();
+  const tracklist = useTracklist();
+  const data = await getPlaylist(id);
+
+  if (!data) return;
+
+  const { tracks, info } = data;
+
+  tracklist.setFromPlaylist(info.name, info.id, tracks);
+
+  if (track) {
+    const index = tracks.findIndex((t) => t.trackhash === track.trackhash);
+    queue.play(index);
+  } else {
+    queue.play();
+  }
+}
+
 export const playFrom = async (source: playSources) => {
   const queue = useQueue();
   const tracklist = useTracklist();
@@ -87,6 +128,7 @@ export const playFrom = async (source: playSources) => {
       queue.play();
       break;
     }
+
     case playSources.playlist: {
       const playlist = usePlaylist();
 

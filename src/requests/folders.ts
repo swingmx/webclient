@@ -2,7 +2,7 @@ import { paths } from "@/config";
 import { Folder, Track } from "@/interfaces";
 import useAxios from "./useAxios";
 
-export async function getFiles(path: string) {
+export async function getFiles(path: string, tracks_only = false) {
   interface FolderData {
     tracks: Track[];
     folders: Folder[];
@@ -12,6 +12,7 @@ export async function getFiles(path: string) {
     url: paths.api.folder.base,
     props: {
       folder: path,
+      tracks_only: tracks_only,
     },
   });
 

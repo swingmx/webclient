@@ -22,7 +22,9 @@
       />
     </div>
     <div>
-      <div v-if="show_help" class="rhelp album">NEW ALBUM</div>
+      <div v-if="album.help_text" class="rhelp album">
+        {{ album.help_text }}
+      </div>
       <h4 v-tooltip class="title ellip">
         {{ album.title }}
       </h4>
@@ -75,7 +77,6 @@ const props = defineProps<{
   show_date?: boolean;
   artist_page?: boolean;
   hide_artists?: boolean;
-  show_help?: boolean;
 }>();
 
 function getVersions(ver1: string[], ver2: string[] = []) {
@@ -99,8 +100,6 @@ const artists = computed(() => {
 
 <style lang="scss">
 .album-card {
-  flex: 0 0 10.1rem;
-
   display: grid;
   gap: $small;
   padding: $medium;

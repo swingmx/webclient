@@ -4,12 +4,12 @@
       <div class="rtitle">
         <b>{{ title }}</b>
       </div>
-      <div class="rdesc">{{ description }}</div>
+      <div v-if="description" class="rdesc">{{ description }}</div>
     </div>
     <div class="recentitems">
       <component
         :is="getComponent(i.type)"
-        v-for="(i, index) in items.toSpliced(maxAbumCards)"
+        v-for="(i, index) in items.slice(0, maxAbumCards)"
         :key="index"
         class="hlistitem"
         v-bind="getProps(i)"
@@ -27,10 +27,11 @@ import FolderCard from "./FolderCard.vue";
 import AlbumCard from "../shared/AlbumCard.vue";
 import ArtistCard from "../shared/ArtistCard.vue";
 import { maxAbumCards } from "@/stores/content-width";
+import { playSources } from "@/enums";
 
 defineProps<{
   title: string;
-  description: string;
+  description?: string;
   items: {
     type: string;
     item: any;
@@ -63,11 +64,11 @@ function getProps(item: { type: string; item: any }) {
     case "track":
       return {
         track: item.item,
+        playSource: playSources.recentlyAdded,
       };
     case "artist":
       return {
         artist: item.item,
-        show_help: true,
       };
     case "folder":
       return {

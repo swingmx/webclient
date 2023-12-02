@@ -1,8 +1,13 @@
 <template>
   <div class="trackcard rounded">
-    <img class="rounded-sm" :src="paths.images.thumb.large + track.image" />
+    <div class="image">
+      <img class="rounded-sm" :src="paths.images.thumb.large + track.image" />
+      <PlayBtn :source="playSource" :track="track"/>
+    </div>
     <div class="tinfo">
-      <div class="rhelp track">NEW TRACK</div>
+      <div v-if="track.help_text" class="rhelp track">
+        {{ track.help_text }}
+      </div>
       <div class="ttitle ellip">{{ track.title }}</div>
       <ArtistName :albumartists="track.albumartists" :artists="track.artists" />
     </div>
@@ -12,10 +17,14 @@
 <script setup lang="ts">
 import { paths } from "@/config";
 import { Track } from "@/interfaces";
+import { playSources } from "@/enums";
+
+import PlayBtn from "../shared/PlayBtn.vue";
 import ArtistName from "../shared/ArtistName.vue";
 
 defineProps<{
   track: Track;
+  playSource: playSources;
 }>();
 </script>
 
@@ -23,11 +32,29 @@ defineProps<{
 .trackcard {
   padding: $medium;
   cursor: pointer;
-  flex: 0 0 10.1rem;
 
+  .image {
+    position: relative;
+  }
+
+  $btn-width: 4rem;
+
+  .play-btn {
+    opacity: 0;
+    position: absolute;
+    width: 4rem;
+    bottom: $small;
+    left: calc(50% - #{$btn-width / 2});
+    transition: all 0.25s;
+  }
 
   &:hover {
-    background-color: $gray3;
+    background-color: $gray4;
+
+    .play-btn {
+      opacity: 1;
+      transform: translateY(-0.75rem);
+    }
   }
 
   img {

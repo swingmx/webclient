@@ -29,6 +29,7 @@ export interface Track extends AlbumDisc {
   genre?: string;
   copyright?: string;
   master_index?: number;
+  help_text?: string;
 }
 
 export interface Folder {
@@ -54,6 +55,7 @@ export interface Album {
   colors: string[];
   copyright?: string;
 
+  help_text?: string;
   is_live: boolean;
   is_compilation: boolean;
   is_soundtrack: boolean;
@@ -73,6 +75,7 @@ export interface Artist {
   duration: number;
   colors: string[];
   is_favorite?: boolean;
+  help_text?: string;
 }
 
 export interface Option {

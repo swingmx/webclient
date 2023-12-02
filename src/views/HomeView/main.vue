@@ -2,12 +2,11 @@
   <div class="homepageview content-page">
     <GenericHeader>
       <template #name>Home</template>
-      <template #description>Good evening cwilvx</template>
+      <template #description>{{ getGreetings("cwilvx") }}</template>
       <template #right?> </template>
     </GenericHeader>
     <RecentItems
       :title="'Recently Added'"
-      :description="`What you added within the last ${home.recentlyAddedCutoff} days`"
       :items="home.recentlyAdded"
     />
   </div>
@@ -23,6 +22,23 @@ import RecentItems from "@/components/HomeView/RecentItems.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
 
 const home = useHome();
+
+function getGreetings(username: string) {
+  const date = new Date();
+  const hour = date.getHours();
+
+  if (hour < 3) {
+    return "Hey there night owl";
+  } else if (hour < 5) {
+    return "Hey there early bird";
+  } else if (hour < 11) {
+    return "Good morning " + username;
+  } else if (hour < 16) {
+    return "Good afternoon " + username;
+  } else {
+    return "Goooood evening " + username;
+  }
+}
 
 onMounted(async () => {
   document.title = "Home | Swing Music";

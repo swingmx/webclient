@@ -7,7 +7,12 @@
 <script setup lang="ts">
 import { Track } from "@/interfaces";
 import { playSources } from "@/enums";
-import { playFromAlbumCard, playFromArtistCard } from "@/helpers/usePlayFrom";
+import {
+  playFromAlbumCard,
+  playFromArtistCard,
+  playFromFolderCard,
+  playFromPlaylist,
+} from "@/helpers/usePlayFrom";
 
 import PlaySvg from "@/assets/icons/play.svg";
 import useQueue from "@/stores/queue";
@@ -20,6 +25,7 @@ const props = defineProps<{
   albumName?: string;
   artisthash?: string;
   artistname?: string;
+  folderpath?: string;
   track?: Track;
 }>();
 
@@ -32,7 +38,12 @@ function handlePlay() {
     case playSources.artist:
       playFromArtistCard(props.artisthash || "", props.artistname || "");
       break;
-
+    case playSources.folder:
+      playFromFolderCard(props.folderpath || "");
+      break;
+    case playSources.recentlyAdded:
+      playFromPlaylist("recentlyadded", props.track);
+      break;
     case playSources.track: {
       // insert after current and play
       if (!props.track) break;

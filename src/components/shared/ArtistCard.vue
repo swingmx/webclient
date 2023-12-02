@@ -8,12 +8,21 @@
     }"
     class="artist-card"
   >
-    <img class="artist-image circular" :src="imguri + artist.image" />
-    <div v-if="show_help" class="rhelp t-center">NEW MUSIC</div>
+    <div class="image">
+      <img class="artist-image circular" :src="imguri + artist.image" />
+      <PlayBtn
+        :artisthash="artist.artisthash"
+        :artistname="artist.name"
+        :source="playSources.artist"
+      />
+    </div>
+    <div v-if="artist.help_text" class="rhelp t-center">
+      {{ artist.help_text }}
+    </div>
     <div class="artist-name t-center">
       {{ artist.name }}
     </div>
-    <div class="racount t-center">
+    <div v-if="artist.help_text" class="racount t-center">
       {{ artist.trackcount }} Track{{ artist.trackcount == 1 ? "" : "s" }}
     </div>
   </RouterLink>
@@ -22,20 +31,20 @@
 <script setup lang="ts">
 import { Artist } from "@/interfaces";
 import { Routes } from "@/router";
-import { paths } from "../../config";
+import { paths } from "@/config";
+
+import PlayBtn from "./PlayBtn.vue";
+import { playSources } from "@/enums";
 
 const imguri = paths.images.artist.large;
 
 defineProps<{
   artist: Artist;
-  show_help?: boolean;
 }>();
 </script>
 
 <style lang="scss">
 .artist-card {
-  flex: 0 0 10.1rem;
-
   overflow: hidden;
   position: relative;
 
@@ -46,8 +55,28 @@ defineProps<{
   font-weight: bolder;
   height: max-content;
 
+  .image {
+    position: relative;
+  }
+
+  $btn-width: 4rem;
+
+  .play-btn {
+    opacity: 0;
+    position: absolute;
+    width: 4rem;
+    bottom: 0;
+    left: calc(50% - #{$btn-width / 2});
+    transition: all 0.25s;
+  }
+
   &:hover {
     background-color: $gray4;
+
+    .play-btn {
+      opacity: 1;
+      transform: translateY(-1.25rem);
+    }
   }
 
   .artist-image {

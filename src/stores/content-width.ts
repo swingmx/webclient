@@ -41,7 +41,6 @@ const maxAbumCards = computed(() => {
   const max = Math.round((content_width.value - paddings) / width);
 
   if (max == 0) return 7;
-  console.log("max", max);
   return max;
 });
 

@@ -57,7 +57,7 @@ export async function getAllPlaylists(no_images = false): Promise<Playlist[]> {
   return [];
 }
 
-export async function getPlaylist(pid: number, no_tracks = false) {
+export async function getPlaylist(pid: number | string, no_tracks = false) {
   const uri = `${basePlaylistUrl}/${pid}?no_tracks=${no_tracks}`;
 
   interface PlaylistData {
