@@ -1,20 +1,31 @@
 <template>
-  <div class="album-virtual-scroller v-scroll-page" :class="{ isSmall }">
-    <RecycleScroller
-      v-slot="{ item }"
+  <div
+    class="album-virtual-scroller v-scroll-page"
+    :class="{ isSmall }"
+    style="height: 100%"
+  >
+    <DynamicScroller
+      style="height: 100%"
       class="scroller"
+      :min-item-size="64"
       :items="scrollerItems"
-      :item-size="null"
-      key-field="id"
     >
-      <div :style="{ maxHeight: `${item.size}px` }">
-        <component
-          :is="item.component"
-          v-bind="item.props"
-          @playThis="playFromAlbum(item.props.track.master_index)"
-        />
-      </div>
-    </RecycleScroller>
+      <template #default="{ item, index, active }">
+        <DynamicScrollerItem
+          :item="item"
+          :active="active"
+          :size-dependencies="[item.props]"
+          :data-index="index"
+        >
+          <component
+            :is="item.component"
+            :key="index"
+            v-bind="item.props"
+            @playThis="playFromAlbum(item.props.track.master_index)"
+          ></component>
+        </DynamicScrollerItem>
+      </template>
+    </DynamicScroller>
   </div>
 </template>
 
@@ -24,20 +35,20 @@ import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import { Track } from "@/interfaces";
 
-import useQueueStore from "@/stores/queue";
-import useTracklist from "@/stores/queue/tracklist"
 import useAlbumStore from "@/stores/pages/album";
+import useQueueStore from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
 
 import AlbumDiscBar from "@/components/AlbumView/AlbumDiscBar.vue";
-import AlbumsList from "@/components/AlbumView/ArtistAlbums.vue";
 import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 import Header from "@/components/AlbumView/main.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
+import CardScroller from "@/components/HomeView/RecentItems.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import SimilarAlbumLoader from "./SimilarAlbumLoader.vue";
 
-import { discographyAlbumTypes, dropSources } from "@/enums";
-import { heightLarge, isSmall, isSmallPhone } from "@/stores/content-width";
+import { dropSources } from "@/enums";
+import { isSmall } from "@/stores/content-width";
 
 const album = useAlbumStore();
 const queue = useQueueStore();
@@ -50,17 +61,15 @@ interface ScrollerItem {
     | typeof Header
     | typeof SongItem
     | typeof GenreBanner
-    | typeof AlbumsList
+    | typeof CardScroller
     | typeof AlbumsFetcher
     | typeof SimilarAlbumLoader;
   props?: any;
-  size: number;
 }
 
 class songItem {
   id: string | number;
   props = {};
-  size = 64;
   component: typeof SongItem | typeof AlbumDiscBar;
 
   constructor(track: Track) {
@@ -84,23 +93,23 @@ const AlbumVersionsFetcher: ScrollerItem = {
     fetch_callback: album.fetchAlbumVersions,
     reset_callback: () => {
       album.resetOtherVersions();
-      album.fetchAlbumVersions();
+      return album.fetchAlbumVersions();
     },
+    name: "otherVersions",
   },
-  size: 2,
 };
 
-const SimilarAlbumsFetcher: ScrollerItem = {
+const fetched_similar_hash: ScrollerItem = {
   id: "similarAlbumsFetcherBanner",
   component: AlbumsFetcher,
   props: {
-    fetch_callback: album.fetchSimilarAlbums,
+    fetch_callback: () => album.fetchSimilarAlbums(),
     reset_callback: () => {
       album.resetSimilarAlbums();
-      album.fetchSimilarAlbums();
+      return album.fetchSimilarAlbums();
     },
+    name: "similarAlbums",
   },
-  size: 2,
 };
 
 function getSongItems() {
@@ -119,15 +128,16 @@ function getArtistAlbumComponents(): ScrollerItem[] {
 
     return {
       id: artisthash,
-      component: AlbumsList,
+      component: CardScroller,
       props: {
-        artisthash,
-        albums: ar.albums,
+        items: ar.albums.map((album) => ({
+          type: "album",
+          item: album,
+        })),
         title: `More from ${artistname}`,
-        albumType: discographyAlbumTypes.all,
+        // albumType: discographyAlbumTypes.all,
         route: `/artists/${artisthash}/discography`,
       },
-      size: 19 * 16,
     };
   });
 }
@@ -137,61 +147,62 @@ function getAlbumVersionsComponent(): ScrollerItem | null {
 
   return {
     id: "otherVersions",
-    component: AlbumsList,
+    component: CardScroller,
     props: {
-      artisthash: album.info.albumartists[0].artisthash,
-      albums: album.otherVersions,
+      items: album.otherVersions.map((album) => ({
+        type: "album",
+        item: album,
+      })),
       title: "Other versions",
-      albumType: discographyAlbumTypes.albums,
+      child_props: {
+        hide_artists: true,
+      },
+      // albumType: discographyAlbumTypes.albums,
       route: `/artists/${album.info.albumartists[0].artisthash}/discography`,
-      hide_artists: true,
     },
-    size: 18 * 16,
   };
 }
+const header: ScrollerItem = {
+  id: "album-header",
+  component: Header,
+};
+
+const genreBanner: ScrollerItem = {
+  id: "genre-banner",
+  component: GenreBanner,
+  props: {
+    source: "album",
+  },
+};
 
 const scrollerItems = computed(() => {
-  const header: ScrollerItem = {
-    id: "album-header",
-    component: Header,
-    size: isSmallPhone.value || heightLarge.value ? 25 * 16 : 19 * 16,
-  };
-
-  const genreBanner: ScrollerItem = {
-    id: "genre-banner",
-    component: GenreBanner,
-    size: 80,
-    props: {
-      source: "album",
-    },
-  };
-
   let moreFrom = getArtistAlbumComponents();
   moreFrom = moreFrom.filter((item) => item.id !== undefined);
   const otherVersionsComponent = getAlbumVersionsComponent();
 
-  let components = [
-    header,
-    ...getSongItems(),
-    genreBanner,
-    AlbumVersionsFetcher,
-  ];
+  let components = [header, ...getSongItems(), genreBanner];
+
+  if (album.tracks.length) {
+    components.push(AlbumVersionsFetcher);
+  }
 
   if (otherVersionsComponent !== null) {
     components.push(otherVersionsComponent);
   }
 
   components.push(...moreFrom);
-  components.push(SimilarAlbumsFetcher);
+
+  if (album.tracks.length) {
+    components.push(fetched_similar_hash);
+  }
 
   if (
-    album.fetched_hash === route.params.albumhash &&
+    album.fetched_similar_hash === route.params.albumhash &&
     album.similarAlbums.length
   ) {
     components.push({
       id: "similarAlbums",
       component: SimilarAlbumLoader,
-      size: 19 * 16,
     });
   }
 
@@ -206,7 +217,6 @@ function playFromAlbum(index: number) {
 
 onBeforeRouteUpdate(async (to) => {
   await album.fetchTracksAndArtists(to.params.albumhash.toString()).then(() => {
-    album.resetQuery();
     album.resetAlbumArtists();
     album.fetchArtistAlbums();
   });
@@ -214,7 +224,6 @@ onBeforeRouteUpdate(async (to) => {
 
 onBeforeRouteLeave(() => {
   setTimeout(() => {
-    album.resetQuery();
     album.resetAlbumArtists();
   }, 500);
 });

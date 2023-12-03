@@ -15,12 +15,6 @@
         v-bind="getProps(i)"
       ></component>
     </div>
-    <RouterLink
-      v-if="playSource == playSources.recentlyAdded"
-      to="playlist/recentlyadded"
-    >
-      <button class="to_playlist circular">Browse recent tracks</button>
-    </RouterLink>
   </div>
 </template>
 
@@ -41,7 +35,9 @@ const props = defineProps<{
     type: string;
     item: any;
   }[];
-  playSource: playSources;
+  playSource?: playSources;
+  child_props?: any;
+  route?: string;
 }>();
 
 function getComponent(type: string) {
@@ -64,6 +60,7 @@ function getProps(item: { type: string; item: any }) {
     case "album":
       return {
         album: item.item,
+        ...props.child_props,
       };
     case "track":
       return {
@@ -88,6 +85,8 @@ function getProps(item: { type: string; item: any }) {
 
 <style lang="scss">
 .home-recent-items {
+  padding: 2rem 0;
+
   .recentitems {
     gap: 1.5rem 0;
     display: grid;

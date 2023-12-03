@@ -28,26 +28,26 @@
 import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
-import useQueue from "@/stores/queue";
 import { getArtistTracks } from "@/requests/artists";
 import useArtist from "@/stores/pages/artist";
+import useQueue from "@/stores/queue";
 
+import { discographyAlbumTypes, dropSources } from "@/enums";
 import { Album, ScrollerItem } from "@/interfaces";
 import useTracklist from "@/stores/queue/tracklist";
-import { discographyAlbumTypes, dropSources } from "@/enums";
 
-import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
+import CardScroller from "@/components/HomeView/RecentItems.vue";
+
+import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import Header from "@/components/ArtistView/Header.vue";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
-import SimilarArtists from "@/components/PlaylistView/ArtistsList.vue";
-import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 
 const route = useRoute();
 
 const queue = useQueue();
-const tracklist = useTracklist();
 const store = useArtist();
+const tracklist = useTracklist();
 
 function fetchArtistAlbums() {
   return store.getArtistAlbums();
@@ -125,15 +125,18 @@ function createAbumComponent(
   }
   return {
     id: title,
-    component: ArtistAlbums,
+    component: CardScroller,
     props: {
-      albumType,
-      albums,
       title,
-      artisthash: route.params.hash,
-      show_date,
-      artist_page: true,
-      hide_artists: !(AlbumType.APPEARANCES === title),
+      items: albums.map((album) => ({
+        type: "album",
+        item: album,
+      })),
+      child_props: {
+        show_date,
+        artist_page: true,
+        hide_artists: !(AlbumType.APPEARANCES === title),
+      },
       route: `/artists/${store.info.artisthash}/discography?artist=${store.info.name}`,
     },
   };
@@ -196,17 +199,24 @@ const scrollerItems = computed(() => {
     components.push(appearances);
   }
 
-  components = [...components, genreBanner, similar_artists_fetcher];
+  components = [...components, genreBanner];
+
+  if (store.tracks.length) {
+    components.push(similar_artists_fetcher);
+  }
 
   if (
-    store.fetched_hash === route.params.hash &&
+    store.fetched_similar_hash === route.params.hash &&
     store.similar_artists.length > 0
   ) {
     const SimilarArtistsComponent = {
       id: "similar-artists",
-      component: SimilarArtists,
+      component: CardScroller,
       props: {
-        artists: store.similar_artists,
+        items: store.similar_artists.map((artist) => ({
+          type: "artist",
+          item: artist,
+        })),
         title: "Similar Artists",
       },
     };

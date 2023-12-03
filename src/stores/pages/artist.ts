@@ -27,7 +27,8 @@ export default defineStore("artistPage", {
       btn: "",
     },
     genres: <string[]>[],
-    fetched_hash: "",
+    
+    fetched_similar_hash: "",
   }),
   actions: {
     async getData(hash: string) {
@@ -53,17 +54,13 @@ export default defineStore("artistPage", {
       this.compilations = compilations;
     },
     async fetchSimilarArtists() {
-      // the fetcher component is first mounted then unmounted by the recycler view,
-      // resulting in this function being called twice.
-      // 👇👇 To fix multiple calls, check if data is already fetched .
-      if (this.fetched_hash === this.info.artisthash) return;
-
+      if (this.fetched_similar_hash === this.info.artisthash) return;
+      this.fetched_similar_hash = this.info.artisthash;
       this.similar_artists = await getSimilarArtists(
         this.info.artisthash,
         maxAbumCards.value
       );
 
-      this.fetched_hash = this.info.artisthash;
     },
     extractColors() {
       const url = paths.images.artist.large + this.info.image;

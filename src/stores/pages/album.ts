@@ -1,5 +1,5 @@
-import { ComputedRef } from "vue";
 import { defineStore } from "pinia";
+import { ComputedRef } from "vue";
 
 import {
   getAlbum,
@@ -9,12 +9,12 @@ import {
 } from "@/requests/album";
 
 import { paths } from "@/config";
-import { useFuse } from "@/utils";
 import { FuseTrackOptions } from "@/enums";
-import { useNotifStore } from "../notification";
-import { maxAbumCards } from "@/stores/content-width";
-import setColorsToStore from "@/utils/colortools/setColorsToStore";
 import { Album, AlbumDisc, FuseResult, Track } from "@/interfaces";
+import { maxAbumCards } from "@/stores/content-width";
+import { useFuse } from "@/utils";
+import setColorsToStore from "@/utils/colortools/setColorsToStore";
+import { useNotifStore } from "../notification";
 
 interface Disc {
   [key: string]: Track[];
@@ -60,7 +60,9 @@ export default defineStore("album", {
       bg: "",
       btn: "",
     },
-    fetched_hash: "",
+    fetched_similar_hash: "",
+    fetched_version_hash: "",
+    fetched_other_hash: "",
   }),
   actions: {
     /**
@@ -94,6 +96,9 @@ export default defineStore("album", {
       this.extractColors();
     },
     async fetchArtistAlbums() {
+      if (this.fetched_other_hash == this.info.albumhash) return;
+
+      this.fetched_other_hash = this.info.albumhash;
       const albumartists = this.info.albumartists;
 
       const albumartisthashes = albumartists.map((artist) => artist.artisthash);
@@ -105,6 +110,9 @@ export default defineStore("album", {
       );
     },
     async fetchAlbumVersions() {
+      if (this.fetched_version_hash == this.info.albumhash) return;
+
+      this.fetched_version_hash = this.info.albumhash;
       this.otherVersions = await getAlbumVersions(
         this.info.og_title,
         this.info.base_title,
@@ -112,14 +120,13 @@ export default defineStore("album", {
       );
     },
     async fetchSimilarAlbums() {
-      if (this.fetched_hash === this.info.albumhash) return;
+      if (this.fetched_similar_hash === this.info.albumhash) return;
 
+      this.fetched_similar_hash = this.info.albumhash;
       this.similarAlbums = await getSimilarAlbums(
         this.info.albumartists[0].artisthash,
         maxAbumCards.value
       );
-
-      this.fetched_hash = this.info.albumhash;
     },
     extractColors() {
       const url = paths.images.thumb.small + this.info.image;
