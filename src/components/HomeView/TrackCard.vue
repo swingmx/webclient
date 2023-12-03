@@ -37,14 +37,14 @@ defineProps<{
     position: relative;
   }
 
-  $btn-width: 4rem;
+  $btnwidth: 4rem;
 
   .play-btn {
     opacity: 0;
     position: absolute;
     width: 4rem;
     bottom: $small;
-    left: calc(50% - #{$btn-width / 2});
+    left: calc(50% - ($btnwidth / 2));
     transition: all 0.25s;
   }
 

@@ -1,10 +1,13 @@
 <template>
   <div class="card-list-scroll-x">
-    <h3>{{ title }} <SeeAll v-if="route" :route="route" /></h3>
-    <div ref="artistItemswrappers" class="cards">
+    <h3>
+      {{ title }} <SeeAll v-if="route" :route="route" />
+    </h3>
+    <div class="cards">
       <ArtistCard
         v-for="artist in artists.slice(0, maxAbumCards)"
         :key="artist.image"
+        class="hlistitem"
         :artist="artist"
       />
     </div>
@@ -12,8 +15,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
 import { Artist } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
 
@@ -25,6 +26,4 @@ defineProps<{
   title: string;
   route?: string;
 }>();
-
-const artistItemswrappers = ref<HTMLElement | null>(null);
 </script>

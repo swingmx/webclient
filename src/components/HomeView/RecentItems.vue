@@ -1,5 +1,5 @@
 <template>
-  <div class="home-recent-items card-list-scroll-x">
+  <div class="home-recent-items">
     <div class="rinfo">
       <div class="rtitle">
         <b>{{ title }}</b>
@@ -22,20 +22,22 @@
 </template>
 
 <script setup lang="ts">
+import { playSources } from "@/enums";
+import { maxAbumCards } from "@/stores/content-width";
+
 import TrackCard from "./TrackCard.vue";
 import FolderCard from "./FolderCard.vue";
 import AlbumCard from "../shared/AlbumCard.vue";
 import ArtistCard from "../shared/ArtistCard.vue";
-import { maxAbumCards } from "@/stores/content-width";
-import { playSources } from "@/enums";
 
-defineProps<{
+const props = defineProps<{
   title: string;
   description?: string;
   items: {
     type: string;
     item: any;
   }[];
+  playSource: playSources;
 }>();
 
 function getComponent(type: string) {
@@ -56,15 +58,11 @@ function getProps(item: { type: string; item: any }) {
     case "album":
       return {
         album: item.item,
-        show_date: false,
-        artist_page: false,
-        hide_artists: false,
-        show_help: true,
       };
     case "track":
       return {
         track: item.item,
-        playSource: playSources.recentlyAdded,
+        playSource: props.playSource,
       };
     case "artist":
       return {

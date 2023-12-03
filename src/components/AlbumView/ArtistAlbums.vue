@@ -12,8 +12,9 @@
     </h3>
     <div class="cards">
       <AlbumCard
-        v-for="a in albums"
+        v-for="a in albums.slice(0, maxAbumCards)"
         :key="a.albumhash"
+        class="hlistitem"
         :album="a"
         :show_date="show_date"
         :artist_page="artist_page"

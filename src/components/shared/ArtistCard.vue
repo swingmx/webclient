@@ -8,8 +8,14 @@
     }"
     class="artist-card"
   >
-    <div class="image">
+    <div class="image circular">
       <img class="artist-image circular" :src="imguri + artist.image" />
+      <div
+        class="overlay circular"
+        :style="{
+          background: `linear-gradient(to top, ${artist.colors[0]} 20%, transparent)`,
+        }"
+      ></div>
       <PlayBtn
         :artisthash="artist.artisthash"
         :artistname="artist.name"
@@ -57,16 +63,24 @@ defineProps<{
 
   .image {
     position: relative;
+
+    .overlay {
+      position: absolute;
+      width: 100%;
+      height: calc(100% - $small + 1px);
+      top: 0;
+      opacity: 0;
+    }
   }
 
-  $btn-width: 4rem;
+  $btnwidth: 4rem;
 
   .play-btn {
     opacity: 0;
     position: absolute;
     width: 4rem;
     bottom: 0;
-    left: calc(50% - #{$btn-width / 2});
+    left: calc(50% - ($btnwidth / 2));
     transition: all 0.25s;
   }
 
@@ -76,6 +90,10 @@ defineProps<{
     .play-btn {
       opacity: 1;
       transform: translateY(-1.25rem);
+    }
+
+    .overlay {
+      opacity: 1;
     }
   }
 

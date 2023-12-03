@@ -140,7 +140,6 @@ button {
   opacity: 0.5;
 }
 
-// NO THIS, NO THAT (OVERRIDES)
 .no-border {
   border: none;
 }
@@ -202,8 +201,8 @@ button {
   }
 
   .cards {
-    display: flex;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10.1rem, 1fr));
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     flex-direction: row;

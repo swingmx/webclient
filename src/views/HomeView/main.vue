@@ -8,6 +8,7 @@
     <RecentItems
       :title="'Recently Added'"
       :items="home.recentlyAdded"
+      :play-source="playSources.recentlyAdded"
     />
   </div>
 </template>
@@ -15,8 +16,9 @@
 <script setup lang="ts">
 import { nextTick, onMounted } from "vue";
 
+import { playSources } from "@/enums";
 import useHome from "@/stores/home";
-import { album_card_with } from "@/stores/content-width";
+import { updateCardWidth } from "@/stores/content-width";
 
 import RecentItems from "@/components/HomeView/RecentItems.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
@@ -44,13 +46,7 @@ onMounted(async () => {
   document.title = "Home | Swing Music";
   await home.fetchRecentlyAdded();
 
-  nextTick().then(() => {
-    const elems = document.getElementsByClassName("hlistitem");
-
-    if (elems.length) {
-      album_card_with.value = elems[0].clientWidth;
-    }
-  });
+  nextTick().then(updateCardWidth);
 });
 </script>
 

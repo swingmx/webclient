@@ -50,21 +50,21 @@ const tracklist = useTracklist();
 const store = useArtist();
 
 function fetchArtistAlbums() {
-  store.getArtistAlbums();
+  return store.getArtistAlbums();
 }
 
 function reFetchArtistAlbums() {
   store.resetAlbums();
-  store.getArtistAlbums();
+  return store.getArtistAlbums();
 }
 
 function fetchSimilarArtists() {
-  store.fetchSimilarArtists();
+  return store.fetchSimilarArtists();
 }
 
 function reFetchSimilarArtists() {
   store.resetSimilarArtists();
-  store.fetchSimilarArtists();
+  return store.fetchSimilarArtists();
 }
 
 function getHeader() {
