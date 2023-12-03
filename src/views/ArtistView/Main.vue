@@ -28,20 +28,20 @@
 import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
-import { getArtistTracks } from "@/requests/artists";
-import useArtist from "@/stores/pages/artist";
 import useQueue from "@/stores/queue";
-
-import { discographyAlbumTypes, dropSources } from "@/enums";
-import { Album, ScrollerItem } from "@/interfaces";
+import useArtist from "@/stores/pages/artist";
 import useTracklist from "@/stores/queue/tracklist";
 
-import CardScroller from "@/components/HomeView/RecentItems.vue";
+import { Album, ScrollerItem } from "@/interfaces";
+import { getArtistTracks } from "@/requests/artists";
+import { discographyAlbumTypes, dropSources } from "@/enums";
 
-import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
-import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
+
 import Header from "@/components/ArtistView/Header.vue";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
+import CardScroller from "@/components/HomeView/RecentItems.vue";
+import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
+import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 
 const route = useRoute();
 

@@ -1,6 +1,6 @@
 <template>
   <span class="see-all">
-    <RouterLink :to="route"> SEE ALL </RouterLink>
+    <RouterLink :to="route"> <b>SEE ALL</b> </RouterLink>
   </span>
 </template>
 

@@ -3,6 +3,7 @@
     <div class="rinfo">
       <div class="rtitle">
         <b>{{ title }}</b>
+        <SeeAll v-if="route && items.length >= maxAbumCards" :route="route" />
       </div>
       <div v-if="description" class="rdesc">{{ description }}</div>
     </div>
@@ -23,6 +24,7 @@ import { playSources } from "@/enums";
 import { maxAbumCards } from "@/stores/content-width";
 
 import TrackCard from "./TrackCard.vue";
+import SeeAll from "../shared/SeeAll.vue";
 import FolderCard from "./FolderCard.vue";
 import AlbumCard from "../shared/AlbumCard.vue";
 import ArtistCard from "../shared/ArtistCard.vue";
@@ -103,6 +105,9 @@ function getProps(item: { type: string; item: any }) {
 
     .rtitle {
       font-size: 1.15rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
     }
 
     .rdesc {
