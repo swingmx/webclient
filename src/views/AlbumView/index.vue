@@ -45,7 +45,6 @@ import Header from "@/components/AlbumView/main.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import CardScroller from "@/components/HomeView/RecentItems.vue";
 import SongItem from "@/components/shared/SongItem.vue";
-import SimilarAlbumLoader from "./SimilarAlbumLoader.vue";
 
 import { dropSources } from "@/enums";
 import { isSmall } from "@/stores/content-width";
@@ -63,7 +62,6 @@ interface ScrollerItem {
     | typeof GenreBanner
     | typeof CardScroller
     | typeof AlbumsFetcher
-    | typeof SimilarAlbumLoader;
   props?: any;
 }
 
@@ -202,7 +200,14 @@ const scrollerItems = computed(() => {
   ) {
     components.push({
       id: "similarAlbums",
-      component: SimilarAlbumLoader,
+      component: CardScroller,
+      props: {
+        title: "Related Albums",
+        items: album.similarAlbums.map((i) => ({
+          type: "album",
+          item: i,
+        })),
+      },
     });
   }
 

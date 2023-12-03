@@ -10,7 +10,6 @@
       :items="home.recentlyAdded"
       :play-source="playSources.recentlyAdded"
     />
-    <br><br>
     <RecentItems
       :title="'Recently Played'"
       :items="home.recentlyPlayed"
@@ -28,6 +27,7 @@ import { updateCardWidth } from "@/stores/content-width";
 
 import RecentItems from "@/components/HomeView/RecentItems.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 const home = useHome();
 
@@ -49,7 +49,7 @@ function getGreetings(username: string) {
 }
 
 onMounted(async () => {
-  document.title = "Home | Swing Music";
+  updatePageTitle("Home");
   await home.fetchRecentlyAdded();
 
   nextTick().then(updateCardWidth);

@@ -13,7 +13,6 @@ const FolderView = () => import("@/views/FolderView.vue");
 const PlaylistListView = () => import("@/views/PlaylistList.vue");
 const PlaylistView = () => import("@/views/PlaylistView/index.vue");
 const AlbumView = () => import("@/views/AlbumView/index.vue");
-const ArtistExplorer = () => import("@/views/ArtistsExplorer.vue");
 const ArtistView = () => import("@/views/ArtistView");
 const ArtistTracksView = () => import("@/views/ArtistTracks.vue");
 const ArtistDiscographyView = () => import("@/views/ArtistDiscography.vue");
@@ -80,12 +79,6 @@ const albumView = {
       state.loading.value = false;
     });
   },
-};
-
-const artists = {
-  path: "/artists",
-  name: "ArtistsView",
-  component: ArtistExplorer,
 };
 
 const artistView = {
@@ -174,7 +167,6 @@ const routes = [
   playlists,
   playlistView,
   albumView,
-  artists,
   artistView,
   artistDiscography,
   settings,
@@ -194,7 +186,6 @@ export const Routes = {
   playlists: playlists.name,
   playlist: playlistView.name,
   album: albumView.name,
-  artists: artists.name,
   artist: artistView.name,
   artistDiscography: artistDiscography.name,
   settings: settings.name,

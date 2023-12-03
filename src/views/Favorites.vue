@@ -1,30 +1,29 @@
 <template>
   <div class="content-page favorites-page">
     <div v-if="recentFavs.length" class="fav-recents">
-      <Recents :favs="recentFavs" />
+      <CardScroller :items="recentFavs" :title="'Recent'" />
     </div>
     <div v-if="favTracks.length" class="fav-tracks">
       <TopTracks
         :tracks="favTracks"
         :route="'/favorites/tracks'"
-        :title="'Tracks ❤️'"
+        :title="'Tracks'"
         :play-handler="handlePlay"
         :source="dropSources.favorite"
       />
     </div>
     <div v-if="favAlbums.length" class="fav-albums">
-      <ArtistAlbums
-        :albums="favAlbums"
-        :album-type="discographyAlbumTypes.albums"
-        :title="'Albums ❤️'"
+      <CardScroller
+        :items="favAlbums.map((i) => ({ type: 'album', item: i }))"
+        :title="'Albums'"
         :route="'/favorites/albums'"
       />
     </div>
 
     <div v-if="favArtists.length" class="fav-artists">
-      <FeaturedArtists
-        :artists="favArtists"
-        :title="'Artists ❤️'"
+      <CardScroller
+        :items="favArtists.map((i) => ({ type: 'artist', item: i }))"
+        :title="'Artists'"
         :route="'/favorites/artists'"
       />
     </div>
@@ -39,25 +38,23 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, Ref, ref } from "vue";
+import { nextTick, onMounted, Ref, ref } from "vue";
 
 import useQueueStore from "@/stores/queue";
 import useTracklist from "@/stores/queue/tracklist";
-import { maxAbumCards } from "@/stores/content-width";
+import { maxAbumCards, updateCardWidth } from "@/stores/content-width";
 
-import { discographyAlbumTypes, dropSources } from "@/enums";
-import { Album, Artist, RecentFavResult, Track } from "@/interfaces";
-import { getAllFavs, getFavTracks } from "@/requests/favorite";
-
-import HeartSvg from "@/assets/icons/heart-no-color.svg";
-import ArtistAlbums from "@/components/AlbumView/ArtistAlbums.vue";
-import TopTracks from "@/components/ArtistView/TopTracks.vue";
-import Recents from "@/components/Favorites/Recents.vue";
-import FeaturedArtists from "@/components/PlaylistView/ArtistsList.vue";
-import NoItems from "@/components/shared/NoItems.vue";
+import { dropSources } from "@/enums";
 import updatePageTitle from "@/utils/updatePageTitle";
+import { getAllFavs, getFavTracks } from "@/requests/favorite";
+import { Album, Artist, RecentFavResult, Track } from "@/interfaces";
 
-const description = `You can add tracks, albums and artists to your favorites by clicking the ❤️ heart icon`;
+import NoItems from "@/components/shared/NoItems.vue";
+import HeartSvg from "@/assets/icons/heart-no-color.svg";
+import TopTracks from "@/components/ArtistView/TopTracks.vue";
+import CardScroller from "@/components/HomeView/RecentItems.vue";
+
+const description = `You can add tracks, albums and artists to your favorites by clicking the heart icon`;
 
 const queue = useQueueStore();
 const tracklist = useTracklist();
@@ -72,6 +69,7 @@ const noFavs = ref(false);
 onMounted(() => {
   updatePageTitle("Favorites");
   const max = maxAbumCards.value;
+
   getAllFavs(6, max, max)
     .then((favs) => {
       recentFavs.value = favs.recents;
@@ -84,6 +82,10 @@ onMounted(() => {
         !favAlbums.value.length &&
         !favTracks.value.length &&
         !favArtists.value.length;
+    })
+    .then(async () => {
+      await nextTick();
+      updateCardWidth();
     });
 });
 
@@ -123,19 +125,6 @@ async function handlePlay(index: number) {
       h3 {
         padding-right: $smaller;
       }
-    }
-  }
-
-  .fav-artists {
-    h3 {
-      padding-right: $medium;
-    }
-  }
-
-  .fav-albums {
-    .album-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
     }
   }
 }
