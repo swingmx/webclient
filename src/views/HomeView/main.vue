@@ -10,6 +10,12 @@
       :items="home.recentlyAdded"
       :play-source="playSources.recentlyAdded"
     />
+    <br><br>
+    <RecentItems
+      :title="'Recently Played'"
+      :items="home.recentlyPlayed"
+      :play-source="playSources.recentlyPlayed"
+    />
   </div>
 </template>
 
@@ -47,6 +53,8 @@ onMounted(async () => {
   await home.fetchRecentlyAdded();
 
   nextTick().then(updateCardWidth);
+
+  await home.fetchRecentlyPlayed();
 });
 </script>
 

@@ -1,11 +1,19 @@
 import { paths } from "@/config";
 import useAxios from "./useAxios";
 
-export async function getRecentlyAdded(limit: number) {
+export async function getRecents(path: string, limit: number) {
   const { data } = await useAxios({
-    url: paths.api.home.recentlyAdded + "?limit=" + limit,
+    url: path + "?limit=" + limit,
     get: true,
   });
 
   return data;
+}
+
+export async function getRecentlyAdded(limit: number) {
+  return getRecents(paths.api.home.recentlyAdded, limit);
+}
+
+export async function getRecentlyPlayed(limit: number) {
+  return getRecents(paths.api.home.recentlyPlayed, limit);
 }

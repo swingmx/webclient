@@ -15,7 +15,10 @@
         v-bind="getProps(i)"
       ></component>
     </div>
-    <RouterLink to="playlist/recentlyadded">
+    <RouterLink
+      v-if="playSource == playSources.recentlyAdded"
+      to="playlist/recentlyadded"
+    >
       <button class="to_playlist circular">Browse recent tracks</button>
     </RouterLink>
   </div>
@@ -29,6 +32,7 @@ import TrackCard from "./TrackCard.vue";
 import FolderCard from "./FolderCard.vue";
 import AlbumCard from "../shared/AlbumCard.vue";
 import ArtistCard from "../shared/ArtistCard.vue";
+import PlaylistCard from "../PlaylistsList/PlaylistCard.vue";
 
 const props = defineProps<{
   title: string;
@@ -50,6 +54,8 @@ function getComponent(type: string) {
       return ArtistCard;
     case "folder":
       return FolderCard;
+    case "playlist":
+      return PlaylistCard;
   }
 }
 
@@ -72,6 +78,10 @@ function getProps(item: { type: string; item: any }) {
       return {
         folder: item.item,
       };
+    case "playlist":
+      return {
+        playlist: item.item,
+      };
   }
 }
 </script>
@@ -82,6 +92,10 @@ function getProps(item: { type: string; item: any }) {
     gap: 1.5rem 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(10.1rem, 1fr));
+  }
+
+  .p-card {
+    background-color: transparent;
   }
 
   .rinfo {

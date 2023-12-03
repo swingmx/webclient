@@ -7,6 +7,7 @@ export enum playSources {
   favorite,
   track,
   recentlyAdded,
+  recentlyPlayed,
 }
 
 export enum NotifType {

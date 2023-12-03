@@ -7,6 +7,8 @@ import useLyrics from "./lyrics";
 import useColors from "./colors";
 import useSettings from "./settings";
 import useTracklist from "./queue/tracklist";
+import useTracker from "./tracker";
+
 import { NotifType, useNotifStore } from "./notification";
 
 import { paths } from "../config";
@@ -106,6 +108,9 @@ export const usePlayer = defineStore("player", () => {
   };
 
   audio.onended = () => {
+    const { submitData } = useTracker();
+    submitData();
+
     queue.autoPlayNext();
   };
 

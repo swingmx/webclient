@@ -22,7 +22,7 @@
     <div class="overlay rounded">
       <div class="p-name ellip">{{ playlist.name }}</div>
       <div class="p-count">
-        {{ playlist.count + ` ${playlist.count === 1 ? "Track" : "Tracks"}` }}
+        <b>{{ playlist.count + ` Track${playlist.count === 1 ? "" : "s"}` }}</b>
       </div>
     </div>
   </router-link>
@@ -33,8 +33,7 @@ import { paths } from "../../config";
 import { Playlist } from "../../interfaces";
 
 const imguri = paths.images.playlist;
-
-const props = defineProps<{
+defineProps<{
   playlist: Playlist;
 }>();
 </script>
@@ -44,9 +43,10 @@ const props = defineProps<{
   background-color: #2c2c2e45;
   display: grid;
   grid-template-rows: 1fr max-content;
-  padding: 1rem;
+  padding: $medium;
   gap: $small;
   user-select: none;
+  height: max-content;
 
   .image-grid {
     display: grid;
@@ -55,7 +55,7 @@ const props = defineProps<{
 
   &:hover {
     transition: all 0.25s ease;
-    background-color: $gray3;
+    background-color: $gray4 !important;
     background-blend-mode: screen;
   }
 
@@ -74,25 +74,7 @@ const props = defineProps<{
     .p-count {
       opacity: 0.75;
       font-size: 0.75rem;
-    }
-  }
-
-  &:hover {
-    .p-name {
-      text-decoration: underline;
-    }
-  }
-
-  .bottom {
-    margin-top: $smaller;
-
-    .name {
-      font-weight: 900;
-    }
-
-    .count {
-      font-size: $medium;
-      opacity: 0.5;
+      margin-top: $smaller;
     }
   }
 }

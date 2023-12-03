@@ -32,6 +32,7 @@ defineProps<{
 .trackcard {
   padding: $medium;
   cursor: pointer;
+  height: max-content;
 
   .image {
     position: relative;
