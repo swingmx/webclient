@@ -1,10 +1,7 @@
 <template>
   <div class="right-search-top-albums-or-artists">
     <AlbumCard
-      v-for="album in search.top_results.albums.slice(
-        0,
-        !onSearchPage ? 3 : search.top_results.albums.length
-      )"
+      v-for="album in search.top_results.albums.slice(0, 3)"
       :key="album.albumhash"
       :album="album"
     />
@@ -16,10 +13,6 @@ import useSearchstore from "@/stores/search";
 import AlbumCard from "@/components/shared/AlbumCard.vue";
 
 const search = useSearchstore();
-
-defineProps<{
-  onSearchPage?: boolean;
-}>();
 </script>
 
 <style lang="scss">

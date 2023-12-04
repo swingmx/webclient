@@ -24,25 +24,40 @@
       </div>
     </div>
     <div v-if="search.top_results.artists.length">
-      <h3>Artists</h3>
-      <TopArtists :on-search-page="true" />
+      <RecentItems
+        :title="'Artists'"
+        :items="
+          search.top_results.artists.map((i) => ({
+            type: 'artist',
+            item: i,
+          }))
+        "
+        :route="`/search/artists?q=${search.query}`"
+      />
     </div>
     <div v-if="search.top_results.albums.length">
-      <h3>Albums</h3>
-      <TopAlbums :on-search-page="true" />
+      <RecentItems
+        :title="'Albums'"
+        :items="
+          search.top_results.albums.map((i) => ({
+            type: 'album',
+            item: i,
+          }))
+        "
+        :route="`/search/albums?q=${search.query}`"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import TopAlbums from "@/components/RightSideBar/Search/Top/TopAlbums.vue";
-import TopArtists from "@/components/RightSideBar/Search/Top/TopArtists.vue";
+import useSearchStore from "@/stores/search";
+
+import SearchSvg from "@/assets/icons/search.svg";
+import NoItems from "@/components/shared/NoItems.vue";
+import RecentItems from "@/components/HomeView/RecentItems.vue";
 import TopItem from "@/components/RightSideBar/Search/Top/TopItem.vue";
 import TopTracks from "@/components/RightSideBar/Search/Top/TopTracks.vue";
-import NoItems from "@/components/shared/NoItems.vue";
-import SearchSvg from "@/assets/icons/search.svg";
-
-import useSearchStore from "@/stores/search";
 
 const search = useSearchStore();
 </script>
