@@ -10,11 +10,11 @@
       NoSideBorders: !xxl,
       extendWidth: settings.extend_width && settings.can_extend_width,
     }"
-    :style="{ maxWidth: `${content_height > 1080 ? '2220px' : '1720px'}` }"
+    :style="{ maxWidth: `${content_height > 1080 ? '2220px' : '1760px'}` }"
   >
     <LeftSidebar v-if="!isMobile" />
     <NavBar />
-    <div id="acontent" v-element-size="updateContentElemSize">
+    <div id="acontent" ref="appcontent" v-element-size="updateContentElemSize">
       <BalancerProvider>
         <router-view />
       </BalancerProvider>
@@ -29,7 +29,7 @@
 // @libraries
 import { vElementSize } from "@vueuse/components";
 import { onStartTyping } from "@vueuse/core";
-import { onMounted } from "vue";
+import { onMounted, Ref, ref } from "vue";
 import { useRouter } from "vue-router";
 import { BalancerProvider } from "vue-wrap-balancer";
 
@@ -65,6 +65,7 @@ import { getAllSettings } from "@/requests/settings";
 import { getRootDirs } from "@/requests/settings/rootdirs";
 // import BubbleManager from "./components/bubbles/BinManager.vue";
 
+const appcontent: Ref<HTMLLegendElement | null> = ref(null);
 const queue = useQueue();
 const modal = useModal();
 const lyrics = useLyrics();
@@ -101,7 +102,9 @@ function updateContentElemSize({
   width: number;
   height: number;
 }) {
-  content_width.value = width;
+  // 1372 is the maxwidth of the #acontent. see app-grid.scss > $maxwidth
+  const elem_width = Math.min(1372, appcontent.value?.offsetWidth || 0);
+  content_width.value = elem_width;
   content_height.value = height;
 }
 

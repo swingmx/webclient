@@ -94,7 +94,7 @@ function playFromSearch(index: number) {
   }
 
   #songlist-scroller {
-    padding-right: 1rem;
+    padding-right: $padright;
     padding-left: 0;
   }
 }

@@ -23,9 +23,15 @@ $g-border: solid 1px $gray5;
 #acontent {
   width: 100%;
   grid-area: content;
-  padding-right: calc($medium);
-
   overflow: hidden;
+
+  padding-left: $padleft;
+  margin-right: $margright;
+}
+
+.content-page {
+  scrollbar-gutter: stable;
+  padding-right: $padright;
 }
 
 .vue-recycle-scroller__item-wrapper {
@@ -33,7 +39,6 @@ $g-border: solid 1px $gray5;
 }
 
 .vue-recycle-scroller {
-  padding-left: 1.25rem;
   scrollbar-gutter: stable;
 }
 
@@ -44,19 +49,13 @@ $g-border: solid 1px $gray5;
 
 .topnav {
   grid-area: nav;
-  margin: 1rem 0;
+  padding: 1rem $padleft;
+  padding-right: max(2rem, calc($padright - $padleft));
 }
 
 .b-bar {
   grid-area: bottombar;
   border-top: $g-border;
-}
-
-.content-page {
-  margin-left: 1.25rem;
-  margin-right: -$medium;
-  padding-right: $medium;
-  scrollbar-gutter: stable;
 }
 
 // ====== MODIFIERS =======
@@ -77,13 +76,7 @@ $g-border: solid 1px $gray5;
 
   #acontent {
     margin-right: 0 !important;
-    padding-right: $medium !important;
-  }
-
-  .topnav {
-    //reduce width to match #acontent
-    width: calc(100% - 1rem);
-    padding-right: 0;
+    // padding-right: $medium !important;
   }
 
   @include allPhones {
@@ -102,12 +95,10 @@ $g-border: solid 1px $gray5;
 }
 
 .v-scroll-page {
-  width: calc(100% + $medium) !important;
-
   .scroller {
+    padding-right: $padright;
     height: 100%;
     width: 100%;
-    padding-right: 1.25rem;
     padding-bottom: $content-padding-bottom;
   }
 }

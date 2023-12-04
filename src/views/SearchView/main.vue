@@ -1,5 +1,5 @@
 <template>
-  <div class="search-view content-page" style="padding-right: 0">
+  <div class="search-view">
     <div v-if="isMobile" class="buttons-area">
       <Tabs
         :tabs="pages"
@@ -130,9 +130,8 @@ onMounted(() => {
 
 <style lang="scss">
 .search-view {
-  height: calc(100%);
+  height: 100%;
   display: grid;
-  margin-right: -0.75rem;
   position: relative;
 
   @include allPhones {
@@ -142,19 +141,17 @@ onMounted(() => {
 
   .page.no-scroll {
     overflow-x: visible;
-    // @include hideScrollbars
   }
 
   .buttons-area {
     position: relative;
-    // height: 4rem;
-
     .tabheaders {
       margin: 0;
     }
   }
 
   .grid-page {
+    padding-right: $padright;
     max-height: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
@@ -162,7 +159,6 @@ onMounted(() => {
 
     padding-bottom: 4rem;
     overflow: auto;
-    padding-right: $medium;
     scrollbar-gutter: stable;
   }
 
@@ -170,8 +166,8 @@ onMounted(() => {
     position: absolute;
     bottom: 0;
     height: 3rem;
-    left: -1.25rem;
-    width: calc(100% + 1.25rem);
+    left: $padleft;
+    width: calc(100% + $padleft);
     border-radius: 0;
     background: $darkestblue;
   }

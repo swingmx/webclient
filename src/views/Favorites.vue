@@ -101,7 +101,6 @@ async function handlePlay(index: number) {
   height: 100%;
   overflow: auto;
   padding-bottom: 2rem;
-  padding-right: 1rem;
 
   h3 {
     margin-top: 0;

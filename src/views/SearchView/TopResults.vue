@@ -23,30 +23,28 @@
         <TopTracks />
       </div>
     </div>
-    <div v-if="search.top_results.artists.length">
-      <RecentItems
-        :title="'Artists'"
-        :items="
-          search.top_results.artists.map((i) => ({
-            type: 'artist',
-            item: i,
-          }))
-        "
-        :route="`/search/artists?q=${search.query}`"
-      />
-    </div>
-    <div v-if="search.top_results.albums.length">
-      <RecentItems
-        :title="'Albums'"
-        :items="
-          search.top_results.albums.map((i) => ({
-            type: 'album',
-            item: i,
-          }))
-        "
-        :route="`/search/albums?q=${search.query}`"
-      />
-    </div>
+    <RecentItems
+      v-if="search.top_results.artists.length"
+      :title="'Artists'"
+      :items="
+        search.top_results.artists.map((i) => ({
+          type: 'artist',
+          item: i,
+        }))
+      "
+      :route="`/search/artists?q=${search.query}`"
+    />
+    <RecentItems
+      v-if="search.top_results.albums.length"
+      :title="'Albums'"
+      :items="
+        search.top_results.albums.map((i) => ({
+          type: 'album',
+          item: i,
+        }))
+      "
+      :route="`/search/albums?q=${search.query}`"
+    />
   </div>
 </template>
 
@@ -66,13 +64,12 @@ const search = useSearchStore();
 .search-page-top-results {
   height: 100%;
   overflow: auto;
+  padding-right: $padright;
 
   .header {
-    margin-right: 1.25rem;
     display: grid;
     grid-template-columns: max-content 1fr;
-    margin-bottom: 2rem;
-    gap: $medium;
+    gap: 1rem;
 
     @include allPhones {
       grid-template-columns: 1fr;

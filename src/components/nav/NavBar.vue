@@ -94,8 +94,6 @@ watch(
 .topnav {
   display: grid;
   grid-template-columns: 1fr min-content;
-  width: 100%;
-  padding: 0 1.25rem;
 
   .left {
     display: grid;

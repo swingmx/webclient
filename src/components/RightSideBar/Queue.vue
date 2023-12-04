@@ -88,9 +88,5 @@ onBeforeUnmount(() => {
 .queue-virtual-scroller {
   height: 100%;
   overflow: hidden;
-
-  .vue-recycle-scroller {
-    padding: 0 !important;
-  }
 }
 </style>
