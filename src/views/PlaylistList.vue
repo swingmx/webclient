@@ -1,6 +1,7 @@
 <template>
   <div id="p-view" class="content-page">
     <Header>
+      <template #name>Playlists</template>
       <template #description>
         You have {{ pStore.playlists.length }} playlists in your library
         <br />

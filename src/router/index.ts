@@ -109,7 +109,7 @@ const ArtistTracks = {
 };
 
 const artistDiscography = {
-  path: "/artists/:hash/discography",
+  path: "/artists/:hash/discography/:type",
   name: "ArtistDiscographyView",
   component: ArtistDiscographyView,
 };

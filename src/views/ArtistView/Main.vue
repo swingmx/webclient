@@ -28,20 +28,19 @@
 import { computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
-import useQueue from "@/stores/queue";
 import useArtist from "@/stores/pages/artist";
+import useQueue from "@/stores/queue";
 import useTracklist from "@/stores/queue/tracklist";
 
+import { discographyAlbumTypes, dropSources } from "@/enums";
 import { Album, ScrollerItem } from "@/interfaces";
 import { getArtistTracks } from "@/requests/artists";
-import { discographyAlbumTypes, dropSources } from "@/enums";
 
-
+import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
+import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import Header from "@/components/ArtistView/Header.vue";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
 import CardScroller from "@/components/HomeView/RecentItems.vue";
-import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
-import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 
 const route = useRoute();
 
@@ -111,7 +110,7 @@ function createAbumComponent(
       albumType = discographyAlbumTypes.albums;
       break;
     case AlbumType.SINGLES:
-      albumType = discographyAlbumTypes.singles;
+      albumType = discographyAlbumTypes.EPs_and_singles;
       break;
     case AlbumType.COMPILATIONS:
       albumType = discographyAlbumTypes.compilations;
@@ -137,7 +136,7 @@ function createAbumComponent(
         artist_page: true,
         hide_artists: !(AlbumType.APPEARANCES === title),
       },
-      route: `/artists/${store.info.artisthash}/discography?artist=${store.info.name}`,
+      route: `/artists/${store.info.artisthash}/discography/${albumType}?artist=${store.info.name}`,
     },
   };
 }

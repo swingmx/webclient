@@ -52,14 +52,14 @@ export enum contextChildrenShowMode {
   hover = "hover",
 }
 
-export enum discographyAlbumTypes {
-  all = "All",
-  albums = "Albums",
-  singles = "Singles",
-  eps = "EPs",
-  appearances = "Appearances",
-  compilations = "Compilations",
-}
+// rewrite the above as an object
+export const discographyAlbumTypes = {
+  all: "all",
+  albums: "albums",
+  EPs_and_singles: "EP & singles",
+  appearances: "appearances",
+  compilations: "compilations",
+};
 
 export enum favType {
   artist = "artist",

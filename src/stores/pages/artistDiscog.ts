@@ -1,7 +1,9 @@
+import { router } from "@/router";
+import { defineStore } from "pinia";
+
 import { discographyAlbumTypes } from "@/enums";
 import { Album } from "@/interfaces";
 import { getArtistAlbums } from "@/requests/artists";
-import { defineStore } from "pinia";
 
 export default defineStore("artistDiscography", {
   state: () => ({
@@ -16,13 +18,18 @@ export default defineStore("artistDiscography", {
     compilations: <Album[]>[],
   }),
   actions: {
-    setAlbums(page: discographyAlbumTypes) {
+    setAlbums(page?: string) {
+      if (!page) {
+        const route = router.currentRoute.value;
+        page = route.params.type as string;
+      }
+
       this.setPage(page);
       switch (page) {
         case discographyAlbumTypes.albums:
           this.toShow = this.albums;
           break;
-        case discographyAlbumTypes.singles:
+        case discographyAlbumTypes.EPs_and_singles:
           this.toShow = this.singles;
           break;
         case discographyAlbumTypes.appearances:
@@ -39,14 +46,13 @@ export default defineStore("artistDiscography", {
           );
           break;
       }
-
-      // remove undefined
     },
-    setPage(page: discographyAlbumTypes | undefined) {
+    setPage(page: string | undefined) {
       // @ts-ignore
       this.page = page;
     },
     fetchAlbums(artisthash: string) {
+      this.resetStore();
       getArtistAlbums(artisthash, 0, true)
         .then((data) => {
           this.albums = data.albums;
@@ -55,9 +61,9 @@ export default defineStore("artistDiscography", {
           this.artistname = data.artistname;
           this.compilations = data.compilations;
         })
-        .then(() => this.setAlbums(this.page));
+        .then(() => this.setAlbums());
     },
-    resetAlbums() {
+    resetStore() {
       this.albums = [];
       this.singles = [];
       this.appearances = [];

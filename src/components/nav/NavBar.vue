@@ -16,9 +16,6 @@
         <SearchTitle v-if="$route.name == Routes.search" />
         <PlaylistsTitle v-if="$route.name == Routes.playlists" />
         <QueueTitle v-if="$route.name == Routes.nowPlaying" />
-        <ArtistDiscographyTitle
-          v-if="$route.name == Routes.artistDiscography"
-        />
         <SimpleNav
           v-if="$route.name == Routes.artistTracks"
           :text="$route.query.artist as string || 'Artist Tracks'"
@@ -54,7 +51,6 @@ import { createSubPaths } from "@/utils";
 
 import NavButtons from "./NavButtons.vue";
 
-import ArtistDiscographyTitle from "./Titles/ArtistDiscographyTitle.vue";
 import FolderTitle from "./Titles/Folder.vue";
 import PlaylistsTitle from "./Titles/PlaylistsTitle.vue";
 import QueueTitle from "./Titles/QueueTitle.vue";

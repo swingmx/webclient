@@ -6,24 +6,18 @@
         Customize your settings and preferences
       </template>
     </GenericHeader>
-    <div class="s-tabs">
-      <RouterLink
-        v-for="group in settingGroups"
-        :key="group.title"
-        class="tab"
-        :class="{ active: currentTab?.title === group.title }"
-        :to="{
-          name: Routes.settings,
+    <GenericTabs
+      :items="
+        settingGroups.map((g) => ({
+          title: g.title,
           params: {
-            tab: group.title.toLowerCase(),
+            tab: g.title.toLowerCase(),
           },
-          replace: true,
-        }"
-      >
-        {{ group.title }}
-        <div class="indicator"></div>
-      </RouterLink>
-    </div>
+        }))
+      "
+      :active="(item) => item.title === currentTab?.title"
+      :route="Routes.settings"
+    />
     <Group
       v-for="(group, index) in currentTab?.groups"
       :key="index"
@@ -47,7 +41,9 @@ import settingGroups from "@/settings";
 import Group from "./Group.vue";
 import About from "./About.vue";
 import LogoSvg from "@/assets/icons/logos/logo-light.svg";
+import GenericTabs from "@/components/shared/GenericTabs.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
+
 const route = useRoute();
 
 const currentTab = computed(() => {
@@ -61,37 +57,6 @@ const currentTab = computed(() => {
   width: 35rem;
   max-width: 100%;
   padding-bottom: 2rem;
-
-  .s-tabs {
-    display: flex;
-    border-bottom: solid 1px $gray;
-
-    .tab {
-      padding: $medium;
-      position: relative;
-      color: $gray1;
-    }
-
-    .indicator {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: $white;
-      height: 3px;
-      border-radius: 1rem;
-      opacity: 0;
-    }
-
-    .tab.active {
-      color: $white;
-
-      .indicator {
-        width: 3rem;
-        opacity: 1;
-      }
-    }
-  }
 
   .version {
     margin: 2rem auto;

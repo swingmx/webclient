@@ -1,11 +1,9 @@
 <template>
   <div class="generichead">
     <div class="left">
-      <h1><slot name="name">Playlists</slot></h1>
+      <h1><slot name="name"></slot></h1>
       <div class="desc">
-        <slot name="description">
-          <div>All your playlists, all in one place.</div>
-        </slot>
+        <slot name="description"></slot>
       </div>
     </div>
     <div class="right">
