@@ -24,8 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
 
 import { paths } from "@/config";
 import { isHeaderSmall } from "@/stores/content-width";

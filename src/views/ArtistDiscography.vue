@@ -103,7 +103,6 @@ onBeforeRouteUpdate((to, from, next) => {
 .artistdiscogview {
   height: 100%;
   overflow: auto;
-  padding-bottom: 4rem;
 
   .cards {
     display: grid;

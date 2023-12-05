@@ -40,7 +40,7 @@ import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 import ArtistAlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import Header from "@/components/ArtistView/Header.vue";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
-import CardScroller from "@/components/HomeView/RecentItems.vue";
+import CardScroller from "@/components/shared/CardScroller.vue";
 
 const route = useRoute();
 

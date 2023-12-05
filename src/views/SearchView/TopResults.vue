@@ -52,10 +52,10 @@
 import useSearchStore from "@/stores/search";
 
 import SearchSvg from "@/assets/icons/search.svg";
-import NoItems from "@/components/shared/NoItems.vue";
-import RecentItems from "@/components/HomeView/RecentItems.vue";
 import TopItem from "@/components/RightSideBar/Search/Top/TopItem.vue";
 import TopTracks from "@/components/RightSideBar/Search/Top/TopTracks.vue";
+import RecentItems from "@/components/shared/CardScroller.vue";
+import NoItems from "@/components/shared/NoItems.vue";
 
 const search = useSearchStore();
 </script>
@@ -65,6 +65,7 @@ const search = useSearchStore();
   height: 100%;
   overflow: auto;
   padding-right: $padright;
+  padding-bottom: $padbottom;
 
   .header {
     display: grid;

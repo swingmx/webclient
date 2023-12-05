@@ -43,7 +43,7 @@ import AlbumDiscBar from "@/components/AlbumView/AlbumDiscBar.vue";
 import GenreBanner from "@/components/AlbumView/GenreBanner.vue";
 import Header from "@/components/AlbumView/main.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
-import CardScroller from "@/components/HomeView/RecentItems.vue";
+import CardScroller from "@/components/shared/CardScroller.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 
 import { dropSources } from "@/enums";

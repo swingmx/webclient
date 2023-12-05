@@ -89,9 +89,5 @@ onMounted(() => updatePageTitle("Now Playing"));
 .now-playing-view {
   height: 100%;
   margin-bottom: 2rem;
-
-  .vue-recycle-scroller {
-    padding-bottom: 2rem;
-  }
 }
 </style>

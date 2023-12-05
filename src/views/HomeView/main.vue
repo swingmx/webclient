@@ -9,6 +9,7 @@
       :title="'Recently Added'"
       :items="home.recentlyAdded"
       :play-source="playSources.recentlyAdded"
+      :route="'/playlist/recentlyadded'"
     />
     <RecentItems
       :title="'Recently Played'"
@@ -22,10 +23,10 @@
 import { nextTick, onMounted } from "vue";
 
 import { playSources } from "@/enums";
-import useHome from "@/stores/home";
 import { updateCardWidth } from "@/stores/content-width";
+import useHome from "@/stores/home";
 
-import RecentItems from "@/components/HomeView/RecentItems.vue";
+import RecentItems from "@/components/shared/CardScroller.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
 import updatePageTitle from "@/utils/updatePageTitle";
 
@@ -66,7 +67,5 @@ onMounted(async () => {
   .generichead {
     padding: 0 $small;
   }
-
-  padding-bottom: 4rem;
 }
 </style>

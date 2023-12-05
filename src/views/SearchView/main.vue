@@ -38,7 +38,7 @@ import updatePageTitle from "@/utils/updatePageTitle";
 import AlbumPage from "./albums.vue";
 import ArtistPage from "./artists.vue";
 import TracksPage from "./tracks.vue";
-import TopTracks from "./TopResults.vue";
+import TopResults from "./TopResults.vue";
 import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
 
 const page = ref<HTMLElement>();
@@ -52,7 +52,7 @@ const route = useRoute();
 const component = computed(() => {
   switch (route.params.page) {
     case pages[0]:
-      return TopTracks;
+      return TopResults;
     case pages[1]:
       return TracksPage;
     case pages[2]:
@@ -152,12 +152,12 @@ onMounted(() => {
 
   .grid-page {
     padding-right: $padright;
+    padding-bottom: calc($padbottom * 1.5);
     max-height: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
     gap: 1.75rem 0;
 
-    padding-bottom: 4rem;
     overflow: auto;
     scrollbar-gutter: stable;
   }
@@ -166,7 +166,7 @@ onMounted(() => {
     position: absolute;
     bottom: 0;
     height: 3rem;
-    left: $padleft;
+    left: calc(0rem - $padleft);
     width: calc(100% + $padleft);
     border-radius: 0;
     background: $darkestblue;

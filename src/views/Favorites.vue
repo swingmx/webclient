@@ -40,19 +40,19 @@
 <script setup lang="ts">
 import { nextTick, onMounted, Ref, ref } from "vue";
 
+import { maxAbumCards, updateCardWidth } from "@/stores/content-width";
 import useQueueStore from "@/stores/queue";
 import useTracklist from "@/stores/queue/tracklist";
-import { maxAbumCards, updateCardWidth } from "@/stores/content-width";
 
 import { dropSources } from "@/enums";
-import updatePageTitle from "@/utils/updatePageTitle";
-import { getAllFavs, getFavTracks } from "@/requests/favorite";
 import { Album, Artist, RecentFavResult, Track } from "@/interfaces";
+import { getAllFavs, getFavTracks } from "@/requests/favorite";
+import updatePageTitle from "@/utils/updatePageTitle";
 
-import NoItems from "@/components/shared/NoItems.vue";
 import HeartSvg from "@/assets/icons/heart-no-color.svg";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
-import CardScroller from "@/components/HomeView/RecentItems.vue";
+import CardScroller from "@/components/shared/CardScroller.vue";
+import NoItems from "@/components/shared/NoItems.vue";
 
 const description = `You can add tracks, albums and artists to your favorites by clicking the heart icon`;
 
@@ -100,7 +100,6 @@ async function handlePlay(index: number) {
 .favorites-page {
   height: 100%;
   overflow: auto;
-  padding-bottom: 2rem;
 
   h3 {
     margin-top: 0;

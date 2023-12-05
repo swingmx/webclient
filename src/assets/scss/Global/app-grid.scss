@@ -32,6 +32,7 @@ $g-border: solid 1px $gray5;
 .content-page {
   scrollbar-gutter: stable;
   padding-right: $padright;
+  padding-bottom: $padbottom;
 }
 
 .vue-recycle-scroller__item-wrapper {
@@ -100,6 +101,7 @@ $g-border: solid 1px $gray5;
     height: 100%;
     width: 100%;
     padding-bottom: $content-padding-bottom;
+    padding-bottom: $padbottom;
   }
 }
 

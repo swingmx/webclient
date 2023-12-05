@@ -26,8 +26,8 @@ import { maxAbumCards } from "@/stores/content-width";
 import TrackCard from "./TrackCard.vue";
 import SeeAll from "../shared/SeeAll.vue";
 import FolderCard from "./FolderCard.vue";
-import AlbumCard from "../shared/AlbumCard.vue";
-import ArtistCard from "../shared/ArtistCard.vue";
+import AlbumCard from "./AlbumCard.vue";
+import ArtistCard from "./ArtistCard.vue";
 import PlaylistCard from "../PlaylistsList/PlaylistCard.vue";
 
 const props = defineProps<{

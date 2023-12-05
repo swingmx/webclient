@@ -56,7 +56,6 @@ const currentTab = computed(() => {
 .settingscontent {
   width: 35rem;
   max-width: 100%;
-  padding-bottom: 2rem;
 
   .version {
     margin: 2rem auto;

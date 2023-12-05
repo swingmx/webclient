@@ -57,7 +57,14 @@ $overshoot: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 $separator: $gray4;
 
 $maxwidth: 1372px;
+$maxpadleft: 5rem;
+$maxpadright: calc(100% - $maxwidth);
 
-$padleft: clamp(2rem, calc(100% - $maxwidth), 5rem);
-$padright: max(2rem, calc(100% - $maxwidth));
-$margright: -calc($padright);
+$padbottom: 4rem;
+$padleft: clamp(2rem, $maxpadright, $maxpadleft);
+$padright: clamp(
+  2rem,
+  max($maxpadright, 5rem),
+  calc($maxpadright + $maxpadleft)
+);
+$margright: calc(0rem - $padright);
