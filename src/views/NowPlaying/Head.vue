@@ -39,7 +39,7 @@ import useLyrics from "@/stores/lyrics";
 
 import { paths } from "@/config";
 import { Routes } from "@/router";
-import ArtistName from "../../shared/ArtistName.vue";
+import ArtistName from "@/components/shared/ArtistName.vue";
 
 const queue = useQueue();
 const lyrics = useLyrics();
@@ -51,15 +51,15 @@ defineProps<{
 
 <style lang="scss">
 .lyricsinfo {
-  padding: $medium 1.5rem;
+  padding: 1.5rem 1.5rem;
   font-size: 1rem;
   display: grid;
   grid-template-columns: max-content 1fr max-content;
   gap: $small;
   align-items: center;
   position: sticky;
-  top: -$medium;
-  margin: -1.5rem;
+  top: -2rem;
+  margin: -2rem;
   z-index: 1;
 
   img {

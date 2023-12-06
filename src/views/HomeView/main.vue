@@ -66,6 +66,7 @@ onMounted(async () => {
 
   .generichead {
     padding: 0 $small;
+    margin-bottom: 0;
   }
 }
 </style>

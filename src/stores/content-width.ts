@@ -31,13 +31,6 @@ const album_card_with = ref(161.6);
 const elemclass = "hlistitem";
 
 const maxAbumCards = computed(() => {
-  // const elems = document.getElementsByClassName(elemclass);
-  // let width = album_card_with.value;
-
-  // if (elems.length > 0) {
-  //   width = elems[0].clientWidth;
-  // }
-
   const max = Math.round(
     (content_width.value - paddings) / album_card_with.value
   );
@@ -70,8 +63,6 @@ const updateCardWidth = () => {
   if (elems.length) {
     album_card_with.value = elems[0].clientWidth;
   }
-
-  console.log(album_card_with.value);
 };
 
 export {

@@ -2,7 +2,7 @@
   <div class="trackcard rounded">
     <div class="image">
       <img class="rounded-sm" :src="paths.images.thumb.large + track.image" />
-      <PlayBtn :source="playSource" :track="track"/>
+      <PlayBtn :source="playSource" :track="track" />
     </div>
     <div class="tinfo">
       <div v-if="track.help_text" class="rhelp track">
@@ -58,13 +58,19 @@ defineProps<{
     }
   }
 
+  .ttitle {
+    font-size: 0.9rem;
+  }
+
   img {
     width: 100%;
   }
 
   .artist {
-    font-size: 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
     opacity: 0.86;
+    opacity: 0.75;
   }
 }
 </style>

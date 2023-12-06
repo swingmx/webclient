@@ -1,8 +1,17 @@
 <template>
   <div class="content-page favorites-page">
-    <div v-if="recentFavs.length" class="fav-recents">
-      <CardScroller :items="recentFavs" :title="'Recent'" />
-    </div>
+    <GenericHeader>
+      <template #name>Favorites</template>
+      <template #description
+        >{{ count.tracks }} Tracks • {{ count.albums }} Albums • 
+        {{ count.artists }} Artists</template
+      >
+    </GenericHeader>
+    <CardScroller
+      v-if="recentFavs.length"
+      :items="recentFavs"
+      :title="'Recent'"
+    />
     <div v-if="favTracks.length" class="fav-tracks">
       <TopTracks
         :tracks="favTracks"
@@ -12,21 +21,19 @@
         :source="dropSources.favorite"
       />
     </div>
-    <div v-if="favAlbums.length" class="fav-albums">
-      <CardScroller
-        :items="favAlbums.map((i) => ({ type: 'album', item: i }))"
-        :title="'Albums'"
-        :route="'/favorites/albums'"
-      />
-    </div>
+    <CardScroller
+      v-if="favAlbums.length"
+      :items="favAlbums.map((i) => ({ type: 'album', item: i }))"
+      :title="'Albums'"
+      :route="'/favorites/albums'"
+    />
 
-    <div v-if="favArtists.length" class="fav-artists">
-      <CardScroller
-        :items="favArtists.map((i) => ({ type: 'artist', item: i }))"
-        :title="'Artists'"
-        :route="'/favorites/artists'"
-      />
-    </div>
+    <CardScroller
+      v-if="favArtists.length"
+      :items="favArtists.map((i) => ({ type: 'artist', item: i }))"
+      :title="'Artists'"
+      :route="'/favorites/artists'"
+    />
 
     <NoItems
       :flag="noFavs"
@@ -53,6 +60,7 @@ import HeartSvg from "@/assets/icons/heart-no-color.svg";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
 import CardScroller from "@/components/shared/CardScroller.vue";
 import NoItems from "@/components/shared/NoItems.vue";
+import GenericHeader from "@/components/shared/GenericHeader.vue";
 
 const description = `You can add tracks, albums and artists to your favorites by clicking the heart icon`;
 
@@ -63,6 +71,11 @@ const recentFavs: Ref<RecentFavResult[]> = ref([]);
 const favAlbums: Ref<Album[]> = ref([]);
 const favTracks: Ref<Track[]> = ref([]);
 const favArtists: Ref<Artist[]> = ref([]);
+const count = ref({
+  albums: 0,
+  tracks: 0,
+  artists: 0,
+});
 
 const noFavs = ref(false);
 
@@ -76,6 +89,7 @@ onMounted(() => {
       favAlbums.value = favs.albums;
       favTracks.value = favs.tracks;
       favArtists.value = favs.artists;
+      count.value = favs.count;
     })
     .then(() => {
       noFavs.value =
@@ -101,8 +115,9 @@ async function handlePlay(index: number) {
   height: 100%;
   overflow: auto;
 
-  h3 {
-    margin-top: 0;
+  .generichead {
+    margin-bottom: 0;
+    padding: 0 $small;
   }
 
   .nothing h3 {
@@ -110,16 +125,11 @@ async function handlePlay(index: number) {
   }
 
   .fav-tracks {
-    margin-bottom: 4rem;
-
     h3 {
       margin-top: 0;
     }
 
     .artist-top-tracks {
-      margin-top: 0;
-      padding-right: $small;
-
       h3 {
         padding-right: $smaller;
       }

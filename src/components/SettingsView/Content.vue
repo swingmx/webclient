@@ -25,7 +25,7 @@
     />
     <About v-if="currentTab?.title === 'About'" />
     <div class="version t-center">
-      <LogoSvg /> <span>Swing Music - v{{ VERSION }}</span>
+     <b>Swing Music - v{{ VERSION }}</b>
     </div>
   </div>
 </template>
@@ -40,7 +40,6 @@ import settingGroups from "@/settings";
 
 import Group from "./Group.vue";
 import About from "./About.vue";
-import LogoSvg from "@/assets/icons/logos/logo-light.svg";
 import GenericTabs from "@/components/shared/GenericTabs.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
 
@@ -59,12 +58,10 @@ const currentTab = computed(() => {
 
   .version {
     margin: 2rem auto;
-    color: $gray1;
     height: 3rem;
     width: max-content;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    opacity: .5;
+    font-size: 14px;
   }
 }
 </style>

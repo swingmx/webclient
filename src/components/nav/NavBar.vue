@@ -21,20 +21,16 @@
           :text="$route.query.artist as string || 'Artist Tracks'"
         />
         <SimpleNav
-          v-if="$route.name === Routes.favorites"
-          :text="'Favorites ❤️'"
-        />
-        <SimpleNav
           v-if="$route.name === Routes.favoriteAlbums"
-          :text="'Favorite Albums ❤️'"
+          :text="'Favorite Albums'"
         />
         <SimpleNav
           v-if="$route.name === Routes.favoriteArtists"
-          :text="'Favorite Artists ❤️'"
+          :text="'Favorite Artists'"
         />
         <SimpleNav
           v-if="$route.name === Routes.favoriteTracks"
-          :text="'Favorite Tracks ❤️'"
+          :text="'Favorite Tracks'"
         />
       </div>
     </div>

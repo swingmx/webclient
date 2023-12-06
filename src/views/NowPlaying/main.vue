@@ -42,7 +42,7 @@ import Header from "@/components/NowPlaying/Header.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import updatePageTitle from "@/utils/updatePageTitle";
 import Tabs from "@/components/NowPlaying/Tabs.vue";
-import LyricsBody from "@/components/RightSideBar/Lyrics/Body.vue";
+import LyricsBody from "./Lyrics.vue";
 
 const header: ScrollerItem = {
   id: "header",
@@ -88,6 +88,5 @@ onMounted(() => updatePageTitle("Now Playing"));
 <style lang="scss">
 .now-playing-view {
   height: 100%;
-  margin-bottom: 2rem;
 }
 </style>

@@ -1,3 +1,4 @@
+import { ref } from "vue";
 import { defineStore } from "pinia";
 
 import useQueue from "./queue";
@@ -51,22 +52,25 @@ export function sendLogData(trackhash: string, duration: number, from: From) {
 export default defineStore(
   "playTracker",
   () => {
-    let prev_date = 0;
-    let trackhash = "";
-    let duration = 0;
-    let from: From = {
-      type: FromOptions.folder,
+    const duration = ref(0);
+    const trackhash = ref("");
+    // @ts-ignore
+    const from = ref({
+      type: null,
       path: "",
       name: "",
-    };
+    } as From);
+
+    let prev_date = 0;
     let can_submit = true;
 
     const queue = useQueue();
 
     function resetData() {
-      from = useTracklist().from;
-      duration = 0;
-      trackhash = queue.currenttrack.trackhash;
+      console.log("resetting ...", duration);
+      from.value = useTracklist().from;
+      duration.value = 0;
+      trackhash.value = queue.currenttrack.trackhash;
       prev_date = Date.now();
     }
 
@@ -78,7 +82,7 @@ export default defineStore(
         return (prev_date = now);
       }
 
-      duration += now - prev_date;
+      duration.value += now - prev_date;
       prev_date = now;
     }
 
@@ -93,7 +97,7 @@ export default defineStore(
     function submitData() {
       if (!can_submit) return;
       lockSubmit();
-      sendLogData(trackhash, duration, from);
+      sendLogData(trackhash.value, duration.value, from.value);
       resetData();
     }
 
@@ -104,10 +108,10 @@ export default defineStore(
           prev_date = 0;
         }
 
-        if (queue.currenttrack.trackhash !== trackhash) {
-          if (trackhash !== "" && duration > 1000 && can_submit) {
+        if (queue.currenttrack.trackhash !== trackhash.value) {
+          if (trackhash.value !== "" && duration.value > 1000 && can_submit) {
             lockSubmit();
-            sendLogData(trackhash, duration, from);
+            sendLogData(trackhash.value, duration.value, from.value);
           }
 
           resetData();
@@ -120,10 +124,13 @@ export default defineStore(
     return {
       trackhash,
       duration,
+      from,
       resetData,
       submitData,
       toggleLock: lockSubmit,
     };
   },
-  { persist: true }
+  {
+    persist: true,
+  }
 );

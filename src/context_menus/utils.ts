@@ -72,6 +72,22 @@ export const get_find_on_social = (page = "album") => {
     icon: SearchIcon,
     children: [
       {
+        label: "Google",
+        action: () =>
+          window.open(
+            `https://www.google.com/search?q=${search_term}`,
+            "_blank"
+          ),
+      },
+      {
+        label: "YouTube",
+        action: () =>
+          window.open(
+            `https://www.youtube.com/results?search_query=${search_term}`,
+            "_blank"
+          ),
+      },
+      {
         label: "Spotify",
         action: () =>
           window.open(
@@ -100,6 +116,22 @@ export const get_find_on_social = (page = "album") => {
         action: () =>
           window.open(
             `https://www.deezer.com/search/${search_term}/${page}`,
+            "_blank"
+          ),
+      },
+      {
+        label: "Wikipedia",
+        action: () =>
+          window.open(
+            `https://en.wikipedia.org/wiki/Special:Search?search=${search_term}`,
+            "_blank"
+          ),
+      },
+      {
+        label: "Last.fm",
+        action: () =>
+          window.open(
+            `https://www.last.fm/search/${page}s?q=${search_term}`,
             "_blank"
           ),
       },

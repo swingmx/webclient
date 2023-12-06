@@ -1,43 +1,46 @@
 <template>
-  <div
-    v-if="queue.currenttrack"
-    id="sidelyrics"
-    :style="{ background: bgColor }"
-    @wheel="onScroll"
-  >
-    <LyricsHead :bg-color="bgColor" />
-    <div v-if="lyrics.synced" class="synced">
-      <div id="lyricsline--1"></div>
-      <div
-        v-for="(line, index) in lyrics.lyrics"
-        :id="`lyricsline-${index}`"
-        :key="line.time"
-        class="line"
-        :class="{
-          currentLine: index == lyrics.currentLine,
-          seenLine: index < lyrics.currentLine,
-          opacity_25: index <= lyrics.currentLine - 3,
-          opacity_5: index == lyrics.currentLine - 2,
-          opacity_75: index == lyrics.currentLine - 1,
-        }"
-        @click="queue.seek(line.time / 1000)"
-      >
-        {{ line.text }}
+  <div class="lyricsview content-page">
+    <div
+      v-if="queue.currenttrack"
+      id="sidelyrics"
+      class="content-page rounded"
+      @wheel="onScroll"
+      :style="{ background: bgColor }"
+    >
+      <LyricsHead :bg-color="bgColor" />
+      <div v-if="lyrics.synced" class="synced">
+        <div id="lyricsline--1"></div>
+        <div
+          v-for="(line, index) in lyrics.lyrics"
+          :id="`lyricsline-${index}`"
+          :key="line.time"
+          class="line"
+          :class="{
+            currentLine: index == lyrics.currentLine,
+            seenLine: index < lyrics.currentLine,
+            opacity_25: index <= lyrics.currentLine - 3,
+            opacity_5: index == lyrics.currentLine - 2,
+            opacity_75: index == lyrics.currentLine - 1,
+          }"
+          @click="queue.seek(line.time / 1000)"
+        >
+          {{ line.text }}
+        </div>
       </div>
-    </div>
-    <div v-if="!lyrics.synced" class="unsynced">
-      <div id="lyricsline--1"></div>
-      <div v-for="(line, index) in lyrics.lyrics" :key="index" class="line">
-        {{ line }}
+      <div v-if="!lyrics.synced" class="unsynced">
+        <div id="lyricsline--1"></div>
+        <div v-for="(line, index) in lyrics.lyrics" :key="index" class="line">
+          {{ line }}
+        </div>
       </div>
-    </div>
-    <div v-if="lyrics.copyright && lyrics.lyrics" class="copyright">
-      {{ lyrics.copyright }}
-    </div>
-    <div v-if="!lyrics.lyrics || lyrics.lyrics.length == 0" class="nolyrics">
-      <div>You don't have</div>
-      <div>the lyrics for this song</div>
-      <PluginFind v-if="settings.use_lyrics_plugin" />
+      <div v-if="lyrics.copyright && lyrics.lyrics" class="copyright">
+        {{ lyrics.copyright }}
+      </div>
+      <div v-if="!lyrics.lyrics || lyrics.lyrics.length == 0" class="nolyrics">
+        <div>You don't have</div>
+        <div>the lyrics for this song</div>
+        <PluginFind v-if="settings.use_lyrics_plugin" />
+      </div>
     </div>
   </div>
 </template>
@@ -62,10 +65,6 @@ const lyrics = useLyrics();
 const colors = useColors();
 const settings = useSettings();
 
-defineProps<{
-  onNowPlaying?: boolean;
-}>();
-
 const onScroll = (e: Event) => {
   lyrics.setUserScrolled(true);
 };
@@ -87,8 +86,13 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+.lyricsview {
+  height: 100%;
+  padding-bottom: 1rem;
+}
+
 #sidelyrics {
-  padding: $medium 5rem;
+  padding: 2rem 2rem 0 2rem;
   height: 100%;
   overflow: scroll;
   background-color: rgb(122, 122, 122);
@@ -98,7 +102,6 @@ onMounted(() => {
   position: relative;
   overflow-x: hidden;
   @include hideScrollbars;
-  margin-right: -0.75rem;
 
   @include tablet-portrait {
     font-size: 2rem !important;
