@@ -2,9 +2,10 @@
   <div class="homepageview content-page">
     <GenericHeader>
       <template #name>Home</template>
-      <template #description>{{ getGreetings("cwilvx") }}</template>
+      <template #description>{{ getGreetings("") }}</template>
       <template #right?> </template>
     </GenericHeader>
+    <Browse />
     <RecentItems
       :title="'Recently Added'"
       :items="home.recentlyAdded"
@@ -22,13 +23,14 @@
 <script setup lang="ts">
 import { nextTick, onMounted } from "vue";
 
-import { playSources } from "@/enums";
-import { updateCardWidth } from "@/stores/content-width";
 import useHome from "@/stores/home";
+import { playSources } from "@/enums";
+import updatePageTitle from "@/utils/updatePageTitle";
+import { updateCardWidth } from "@/stores/content-width";
 
+import Browse from "@/components/HomeView/Browse.vue";
 import RecentItems from "@/components/shared/CardScroller.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
-import updatePageTitle from "@/utils/updatePageTitle";
 
 const home = useHome();
 
