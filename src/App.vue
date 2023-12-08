@@ -38,6 +38,7 @@ import {
   content_height,
   content_width,
   isMobile,
+  updateCardWidth,
 } from "@/stores/content-width";
 import useLyrics from "@/stores/lyrics";
 import useModal from "@/stores/modal";
@@ -106,6 +107,7 @@ function updateContentElemSize({
   const elem_width = Math.min(1372, appcontent.value?.offsetWidth || 0);
   content_width.value = elem_width;
   content_height.value = height;
+  updateCardWidth();
 }
 
 function handleWelcomeModal() {

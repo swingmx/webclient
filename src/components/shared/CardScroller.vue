@@ -1,5 +1,5 @@
 <template>
-  <div class="home-recent-items">
+  <div class="cardscroller">
     <div class="rinfo">
       <div class="rtitle">
         <b>{{ title }}</b>
@@ -86,7 +86,7 @@ function getProps(item: { type: string; item: any }) {
 </script>
 
 <style lang="scss">
-.home-recent-items {
+.cardscroller {
   padding: 2rem 0;
 
   .recentitems {
@@ -113,26 +113,6 @@ function getProps(item: { type: string; item: any }) {
     .rdesc {
       font-size: 0.9rem;
       color: rgba(255, 255, 255, 0.747);
-    }
-  }
-
-  .rhelp {
-    text-transform: uppercase;
-    font-size: 11px;
-    color: $purple;
-    font-weight: bold;
-    margin: $smaller 0;
-
-    &.album {
-      color: $orange;
-    }
-
-    &.track {
-      color: $pink;
-    }
-
-    &.folder {
-      color: $teal;
     }
   }
 

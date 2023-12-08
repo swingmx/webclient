@@ -105,6 +105,10 @@ const playlists = computed(() => {
   overflow: auto;
   padding-right: 1rem;
 
+  .generichead {
+    padding-left: 0;
+  }
+
   .grid {
     grid-template-columns: repeat(auto-fill, minmax(9.25rem, 1fr));
     gap: 2.5rem 1.75rem;

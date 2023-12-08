@@ -22,7 +22,10 @@
     <div class="overlay rounded">
       <div class="p-name ellip">{{ playlist.name }}</div>
       <div class="p-count">
-        <b>{{ playlist.count + ` Track${playlist.count === 1 ? "" : "s"}` }}</b>
+        <b>{{
+          playlist.count.toLocaleString() +
+          ` Track${playlist.count === 1 ? "" : "s"}`
+        }}</b>
       </div>
     </div>
   </router-link>

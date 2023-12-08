@@ -1,15 +1,14 @@
 import { SettingType } from "../enums";
 import { Setting } from "@/interfaces/settings";
-import { nowPlayingStrings as data } from "../strings";
 
 import useSettingsStore from "@/stores/settings";
 
 const settings = useSettingsStore;
 
 const disable_np_img: Setting = {
-  title: data.settings.album_art,
+  title: "Hide album art from the left sidebar",
   type: SettingType.binary,
-  state: () => settings().use_np_img,
+  state: () => !settings().use_np_img,
   action: () => settings().toggleUseNPImg(),
 };
 

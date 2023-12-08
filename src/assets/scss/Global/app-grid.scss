@@ -24,13 +24,12 @@ $g-border: solid 1px $gray5;
   width: 100%;
   grid-area: content;
   overflow: hidden;
-
-  padding-left: $padleft;
   margin-right: $margright;
 }
 
 .content-page {
   scrollbar-gutter: stable;
+  padding-left: $padleft;
   padding-right: $padright;
   padding-bottom: $padbottom;
 }
@@ -41,17 +40,22 @@ $g-border: solid 1px $gray5;
 
 .vue-recycle-scroller {
   scrollbar-gutter: stable;
+  padding-left: $padleft;
 }
 
 .r-sidebar {
   grid-area: r-sidebar;
   border-left: $g-border;
+
+  .vue-recycle-scroller {
+    padding-left: 0;
+  }
 }
 
 .topnav {
   grid-area: nav;
   padding: 1rem $padleft;
-  padding-right: max(2rem, calc($padright - $padleft));
+  padding-right: $padright;
 }
 
 .b-bar {

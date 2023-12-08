@@ -151,6 +151,7 @@ onMounted(() => {
   }
 
   .grid-page {
+    padding-left: $padleft;
     padding-right: $padright;
     padding-bottom: calc($padbottom * 1.5);
     max-height: 100%;

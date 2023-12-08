@@ -58,7 +58,6 @@ const currentTab = computed(() => {
 
   .version {
     margin: 2rem auto;
-    height: 3rem;
     width: max-content;
     opacity: .5;
     font-size: 14px;

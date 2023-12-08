@@ -99,6 +99,15 @@ export const paths = {
         return this.base + "/track/log";
       },
     },
+    getall: {
+      base: base_url + "/getall",
+      get albums() {
+        return this.base + "/albums";
+      },
+      get artists() {
+        return this.base + "/artists";
+      },
+    },
     colors: {
       base: base_url + "/colors",
       get album() {

@@ -19,13 +19,13 @@
       </div>
       <div class="stats">
         <span v-if="artist.trackcount">
-          {{ artist.trackcount }} Track{{
+          {{ artist.trackcount.toLocaleString() }} Track{{
             `${artist.trackcount == 1 ? "" : "s"}`
           }}
         </span>
-        {{ artist.albumcount && artist.trackcount ? "•" : "" }}
+        {{ artist.albumcount && artist.trackcount.toLocaleString() ? "•" : "" }}
         <span v-if="artist.albumcount">
-          {{ artist.albumcount }} Album{{
+          {{ artist.albumcount.toLocaleString() }} Album{{
             `${artist.albumcount == 1 ? "" : "s"}`
           }}
         </span>

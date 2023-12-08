@@ -1,3 +1,7 @@
+function padNumber(number: number) {
+  return ("0" + number).slice(-2);
+}
+
 /**
  * Converts seconds into minutes and hours.
  * @param seconds The seconds to convert
@@ -11,43 +15,32 @@ export default function formatSeconds(
     return "00:00";
   }
 
-  const date = new Date(seconds * 1000);
+  const hh = Math.floor(seconds / 3600);
+  const mm = Math.floor((seconds % 3600) / 60);
+  const ss = Math.floor((seconds % 3600) % 60);
 
-  const hh = date.getUTCHours();
-  const mm = date.getUTCMinutes();
-  const ss = date.getUTCSeconds();
-
-  let _hh = hh < 10 ? `0${hh}` : hh;
-  let _mm = mm < 10 ? `0${mm}` : mm;
-  let _ss = ss < 10 ? `0${ss}` : ss;
+  let _hh = padNumber(hh);
+  let _mm = padNumber(mm);
+  let _ss = padNumber(ss);
 
   if (long == true) {
-    if (hh === 1) {
-      _hh = hh + " Hour";
-    } else {
-      _hh = `${hh} Hours`;
-    }
-
-    if (mm === 1) {
-      _mm = mm + " Minute";
-    } else {
-      _mm = `${mm} Minutes`;
-    }
-
     if (mm < 1 && hh < 1 && ss > 0) {
       return `${_ss} Seconds`;
     }
 
+    _hh = `${hh} hr${hh > 1 ? "s" : ""}`;
+    _mm = `${mm} minute${mm > 1 ? "s" : ""}`;
+
     if (hh > 0) {
       return `${_hh}, ${_mm}`;
-    } else {
-      return _mm;
     }
+
+    return _mm;
   }
 
   if (hh > 0) {
     return `${_hh}:${_mm}:${_ss}`;
-  } else {
-    return `${_mm}:${_ss}`;
   }
+
+  return `${_mm}:${_ss}`;
 }

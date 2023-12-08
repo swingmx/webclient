@@ -94,8 +94,8 @@ function playFromSearch(index: number) {
   }
 
   #songlist-scroller {
+    padding-left: $padleft;
     padding-right: $padright;
-    padding-left: 0;
   }
 }
 </style>

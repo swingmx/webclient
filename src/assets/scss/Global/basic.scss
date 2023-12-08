@@ -217,3 +217,23 @@ button {
     }
   }
 }
+
+.rhelp {
+  text-transform: uppercase;
+  font-size: 11px;
+  color: $purple;
+  font-weight: bold;
+  margin: $smaller 0;
+
+  &.album {
+    color: $orange;
+  }
+
+  &.track {
+    color: $pink;
+  }
+
+  &.folder {
+    color: $teal;
+  }
+}

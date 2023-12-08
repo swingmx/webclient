@@ -3,12 +3,13 @@
     <GenericHeader>
       <template #name>Favorites</template>
       <template #description
-        >{{ count.tracks }} Tracks • {{ count.albums }} Albums • 
+        >{{ count.tracks }} Tracks • {{ count.albums }} Albums •
         {{ count.artists }} Artists</template
       >
     </GenericHeader>
     <CardScroller
       v-if="recentFavs.length"
+      class="recent-favs"
       :items="recentFavs"
       :title="'Recent'"
     />
@@ -76,7 +77,6 @@ const count = ref({
   tracks: 0,
   artists: 0,
 });
-
 const noFavs = ref(false);
 
 onMounted(() => {
@@ -115,9 +115,8 @@ async function handlePlay(index: number) {
   height: 100%;
   overflow: auto;
 
-  .generichead {
-    margin-bottom: 0;
-    padding: 0 $small;
+  .recent-favs {
+    padding-top: 1rem;
   }
 
   .nothing h3 {

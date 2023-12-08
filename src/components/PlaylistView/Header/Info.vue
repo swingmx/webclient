@@ -10,7 +10,7 @@
     </div>
     <div class="duration">
       {{
-        playlist.info.count +
+        playlist.info.count.toLocaleString() +
         ` ${playlist.info.count == 1 ? "Track" : "Tracks"}`
       }}
       •

@@ -65,7 +65,6 @@ onMounted(async () => {
   overflow: auto;
 
   .generichead {
-    padding: 0 $small;
     margin-bottom: 0;
   }
 }

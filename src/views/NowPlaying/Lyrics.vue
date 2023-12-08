@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 
 import useTabs from "@/stores/tabs";
 import useQueue from "@/stores/queue";

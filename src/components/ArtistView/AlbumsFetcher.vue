@@ -1,5 +1,7 @@
 <template>
-  <div style="height: 1px"></div>
+  <div style="height: 1px">
+    <button v-if="show_text" @click="fetch_callback">Load More</button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -9,8 +11,9 @@ import { onBeforeRouteUpdate } from "vue-router";
 import { updateCardWidth } from "@/stores/content-width";
 
 const props = defineProps<{
+  show_text?: boolean;
   fetch_callback: () => Promise<void>;
-  reset_callback: () => Promise<void>;
+  reset_callback?: () => Promise<void>;
 }>();
 
 const update = async () => {
@@ -24,6 +27,7 @@ onMounted(async () => {
 });
 
 onBeforeRouteUpdate(() => {
+  if (!props.reset_callback) return;
   props.reset_callback().then(update);
 });
 </script>

@@ -64,8 +64,7 @@ const search = useSearchStore();
 .search-page-top-results {
   height: 100%;
   overflow: auto;
-  padding-right: $padright;
-  padding-bottom: $padbottom;
+  padding: 0 $padright $padbottom $padleft;
 
   .header {
     display: grid;

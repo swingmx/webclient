@@ -22,8 +22,8 @@ export default {
       title: "UI Settings",
       desc: "Settings for various parts of the user interface.",
       settings: [
-        ...sidebarSettings,
         ...extendWidth,
+        ...sidebarSettings,
         circularArtistImg,
         ...contextChildrenShowMode,
       ],
