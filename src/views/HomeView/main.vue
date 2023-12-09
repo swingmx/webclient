@@ -7,10 +7,10 @@
     </GenericHeader>
     <Browse />
     <RecentItems
-      :title="'Recently Added'"
-      :items="home.recentlyAdded"
-      :play-source="playSources.recentlyAdded"
-      :route="'/playlist/recentlyadded'"
+    :title="'Recently Added'"
+    :items="home.recentlyAdded"
+    :play-source="playSources.recentlyAdded"
+    :route="'/playlist/recentlyadded'"
     />
     <RecentItems
       :title="'Recently Played'"

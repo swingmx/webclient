@@ -25,7 +25,7 @@
     />
     <About v-if="currentTab?.title === 'About'" />
     <div class="version t-center">
-     <b>Swing Music - v{{ VERSION }}</b>
+      <b>Swing Music - v{{ settings.version }}</b>
     </div>
   </div>
 </template>
@@ -35,8 +35,8 @@ import { computed } from "vue";
 import { Routes } from "@/router";
 import { useRoute } from "vue-router";
 
-import { VERSION } from "@/config";
 import settingGroups from "@/settings";
+import useSettings from "@/stores/settings";
 
 import Group from "./Group.vue";
 import About from "./About.vue";
@@ -44,6 +44,7 @@ import GenericTabs from "@/components/shared/GenericTabs.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
 
 const route = useRoute();
+const settings = useSettings();
 
 const currentTab = computed(() => {
   const tab = route.params.tab;
@@ -59,7 +60,7 @@ const currentTab = computed(() => {
   .version {
     margin: 2rem auto;
     width: max-content;
-    opacity: .5;
+    opacity: 0.5;
     font-size: 14px;
   }
 }

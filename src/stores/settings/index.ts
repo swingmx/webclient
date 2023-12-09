@@ -7,6 +7,7 @@ import { usePlayer } from "@/stores/player";
 
 export default defineStore("settings", {
   state: () => ({
+    version: "",
     use_np_img: true,
     use_sidebar: true,
     extend_width: false,
@@ -40,6 +41,7 @@ export default defineStore("settings", {
   }),
   actions: {
     mapDbSettings(settings: DBSettings) {
+      this.version = settings.version;
       this.root_dirs = settings.root_dirs;
       this.feat = settings.extract_feat;
       this.prodby = settings.remove_prod;

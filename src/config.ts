@@ -154,5 +154,3 @@ export const paths = {
     raw: baseImgUrl + imageRoutes.raw,
   },
 };
-
-export const VERSION = "2.0.0";

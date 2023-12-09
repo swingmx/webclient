@@ -109,4 +109,5 @@ export interface DBSettings {
   merge_albums: boolean;
   show_albums_as_singles: boolean;
   plugins: Plugin[];
+  version: string;
 }
