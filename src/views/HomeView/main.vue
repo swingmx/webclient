@@ -15,7 +15,7 @@
     <RecentItems
       :title="'Recently Played'"
       :items="home.recentlyPlayed"
-      :play-source="playSources.recentlyPlayed"
+      :play-source="playSources.track"
     />
   </div>
 </template>

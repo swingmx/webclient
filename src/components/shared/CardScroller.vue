@@ -14,6 +14,7 @@
         :key="index"
         class="hlistitem"
         v-bind="getProps(i)"
+        @playThis="() => $emit('playThis', index)"
       ></component>
     </div>
   </div>
@@ -40,6 +41,10 @@ const props = defineProps<{
   playSource?: playSources;
   child_props?: any;
   route?: string;
+}>();
+
+defineEmits<{
+  playThis: (index: number) => void;
 }>();
 
 function getComponent(type: string) {

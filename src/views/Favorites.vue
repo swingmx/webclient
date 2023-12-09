@@ -12,6 +12,7 @@
       class="recent-favs"
       :items="recentFavs"
       :title="'Recent'"
+      :play-source="playSources.favorite"
     />
     <div v-if="favTracks.length" class="fav-tracks">
       <TopTracks
@@ -48,14 +49,15 @@
 <script setup lang="ts">
 import { nextTick, onMounted, Ref, ref } from "vue";
 
-import { maxAbumCards, updateCardWidth } from "@/stores/content-width";
 import useQueueStore from "@/stores/queue";
 import useTracklist from "@/stores/queue/tracklist";
+import { maxAbumCards, updateCardWidth } from "@/stores/content-width";
 
-import { dropSources } from "@/enums";
-import { Album, Artist, RecentFavResult, Track } from "@/interfaces";
-import { getAllFavs, getFavTracks } from "@/requests/favorite";
+import { dropSources, playSources } from "@/enums";
+import { getAllFavs } from "@/requests/favorite";
 import updatePageTitle from "@/utils/updatePageTitle";
+import { playFromFavorites } from "@/helpers/usePlayFrom";
+import { Album, Artist, RecentFavResult, Track } from "@/interfaces";
 
 import HeartSvg from "@/assets/icons/heart-no-color.svg";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
@@ -103,10 +105,10 @@ onMounted(() => {
     });
 });
 
-async function handlePlay(index: number) {
-  const tracks = await getFavTracks(0);
-  tracklist.setFromFav(tracks);
-  queue.play(index);
+function handlePlay(index: number) {
+  const track = favTracks.value[index];
+  if (!track) return;
+  playFromFavorites(track);
 }
 </script>
 

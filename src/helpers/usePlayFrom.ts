@@ -1,4 +1,4 @@
-import { NotifType, playSources } from "@/enums";
+import { FromOptions, NotifType, playSources } from "@/enums";
 
 import useQueue from "@/stores/queue";
 import useAlbum from "@/stores/pages/album";
@@ -13,6 +13,7 @@ import { getArtistTracks } from "@/requests/artists";
 import { getFiles } from "@/requests/folders";
 import { getPlaylist } from "@/requests/playlists";
 import { Track } from "@/interfaces";
+import { getFavTracks } from "@/requests/favorite";
 
 export async function utilPlayFromArtist(index: number = 0) {
   const queue = useQueue();
@@ -91,6 +92,21 @@ export async function playFromFolderCard(folderpath: string) {
 
   tracklist.setFromFolder(folderpath, tracks);
   queue.play();
+}
+
+export async function playFromFavorites(track: Track | undefined) {
+  const queue = useQueue();
+  const tracklist = useTracklist();
+
+  if (tracklist.from.type !== FromOptions.favorite) {
+    const tracks = await getFavTracks(0);
+    tracklist.setFromFav(tracks);
+  }
+
+  const index = tracklist.tracklist.findIndex(
+    (t) => t.trackhash === track?.trackhash
+  );
+  queue.play(index);
 }
 
 export async function playFromPlaylist(id: string, track?: Track) {

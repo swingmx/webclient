@@ -106,6 +106,7 @@ export interface Playlist {
   duration: number;
   settings: PlaylistSettings;
   pinned: boolean;
+  help_text?: string;
   images:
     | {
         image: string;

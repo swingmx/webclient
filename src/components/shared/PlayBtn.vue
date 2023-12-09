@@ -10,6 +10,7 @@ import { playSources } from "@/enums";
 import {
   playFromAlbumCard,
   playFromArtistCard,
+  playFromFavorites,
   playFromFolderCard,
   playFromPlaylist,
 } from "@/helpers/usePlayFrom";
@@ -57,6 +58,9 @@ function handlePlay() {
       queue.play();
       break;
     }
+    case playSources.favorite:
+      playFromFavorites(props.track);
+      break;
 
     default:
       break;

@@ -20,6 +20,7 @@
       :class="{ border: !playlist.thumb }"
     />
     <div class="overlay rounded">
+      <div v-if="playlist.help_text" class="rhelp playlist">{{ playlist.help_text }}</div>
       <div class="p-name ellip">{{ playlist.name }}</div>
       <div class="p-count">
         <b>{{

@@ -26,6 +26,10 @@ defineProps<{
   track: Track;
   playSource: playSources;
 }>();
+
+defineEmits<{
+  playThis: (index: number) => void;
+}>();
 </script>
 
 <style lang="scss">
