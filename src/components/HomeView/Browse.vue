@@ -5,8 +5,9 @@
       <RouterLink
         v-for="i in browselist"
         :key="i.title"
-        class="browseitem rounded-sm"
+        class="browseitem rounded-sm t-center"
         :to="{ name: i.route, params: i.params }"
+        :style="{ width: `${album_card_with - 24}px` }"
       >
         {{ i.title }}
       </RouterLink>
@@ -16,8 +17,16 @@
 
 <script setup lang="ts">
 import { Routes } from "@/router";
+import { album_card_with } from "@/stores/content-width";
 
 const browselist = [
+  {
+    title: "Folders",
+    route: Routes.folder,
+    params: {
+      path: "$home",
+    },
+  },
   {
     title: "Albums",
     route: Routes.AlbumList,
@@ -25,13 +34,6 @@ const browselist = [
   {
     title: "Artists",
     route: Routes.ArtistList,
-  },
-  {
-    title: "Folders",
-    route: Routes.folder,
-    params: {
-      path: "$home",
-    },
   },
 ];
 </script>
@@ -49,12 +51,12 @@ const browselist = [
   .browselist {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 1.5rem;
     margin-top: $small;
   }
 
   .browseitem {
-    padding: 1.5rem 3rem;
+    padding: 1.5rem 0;
     background-color: $gray;
     background-image: linear-gradient(37deg, $gray 0%, transparent, $gray),
       linear-gradient(-37deg, $gray 0%, $gray5, $gray);

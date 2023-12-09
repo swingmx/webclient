@@ -1,5 +1,5 @@
-import { defineStore } from "pinia";
 import { ComputedRef } from "vue";
+import { defineStore } from "pinia";
 
 import { useFuse } from "@/utils";
 

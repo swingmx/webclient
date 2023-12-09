@@ -41,8 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { computed } from "vue";
+import { onMounted, computed } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
 import useQueue from "@/stores/queue";

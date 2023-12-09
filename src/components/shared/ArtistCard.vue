@@ -28,7 +28,7 @@
     <div class="artist-name t-center">
       {{ artist.name }}
     </div>
-    <div v-if="artist.help_text" class="racount t-center">
+    <div v-if="artist.help_text && artist.trackcount" class="racount t-center">
       {{ artist.trackcount }} Track{{ artist.trackcount == 1 ? "" : "s" }}
     </div>
   </RouterLink>
