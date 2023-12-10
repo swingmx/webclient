@@ -13,7 +13,6 @@
           :size-dependencies="[item.props]"
           :data-index="index"
         >
-          <!-- @playThis="playFromAlbum(item.props.track.master_index)" -->
           <component
             :is="item.component"
             :key="index"
@@ -64,7 +63,6 @@ const scrollerItems = computed(() => {
   );
 
   const groups = Math.ceil(storeitems.value.length / maxAbumCards.value);
-  console.log(route.name);
   for (let i = 0; i < groups; i++) {
     items.push({
       id: i,
@@ -80,7 +78,7 @@ const scrollerItems = computed(() => {
   }
 
   items.push({
-    id: "fetcher",
+    id: Math.random(),
     component: Fetcher,
     props: {
       fetch_callback: () => store.getMoreAlbums(),

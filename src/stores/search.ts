@@ -1,6 +1,6 @@
-import { watch } from "vue";
+import { computed, watch } from "vue";
 import { defineStore } from "pinia";
-import { useRoute } from "vue-router";
+// import { useRoute } from "vue-router";
 import { Routes, router } from "@/router";
 import { reactive, ref } from "vue";
 import { useDebounce } from "@vueuse/core";
@@ -14,36 +14,21 @@ import {
   searchTopResults,
   searchTracks,
 } from "@/requests/searchMusic";
+import useTabStore from "./tabs";
+import useLoaderStore from "./loader";
+import { maxAbumCards } from "./content-width";
 import waitForScrollEnd from "@/helpers/useWaitForScroll";
 import { Album, Artist, Playlist, Track } from "../interfaces";
-import useLoaderStore from "./loader";
-import useTabStore from "./tabs";
-import { maxAbumCards } from "./content-width";
-/**
- *
- * Scrolls on clicking the loadmore button
- */
-function scrollOnLoad() {
-  const elem = document.getElementById("tab-content") as HTMLElement;
-
-  if (elem === null) return;
-
-  elem.scroll({
-    top: elem.scrollHeight,
-    left: 0,
-    behavior: "smooth",
-  });
-}
 
 export default defineStore("search", () => {
   // @ts-ignore
   const query = ref("");
-  const route = useRoute();
+  const route = computed(() => router.currentRoute.value);
   const debouncedQuery = useDebounce(query, 500);
   const { startLoading, stopLoading } = useLoaderStore();
 
   const currentTab = ref("top");
-  const RESULT_COUNT = 12;
+  const RESULT_COUNT = 30;
 
   const loadCounter = reactive({
     tracks: 0,
@@ -91,7 +76,7 @@ export default defineStore("search", () => {
     if (!query) return;
     let limit = 3;
 
-    if (route.name == Routes.search) {
+    if (route.value.name == Routes.search) {
       limit = maxAbumCards.value;
     }
 
@@ -147,61 +132,44 @@ export default defineStore("search", () => {
     });
   }
 
-  function loadTracks() {
+  async function loadTracks() {
     loadCounter.tracks += RESULT_COUNT;
 
     startLoading();
-    loadMoreTracks(loadCounter.tracks, query.value)
-      .then((res) => {
-        tracks.value = [...tracks.value, ...res.tracks];
-        tracks.more = res.more;
-      })
-      .then(() => stopLoading())
-      .then(() => scrollOnLoad());
+    const res = await loadMoreTracks(loadCounter.tracks, query.value);
+    tracks.value = [...tracks.value, ...res.tracks];
+    tracks.more = res.more;
+    return stopLoading();
   }
 
-  function loadAlbums() {
+  async function loadAlbums() {
     loadCounter.albums += RESULT_COUNT;
 
     startLoading();
-    loadMoreAlbums(loadCounter.albums, query.value)
-      .then((res) => {
-        albums.value = [...albums.value, ...res.albums];
-        albums.more = res.more;
-      })
-      .then(() => stopLoading())
-      .then(() => {
-        setTimeout(() => {
-          scrollOnLoad();
-        }, 500);
-      });
+    const res = await loadMoreAlbums(loadCounter.albums, query.value);
+    albums.value = [...albums.value, ...res.albums];
+    albums.more = res.more;
+    return stopLoading();
   }
 
-  function loadArtists() {
+  async function loadArtists() {
     loadCounter.artists += RESULT_COUNT;
 
     startLoading();
-    loadMoreArtists(loadCounter.artists, query.value)
-      .then((res) => {
-        artists.value = [...artists.value, ...res.artists];
-        artists.more = res.more;
-      })
-      .then(() => stopLoading())
-      .then(() =>
-        setTimeout(() => {
-          scrollOnLoad();
-        }, 500)
-      );
+    const res = await loadMoreArtists(loadCounter.artists, query.value);
+    artists.value = [...artists.value, ...res.artists];
+    artists.more = res.more;
+    return stopLoading();
   }
 
   watch(
     () => debouncedQuery.value,
     (newQuery) => {
-      if (route.name === Routes.search) {
+      if (route.value.name === Routes.search) {
         router.replace({
           name: Routes.search,
           params: {
-            page: route.params.page,
+            page: route.value.params.page,
           },
           query: { q: newQuery },
         });
@@ -214,7 +182,7 @@ export default defineStore("search", () => {
 
       const tabs = useTabStore();
 
-      if (route.name !== Routes.search && tabs.current !== "search") {
+      if (route.value.name !== Routes.search && tabs.current !== "search") {
         tabs.switchToSearch();
       }
 

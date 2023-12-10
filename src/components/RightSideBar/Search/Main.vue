@@ -48,5 +48,7 @@ function switchTab(tab: string) {
     align-items: center;
     position: relative;
   }
+
+  
 }
 </style>

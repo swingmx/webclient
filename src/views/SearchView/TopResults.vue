@@ -8,13 +8,11 @@
         !search.top_results.top_result || !search.top_results.top_result.type
       "
     />
-    <div class="header">
-      <div
-        v-if="
-          search.top_results.top_result && search.top_results.top_result.type
-        "
-        class="top"
-      >
+    <div
+      v-if="search.top_results.top_result && search.top_results.top_result.type"
+      class="header"
+    >
+      <div class="top">
         <h3>Top Result</h3>
         <TopItem />
       </div>

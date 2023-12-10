@@ -44,6 +44,14 @@ defineEmits<{
     justify-content: center;
     align-items: center;
   }
+
+  .vue-recycle-scroller {
+    padding: 0 $small;
+  }
+
+  .cardlistrow {
+    grid-template-columns: repeat(auto-fill, minmax(8.1rem, 1fr));
+  }
 }
 
 #tab-content {

@@ -28,17 +28,17 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import FetchMore from "@/components/SearchPage/FetchMore.vue";
-import NoItems from "@/components/shared/NoItems.vue";
-import SongItem from "@/components/shared/SongItem.vue";
 import { isMedium, isSmall } from "@/stores/content-width";
 
+import { dropSources } from "@/enums";
 import useQueue from "@/stores/queue";
 import useSearch from "@/stores/search";
 import useTracklist from "@/stores/queue/tracklist";
 
 import SearchSvg from "@/assets/icons/search.svg";
-import { dropSources } from "@/enums";
+import NoItems from "@/components/shared/NoItems.vue";
+import SongItem from "@/components/shared/SongItem.vue";
+import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 
 const queue = useQueue();
 const search = useSearch();
@@ -52,7 +52,7 @@ const desc = computed(() =>
 
 interface scrollerItem {
   id: string | number | undefined;
-  component: typeof SongItem | typeof FetchMore;
+  component: typeof SongItem | typeof AlbumsFetcher;
   props: Record<string, any>;
 }
 
@@ -70,9 +70,9 @@ const scrollerItems = computed(() => {
   items.push({
     // set to random to force re-render
     id: Math.random(),
-    component: FetchMore,
+    component: AlbumsFetcher,
     props: {
-      action: search.loadTracks,
+      fetch_callback: search.loadTracks,
     },
   });
 

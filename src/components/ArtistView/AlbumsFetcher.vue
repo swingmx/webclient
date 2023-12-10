@@ -14,6 +14,7 @@ const props = defineProps<{
   show_text?: boolean;
   fetch_callback: () => Promise<void>;
   reset_callback?: () => Promise<void>;
+  outside_route?: boolean;
 }>();
 
 const update = async () => {
@@ -26,8 +27,9 @@ onMounted(async () => {
   props.fetch_callback().then(update);
 });
 
-onBeforeRouteUpdate(() => {
-  if (!props.reset_callback) return;
-  props.reset_callback().then(update);
-});
+!props.outside_route &&
+  onBeforeRouteUpdate(() => {
+    if (!props.reset_callback) return;
+    props.reset_callback().then(update);
+  });
 </script>

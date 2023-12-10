@@ -3,10 +3,13 @@
 </template>
 
 <script setup lang="ts">
-import ArtistGrid from "./ArtistGrid.vue";
+import useSearch from "@/stores/search";
+
 import TracksGrid from "./TracksGrid.vue";
 import TopResults from "./TopResults.vue";
+import CardPage from "@/views/SearchView/CardGridPage.vue";
 
+const search = useSearch();
 const props = defineProps<{
   name: string;
 }>();
@@ -24,15 +27,21 @@ function getComponent() {
       };
     case "albums":
       return {
-        component: ArtistGrid,
+        component: CardPage,
         props: {
-          album_grid: true,
+          page: "album",
+          items: search.albums.value,
+          outside_route: true,
         },
       };
     case "artists":
       return {
-        component: ArtistGrid,
-        props: {},
+        component: CardPage,
+        props: {
+          page: "artist",
+          items: search.artists.value,
+          outside_route: true,
+        },
       };
     default:
       return null;
