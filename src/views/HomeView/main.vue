@@ -7,10 +7,10 @@
     </GenericHeader>
     <Browse />
     <RecentItems
-    :title="'Recently Added'"
-    :items="home.recentlyAdded"
-    :play-source="playSources.recentlyAdded"
-    :route="'/playlist/recentlyadded'"
+      :title="'Recently Added'"
+      :items="home.recentlyAdded"
+      :play-source="playSources.recentlyAdded"
+      :route="'/playlist/recentlyadded'"
     />
     <RecentItems
       :title="'Recently Played'"
@@ -38,13 +38,13 @@ function getGreetings(username: string) {
   const date = new Date();
   const hour = date.getHours();
 
-  if (hour < 3) {
+  if (hour <= 3) {
     return "Hey there night owl";
-  } else if (hour < 5) {
+  } else if (hour <= 5) {
     return "Hey there early bird";
-  } else if (hour < 11) {
+  } else if (hour <= 12) {
     return "Good morning " + username;
-  } else if (hour < 16) {
+  } else if (hour <= 18) {
     return "Good afternoon " + username;
   } else {
     return "Goooood evening " + username;

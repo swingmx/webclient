@@ -30,6 +30,7 @@ import FolderCard from "./FolderCard.vue";
 import AlbumCard from "./AlbumCard.vue";
 import ArtistCard from "./ArtistCard.vue";
 import PlaylistCard from "../PlaylistsList/PlaylistCard.vue";
+import FavoritesCard from "./FavoritesCard.vue";
 
 const props = defineProps<{
   title: string;
@@ -59,6 +60,8 @@ function getComponent(type: string) {
       return FolderCard;
     case "playlist":
       return PlaylistCard;
+    case "favorite_tracks":
+      return FavoritesCard;
   }
 }
 
@@ -85,6 +88,10 @@ function getProps(item: { type: string; item: any }) {
     case "playlist":
       return {
         playlist: item.item,
+      };
+    case "favorite_tracks":
+      return {
+        item: item.item,
       };
   }
 }

@@ -108,8 +108,9 @@ export const usePlayer = defineStore("player", () => {
   };
 
   audio.onended = () => {
-    const { submitData } = useTracker();
+    const { submitData, setTimestamp } = useTracker();
     submitData();
+    setTimestamp();
 
     queue.autoPlayNext();
   };

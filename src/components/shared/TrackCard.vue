@@ -64,6 +64,7 @@ defineEmits<{
 
   .ttitle {
     font-size: 0.9rem;
+    margin-top: $small;
   }
 
   img {

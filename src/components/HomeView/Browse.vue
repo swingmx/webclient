@@ -58,15 +58,11 @@ const browselist = [
   .browseitem {
     padding: 1.5rem 0;
     background-color: $gray;
-    background-image: linear-gradient(37deg, $gray 0%, transparent, $gray),
-      linear-gradient(-37deg, $gray 0%, $gray5, $gray);
     color: $white;
   }
 
   .browseitem:hover {
     background-color: $gray5;
-    background-image: linear-gradient(37deg, $gray3 0%, transparent, $gray3),
-      linear-gradient(-37deg, $gray3 0%, $gray5, $gray3);
   }
 }
 </style>

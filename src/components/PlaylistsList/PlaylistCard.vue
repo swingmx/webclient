@@ -69,6 +69,7 @@ defineProps<{
     object-fit: cover;
     transition: all 0.5s ease;
   }
+
   .overlay {
     display: flex;
     flex-direction: column;

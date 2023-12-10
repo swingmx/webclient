@@ -39,13 +39,18 @@ function getSource(source: From) {
   }
 }
 
-export function sendLogData(trackhash: string, duration: number, from: From) {
+export function sendLogData(
+  trackhash: string,
+  duration: number,
+  from: From,
+  timestamp: number
+) {
   if (window.Worker) {
     const worker = new Worker("/workers/logtrack.js");
 
     const seconds = Math.round(duration / 1000);
     const source = getSource(from);
-    worker.postMessage({ trackhash, duration: seconds, source });
+    worker.postMessage({ trackhash, duration: seconds, source, timestamp });
   }
 }
 
@@ -54,6 +59,8 @@ export default defineStore(
   () => {
     const duration = ref(0);
     const trackhash = ref("");
+    const timestamp = ref(0);
+
     // @ts-ignore
     const from = ref({
       type: null,
@@ -67,11 +74,11 @@ export default defineStore(
     const queue = useQueue();
 
     function resetData() {
-      console.log("resetting ...", duration);
       from.value = useTracklist().from;
       duration.value = 0;
       trackhash.value = queue.currenttrack.trackhash;
       prev_date = Date.now();
+      timestamp.value = 0;
     }
 
     function updateDuration() {
@@ -97,8 +104,12 @@ export default defineStore(
     function submitData() {
       if (!can_submit) return;
       lockSubmit();
-      sendLogData(trackhash.value, duration.value, from.value);
+      sendLogData(trackhash.value, duration.value, from.value, timestamp.value);
       resetData();
+    }
+
+    function setTimestamp() {
+      timestamp.value = Math.floor(Date.now() / 1000);
     }
 
     audio.addEventListener(
@@ -111,10 +122,16 @@ export default defineStore(
         if (queue.currenttrack.trackhash !== trackhash.value) {
           if (trackhash.value !== "" && duration.value > 1000 && can_submit) {
             lockSubmit();
-            sendLogData(trackhash.value, duration.value, from.value);
+            sendLogData(
+              trackhash.value,
+              duration.value,
+              from.value,
+              timestamp.value
+            );
           }
 
           resetData();
+          setTimestamp();
         }
 
         updateDuration();
@@ -123,11 +140,11 @@ export default defineStore(
 
     return {
       trackhash,
+      timestamp,
       duration,
       from,
-      resetData,
       submitData,
-      toggleLock: lockSubmit,
+      setTimestamp,
     };
   },
   {

@@ -1,5 +1,5 @@
 onmessage = (e) => {
-  const { trackhash, duration, source } = e.data;
+  const { trackhash, duration, source, timestamp } = e.data;
 
   const is_dev = location.port === "5173";
   const base_url = is_dev ? "http://localhost:1980" : location.origin;
@@ -10,6 +10,6 @@ onmessage = (e) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ trackhash, duration, source }),
+    body: JSON.stringify({ trackhash, duration, source, timestamp }),
   });
 };

@@ -11,6 +11,7 @@
     :class="{ 'use-sqr_img': useSqrImg }"
   >
     <div
+      v-if="Number.isNaN"
       class="float"
       :style="{
         color: textColor,

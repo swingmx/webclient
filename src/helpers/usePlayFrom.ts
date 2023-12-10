@@ -103,9 +103,14 @@ export async function playFromFavorites(track: Track | undefined) {
     tracklist.setFromFav(tracks);
   }
 
-  const index = tracklist.tracklist.findIndex(
-    (t) => t.trackhash === track?.trackhash
-  );
+  let index = 0;
+
+  if (track) {
+    index = tracklist.tracklist.findIndex(
+      (t) => t.trackhash === track?.trackhash
+    );
+  }
+
   queue.play(index);
 }
 
