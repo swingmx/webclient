@@ -9,7 +9,7 @@ export default defineStore("settings", {
   state: () => ({
     version: "",
     use_np_img: true,
-    use_sidebar: true,
+    use_sidebar: false,
     extend_width: false,
     contextChildrenShowMode: contextChildrenShowMode.hover,
     artist_top_tracks_count: 5,

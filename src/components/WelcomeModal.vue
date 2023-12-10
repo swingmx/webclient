@@ -17,7 +17,7 @@
       <div class="creator t-center">
         Designed and developed by
         <span class="name"
-          ><a target="_blank" href="https://github.com/mungai-njoroge"
+          ><a target="_blank" href="https://github.com/cwilvx"
             >Mungai Njoroge</a
           >
         </span>

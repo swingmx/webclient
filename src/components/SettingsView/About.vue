@@ -39,7 +39,16 @@
       >
     </div>
     <br /><br />
-    Let there be music 💃🕺!
+    If you like my work, and would like me to work on your project, I'm open to
+    offers. Feel free to reach out to me via email.
+    <br /><br />
+    <div class="flex">
+      <a href="mailto:geoffreymungai45@gmail.com" target="_blank"
+        ><button>Write Email</button></a
+      >
+    </div>
+    <br /><br />
+    Hope you enjoy using Swing Music as much as I enjoy building it.
   </div>
 </template>
 

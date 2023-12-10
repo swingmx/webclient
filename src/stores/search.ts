@@ -1,8 +1,8 @@
+import { reactive, ref } from "vue";
 import { computed, watch } from "vue";
 import { defineStore } from "pinia";
-// import { useRoute } from "vue-router";
+
 import { Routes, router } from "@/router";
-import { reactive, ref } from "vue";
 import { useDebounce } from "@vueuse/core";
 
 import {
@@ -17,11 +17,9 @@ import {
 import useTabStore from "./tabs";
 import useLoaderStore from "./loader";
 import { maxAbumCards } from "./content-width";
-// import waitForScrollEnd from "@/helpers/useWaitForScroll";
 import { Album, Artist, Playlist, Track } from "../interfaces";
 
 export default defineStore("search", () => {
-  // @ts-ignore
   const query = ref("");
   const route = computed(() => router.currentRoute.value);
   const debouncedQuery = useDebounce(query, 500);
