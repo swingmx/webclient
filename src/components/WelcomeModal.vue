@@ -18,7 +18,7 @@
         Designed and developed by
         <span class="name"
           ><a target="_blank" href="https://github.com/cwilvx"
-            >Mungai Njoroge</a
+            >@cwilvx</a
           >
         </span>
       </div>
@@ -42,12 +42,6 @@
   .app-name {
     font-size: 1.5rem;
     color: $pink;
-  }
-
-  .release {
-    margin-left: $smaller;
-    font-size: 0.7rem;
-    color: $gray1;
   }
 
   .bottom-banner {
