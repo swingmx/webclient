@@ -17,7 +17,7 @@ import {
 import useTabStore from "./tabs";
 import useLoaderStore from "./loader";
 import { maxAbumCards } from "./content-width";
-import waitForScrollEnd from "@/helpers/useWaitForScroll";
+// import waitForScrollEnd from "@/helpers/useWaitForScroll";
 import { Album, Artist, Playlist, Track } from "../interfaces";
 
 export default defineStore("search", () => {
@@ -96,19 +96,9 @@ export default defineStore("search", () => {
     if (!query) return;
 
     searchTracks(query).then((data) => {
-      let scrollable = document.getElementById(
-        "songlist-scroller"
-      ) as HTMLElement;
-
-      if (scrollable === null) {
-        scrollable = document.createElement("div");
-      }
-
-      waitForScrollEnd(scrollable, 0).then(() => {
-        tracks.value = data.tracks;
-        tracks.more = data.more;
-        tracks.query = query;
-      });
+      tracks.value = data.tracks;
+      tracks.more = data.more;
+      tracks.query = query;
     });
   }
 
