@@ -121,7 +121,7 @@ onBeforeRouteUpdate((to, from) => {
 });
 
 onBeforeRouteLeave(() => {
-  setTimeout(() => folder.resetQuery(), 500);
+  folder.resetAll();
 });
 
 onMounted(() => updatePageTitle("Folders"));

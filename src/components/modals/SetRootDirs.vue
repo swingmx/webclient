@@ -2,7 +2,7 @@
   <br /><br />
   <div style="position: relative">
     <div id="bread-nav" class="bread-nav rounded-sm">
-      &nbsp;&nbsp;<span @click="fetchDirs('$root')">📁</span
+      &nbsp;&nbsp;<span @click="fetchDirs('$root')">$root</span
       >&nbsp;&nbsp;<BreadCrumbNav :sub-paths="subPaths" @navigate="fetchDirs" />
     </div>
     <div class="set-root-dirs-browser">
@@ -26,10 +26,10 @@
       </div>
       <div class="buttons">
         <button class="btn-active select-here" @click="selectHere">
-          Select here
+          Add this folder
         </button>
         <button class="btn-active finish" @click="submitFolders">
-          Select checked ({{ getNewDirs().length }})
+          Add all checked ({{ getNewDirs().length }})
         </button>
       </div>
     </div>
@@ -40,9 +40,9 @@
 import { onMounted, Ref, ref } from "vue";
 
 import {
-addRootDirs,
-getFolders,
-getRootDirs,
+  addRootDirs,
+  getFolders,
+  getRootDirs,
 } from "@/requests/settings/rootdirs";
 
 import { Folder, subPath } from "@/interfaces";
@@ -113,7 +113,7 @@ function submitFolders() {
 }
 
 function selectHere() {
-  if (current == "$root") return;
+  if (current == "$root" || current == "/") return;
 
   addRootDirs([current], [])
     .then((res) => settings.setRootDirs(res))
@@ -188,7 +188,7 @@ onMounted(() => {
 
   .buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     gap: $medium;
     margin-right: 1rem;
     margin-bottom: -$medium;
@@ -199,16 +199,8 @@ onMounted(() => {
     }
 
     button {
+      font-weight: normal;
       padding: 0 1rem;
-    }
-
-    button.select-here {
-      border: solid $darkestblue;
-      background: transparent;
-
-      &:hover {
-        background-color: $darkestblue;
-      }
     }
   }
 

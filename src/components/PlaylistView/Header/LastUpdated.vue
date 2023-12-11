@@ -3,8 +3,14 @@
     <span v-if="!isHeaderSmall" class="status"
       >Last updated {{ playlist.info.last_updated }} &#160;|&#160;&#160;</span
     >
-    <div class="edit" @click="editPlaylist">Edit&#160;&#160;</div>
-    |
+    <div
+      v-if="Number.isInteger(playlist.info.id)"
+      class="edit"
+      @click="editPlaylist"
+    >
+      Edit&#160;&#160;
+    </div>
+    {{ Number.isInteger(playlist.info.id) ? " | " : "" }}
     <DeleteSvg class="edit" @click="deletePlaylist" />
   </div>
 </template>
@@ -34,11 +40,8 @@ function deletePlaylist() {
   bottom: 1rem;
   right: 1rem;
   padding: $smaller $small;
-  // background-color: $body;
-  // color: rgb(255, 255, 255);
   font-size: 0.9rem;
   border-radius: $smaller;
-  // box-shadow: 0 0 1rem rgba(0, 0, 0, 0.479);
   z-index: 12;
 
   display: flex;

@@ -31,6 +31,7 @@ import { updateCardWidth } from "@/stores/content-width";
 import Browse from "@/components/HomeView/Browse.vue";
 import RecentItems from "@/components/shared/CardScroller.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
+import { onBeforeRouteLeave } from "vue-router";
 
 const home = useHome();
 
@@ -59,6 +60,8 @@ onMounted(async () => {
 
   await home.fetchRecentlyPlayed();
 });
+
+onBeforeRouteLeave(() => home.resetAll())
 </script>
 
 <style lang="scss">

@@ -15,6 +15,7 @@ import { maxAbumCards } from "@/stores/content-width";
 import { useFuse } from "@/utils";
 import setColorsToStore from "@/utils/colortools/setColorsToStore";
 import { useNotifStore } from "../notification";
+import { router, Routes } from "@/router";
 
 interface Disc {
   [key: string]: Track[];
@@ -136,7 +137,10 @@ export default defineStore("album", {
       this.query = "";
     },
     resetAlbumArtists() {
-      this.albumArtists = [];
+      setTimeout(() => {
+        if (router.currentRoute.value.name == Routes.album) return;
+        this.albumArtists = [];
+      }, 10000);
     },
     resetOtherVersions() {
       this.otherVersions = [];
@@ -149,6 +153,14 @@ export default defineStore("album", {
     },
     removeFavorite() {
       this.info.is_favorite = false;
+    },
+    resetAll() {
+      setTimeout(() => {
+        if (router.currentRoute.value.name == Routes.album) return;
+        this.resetAlbumArtists();
+        this.resetOtherVersions();
+        this.resetSimilarAlbums();
+      }, 5000);
     },
   },
   getters: {

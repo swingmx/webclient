@@ -6,6 +6,7 @@ import { useFuse } from "@/utils";
 import { FuseTrackOptions } from "@/enums";
 import { Folder, FuseResult, Track } from "@/interfaces";
 import { getFiles } from "@/requests/folders";
+import { Routes, router } from "@/router";
 
 export default defineStore("FolderDirs&Tracks", {
   state: () => ({
@@ -22,6 +23,14 @@ export default defineStore("FolderDirs&Tracks", {
     },
     resetQuery() {
       this.query = "";
+    },
+    resetAll() {
+      setTimeout(() => {
+        if (router.currentRoute.value.name == Routes.folder) return;
+
+        [this.allDirs, this.allTracks] = [[], []];
+        this.resetQuery();
+      }, 5000);
     },
   },
   getters: {

@@ -3,9 +3,9 @@
     <div
       v-if="queue.currenttrack"
       id="sidelyrics"
+      :style="{ background: bgColor }"
       class="content-page rounded"
       @wheel="onScroll"
-      :style="{ background: bgColor }"
     >
       <LyricsHead :bg-color="bgColor" />
       <div v-if="lyrics.synced" class="synced">
@@ -92,7 +92,8 @@ onMounted(() => {
 }
 
 #sidelyrics {
-  padding: 2rem 2rem 0 2rem;
+  padding: 2rem 4rem;
+  padding-bottom: 4rem;
   height: 100%;
   overflow: scroll;
   background-color: rgb(122, 122, 122);
@@ -152,7 +153,7 @@ onMounted(() => {
 
   .copyright {
     font-size: 12px;
-    padding: 2rem 0;
+    padding-top: 2rem;
     opacity: 0.9;
     text-transform: uppercase;
   }

@@ -1,5 +1,13 @@
 <template>
-  <div class="trackcard rounded">
+  <RouterLink
+    :to="{
+      name: Routes.album,
+      params: {
+        albumhash: track.albumhash,
+      },
+    }"
+    class="trackcard rounded"
+  >
     <div class="image">
       <img class="rounded-sm" :src="paths.images.thumb.large + track.image" />
       <PlayBtn :source="playSource" :track="track" />
@@ -11,7 +19,7 @@
       <div class="ttitle ellip">{{ track.title }}</div>
       <ArtistName :albumartists="track.albumartists" :artists="track.artists" />
     </div>
-  </div>
+  </RouterLink>
 </template>
 
 <script setup lang="ts">
@@ -21,6 +29,7 @@ import { playSources } from "@/enums";
 
 import PlayBtn from "../shared/PlayBtn.vue";
 import ArtistName from "../shared/ArtistName.vue";
+import { Routes } from "@/router";
 
 defineProps<{
   track: Track;

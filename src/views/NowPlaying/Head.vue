@@ -51,7 +51,7 @@ defineProps<{
 
 <style lang="scss">
 .lyricsinfo {
-  padding: 1.5rem 1.5rem;
+  padding: 2rem 2.5rem 1rem;
   font-size: 1rem;
   display: grid;
   grid-template-columns: max-content 1fr max-content;
@@ -59,7 +59,7 @@ defineProps<{
   align-items: center;
   position: sticky;
   top: -2rem;
-  margin: -2rem;
+  margin: -2.5rem;
   z-index: 1;
 
   img {

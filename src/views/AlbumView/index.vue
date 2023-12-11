@@ -61,7 +61,7 @@ interface ScrollerItem {
     | typeof SongItem
     | typeof GenreBanner
     | typeof CardScroller
-    | typeof AlbumsFetcher
+    | typeof AlbumsFetcher;
   props?: any;
 }
 
@@ -226,9 +226,7 @@ onBeforeRouteUpdate(async (to) => {
 });
 
 onBeforeRouteLeave(() => {
-  setTimeout(() => {
-    album.resetAlbumArtists();
-  }, 500);
+  album.resetAll();
 });
 </script>
 

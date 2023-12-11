@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 
 import { getRecentlyAdded, getRecentlyPlayed } from "@/requests/home";
 import { maxAbumCards } from "./content-width";
+import { Routes, router } from "@/router";
 
 export default defineStore("homepage", () => {
   const recentlyAddedCutoff = ref(0);
@@ -22,11 +23,19 @@ export default defineStore("homepage", () => {
     recentlyPlayed.value = data.items;
   }
 
+  function resetAll() {
+    setTimeout(() => {
+      if (router.currentRoute.value.name == Routes.Home) return;
+      [recentlyAdded.value, recentlyPlayed.value] = [[], []];
+    }, 5000);
+  }
+
   return {
     recentlyAddedCutoff,
     recentlyAdded,
     recentlyPlayed,
     fetchRecentlyAdded,
     fetchRecentlyPlayed,
+    resetAll,
   };
 });

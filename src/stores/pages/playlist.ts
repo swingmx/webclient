@@ -8,6 +8,7 @@ import { FuseTrackOptions } from "@/enums";
 import { Artist, FuseResult, Playlist, Track } from "@/interfaces";
 import { getPlaylist, removeBannerImage } from "@/requests/playlists";
 import setColorsToStore from "@/utils/colortools/setColorsToStore";
+import { Routes, router } from "@/router";
 
 export default defineStore("playlist-tracks", {
   state: () => ({
@@ -15,7 +16,6 @@ export default defineStore("playlist-tracks", {
     query: "",
     initialBannerPos: 0,
     allTracks: <Track[]>[],
-    artists: <Artist[]>[],
     colors: {
       bg: "",
       btn: "",
@@ -119,19 +119,18 @@ export default defineStore("playlist-tracks", {
     addTrack(track: Track) {
       this.allTracks.push(track);
     },
-    
-    resetArtists() {
-      this.artists = [];
-    },
-    resetQuery() {
-      this.query = "";
-    },
     resetBannerPos() {
       try {
         this.info.settings.banner_pos = 50;
       } catch (e) {
         /* empty */
       }
+    },
+    resetAll() {
+      setTimeout(() => {
+        if (router.currentRoute.value.name == Routes.playlist) return;
+        this.allTracks = [];
+      }, 5000);
     },
   },
   getters: {

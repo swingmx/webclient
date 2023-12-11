@@ -43,6 +43,7 @@ import Header from "@/components/PlaylistView/Header.vue";
 import NoItems from "@/components/shared/NoItems.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import AfterHeader from "@/components/PlaylistView/AfterHeader.vue";
+import { onBeforeRouteLeave } from "vue-router";
 
 const queue = useQueue();
 const tracklist = useTracklist();
@@ -111,6 +112,8 @@ function playFromPlaylistPage(index: number) {
 [onMounted, onUpdated].forEach(() => {
   updatePageTitle(playlist.info.name);
 });
+
+onBeforeRouteLeave(() => playlist.resetAll())
 </script>
 
 <style lang="scss">

@@ -1,4 +1,4 @@
-import { router } from "@/router";
+import { Routes, router } from "@/router";
 import { defineStore } from "pinia";
 
 import { discographyAlbumTypes } from "@/enums";
@@ -70,6 +70,12 @@ export default defineStore("artistDiscography", {
 
       this.toShow = [];
       this.artistname = "";
+    },
+    resetAll() {
+      setTimeout(() => {
+        if (router.currentRoute.value.name == Routes.artistDiscography) return;
+        this.resetStore();
+      }, 5000);
     },
   },
 });

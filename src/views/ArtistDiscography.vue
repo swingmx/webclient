@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { Routes } from "@/router";
-import { onBeforeRouteUpdate, useRoute } from "vue-router";
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import { discographyAlbumTypes } from "@/enums";
 import updatePageTitle from "@/utils/updatePageTitle";
@@ -97,6 +97,8 @@ onBeforeRouteUpdate((to, from, next) => {
   artist.setAlbums(to.params.type as string);
   next();
 });
+
+onBeforeRouteLeave(() => artist.resetStore());
 </script>
 
 <style lang="scss">
