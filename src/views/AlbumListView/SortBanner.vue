@@ -81,10 +81,10 @@ const artistitems = [
   position: relative;
   font-size: 14px;
   text-transform: capitalize;
-  cursor: pointer;
   user-select: none;
-
+  
   .select {
+    cursor: pointer;
     display: flex;
     align-items: center;
     border: solid 1px $gray5;

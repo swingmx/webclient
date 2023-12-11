@@ -99,7 +99,7 @@ function getProps(item: { type: string; item: any }) {
 
 <style lang="scss">
 .cardscroller {
-  padding: 2rem 0;
+  padding: 1.5rem 0;
 
   .recentitems {
     gap: 1.5rem 0;

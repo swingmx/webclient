@@ -39,16 +39,22 @@
       >
     </div>
     <br /><br />
-    If you like my work, and would like me to work on your project, I'm open to
-    offers. Feel free to reach out to me via email.
-    <br /><br />
-    <div class="flex">
-      <a href="mailto:geoffreymungai45@gmail.com" target="_blank"
-        ><button>Write Email</button></a
-      >
-    </div>
-    <br /><br />
     Hope you enjoy using Swing Music as much as I enjoy building it.
+    <br /><br />
+    <div class="hireme rounded">
+      <h2>Hire me</h2>
+      If you like my work, and would like me to work for you or your company,
+      I'm open to offers. Feel free to reach out to me via email.
+      <br /><br />
+      <div class="flex">
+        <a
+          href="mailto:geoffreymungai45@gmail.com?subject=Job Offer&body=Hi Mungai,
+        "
+          target="_blank"
+          ><button>Write Email</button></a
+        >
+      </div>
+    </div>
   </div>
 </template>
 
@@ -61,6 +67,26 @@
 
   .flex {
     gap: 1rem;
+  }
+
+  .hireme {
+    background-color: #ffffff;
+    background-image: linear-gradient(
+      37deg,
+      #bfeaf0 0%,
+      #ffffff00 50%,
+      #a7dcff 100%
+    );
+    padding: 1rem;
+    color: $black;
+
+    button {
+      background-color: $blue;
+    }
+
+    h2 {
+      margin-top: $small;
+    }
   }
 }
 </style>

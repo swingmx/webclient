@@ -40,8 +40,8 @@ const browselist = [
 
 <style lang="scss">
 .homebrowse {
-  padding: 1rem 0;
-  padding-left: $medium;
+  padding: 1.5rem 0;
+  padding-left: $small;
 
   .btitle {
     font-size: 1.15rem;

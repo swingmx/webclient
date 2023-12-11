@@ -6,7 +6,7 @@
       }}</template>
       <template #description>
         You have {{ total.toLocaleString() }}
-        {{ is_albumlist ? "album" : "artist" + (is_not_one ? "s" : "") }} in
+        {{ (is_albumlist ? "album" : "artist") + (is_not_one ? "s" : "") }} in
         your library</template
       >
     </GenericHeader>

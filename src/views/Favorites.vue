@@ -23,6 +23,7 @@
         :source="dropSources.favorite"
       />
     </div>
+    <br>
     <CardScroller
       v-if="favAlbums.length"
       :items="favAlbums.map((i) => ({ type: 'album', item: i }))"
