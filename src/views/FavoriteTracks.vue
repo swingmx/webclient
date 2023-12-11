@@ -5,6 +5,7 @@
     :is_queue="false"
     :drop-handler="() => {}"
     :source="dropSources.favorite"
+    :total="tracks.length"
   />
 </template>
 

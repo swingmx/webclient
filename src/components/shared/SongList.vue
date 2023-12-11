@@ -15,7 +15,7 @@
     >
       <SongItem
         :track="item.track"
-        :index="index + 1"
+        :index="total ? total - index : index + 1"
         :is_queue_track="is_queue"
         :is_last="index == tracks.length - 1"
         :droppable="false"
@@ -44,6 +44,7 @@ defineProps<{
     oldIndex: number
   ) => void;
   source: dropSources;
+  total?: number;
 }>();
 
 const itemHeight = 64;

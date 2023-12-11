@@ -21,9 +21,10 @@
         :title="'Tracks'"
         :play-handler="handlePlay"
         :source="dropSources.favorite"
+        :total="count.tracks"
       />
     </div>
-    <br>
+    <br />
     <CardScroller
       v-if="favAlbums.length"
       :items="favAlbums.map((i) => ({ type: 'album', item: i }))"

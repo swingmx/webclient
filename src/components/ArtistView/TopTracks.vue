@@ -9,7 +9,7 @@
         v-for="(song, index) in tracks"
         :key="index"
         :track="song"
-        :index="index + 1"
+        :index="total ? total - index : index + 1"
         :source="source"
         @playThis="playHandler(index)"
       />
@@ -31,6 +31,7 @@ defineProps<{
   title: string;
   playHandler: (index: number) => void;
   source: dropSources;
+  total?: number;
 }>();
 </script>
 
