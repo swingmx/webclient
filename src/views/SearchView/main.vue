@@ -81,6 +81,8 @@ onMounted(() => {
 
   .buttons-area {
     position: relative;
+    padding-left: $padleft;
+
     .tabheaders {
       margin: 0;
     }
