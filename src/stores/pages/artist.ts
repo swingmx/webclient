@@ -11,6 +11,7 @@ import { Album, Artist, Track } from "@/interfaces";
 import { maxAbumCards } from "@/stores/content-width";
 import useSettingsStore from "@/stores/settings";
 import setColorsToStore from "@/utils/colortools/setColorsToStore";
+import { Routes, router } from "@/router";
 
 export default defineStore("artistPage", {
   state: () => ({
@@ -27,7 +28,6 @@ export default defineStore("artistPage", {
       btn: "",
     },
     genres: <string[]>[],
-    
     fetched_similar_hash: "",
   }),
   actions: {
@@ -60,7 +60,6 @@ export default defineStore("artistPage", {
         this.info.artisthash,
         maxAbumCards.value
       );
-
     },
     extractColors() {
       const url = paths.images.artist.large + this.info.image;
@@ -78,6 +77,14 @@ export default defineStore("artistPage", {
     },
     resetSimilarArtists() {
       this.similar_artists = [];
+    },
+    resetAll() {
+      setTimeout(() => {
+        if (router.currentRoute.value.name == Routes.artist) return;
+        this.resetAlbums();
+        this.resetSimilarArtists();
+        this.fetched_similar_hash = "";
+      }, 5000);
     },
     makeFavorite() {
       this.info.is_favorite = true;

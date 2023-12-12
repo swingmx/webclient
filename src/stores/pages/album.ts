@@ -140,13 +140,16 @@ export default defineStore("album", {
       setTimeout(() => {
         if (router.currentRoute.value.name == Routes.album) return;
         this.albumArtists = [];
+        this.fetched_other_hash = "";
       }, 10000);
     },
     resetOtherVersions() {
       this.otherVersions = [];
+      this.fetched_version_hash = "";
     },
     resetSimilarAlbums() {
       this.similarAlbums = [];
+      this.fetched_similar_hash = "";
     },
     makeFavorite() {
       this.info.is_favorite = true;

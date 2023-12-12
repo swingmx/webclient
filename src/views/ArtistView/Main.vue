@@ -235,11 +235,7 @@ onBeforeRouteUpdate(async (to) => {
   await store.getData(to.params.hash as string);
 });
 
-onBeforeRouteLeave(async () => {
-  setTimeout(() => {
-    store.resetAlbums();
-  }, 400);
-});
+onBeforeRouteLeave(() => store.resetAll());
 </script>
 
 <style lang="scss">
