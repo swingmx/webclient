@@ -30,7 +30,6 @@
           item: i,
         }))
       "
-      :route="`/search/artists?q=${search.query}`"
     />
     <RecentItems
       v-if="search.top_results.albums.length"
@@ -41,7 +40,6 @@
           item: i,
         }))
       "
-      :route="`/search/albums?q=${search.query}`"
     />
   </div>
 </template>
