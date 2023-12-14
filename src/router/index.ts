@@ -19,9 +19,8 @@ const ArtistDiscographyView = () => import("@/views/ArtistDiscography.vue");
 const SettingsView = () => import("@/views/SettingsView.vue");
 const SearchView = () => import("@/views/SearchView");
 const FavoritesView = () => import("@/views/Favorites.vue");
-const FavoriteAlbums = () => import("@/views/FavoriteAlbums.vue");
+const FavoriteCardScroller = () => import("@/views/FavoriteCardScroller.vue");
 const FavoriteTracks = () => import("@/views/FavoriteTracks.vue");
-const FavoriteArtists = () => import("@/views/FavoriteArtists.vue");
 const NotFound = () => import("@/views/NotFound.vue");
 const NowPlaying = () => import("@/views/NowPlaying");
 const AlbumList = () => import("@/views/AlbumListView");
@@ -136,19 +135,19 @@ const favorites = {
 const favoriteAlbums = {
   path: "/favorites/albums",
   name: "FavoriteAlbums",
-  component: FavoriteAlbums,
+  component: FavoriteCardScroller,
+};
+
+const favoriteArtists = {
+  path: "/favorites/artists",
+  name: "FavoriteArtists",
+  component: FavoriteCardScroller,
 };
 
 const favoriteTracks = {
   path: "/favorites/tracks",
   name: "FavoriteTracks",
   component: FavoriteTracks,
-};
-
-const favoriteArtists = {
-  path: "/favorites/artists",
-  name: "FavoriteArtists",
-  component: FavoriteArtists,
 };
 
 const notFound = {

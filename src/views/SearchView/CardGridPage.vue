@@ -43,6 +43,7 @@ import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 
 const props = defineProps<{
   page: "album" | "artist";
+  fetch_callback?: () => Promise<void>;
   items: any[];
   outside_route?: boolean;
 }>();
@@ -52,7 +53,7 @@ const search = useSearchStore();
 const desc = computed(() =>
   search.query === ""
     ? `Start typing to search for ${props.page}s`
-    : `Track results for '${search.query}' should appear here`
+    : `Results for '${search.query}' should appear here`
 );
 
 const scrollerItems = computed(() => {
@@ -76,17 +77,16 @@ const scrollerItems = computed(() => {
     });
   }
 
-  items.push({
-    id: Math.random(),
-    component: AlbumsFetcher,
-    props: {
-      fetch_callback:
-        props.page == "album" ? search.loadAlbums : search.loadArtists,
-      show_text:
-        props.page == "album" ? search.albums.more : search.artists.more,
-      outside_route: props.outside_route,
-    },
-  });
+  if (props.fetch_callback) {
+    items.push({
+      id: Math.random(),
+      component: AlbumsFetcher,
+      props: {
+        fetch_callback: props.fetch_callback,
+        outside_route: props.outside_route,
+      },
+    });
+  }
 
   return items;
 });

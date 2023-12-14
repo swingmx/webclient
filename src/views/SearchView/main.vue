@@ -47,13 +47,21 @@ const component = computed(() => {
     case pages[2]:
       return {
         component: CardGridPage,
-        props: { page: "album", items: search.albums.value },
+        props: {
+          page: "album",
+          items: search.albums.value,
+          fetch_callback: search.loadAlbums,
+        },
       };
 
     case pages[3]:
       return {
         component: CardGridPage,
-        props: { page: "artist", items: search.artists.value },
+        props: {
+          page: "artist",
+          items: search.artists.value,
+          fetch_callback: search.loadArtists,
+        },
       };
 
     default:
