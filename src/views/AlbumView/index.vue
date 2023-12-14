@@ -236,7 +236,7 @@ onBeforeRouteLeave(() => {
   overflow: visible;
 
   .songlist-item {
-    grid-template-columns: 1.75rem 1.5fr 1fr 5.5rem;
+    grid-template-columns: 1.75rem 1fr 1fr 5.5rem;
   }
 }
 </style>

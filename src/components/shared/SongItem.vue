@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
 <style lang="scss">
 .songlist-item {
   display: grid;
-  grid-template-columns: 1.75rem 2fr 1fr 1.5fr 5.5rem;
+  grid-template-columns: 1.75rem 1.25fr 1fr 1fr 5.5rem;
   align-items: center;
   justify-content: flex-start;
   height: $song-item-height;
