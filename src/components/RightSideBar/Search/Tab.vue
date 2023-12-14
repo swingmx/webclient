@@ -32,6 +32,7 @@ function getComponent() {
           page: "album",
           items: search.albums.value,
           outside_route: true,
+          fetch_callback: search.loadAlbums,
         },
       };
     case "artists":
@@ -41,6 +42,7 @@ function getComponent() {
           page: "artist",
           items: search.artists.value,
           outside_route: true,
+          fetch_callback: search.loadArtists,
         },
       };
     default:
