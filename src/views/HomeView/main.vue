@@ -7,12 +7,14 @@
     </GenericHeader>
     <Browse />
     <RecentItems
+      v-if="home.recentlyAdded.length"
       :title="'Recently Added'"
       :items="home.recentlyAdded"
       :play-source="playSources.recentlyAdded"
       :route="'/playlist/recentlyadded'"
     />
     <RecentItems
+      v-if="home.recentlyPlayed.length"
       :title="'Recently Played'"
       :items="home.recentlyPlayed"
       :play-source="playSources.track"
@@ -61,7 +63,7 @@ onMounted(async () => {
   await home.fetchRecentlyPlayed();
 });
 
-onBeforeRouteLeave(() => home.resetAll())
+onBeforeRouteLeave(() => home.resetAll());
 </script>
 
 <style lang="scss">
