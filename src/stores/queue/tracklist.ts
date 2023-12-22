@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import useQueue from "@/stores/queue";
 import useInterface from "@/stores/interface";
 import useSettings from "@/stores/settings";
+import { usePlayer } from "@/stores/player";
 import { useNotifStore, NotifType } from "@/stores/notification";
 
 import {
@@ -61,6 +62,7 @@ export default defineStore("tracklist", {
 
       const { focusCurrentInSidebar } = useInterface();
       focusCurrentInSidebar(1000);
+      usePlayer().clearNextAudio();
     },
     setFromFolder(path: string, tracks: Track[]) {
       const name = path.split("/").pop();

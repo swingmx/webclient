@@ -102,6 +102,10 @@ export default defineStore("Queue", {
       }
 
       this.play(this.previndex);
+      usePlayer().clearNextAudio();
+    },
+    moveForward() {
+      this.currentindex = this.nextindex;
     },
     seek(pos: number) {
       const tabs = useTabs();
