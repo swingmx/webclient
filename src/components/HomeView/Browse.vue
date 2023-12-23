@@ -35,6 +35,14 @@ const browselist = [
     title: "Artists",
     route: Routes.ArtistList,
   },
+  {
+    title: "Playlists",
+    route: Routes.playlists,
+  },
+  {
+    title: "Favorites",
+    route: Routes.favorites,
+  },
 ];
 </script>
 
