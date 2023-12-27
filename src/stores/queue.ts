@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 
 import { favType } from "@/enums";
-import { Track } from "@/interfaces";
-import useInterface from "./interface";
-import { isFavorite } from "@/requests/favorite";
 import updateMediaNotif from "@/helpers/mediaNotification";
+import { Track } from "@/interfaces";
+import { isFavorite } from "@/requests/favorite";
+import useInterface from "./interface";
 
 import useTabs from "./tabs";
 import useLyrics from "./lyrics";
@@ -21,23 +21,32 @@ export default defineStore("Queue", {
     },
     currentindex: 0,
     playing: false,
+    /** Whether track has been triggered manually */
+    manual: true,
   }),
   actions: {
     setPlaying(val: boolean) {
       this.playing = val;
     },
-    setFullDuration(duration: number) {
+    setDurationFromFile(duration: number) {
       this.duration.full = duration;
+    },
+    setManual(val: boolean) {
+      this.manual = val;
     },
     setCurrentDuration(duration: number) {
       this.duration.current = duration;
     },
-    play(index: number = 0) {
+    setCurrentIndex(val: number) {
+      this.currentindex = val;
+    },
+    play(index: number = 0, manual = true) {
       const { tracklist } = useTracklist();
       if (tracklist.length === 0) return;
 
       this.playing = true;
       this.currentindex = index;
+      this.manual = manual;
 
       const { playCurrent } = usePlayer();
       const { focusCurrentInSidebar } = useInterface();
@@ -68,12 +77,12 @@ export default defineStore("Queue", {
       const is_last = this.currentindex === tracklist.length - 1;
 
       if (settings.repeat_one) {
-        this.play(this.currentindex);
+        this.play(this.currentindex, false);
         return;
       }
 
       if (settings.repeat_all) {
-        this.play(is_last ? 0 : this.currentindex + 1);
+        this.play(is_last ? 0 : this.currentindex + 1, false);
         return;
       }
 
@@ -87,7 +96,7 @@ export default defineStore("Queue", {
         focusCurrentInSidebar();
       };
 
-      !is_last ? this.play(this.currentindex + 1) : resetQueue();
+      !is_last ? this.play(this.currentindex + 1, false) : resetQueue();
     },
     playNext() {
       this.play(this.nextindex);
@@ -147,32 +156,6 @@ export default defineStore("Queue", {
       this.currentindex = 0;
       this.play(this.currentindex);
       focusCurrentInSidebar();
-    },
-    removeFromQueue(index: number = 0) {
-      const { tracklist, removeByIndex } = useTracklist();
-
-      if (index === this.currentindex) {
-        const is_last = index === tracklist.length - 1;
-        const was_playing = this.playing;
-
-        audio.src = "";
-        // this.tracklist.splice(index, 1);
-
-        if (is_last) {
-          this.currentindex = 0;
-        }
-
-        if (was_playing) {
-          this.playPause();
-        }
-        return;
-      }
-
-      removeByIndex(index);
-
-      if (index < this.currentindex) {
-        this.currentindex -= 1;
-      }
     },
   },
   getters: {

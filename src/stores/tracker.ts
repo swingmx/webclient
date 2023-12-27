@@ -112,31 +112,33 @@ export default defineStore(
       timestamp.value = Math.floor(Date.now() / 1000);
     }
 
-    audio.addEventListener(
-      "timeupdate",
-      throttle(() => {
-        if (audio.paused) {
-          prev_date = 0;
-        }
-
-        if (queue.currenttrack.trackhash !== trackhash.value) {
-          if (trackhash.value !== "" && duration.value > 1000 && can_submit) {
-            lockSubmit();
-            sendLogData(
-              trackhash.value,
-              duration.value,
-              from.value,
-              timestamp.value
-            );
+    function reassignEventListener() {
+      audio.addEventListener(
+        "timeupdate",
+        throttle(() => {
+          if (audio.paused) {
+            prev_date = 0;
           }
 
-          resetData();
-          setTimestamp();
-        }
+          if (queue.currenttrack.trackhash !== trackhash.value) {
+            if (trackhash.value !== "" && duration.value > 1000 && can_submit) {
+              lockSubmit();
+              sendLogData(
+                trackhash.value,
+                duration.value,
+                from.value,
+                timestamp.value
+              );
+            }
 
-        updateDuration();
-      }, 500)
-    );
+            resetData();
+            setTimestamp();
+          }
+
+          updateDuration();
+        }, 500)
+      );
+    }
 
     return {
       trackhash,
@@ -145,6 +147,7 @@ export default defineStore(
       from,
       submitData,
       setTimestamp,
+      reassignEventListener,
     };
   },
   {

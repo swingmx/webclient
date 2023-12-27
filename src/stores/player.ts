@@ -5,15 +5,13 @@ import useTabs from "./tabs";
 import useQueue from "./queue";
 import useLyrics from "./lyrics";
 import useColors from "./colors";
+import useTracker from "./tracker";
 import useSettings from "./settings";
 import useTracklist from "./queue/tracklist";
-import useTracker from "./tracker";
-
 import { NotifType, useNotifStore } from "./notification";
 
 import { paths } from "../config";
 import updateMediaNotif from "@/helpers/mediaNotification";
-import getSilence from "@/requests/files";
 
 function getUrl(filepath: string, trackhash: string) {
   return `${paths.api.files}/${trackhash}?filepath=${encodeURIComponent(
@@ -27,25 +25,56 @@ function crossFade(
   start_volume = 0,
   then_destroy = false
 ) {
+  if (audio.muted) {
+    return;
+  }
+
+  const { volume } = useSettings();
+
   audio.volume = start_volume;
-  const fadeSteps = duration / 100;
-  const fadeStepTime = duration / fadeSteps;
+  const fadeStepTime = 50;
+  const fadeSteps = duration / fadeStepTime;
+  const volumeStep = volume / fadeSteps;
   const is_up = start_volume == 0;
 
-  const volumeStep = is_up ? 1 / fadeSteps : audio.volume / fadeSteps;
-  console.log(audio.volume, fadeSteps, fadeStepTime, volumeStep);
+  function incrementOrDecrement() {
+    const v = audio.volume;
+    const newVolume = is_up ? v + volumeStep : v - volumeStep;
+
+    if (newVolume > 1) {
+      audio.volume = 1;
+      return;
+    }
+
+    if (newVolume < 0) {
+      audio.volume = 0;
+      return;
+    }
+
+    audio.volume = newVolume;
+  }
+
+  let counter = 0;
 
   const interval = setInterval(() => {
-    is_up ? (audio.volume += volumeStep) : (audio.volume -= volumeStep);
+    if (counter == fadeSteps) {
+      return stopInterval();
+    }
+
+    incrementOrDecrement();
+    counter++;
   }, fadeStepTime);
 
-  setTimeout(() => {
+  function stopInterval() {
     clearInterval(interval);
 
     if (then_destroy) {
+      audio.pause();
+      // audio.src = "";
+      // @ts-ignore
       audio = null;
     }
-  }, duration);
+  }
 }
 
 let audio = new Audio();
@@ -55,12 +84,13 @@ export const usePlayer = defineStore("player", () => {
   const queue = useQueue();
   const colors = useColors();
   const lyrics = useLyrics();
+  const tracker = useTracker();
   const toast = useNotifStore();
   const settings = useSettings();
   const tracklist = useTracklist();
 
   const crossfade_duration = 2000;
-  let currentAudio = {
+  let currentAudioData = {
     filepath: "",
     silence: {
       start: 0,
@@ -68,7 +98,7 @@ export const usePlayer = defineStore("player", () => {
     },
   };
 
-  let nextAudio = {
+  let nextAudioData = {
     filepath: "",
     audio: new Audio(),
     loaded: false,
@@ -79,15 +109,26 @@ export const usePlayer = defineStore("player", () => {
     },
   };
 
-  function clearNextAudio() {
-    nextAudio.filepath = "";
-    nextAudio.audio = new Audio();
-    nextAudio.loaded = false;
-    nextAudio.ticking = false;
-    nextAudio.silence = {
+  let movingNextTimer: any = null;
+  function clearMovingNextTimeout() {
+    if (movingNextTimer) {
+      clearTimeout(movingNextTimer);
+      movingNextTimer = null;
+      nextAudioData.ticking = false;
+    }
+  }
+
+  function clearNextAudioData() {
+    nextAudioData.filepath = "";
+    nextAudioData.audio = new Audio();
+    nextAudioData.loaded = false;
+    nextAudioData.ticking = false;
+    nextAudioData.silence = {
       start: 0,
       end: 0,
     };
+
+    clearMovingNextTimeout();
   }
 
   let sourceTime = 0;
@@ -138,25 +179,28 @@ export const usePlayer = defineStore("player", () => {
     queue.setPlaying(false);
   };
 
-  // const audio_play_then_catch = (e: Event) => {
-  //   if (e instanceof DOMException) {
-  //     queue.playPause();
+  const handlePlayErrors = (e: Event) => {
+    if (e instanceof DOMException) {
+      queue.playPause();
 
-  //     return toast.showNotification(
-  //       "Tap anywhere in the page and try again (autoplay blocked))",
-  //       NotifType.Error
-  //     );
-  //   }
+      return toast.showNotification(
+        "Tap anywhere in the page and try again (autoplay blocked))",
+        NotifType.Error
+      );
+    }
 
-  //   toast.showNotification(
-  //     "Can't play: " + queue.currenttrack.title,
-  //     NotifType.Error
-  //   );
-  // };
+    toast.showNotification(
+      "Can't play: " + queue.currenttrack.title,
+      NotifType.Error
+    );
+  };
 
-  const audio_play_then = async () => {
-    console.log("audio play then ....");
-    if (queue.duration.current <= 4) {
+  const runActionsOnPlay = () => {
+    if (
+      !queue.manual &&
+      !audio.src.includes("sm.radio.jingles") &&
+      audio.currentTime - currentAudioData.silence.start / 1000 <= 4
+    ) {
       crossFade(audio, crossfade_duration, 0);
     }
 
@@ -173,44 +217,36 @@ export const usePlayer = defineStore("player", () => {
         queue.currenttrack.trackhash
       );
     }
-
-    if (currentAudio.filepath !== queue.currenttrack.filepath) {
-      const silence = await getSilence(queue.currenttrack.filepath);
-      currentAudio.silence = silence;
-      console.log(silence);
-    }
   };
 
-  const audio_oncanplay = () => {
-    console.log("can play");
+  const onAudioCanPlay = () => {
     if (!queue.playing) {
       audio.pause();
       return;
     }
-    queue.setFullDuration(audio.duration);
+    queue.setDurationFromFile(audio.duration);
 
-    audio.play();
-
-    // .then(audio_play_then).catch(audio_play_then_catch);
+    audio
+      .play()
+      .catch(handlePlayErrors);
   };
 
-  const audio_onended = () => {
-    const { submitData, setTimestamp } = useTracker();
+  const onAudioEnded = () => {
+    const { submitData, setTimestamp } = tracker;
     submitData();
     setTimestamp();
-    console.log("track ended");
     queue.autoPlayNext();
   };
 
-  const audio_onplay = () => {
+  const onAudioPlay = () => {
     // reset sourceTime to prevent false positives
     const date = new Date();
     sourceTime = date.getTime();
 
-    audio_play_then();
+    runActionsOnPlay();
   };
 
-  const tick = () => {
+  const updateLyricsPosition = () => {
     if (!lyrics.exists || tabs.nowplaying !== tabs.tabs.lyrics) return;
 
     const millis = Math.round(audio.currentTime * 1000);
@@ -234,76 +270,82 @@ export const usePlayer = defineStore("player", () => {
     }
   };
 
-  const next_canplay_handler = async () => {
-    console.log(nextAudio.audio.currentTime);
-    const silence = await getSilence(queue.next.filepath);
-    nextAudio.silence = silence;
-    nextAudio.loaded = silence !== null;
-    console.log(silence);
-    console.log("next track loaded ... ✅: ", silence !== null);
+  const handleNextAudioCanPlay = async () => {
+    const worker = new Worker("/workers/silence.js");
+
+    worker.postMessage({
+      ending_file: queue.currenttrack.filepath,
+      starting_file: queue.next.filepath,
+    });
+
+    worker.onmessage = (e) => {
+      const silence = e.data;
+      nextAudioData.silence.start = silence.start;
+      currentAudioData.silence.end = silence.end;
+      nextAudioData.loaded = silence !== null;
+    };
   };
 
-  let nextTrackHash = "";
-
   function loadNextTrack() {
-    console.log("^^^^^^^^^^^");
-    if (nextTrackHash === queue.next.trackhash) return;
-
-    nextTrackHash = queue.next.trackhash;
-    console.log("loading next track: ", queue.next.title);
+    if (nextAudioData.filepath === queue.next.filepath) return;
 
     const uri = getUrl(queue.next.filepath, queue.next.trackhash);
-    nextAudio.audio = new Audio(uri);
-    nextAudio.filepath = queue.next.filepath;
-    nextAudio.audio.oncanplay = next_canplay_handler;
-    nextAudio.audio.load();
+    nextAudioData.audio = new Audio(uri);
+    audio.muted = settings.mute;
+    nextAudioData.filepath = queue.next.filepath;
+    nextAudioData.audio.oncanplay = handleNextAudioCanPlay;
+    nextAudioData.audio.load();
   }
 
   function moveLoadedForward() {
-    clearEventHandlers();
+    clearEventHandlers(audio);
 
     const oldAudio = audio;
-    crossFade(oldAudio, crossfade_duration, audio.volume, true);
+    queue.setManual(false);
+    crossFade(oldAudio, crossfade_duration, settings.volume, true);
 
-    audio = nextAudio.audio;
-    audio.currentTime = nextAudio.silence.start / 1000;
-    currentAudio.silence = nextAudio.silence;
-    currentAudio.filepath = nextAudio.filepath;
+    audio = nextAudioData.audio;
+    audio.currentTime = nextAudioData.silence.start / 1000;
+    currentAudioData.silence = nextAudioData.silence;
+    currentAudioData.filepath = nextAudioData.filepath;
 
-    clearNextAudio();
+    clearNextAudioData();
     queue.moveForward();
-    assignEventHandlers();
+    assignEventHandlers(audio);
   }
 
-  const nextTrackLoader = () => {
+  const initLoadingNextTrackAudio = () => {
     const currentTime = audio.currentTime;
 
     // if track has less than 20 seconds left, load next track
-    if (audio.duration - currentTime > 20) {
+    if (Number.isNaN(audio.duration) || audio.duration - currentTime > 20) {
       return;
     }
 
-    if (!nextAudio.loaded) {
-      console.log("loading next track");
+    if (!nextAudioData.loaded) {
       loadNextTrack();
     }
 
-    console.log(nextAudio.loaded, !nextAudio.ticking, currentAudio.silence.end);
-    console.log(nextAudio);
-
-    if (nextAudio.loaded && !nextAudio.ticking && currentAudio.silence.end) {
+    if (
+      nextAudioData.loaded &&
+      !nextAudioData.ticking &&
+      currentAudioData.silence.end
+    ) {
       const diff =
-        currentAudio.silence.end - Math.floor(audio.currentTime * 1000);
-      console.log(diff, audio.duration);
+        currentAudioData.silence.end - Math.floor(audio.currentTime * 1000);
 
+      const is_jingle =
+        queue.currenttrack.filepath.includes("sm.radio.jingles");
       const newdiff =
-        crossfade_duration > diff ? diff : diff - crossfade_duration;
+        crossfade_duration > diff || is_jingle
+          ? diff
+          : diff - crossfade_duration;
 
       if (diff > 0) {
-        nextAudio.ticking = true;
-        setTimeout(() => {
-          nextAudio.ticking = false;
-          if (!queue.playing && nextAudio.filepath == queue.next.filepath)
+        nextAudioData.ticking = true;
+        movingNextTimer = setTimeout(() => {
+          nextAudioData.ticking = false;
+          if (!queue.playing && nextAudioData.filepath == queue.next.filepath)
             return;
           moveLoadedForward();
         }, newdiff);
@@ -311,16 +353,16 @@ export const usePlayer = defineStore("player", () => {
     }
   };
 
-  const audio_ontimeupdate = () => {
-    tick();
-    nextTrackLoader();
+  const onAudioTimeUpdateHandler = () => {
+    updateLyricsPosition();
+    initLoadingNextTrackAudio();
     queue.setCurrentDuration(audio.currentTime);
 
     const date = new Date();
     sourceTime = date.getTime();
   };
 
-  const compare = () => {
+  const handleBufferingStatus = () => {
     const difference = Math.abs(sourceTime - lastTime);
 
     if (difference > 600 && queue.playing) {
@@ -331,11 +373,11 @@ export const usePlayer = defineStore("player", () => {
     buffering.value = false;
   };
 
-  const updateTime = () => {
+  const updateBufferWatcherTime = () => {
     if (!queue.playing) return;
     const date = new Date();
     lastTime = date.getTime();
-    compare();
+    handleBufferingStatus();
   };
 
   // Loader will misbehave on HMR because of multiple setInterval calls
@@ -345,46 +387,68 @@ export const usePlayer = defineStore("player", () => {
       return;
     }
 
-    updateTime();
+    updateBufferWatcherTime();
   }, 100);
 
-  function playCurrent() {
+  function playCurrentTrack() {
+    clearEventHandlers(audio);
+
+    if (
+      !queue.manual &&
+      queue.playing &&
+      audio.src !== "" &&
+      !audio.src.includes("sm.radio.jingles")
+    ) {
+      const oldAudio = audio;
+      crossFade(oldAudio, crossfade_duration, settings.volume, true);
+      audio = new Audio();
+      audio.muted = settings.mute;
+    }
+
     const { currenttrack: track } = queue;
     const uri = `${paths.api.files}/${
       track.trackhash
     }?filepath=${encodeURIComponent(track.filepath as string)}`;
 
-    // audio.autoplay = true;
-    // audio.play();
-    // audio.pause();
     audio.src = uri;
+
+    // when progress bar is focused, changing a track will trigger the
+    // @change event which will in turn seek the current track
+    // to the previous' currentTime
+    document.getElementById("progress")?.blur();
+    clearNextAudioData();
+    assignEventHandlers(audio);
   }
 
-  const assignEventHandlers = () => {
-    audio.onerror = audio_onerror;
-    audio.oncanplay = audio_oncanplay;
-    audio.onended = audio_onended;
-    audio.onplay = audio_onplay;
-    audio.ontimeupdate = audio_ontimeupdate;
+  const assignEventHandlers = (audioElem: HTMLAudioElement) => {
+    audioElem.onerror = audio_onerror;
+    audioElem.oncanplay = onAudioCanPlay;
+    audioElem.onended = onAudioEnded;
+    audioElem.onplay = onAudioPlay;
+    audioElem.ontimeupdate = onAudioTimeUpdateHandler;
+    tracker.reassignEventListener();
   };
 
-  const clearEventHandlers = () => {
-    audio.onerror = null;
-    audio.oncanplay = null;
-    audio.onended = null;
-    audio.onplay = null;
-    audio.ontimeupdate = null;
+  const clearEventHandlers = (audioElem: HTMLAudioElement) => {
+    audioElem.onerror = null;
+    audioElem.oncanplay = null;
+    audioElem.onended = null;
+    audioElem.onplay = null;
+    audioElem.ontimeupdate = null;
+
+    // removes listener added in stores/tracker.ts
+    audioElem.removeEventListener("timeupdate", () => {});
   };
 
-  assignEventHandlers();
+  assignEventHandlers(audio);
 
   return {
     audio,
     buffering,
     setMute,
     setVolume,
-    playCurrent,
-    clearNextAudio,
+    playCurrent: playCurrentTrack,
+    clearNextAudio: clearNextAudioData,
   };
 });
 

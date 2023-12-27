@@ -135,9 +135,14 @@ export default defineStore("tracklist", {
     },
     insertAt(track: Track, index: number) {
       this.tracklist.splice(index, 0, track);
-    },
-    removeTrack(index: number) {
-      this.tracklist.splice(index, 1);
+
+      const player = usePlayer();
+      const queue = useQueue();
+
+      if (index == queue.nextindex) {
+        console.log("inserted at nextindex");
+        player.clearNextAudio();
+      }
     },
     clearList() {
       this.tracklist = [];
@@ -152,6 +157,27 @@ export default defineStore("tracklist", {
       this.tracklist = shuffle(this.tracklist);
     },
     removeByIndex(index: number) {
+      const { currentindex, playing, playNext, moveForward, setCurrentIndex } =
+        useQueue();
+
+      if (this.tracklist.length == 1) {
+        return this.clearList();
+      }
+
+      if (index == currentindex) {
+        if (playing) {
+          playNext();
+        } else {
+          moveForward();
+        }
+
+        setCurrentIndex(index);
+      }
+
+      if (index < currentindex) {
+        setCurrentIndex(currentindex - 1);
+      }
+
       this.tracklist.splice(index, 1);
     },
     toggleFav(index: number) {
