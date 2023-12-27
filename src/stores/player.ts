@@ -25,7 +25,7 @@ function crossFade(
   start_volume = 0,
   then_destroy = false
 ) {
-  if (audio.muted) {
+  if (audio.muted || duration < 1000) {
     return;
   }
 
@@ -226,9 +226,7 @@ export const usePlayer = defineStore("player", () => {
     }
     queue.setDurationFromFile(audio.duration);
 
-    audio
-      .play()
-      .catch(handlePlayErrors);
+    audio.play().catch(handlePlayErrors);
   };
 
   const onAudioEnded = () => {
