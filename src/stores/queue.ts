@@ -133,6 +133,9 @@ export default defineStore("Queue", {
         const line = lyrics.calculateCurrentLine();
         lyrics.setCurrentLine(line);
       }
+
+      const player = usePlayer();
+      player.clearMovingNextTimeout();
     },
 
     playTrackNext(track: Track) {

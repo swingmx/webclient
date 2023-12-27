@@ -70,7 +70,7 @@ function crossFade(
 
     if (then_destroy) {
       audio.pause();
-      // audio.src = "";
+      audio.src = "";
       // @ts-ignore
       audio = null;
     }
@@ -449,6 +449,7 @@ export const usePlayer = defineStore("player", () => {
     setVolume,
     playCurrent: playCurrentTrack,
     clearNextAudio: clearNextAudioData,
+    clearMovingNextTimeout,
   };
 });
 

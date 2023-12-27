@@ -116,7 +116,7 @@ export default defineStore("tracklist", {
       this.setNewList(tracks);
     },
     addTrack(track: Track) {
-      this.tracklist.push(track);
+      this.insertAt([track], this.tracklist.length - 1);
 
       const Toast = useNotifStore();
       Toast.showNotification(
@@ -125,7 +125,7 @@ export default defineStore("tracklist", {
       );
     },
     addTracks(tracks: Track[]) {
-      this.tracklist = this.tracklist.concat(tracks);
+      this.insertAt(tracks, this.tracklist.length - 1);
 
       const Toast = useNotifStore();
       Toast.showNotification(
@@ -133,14 +133,13 @@ export default defineStore("tracklist", {
         NotifType.Success
       );
     },
-    insertAt(track: Track, index: number) {
-      this.tracklist.splice(index, 0, track);
+    insertAt(tracks: Track[], index: number) {
+      this.tracklist.splice(index, 0, tracks);
 
       const player = usePlayer();
       const queue = useQueue();
 
       if (index == queue.nextindex) {
-        console.log("inserted at nextindex");
         player.clearNextAudio();
       }
     },
@@ -157,8 +156,15 @@ export default defineStore("tracklist", {
       this.tracklist = shuffle(this.tracklist);
     },
     removeByIndex(index: number) {
-      const { currentindex, playing, playNext, moveForward, setCurrentIndex } =
-        useQueue();
+      const {
+        currentindex,
+        nextindex,
+        playing,
+        playNext,
+        moveForward,
+        setCurrentIndex,
+      } = useQueue();
+      const player = usePlayer();
 
       if (this.tracklist.length == 1) {
         return this.clearList();
@@ -179,6 +185,10 @@ export default defineStore("tracklist", {
       }
 
       this.tracklist.splice(index, 1);
+
+      if (index == nextindex) {
+        player.clearNextAudio();
+      }
     },
     toggleFav(index: number) {
       const track = this.tracklist[index];
