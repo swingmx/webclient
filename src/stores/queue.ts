@@ -10,7 +10,7 @@ import useTabs from "./tabs";
 import useLyrics from "./lyrics";
 import useSettings from "./settings";
 import useTracklist from "./queue/tracklist";
-import { audio, usePlayer } from "@/stores/player";
+import { audio, getUrl, usePlayer } from "@/stores/player";
 import { NotifType, useNotifStore } from "./notification";
 
 export default defineStore("Queue", {
@@ -88,7 +88,7 @@ export default defineStore("Queue", {
 
       const resetQueue = () => {
         this.currentindex = 0;
-        audio.src = "";
+        audio.src = getUrl(this.next.filepath, this.next.trackhash);
         audio.pause();
         this.playing = false;
 
@@ -143,7 +143,7 @@ export default defineStore("Queue", {
       const { insertAt } = useTracklist();
 
       const nextindex = this.currentindex + 1;
-      insertAt(track, nextindex);
+      insertAt([track], nextindex);
       Toast.showNotification(`Added 1 track to queue`, NotifType.Success);
     },
     clearQueue() {

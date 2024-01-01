@@ -134,7 +134,7 @@ export default defineStore("tracklist", {
       );
     },
     insertAt(tracks: Track[], index: number) {
-      this.tracklist.splice(index, 0, tracks);
+      this.tracklist.splice(index, 0, ...tracks);
 
       const player = usePlayer();
       const queue = useQueue();
@@ -207,6 +207,11 @@ export default defineStore("tracklist", {
         `Added ${tracks.length} tracks to queue`,
         NotifType.Success
       );
+    },
+  },
+  getters: {
+    length(): number {
+      return this.tracklist.length;
     },
   },
   persist: true,

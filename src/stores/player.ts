@@ -13,7 +13,7 @@ import { NotifType, useNotifStore } from "./notification";
 import { paths } from "../config";
 import updateMediaNotif from "@/helpers/mediaNotification";
 
-function getUrl(filepath: string, trackhash: string) {
+export function getUrl(filepath: string, trackhash: string) {
   return `${paths.api.files}/${trackhash}?filepath=${encodeURIComponent(
     filepath
   )}`;
@@ -319,6 +319,15 @@ export const usePlayer = defineStore("player", () => {
   }
 
   const initLoadingNextTrackAudio = () => {
+    const { nextindex } = queue;
+    const { length } = tracklist;
+    const { repeat_all, repeat_one } = settings;
+
+    // if no repeat && is last track, return
+    if ((nextindex === length - 1 && !repeat_all) || !repeat_one) {
+      return;
+    }
+
     const currentTime = audio.currentTime;
 
     // if track has less than 30 seconds left, load next track
