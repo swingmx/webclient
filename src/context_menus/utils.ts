@@ -56,7 +56,7 @@ export async function getAddToPlaylistOptions(
   return [...items, separator, ...playlists];
 }
 
-export const get_find_on_social = (page = "album") => {
+export const get_find_on_social = (page = "album", query = "") => {
   const is_album = page === "album";
   const getAlbumSearchTerm = () => {
     const store = useAlbum();
@@ -65,7 +65,11 @@ export const get_find_on_social = (page = "album") => {
       .map((a) => a.name)
       .join(", ")}`;
   };
-  const search_term = is_album ? getAlbumSearchTerm() : useArtist().info.name;
+  const search_term = query
+    ? query
+    : is_album
+    ? getAlbumSearchTerm()
+    : useArtist().info.name;
 
   return <Option>{
     label: "Search on",
