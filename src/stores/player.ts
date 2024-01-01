@@ -316,15 +316,16 @@ export const usePlayer = defineStore("player", () => {
     clearNextAudioData();
     queue.moveForward();
     assignEventHandlers(audio);
+    tracker.changeKey();
   }
 
   const initLoadingNextTrackAudio = () => {
-    const { nextindex } = queue;
+    const { currentindex } = queue;
     const { length } = tracklist;
     const { repeat_all, repeat_one } = settings;
 
     // if no repeat && is last track, return
-    if ((nextindex === length - 1 && !repeat_all) || !repeat_one) {
+    if (currentindex === length - 1 && !repeat_all && !repeat_one) {
       return;
     }
 
@@ -346,7 +347,6 @@ export const usePlayer = defineStore("player", () => {
     ) {
       const diff =
         currentAudioData.silence.end - Math.floor(audio.currentTime * 1000);
-      console.log(diff);
 
       const is_jingle =
         queue.currenttrack.filepath.includes("sm.radio.jingles");
@@ -405,6 +405,7 @@ export const usePlayer = defineStore("player", () => {
   }, 100);
 
   function playCurrentTrack() {
+    tracker.changeKey();
     clearEventHandlers(audio);
 
     if (
