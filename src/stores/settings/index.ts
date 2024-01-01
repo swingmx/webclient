@@ -41,7 +41,8 @@ export default defineStore("settings", {
 
     // audio
     use_silence_skip: true,
-    crossfade_duration: 0,
+    use_crossfade: false,
+    crossfade_duration: 3000, // milliseconds
   }),
   actions: {
     mapDbSettings(settings: DBSettings) {
@@ -187,6 +188,9 @@ export default defineStore("settings", {
     toggleGapless() {
       this.use_silence_skip = !this.use_silence_skip;
     },
+    toggleCrossfade() {
+      this.use_crossfade = !this.use_crossfade;
+    },
     setCrossfadeDuration(duration: number) {
       this.crossfade_duration = duration * 1000;
     },
@@ -200,6 +204,9 @@ export default defineStore("settings", {
     },
     crossfade_duration_seconds(): number {
       return this.crossfade_duration / 1000;
+    },
+    crossfade_on(): boolean {
+      return this.use_crossfade && this.crossfade_duration > 0;
     },
   },
   persist: {

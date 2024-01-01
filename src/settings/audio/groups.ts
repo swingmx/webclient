@@ -10,14 +10,24 @@ const use_silence: Setting = {
   action: () => settings().toggleGapless(),
 };
 
+const use_crossfade: Setting = {
+  title: "Enable crossfade",
+  desc: "Fade out the current track while fading in the next track",
+  type: SettingType.binary,
+  state: () => settings().use_crossfade,
+  action: () => settings().toggleCrossfade(),
+  // @ts-ignore
+  experimental: !(window.chrome),
+};
+
 const crossfade: Setting = {
   title: "Crossfade duration",
-  desc: "Fade out the current track while fading in the next track.",
+  desc: "Duration of the crossfade in seconds",
   type: SettingType.locked_number_input,
   state: () => settings().crossfade_duration_seconds,
   action: settings().setCrossfadeDuration,
   defaultAction: () => {},
-  experimental: true,
+  show_if: () => settings().use_crossfade,
 };
 
-export default [use_silence, crossfade];
+export default [use_silence, use_crossfade, crossfade];

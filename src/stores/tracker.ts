@@ -112,6 +112,8 @@ export default defineStore(
       lockSubmit();
       sendLogData(trackhash.value, duration.value, from.value, timestamp.value);
       resetData();
+      setTimestamp();
+      prevKey.value = key.value;
     }
 
     function setTimestamp() {
@@ -126,20 +128,13 @@ export default defineStore(
             prev_date = 0;
           }
 
-          if (key.value !== prevKey.value) {
-            if (trackhash.value !== "" && duration.value > 1000 && can_submit) {
-              lockSubmit();
-              sendLogData(
-                trackhash.value,
-                duration.value,
-                from.value,
-                timestamp.value
-              );
-            }
-
-            resetData();
-            setTimestamp();
-            prevKey.value = key.value;
+          if (
+            key.value !== prevKey.value &&
+            trackhash.value !== "" &&
+            duration.value > 1000 &&
+            can_submit
+          ) {
+            submitData();
           }
 
           updateDuration();

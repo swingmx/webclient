@@ -25,11 +25,12 @@ function crossFade(
   start_volume = 0,
   then_destroy = false
 ) {
-  if (audio.muted || duration < 1000) {
+  const { volume, use_crossfade } = useSettings();
+
+  if (audio.muted || duration < 1000 || !use_crossfade) {
+    endCrossfade();
     return;
   }
-
-  const { volume } = useSettings();
 
   audio.volume = start_volume;
   const fadeStepTime = 100;
@@ -58,14 +59,14 @@ function crossFade(
 
   const interval = setInterval(() => {
     if (counter == fadeSteps) {
-      return stopInterval();
+      return endCrossfade();
     }
 
     incrementOrDecrement();
     counter++;
   }, fadeStepTime);
 
-  function stopInterval() {
+  function endCrossfade() {
     clearInterval(interval);
 
     if (then_destroy) {
@@ -229,9 +230,8 @@ export const usePlayer = defineStore("player", () => {
   };
 
   const onAudioEnded = () => {
-    const { submitData, setTimestamp } = tracker;
+    const { submitData } = tracker;
     submitData();
-    setTimestamp();
     queue.autoPlayNext();
   };
 
