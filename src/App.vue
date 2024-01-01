@@ -16,7 +16,7 @@
     <NavBar />
     <div id="acontent" ref="appcontent" v-element-size="updateContentElemSize">
       <BalancerProvider>
-        <router-view />
+        <RouterView />
       </BalancerProvider>
     </div>
     <RightSideBar v-if="settings.use_sidebar && xl" />

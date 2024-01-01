@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 
 import { favType } from "@/enums";
-import updateMediaNotif from "@/helpers/mediaNotification";
 import { Track } from "@/interfaces";
-import { isFavorite } from "@/requests/favorite";
 import useInterface from "./interface";
+import { isFavorite } from "@/requests/favorite";
+import updateMediaNotif from "@/helpers/mediaNotification";
 
 import useTabs from "./tabs";
 import useLyrics from "./lyrics";
@@ -164,19 +164,11 @@ export default defineStore("Queue", {
   getters: {
     next(): Track {
       const { tracklist } = useTracklist();
-      if (this.currentindex == tracklist.length - 1) {
-        return tracklist[0];
-      }
-
-      return tracklist[this.currentindex + 1];
+      return tracklist[this.nextindex];
     },
-    prev(): Track | undefined {
+    prev(): Track {
       const { tracklist } = useTracklist();
-      if (this.currentindex === 0) {
-        return tracklist[tracklist.length - 1];
-      }
-
-      return tracklist[this.currentindex - 1];
+      return tracklist[this.previndex];
     },
     currenttrack(): Track {
       const { tracklist } = useTracklist();
@@ -195,12 +187,24 @@ export default defineStore("Queue", {
     },
     previndex(): number {
       const { tracklist } = useTracklist();
+      const { repeat_one } = useSettings();
+
+      if (repeat_one) {
+        return this.currentindex;
+      }
+
       return this.currentindex === 0
         ? tracklist.length - 1
         : this.currentindex - 1;
     },
     nextindex(): number {
       const { tracklist } = useTracklist();
+      const { repeat_one } = useSettings();
+
+      if (repeat_one) {
+        return this.currentindex;
+      }
+
       return this.currentindex === tracklist.length - 1
         ? 0
         : this.currentindex + 1;

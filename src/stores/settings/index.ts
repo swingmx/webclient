@@ -38,6 +38,10 @@ export default defineStore("settings", {
       auto_download: false,
       overide_unsynced: false,
     },
+
+    // audio
+    use_silence_skip: true,
+    crossfade_duration: 0,
   }),
   actions: {
     mapDbSettings(settings: DBSettings) {
@@ -179,6 +183,13 @@ export default defineStore("settings", {
         this.lyrics_plugin_settings.overide_unsynced = state;
       });
     },
+    // audio 👇
+    toggleGapless() {
+      this.use_silence_skip = !this.use_silence_skip;
+    },
+    setCrossfadeDuration(duration: number) {
+      this.crossfade_duration = duration * 1000;
+    },
   },
   getters: {
     can_extend_width(): boolean {
@@ -186,6 +197,9 @@ export default defineStore("settings", {
     },
     no_repeat(): boolean {
       return !this.repeat_all && !this.repeat_one;
+    },
+    crossfade_duration_seconds(): number {
+      return this.crossfade_duration / 1000;
     },
   },
   persist: {

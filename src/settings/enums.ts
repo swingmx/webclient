@@ -5,4 +5,5 @@ export enum SettingType {
   binary,
   button,
   root_dirs,
+  locked_number_input,
 }

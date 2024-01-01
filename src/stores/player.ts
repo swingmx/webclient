@@ -3,8 +3,8 @@ import { defineStore } from "pinia";
 
 import useTabs from "./tabs";
 import useQueue from "./queue";
-import useLyrics from "./lyrics";
 import useColors from "./colors";
+import useLyrics from "./lyrics";
 import useTracker from "./tracker";
 import useSettings from "./settings";
 import useTracklist from "./queue/tracklist";
@@ -32,7 +32,7 @@ function crossFade(
   const { volume } = useSettings();
 
   audio.volume = start_volume;
-  const fadeStepTime = 50;
+  const fadeStepTime = 100;
   const fadeSteps = duration / fadeStepTime;
   const volumeStep = volume / fadeSteps;
   const is_up = start_volume == 0;
@@ -89,7 +89,6 @@ export const usePlayer = defineStore("player", () => {
   const settings = useSettings();
   const tracklist = useTracklist();
 
-  const crossfade_duration = 2000;
   let currentAudioData = {
     filepath: "",
     silence: {
@@ -201,7 +200,7 @@ export const usePlayer = defineStore("player", () => {
       !audio.src.includes("sm.radio.jingles") &&
       audio.currentTime - currentAudioData.silence.start / 1000 <= 4
     ) {
-      crossFade(audio, crossfade_duration, 0);
+      crossFade(audio, settings.crossfade_duration, 0);
     }
 
     updateMediaNotif();
@@ -269,6 +268,13 @@ export const usePlayer = defineStore("player", () => {
   };
 
   const handleNextAudioCanPlay = async () => {
+    if (!settings.use_silence_skip) {
+      nextAudioData.silence.start = 0;
+      currentAudioData.silence.end = Math.floor(audio.duration * 1000);
+      nextAudioData.loaded = true;
+      return;
+    }
+
     const worker = new Worker("/workers/silence.js");
 
     worker.postMessage({
@@ -300,7 +306,7 @@ export const usePlayer = defineStore("player", () => {
 
     const oldAudio = audio;
     queue.setManual(false);
-    crossFade(oldAudio, crossfade_duration, settings.volume, true);
+    crossFade(oldAudio, settings.crossfade_duration, settings.volume, true);
 
     audio = nextAudioData.audio;
     audio.currentTime = nextAudioData.silence.start / 1000;
@@ -315,8 +321,8 @@ export const usePlayer = defineStore("player", () => {
   const initLoadingNextTrackAudio = () => {
     const currentTime = audio.currentTime;
 
-    // if track has less than 20 seconds left, load next track
-    if (Number.isNaN(audio.duration) || audio.duration - currentTime > 20) {
+    // if track has less than 30 seconds left, load next track
+    if (Number.isNaN(audio.duration) || audio.duration - currentTime > 30) {
       return;
     }
 
@@ -331,13 +337,14 @@ export const usePlayer = defineStore("player", () => {
     ) {
       const diff =
         currentAudioData.silence.end - Math.floor(audio.currentTime * 1000);
+      console.log(diff);
 
       const is_jingle =
         queue.currenttrack.filepath.includes("sm.radio.jingles");
       const newdiff =
-        crossfade_duration > diff || is_jingle
+        settings.crossfade_duration > diff || is_jingle
           ? diff
-          : diff - crossfade_duration;
+          : diff - settings.crossfade_duration;
 
       if (diff > 0) {
         nextAudioData.ticking = true;
@@ -398,7 +405,7 @@ export const usePlayer = defineStore("player", () => {
       !audio.src.includes("sm.radio.jingles")
     ) {
       const oldAudio = audio;
-      crossFade(oldAudio, crossfade_duration, settings.volume, true);
+      crossFade(oldAudio, settings.crossfade_duration, settings.volume, true);
       audio = new Audio();
       audio.muted = settings.mute;
     }

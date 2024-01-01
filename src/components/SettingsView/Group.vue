@@ -30,6 +30,9 @@
           <div class="title">
             <span class="ellip">
               {{ setting.title }}
+              <span v-if="setting.experimental" class="experimental circular">
+                {{ setting.experimental ? "experimental" : "" }}
+              </span>
             </span>
             <button
               v-if="setting.type == SettingType.root_dirs"
@@ -60,6 +63,15 @@
           >
             {{ setting.button_text && setting.button_text() }}
           </button>
+          <LockedNumberInput
+            v-if="setting.type == SettingType.locked_number_input"
+            :value="setting.state !== null ? setting.state() : 0"
+            :min="0"
+            :max="10"
+            :step="1"
+            :unit="'s'"
+            :on-change="setting.action"
+          />
         </div>
 
         <List
@@ -85,6 +97,7 @@ import Switch from "./Components/Switch.vue";
 import Select from "./Components/Select.vue";
 import List from "./Components/List.vue";
 import SeparatorsInput from "./Components/SeparatorsInput.vue";
+import LockedNumberInput from "./Components/LockedNumberInput.vue";
 import ReloadSvg from "@/assets/icons/reload.svg";
 
 defineProps<{
@@ -130,8 +143,6 @@ defineProps<{
 
   .setting {
     background-color: $gray;
-    // display: grid;
-    // gap: 1rem;
 
     .inactive {
       opacity: 0.5;
