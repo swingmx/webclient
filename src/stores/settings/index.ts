@@ -42,7 +42,7 @@ export default defineStore("settings", {
     // audio
     use_silence_skip: true,
     use_crossfade: false,
-    crossfade_duration: 3000, // milliseconds
+    crossfade_duration: 2000, // milliseconds
   }),
   actions: {
     mapDbSettings(settings: DBSettings) {

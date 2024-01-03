@@ -25,6 +25,7 @@ function crossFade(
   start_volume = 0,
   then_destroy = false
 ) {
+  let interval: any = null;
   const { volume, use_crossfade } = useSettings();
 
   if (audio.muted || duration < 1000 || !use_crossfade) {
@@ -57,7 +58,7 @@ function crossFade(
 
   let counter = 0;
 
-  const interval = setInterval(() => {
+  interval = setInterval(() => {
     if (counter == fadeSteps) {
       return endCrossfade();
     }
@@ -345,15 +346,16 @@ export const usePlayer = defineStore("player", () => {
       !nextAudioData.ticking &&
       currentAudioData.silence.end
     ) {
+      const { crossfade_duration, use_crossfade } = settings;
       const diff =
         currentAudioData.silence.end - Math.floor(audio.currentTime * 1000);
 
       const is_jingle =
         queue.currenttrack.filepath.includes("sm.radio.jingles");
       const newdiff =
-        settings.crossfade_duration > diff || is_jingle
+        crossfade_duration > diff || is_jingle || !use_crossfade
           ? diff
-          : diff - settings.crossfade_duration;
+          : diff - crossfade_duration;
 
       if (diff > 0) {
         nextAudioData.ticking = true;
