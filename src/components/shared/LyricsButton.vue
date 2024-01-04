@@ -1,5 +1,6 @@
 <template>
   <button
+    title="Lyrics"
     class="lyrics"
     :class="{ showStatus: lyrics.exists }"
     @click="handleClick"

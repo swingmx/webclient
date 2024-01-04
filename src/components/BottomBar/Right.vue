@@ -17,8 +17,12 @@
       <RepeatOneSvg v-if="settings.repeat_one" />
       <RepeatAllSvg v-else />
     </button>
+    <button title="Shuffle" @click="queue.shuffleQueue">
+      <ShuffleSvg />
+    </button>
     <HeartSvg
       v-if="!hideHeart"
+      title="Favorite"
       :state="queue.currenttrack?.is_favorite"
       @handleFav="() => $emit('handleFav')"
     />
@@ -30,11 +34,12 @@ import useQueue from "@/stores/queue";
 import useSettings from "@/stores/settings";
 import useLyrics from "@/stores/lyrics";
 
+import Volume from "./Volume.vue";
 import HeartSvg from "../shared/HeartSvg.vue";
+import LyricsButton from "../shared/LyricsButton.vue";
 import RepeatAllSvg from "@/assets/icons/repeat.svg";
 import RepeatOneSvg from "@/assets/icons/repeat-one.svg";
-import Volume from "./Volume.vue";
-import LyricsButton from "../shared/LyricsButton.vue";
+import ShuffleSvg from "@/assets/icons/shuffle.svg";
 
 const queue = useQueue();
 const lyrics = useLyrics();
@@ -53,7 +58,7 @@ defineEmits<{
 .right-group {
   display: grid;
   justify-content: flex-end;
-  grid-template-columns: repeat(4, max-content);
+  grid-template-columns: repeat(5, max-content);
   align-items: center;
   height: 4rem;
 
