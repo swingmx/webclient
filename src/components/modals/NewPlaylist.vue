@@ -21,10 +21,11 @@ import {
   saveArtistAsPlaylist,
   saveTrackAsPlaylist,
 } from "@/requests/playlists";
-import useTracklist from "@/stores/queue/tracklist";
-import { NotifType, Notification } from "@/stores/notification";
 import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
+
+import useTracklist from "@/stores/queue/tracklist";
 import usePlaylistStore from "@/stores/pages/playlists";
+import { NotifType, Notification } from "@/stores/notification";
 
 const props = defineProps<{
   trackhash?: string;

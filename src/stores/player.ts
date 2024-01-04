@@ -1,82 +1,23 @@
-import { ref } from "vue";
 import { defineStore } from "pinia";
+import { ref } from "vue";
 
-import useTabs from "./tabs";
-import useQueue from "./queue";
 import useColors from "./colors";
 import useLyrics from "./lyrics";
-import useTracker from "./tracker";
-import useSettings from "./settings";
-import useTracklist from "./queue/tracklist";
 import { NotifType, useNotifStore } from "./notification";
+import useQueue from "./queue";
+import useTracklist from "./queue/tracklist";
+import useSettings from "./settings";
+import useTabs from "./tabs";
+import useTracker from "./tracker";
 
-import { paths } from "../config";
+import { paths } from "@/config";
+import { crossFade } from "@/utils/audio/crossFade";
 import updateMediaNotif from "@/helpers/mediaNotification";
 
 export function getUrl(filepath: string, trackhash: string) {
   return `${paths.api.files}/${trackhash}?filepath=${encodeURIComponent(
     filepath
   )}`;
-}
-
-function crossFade(
-  audio: HTMLAudioElement,
-  duration = 1000,
-  start_volume = 0,
-  then_destroy = false
-) {
-  let interval: any = null;
-  const { volume, use_crossfade } = useSettings();
-
-  if (audio.muted || duration < 1000 || !use_crossfade) {
-    endCrossfade();
-    return;
-  }
-
-  audio.volume = start_volume;
-  const fadeStepTime = 100;
-  const fadeSteps = duration / fadeStepTime;
-  const volumeStep = volume / fadeSteps;
-  const is_up = start_volume == 0;
-
-  function incrementOrDecrement() {
-    const v = audio.volume;
-    const newVolume = is_up ? v + volumeStep : v - volumeStep;
-
-    if (newVolume > 1) {
-      audio.volume = 1;
-      return;
-    }
-
-    if (newVolume < 0) {
-      audio.volume = 0;
-      return;
-    }
-
-    audio.volume = newVolume;
-  }
-
-  let counter = 0;
-
-  interval = setInterval(() => {
-    if (counter == fadeSteps) {
-      return endCrossfade();
-    }
-
-    incrementOrDecrement();
-    counter++;
-  }, fadeStepTime);
-
-  function endCrossfade() {
-    clearInterval(interval);
-
-    if (then_destroy) {
-      audio.pause();
-      audio.src = "";
-      // @ts-ignore
-      audio = null;
-    }
-  }
 }
 
 let audio = new Audio();
@@ -202,7 +143,11 @@ export const usePlayer = defineStore("player", () => {
       !audio.src.includes("sm.radio.jingles") &&
       audio.currentTime - currentAudioData.silence.start / 1000 <= 4
     ) {
-      crossFade(audio, settings.crossfade_duration, 0);
+      crossFade({
+        audio,
+        duration: settings.crossfade_duration,
+        start_volume: 0,
+      });
     }
 
     updateMediaNotif();
@@ -307,7 +252,12 @@ export const usePlayer = defineStore("player", () => {
 
     const oldAudio = audio;
     queue.setManual(false);
-    crossFade(oldAudio, settings.crossfade_duration, settings.volume, true);
+    crossFade({
+      audio: oldAudio,
+      duration: settings.crossfade_duration,
+      start_volume: settings.volume,
+      then_destroy: true,
+    });
 
     audio = nextAudioData.audio;
     audio.currentTime = nextAudioData.silence.start / 1000;
@@ -417,7 +367,12 @@ export const usePlayer = defineStore("player", () => {
       !audio.src.includes("sm.radio.jingles")
     ) {
       const oldAudio = audio;
-      crossFade(oldAudio, settings.crossfade_duration, settings.volume, true);
+      crossFade({
+        audio: oldAudio,
+        duration: settings.crossfade_duration,
+        start_volume: settings.volume,
+        then_destroy: true,
+      });
       audio = new Audio();
       audio.muted = settings.mute;
     }
