@@ -53,7 +53,7 @@ import { computed, onMounted, ref } from "vue";
 import { useFuse } from "@/utils";
 import usePStore from "@/stores/pages/playlists";
 import updatePageTitle from "@/utils/updatePageTitle";
-import { isMedium, isSmall, maxAbumCards } from "@/stores/content-width";
+import { isSmall } from "@/stores/content-width";
 
 import NoItems from "@/components/shared/NoItems.vue";
 import Header from "@/components/shared/GenericHeader.vue";
@@ -103,14 +103,13 @@ const playlists = computed(() => {
   padding-bottom: $content-padding-bottom;
   height: 100%;
   overflow: auto;
-  padding-right: 1rem;
 
   .generichead {
     padding-left: 0;
   }
 
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(9.25rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(10.1rem, 1fr));
     gap: 2.5rem 1.75rem;
   }
 
