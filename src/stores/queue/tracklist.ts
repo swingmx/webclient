@@ -148,11 +148,6 @@ export default defineStore("tracklist", {
       this.from = {} as From;
     },
     shuffleList() {
-      const Toast = useNotifStore();
-      if (this.tracklist.length < 2) {
-        Toast.showNotification("Queue is too short", NotifType.Info);
-        return;
-      }
       this.tracklist = shuffle(this.tracklist);
     },
     removeByIndex(index: number) {
