@@ -195,7 +195,18 @@ export default async (
   ];
 
   if (route.name === Routes.playlist && on_playlist) {
-    options.splice(4, 0, getRemoveFromPlaylistOption());
+    options.splice(0, 0, getRemoveFromPlaylistOption());
+  }
+
+  if (route.name === Routes.nowPlaying) {
+    options.splice(0, 0, <Option>{
+      label: "Remove from Queue",
+      action: () => {
+        useTracklist().removeByIndex(track.index);
+      },
+      icon: DeleteIcon,
+      critical: true,
+    });
   }
 
   return options;
