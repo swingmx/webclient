@@ -15,14 +15,13 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useRoute } from "vue-router";
 
 import {
   saveAlbumAsPlaylist,
   saveArtistAsPlaylist,
   saveTrackAsPlaylist,
 } from "@/requests/playlists";
-import useQueueStore from "@/stores/queue";
+import useTracklist from "@/stores/queue/tracklist";
 import { NotifType, Notification } from "@/stores/notification";
 import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
 import usePlaylistStore from "@/stores/pages/playlists";
@@ -37,7 +36,6 @@ const props = defineProps<{
 }>();
 
 const store = usePlaylistStore();
-const route = useRoute();
 
 onMounted(() => {
   const input_elem = document.getElementById(
@@ -112,8 +110,8 @@ function create(e: Event) {
   };
 
   const createQueuePlaylist = () => {
-    const queue = useQueueStore();
-    const trackhashes = queue.tracklist.map((track) => track.trackhash);
+    const { tracklist } = useTracklist();
+    const trackhashes = tracklist.map((track) => track.trackhash);
     const itemhash = trackhashes.join(",");
 
     saveTrackAsPlaylist(name, itemhash).then((res) => {
