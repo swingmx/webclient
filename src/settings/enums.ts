@@ -6,4 +6,5 @@ export enum SettingType {
   button,
   root_dirs,
   locked_number_input,
+  quick_actions,
 }

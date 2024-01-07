@@ -6,7 +6,7 @@ export interface SettingOption {
 }
 
 export interface Setting {
-  title: string;
+  title?: string;
   desc?: string;
   type: SettingType;
   options?: SettingOption[];

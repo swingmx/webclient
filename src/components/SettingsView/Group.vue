@@ -74,6 +74,7 @@
           />
         </div>
 
+        <QuickActions v-if="setting.type == SettingType.quick_actions" />
         <List
           v-if="setting.type === SettingType.root_dirs"
           icon="folder"
@@ -99,6 +100,7 @@ import List from "./Components/List.vue";
 import SeparatorsInput from "./Components/SeparatorsInput.vue";
 import LockedNumberInput from "./Components/LockedNumberInput.vue";
 import ReloadSvg from "@/assets/icons/reload.svg";
+import QuickActions from "./Components/QuickActions.vue";
 
 defineProps<{
   group: SettingGroup;
