@@ -94,13 +94,13 @@
 import { SettingType } from "@/settings/enums";
 import { SettingGroup } from "@/interfaces/settings";
 
+import List from "./Components/List.vue";
 import Switch from "./Components/Switch.vue";
 import Select from "./Components/Select.vue";
-import List from "./Components/List.vue";
+import ReloadSvg from "@/assets/icons/reload.svg";
+import QuickActions from "./Components/QuickSettings.vue";
 import SeparatorsInput from "./Components/SeparatorsInput.vue";
 import LockedNumberInput from "./Components/LockedNumberInput.vue";
-import ReloadSvg from "@/assets/icons/reload.svg";
-import QuickActions from "./Components/QuickActions.vue";
 
 defineProps<{
   group: SettingGroup;

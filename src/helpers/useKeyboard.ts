@@ -52,7 +52,6 @@ export default function (queue: typeof useQueue, modal: typeof useModal) {
     }
 
     if (key_down_fired == e.key.toLowerCase()) {
-      console.log("key down fired");
       return;
     }
 
@@ -60,7 +59,6 @@ export default function (queue: typeof useQueue, modal: typeof useModal) {
       key_down_fired = e.key.toLowerCase();
     }
 
-    console.log("here ");
     switch (e.key.toLowerCase()) {
       case "arrowright":
         {
@@ -120,7 +118,6 @@ export default function (queue: typeof useQueue, modal: typeof useModal) {
       }
 
       case "b": {
-        console.log("received ctrl+b");
         if (!ctrlKey) return;
         e.stopPropagation();
         e.stopImmediatePropagation();

@@ -6,7 +6,8 @@ import useSettingsStore from "@/stores/settings";
 const settings = useSettingsStore;
 
 const use_sidebar: Setting = {
-  title: "Enable right sidebar",
+  title: "Toggle right sidebar",
+  desc: "CTRL + B",
   type: SettingType.binary,
   state: () => settings().use_sidebar,
   action: () => settings().toggleDisableSidebar(),

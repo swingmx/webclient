@@ -185,7 +185,7 @@ export default defineStore("settings", {
       });
     },
     // audio 👇
-    toggleGapless() {
+    toggleUseSilenceSkip() {
       this.use_silence_skip = !this.use_silence_skip;
     },
     toggleCrossfade() {

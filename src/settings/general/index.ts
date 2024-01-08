@@ -65,3 +65,5 @@ export default {
     },
   ],
 } as SettingCategory;
+
+// ENHANCEMENT: Decouple components from Group.vue and pass them as part of the Setting interface (maybe?)

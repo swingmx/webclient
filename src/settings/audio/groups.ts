@@ -7,7 +7,7 @@ const use_silence: Setting = {
   desc: "Automatically skip silence between tracks.",
   type: SettingType.binary,
   state: () => settings().use_silence_skip,
-  action: () => settings().toggleGapless(),
+  action: () => settings().toggleUseSilenceSkip(),
 };
 
 const use_crossfade: Setting = {
