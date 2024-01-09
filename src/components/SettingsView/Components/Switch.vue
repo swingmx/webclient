@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 defineProps<{
-  state: undefined;
+  state: undefined | boolean;
 }>();
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div
     class="settingspage content-page"
-    style="height: 100%; overflow: auto; padding-right: 1.25rem"
+    style="height: 100%; overflow: auto;"
   >
     <Content />
   </div>

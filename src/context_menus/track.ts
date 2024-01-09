@@ -19,7 +19,7 @@ import {
 import usePlaylistStore from "@/stores/pages/playlist";
 import useQueueStore from "@/stores/queue";
 import useTracklist from "@/stores/queue/tracklist";
-import { getAddToPlaylistOptions } from "./utils";
+import { getAddToPlaylistOptions, get_find_on_social } from "./utils";
 
 /**
  * Returns a list of context menu items for a track.
@@ -190,11 +190,23 @@ export default async (
     go_to_artist,
     go_to_alb_artist,
     open_in_explorer,
+    get_find_on_social("track", `${track.title} ${track.artists[0].name}`),
     // del_track,
   ];
 
   if (route.name === Routes.playlist && on_playlist) {
-    options.splice(4, 0, getRemoveFromPlaylistOption());
+    options.splice(0, 0, getRemoveFromPlaylistOption());
+  }
+
+  if (route.name === Routes.nowPlaying) {
+    options.splice(0, 0, <Option>{
+      label: "Remove from Queue",
+      action: () => {
+        useTracklist().removeByIndex(track.index);
+      },
+      icon: DeleteIcon,
+      critical: true,
+    });
   }
 
   return options;

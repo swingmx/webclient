@@ -1,29 +1,77 @@
-import { ref } from "vue";
 import { defineStore } from "pinia";
+import { ref } from "vue";
 
-import useTabs from "./tabs";
-import useQueue from "./queue";
-import useLyrics from "./lyrics";
 import useColors from "./colors";
-import useSettings from "./settings";
+import useLyrics from "./lyrics";
+import { NotifType, useNotifStore } from "./notification";
+import useQueue from "./queue";
 import useTracklist from "./queue/tracklist";
+import useSettings from "./settings";
+import useTabs from "./tabs";
 import useTracker from "./tracker";
 
-import { NotifType, useNotifStore } from "./notification";
-
-import { paths } from "../config";
+import { paths } from "@/config";
+import { crossFade } from "@/utils/audio/crossFade";
 import updateMediaNotif from "@/helpers/mediaNotification";
 
-const audio = new Audio();
+export function getUrl(filepath: string, trackhash: string) {
+  return `${paths.api.files}/${trackhash}?filepath=${encodeURIComponent(
+    filepath
+  )}`;
+}
+
+let audio = new Audio();
 
 export const usePlayer = defineStore("player", () => {
   const tabs = useTabs();
   const queue = useQueue();
   const colors = useColors();
   const lyrics = useLyrics();
+  const tracker = useTracker();
   const toast = useNotifStore();
   const settings = useSettings();
   const tracklist = useTracklist();
+
+  let currentAudioData = {
+    filepath: "",
+    silence: {
+      start: 0,
+      end: 0,
+    },
+  };
+
+  let nextAudioData = {
+    filepath: "",
+    audio: new Audio(),
+    loaded: false,
+    ticking: false,
+    silence: {
+      start: 0,
+      end: 0,
+    },
+  };
+
+  let movingNextTimer: any = null;
+  function clearMovingNextTimeout() {
+    if (movingNextTimer) {
+      clearTimeout(movingNextTimer);
+      movingNextTimer = null;
+      nextAudioData.ticking = false;
+    }
+  }
+
+  function clearNextAudioData() {
+    nextAudioData.filepath = "";
+    nextAudioData.audio = new Audio();
+    nextAudioData.loaded = false;
+    nextAudioData.ticking = false;
+    nextAudioData.silence = {
+      start: 0,
+      end: 0,
+    };
+
+    clearMovingNextTimeout();
+  }
 
   let sourceTime = 0;
   let lastTime = 0;
@@ -38,11 +86,20 @@ export const usePlayer = defineStore("player", () => {
     audio.muted = new_value;
   }
 
-  audio.onerror = (err: Event | string) => {
+  const audio_onerror = (err: Event | string) => {
     const { showNotification } = useNotifStore();
 
     if (typeof err != "string") {
       err.stopImmediatePropagation();
+    }
+
+    if (err instanceof DOMException) {
+      queue.playPause();
+
+      return toast.showNotification(
+        "Tap anywhere in the page and try again (autoplay blocked))",
+        NotifType.Error
+      );
     }
 
     showNotification(
@@ -64,64 +121,75 @@ export const usePlayer = defineStore("player", () => {
     queue.setPlaying(false);
   };
 
-  audio.oncanplay = () => {
+  const handlePlayErrors = (e: Event) => {
+    if (e instanceof DOMException) {
+      queue.playPause();
+
+      return toast.showNotification(
+        "Tap anywhere in the page and try again (autoplay blocked))",
+        NotifType.Error
+      );
+    }
+
+    toast.showNotification(
+      "Can't play: " + queue.currenttrack.title,
+      NotifType.Error
+    );
+  };
+
+  const runActionsOnPlay = () => {
+    if (
+      !queue.manual &&
+      !audio.src.includes("sm.radio.jingles") &&
+      audio.currentTime - currentAudioData.silence.start / 1000 <= 4
+    ) {
+      crossFade({
+        audio,
+        duration: settings.crossfade_duration,
+        start_volume: 0,
+      });
+    }
+
+    updateMediaNotif();
+    colors.setTheme1Color(paths.images.thumb.small + queue.currenttrack.image);
+
+    if (tabs.nowplaying == tabs.tabs.lyrics) {
+      return lyrics.getLyrics();
+    }
+
+    if (!settings.use_lyrics_plugin) {
+      lyrics.checkExists(
+        queue.currenttrack.filepath,
+        queue.currenttrack.trackhash
+      );
+    }
+  };
+
+  const onAudioCanPlay = () => {
     if (!queue.playing) {
       audio.pause();
       return;
     }
-    queue.setFullDuration(audio.duration);
+    queue.setDurationFromFile(audio.duration);
 
-    audio
-      .play()
-      .then(() => {
-        updateMediaNotif();
-        colors.setTheme1Color(
-          paths.images.thumb.small + queue.currenttrack.image
-        );
-
-        if (tabs.nowplaying == tabs.tabs.lyrics) {
-          return lyrics.getLyrics();
-        }
-
-        if (!settings.use_lyrics_plugin) {
-          lyrics.checkExists(
-            queue.currenttrack.filepath,
-            queue.currenttrack.trackhash
-          );
-        }
-      })
-      .catch((e) => {
-        if (e instanceof DOMException) {
-          queue.playPause();
-
-          return toast.showNotification(
-            "Tap anywhere in the page and try again (autoplay blocked))",
-            NotifType.Error
-          );
-        }
-
-        toast.showNotification(
-          "Can't play: " + queue.currenttrack.title,
-          NotifType.Error
-        );
-      });
+    audio.play().catch(handlePlayErrors);
   };
 
-  audio.onended = () => {
-    const { submitData, setTimestamp } = useTracker();
+  const onAudioEnded = () => {
+    const { submitData } = tracker;
     submitData();
-    setTimestamp();
-
     queue.autoPlayNext();
   };
 
-  audio.onplay = () => {
+  const onAudioPlay = () => {
     // reset sourceTime to prevent false positives
     const date = new Date();
     sourceTime = date.getTime();
+
+    runActionsOnPlay();
   };
 
-  const tick = () => {
+  const updateLyricsPosition = () => {
     if (!lyrics.exists || tabs.nowplaying !== tabs.tabs.lyrics) return;
 
     const millis = Math.round(audio.currentTime * 1000);
@@ -145,15 +213,122 @@ export const usePlayer = defineStore("player", () => {
     }
   };
 
-  audio.ontimeupdate = () => {
-    tick();
+  const handleNextAudioCanPlay = async () => {
+    if (!settings.use_silence_skip) {
+      nextAudioData.silence.start = 0;
+      currentAudioData.silence.end = Math.floor(audio.duration * 1000);
+      nextAudioData.loaded = true;
+      return;
+    }
+
+    const worker = new Worker("/workers/silence.js");
+
+    worker.postMessage({
+      ending_file: queue.currenttrack.filepath,
+      starting_file: queue.next.filepath,
+    });
+
+    worker.onmessage = (e) => {
+      const silence = e.data;
+      nextAudioData.silence.start = silence.start;
+      currentAudioData.silence.end = silence.end;
+      nextAudioData.loaded = silence !== null;
+    };
+  };
+
+  function loadNextTrack() {
+    if (nextAudioData.filepath === queue.next.filepath) return;
+
+    const uri = getUrl(queue.next.filepath, queue.next.trackhash);
+    nextAudioData.audio = new Audio(uri);
+    audio.muted = settings.mute;
+    nextAudioData.filepath = queue.next.filepath;
+    nextAudioData.audio.oncanplay = handleNextAudioCanPlay;
+    nextAudioData.audio.load();
+  }
+
+  function moveLoadedForward() {
+    clearEventHandlers(audio);
+
+    const oldAudio = audio;
+    queue.setManual(false);
+    crossFade({
+      audio: oldAudio,
+      duration: settings.crossfade_duration,
+      start_volume: settings.volume,
+      then_destroy: true,
+    });
+
+    audio = nextAudioData.audio;
+    audio.currentTime = nextAudioData.silence.start / 1000;
+    currentAudioData.silence = nextAudioData.silence;
+    currentAudioData.filepath = nextAudioData.filepath;
+
+    clearNextAudioData();
+    queue.moveForward();
+    assignEventHandlers(audio);
+    tracker.changeKey();
+  }
+
+  const initLoadingNextTrackAudio = () => {
+    const { currentindex } = queue;
+    const { length } = tracklist;
+    const { repeat_all, repeat_one } = settings;
+
+    // if no repeat && is last track, return
+    if (currentindex === length - 1 && !repeat_all && !repeat_one) {
+      return;
+    }
+
+    const currentTime = audio.currentTime;
+
+    // if track has less than 30 seconds left, load next track
+    if (Number.isNaN(audio.duration) || audio.duration - currentTime > 30) {
+      return;
+    }
+
+    if (!nextAudioData.loaded) {
+      loadNextTrack();
+    }
+
+    if (
+      nextAudioData.loaded &&
+      !nextAudioData.ticking &&
+      currentAudioData.silence.end
+    ) {
+      const { crossfade_duration, use_crossfade } = settings;
+      const diff =
+        currentAudioData.silence.end - Math.floor(audio.currentTime * 1000);
+
+      const is_jingle =
+        queue.currenttrack.filepath.includes("sm.radio.jingles");
+      const newdiff =
+        crossfade_duration > diff || is_jingle || !use_crossfade
+          ? diff
+          : diff - crossfade_duration;
+
+      if (diff > 0) {
+        nextAudioData.ticking = true;
+        movingNextTimer = setTimeout(() => {
+          nextAudioData.ticking = false;
+          if (!queue.playing && nextAudioData.filepath == queue.next.filepath)
+            return;
+          moveLoadedForward();
+        }, newdiff);
+      }
+    }
+  };
+
+  const onAudioTimeUpdateHandler = () => {
+    updateLyricsPosition();
+    initLoadingNextTrackAudio();
     queue.setCurrentDuration(audio.currentTime);
 
     const date = new Date();
     sourceTime = date.getTime();
   };
 
-  const compare = () => {
+  const handleBufferingStatus = () => {
     const difference = Math.abs(sourceTime - lastTime);
 
     if (difference > 600 && queue.playing) {
@@ -164,11 +339,11 @@ export const usePlayer = defineStore("player", () => {
     buffering.value = false;
   };
 
-  const updateTime = () => {
+  const updateBufferWatcherTime = () => {
     if (!queue.playing) return;
     const date = new Date();
     lastTime = date.getTime();
-    compare();
+    handleBufferingStatus();
   };
 
   // Loader will misbehave on HMR because of multiple setInterval calls
@@ -178,26 +353,75 @@ export const usePlayer = defineStore("player", () => {
       return;
     }
 
-    updateTime();
+    updateBufferWatcherTime();
   }, 100);
 
-  function playCurrent() {
+  function playCurrentTrack() {
+    tracker.changeKey();
+    clearEventHandlers(audio);
+
+    if (
+      !queue.manual &&
+      queue.playing &&
+      audio.src !== "" &&
+      !audio.src.includes("sm.radio.jingles")
+    ) {
+      const oldAudio = audio;
+      crossFade({
+        audio: oldAudio,
+        duration: settings.crossfade_duration,
+        start_volume: settings.volume,
+        then_destroy: true,
+      });
+      audio = new Audio();
+      audio.muted = settings.mute;
+    }
+
     const { currenttrack: track } = queue;
     const uri = `${paths.api.files}/${
       track.trackhash
     }?filepath=${encodeURIComponent(track.filepath as string)}`;
 
-    audio.autoplay = true;
-    audio.pause();
     audio.src = uri;
+
+    // when progress bar is focused, changing a track will trigger the
+    // @change event which will in turn seek the current track
+    // to the previous' currentTime
+    document.getElementById("progress")?.blur();
+    clearNextAudioData();
+    assignEventHandlers(audio);
   }
+
+  const assignEventHandlers = (audioElem: HTMLAudioElement) => {
+    audioElem.onerror = audio_onerror;
+    audioElem.oncanplay = onAudioCanPlay;
+    audioElem.onended = onAudioEnded;
+    audioElem.onplay = onAudioPlay;
+    audioElem.ontimeupdate = onAudioTimeUpdateHandler;
+    tracker.reassignEventListener();
+  };
+
+  const clearEventHandlers = (audioElem: HTMLAudioElement) => {
+    audioElem.onerror = null;
+    audioElem.oncanplay = null;
+    audioElem.onended = null;
+    audioElem.onplay = null;
+    audioElem.ontimeupdate = null;
+
+    // removes listener added in stores/tracker.ts
+    audioElem.removeEventListener("timeupdate", () => {});
+  };
+
+  assignEventHandlers(audio);
 
   return {
     audio,
     buffering,
     setMute,
     setVolume,
-    playCurrent,
+    playCurrent: playCurrentTrack,
+    clearNextAudio: clearNextAudioData,
+    clearMovingNextTimeout,
   };
 });
 

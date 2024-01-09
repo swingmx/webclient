@@ -65,6 +65,7 @@ const scrollerItems = computed(() => {
   const items = [header, tabs];
 
   const trackComponents = store.tracklist.map((track, index) => {
+    track.index = index; // used in context menu to remove from queue
     return {
       id: index,
       component: SongItem,

@@ -16,7 +16,7 @@
     <NavBar />
     <div id="acontent" ref="appcontent" v-element-size="updateContentElemSize">
       <BalancerProvider>
-        <router-view />
+        <RouterView />
       </BalancerProvider>
     </div>
     <RightSideBar v-if="settings.use_sidebar && xl" />
@@ -81,8 +81,6 @@ router.afterEach(() => {
 });
 
 onStartTyping(() => {
-  if (isMobile.value) return;
-
   const elem = document.getElementById("globalsearch") as HTMLInputElement;
   elem.focus();
   elem.value = "";

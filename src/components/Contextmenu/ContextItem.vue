@@ -178,7 +178,8 @@ function runChildAction(action: () => void) {
     }
   }
 
-  &:nth-child(2) .icon > svg {
+  // add to queue icon
+  &:nth-child(3) .icon > svg {
     transform: scale(0.9);
   }
 

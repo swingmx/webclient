@@ -1,10 +1,16 @@
 <template>
   <div class="queue-actions">
     <div class="left">
-      <button v-wave class="shuffle-queue action" @click="queue.shuffleQueue">
+      <button
+        v-if="!onNowPlaying"
+        v-wave
+        class="shuffle-queue action"
+        @click="queue.shuffleQueue"
+      >
         <ShuffleSvg />
         <span>Shuffle</span>
       </button>
+      <h2 v-else style="margin: 0">Now Playing</h2>
     </div>
     <div class="right">
       <button
@@ -68,6 +74,7 @@ defineProps<{
 
   .left {
     display: flex;
+    align-items: center;
     gap: $small;
   }
 

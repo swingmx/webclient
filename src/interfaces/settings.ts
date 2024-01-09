@@ -6,7 +6,7 @@ export interface SettingOption {
 }
 
 export interface Setting {
-  title: string;
+  title?: string;
   desc?: string;
   type: SettingType;
   options?: SettingOption[];
@@ -16,6 +16,7 @@ export interface Setting {
   button_text?: () => string;
   defaultAction?: () => void;
   show_if?: () => boolean;
+  experimental?: boolean;
 }
 
 export interface SettingGroup {
