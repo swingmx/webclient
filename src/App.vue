@@ -81,8 +81,6 @@ router.afterEach(() => {
 });
 
 onStartTyping(() => {
-  if (isMobile.value) return;
-
   const elem = document.getElementById("globalsearch") as HTMLInputElement;
   elem.focus();
   elem.value = "";
