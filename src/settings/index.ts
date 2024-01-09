@@ -1,5 +1,6 @@
+import audio from "./audio";
+import about from "./about";
 import general from "./general";
 import plugins from "./plugins";
-import about from "./about";
 
-export default [general, plugins, about];
+export default [general, audio, plugins, about];

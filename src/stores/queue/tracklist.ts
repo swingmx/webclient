@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import useQueue from "@/stores/queue";
 import useInterface from "@/stores/interface";
 import useSettings from "@/stores/settings";
+import { usePlayer } from "@/stores/player";
 import { useNotifStore, NotifType } from "@/stores/notification";
 
 import {
@@ -61,6 +62,7 @@ export default defineStore("tracklist", {
 
       const { focusCurrentInSidebar } = useInterface();
       focusCurrentInSidebar(1000);
+      usePlayer().clearNextAudio();
     },
     setFromFolder(path: string, tracks: Track[]) {
       const name = path.split("/").pop();
@@ -114,7 +116,7 @@ export default defineStore("tracklist", {
       this.setNewList(tracks);
     },
     addTrack(track: Track) {
-      this.tracklist.push(track);
+      this.insertAt([track], this.tracklist.length - 1);
 
       const Toast = useNotifStore();
       Toast.showNotification(
@@ -123,7 +125,7 @@ export default defineStore("tracklist", {
       );
     },
     addTracks(tracks: Track[]) {
-      this.tracklist = this.tracklist.concat(tracks);
+      this.insertAt(tracks, this.tracklist.length - 1);
 
       const Toast = useNotifStore();
       Toast.showNotification(
@@ -131,26 +133,57 @@ export default defineStore("tracklist", {
         NotifType.Success
       );
     },
-    insertAt(track: Track, index: number) {
-      this.tracklist.splice(index, 0, track);
-    },
-    removeTrack(index: number) {
-      this.tracklist.splice(index, 1);
+    insertAt(tracks: Track[], index: number) {
+      this.tracklist.splice(index, 0, ...tracks);
+
+      const player = usePlayer();
+      const queue = useQueue();
+
+      if (index == queue.nextindex) {
+        player.clearNextAudio();
+      }
     },
     clearList() {
       this.tracklist = [];
       this.from = {} as From;
     },
     shuffleList() {
-      const Toast = useNotifStore();
-      if (this.tracklist.length < 2) {
-        Toast.showNotification("Queue is too short", NotifType.Info);
-        return;
-      }
       this.tracklist = shuffle(this.tracklist);
     },
     removeByIndex(index: number) {
+      const {
+        currentindex,
+        nextindex,
+        playing,
+        playNext,
+        moveForward,
+        setCurrentIndex,
+      } = useQueue();
+      const player = usePlayer();
+
+      if (this.tracklist.length == 1) {
+        return this.clearList();
+      }
+
+      if (index == currentindex) {
+        if (playing) {
+          playNext();
+        } else {
+          moveForward();
+        }
+
+        setCurrentIndex(index);
+      }
+
+      if (index < currentindex) {
+        setCurrentIndex(currentindex - 1);
+      }
+
       this.tracklist.splice(index, 1);
+
+      if (index == nextindex) {
+        player.clearNextAudio();
+      }
     },
     toggleFav(index: number) {
       const track = this.tracklist[index];
@@ -169,6 +202,11 @@ export default defineStore("tracklist", {
         `Added ${tracks.length} tracks to queue`,
         NotifType.Success
       );
+    },
+  },
+  getters: {
+    length(): number {
+      return this.tracklist.length;
     },
   },
   persist: true,

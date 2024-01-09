@@ -11,6 +11,7 @@ import albums from "./albums";
 import separators from "./separators";
 import tracks from "./tracks";
 import circularArtistImg from "./circular-artist-img";
+import quickactions from "./quickactions";
 
 const npStrings = strings.nowPlayingStrings;
 const rootRootStrings = strings.manageRootDirsStrings;
@@ -18,6 +19,9 @@ const rootRootStrings = strings.manageRootDirsStrings;
 export default {
   title: "General",
   groups: [
+    {
+      settings: quickactions,
+    },
     {
       title: "UI Settings",
       desc: "Settings for various parts of the user interface.",
@@ -61,3 +65,5 @@ export default {
     },
   ],
 } as SettingCategory;
+
+// ENHANCEMENT: Decouple components from Group.vue and pass them as part of the Setting interface (maybe?)

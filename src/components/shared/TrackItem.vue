@@ -48,7 +48,7 @@
         v-if="isQueueTrack"
         class="remove-track"
         title="Remove from queue"
-        @click.stop="queue.removeFromQueue(index)"
+        @click.stop="player.removeByIndex(index)"
       >
         <DelSvg />
       </div>
@@ -60,10 +60,11 @@
 import { useRoute } from "vue-router";
 import { onBeforeUnmount, ref, watch } from "vue";
 
+import useTracklist from "@/stores/queue/tracklist";
+
 import { paths } from "@/config";
 import { favType } from "@/enums";
 import { Track } from "@/interfaces";
-import useQueueStore from "@/stores/queue";
 import favoriteHandler from "@/helpers/favoriteHandler";
 import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
 
@@ -79,10 +80,11 @@ const props = defineProps<{
   index?: number;
 }>();
 
-const queue = useQueueStore();
+const player = useTracklist();
+
+const route = useRoute();
 const context_on = ref(false);
 const is_fav = ref(props.track.is_favorite);
-const route = useRoute();
 
 function showMenu(e: MouseEvent) {
   showContext(e, props.track, context_on, route);

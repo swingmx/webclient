@@ -10,7 +10,7 @@ import useTabs from "./tabs";
 import useLyrics from "./lyrics";
 import useSettings from "./settings";
 import useTracklist from "./queue/tracklist";
-import { audio, usePlayer } from "@/stores/player";
+import { audio, getUrl, usePlayer } from "@/stores/player";
 import { NotifType, useNotifStore } from "./notification";
 
 export default defineStore("Queue", {
@@ -21,23 +21,32 @@ export default defineStore("Queue", {
     },
     currentindex: 0,
     playing: false,
+    /** Whether track has been triggered manually */
+    manual: true,
   }),
   actions: {
     setPlaying(val: boolean) {
       this.playing = val;
     },
-    setFullDuration(duration: number) {
+    setDurationFromFile(duration: number) {
       this.duration.full = duration;
+    },
+    setManual(val: boolean) {
+      this.manual = val;
     },
     setCurrentDuration(duration: number) {
       this.duration.current = duration;
     },
-    play(index: number = 0) {
+    setCurrentIndex(val: number) {
+      this.currentindex = val;
+    },
+    play(index: number = 0, manual = true) {
       const { tracklist } = useTracklist();
       if (tracklist.length === 0) return;
 
       this.playing = true;
       this.currentindex = index;
+      this.manual = manual;
 
       const { playCurrent } = usePlayer();
       const { focusCurrentInSidebar } = useInterface();
@@ -68,18 +77,18 @@ export default defineStore("Queue", {
       const is_last = this.currentindex === tracklist.length - 1;
 
       if (settings.repeat_one) {
-        this.play(this.currentindex);
+        this.play(this.currentindex, false);
         return;
       }
 
       if (settings.repeat_all) {
-        this.play(is_last ? 0 : this.currentindex + 1);
+        this.play(is_last ? 0 : this.currentindex + 1, false);
         return;
       }
 
       const resetQueue = () => {
         this.currentindex = 0;
-        audio.src = "";
+        audio.src = getUrl(this.next.filepath, this.next.trackhash);
         audio.pause();
         this.playing = false;
 
@@ -87,7 +96,7 @@ export default defineStore("Queue", {
         focusCurrentInSidebar();
       };
 
-      !is_last ? this.play(this.currentindex + 1) : resetQueue();
+      !is_last ? this.play(this.currentindex + 1, false) : resetQueue();
     },
     playNext() {
       this.play(this.nextindex);
@@ -102,6 +111,10 @@ export default defineStore("Queue", {
       }
 
       this.play(this.previndex);
+      usePlayer().clearNextAudio();
+    },
+    moveForward() {
+      this.currentindex = this.nextindex;
     },
     seek(pos: number) {
       const tabs = useTabs();
@@ -120,6 +133,9 @@ export default defineStore("Queue", {
         const line = lyrics.calculateCurrentLine();
         lyrics.setCurrentLine(line);
       }
+
+      const player = usePlayer();
+      player.clearMovingNextTimeout();
     },
 
     playTrackNext(track: Track) {
@@ -127,7 +143,7 @@ export default defineStore("Queue", {
       const { insertAt } = useTracklist();
 
       const nextindex = this.currentindex + 1;
-      insertAt(track, nextindex);
+      insertAt([track], nextindex);
       Toast.showNotification(`Added 1 track to queue`, NotifType.Success);
     },
     clearQueue() {
@@ -144,49 +160,15 @@ export default defineStore("Queue", {
       this.play(this.currentindex);
       focusCurrentInSidebar();
     },
-    removeFromQueue(index: number = 0) {
-      const { tracklist, removeByIndex } = useTracklist();
-
-      if (index === this.currentindex) {
-        const is_last = index === tracklist.length - 1;
-        const was_playing = this.playing;
-
-        audio.src = "";
-        // this.tracklist.splice(index, 1);
-
-        if (is_last) {
-          this.currentindex = 0;
-        }
-
-        if (was_playing) {
-          this.playPause();
-        }
-        return;
-      }
-
-      removeByIndex(index);
-
-      if (index < this.currentindex) {
-        this.currentindex -= 1;
-      }
-    },
   },
   getters: {
     next(): Track {
       const { tracklist } = useTracklist();
-      if (this.currentindex == tracklist.length - 1) {
-        return tracklist[0];
-      }
-
-      return tracklist[this.currentindex + 1];
+      return tracklist[this.nextindex];
     },
-    prev(): Track | undefined {
+    prev(): Track {
       const { tracklist } = useTracklist();
-      if (this.currentindex === 0) {
-        return tracklist[tracklist.length - 1];
-      }
-
-      return tracklist[this.currentindex - 1];
+      return tracklist[this.previndex];
     },
     currenttrack(): Track {
       const { tracklist } = useTracklist();
@@ -205,12 +187,24 @@ export default defineStore("Queue", {
     },
     previndex(): number {
       const { tracklist } = useTracklist();
+      const { repeat_one } = useSettings();
+
+      if (repeat_one) {
+        return this.currentindex;
+      }
+
       return this.currentindex === 0
         ? tracklist.length - 1
         : this.currentindex - 1;
     },
     nextindex(): number {
       const { tracklist } = useTracklist();
+      const { repeat_one } = useSettings();
+
+      if (repeat_one) {
+        return this.currentindex;
+      }
+
       return this.currentindex === tracklist.length - 1
         ? 0
         : this.currentindex + 1;

@@ -1,8 +1,9 @@
-import useQStore from "@/stores/queue";
-import useModalStore from "@/stores/modal";
-import useContextStore from "@/stores/context";
+import useQueue from "@/stores/queue";
+import useModal from "@/stores/modal";
+import useContextMenu from "@/stores/context";
+import useSettings from "@/stores/settings";
 
-let key_down_fired = false;
+let key_down_fired = "";
 
 function focusPageSearchBox() {
   const elem = document.getElementById(
@@ -13,13 +14,16 @@ function focusPageSearchBox() {
   }
 }
 
-export default function (queue: typeof useQStore, modal: typeof useModalStore) {
+function resetKeyFired() {
+  key_down_fired = "";
+}
+
+export default function (queue: typeof useQueue, modal: typeof useModal) {
   const q = queue();
 
   window.addEventListener("keydown", (e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
     if (e.altKey) return;
-
     const ctrlKey = e.ctrlKey;
     const shiftKey = e.shiftKey;
 
@@ -47,10 +51,16 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
       return;
     }
 
-    if (key_down_fired) return;
+    if (key_down_fired == e.key.toLowerCase()) {
+      return;
+    }
 
-    switch (e.key) {
-      case "ArrowRight":
+    function setKeyFired() {
+      key_down_fired = e.key.toLowerCase();
+    }
+
+    switch (e.key.toLowerCase()) {
+      case "arrowright":
         {
           const doSeek = triggerSeek();
 
@@ -62,7 +72,7 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
 
           setTimeout(() => {
             // fire event after 1 second
-            key_down_fired = false;
+            resetKeyFired();
           }, 1000);
 
           if (no_text_selection) {
@@ -71,7 +81,7 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
         }
         break;
 
-      case "ArrowLeft":
+      case "arrowleft":
         {
           const doSeek = triggerSeek();
 
@@ -86,7 +96,7 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
           }
 
           setTimeout(() => {
-            key_down_fired = false;
+            resetKeyFired();
           }, 1000);
         }
 
@@ -95,7 +105,6 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
       case " ": // space
         {
           e.preventDefault();
-
           q.playPause();
         }
 
@@ -108,9 +117,21 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
         break;
       }
 
-      case "Escape": {
+      case "b": {
+        if (!ctrlKey) return;
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        e.preventDefault();
+
+        const { toggleDisableSidebar } = useSettings();
+        toggleDisableSidebar();
+        setKeyFired();
+        break;
+      }
+
+      case "escape": {
         const m = modal();
-        const c = useContextStore();
+        const c = useContextMenu();
 
         if (m.visible) {
           m.hideModal();
@@ -122,10 +143,10 @@ export default function (queue: typeof useQStore, modal: typeof useModalStore) {
       }
     }
 
-    key_down_fired = true;
+    setKeyFired();
   });
 }
 
 window.addEventListener("keyup", () => {
-  key_down_fired = false;
+  resetKeyFired();
 });

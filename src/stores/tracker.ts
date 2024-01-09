@@ -2,18 +2,21 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 
 import useQueue from "./queue";
-import useTracklist, { From } from "@/stores/queue/tracklist";
 import { audio } from "./player";
-
 import { FromOptions } from "@/enums";
+import useTracklist, { From } from "@/stores/queue/tracklist";
 
-function throttle(callback: CallableFunction, interval: number) {
-  let enableCall = true;
+let enableCall = true;
+let throttleTimeout: number = 1000;
 
+function throttle(
+  callback: CallableFunction,
+  interval: number = throttleTimeout
+) {
   return function (...args: any[]) {
     if (!enableCall) return;
-
     enableCall = false;
+
     // @ts-ignore
     callback.apply(this, args);
     setTimeout(() => (enableCall = true), interval);
@@ -61,6 +64,9 @@ export default defineStore(
     const trackhash = ref("");
     const timestamp = ref(0);
 
+    const key = ref(0);
+    const prevKey = ref(0);
+
     // @ts-ignore
     const from = ref({
       type: null,
@@ -85,11 +91,11 @@ export default defineStore(
       const now = Date.now();
       const diff = now - prev_date;
 
-      if (diff > 1000) {
+      if (diff > throttleTimeout * 1.75) {
         return (prev_date = now);
       }
 
-      duration.value += now - prev_date;
+      duration.value += diff;
       prev_date = now;
     }
 
@@ -106,45 +112,52 @@ export default defineStore(
       lockSubmit();
       sendLogData(trackhash.value, duration.value, from.value, timestamp.value);
       resetData();
+      setTimestamp();
+      prevKey.value = key.value;
     }
 
     function setTimestamp() {
       timestamp.value = Math.floor(Date.now() / 1000);
     }
 
-    audio.addEventListener(
-      "timeupdate",
-      throttle(() => {
-        if (audio.paused) {
-          prev_date = 0;
-        }
-
-        if (queue.currenttrack.trackhash !== trackhash.value) {
-          if (trackhash.value !== "" && duration.value > 1000 && can_submit) {
-            lockSubmit();
-            sendLogData(
-              trackhash.value,
-              duration.value,
-              from.value,
-              timestamp.value
-            );
+    function reassignEventListener() {
+      audio.addEventListener(
+        "timeupdate",
+        throttle(() => {
+          if (audio.paused) {
+            prev_date = 0;
           }
 
-          resetData();
-          setTimestamp();
-        }
+          if (
+            key.value !== prevKey.value &&
+            trackhash.value !== "" &&
+            duration.value > 1000 &&
+            can_submit
+          ) {
+            submitData();
+          }
 
-        updateDuration();
-      }, 500)
-    );
+          updateDuration();
+        })
+      );
+    }
+
+    function changeKey() {
+      prevKey.value = key.value;
+      key.value = Math.random();
+    }
 
     return {
       trackhash,
       timestamp,
       duration,
       from,
+      key,
+      prevKey,
       submitData,
       setTimestamp,
+      reassignEventListener,
+      changeKey,
     };
   },
   {
