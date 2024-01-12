@@ -121,6 +121,10 @@ export default defineStore(
     }
 
     function reassignEventListener() {
+      if (trackhash.value == "") {
+        trackhash.value = queue.currenttrackhash;
+      }
+
       audio.addEventListener(
         "timeupdate",
         throttle(() => {
@@ -158,6 +162,7 @@ export default defineStore(
       setTimestamp,
       reassignEventListener,
       changeKey,
+      resetData,
     };
   },
   {
