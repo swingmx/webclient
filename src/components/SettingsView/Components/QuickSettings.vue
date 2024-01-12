@@ -34,7 +34,7 @@ const actions = [
     state: () => settings.use_sidebar,
   },
   {
-    label: "Silcence skip",
+    label: "Silence skip",
     action: settings.toggleUseSilenceSkip,
     state: () => settings.use_silence_skip,
   },
