@@ -22,7 +22,7 @@ export default defineConfig({
         name: "Swing Music",
         short_name: "Swing Music",
         description: "Swing Music",
-        theme_color: "#ff2171",
+        theme_color: "#111",
         icons: [
           {
             src: "pwa-192x192.png",
