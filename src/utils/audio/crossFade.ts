@@ -8,7 +8,10 @@ import useSettings from "../../stores/settings";
  * @param then_destroy - Specifies whether to destroy the audio element after the cross-fade ends. Default is false.
  */
 export function crossFade({
-  audio, duration = 1000, start_volume = 0, then_destroy = false,
+  audio,
+  duration = 1000,
+  start_volume = 0,
+  then_destroy = false,
 }: {
   audio: HTMLAudioElement;
   duration?: number;
@@ -19,6 +22,7 @@ export function crossFade({
   const { volume, use_crossfade } = useSettings();
 
   if (audio.muted || duration < 1000 || !use_crossfade) {
+    audio.volume = volume;
     endCrossfade();
     return;
   }

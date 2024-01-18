@@ -105,7 +105,7 @@ export default defineStore("Queue", {
       const lyrics = useLyrics();
 
       if (audio.currentTime > 3) {
-        audio.currentTime = 0;
+        this.seek(0);
         lyrics.setCurrentLine(-1);
         return;
       }
