@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 
 import useQueue from "./queue";
-import useTabs from "./tabs";
 import useLyricsPlugin from "./plugins/lyrics";
 import useSettings from "./settings";
 
 import { LyricsLine } from "@/interfaces";
 import { checkExists, getLyrics } from "@/requests/lyrics";
+import { Routes, router } from "@/router";
 
 // a custom error class called HasNoSyncedLyricsError
 class HasUnSyncedLyricsError extends Error {
@@ -97,9 +97,8 @@ export default defineStore("lyrics", {
       }
     },
     checkExists(filepath: string, trackhash: string) {
-      const tabs = useTabs();
-
-      if (tabs.nowplaying !== tabs.tabs.lyrics) {
+      console.log("check exists");
+      if (router.currentRoute.value.name !== Routes.Lyrics) {
         this.lyrics = <LyricsLine[]>[];
       }
 

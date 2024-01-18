@@ -28,13 +28,12 @@ const lyrics = useLyrics();
 let prevRoute = ref(route.name);
 
 function handleClick() {
-  if (route.name === Routes.nowPlaying && route.params.tab === "lyrics") {
+  if (route.name === Routes.Lyrics) {
     return router.back();
   }
 
   router.push({
-    name: Routes.nowPlaying,
-    params: { tab: "lyrics" },
+    name: Routes.Lyrics,
   });
 
   prevRoute.value = route.name;

@@ -1,5 +1,6 @@
-import { defineStore } from "pinia";
 import { ref } from "vue";
+import { defineStore } from "pinia";
+import { router, Routes } from "@/router";
 
 import useColors from "./colors";
 import useLyrics from "./lyrics";
@@ -7,7 +8,6 @@ import { NotifType, useNotifStore } from "./notification";
 import useQueue from "./queue";
 import useTracklist from "./queue/tracklist";
 import useSettings from "./settings";
-import useTabs from "./tabs";
 import useTracker from "./tracker";
 
 import { paths } from "@/config";
@@ -23,7 +23,6 @@ export function getUrl(filepath: string, trackhash: string) {
 let audio = new Audio();
 
 export const usePlayer = defineStore("player", () => {
-  const tabs = useTabs();
   const queue = useQueue();
   const colors = useColors();
   const lyrics = useLyrics();
@@ -153,7 +152,7 @@ export const usePlayer = defineStore("player", () => {
     updateMediaNotif();
     colors.setTheme1Color(paths.images.thumb.small + queue.currenttrack.image);
 
-    if (tabs.nowplaying == tabs.tabs.lyrics) {
+    if (router.currentRoute.value.name == Routes.Lyrics) {
       return lyrics.getLyrics();
     }
 
@@ -190,7 +189,7 @@ export const usePlayer = defineStore("player", () => {
   };
 
   const updateLyricsPosition = () => {
-    if (!lyrics.exists || tabs.nowplaying !== tabs.tabs.lyrics) return;
+    if (!lyrics.exists || router.currentRoute.value.name !== Routes.Lyrics) return;
 
     const millis = Math.round(audio.currentTime * 1000);
     const diff = lyrics.nextLineTime - millis;

@@ -5,7 +5,7 @@
       id="sidelyrics"
       :style="{ background: bgColor }"
       class="content-page rounded"
-      @wheel="onScroll"
+      @wheel.passive="onScroll"
     >
       <LyricsHead :bg-color="bgColor" />
       <div v-if="lyrics.synced" class="synced">
@@ -48,7 +48,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 
-import useTabs from "@/stores/tabs";
 import useQueue from "@/stores/queue";
 import useLyrics from "@/stores/lyrics";
 import useColors from "@/stores/colors";
@@ -59,7 +58,6 @@ import { getShift } from "@/utils/colortools/shift";
 import LyricsHead from "./Head.vue";
 import PluginFind from "./Plugins/Find.vue";
 
-const tabs = useTabs();
 const queue = useQueue();
 const lyrics = useLyrics();
 const colors = useColors();
@@ -80,7 +78,6 @@ function fetchLyrics() {
 onMounted(() => {
   if (!queue.currenttrack) return;
   fetchLyrics();
-  tabs.npSwitchToLyrics();
   lyrics.scrollToCurrentLine();
 });
 </script>
@@ -92,7 +89,7 @@ onMounted(() => {
 }
 
 #sidelyrics {
-  padding: 2rem 4rem;
+  padding: 0 4rem;
   padding-bottom: 4rem;
   height: 100%;
   overflow: scroll;
@@ -106,7 +103,7 @@ onMounted(() => {
 
   @include tablet-portrait {
     font-size: 2rem !important;
-    padding: $medium 1.5rem;
+    padding: 0 1.5rem;
   }
 
   .nolyrics {
@@ -136,7 +133,7 @@ onMounted(() => {
   }
 
   #lyricsline--1 {
-    margin-top: 3.5rem;
+    margin-top: 1rem;
   }
 
   .opacity_75 {

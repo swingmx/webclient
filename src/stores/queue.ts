@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { router, Routes } from "@/router";
 
 import { favType } from "@/enums";
 import { Track } from "@/interfaces";
@@ -6,7 +7,6 @@ import useInterface from "./interface";
 import { isFavorite } from "@/requests/favorite";
 import updateMediaNotif from "@/helpers/mediaNotification";
 
-import useTabs from "./tabs";
 import useLyrics from "./lyrics";
 import useSettings from "./settings";
 import useTracklist from "./queue/tracklist";
@@ -117,7 +117,6 @@ export default defineStore("Queue", {
       this.currentindex = this.nextindex;
     },
     seek(pos: number) {
-      const tabs = useTabs();
       const lyrics = useLyrics();
 
       try {
@@ -129,7 +128,7 @@ export default defineStore("Queue", {
         }
       }
 
-      if (tabs.nowplaying == tabs.tabs.lyrics) {
+      if (router.currentRoute.value.name == Routes.Lyrics) {
         const line = lyrics.calculateCurrentLine();
         lyrics.setCurrentLine(line);
       }

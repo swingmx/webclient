@@ -24,6 +24,7 @@ const FavoriteTracks = () => import("@/views/FavoriteTracks.vue");
 const NotFound = () => import("@/views/NotFound.vue");
 const NowPlaying = () => import("@/views/NowPlaying");
 const AlbumList = () => import("@/views/AlbumListView");
+const Lyrics = () => import("@/views/LyricsView");
 
 const folder = {
   path: "/folder/:path",
@@ -100,6 +101,12 @@ const NowPlayingView = {
   path: "/nowplaying/:tab",
   name: "NowPlaying",
   component: NowPlaying,
+};
+
+const LyricsView = {
+  path: "/lyrics",
+  name: "LyricsView",
+  component: Lyrics,
 };
 
 const ArtistTracks = {
@@ -193,9 +200,10 @@ const routes = [
   Home,
   AlbumListView,
   ArtistListView,
+  LyricsView,
 ];
 
-export const Routes = {
+const Routes = {
   folder: folder.name,
   playlists: playlists.name,
   playlist: playlistView.name,
@@ -214,6 +222,7 @@ export const Routes = {
   Home: Home.name,
   AlbumList: AlbumListView.name,
   ArtistList: ArtistListView.name,
+  Lyrics: LyricsView.name,
 };
 
 const router = createRouter({
@@ -222,4 +231,4 @@ const router = createRouter({
   routes,
 } as RouterOptions);
 
-export { router };
+export { router, Routes };

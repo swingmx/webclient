@@ -51,16 +51,19 @@ defineProps<{
 
 <style lang="scss">
 .lyricsinfo {
-  padding: 2rem 2.5rem 1rem;
+  padding: 2rem 0 1rem 0;
   font-size: 1rem;
   display: grid;
   grid-template-columns: max-content 1fr max-content;
   gap: $small;
   align-items: center;
   position: sticky;
-  top: -2rem;
-  margin: -2.5rem;
+  top: 0;
   z-index: 1;
+
+  @include tablet-portrait {
+    padding: $medium 0;
+  }
 
   img {
     height: 2.5rem;

@@ -38,6 +38,7 @@
       :source="dropSources.folder"
       @play-this="queue.playNext"
     />
+    <h3>Queue</h3>
   </div>
 </template>
 

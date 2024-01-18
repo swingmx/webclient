@@ -56,7 +56,7 @@ function removeFocusedClass() {
 function handleButton() {
   if (props.on_nav) return;
 
-  if (tabs.current === tabs.tabs.search || tabs.current === tabs.tabs.lyrics) {
+  if (tabs.current === tabs.tabs.search) {
     tabs.switchToQueue();
   } else {
     tabs.switchToSearch();

@@ -145,15 +145,13 @@ onMounted(() => {
       settings.mapDbSettings(data);
     })
     .then(() => {
-      if (settings.use_lyrics_plugin) return;
+      if (queue.currenttrack && !settings.use_lyrics_plugin) {
+        lyrics.checkExists(
+          queue.currenttrack.filepath,
+          queue.currenttrack.trackhash
+        );
+      }
     });
-
-  if (queue.currenttrack) {
-    lyrics.checkExists(
-      queue.currenttrack.filepath,
-      queue.currenttrack.trackhash
-    );
-  }
 });
 </script>
 

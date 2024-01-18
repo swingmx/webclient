@@ -27,7 +27,6 @@
       </template>
     </DynamicScroller>
   </div>
-  <LyricsBody v-if="$route.params.tab == 'lyrics'" />
 </template>
 
 <script setup lang="ts">
@@ -41,17 +40,10 @@ import { isMedium, isSmall } from "@/stores/content-width";
 import Header from "@/components/NowPlaying/Header.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import updatePageTitle from "@/utils/updatePageTitle";
-import Tabs from "@/components/NowPlaying/Tabs.vue";
-import LyricsBody from "./Lyrics.vue";
 
 const header: ScrollerItem = {
   id: "header",
   component: Header,
-};
-
-const tabs: ScrollerItem = {
-  id: "tabs",
-  component: Tabs,
 };
 
 const queue = useQueueStore();
@@ -62,7 +54,7 @@ function playFromQueue(index: number) {
 }
 
 const scrollerItems = computed(() => {
-  const items = [header, tabs];
+  const items = [header];
 
   const trackComponents = store.tracklist.map((track, index) => {
     track.index = index; // used in context menu to remove from queue
