@@ -54,7 +54,7 @@ const currentTab = computed(() => {
 
 <style lang="scss">
 .settingscontent {
-  width: 35rem;
+  width: 31rem;
   max-width: 100%;
 
   .version {

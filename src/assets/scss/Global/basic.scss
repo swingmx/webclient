@@ -28,7 +28,7 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .heading {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
@@ -202,7 +202,7 @@ button {
 
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10.1rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     flex-direction: row;

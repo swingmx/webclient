@@ -3,7 +3,7 @@
     <div v-if="group.title || group.desc" class="info">
       <h4 v-if="group.title">
         {{ group.title
-        }}<span v-if="group.experimental" class="experimental circular">
+        }}<span v-if="group.experimental" class="badge experimental circular">
           {{ group.experimental ? "experimental" : "" }}
         </span>
       </h4>
@@ -30,8 +30,14 @@
           <div class="title">
             <span class="ellip">
               {{ setting.title }}
-              <span v-if="setting.experimental" class="experimental circular">
+              <span
+                v-if="setting.experimental"
+                class="badge experimental circular"
+              >
                 {{ setting.experimental ? "experimental" : "" }}
+              </span>
+              <span v-if="setting.new" class="badge new circular">
+                {{ setting.new ? "new" : "" }}
               </span>
             </span>
             <button
@@ -116,13 +122,22 @@ defineProps<{
   border-bottom: solid 1px $gray;
   padding-bottom: 2rem;
 
-  .experimental {
-    font-size: 12px;
+  .badge {
     margin-left: $small;
-    opacity: 0.5;
+    opacity: 0.75;
+    padding: 0 $smaller;
+    border-radius: $smaller;
+    font-size: 12px !important;
+  }
+
+  .experimental {
     border: solid 1px $yellow;
     color: $yellow;
-    padding: 0 $smaller;
+  }
+
+  .badge.new {
+    background-color: $blue;
+    opacity: 1;
   }
 
   &:first-child {

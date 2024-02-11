@@ -3,7 +3,9 @@ import { defineStore } from "pinia";
 import { xxl } from "@/composables/useBreakpoints";
 import { DBSettings, contextChildrenShowMode } from "@/enums";
 import { pluginSetActive, updatePluginSettings } from "@/requests/plugins";
+
 import { usePlayer } from "@/stores/player";
+import { content_width } from "../content-width";
 
 export default defineStore("settings", {
   state: () => ({
@@ -43,6 +45,9 @@ export default defineStore("settings", {
     use_silence_skip: true,
     use_crossfade: false,
     crossfade_duration: 2000, // milliseconds
+
+    // layout
+    layout: "",
   }),
   actions: {
     mapDbSettings(settings: DBSettings) {
@@ -75,6 +80,11 @@ export default defineStore("settings", {
     },
     // sidebar 👇
     toggleDisableSidebar() {
+      if (this.is_alt_layout) {
+        this.use_sidebar = false;
+        return;
+      }
+
       this.use_sidebar = !this.use_sidebar;
     },
     toggleExtendWidth() {
@@ -194,10 +204,21 @@ export default defineStore("settings", {
     setCrossfadeDuration(duration: number) {
       this.crossfade_duration = duration * 1000;
     },
+    toggleLayout() {
+      if (this.layout == "") {
+        this.layout = "alternate";
+        this.use_sidebar = false;
+        this.use_np_img = false;
+        return;
+      }
+
+      this.layout = "";
+      this.use_np_img = true;
+    },
   },
   getters: {
     can_extend_width(): boolean {
-      return xxl.value;
+      return this.is_default_layout && xxl.value;
     },
     no_repeat(): boolean {
       return !this.repeat_all && !this.repeat_one;
@@ -208,6 +229,9 @@ export default defineStore("settings", {
     crossfade_on(): boolean {
       return this.use_crossfade && this.crossfade_duration > 0;
     },
+    is_default_layout: (state) => state.layout === "",
+    is_alt_layout: (state) =>
+      state.layout === "alternate" && content_width.value > 800,
   },
   persist: {
     afterRestore: (context) => {

@@ -26,7 +26,8 @@
     </div>
 
     <div v-if="folder.help_text" class="rhelp folder">
-      {{ folder.help_text }}
+      <span class="help">{{ folder.help_text }}</span>
+      <span class="time">{{ folder.time }}</span>
     </div>
     <div class="ellip" :title="name(folder.path)">
       {{ name(folder.path) }}
@@ -47,6 +48,7 @@ defineProps<{
     path: string;
     count: number;
     help_text: string;
+    time?: string;
   };
 }>();
 

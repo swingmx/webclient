@@ -147,7 +147,7 @@ function runChildAction(action: () => void) {
     transform: scale(0);
     background-color: $context;
     transform: scale(0);
-    padding: $medium;
+    padding: $small;
     border: solid 1px $gray3;
 
     max-height: calc(100vh / 2);

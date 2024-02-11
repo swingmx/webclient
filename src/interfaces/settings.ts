@@ -17,6 +17,7 @@ export interface Setting {
   defaultAction?: () => void;
   show_if?: () => boolean;
   experimental?: boolean;
+  new?: boolean;
 }
 
 export interface SettingGroup {

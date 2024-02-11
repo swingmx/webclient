@@ -90,5 +90,9 @@ defineEmits<{
       opacity: 0.25;
     }
   }
+
+  .heart-button {
+    border: solid 1px $gray4 !important;
+  }
 }
 </style>

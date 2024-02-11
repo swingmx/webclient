@@ -12,6 +12,8 @@ import separators from "./separators";
 import tracks from "./tracks";
 import circularArtistImg from "./circular-artist-img";
 import quickactions from "./quickactions";
+import layout from "./layout";
+import folderlistmode from "./folderlistmode";
 
 const npStrings = strings.nowPlayingStrings;
 const rootRootStrings = strings.manageRootDirsStrings;
@@ -26,16 +28,19 @@ export default {
       title: "UI Settings",
       desc: "Settings for various parts of the user interface.",
       settings: [
+        ...layout,
         ...extendWidth,
         ...sidebarSettings,
         circularArtistImg,
         ...contextChildrenShowMode,
+        ...folderlistmode,
       ],
     },
     {
       title: npStrings.title,
       desc: npStrings.desc,
       settings: [...nowPlaying],
+      show_if: () => !useSettingsStore().is_alt_layout,
     },
     {
       title: rootRootStrings.title,

@@ -56,15 +56,26 @@ $overshoot: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
 $separator: $gray4;
 
-$maxwidth: 1372px;
+$margright: 0;
+$padbottom: 4rem;
+$maxwidth: 1438px;
+$navheight: 5rem;
+$cardwidth: 10.75rem;
 $maxpadleft: 5rem;
+
+
+$alt_layout_pad: max(2rem, calc((100% - 1280px) / 2));
+
 $maxpadright: calc(100% - $maxwidth);
 
-$padbottom: 4rem;
 $padleft: clamp(2rem, $maxpadright, $maxpadleft);
-$padright: clamp(
-  2rem,
-  max($maxpadright, 5rem),
-  calc($maxpadright + $maxpadleft)
-);
+
+// 👇 fixed width with content floating to the left.
+// $padright: clamp(
+//   1rem,
+//   max($maxpadright, 5rem),
+//   calc($maxpadright + $maxpadleft)
+// );
+$padright: $padleft;
+
 $margright: calc(0rem - $padright);

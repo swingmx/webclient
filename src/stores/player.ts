@@ -109,8 +109,14 @@ export const usePlayer = defineStore("player", () => {
     if (queue.currentindex !== tracklist.tracklist.length - 1) {
       if (!queue.playing) return;
 
-      // if (queue.currenttrack.trackhash !== track.trackhash) return;
+      let onErrorPrevTrackHash: string = queue.currenttrackhash;
+
       setTimeout(() => {
+        // if another track has been played, don't play next track
+        if (queue.currenttrackhash !== onErrorPrevTrackHash) {
+          return;
+        }
+
         queue.playNext();
       }, 3000);
       return;
@@ -189,7 +195,8 @@ export const usePlayer = defineStore("player", () => {
   };
 
   const updateLyricsPosition = () => {
-    if (!lyrics.exists || router.currentRoute.value.name !== Routes.Lyrics) return;
+    if (!lyrics.exists || router.currentRoute.value.name !== Routes.Lyrics)
+      return;
 
     const millis = Math.round(audio.currentTime * 1000);
     const diff = lyrics.nextLineTime - millis;
@@ -383,10 +390,6 @@ export const usePlayer = defineStore("player", () => {
 
     audio.src = uri;
 
-    // when progress bar is focused, changing a track will trigger the
-    // @change event which will in turn seek the current track
-    // to the previous' currentTime
-    document.getElementById("progress")?.blur();
     clearNextAudioData();
     assignEventHandlers(audio);
   }

@@ -13,6 +13,7 @@
       type="search"
       class="rounded-sm"
       name="name"
+      spellcheck="false"
       @keypress.enter.prevent="update_playlist"
     />
 
@@ -81,7 +82,7 @@
     </div>
 
     <button type="submit">
-      {{ clicked ? "Saving" : "Save" }}
+      {{ clicked ? "Saving" : "Update" }}
     </button>
   </form>
 </template>

@@ -14,9 +14,14 @@
 </template>
 
 <script setup lang="ts">
+import { onUpdated } from "vue";
+
 import { subPath } from "@/interfaces";
 import { focusElemByClass } from "@/utils";
-import { onUpdated } from "vue";
+
+import useSettings from "@/stores/settings";
+
+const settings = useSettings();
 
 defineProps<{
   subPaths: subPath[];
@@ -27,7 +32,9 @@ defineEmits<{
 }>();
 
 onUpdated(() => {
-  focusElemByClass("inthisfolder");
+  if (settings.is_default_layout) {
+    focusElemByClass("inthisfolder");
+  }
 });
 </script>
 

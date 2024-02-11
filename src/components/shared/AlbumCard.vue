@@ -23,7 +23,8 @@
     </div>
     <div>
       <div v-if="album.help_text" class="rhelp album">
-        {{ album.help_text }}
+        <span class="help">{{ album.help_text }}</span>
+        <span class="time">{{ album.time }}</span>
       </div>
       <h4 v-tooltip class="title ellip">
         {{ album.title }}

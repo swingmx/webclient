@@ -23,13 +23,14 @@ export default function (queue: typeof useQueue, modal: typeof useModal) {
 
   window.addEventListener("keydown", (e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
+
     if (e.altKey) return;
     const ctrlKey = e.ctrlKey;
     const shiftKey = e.shiftKey;
 
     const no_text_selection = !window.getSelection()?.toString();
 
-    function FocusedOnInput(target: HTMLElement) {
+    function focusedOnInput() {
       const targett = target as HTMLInputElement;
 
       return (
@@ -43,7 +44,7 @@ export default function (queue: typeof useQueue, modal: typeof useModal) {
       if (ctrlKey) return true;
     }
 
-    if (FocusedOnInput(target)) {
+    if (focusedOnInput()) {
       if (e.key == "Escape") {
         target.blur();
       }

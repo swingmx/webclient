@@ -58,10 +58,10 @@ function getSvg(notif: NotifType) {
   place-items: center;
   box-shadow: 0px 0px 2rem rgba(0, 0, 0, 0.466);
   font-size: 0.85rem;
-  padding: 1rem;
+  padding: 1rem $small;
 
   grid-template-columns: 2rem 3fr;
-  gap: $small;
+  gap: $smaller;
 
   .notif-text {
     width: 100%;
@@ -74,14 +74,10 @@ function getSvg(notif: NotifType) {
 }
 
 .new-notif.info,
-.new-notif.favorite {
-  $bg: rgb(28, 102, 238);
+.new-notif.favorite,.new-notif.success {
+  $bg: rgb(255, 255, 255);
   background-color: $bg;
-}
-
-.new-notif.success {
-  $bg: rgb(5, 167, 53);
-  background-color: $bg;
+  color: $black;
 }
 
 .new-notif.working {

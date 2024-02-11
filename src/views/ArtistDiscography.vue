@@ -60,19 +60,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { Routes } from "@/router";
+import { onMounted } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import { discographyAlbumTypes } from "@/enums";
-import updatePageTitle from "@/utils/updatePageTitle";
 import useArtistDiscography from "@/stores/pages/artistDiscog";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 import AlbumSvg from "@/assets/icons/album.svg";
-import NoItems from "@/components/shared/NoItems.vue";
 import AlbumCard from "@/components/shared/AlbumCard.vue";
-import GenericTabs from "@/components/shared/GenericTabs.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
+import GenericTabs from "@/components/shared/GenericTabs.vue";
+import NoItems from "@/components/shared/NoItems.vue";
 
 const route = useRoute();
 const artist = useArtistDiscography();
@@ -108,7 +108,7 @@ onBeforeRouteLeave(() => artist.resetStore());
 
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10.1rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
     gap: 2rem 0;
   }
 

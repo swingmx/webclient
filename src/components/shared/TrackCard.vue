@@ -14,7 +14,8 @@
     </div>
     <div class="tinfo">
       <div v-if="track.help_text" class="rhelp track">
-        {{ track.help_text }}
+        <span class="help">{{ track.help_text }}</span>
+        <span class="time">{{ track.time }}</span>
       </div>
       <div class="ttitle ellip">{{ track.title }}</div>
       <ArtistName :albumartists="track.albumartists" :artists="track.artists" />
@@ -78,6 +79,8 @@ defineEmits<{
 
   img {
     width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
   }
 
   .artist {

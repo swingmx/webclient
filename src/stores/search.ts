@@ -14,16 +14,20 @@ import {
   searchTopResults,
   searchTracks,
 } from "@/requests/searchMusic";
-import useTabStore from "./tabs";
-import useLoaderStore from "./loader";
+
+import useTabs from "./tabs";
+import useLoader from "./loader";
+import useSettings from "./settings";
 import { maxAbumCards } from "./content-width";
+
 import { Album, Artist, Playlist, Track } from "../interfaces";
 
 export default defineStore("search", () => {
   const query = ref("");
+  const settings = useSettings();
   const route = computed(() => router.currentRoute.value);
   const debouncedQuery = useDebounce(query, 500);
-  const { startLoading, stopLoading } = useLoaderStore();
+  const { startLoading, stopLoading } = useLoader();
 
   const currentTab = ref("top");
   const RESULT_COUNT = 30;
@@ -153,6 +157,16 @@ export default defineStore("search", () => {
   watch(
     () => debouncedQuery.value,
     (newQuery) => {
+      if (!settings.use_sidebar && route.value.name !== Routes.search) {
+        router.push({
+          name: Routes.search,
+          params: {
+            page: "top",
+          },
+          query: { q: newQuery },
+        });
+      }
+
       if (route.value.name === Routes.search) {
         router.replace({
           name: Routes.search,
@@ -162,13 +176,14 @@ export default defineStore("search", () => {
           query: { q: newQuery },
         });
       }
+
       // reset all counters
       for (const key in loadCounter) {
         // @ts-ignore
         loadCounter[key] = 0;
       }
 
-      const tabs = useTabStore();
+      const tabs = useTabs();
 
       if (route.value.name !== Routes.search && tabs.current !== "search") {
         tabs.switchToSearch();

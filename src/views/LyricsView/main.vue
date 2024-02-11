@@ -2,7 +2,7 @@
   <div class="lyricsview content-page">
     <div
       v-if="queue.currenttrack"
-      id="sidelyrics"
+      id="lyricscontent"
       :style="{ background: bgColor }"
       class="content-page rounded"
       @wheel.passive="onScroll"
@@ -48,9 +48,9 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 
-import useQueue from "@/stores/queue";
-import useLyrics from "@/stores/lyrics";
 import useColors from "@/stores/colors";
+import useLyrics from "@/stores/lyrics";
+import useQueue from "@/stores/queue";
 import useSettings from "@/stores/settings";
 
 import { getShift } from "@/utils/colortools/shift";
@@ -88,7 +88,7 @@ onMounted(() => {
   padding-bottom: 1rem;
 }
 
-#sidelyrics {
+#lyricscontent {
   padding: 0 4rem;
   padding-bottom: 4rem;
   height: 100%;

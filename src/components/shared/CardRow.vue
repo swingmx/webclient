@@ -31,7 +31,7 @@ defineProps<{
 <style lang="scss">
 .cardlistrow {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(10.1rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
   padding-bottom: 2rem;
   z-index: -1;
 }

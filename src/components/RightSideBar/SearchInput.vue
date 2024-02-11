@@ -1,5 +1,15 @@
 <template>
-  <div class="gsearch-input">
+  <div
+    class="gsearch-input"
+    @click="
+      $route.name !== Routes.search &&
+        $router.push({
+          name: Routes.search,
+          params: { page: 'top' },
+          query: { q: search.query },
+        })
+    "
+  >
     <div id="ginner" ref="inputRef" tabindex="0">
       <button
         v-auto-animate
@@ -18,6 +28,7 @@
         placeholder="Start typing to search"
         type="search"
         autocomplete="off"
+        spellcheck="false"
         @blur.prevent="removeFocusedClass"
         @focus.prevent="addFocusedClass"
       />
@@ -33,6 +44,7 @@ import useSearchStore from "@/stores/search";
 
 import BackSvg from "@/assets/icons/arrow.svg";
 import SearchSvg from "@/assets/icons/search.svg";
+import { Routes } from "@/router";
 
 const props = defineProps<{
   on_nav?: boolean;
@@ -43,6 +55,9 @@ const search = useSearchStore();
 
 // HANDLE FOCUS
 const inputRef = ref<HTMLElement>();
+
+// NOTE: Functions are used because classes are added to the sorrounding element
+// and not the input itself.
 function addFocusedClass() {
   inputRef.value?.classList.add("search-focused");
 }
@@ -73,9 +88,9 @@ function handleButton() {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: $small;
+    // gap: $small;
     border-radius: 3rem;
-    outline: solid 1px $gray3;
+    background-color: $gray5;
 
     button {
       background: transparent;
@@ -101,13 +116,17 @@ function handleButton() {
       border: none;
       line-height: 2.25rem;
       color: inherit;
-      font-size: 1rem;
+      font-size: 14px;
       background-color: transparent;
       outline: none;
+
+      @media screen and (max-width: 500px) {
+        width: 7rem;
+      }
     }
   }
 }
 .search-focused {
-  outline: solid $darkblue !important;
+  outline: solid 2px #fff !important;
 }
 </style>

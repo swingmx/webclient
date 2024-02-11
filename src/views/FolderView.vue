@@ -2,7 +2,7 @@
   <div
     class="folder-view v-scroll-page"
     style="height: 100%"
-    :class="{ isSmall, isMedium }"
+    :class="{ isSmall, isMedium, is_alt_layout }"
   >
     <NoItems
       :flag="folder.tracks.length === 0 && folder.dirs.length === 0"
@@ -16,11 +16,16 @@
       :icon="FolderSvg"
     />
     <DynamicScroller
+      id="contentscroller"
       :items="scrollerItems"
       :min-item-size="64"
       class="scroller"
       style="height: 100%"
     >
+      <template v-if="is_alt_layout" #before>
+        <Folder :sub-paths="subPaths" />
+      </template>
+
       <template #default="{ item, index, active }">
         <DynamicScrollerItem
           :item="item"
@@ -41,29 +46,54 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from "vue";
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
+import { onMounted, computed, ref, watch, nextTick } from "vue";
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import useQueue from "@/stores/queue";
 import useLoader from "@/stores/loader";
+import useSettings from "@/stores/settings";
 import useFolder from "@/stores/pages/folder";
 import useTracklist from "@/stores/queue/tracklist";
-import { isMedium, isSmall } from "@/stores/content-width";
+import { content_width, isMedium, isSmall } from "@/stores/content-width";
 
-import { Track } from "@/interfaces";
 import { dropSources } from "@/enums";
-import { createTrackProps } from "@/utils";
+import { Track, subPath } from "@/interfaces";
 import updatePageTitle from "@/utils/updatePageTitle";
+import { createSubPaths, createTrackProps } from "@/utils";
 
 import FolderSvg from "@/assets/icons/folder.svg";
 import NoItems from "@/components/shared/NoItems.vue";
 import SongItem from "@/components/shared/SongItem.vue";
+import Folder from "@/components/nav/Titles/Folder.vue";
 import FolderList from "@/components/FolderView/FolderList.vue";
+import { xl } from "@/composables/useBreakpoints";
 
 const queue = useQueue();
 const loader = useLoader();
 const folder = useFolder();
+const settings = useSettings();
 const tracklist = useTracklist();
+
+const route = useRoute();
+const subPaths = ref<subPath[]>([]);
+
+const is_alt_layout = computed(() => settings.is_alt_layout || !xl);
+
+let oldpath = "";
+
+const getSubPaths = (newPath: string) => {
+  [oldpath, subPaths.value] = createSubPaths(newPath, oldpath);
+};
+
+watch(
+  () => route.params.path,
+  (newPath) => {
+    newPath = newPath as string;
+    if (newPath == undefined) return;
+
+    getSubPaths(newPath);
+  }
+);
 
 interface ScrollerItem {
   id: string | undefined;
@@ -117,6 +147,13 @@ onBeforeRouteUpdate((to, from) => {
     })
     .then(() => {
       loader.stopLoading();
+    })
+    .then(async () => {
+      await nextTick();
+
+      document.getElementById("folder-scroller")?.scrollTo({
+        top: 0,
+      });
     });
 });
 
@@ -124,5 +161,24 @@ onBeforeRouteLeave(() => {
   folder.resetAll();
 });
 
-onMounted(() => updatePageTitle("Folders"));
+onMounted(() => {
+  updatePageTitle("Folders");
+  getSubPaths(route.params.path as string);
+});
 </script>
+
+<style lang="scss">
+.folder-view.is_alt_layout {
+  .scroller {
+    padding-top: 0 !important;
+  }
+
+  .scroller > div.vue-recycle-scroller__slot:first-child {
+    padding: 1rem 0;
+    background-color: $body;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+}
+</style>
