@@ -15,12 +15,12 @@
         },
         replace: true,
       }"
+      class="np-image rounded-sm no-scroll"
     >
-      <img
-        class="rounded-sm"
-        :src="paths.images.thumb.small + queue.currenttrack?.image"
-        alt=""
-      />
+      <img :src="paths.images.thumb.small + queue.currenttrack?.image" alt="" />
+      <div class="expandicon">
+        <ExpandSvg />
+      </div>
     </RouterLink>
     <div
       class="track-info"
@@ -62,6 +62,7 @@ import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
 import HotKeys from "../LeftSidebar/NP/HotKeys.vue";
 import ArtistName from "@/components/shared/ArtistName.vue";
+import ExpandSvg from "@/assets/icons/expand.svg";
 
 const queue = useQStore();
 const settings = useSettingsStore();
@@ -80,12 +81,36 @@ defineEmits<{
   align-items: center;
   font-size: small;
 
-  a {
-    font-size: small;
+  .np-image {
+    position: relative;
+    height: 3rem;
+
+    img {
+      height: 100%;
+    }
+
+    .expandicon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(51, 51, 51, 0.575);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+
+      svg {
+        transform: rotate(-90deg);
+      }
+    }
   }
 
-  img {
-    height: 3rem;
+  a {
+    font-size: small;
   }
 
   .heart-button {

@@ -94,6 +94,7 @@ function handleFav() {
   }
 
   &:hover {
+    // INFO: Show the progress bar when hovering over the bottom bar
     #progress::-moz-range-thumb {
       height: 1rem;
       width: 1rem;
@@ -107,6 +108,11 @@ function handleFav() {
     #progress::-ms-thumb {
       height: 1rem;
       width: 1rem;
+    }
+
+    // INFO: Also show the expand button
+    .np-image .expandicon {
+      opacity: 1;
     }
   }
 

@@ -28,11 +28,7 @@
         </div>
       </div>
     </router-link>
-    <button
-      v-if="settings.is_alt_layout || isSmall"
-      class="options"
-      @click="showContextMenu"
-    >
+    <button class="options" @click="showContextMenu">
       <MoreSvg />
     </button>
   </div>
@@ -42,7 +38,6 @@
 import { computed, ref } from "vue";
 import { RouteLocationRaw } from "vue-router";
 
-import useSettings from "@/stores/settings";
 import useTracklist from "@/stores/queue/tracklist";
 
 import { FromOptions } from "@/enums";
@@ -50,14 +45,11 @@ import playingFrom from "@/utils/playingFrom";
 
 import MoreSvg from "@/assets/icons/more.svg";
 import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
-import { content_width } from "@/stores/content-width";
 
 const tracklist = useTracklist();
-const settings = useSettings();
 
 const context_showing = ref(false);
 
-const isSmall = computed(() => content_width.value < 800);
 const data = computed(() => {
   const { name, location, icon, image } = playingFrom(tracklist.from);
   return { name, location, icon, image };

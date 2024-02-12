@@ -3,7 +3,6 @@
     <SettingsTitle v-if="$route.name == Routes.settings" :text="'Settings'" />
     <SearchTitle v-if="$route.name == Routes.search" />
     <PlaylistsTitle v-if="$route.name == Routes.playlists" />
-    <QueueTitle v-if="$route.name == Routes.nowPlaying" />
     <SimpleNav
       v-if="$route.name == Routes.artistTracks"
       :text="$route.query.artist as string || 'Artist Tracks'"
@@ -20,6 +19,7 @@
       v-if="$route.name === Routes.favoriteTracks"
       :text="'Favorite Tracks'"
     />
+    <SimpleNav v-if="$route.name === Routes.nowPlaying" :text="'Now Playing'" />
   </div>
 </template>
 
@@ -27,7 +27,6 @@
 import { Routes } from "@/router";
 
 import SimpleNav from "./Titles/SimpleNav.vue";
-import QueueTitle from "./Titles/QueueTitle.vue";
 import SearchTitle from "./Titles/SearchTitle.vue";
 import SettingsTitle from "./Titles/SettingsTitle.vue";
 import PlaylistsTitle from "./Titles/PlaylistsTitle.vue";
