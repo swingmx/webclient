@@ -2,7 +2,7 @@
   <div
     class="gsearch-input"
     @click="
-      $route.name !== Routes.search &&
+      !settings.use_sidebar && $route.name !== Routes.search &&
         $router.push({
           name: Routes.search,
           params: { page: 'top' },
@@ -40,7 +40,8 @@
 import { ref } from "vue";
 
 import useTabStore from "@/stores/tabs";
-import useSearchStore from "@/stores/search";
+import useSearch from "@/stores/search";
+import useSettings from "@/stores/settings";
 
 import BackSvg from "@/assets/icons/arrow.svg";
 import SearchSvg from "@/assets/icons/search.svg";
@@ -51,7 +52,8 @@ const props = defineProps<{
 }>();
 
 const tabs = useTabStore();
-const search = useSearchStore();
+const search = useSearch();
+const settings = useSettings();
 
 // HANDLE FOCUS
 const inputRef = ref<HTMLElement>();

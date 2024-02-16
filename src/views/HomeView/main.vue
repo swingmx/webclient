@@ -3,7 +3,6 @@
     <GenericHeader>
       <template #name>Home</template>
       <template #description>{{ getGreetings("") }}</template>
-      <template #right?> </template>
     </GenericHeader>
     <RecentItems
       v-if="home.recentlyPlayed.length"
@@ -12,11 +11,11 @@
       :play-source="playSources.track"
     />
     <RecentItems
-    v-if="home.recentlyAdded.length"
-    :title="'Recently Added'"
-    :items="home.recentlyAdded"
-    :play-source="playSources.recentlyAdded"
-    :route="'/playlist/recentlyadded'"
+      v-if="home.recentlyAdded.length"
+      :title="'Recently Added'"
+      :items="home.recentlyAdded"
+      :play-source="playSources.recentlyAdded"
+      :route="'/playlist/recentlyadded'"
     />
     <Browse />
   </div>
@@ -26,10 +25,10 @@
 import { nextTick, onMounted } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 
-import useHome from "@/stores/home";
 import { playSources } from "@/enums";
-import updatePageTitle from "@/utils/updatePageTitle";
 import { updateCardWidth } from "@/stores/content-width";
+import useHome from "@/stores/home";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 import Browse from "@/components/HomeView/Browse.vue";
 import RecentItems from "@/components/shared/CardScroller.vue";
