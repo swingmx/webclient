@@ -33,9 +33,9 @@ app.use(MotionPlugin);
 
 app.directive("tooltip", vTooltip);
 
+app.component("WrapBalancer", WrapBalancer);
 app.component("RecycleScroller", RecycleScroller);
 app.component("DynamicScroller", DynamicScroller);
 app.component("DynamicScrollerItem", DynamicScrollerItem);
-app.component("WrapBalancer", WrapBalancer);
 
 app.mount("#app");

@@ -35,8 +35,8 @@
 
 <script setup lang="ts">
 import { RecentFavResult } from "@/interfaces";
-import { paths } from "../../config";
 import { Routes } from "@/router";
+import { paths } from "../../config";
 
 defineProps<{
   fav: RecentFavResult;
@@ -45,7 +45,7 @@ defineProps<{
 
 <style lang="scss">
 .recent-fav-item {
-  flex: 0 0 10.1rem;
+  flex: 0 0 $cardwidth;
 
   padding: $medium;
   height: 100%;

@@ -14,6 +14,7 @@
       <div
         class="artist-name"
         :class="`${useCircularImage ? 'ellip' : 'ellip2'}`"
+        :title="artist.name"
       >
         {{ artist.name }}
       </div>
@@ -77,7 +78,7 @@ defineProps<{
   .artist-name {
     font-size: 3.5rem;
     font-weight: bold;
-    word-wrap: break-word;
+    word-wrap: break-all;
   }
 
   .stats {

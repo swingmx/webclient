@@ -5,6 +5,7 @@
     style="height: 100%"
   >
     <DynamicScroller
+      id="album-scroller"
       style="height: 100%"
       class="scroller"
       :min-item-size="64"
@@ -30,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, nextTick } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import { Track } from "@/interfaces";
@@ -219,10 +220,18 @@ function playFromAlbum(index: number) {
 }
 
 onBeforeRouteUpdate(async (to) => {
-  await album.fetchTracksAndArtists(to.params.albumhash.toString()).then(() => {
-    album.resetAlbumArtists();
-    album.fetchArtistAlbums();
-  });
+  await album
+    .fetchTracksAndArtists(to.params.albumhash.toString())
+    .then(async () => {
+      album.resetAlbumArtists();
+      album.fetchArtistAlbums();
+
+      await nextTick();
+
+      document.getElementById("album-scroller")?.scrollTo({
+        top: 0,
+      });
+    });
 });
 
 onBeforeRouteLeave(() => {

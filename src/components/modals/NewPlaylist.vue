@@ -7,6 +7,8 @@
       type="search"
       class="rounded-sm"
       name="name"
+      placeholder="Type a name..."
+      spellcheck="false"
     />
     <br /><br />
     <button type="submit">Create</button>
@@ -159,7 +161,6 @@ function create(e: Event) {
   label {
     font-size: 0.9rem;
     color: $gray1;
-    font-weight: 700;
   }
 
   .submit {
@@ -170,8 +171,15 @@ function create(e: Event) {
   button {
     margin: 0 auto;
     width: 8rem;
+    padding: 1.25rem;
+    // font-weight: normal;
     transition: all 0.25s ease-out;
-    background-color: $pink;
+    background-color: $white;
+    color: $black;
+
+    &:hover {
+      color: $white;
+    }
   }
 }
 </style>

@@ -23,7 +23,8 @@
       />
     </div>
     <div v-if="artist.help_text" class="rhelp t-center">
-      {{ artist.help_text }}
+      <span class="help">{{ artist.help_text }}</span>
+      <span class="time">{{ artist.time }}</span>
     </div>
     <div class="artist-name t-center">
       {{ artist.name }}

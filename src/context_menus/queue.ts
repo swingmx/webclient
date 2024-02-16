@@ -36,10 +36,11 @@ export default async () => {
       useQueue().clearQueue();
     },
     icon: DeleteIcon,
+    critical: true,
   };
 
   const saveAsPlaylist: Option = {
-    label: "Save as playlist",
+    label: "Save queue as playlist",
     action: () => {
       useModalStore().showSaveQueueAsPlaylistModal(getQueueName(store.from));
     },
@@ -51,7 +52,7 @@ export default async () => {
   };
 
   const addToPlaylist: Option = {
-    label: "Add to Playlist",
+    label: "Add queue to playlist",
     children: await getAddToPlaylistOptions(AddToPlaylistAction, {
       trackhash: store.tracklist.map((t) => t.trackhash).join(","),
     }),

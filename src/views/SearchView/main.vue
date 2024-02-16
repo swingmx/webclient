@@ -1,6 +1,6 @@
 <template>
-  <div class="search-view">
-    <div v-if="isMobile" class="buttons-area">
+  <div class="search-view" :class="{ is_alt_layout }">
+    <div v-if="is_alt_layout" class="buttons-area">
       <Tabs
         :tabs="pages"
         :current-tab="($route.params.page as string)"
@@ -24,15 +24,21 @@ import { useRoute } from "vue-router";
 import { computed, onMounted } from "vue";
 
 import useSearchStore from "@/stores/search";
-import { isMobile } from "@/stores/content-width";
+import useSettings from "@/stores/settings";
+import { content_width } from "@/stores/content-width";
 import updatePageTitle from "@/utils/updatePageTitle";
 
-import CardGridPage from "./CardGridPage.vue";
 import TracksPage from "./tracks.vue";
 import TopResults from "./TopResults.vue";
+import CardGridPage from "./CardGridPage.vue";
 import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
 
+const settings = useSettings();
 const search = useSearchStore();
+
+const is_alt_layout = computed(
+  () => settings.is_alt_layout || content_width.value < 800
+);
 
 const pages = ["top", "tracks", "albums", "artists"];
 
@@ -79,13 +85,8 @@ onMounted(() => {
 <style lang="scss">
 .search-view {
   height: 100%;
-  display: grid;
   position: relative;
-
-  @include allPhones {
-    display: grid;
-    grid-template-rows: 3.5rem 1fr;
-  }
+  display: grid;
 
   .buttons-area {
     position: relative;
@@ -93,6 +94,16 @@ onMounted(() => {
 
     .tabheaders {
       margin: 0;
+    }
+  }
+
+  &.is_alt_layout {
+    grid-template-rows: 2rem 1fr;
+    gap: 1rem;
+    padding-top: 1rem;
+
+    .vue-recycle-scroller {
+      padding-top: 0 !important;
     }
   }
 }

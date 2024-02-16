@@ -50,16 +50,16 @@
 import { debouncedRef } from "@vueuse/core";
 import { computed, onMounted, ref } from "vue";
 
-import { useFuse } from "@/utils";
-import usePStore from "@/stores/pages/playlists";
-import updatePageTitle from "@/utils/updatePageTitle";
 import { isSmall } from "@/stores/content-width";
+import usePStore from "@/stores/pages/playlists";
+import { useFuse } from "@/utils";
+import updatePageTitle from "@/utils/updatePageTitle";
 
-import NoItems from "@/components/shared/NoItems.vue";
-import Header from "@/components/shared/GenericHeader.vue";
 import PlaylistSvg from "@/assets/icons/playlist-1.svg";
-import PlaylistCardGroup from "@/components/PlaylistsList/PlaylistCardGroup.vue";
 import PlusSvg from "@/assets/icons/plus.svg";
+import PlaylistCardGroup from "@/components/PlaylistsList/PlaylistCardGroup.vue";
+import Header from "@/components/shared/GenericHeader.vue";
+import NoItems from "@/components/shared/NoItems.vue";
 import useModalStore from "@/stores/modal";
 
 const pStore = usePStore();
@@ -79,10 +79,6 @@ const pinnedPlaylists = computed(() => {
 
 onMounted(() => {
   updatePageTitle("Playlists");
-
-  // focus on search input
-  const elem = document.getElementById("playlistsearch");
-  if (elem) elem.focus();
 });
 
 const playlists = computed(() => {
@@ -109,8 +105,8 @@ const playlists = computed(() => {
   }
 
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(10.1rem, 1fr));
-    gap: 2.5rem 1.75rem;
+    grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
+    gap: 2.5rem 1.5rem;
   }
 
   #playlistsearch {

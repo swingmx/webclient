@@ -1,6 +1,7 @@
 <template>
   <div class="artist-page v-scroll-page" style="height: 100%">
     <DynamicScroller
+      id="artist-scroller"
       :items="scrollerItems"
       :min-item-size="64"
       class="scroller"
@@ -25,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, nextTick } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import useArtist from "@/stores/pages/artist";
@@ -232,7 +233,14 @@ async function handlePlay(index: number) {
 }
 
 onBeforeRouteUpdate(async (to) => {
-  await store.getData(to.params.hash as string);
+  // fetch data and scroll to top
+  await store.getData(to.params.hash as string).then(async () => {
+    await nextTick();
+
+    document.getElementById("artist-scroller")?.scrollTo({
+      top: 0,
+    });
+  });
 });
 
 onBeforeRouteLeave(() => store.resetAll());

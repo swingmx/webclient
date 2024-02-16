@@ -8,18 +8,34 @@ import SearchSvg from "@/assets/icons/search.svg";
 import SettingsSvg from "@/assets/icons/settings.svg";
 import HomeSvg from "@/assets/icons/home.svg";
 
+const folder = {
+  name: "folders",
+  route_name: Routes.folder,
+  params: { path: "$home" },
+  icon: FolderSvg,
+};
+
+const favorites = {
+  name: "favorites",
+  route_name: Routes.favorites,
+  icon: HeartSvg,
+};
+
+const playlists = {
+  name: "playlists",
+  route_name: Routes.playlists,
+  icon: PlaylistSvg,
+};
+
+const home = {
+  name: "home",
+  route_name: Routes.Home,
+  icon: HomeSvg,
+};
+
 export const menus = [
-  {
-    name: "home",
-    route_name: Routes.Home,
-    icon: HomeSvg,
-  },
-  {
-    name: "folders",
-    route_name: Routes.folder,
-    params: { path: "$home" },
-    icon: FolderSvg,
-  },
+  home,
+  folder,
   {
     name: "search",
     route_name: Routes.search,
@@ -30,16 +46,8 @@ export const menus = [
   {
     separator: true,
   },
-  {
-    name: "favorites",
-    route_name: Routes.favorites,
-    icon: HeartSvg,
-  },
-  {
-    name: "playlists",
-    route_name: Routes.playlists,
-    icon: PlaylistSvg,
-  },
+  favorites,
+  playlists,
   {
     separator: true,
   },
@@ -50,3 +58,5 @@ export const menus = [
     icon: SettingsSvg,
   },
 ];
+
+export const topnavitems = [home, folder, favorites, playlists];

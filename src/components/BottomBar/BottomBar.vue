@@ -1,5 +1,10 @@
 <template>
-  <div class="b-bar">
+  <div
+    class="b-bar"
+    :style="{
+      padding: `${settings.is_default_layout ? '0 1rem 0 1rem' : ''}`,
+    }"
+  >
     <LeftGroup @handleFav="handleFav" />
     <div class="center">
       <div v-if="!isMobile" class="with-time">
@@ -32,6 +37,7 @@ import { isMobile } from "@/stores/content-width";
 import { formatSeconds } from "@/utils";
 
 import useQStore from "@/stores/queue";
+import useSettings from "@/stores/settings";
 
 import HotKeys from "@/components/LeftSidebar/NP/HotKeys.vue";
 import Progress from "@/components/LeftSidebar/NP/Progress.vue";
@@ -41,6 +47,7 @@ import LeftGroup from "./Left.vue";
 import RightGroup from "./Right.vue";
 
 const queue = useQStore();
+const settings = useSettings();
 
 function handleFav() {
   favoriteHandler(
@@ -60,7 +67,6 @@ function handleFav() {
   grid-template-columns: 1fr max-content 1fr;
   align-items: center;
   z-index: 1;
-  padding: 0 1rem;
 
   @include allPhones {
     grid-template-columns: 1fr;
@@ -88,6 +94,7 @@ function handleFav() {
   }
 
   &:hover {
+    // INFO: Show the progress bar when hovering over the bottom bar
     #progress::-moz-range-thumb {
       height: 1rem;
       width: 1rem;
@@ -101,6 +108,11 @@ function handleFav() {
     #progress::-ms-thumb {
       height: 1rem;
       width: 1rem;
+    }
+
+    // INFO: Also show the expand button
+    .np-image .expandicon {
+      opacity: 1;
     }
   }
 

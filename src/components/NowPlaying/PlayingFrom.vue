@@ -8,29 +8,34 @@
       <div class="from">
         <img
           v-if="
-            queue.from.type === FromOptions.album ||
-            queue.from.type === FromOptions.artist
+            tracklist.from.type === FromOptions.album ||
+            tracklist.from.type === FromOptions.artist
           "
           :src="data.image + '.webp'"
-          :alt="`Now Playing ${queue.from.type} image`"
+          :alt="`Now Playing ${tracklist.from.type} image`"
           :class="`${
-            queue.from.type === FromOptions.artist ? 'circular' : 'rounded-sm'
+            tracklist.from.type === FromOptions.artist
+              ? 'circular'
+              : 'rounded-sm'
           }`"
         />
         <div v-else class="from-icon border rounded-sm">
           <component :is="data.icon"></component>
         </div>
         <div class="pad-sm">
-          <div class="type">{{ queue.from.type }}</div>
+          <div class="type">{{ tracklist.from.type }}</div>
           <div class="ellip2">{{ data.name }}</div>
         </div>
       </div>
     </router-link>
+    <button class="options" @click="showContextMenu">
+      <MoreSvg />
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { RouteLocationRaw } from "vue-router";
 
 import useTracklist from "@/stores/queue/tracklist";
@@ -38,12 +43,23 @@ import useTracklist from "@/stores/queue/tracklist";
 import { FromOptions } from "@/enums";
 import playingFrom from "@/utils/playingFrom";
 
-const queue = useTracklist();
+import MoreSvg from "@/assets/icons/more.svg";
+import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
+
+const tracklist = useTracklist();
+
+const context_showing = ref(false);
 
 const data = computed(() => {
-  const { name, location, icon, image } = playingFrom(queue.from);
+  const { name, location, icon, image } = playingFrom(tracklist.from);
   return { name, location, icon, image };
 });
+
+function showContextMenu(e: MouseEvent) {
+  if (!tracklist.tracklist.length) return;
+
+  showQueueContextMenu(e, context_showing);
+}
 </script>
 
 <style lang="scss">
@@ -52,6 +68,14 @@ const data = computed(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+
+  .options {
+    transform: rotate(90deg);
+
+    svg {
+      transform: scale(1.25);
+    }
+  }
 }
 
 .now-playling-from-link {

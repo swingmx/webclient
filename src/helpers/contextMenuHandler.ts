@@ -60,7 +60,7 @@ export const showFolderContextMenu = (
 ) => {
   const menu = useContextStore();
 
-  const options = () => folderContextItems(source, path);
+  const options = () => folderContextItems(path);
   menu.showContextMenu(e, options, source);
 
   flagWatcher(menu, flag);

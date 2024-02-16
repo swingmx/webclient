@@ -29,8 +29,8 @@ import SeeAll from "../shared/SeeAll.vue";
 import FolderCard from "./FolderCard.vue";
 import AlbumCard from "./AlbumCard.vue";
 import ArtistCard from "./ArtistCard.vue";
-import PlaylistCard from "../PlaylistsList/PlaylistCard.vue";
 import FavoritesCard from "./FavoritesCard.vue";
+import PlaylistCard from "../PlaylistsList/PlaylistCard.vue";
 
 const props = defineProps<{
   title: string;
@@ -104,7 +104,7 @@ function getProps(item: { type: string; item: any }) {
   .recentitems {
     gap: 1.5rem 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10.1rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
   }
 
   .p-card {
@@ -134,6 +134,27 @@ function getProps(item: { type: string; item: any }) {
     border: 1px solid #fff;
     padding: 1.25rem 2rem;
     margin: 1rem;
+  }
+
+  .hlistitem {
+    // TODO: Handle when there's no time
+    // INFO: Set the time to display none by default
+
+    .rhelp .time {
+      display: none;
+    }
+
+    &:hover {
+      // INFO: Set the help text to display none on hover
+      .rhelp .help {
+        display: none;
+      }
+
+      // INFO: Set the time to display block on hover
+      .rhelp .time {
+        display: block;
+      }
+    }
   }
 }
 </style>

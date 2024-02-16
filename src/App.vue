@@ -6,15 +6,25 @@
   <section
     id="app-grid"
     :class="{
-      noSidebar: !settings.use_sidebar || !xl,
-      NoSideBorders: !xxl,
+      useSidebar: settings.use_sidebar && xl,
+      NoSideBorders: settings.is_alt_layout || !xxl,
       extendWidth: settings.extend_width && settings.can_extend_width,
+      is_alt_layout: settings.is_alt_layout,
     }"
-    :style="{ maxWidth: `${content_height > 1080 ? '2220px' : '1760px'}` }"
+    :style="{
+      maxWidth: `${
+        settings.is_default_layout
+          ? content_height > 1080
+            ? '2220px'
+            : '1760px'
+          : ''
+      }`,
+    }"
   >
-    <LeftSidebar v-if="!isMobile" />
+    <LeftSidebar v-if="settings.is_default_layout && !isMobile" />
     <NavBar />
-    <div id="acontent" ref="appcontent" v-element-size="updateContentElemSize">
+    <div id="acontent" v-element-size="updateContentElemSize">
+      <div id="contentresizer" ref="appcontent"></div>
       <BalancerProvider>
         <RouterView />
       </BalancerProvider>
@@ -101,8 +111,9 @@ function updateContentElemSize({
   width: number;
   height: number;
 }) {
-  // 1372 is the maxwidth of the #acontent. see app-grid.scss > $maxwidth
-  const elem_width = Math.min(1372, appcontent.value?.offsetWidth || 0);
+  // 1572 is the maxwidth of the #acontent. see app-grid.scss > $maxwidth
+  const elem_width = appcontent.value?.offsetWidth || 0;
+  
   content_width.value = elem_width;
   content_height.value = height;
   updateCardWidth();

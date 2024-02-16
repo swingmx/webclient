@@ -7,24 +7,24 @@ import usePlaylistPageStore from "@/stores/pages/playlist";
 import usePlaylistListPageStore from "@/stores/pages/playlists";
 import useArtistPageStore from "@/stores/pages/artist";
 
-import HomeView from "@/views/HomeView";
 
-const FolderView = () => import("@/views/FolderView.vue");
-const PlaylistListView = () => import("@/views/PlaylistList.vue");
-const PlaylistView = () => import("@/views/PlaylistView/index.vue");
-const AlbumView = () => import("@/views/AlbumView/index.vue");
+import HomeView from "@/views/HomeView";
+const Lyrics = () => import("@/views/LyricsView");
 const ArtistView = () => import("@/views/ArtistView");
-const ArtistTracksView = () => import("@/views/ArtistTracks.vue");
-const ArtistDiscographyView = () => import("@/views/ArtistDiscography.vue");
-const SettingsView = () => import("@/views/SettingsView.vue");
-const SearchView = () => import("@/views/SearchView");
-const FavoritesView = () => import("@/views/Favorites.vue");
-const FavoriteCardScroller = () => import("@/views/FavoriteCardScroller.vue");
-const FavoriteTracks = () => import("@/views/FavoriteTracks.vue");
 const NotFound = () => import("@/views/NotFound.vue");
 const NowPlaying = () => import("@/views/NowPlaying");
+const SearchView = () => import("@/views/SearchView");
 const AlbumList = () => import("@/views/AlbumListView");
-const Lyrics = () => import("@/views/LyricsView");
+const FolderView = () => import("@/views/FolderView.vue");
+const FavoritesView = () => import("@/views/Favorites.vue");
+const SettingsView = () => import("@/views/SettingsView.vue");
+const AlbumView = () => import("@/views/AlbumView/index.vue");
+const ArtistTracksView = () => import("@/views/ArtistTracks.vue");
+const PlaylistListView = () => import("@/views/PlaylistList.vue");
+const FavoriteTracks = () => import("@/views/FavoriteTracks.vue");
+const PlaylistView = () => import("@/views/PlaylistView/index.vue");
+const ArtistDiscographyView = () => import("@/views/ArtistDiscography.vue");
+const FavoriteCardScroller = () => import("@/views/FavoriteCardScroller.vue");
 
 const folder = {
   path: "/folder/:path",

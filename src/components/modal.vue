@@ -10,9 +10,6 @@
       }"
     >
       <div class="heading">{{ modal.title }}</div>
-      <div class="close circular" @click="modal.hideModal">
-        <PlusSvg />
-      </div>
       <NewPlaylist
         v-if="modal.component == modal.options.newPlaylist"
         v-bind="modal.props"
@@ -20,7 +17,7 @@
         @setTitle="setTitle"
       />
       <UpdatePlaylist
-      v-if="modal.component == modal.options.updatePlaylist"
+        v-if="modal.component == modal.options.updatePlaylist"
         v-bind="modal.props"
         @hideModal="hideModal"
         @setTitle="setTitle"
@@ -50,7 +47,6 @@ import { deletePlaylist as delPlaylist } from "@/requests/playlists";
 import { useRouter } from "vue-router";
 import useModalStore from "@/stores/modal";
 
-import PlusSvg from "@/assets/icons/plus.svg";
 import WelcomeModal from "./WelcomeModal.vue";
 import ConfirmModal from "./modals/ConfirmModal.vue";
 import NewPlaylist from "./modals/NewPlaylist.vue";
@@ -87,13 +83,15 @@ function deletePlaylist() {
 
   input[type="search"] {
     margin: $small 0;
-    border: 2px solid $gray3;
-    background-color: transparent;
+    border: none;
+    background-color: $gray5;
+
     color: #fff;
     width: 100%;
     padding: 0.5rem;
-    font-size: 1rem;
+    font-size: 14px;
     outline: none;
+    height: 2.75rem !important;
   }
 
   .bg {
@@ -115,28 +113,6 @@ function deletePlaylist() {
     @include smallPhone {
       width: calc(100% - 2rem);
       padding: 2rem 1rem;
-    }
-
-    .close {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.25rem;
-
-      transform: rotate(45deg);
-
-      svg {
-        background-color: $gray3;
-        border-radius: 1rem;
-      }
-
-      cursor: pointer;
-      opacity: 0.75;
-
-      &:hover {
-        svg {
-          background-color: $red;
-        }
-      }
     }
   }
 }

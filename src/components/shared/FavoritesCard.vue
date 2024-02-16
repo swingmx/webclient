@@ -18,7 +18,10 @@
       <PlayBtn :source="playSources.favorite" />
     </div>
     <div class="info">
-      <div class="rhelp playlist">PLAYLIST</div>
+      <div class="rhelp playlist">
+        <span class="help">PLAYLIST</span>
+        <span class="time">{{ item.time }}</span>
+      </div>
       <div class="title">Favorite Tracks</div>
       <div class="fcount">
         <b>{{ item.count + ` Track${item.count == 1 ? "" : "s"}` }}</b>

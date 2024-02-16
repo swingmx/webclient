@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
-import useQueue from "./queue";
 import useLyricsPlugin from "./plugins/lyrics";
+import useQueue from "./queue";
 import useSettings from "./settings";
 
 import { LyricsLine } from "@/interfaces";
@@ -87,7 +87,7 @@ export default defineStore("lyrics", {
         });
     },
     scrollToContainerTop() {
-      const container = document.getElementById("sidelyrics");
+      const container = document.getElementById("lyricscontent");
 
       if (container) {
         container.scroll({
@@ -97,7 +97,6 @@ export default defineStore("lyrics", {
       }
     },
     checkExists(filepath: string, trackhash: string) {
-      console.log("check exists");
       if (router.currentRoute.value.name !== Routes.Lyrics) {
         this.lyrics = <LyricsLine[]>[];
       }
