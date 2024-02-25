@@ -1,6 +1,6 @@
 <template>
   <div class="right-group">
-    <LyricsButton v-if="settings.use_lyrics_plugin || lyrics.exists" />
+    <LyricsButton />
     <Volume />
     <button
       class="repeat"
@@ -32,7 +32,6 @@
 <script setup lang="ts">
 import useQueue from "@/stores/queue";
 import useSettings from "@/stores/settings";
-import useLyrics from "@/stores/lyrics";
 
 import Volume from "./Volume.vue";
 import HeartSvg from "../shared/HeartSvg.vue";
@@ -42,7 +41,6 @@ import RepeatOneSvg from "@/assets/icons/repeat-one.svg";
 import ShuffleSvg from "@/assets/icons/shuffle.svg";
 
 const queue = useQueue();
-const lyrics = useLyrics();
 const settings = useSettings();
 
 defineProps<{

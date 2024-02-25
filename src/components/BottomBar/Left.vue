@@ -101,10 +101,17 @@ defineEmits<{
       align-items: center;
       justify-content: center;
       opacity: 0;
-      transition: opacity 0.2s;
+      transition: all 0.2s;
 
       svg {
         transform: rotate(-90deg);
+      }
+    }
+
+    &:hover {
+      .expandicon {
+        transform: translateY(-$medium);
+        height: 130%;
       }
     }
   }

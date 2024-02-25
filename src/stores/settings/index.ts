@@ -32,7 +32,7 @@ export default defineStore("settings", {
     separators: <string[]>[],
 
     // client
-    useCircularArtistImg: false,
+    useCircularArtistImg: true,
 
     // plugins
     use_lyrics_plugin: <boolean | undefined>false,
