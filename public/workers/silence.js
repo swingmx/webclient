@@ -10,7 +10,7 @@ onmessage = async (e) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ end: ending_file, start: starting_file }),
+    body: JSON.stringify({ ending_file, starting_file }),
   });
 
   const data = await res.json();

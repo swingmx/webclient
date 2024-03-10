@@ -1,14 +1,14 @@
-import useAxios from "../useAxios";
 import { paths } from "@/config";
-import { NotifType, useNotifStore } from "@/stores/notification";
 import { Folder } from "@/interfaces";
+import { NotifType, useNotifStore } from "@/stores/notification";
+import useAxios from "../useAxios";
 
 const { add_root_dir, get_root_dirs, remove_root_dir } = paths.api.settings;
 
 export async function getRootDirs() {
   const { data, error } = await useAxios({
     url: get_root_dirs,
-    get: true,
+    method: "GET",
   });
 
   if (error) {
@@ -68,7 +68,7 @@ export async function getFolders(folder: string = "$home") {
 export async function triggerScan() {
   const { error } = await useAxios({
     url: paths.api.settings.trigger_scan,
-    get: true,
+    method: "GET",
   });
 
   if (error) {

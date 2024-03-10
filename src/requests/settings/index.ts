@@ -16,7 +16,7 @@ export async function setSetting(key: DbSettingKeys, value: any) {
 export async function getAllSettings() {
   const { data, status } = await useAxios({
     url: paths.api.settings.base,
-    get: true,
+    method: "GET",
   });
 
   const settings = data.settings as DBSettings;

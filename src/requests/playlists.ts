@@ -5,7 +5,6 @@ import useAxios from "./useAxios";
 
 const {
   new: newPlaylistUrl,
-  all: allPlaylistsUrl,
   base: basePlaylistUrl,
   artists: playlistArtistsUrl,
 } = paths.api.playlist;
@@ -44,8 +43,8 @@ export async function createNewPlaylist(playlist_name: string) {
  */
 export async function getAllPlaylists(no_images = false): Promise<Playlist[]> {
   const { data, error } = await useAxios({
-    url: allPlaylistsUrl + (no_images ? "?no_images=true" : ""),
-    get: true,
+    url: basePlaylistUrl + (no_images ? "?no_images=true" : ""),
+    method: "GET",
   });
 
   if (error) console.error(error);
@@ -67,7 +66,7 @@ export async function getPlaylist(pid: number | string, no_tracks = false) {
 
   const { data, status } = await useAxios({
     url: uri,
-    get: true,
+    method: "GET",
   });
 
   if (status == 404) {
@@ -190,7 +189,7 @@ export async function updatePlaylist(
 
   const { data, status } = await useAxios({
     url: uri,
-    put: true,
+    method: "PUT",
     props: playlist,
     headers: {
       "Content-Type": "multipart/form-data",
@@ -234,10 +233,8 @@ export async function getPlaylistArtists(pid: number): Promise<Artist[]> {
 
 export async function deletePlaylist(pid: number) {
   const { status } = await useAxios({
-    url: paths.api.playlist.base + "/delete",
-    props: {
-      pid,
-    },
+    url: paths.api.playlist.base + `/${pid}/delete`,
+    method: "DELETE"
   });
 
   if (status == 200) {
@@ -267,7 +264,7 @@ export async function removeTracks(
 export async function removeBannerImage(playlistid: number) {
   const { data, status } = await useAxios({
     url: paths.api.playlist.base + `/${playlistid}/remove-img`,
-    get: true,
+    method: "DELETE",
   });
 
   if (status === 200) {
@@ -281,7 +278,6 @@ export async function removeBannerImage(playlistid: number) {
 export async function pinUnpinPlaylist(pid: number) {
   const { status } = await useAxios({
     url: paths.api.playlist.base + `/${pid}/pin_unpin`,
-    get: true,
   });
 
   if (status === 200) {

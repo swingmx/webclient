@@ -33,7 +33,7 @@ export async function getFiles(path: string, tracks_only = false) {
 export async function openInFiles(path: string) {
   const { error } = await useAxios({
     url: paths.api.folder.showInFiles + `?path=${path}`,
-    get: true,
+    method: "GET",
   });
 
   if (error) {
@@ -44,7 +44,7 @@ export async function openInFiles(path: string) {
 export async function getTracksInPath(path: string) {
   const { data, error } = await useAxios({
     url: paths.api.folder.base + "/tracks/all" + `?path=${path}`,
-    get: true,
+    method: "GET",
   });
 
   if (error) {

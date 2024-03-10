@@ -1,6 +1,6 @@
 import { paths } from "@/config";
-import { NotifType, useNotifStore } from "@/stores/notification";
 import { Album, Track } from "@/interfaces";
+import { NotifType, useNotifStore } from "@/stores/notification";
 import useAxios from "./useAxios";
 
 const {
@@ -81,7 +81,7 @@ export const getAlbumsFromArtist = async (
   });
 
   if (data) {
-    return data.data;
+    return data;
   }
 
   return [];
@@ -102,7 +102,7 @@ export const getAlbumVersions = async (
   });
 
   if (data) {
-    return data.data;
+    return data;
   }
 
   return [];
@@ -111,10 +111,10 @@ export const getAlbumVersions = async (
 export async function getAlbumTracks(albumhash: string): Promise<Track[]> {
   const { data } = await useAxios({
     url: albumUrl + `/${albumhash}/` + "tracks",
-    get: true,
+    method: "GET",
   });
 
-  return data.tracks;
+  return data;
 }
 
 export async function getSimilarAlbums(
@@ -124,10 +124,10 @@ export async function getSimilarAlbums(
   const { data } = await useAxios({
     url:
       albumUrl + "/similar?" + "artisthash=" + artisthash + "&limit=" + limit,
-    get: true,
+    method: "GET",
   });
 
-  return data.albums;
+  return data;
 }
 
 export { getAlbumData as getAlbum, getAlbumArtists, getAlbumBio };

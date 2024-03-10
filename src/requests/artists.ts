@@ -11,7 +11,7 @@ export const getArtistData = async (hash: string, limit: number = 5) => {
   }
 
   const { data, error, status } = await useAxios({
-    get: true,
+    method: "GET",
     url: paths.api.artist + `/${hash}?limit=${limit}`,
   });
 
@@ -36,7 +36,7 @@ export const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
   }
 
   const { data, error } = await useAxios({
-    get: true,
+    method: "GET",
     url: paths.api.artist + `/${hash}/albums?limit=${limit}&all=${all}`,
   });
 
@@ -49,7 +49,7 @@ export const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
 
 export const getArtistTracks = async (hash: string) => {
   const { data, error } = await useAxios({
-    get: true,
+    method: "GET",
     url: paths.api.artist + `/${hash}/tracks`,
   });
 
@@ -57,12 +57,12 @@ export const getArtistTracks = async (hash: string) => {
     console.error(error);
   }
 
-  return data.tracks as Track[];
+  return data as Track[];
 };
 
 export const getSimilarArtists = async (hash: string, limit = 6) => {
   const { data, error } = await useAxios({
-    get: true,
+    method: "GET",
     url: paths.api.artist + `/${hash}/similar?limit=${limit}`,
   });
 
@@ -70,7 +70,7 @@ export const getSimilarArtists = async (hash: string, limit = 6) => {
     console.error(error);
   }
 
-  return data.artists as Artist[];
+  return data as Artist[];
 };
 
 export async function saveArtistAsPlaylist(name: string, hash: string) {

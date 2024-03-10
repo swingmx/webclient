@@ -18,7 +18,7 @@ const {
 async function fetchData(url: string) {
   const { data } = await useAxios({
     url: url,
-    get: true,
+    method: "GET",
   });
 
   return data;
@@ -82,13 +82,9 @@ async function loadMoreArtists(index: number, query: string) {
 }
 
 export {
-  searchTracks,
-  searchAlbums,
-  searchArtists,
-  loadMoreTracks,
-  loadMoreAlbums,
-  loadMoreArtists,
-  searchTopResults,
+    loadMoreAlbums,
+    loadMoreArtists, loadMoreTracks, searchAlbums,
+    searchArtists, searchTopResults, searchTracks
 };
 
 // TODO: Rewrite this module using `useAxios` hook

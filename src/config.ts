@@ -30,7 +30,6 @@ const imageRoutes = {
 
 export const paths = {
   api: {
-    album: base_url + "/album",
     favorite: base_url + "/favorite",
     favorites: base_url + "/favorites",
     favAlbums: base_url + "/albums/favorite",
@@ -46,6 +45,9 @@ export const paths = {
     get removeFavorite() {
       return this.favorite + "/remove";
     },
+    
+    // Single album
+    album: base_url + "/album",
     get albumartists() {
       return this.album + "/artists";
     },
@@ -56,7 +58,7 @@ export const paths = {
       return this.album + "/from-artist";
     },
     get albumVersions() {
-      return this.album + "/versions";
+      return this.album + "/other-versions";
     },
     folder: {
       base: base_url + "/folder",
@@ -64,12 +66,9 @@ export const paths = {
     },
     dir_browser: base_url + "/folder/dir-browser",
     playlist: {
-      base: base_url + "/playlist",
+      base: base_url + "/playlists",
       get new() {
         return this.base + "/new";
-      },
-      get all() {
-        return this.base + "s";
       },
       get artists() {
         return this.base + "/artists";

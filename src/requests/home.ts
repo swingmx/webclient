@@ -4,7 +4,7 @@ import useAxios from "./useAxios";
 export async function getRecents(path: string, limit: number) {
   const { data } = await useAxios({
     url: path + "?limit=" + limit,
-    get: true,
+    method: "GET",
   });
 
   return data;

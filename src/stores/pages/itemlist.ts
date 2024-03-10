@@ -54,7 +54,7 @@ const state = () => {
           ? paths.api.getall.albums
           : paths.api.getall.artists) +
         `?start=${start}&limit=${pageSize}&sortby=${sortby.value}&reverse=${reverse_string.value}`,
-      get: true,
+      method: "GET",
     });
 
     const { data } = res;

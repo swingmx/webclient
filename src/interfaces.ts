@@ -171,8 +171,7 @@ export interface subPath {
 export interface FetchProps {
   url: string;
   props?: {};
-  get?: boolean;
-  put?: boolean;
+  method?: "GET" | "POST" | "PUT" | "DELETE"
   headers?: {};
 }
 

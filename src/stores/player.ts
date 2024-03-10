@@ -1,6 +1,6 @@
-import { ref } from "vue";
-import { defineStore } from "pinia";
 import { router, Routes } from "@/router";
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
 import useColors from "./colors";
 import useLyrics from "./lyrics";
@@ -11,8 +11,8 @@ import useSettings from "./settings";
 import useTracker from "./tracker";
 
 import { paths } from "@/config";
-import { crossFade } from "@/utils/audio/crossFade";
 import updateMediaNotif from "@/helpers/mediaNotification";
+import { crossFade } from "@/utils/audio/crossFade";
 
 export function getUrl(filepath: string, trackhash: string) {
   return `${paths.api.files}/${trackhash}?filepath=${encodeURIComponent(
@@ -34,8 +34,8 @@ export const usePlayer = defineStore("player", () => {
   let currentAudioData = {
     filepath: "",
     silence: {
-      start: 0,
-      end: 0,
+      starting_file: 0,
+      ending_file: 0,
     },
   };
 
@@ -45,8 +45,8 @@ export const usePlayer = defineStore("player", () => {
     loaded: false,
     ticking: false,
     silence: {
-      start: 0,
-      end: 0,
+      starting_file: 0,
+      ending_file: 0,
     },
   };
 
@@ -65,8 +65,8 @@ export const usePlayer = defineStore("player", () => {
     nextAudioData.loaded = false;
     nextAudioData.ticking = false;
     nextAudioData.silence = {
-      start: 0,
-      end: 0,
+      starting_file: 0,
+      ending_file: 0,
     };
 
     clearMovingNextTimeout();
@@ -146,7 +146,7 @@ export const usePlayer = defineStore("player", () => {
     if (
       !queue.manual &&
       !audio.src.includes("sm.radio.jingles") &&
-      audio.currentTime - currentAudioData.silence.start / 1000 <= 4
+      audio.currentTime - currentAudioData.silence.starting_file / 1000 <= 4
     ) {
       crossFade({
         audio,
@@ -221,8 +221,8 @@ export const usePlayer = defineStore("player", () => {
 
   const handleNextAudioCanPlay = async () => {
     if (!settings.use_silence_skip) {
-      nextAudioData.silence.start = 0;
-      currentAudioData.silence.end = Math.floor(audio.duration * 1000);
+      nextAudioData.silence.starting_file = 0;
+      currentAudioData.silence.ending_file = Math.floor(audio.duration * 1000);
       nextAudioData.loaded = true;
       return;
     }
@@ -236,8 +236,8 @@ export const usePlayer = defineStore("player", () => {
 
     worker.onmessage = (e) => {
       const silence = e.data;
-      nextAudioData.silence.start = silence.start;
-      currentAudioData.silence.end = silence.end;
+      nextAudioData.silence.starting_file = silence.starting_file;
+      currentAudioData.silence.ending_file = silence.ending_file;
       nextAudioData.loaded = silence !== null;
     };
   };
@@ -266,7 +266,7 @@ export const usePlayer = defineStore("player", () => {
     });
 
     audio = nextAudioData.audio;
-    audio.currentTime = nextAudioData.silence.start / 1000;
+    audio.currentTime = nextAudioData.silence.starting_file / 1000;
     currentAudioData.silence = nextAudioData.silence;
     currentAudioData.filepath = nextAudioData.filepath;
 
@@ -300,11 +300,12 @@ export const usePlayer = defineStore("player", () => {
     if (
       nextAudioData.loaded &&
       !nextAudioData.ticking &&
-      currentAudioData.silence.end
+      currentAudioData.silence.ending_file
     ) {
       const { crossfade_duration, use_crossfade } = settings;
       const diff =
-        currentAudioData.silence.end - Math.floor(audio.currentTime * 1000);
+        currentAudioData.silence.ending_file -
+        Math.floor(audio.currentTime * 1000);
 
       const is_jingle =
         queue.currenttrack.filepath.includes("sm.radio.jingles");

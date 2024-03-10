@@ -48,7 +48,7 @@ export async function getAllFavs(
     url:
       paths.api.favorites +
       `?track_limit=${track_limit}&album_limit=${album_limit}&artist_limit=${artist_limit}`,
-    get: true,
+    method: "GET",
   });
 
   return data;
@@ -57,7 +57,7 @@ export async function getAllFavs(
 export async function getFavAlbums(limit = 6) {
   const { data } = await useAxios({
     url: paths.api.favAlbums + `?limit=${limit}`,
-    get: true,
+    method: "GET",
   });
 
   return data.albums as Album[];
@@ -66,7 +66,7 @@ export async function getFavAlbums(limit = 6) {
 export async function getFavTracks(limit = 5) {
   const { data } = await useAxios({
     url: paths.api.favTracks + `?limit=${limit}`,
-    get: true,
+    method: "GET",
   });
 
   return data.tracks as Track[];
@@ -75,7 +75,7 @@ export async function getFavTracks(limit = 5) {
 export async function getFavArtists(limit = 6) {
   const { data } = await useAxios({
     url: paths.api.favArtists + `?limit=${limit}`,
-    get: true,
+    method: "GET",
   });
 
   return data.artists as Artist[];
@@ -84,7 +84,7 @@ export async function getFavArtists(limit = 6) {
 export async function isFavorite(itemhash: string, type: favType) {
   const { data } = await useAxios({
     url: paths.api.isFavorite + `?hash=${itemhash}&type=${type}`,
-    get: true,
+    method: "GET",
   });
 
   try {

@@ -4,7 +4,7 @@ import useAxios from "../useAxios";
 export const pluginSetActive = async (plugin: string, state: number) => {
   const { data } = await useAxios({
     url: paths.api.plugins + `/setactive?plugin=${plugin}&state=${state}`,
-    get: true,
+    method: "GET",
   });
 
   return data;
