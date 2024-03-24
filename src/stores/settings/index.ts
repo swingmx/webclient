@@ -169,8 +169,7 @@ export default defineStore("settings", {
       this.useCircularArtistImg = !this.useCircularArtistImg;
     },
     toggleLyricsPlugin() {
-      const state = this.use_lyrics_plugin ? 0 : 1;
-      pluginSetActive("lyrics_finder", state).then(() => {
+      pluginSetActive("lyrics_finder", !this.use_lyrics_plugin).then(() => {
         this.use_lyrics_plugin = !this.use_lyrics_plugin;
       });
     },

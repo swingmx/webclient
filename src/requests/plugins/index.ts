@@ -1,10 +1,13 @@
 import { paths } from "@/config";
 import useAxios from "../useAxios";
 
-export const pluginSetActive = async (plugin: string, state: number) => {
+export const pluginSetActive = async (plugin: string, active: boolean) => {
   const { data } = await useAxios({
-    url: paths.api.plugins + `/setactive?plugin=${plugin}&state=${state}`,
-    method: "GET",
+    url: paths.api.plugins + "/setactive",
+    props: {
+      plugin,
+      active,
+    },
   });
 
   return data;

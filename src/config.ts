@@ -30,22 +30,29 @@ const imageRoutes = {
 
 export const paths = {
   api: {
-    favorite: base_url + "/favorite",
     favorites: base_url + "/favorites",
-    favAlbums: base_url + "/albums/favorite",
-    favTracks: base_url + "/tracks/favorite",
-    favArtists: base_url + "/artists/favorite",
-    isFavorite: base_url + "/favorites/check",
+    get favAlbums() {
+      return this.favorites + "/albums";
+    },
+    get favTracks() {
+      return this.favorites + "/tracks";
+    },
+    get favArtists() {
+      return this.favorites + "/artists";
+    },
+    get isFavorite() {
+      return this.favorites + "/check";
+    },
+    get addFavorite() {
+      return this.favorites + "/add";
+    },
+    get removeFavorite() {
+      return this.favorites + "/remove";
+    },
     artist: base_url + "/artist",
     lyrics: base_url + "/lyrics",
     plugins: base_url + "/plugins",
-    get addFavorite() {
-      return this.favorite + "/add";
-    },
-    get removeFavorite() {
-      return this.favorite + "/remove";
-    },
-    
+
     // Single album
     album: base_url + "/album",
     get albumartists() {
@@ -114,7 +121,7 @@ export const paths = {
       },
     },
     settings: {
-      base: base_url + "/settings",
+      base: base_url + "/notsettings",
       get get_root_dirs() {
         return this.base + "/get-root-dirs";
       },
