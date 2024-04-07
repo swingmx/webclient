@@ -5161,11 +5161,6 @@ vue-observe-visibility@^2.0.0-alpha.1:
   resolved "https://registry.yarnpkg.com/vue-observe-visibility/-/vue-observe-visibility-2.0.0-alpha.1.tgz#1e4eda7b12562161d58984b7e0dea676d83bdb13"
   integrity sha512-flFbp/gs9pZniXR6fans8smv1kDScJ8RS7rEpMjhVabiKeq7Qz3D9+eGsypncjfIyyU84saU88XZ0zjbD6Gq/g==
 
-vue-progressive-image@^4.0.0-beta.10:
-  version "4.0.0-beta.10"
-  resolved "https://registry.yarnpkg.com/vue-progressive-image/-/vue-progressive-image-4.0.0-beta.10.tgz#6e1b674d04559d6e96c0f8f95307c76337ff3de9"
-  integrity sha512-AQdz0cU75TUH37UOigCDmIzo42RO0x7o1bhKO5tWn5WEHrshW0A2P10jMzHlEmxcMJBfb2phssxC0K8e9e/JsA==
-
 vue-resize@^2.0.0-alpha.1:
   version "2.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/vue-resize/-/vue-resize-2.0.0-alpha.1.tgz#43eeb79e74febe932b9b20c5c57e0ebc14e2df3a"

@@ -13,7 +13,6 @@ import {
 import VWave from "v-wave";
 import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
-import VueProgressiveImage from 'vue-progressive-image'
 
 import App from "./App.vue";
 import { router } from "./router";
@@ -32,7 +31,6 @@ app.use(router);
 app.use(autoAnimatePlugin);
 app.use(VWave);
 app.use(MotionPlugin);
-app.use(VueProgressiveImage);
 
 app.directive("tooltip", vTooltip);
 
