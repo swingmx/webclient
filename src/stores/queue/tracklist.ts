@@ -68,7 +68,7 @@ export default defineStore("tracklist", {
       const name = path.split("/").pop();
       this.from = <fromFolder>{
         type: FromOptions.folder,
-        path: path,
+        path: tracks[0].folder,
         name: name?.trim() === "" ? path : name,
       };
       this.setNewList(tracks);
