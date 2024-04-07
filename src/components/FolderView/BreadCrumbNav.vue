@@ -51,6 +51,8 @@ onUpdated(() => {
     white-space: nowrap;
     margin: auto 0;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 
     .text {
       padding: $smaller;

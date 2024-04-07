@@ -10,15 +10,17 @@ import {
   DynamicScrollerItem,
   // @ts-ignore
 } from "vue-virtual-scroller";
+import VWave from "v-wave";
 import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
-import VWave from "v-wave";
+import VueProgressiveImage from 'vue-progressive-image'
 
 import App from "./App.vue";
 import { router } from "./router";
 import vTooltip from "./directives/vTooltip";
 
 import "./assets/scss/index.scss";
+import "vue-progressive-image/dist/style.css";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 
 const app = createApp(App);
@@ -30,6 +32,7 @@ app.use(router);
 app.use(autoAnimatePlugin);
 app.use(VWave);
 app.use(MotionPlugin);
+app.use(VueProgressiveImage);
 
 app.directive("tooltip", vTooltip);
 

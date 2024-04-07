@@ -28,9 +28,9 @@ export default function createSubPaths(
 
   const newlist = newpath.split("/");
 
-  if (newlist[0] == "$home") {
-    newlist.shift();
-  }
+  // if (newlist[0] == "$home") {
+  //   newlist.shift();
+  // }
 
   if (oldpath.includes(newpath)) {
     const oldlist = oldpath.split("/");

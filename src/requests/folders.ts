@@ -6,6 +6,7 @@ export async function getFiles(path: string, tracks_only = false) {
   interface FolderData {
     tracks: Track[];
     folders: Folder[];
+    path: string;
   }
 
   const { data, error } = await useAxios({
@@ -25,6 +26,7 @@ export async function getFiles(path: string, tracks_only = false) {
   }
 
   return <FolderData>{
+    path: "",
     tracks: [],
     folders: [],
   };

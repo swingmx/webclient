@@ -38,7 +38,8 @@ export interface Folder {
   path: string;
   has_tracks: number;
   is_sym: boolean;
-  count: number;
+  trackcount: number;
+  foldercount: number;
 }
 
 export interface Album {
