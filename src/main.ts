@@ -19,7 +19,6 @@ import { router } from "./router";
 import vTooltip from "./directives/vTooltip";
 
 import "./assets/scss/index.scss";
-import "vue-progressive-image/dist/style.css";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 
 const app = createApp(App);
