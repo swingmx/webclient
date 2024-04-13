@@ -18,7 +18,6 @@ const imageRoutes = {
   thumb: {
     large: "/t/",
     small: "/t/s/",
-    original: "/t/o/",
   },
   artist: {
     large: "/a/",
@@ -150,7 +149,6 @@ export const paths = {
     thumb: {
       small: baseImgUrl + imageRoutes.thumb.small,
       large: baseImgUrl + imageRoutes.thumb.large,
-      original: baseImgUrl + imageRoutes.thumb.original,
     },
     artist: {
       small: baseImgUrl + imageRoutes.artist.small,

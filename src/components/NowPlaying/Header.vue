@@ -15,7 +15,7 @@
         <img
           v-motion-fade
           class="rounded"
-          :src="paths.images.thumb.original + queue.currenttrack?.image"
+          :src="paths.images.thumb.large + queue.currenttrack?.image"
         />
       </RouterLink>
       <NowPlayingInfo @handle-fav="handleFav" />
