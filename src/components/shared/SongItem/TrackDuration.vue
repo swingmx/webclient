@@ -1,19 +1,15 @@
 <template>
   <div class="options-and-duration">
     <div class="song-duration">{{ formatSeconds(duration) }}</div>
-    <div
-      class="options-icon circular"
-      @click.stop="$emit('showMenu', $event)"
-      @dblclick.stop="() => {}"
-    >
+    <div class="options-icon circular" @click.stop="$emit('showMenu', $event)" @dblclick.stop="() => {}">
       <OptionSvg />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { formatSeconds } from "@/utils";
 import OptionSvg from "@/assets/icons/more.svg";
+import { formatSeconds } from "@/utils";
 
 defineProps<{
   duration: number;
@@ -42,6 +38,7 @@ defineEmits<{
     justify-content: center;
     aspect-ratio: 1;
     width: 2rem;
+    transition: background-color 0.2s ease-out;
 
     svg {
       stroke: $gray1;

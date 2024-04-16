@@ -18,10 +18,7 @@
 import { usePlayer } from "@/stores/player";
 import useQStore from "@/stores/queue";
 
-import {
-default as NextSvg,
-default as PrevSvg,
-} from "@/assets/icons/next.svg";
+import { default as NextSvg, default as PrevSvg } from "@/assets/icons/next.svg";
 import PauseSvg from "@/assets/icons/pause.svg";
 import PlaySvg from "@/assets/icons/play.svg";
 import Spinner from "@/components/shared/Spinner.vue";
@@ -53,6 +50,12 @@ const { buffering } = usePlayer();
   button:first-child {
     svg {
       transform: rotate(180deg);
+    }
+
+    &:active {
+      svg {
+        transform: rotate(180deg) scale(0.75);
+      }
     }
   }
 

@@ -25,12 +25,12 @@
 
 <script setup lang="ts">
 import { paths } from "@/config";
-import { Track } from "@/interfaces";
 import { playSources } from "@/enums";
+import { Track } from "@/interfaces";
 
-import PlayBtn from "../shared/PlayBtn.vue";
-import ArtistName from "../shared/ArtistName.vue";
 import { Routes } from "@/router";
+import ArtistName from "../shared/ArtistName.vue";
+import PlayBtn from "../shared/PlayBtn.vue";
 
 defineProps<{
   track: Track;
@@ -47,6 +47,7 @@ defineEmits<{
   padding: $medium;
   cursor: pointer;
   height: max-content;
+  transition: background-color 0.2s ease-out;
 
   .image {
     position: relative;

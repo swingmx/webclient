@@ -75,6 +75,7 @@ const browselist = [
     padding: 1.5rem 0;
     background-color: $gray;
     color: $white;
+    transition: background-color 0.2s ease-out;
   }
 
   .browseitem:hover {

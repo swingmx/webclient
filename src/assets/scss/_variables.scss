@@ -8,6 +8,7 @@ $theme: #464545fd;
 // sizes
 $small: 0.5rem;
 $smaller: 0.25rem;
+$smallest: 0.15rem;
 $medium: 0.75rem;
 $large: 1.5rem;
 $larger: 2rem;
@@ -62,7 +63,6 @@ $maxwidth: 1438px;
 $navheight: 5rem;
 $cardwidth: 10.75rem;
 $maxpadleft: 5rem;
-
 
 $alt_layout_pad: max(2rem, calc((100% - 1280px) / 2));
 

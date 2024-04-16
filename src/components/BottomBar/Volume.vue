@@ -15,16 +15,20 @@
         step="0.01"
         :value="settings.volume"
         @input="changeVolume"
+        :style="{
+          backgroundSize: `${(settings.volume / 1) * 100}% 100%`,
+        }"
       />
+      <div className="volume_indicator">{{ ((settings.volume / 1) * 100).toFixed(0) }}</div>
     </div>
   </button>
 </template>
 
 <script setup lang="ts">
-import useSettingsStore from "@/stores/settings";
-import VolumeMuteSvg from "@/assets/icons/volume-mute.svg";
 import VolumeLowSvg from "@/assets/icons/volume-low.svg";
 import VolumeMidSvg from "@/assets/icons/volume-mid.svg";
+import VolumeMuteSvg from "@/assets/icons/volume-mute.svg";
+import useSettingsStore from "@/stores/settings";
 
 const settings = useSettingsStore();
 
@@ -50,6 +54,12 @@ const handleMouseWheel = (event: WheelEvent) => {
 </script>
 
 <style lang="scss">
+.b-bar .right-group button.speaker {
+  border-top: 1px solid transparent !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
 .speaker {
   position: relative;
 
@@ -65,19 +75,31 @@ const handleMouseWheel = (event: WheelEvent) => {
   }
 
   .dialog {
-    background-color: $gray4;
     position: absolute;
-    bottom: 2.95rem;
-    height: 2.5rem;
+    cursor: default;
+    bottom: 56px;
+    left: -1px;
+    height: 48px;
+    padding: 0 6px;
     display: flex;
     align-items: center;
+    gap: 4px;
+    background-color: $gray;
+    border-top: 1px solid $gray3;
+    border-bottom: 1px solid $gray3;
+    border-right: 1px solid $gray3;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    -webkit-font-smoothing: antialiased;
+    transform: rotate(270deg) translateX(-50%) perspective(1px);
+    transform-origin: left top;
+    opacity: 0;
     visibility: hidden;
-    transition: visibility 0.2s ease-in;
-    transition-delay: 0.25s;
-    cursor: default;
+    transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
 
     input {
       width: max-content;
+      max-width: 87px;
       margin: 0;
 
       &::-webkit-slider-thumb {
@@ -96,9 +118,14 @@ const handleMouseWheel = (event: WheelEvent) => {
 
   &:hover {
     .dialog {
-      transition-delay: 0.25s;
+      opacity: 1;
       visibility: visible;
     }
+  }
+
+  .volume_indicator {
+    width: 24px;
+    transform: rotate(90deg) translate3d(0, 0, 0);
   }
 }
 </style>

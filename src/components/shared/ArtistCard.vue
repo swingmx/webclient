@@ -16,11 +16,7 @@
           background: `linear-gradient(to top, ${artist.colors[0]} 20%, transparent)`,
         }"
       ></div>
-      <PlayBtn
-        :artisthash="artist.artisthash"
-        :artistname="artist.name"
-        :source="playSources.artist"
-      />
+      <PlayBtn :artisthash="artist.artisthash" :artistname="artist.name" :source="playSources.artist" />
     </div>
     <div v-if="artist.help_text" class="rhelp t-center">
       <span class="help">{{ artist.help_text }}</span>
@@ -36,12 +32,12 @@
 </template>
 
 <script setup lang="ts">
+import { paths } from "@/config";
 import { Artist } from "@/interfaces";
 import { Routes } from "@/router";
-import { paths } from "@/config";
 
-import PlayBtn from "./PlayBtn.vue";
 import { playSources } from "@/enums";
+import PlayBtn from "./PlayBtn.vue";
 
 const imguri = paths.images.artist.large;
 
@@ -61,6 +57,7 @@ defineProps<{
   font-size: 0.9rem;
   font-weight: bolder;
   height: max-content;
+  transition: background-color 0.2s ease-out;
 
   .image {
     position: relative;

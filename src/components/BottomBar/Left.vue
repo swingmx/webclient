@@ -36,9 +36,7 @@
       </div>
       <ArtistName
         :artists="queue.currenttrack?.artists || []"
-        :albumartists="
-          queue.currenttrack?.albumartists || 'Welcome to Swing Music'
-        "
+        :albumartists="queue.currenttrack?.albumartists || 'Welcome to Swing Music'"
         class="artist"
       />
     </div>
@@ -52,17 +50,17 @@ import { paths } from "@/config";
 import { Routes } from "@/router";
 import { getShift } from "@/utils/colortools/shift";
 
-import useQStore from "@/stores/queue";
 import useColorStore from "@/stores/colors";
-import useSettingsStore from "@/stores/settings";
 import { isLargerMobile, isMobile } from "@/stores/content-width";
+import useQStore from "@/stores/queue";
+import useSettingsStore from "@/stores/settings";
 
-import Actions from "./Right.vue";
+import ExpandSvg from "@/assets/icons/expand.svg";
+import ArtistName from "@/components/shared/ArtistName.vue";
+import HotKeys from "../LeftSidebar/NP/HotKeys.vue";
 import HeartSvg from "../shared/HeartSvg.vue";
 import MasterFlag from "../shared/MasterFlag.vue";
-import HotKeys from "../LeftSidebar/NP/HotKeys.vue";
-import ArtistName from "@/components/shared/ArtistName.vue";
-import ExpandSvg from "@/assets/icons/expand.svg";
+import Actions from "./Right.vue";
 
 const queue = useQStore();
 const settings = useSettingsStore();
@@ -77,7 +75,7 @@ defineEmits<{
 .left-group {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: $small;
+  gap: $medium;
   align-items: center;
   font-size: small;
 
@@ -132,7 +130,6 @@ defineEmits<{
       font-size: 0.9rem;
       opacity: 0.75;
       font-weight: bold;
-      margin-bottom: 2px;
     }
 
     .title {

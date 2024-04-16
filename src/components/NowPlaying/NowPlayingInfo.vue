@@ -8,21 +8,12 @@
         :albumartists="queue.currenttrack?.albumartists || ''"
       />
       <span v-else class="artist author">
-        <a href="https://github.com/mungai-njoroge" target="_blank"
-          >built by @mungai-njoroge ↗</a
-        >
+        <a href="https://github.com/mungai-njoroge" target="_blank">built by @mungai-njoroge ↗</a>
       </span>
     </div>
     <div class="actions">
-      <HeartSvg
-        :state="queue.currenttrack?.is_favorite"
-        @handle-fav="$emit('handleFav', queue.currenttrackhash)"
-      />
-      <OptionSvg
-        class="optionsvg"
-        :class="{ context_menu_showing }"
-        @click="showMenu"
-      />
+      <HeartSvg :state="queue.currenttrack?.is_favorite" @handle-fav="$emit('handleFav', queue.currenttrackhash)" />
+      <OptionSvg class="optionsvg" :class="{ context_menu_showing }" @click="showMenu" />
     </div>
   </div>
 </template>
@@ -34,9 +25,9 @@ import { useRoute } from "vue-router";
 import ArtistName from "../shared/ArtistName.vue";
 import HeartSvg from "../shared/HeartSvg.vue";
 
-import useQueueStore from "@/stores/queue";
 import OptionSvg from "@/assets/icons/more.svg";
 import { showTrackContextMenu } from "@/helpers/contextMenuHandler";
+import useQueueStore from "@/stores/queue";
 
 const route = useRoute();
 const context_menu_showing = ref(false);
@@ -50,13 +41,7 @@ defineEmits<{
 function showMenu(e: MouseEvent) {
   if (!queue.currenttrack) return;
 
-  showTrackContextMenu(
-    e,
-    queue.currenttrack,
-    context_menu_showing,
-    route,
-    false
-  );
+  showTrackContextMenu(e, queue.currenttrack, context_menu_showing, route, false);
 }
 </script>
 
@@ -80,6 +65,7 @@ function showMenu(e: MouseEvent) {
     .optionsvg {
       transform: scale(1.5) rotate(90deg);
       border-radius: $small;
+      transition: background-color 0.2s ease-out;
 
       &:hover {
         background-color: $gray3;
@@ -94,6 +80,7 @@ function showMenu(e: MouseEvent) {
 
   .heart-button {
     background-color: $gray;
+    transition: background-color 0.2s ease-out;
 
     &:hover {
       background-color: $gray4;

@@ -5,7 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { Track } from "@/interfaces";
 import { playSources } from "@/enums";
 import {
   playFromAlbumCard,
@@ -14,6 +13,7 @@ import {
   playFromFolderCard,
   playFromPlaylist,
 } from "@/helpers/usePlayFrom";
+import { Track } from "@/interfaces";
 
 import PlaySvg from "@/assets/icons/play.svg";
 import useQueue from "@/stores/queue";
@@ -77,7 +77,7 @@ function handlePlay() {
   place-items: center;
 
   svg {
-    transition: none;
+    transition: transform 0.2s ease;
   }
 }
 </style>

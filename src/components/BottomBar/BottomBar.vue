@@ -82,6 +82,7 @@ function handleFav() {
     background: transparent;
     border-radius: $small;
     width: 3rem;
+    transition: background-color 0.2s ease-out, border-color 0.2s ease-out;
 
     &:hover {
       border: solid 1px $gray3 !important;
@@ -131,7 +132,7 @@ function handleFav() {
     display: grid;
     align-items: center;
     gap: $small;
-    margin-bottom: -$small;
+    margin-bottom: -$smallest;
 
     width: 30rem;
 
@@ -152,7 +153,8 @@ function handleFav() {
       span {
         background-color: $gray3;
         border-radius: $smaller;
-        padding: 0 $smaller;
+        padding: 1px $smaller;
+        font-variant-numeric: tabular-nums;
       }
     }
 

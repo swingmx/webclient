@@ -1,12 +1,7 @@
 <template>
   <div id="folder-nav-title">
     <div class="fname">
-      <div
-        class="icon image"
-        @click="
-          $router.push({ name: Routes.folder, params: { path: '$home' } })
-        "
-      ></div>
+      <div class="icon image" @click="$router.push({ name: Routes.folder, params: { path: '$home' } })"></div>
       <BreadCrumbNav :sub-paths="subPaths" @navigate="navigate" />
     </div>
   </div>
@@ -15,8 +10,8 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 
-import { Routes } from "@/router";
 import { subPath } from "@/interfaces";
+import { Routes } from "@/router";
 
 import BreadCrumbNav from "@/components/FolderView/BreadCrumbNav.vue";
 
@@ -40,10 +35,9 @@ function navigate(path: string) {
   .fname {
     background-color: $gray4;
     border-radius: $small;
-    height: 2.25rem;
+    height: 2.188rem;
     display: flex;
     align-items: center;
-    padding-right: $smaller;
     width: fit-content;
     max-width: 100%;
     overflow: scroll;
