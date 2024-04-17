@@ -4,14 +4,9 @@
       :title="'No results'"
       :description="'We can\'t find any results for your search.'"
       :icon="SearchSvg"
-      :flag="
-        !search.top_results.top_result || !search.top_results.top_result.type
-      "
+      :flag="!search.top_results.top_result || !search.top_results.top_result.type"
     />
-    <div
-      v-if="search.top_results.top_result && search.top_results.top_result.type"
-      class="header"
-    >
+    <div v-if="search.top_results.top_result && search.top_results.top_result.type" class="header">
       <div class="top">
         <h3>Top Result</h3>
         <TopItem />
@@ -66,6 +61,7 @@ const search = useSearchStore();
     display: grid;
     grid-template-columns: max-content 1fr;
     gap: 1rem;
+    margin-bottom: 1.5rem;
 
     @include allPhones {
       grid-template-columns: 1fr;

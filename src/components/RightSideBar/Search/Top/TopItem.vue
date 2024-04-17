@@ -125,7 +125,7 @@ function showMenu(e: MouseEvent) {
       width: 2.5rem;
       height: 2.5rem;
       opacity: 0;
-      transition: opacity 0.2s ease-in-out;
+      transition: opacity 0.2s ease-in-out, background-color 0.2s ease-out;
     }
   }
 

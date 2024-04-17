@@ -15,11 +15,7 @@
   >
     <div class="album-art">
       <img :src="paths.images.thumb.small + track.image" class="rounded-sm" />
-      <div
-        v-if="isCurrent"
-        class="now-playing-track-indicator image"
-        :class="{ last_played: !isCurrentPlaying }"
-      ></div>
+      <div v-if="isCurrent" class="now-playing-track-indicator image" :class="{ last_played: !isCurrentPlaying }"></div>
     </div>
     <div class="tags">
       <div v-tooltip class="title">
@@ -29,11 +25,7 @@
       </div>
       <hr />
       <div class="artist">
-        <ArtistName
-          :artists="track.artists"
-          :albumartists="track.albumartists"
-          :smaller="true"
-        />
+        <ArtistName :artists="track.artists" :albumartists="track.albumartists" :smaller="true" />
       </div>
     </div>
     <div class="float-buttons flex">
@@ -44,12 +36,7 @@
       >
         <HeartSvg :state="is_fav" :no_emit="true" />
       </div>
-      <div
-        v-if="isQueueTrack"
-        class="remove-track"
-        title="Remove from queue"
-        @click.stop="player.removeByIndex(index)"
-      >
+      <div v-if="isQueueTrack" class="remove-track" title="Remove from queue" @click.stop="player.removeByIndex(index)">
         <DelSvg />
       </div>
     </div>
@@ -57,20 +44,20 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
 import { onBeforeUnmount, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
 import useTracklist from "@/stores/queue/tracklist";
 
 import { paths } from "@/config";
 import { favType } from "@/enums";
-import { Track } from "@/interfaces";
-import favoriteHandler from "@/helpers/favoriteHandler";
 import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
+import favoriteHandler from "@/helpers/favoriteHandler";
+import { Track } from "@/interfaces";
 
-import HeartSvg from "./HeartSvg.vue";
-import ArtistName from "./ArtistName.vue";
 import DelSvg from "@/assets/icons/plus.svg";
+import ArtistName from "./ArtistName.vue";
+import HeartSvg from "./HeartSvg.vue";
 
 const props = defineProps<{
   track: Track;
@@ -135,6 +122,7 @@ onBeforeUnmount(() => {
   grid-template-columns: min-content 1fr max-content;
   align-items: center;
   padding: $small 1rem;
+  transition: background-color 0.2s ease-out;
 
   .tags {
     .title {
@@ -201,7 +189,7 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
 
-    margin-right: $small;
+    margin-right: $medium;
     position: relative;
 
     .now-playing-track-indicator {
