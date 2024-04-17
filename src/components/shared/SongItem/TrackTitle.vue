@@ -48,7 +48,7 @@ defineEmits<{
   align-items: center;
 
   .thumbnail {
-    margin-right: $small;
+    margin-right: $medium;
     display: flex;
 
     .album-art {

@@ -24,9 +24,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
 import useAlbumStore from "@/stores/pages/album";
 import useArtistStore from "@/stores/pages/artist";
+import { computed, onMounted } from "vue";
 
 import { getShift } from "@/utils/colortools/shift";
 
@@ -82,6 +82,7 @@ onMounted(hookAction);
     text-align: center;
     padding: $small 1rem;
     font-weight: 700;
+    transition: background-color 0.2s ease-out;
 
     &:first-child {
       background-color: white;

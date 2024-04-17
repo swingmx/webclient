@@ -2,10 +2,7 @@
   <div class="itemsortby">
     <div class="tt select circular">Sort By</div>
     <RouterLink
-      v-for="i in ($route.name == Routes.AlbumList
-        ? albumitems
-        : artistitems
-      ).concat(items)"
+      v-for="i in ($route.name == Routes.AlbumList ? albumitems : artistitems).concat(items)"
       :key="i.key"
       :to="{
         name: $route.name as string,
@@ -47,8 +44,7 @@ import { useAlbumList, useArtistList } from "@/stores/pages/itemlist";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const store =
-  route.name === Routes.AlbumList ? useAlbumList() : useArtistList();
+const store = route.name === Routes.AlbumList ? useAlbumList() : useArtistList();
 
 const items = [
   { key: "duration", displayName: "Duration" },
@@ -82,13 +78,19 @@ const artistitems = [
   font-size: 14px;
   text-transform: capitalize;
   user-select: none;
-  
+
   .select {
     cursor: pointer;
     display: flex;
     align-items: center;
     border: solid 1px $gray5;
     padding: $small $medium;
+    transition: background-color 0.2s ease-out, border-color 0.2s ease-out;
+  }
+
+  .select.circular {
+    user-select: none;
+    pointer-events: none;
   }
 
   .reverse svg {
@@ -108,6 +110,10 @@ const artistitems = [
 
   svg {
     transform: rotate(-90deg);
+    margin: -2px 0;
+    margin-right: -6px;
+    margin-left: 2px;
+    transition: transform 0.1s linear;
   }
 
   button {

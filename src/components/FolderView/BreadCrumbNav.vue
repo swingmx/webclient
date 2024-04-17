@@ -57,6 +57,7 @@ onUpdated(() => {
     .text {
       padding: $smaller;
       border-radius: $smaller;
+      transition: background-color 0.2s ease-out;
     }
 
     &::before {

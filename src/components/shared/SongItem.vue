@@ -5,18 +5,8 @@
     @dblclick.prevent="emitUpdate"
     @contextmenu.prevent="showMenu"
   >
-    <TrackIndex
-      v-if="!isSmall"
-      :index="index"
-      :is_fav="is_fav"
-      @add-to-fav="addToFav(track.trackhash)"
-    />
-    <TrackTitle
-      :track="track"
-      :is_current="isCurrent()"
-      :is_current_playing="isCurrentPlaying()"
-      @play="emitUpdate"
-    />
+    <TrackIndex v-if="!isSmall" :index="index" :is_fav="is_fav" @add-to-fav="addToFav(track.trackhash)" />
+    <TrackTitle :track="track" :is_current="isCurrent()" :is_current_playing="isCurrentPlaying()" @play="emitUpdate" />
     <div class="song-artists">
       <ArtistName :artists="track.artists" :albumartists="track.albumartists" />
     </div>
@@ -32,21 +22,21 @@
 
 <script setup lang="ts">
 import { Routes } from "@/router";
-import { useRoute } from "vue-router";
 import { onBeforeUnmount, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
-import { Track } from "@/interfaces";
-import useQueueStore from "@/stores/queue";
 import { dropSources, favType } from "@/enums";
-import { isSmall } from "@/stores/content-width";
-import favoriteHandler from "@/helpers/favoriteHandler";
 import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
+import favoriteHandler from "@/helpers/favoriteHandler";
+import { Track } from "@/interfaces";
+import { isSmall } from "@/stores/content-width";
+import useQueueStore from "@/stores/queue";
 
 import ArtistName from "./ArtistName.vue";
 import TrackAlbum from "./SongItem/TrackAlbum.vue";
+import TrackDuration from "./SongItem/TrackDuration.vue";
 import TrackIndex from "./SongItem/TrackIndex.vue";
 import TrackTitle from "./SongItem/TrackTitle.vue";
-import TrackDuration from "./SongItem/TrackDuration.vue";
 
 const context_menu_showing = ref(false);
 
@@ -67,13 +57,7 @@ const is_fav = ref(props.track.is_favorite);
 
 const emit = defineEmits<{
   (e: "playThis"): void;
-  (
-    e: "trackDropped",
-    source: dropSources,
-    track: Track,
-    newIndex: number,
-    oldIndex: number
-  ): void;
+  (e: "trackDropped", source: dropSources, track: Track, newIndex: number, oldIndex: number): void;
 }>();
 
 function emitUpdate() {
@@ -81,13 +65,7 @@ function emitUpdate() {
 }
 
 function showMenu(e: MouseEvent) {
-  showContext(
-    e,
-    props.track,
-    context_menu_showing,
-    route,
-    route.name === Routes.playlist
-  );
+  showContext(e, props.track, context_menu_showing, route, route.name === Routes.playlist);
 }
 
 function isCurrent() {
@@ -135,6 +113,7 @@ onBeforeUnmount(() => {
   user-select: none;
   padding-left: $small;
   position: relative;
+  transition: background-color 0.2s ease-out;
 
   &:hover {
     background-color: $gray5;
@@ -149,9 +128,19 @@ onBeforeUnmount(() => {
 
       .heart-icon {
         transition-delay: 500ms;
-
         transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
       }
+    }
+  }
+
+  .index {
+    overflow: unset !important;
+
+    .heart-icon {
+      opacity: 0;
+      visibility: hidden;
     }
   }
 

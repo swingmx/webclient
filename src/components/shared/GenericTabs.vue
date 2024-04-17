@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 defineProps<{
-  items: { title: string; params: any, query?: any }[];
+  items: { title: string; params: any; query?: any }[];
   active: (item: any) => boolean;
   route: string;
 }>();
@@ -35,6 +35,7 @@ defineProps<{
     padding: $medium;
     position: relative;
     color: $gray1;
+    transition: color 0.2s ease-out;
   }
 
   .indicator {
@@ -46,6 +47,8 @@ defineProps<{
     height: 3px;
     border-radius: 1rem;
     opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
   }
 
   .tab.active {
@@ -54,6 +57,7 @@ defineProps<{
     .indicator {
       width: 3rem;
       opacity: 1;
+      visibility: visible;
     }
   }
 }

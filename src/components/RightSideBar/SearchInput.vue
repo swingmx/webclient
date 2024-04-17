@@ -2,7 +2,8 @@
   <div
     class="gsearch-input"
     @click="
-      !settings.use_sidebar && $route.name !== Routes.search &&
+      !settings.use_sidebar &&
+        $route.name !== Routes.search &&
         $router.push({
           name: Routes.search,
           params: { page: 'top' },
@@ -13,9 +14,7 @@
     <div id="ginner" ref="inputRef" tabindex="0">
       <button
         v-auto-animate
-        :title="
-          tabs.current === tabs.tabs.search ? 'back to queue' : 'go to search'
-        "
+        :title="tabs.current === tabs.tabs.search ? 'back to queue' : 'go to search'"
         :class="{ no_bg: on_nav }"
         @click.prevent="handleButton"
       >
@@ -39,9 +38,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import useTabStore from "@/stores/tabs";
 import useSearch from "@/stores/search";
 import useSettings from "@/stores/settings";
+import useTabStore from "@/stores/tabs";
 
 import BackSvg from "@/assets/icons/arrow.svg";
 import SearchSvg from "@/assets/icons/search.svg";
@@ -93,6 +92,8 @@ function handleButton() {
     // gap: $small;
     border-radius: 3rem;
     background-color: $gray5;
+    outline: solid 2px transparent;
+    transition: outline-color 0.2s ease-out;
 
     button {
       background: transparent;
@@ -128,6 +129,7 @@ function handleButton() {
     }
   }
 }
+
 .search-focused {
   outline: solid 2px #fff !important;
 }

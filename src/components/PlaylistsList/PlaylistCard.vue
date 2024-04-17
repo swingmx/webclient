@@ -1,24 +1,9 @@
 <template>
-  <router-link
-    :to="{ name: 'PlaylistView', params: { pid: playlist.id } }"
-    class="p-card rounded no-scroll"
-  >
-    <div
-      v-if="!playlist.has_image && playlist.images.length"
-      class="image-grid rounded-sm no-scroll"
-    >
-      <img
-        v-for="(img, index) in playlist.images"
-        :key="index"
-        :src="paths.images.thumb.large + img"
-      />
+  <router-link :to="{ name: 'PlaylistView', params: { pid: playlist.id } }" class="p-card rounded no-scroll">
+    <div v-if="!playlist.has_image && playlist.images.length" class="image-grid rounded-sm no-scroll">
+      <img v-for="(img, index) in playlist.images" :key="index" :src="paths.images.thumb.large + img" />
     </div>
-    <img
-      v-else
-      :src="imguri + playlist.thumb"
-      class="rounded-sm"
-      :class="{ border: !playlist.thumb }"
-    />
+    <img v-else :src="imguri + playlist.thumb" class="rounded-sm" :class="{ border: !playlist.thumb }" />
     <div class="overlay rounded">
       <div v-if="playlist.help_text" class="rhelp playlist">
         <span class="help">{{ playlist.help_text }}</span>
@@ -26,10 +11,7 @@
       </div>
       <div class="p-name ellip">{{ playlist.name }}</div>
       <div class="p-count">
-        <b>{{
-          playlist.count.toLocaleString() +
-          ` Track${playlist.count === 1 ? "" : "s"}`
-        }}</b>
+        <b>{{ playlist.count.toLocaleString() + ` Track${playlist.count === 1 ? "" : "s"}` }}</b>
       </div>
     </div>
   </router-link>
@@ -54,6 +36,7 @@ defineProps<{
   gap: $small;
   user-select: none;
   height: max-content;
+  transition: background-color 0.2s ease-out;
 
   .image-grid {
     display: grid;
@@ -61,7 +44,6 @@ defineProps<{
   }
 
   &:hover {
-    transition: all 0.25s ease;
     background-color: $gray4 !important;
     background-blend-mode: screen;
   }

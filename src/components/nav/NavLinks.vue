@@ -35,6 +35,7 @@ import { topnavitems } from "../LeftSidebar/navitems";
     padding: 0.25rem $medium;
     cursor: pointer;
     border-radius: 2rem;
+    transition: background-color 0.2s ease-out, color 0.2s ease-out;
 
     display: flex;
     align-items: center;

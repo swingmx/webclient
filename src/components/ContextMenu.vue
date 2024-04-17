@@ -5,6 +5,7 @@
     class="context-menu rounded shadow-lg no-select"
     :style="{
       visibility: context.visible ? 'visible' : 'hidden',
+      opacity: context.visible ? '1' : '0',
     }"
   >
     <ContextItem
@@ -20,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
+import { ref } from "vue";
 
 import useContextStore from "@/stores/context";
 import useSettingsStore from "@/stores/settings";
@@ -67,13 +68,14 @@ context.$subscribe((mutation, state) => {
   left: 0;
   width: 12.5rem;
   z-index: 10000 !important;
-  transform: scale(0);
   height: min-content;
-
   padding: $small;
   background: $context;
   transform-origin: top left;
   font-size: 0.875rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease-out, visibility 0.25s ease-out;
 
   .separator {
     height: 1px;
@@ -85,6 +87,7 @@ context.$subscribe((mutation, state) => {
 
   .critical {
     color: $red;
+    transition: background-color 0.2s ease-out, color 0.2s ease-out;
 
     &:hover {
       background-color: $red;

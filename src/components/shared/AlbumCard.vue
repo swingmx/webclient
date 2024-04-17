@@ -44,10 +44,7 @@
       </div>
       <div v-if="album.versions.length" class="versions">
         <MasterFlag
-          v-for="v in getVersions(
-            album.versions,
-            useAlbumStore().info.versions
-          )"
+          v-for="v in getVersions(album.versions, useAlbumStore().info.versions)"
           :key="v"
           :bitrate="1200"
           :text="v"
@@ -58,16 +55,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { Routes } from "@/router";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import { Album } from "../../interfaces";
 import PlayBtn from "./PlayBtn.vue";
 
-import { paths } from "../../config";
 import { playSources } from "@/enums";
 import useAlbumStore from "@/stores/pages/album";
+import { paths } from "../../config";
 import MasterFlag from "./MasterFlag.vue";
 
 const imguri = paths.images.thumb.large;
@@ -106,6 +103,7 @@ const artists = computed(() => {
   padding: $medium;
   border-radius: 1rem;
   height: max-content;
+  transition: background-color 0.2s ease-out;
 
   .with-img {
     position: relative;

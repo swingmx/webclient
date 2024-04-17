@@ -9,17 +9,12 @@
     <div class="left">
       <NavButtons />
       <NavLinks v-if="settings.is_alt_layout" />
-      <div
-        v-if="settings.is_default_layout && $route.name == Routes.folder"
-        class="info"
-      >
+      <div v-if="settings.is_default_layout && $route.name == Routes.folder" class="info">
         <Folder :sub-paths="subPaths" />
       </div>
       <NavTitles v-else-if="settings.is_default_layout && !isSmall" />
     </div>
-    <RouterLink v-if="settings.is_alt_layout" to="/" class="logo rounded-sm"
-      ><LogoSvg
-    /></RouterLink>
+    <RouterLink v-if="settings.is_alt_layout" to="/" class="logo rounded-sm"><LogoSvg /></RouterLink>
     <div v-if="settings.is_alt_layout || !settings.use_sidebar" class="right">
       <SearchInput :on_nav="true" />
       <!-- v-if="settings.is_alt_layout" -->
@@ -40,21 +35,21 @@
 
 <script setup lang="ts">
 import { Routes } from "@/router";
-import { useRoute } from "vue-router";
 import { computed, onMounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
 import { subPath } from "@/interfaces";
-import { createSubPaths } from "@/utils";
-import useSettings from "@/stores/settings";
 import { content_width } from "@/stores/content-width";
+import useSettings from "@/stores/settings";
+import { createSubPaths } from "@/utils";
 
+import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
+import AvatarSvg from "@/assets/icons/settings.svg";
+import SearchInput from "../RightSideBar/SearchInput.vue";
+import NavButtons from "./NavButtons.vue";
 import NavLinks from "./NavLinks.vue";
 import NavTitles from "./NavTitles.vue";
 import Folder from "./Titles/Folder.vue";
-import NavButtons from "./NavButtons.vue";
-import AvatarSvg from "@/assets/icons/settings.svg";
-import SearchInput from "../RightSideBar/SearchInput.vue";
-import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
 
 const settings = useSettings();
 const isSmall = computed(() => content_width.value < 800);
@@ -69,10 +64,7 @@ watch(
   (newRoute) => {
     switch (newRoute) {
       case Routes.folder: {
-        [oldpath, subPaths.value] = createSubPaths(
-          route.params.path as string,
-          oldpath
-        );
+        [oldpath, subPaths.value] = createSubPaths(route.params.path as string, oldpath);
 
         watch(
           () => route.params.path,
@@ -93,10 +85,7 @@ watch(
 
 onMounted(() => {
   if (route.name == Routes.folder) {
-    [oldpath, subPaths.value] = createSubPaths(
-      route.params.path as string,
-      oldpath
-    );
+    [oldpath, subPaths.value] = createSubPaths(route.params.path as string, oldpath);
   }
 });
 </script>
@@ -161,6 +150,7 @@ onMounted(() => {
       background-color: $gray4;
       border-radius: 50%;
       cursor: pointer;
+      transition: background-color 0.2s ease-out, color 0.2s ease-out;
 
       display: grid;
       place-items: center;

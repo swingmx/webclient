@@ -81,6 +81,7 @@ button {
   justify-content: center;
   height: 2.25rem;
   padding: 0 $small;
+  transition: background-color 0.2s ease-out, color 0.2s ease-out;
 
   background-color: $gray4;
   font-weight: 700;

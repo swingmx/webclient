@@ -2,37 +2,25 @@
   <div
     ref="parentRef"
     class="context-item"
-    @mouseenter="
-      option.children &&
-        !isSmall &&
-        childrenShowMode === contextChildrenShowMode.hover &&
-        showChildren()
-    "
-    @mouseleave="
-      option.children &&
-        !isSmall &&
-        childrenShowMode === contextChildrenShowMode.hover &&
-        hideChildren()
-    "
+    @mouseenter="option.children && !isSmall && childrenShowMode === contextChildrenShowMode.hover && showChildren()"
+    @mouseleave="option.children && !isSmall && childrenShowMode === contextChildrenShowMode.hover && hideChildren()"
     @click="runAction"
   >
     <div class="icon image" v-html="option.icon"></div>
     <div class="label ellip">{{ option.label }}</div>
     <div v-if="option.children" class="more" v-html="ExpandIcon"></div>
-    <div
-      v-if="option.children"
-      ref="childRef"
-      class="children rounded shadow-sm"
-    >
-      <div
-        v-for="child in option.children"
-        :key="child.label"
-        class="context-item"
-        :class="[{ critical: child.critical }, child.type]"
-        @click="child.action && runChildAction(child.action)"
-      >
-        <div class="label ellip">
-          {{ child.label }}
+    <div v-if="option.children" ref="childRef" class="children rounded shadow-sm">
+      <div className="wrapper">
+        <div
+          v-for="child in option.children"
+          :key="child.label"
+          class="context-item"
+          :class="[{ critical: child.critical }, child.type]"
+          @click="child.action && runChildAction(child.action)"
+        >
+          <div class="label ellip">
+            {{ child.label }}
+          </div>
         </div>
       </div>
     </div>
@@ -70,27 +58,25 @@ function showChildren() {
     return;
   }
 
-  popperInstance = createPopper(
-    parentRef.value as HTMLElement,
-    childRef.value as HTMLElement,
-    {
-      placement: "right-start",
-      modifiers: [
-        {
-          name: "flip",
-          options: {
-            fallbackPlacements: ["left-start", "auto"],
-          },
+  popperInstance = createPopper(parentRef.value as HTMLElement, childRef.value as HTMLElement, {
+    placement: "right-start",
+    modifiers: [
+      {
+        name: "flip",
+        options: {
+          fallbackPlacements: ["left-start", "auto"],
         },
-      ],
-    }
-  );
+      },
+    ],
+  });
   childRef.value ? (childRef.value.style.visibility = "visible") : null;
+  childRef.value ? (childRef.value.style.opacity = "1") : null;
   childrenShown.value = true;
 }
 
 function hideChildren() {
   childRef.value ? (childRef.value.style.visibility = "hidden") : null;
+  childRef.value ? (childRef.value.style.opacity = "0") : null;
   popperInstance?.destroy();
   childrenShown.value = false;
 }
@@ -129,6 +115,7 @@ function runChildAction(action: () => void) {
   padding: 0.4rem;
   position: relative;
   border-radius: $small;
+  transition: background-color 0.2s ease-out;
 
   .more {
     height: 1.5rem;
@@ -142,15 +129,20 @@ function runChildAction(action: () => void) {
     position: absolute;
     width: 12rem;
     z-index: 10;
-    overflow-y: auto;
-    overflow-x: hidden;
     transform: scale(0);
     background-color: $context;
-    transform: scale(0);
-    padding: $small;
+    padding: $smaller;
     border: solid 1px $gray3;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease-out, visibility 0.25s ease-out;
 
-    max-height: calc(100vh / 2);
+    .wrapper {
+      padding: $smaller;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: calc(100vh / 2);
+    }
 
     .context-item {
       padding: $small 1rem;

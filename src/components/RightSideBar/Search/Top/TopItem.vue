@@ -2,19 +2,12 @@
   <RouterLink
     :to="{
       name: res_type === 'artist' ? Routes.artist : Routes.album,
-      params:
-        res_type === 'artist'
-          ? { hash: item.artisthash || ' ' }
-          : { albumhash: item.albumhash || ' ' },
+      params: res_type === 'artist' ? { hash: item.artisthash || ' ' } : { albumhash: item.albumhash || ' ' },
     }"
     class="top-result-item rounded"
   >
     <img
-      :src="
-        res_type === 'artist'
-          ? paths.images.artist.large + item.image
-          : paths.images.thumb.large + item.image
-      "
+      :src="res_type === 'artist' ? paths.images.artist.large + item.image : paths.images.thumb.large + item.image"
       alt=""
       class="rounded-sm"
       :class="{ circular: res_type === 'artist' }"
@@ -36,10 +29,7 @@
           {{ item.trackcount === 1 ? "track" : "tracks" }}
         </div>
         <div v-if="res_type === 'track'" class="artists flex">
-          <ArtistName
-            :artists="item.artists"
-            :albumartists="item.albumartists"
-          />
+          <ArtistName :artists="item.artists" :albumartists="item.albumartists" />
           &nbsp; • &nbsp;
           {{ formatSeconds(item.duration, true) }}
         </div>
@@ -57,11 +47,7 @@
       </button>
       <PlayBtn
         :source="
-          res_type == 'album'
-            ? playSources.album
-            : res_type == 'artist'
-            ? playSources.artist
-            : playSources.track
+          res_type == 'album' ? playSources.album : res_type == 'artist' ? playSources.artist : playSources.track
         "
         :album-hash="item.albumhash"
         :album-name="item.title"
@@ -74,22 +60,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
 import { Routes } from "@/router";
 import { storeToRefs } from "pinia";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
-import useSearchStore from "@/stores/search";
 import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
+import useSearchStore from "@/stores/search";
 
-import { paths } from "@/config";
-import { formatSeconds } from "@/utils";
-import { Album, Artist, Track } from "@/interfaces";
-import ArtistName from "@/components/shared/ArtistName.vue";
 import Moresvg from "@/assets/icons/more.svg";
+import ArtistName from "@/components/shared/ArtistName.vue";
+import { paths } from "@/config";
+import { Album, Artist, Track } from "@/interfaces";
+import { formatSeconds } from "@/utils";
 
-import { playSources } from "@/enums";
 import PlayBtn from "@/components/shared/PlayBtn.vue";
+import { playSources } from "@/enums";
 
 const search = useSearchStore();
 const route = useRoute();
