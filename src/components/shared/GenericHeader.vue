@@ -16,7 +16,7 @@
 
 <style lang="scss">
 .generichead {
-  padding: 2rem 0 1rem $small;
+  padding: 1rem 0 1rem $small;
   height: max-content;
   display: grid;
   grid-template-columns: 1fr max-content;
