@@ -6,7 +6,7 @@
       color: color ? getTextColor(color) : '',
     }"
     @click="!no_emit && $emit('handleFav')"
-    >
+  >
     <Motion
       :initial="{
         opacity: 0,
@@ -49,6 +49,7 @@ defineEmits<{
 $bg: rgb(255, 255, 255);
 
 .heart-button {
+  line-height: normal;
   align-items: center;
   gap: $smaller;
   border: none;

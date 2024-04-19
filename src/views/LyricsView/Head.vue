@@ -54,16 +54,17 @@ defineProps<{
   }
 
   img {
+    display: block;
     height: 2.5rem;
     border-radius: $smaller;
   }
 
-  .artist {
-    font-size: small;
+  .title {
+    font-size: 0.85rem;
   }
 
-  .title {
-    font-size: 14px;
+  .artist {
+    font-size: 0.8rem;
   }
 
   .lyricstype {

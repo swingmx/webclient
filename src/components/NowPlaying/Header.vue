@@ -12,11 +12,7 @@
         title="Go to Album"
         class="np-image"
       >
-        <img
-          v-motion-fade
-          class="rounded"
-          :src="paths.images.thumb.large + queue.currenttrack?.image"
-        />
+        <img v-motion-fade class="rounded" :src="paths.images.thumb.large + queue.currenttrack?.image" />
       </RouterLink>
       <NowPlayingInfo @handle-fav="handleFav" />
       <Progress v-if="isSmallPhone" />
@@ -44,18 +40,18 @@
 
 <script setup lang="ts">
 import { paths } from "@/config";
+import { dropSources, favType } from "@/enums";
+import favoriteHandler from "@/helpers/favoriteHandler";
 import { Routes } from "@/router";
+import { isSmallPhone } from "@/stores/content-width";
 import useQueueStore from "@/stores/queue";
 import { formatSeconds } from "@/utils";
-import { dropSources, favType } from "@/enums";
-import { isSmallPhone } from "@/stores/content-width";
-import favoriteHandler from "@/helpers/favoriteHandler";
 
-import PlayingFrom from "./PlayingFrom.vue";
+import Progress from "@/components/LeftSidebar/NP/Progress.vue";
 import Buttons from "../BottomBar/Right.vue";
 import SongItem from "../shared/SongItem.vue";
 import NowPlayingInfo from "./NowPlayingInfo.vue";
-import Progress from "@/components/LeftSidebar/NP/Progress.vue";
+import PlayingFrom from "./PlayingFrom.vue";
 
 const queue = useQueueStore();
 

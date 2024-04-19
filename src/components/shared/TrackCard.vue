@@ -51,7 +51,7 @@ defineEmits<{
 
   .image {
     position: relative;
-    margin-bottom: $medium;
+    margin-bottom: $small;
   }
 
   $btnwidth: 4rem;
@@ -80,7 +80,6 @@ defineEmits<{
   }
 
   img {
-    display: block;
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;

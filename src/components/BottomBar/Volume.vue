@@ -125,7 +125,7 @@ const handleMouseWheel = (event: WheelEvent) => {
 
   .volume_indicator {
     font-weight: 600;
-    font-size: $medium;
+    font-size: 0.825rem;
     width: 24px;
     transform: rotate(90deg) translate3d(0, 0, 0);
   }

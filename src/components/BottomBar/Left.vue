@@ -114,10 +114,6 @@ defineEmits<{
     }
   }
 
-  a {
-    font-size: small;
-  }
-
   .heart-button {
     height: 3rem;
     width: 3rem;
@@ -127,16 +123,22 @@ defineEmits<{
 
   .track-info {
     .title {
+      font-size: 0.85rem;
+      font-weight: 700;
       color: $white;
-      font-weight: 600;
       display: flex;
       align-items: center;
+      margin-bottom: 2px;
     }
 
     .artistname {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       opacity: 0.75;
-      font-weight: 600;
+      font-weight: 700;
+
+      a {
+        font-size: 0.8rem;
+      }
     }
   }
   @include allPhones {

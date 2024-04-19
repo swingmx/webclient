@@ -109,10 +109,11 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
+  font-weight: 500;
   height: $song-item-height;
   letter-spacing: 0.5px;
   user-select: none;
-  padding-left: $small;
+  padding: 0 $small;
   position: relative;
   transition: background-color 0.2s ease-out;
 

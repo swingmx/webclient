@@ -1,7 +1,5 @@
 <template>
-  <router-link class="swing-logo rounded-md" :to="{ name: 'Home' }">
-    <LogoSvg /> <span>Swing Music</span>
-  </router-link>
+  <router-link class="swing-logo rounded-md" :to="{ name: 'Home' }"> <LogoSvg /> <span>Swing Music</span> </router-link>
 </template>
 
 <script setup lang="ts">
@@ -10,12 +8,13 @@ import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
 
 <style lang="scss">
 .swing-logo {
-  background-image: linear-gradient(37deg, rgb(29, 28, 28), transparent);
-  padding-left: 1rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: $medium;
+  padding-left: 1rem;
   border: solid 1px $gray5;
+  background-image: linear-gradient(37deg, rgb(29, 28, 28), transparent);
 
   svg {
     transform: scale(1.25);

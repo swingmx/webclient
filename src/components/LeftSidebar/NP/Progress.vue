@@ -6,9 +6,7 @@
     min="0"
     :max="time.full"
     step="0.1"
-    :style="{
-      backgroundSize: `${(time.current / (time.full || 0)) * 100}% 100%`,
-    }"
+    :style="{ backgroundSize: `${(time.current / (time.full || 1)) * 100}% 100%` }"
     @change="seek"
   />
 </template>
