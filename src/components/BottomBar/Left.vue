@@ -126,17 +126,17 @@ defineEmits<{
   }
 
   .track-info {
+    .title {
+      color: $white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
     .artistname {
       font-size: 0.9rem;
       opacity: 0.75;
-      font-weight: bold;
-    }
-
-    .title {
-      color: $white;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
+      font-weight: 600;
     }
   }
   @include allPhones {

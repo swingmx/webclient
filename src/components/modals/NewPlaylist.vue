@@ -19,15 +19,16 @@
 import { onMounted } from "vue";
 
 import {
+  createNewPlaylist,
   saveAlbumAsPlaylist,
   saveArtistAsPlaylist,
+  saveFolderAsPlaylist,
   saveTrackAsPlaylist,
 } from "@/requests/playlists";
-import { createNewPlaylist, saveFolderAsPlaylist } from "@/requests/playlists";
 
-import useTracklist from "@/stores/queue/tracklist";
-import usePlaylistStore from "@/stores/pages/playlists";
 import { NotifType, Notification } from "@/stores/notification";
+import usePlaylistStore from "@/stores/pages/playlists";
+import useTracklist from "@/stores/queue/tracklist";
 
 const props = defineProps<{
   trackhash?: string;
@@ -41,9 +42,7 @@ const props = defineProps<{
 const store = usePlaylistStore();
 
 onMounted(() => {
-  const input_elem = document.getElementById(
-    "modal-playlist-name-input"
-  ) as HTMLInputElement;
+  const input_elem = document.getElementById("modal-playlist-name-input") as HTMLInputElement;
   input_elem.focus();
   input_elem.value = props.playlist_name || "";
 });
@@ -160,6 +159,7 @@ function create(e: Event) {
 
   label {
     font-size: 0.9rem;
+    font-weight: 500;
     color: $gray1;
   }
 
@@ -173,7 +173,6 @@ function create(e: Event) {
     width: 8rem;
     padding: 1.25rem;
     // font-weight: normal;
-    transition: all 0.25s ease-out;
     background-color: $white;
     color: $black;
 

@@ -17,32 +17,17 @@
         </form>
       </template>
       <template v-if="!isSmall" #right>
-        <button @click="showNewPlaylistModal()">
-          <PlusSvg /> New Playlist
-        </button>
+        <button @click="showNewPlaylistModal()"><PlusSvg /> New Playlist</button>
       </template>
     </Header>
-    <PlaylistCardGroup
-      v-if="!query && pinnedPlaylists.length"
-      :playlists="pinnedPlaylists"
-      :title="'Pinned'"
-    />
+    <PlaylistCardGroup v-if="!query && pinnedPlaylists.length" :playlists="pinnedPlaylists" :title="'Pinned'" />
     <PlaylistCardGroup
       v-if="playlists.length"
       :playlists="playlists"
-      :title="
-        query
-          ? 'Search Results'
-          : `${pinnedPlaylists.length ? 'Other' : 'All'} Playlists`
-      "
+      :title="query ? 'Search Results' : `${pinnedPlaylists.length ? 'Other' : 'All'} Playlists`"
     />
 
-    <NoItems
-      :flag="!playlists.length"
-      :icon="PlaylistSvg"
-      :title="'No playlists found'"
-      :description="description"
-    />
+    <NoItems :flag="!playlists.length" :icon="PlaylistSvg" :title="'No playlists found'" :description="description" />
   </div>
 </template>
 
@@ -110,13 +95,15 @@ const playlists = computed(() => {
   }
 
   #playlistsearch {
-    width: 20rem;
+    width: 16.5rem;
     margin-top: 1rem;
     background-color: $gray5;
     color: white;
     font-size: 1rem;
-    padding: $small;
+    letter-spacing: 0.5px;
+    padding: $medium;
     outline: none;
+    appearance: none;
   }
 
   .nothing {

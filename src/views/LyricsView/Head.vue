@@ -1,9 +1,5 @@
 <template>
-  <div
-    v-if="queue.currenttrack"
-    class="lyricsinfo"
-    :style="{ background: bgColor }"
-  >
+  <div v-if="queue.currenttrack" class="lyricsinfo" :style="{ background: bgColor }">
     <RouterLink
       :to="{
         name: Routes.album,
@@ -12,34 +8,26 @@
         },
       }"
     >
-      <img
-        :src="paths.images.thumb.small + queue.currenttrack.image"
-        class="shadow-sm"
-      />
+      <img :src="paths.images.thumb.small + queue.currenttrack.image" class="shadow-sm" />
     </RouterLink>
 
     <div class="text">
       <div class="title ellip">{{ queue.currenttrack.title }}</div>
-      <ArtistName
-        :artists="queue.currenttrack.artists"
-        :albumartists="queue.currenttrack.albumartists"
-      />
+      <ArtistName :artists="queue.currenttrack.artists" :albumartists="queue.currenttrack.albumartists" />
     </div>
     <div class="right">
-      <div v-if="lyrics.lyrics.length && !lyrics.synced" class="lyricstype">
-        unsynced
-      </div>
+      <div v-if="lyrics.lyrics.length && !lyrics.synced" class="lyricstype">unsynced</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import useQueue from "@/stores/queue";
 import useLyrics from "@/stores/lyrics";
+import useQueue from "@/stores/queue";
 
+import ArtistName from "@/components/shared/ArtistName.vue";
 import { paths } from "@/config";
 import { Routes } from "@/router";
-import ArtistName from "@/components/shared/ArtistName.vue";
 
 const queue = useQueue();
 const lyrics = useLyrics();
@@ -55,7 +43,7 @@ defineProps<{
   font-size: 1rem;
   display: grid;
   grid-template-columns: max-content 1fr max-content;
-  gap: $small;
+  gap: $medium;
   align-items: center;
   position: sticky;
   top: 0;

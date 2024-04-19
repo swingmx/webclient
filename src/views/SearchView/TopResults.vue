@@ -61,7 +61,6 @@ const search = useSearchStore();
     display: grid;
     grid-template-columns: max-content 1fr;
     gap: 1rem;
-    margin-bottom: 1.5rem;
 
     @include allPhones {
       grid-template-columns: 1fr;

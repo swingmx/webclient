@@ -1,15 +1,75 @@
-@import 
-"./mixins.scss",
-"./variables",
-"./ProgressBar.scss",
-"./BottomBar/BottomBar.scss",
-"./Global"
-;
+@import "./mixins.scss", "./variables", "./ProgressBar.scss", "./BottomBar/BottomBar.scss", "./Global";
 
-
+/* San Francisco Pro Display font */
 @font-face {
-    font-family: "SFCompactDisplay";
-    src: url("../sf-compact.woff") format("woff");
-    font-display: swap;
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../fonts/sf-pro-display_light.woff2") format("woff2");
 }
 
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/sf-pro-display_regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/sf-pro-display_medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/sf-pro-display_semibold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/sf-pro-display_bold.woff2") format("woff2");
+}
+
+/* San Francisco Mono font */
+@font-face {
+  font-family: "SF Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/sf-mono-regular.woff2") format("woff2"), url("../fonts/sf-mono-regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "SF Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/sf-mono-medium.woff2") format("woff2"), url("../fonts/sf-mono-medium.woff") format("woff");
+}
+
+@font-face {
+  font-family: "SF Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/sf-mono-semibold.woff2") format("woff2"), url("../fonts/sf-mono-semibold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "SF Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/sf-mono-bold.woff2") format("woff2"), url("../fonts/sf-mono-bold.woff") format("woff");
+}

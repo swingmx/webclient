@@ -108,8 +108,9 @@ onBeforeUnmount(() => {
   grid-template-columns: 1.75rem 1.25fr 1fr 1fr 5.5rem;
   align-items: center;
   justify-content: flex-start;
-  height: $song-item-height;
   gap: 1rem;
+  height: $song-item-height;
+  letter-spacing: 0.5px;
   user-select: none;
   padding-left: $small;
   position: relative;

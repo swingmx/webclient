@@ -23,8 +23,8 @@ import ArrowSvg from "../../assets/icons/right-arrow.svg";
   height: max-content;
 
   & > * {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
     aspect-ratio: 1;
     display: flex;
     justify-content: center;
@@ -33,11 +33,11 @@ import ArrowSvg from "../../assets/icons/right-arrow.svg";
     border-radius: 5rem;
 
     svg {
-      transform: scale(1.25);
-      transition: all 0.2s;
+      transform: scale(1.12);
+      transition: transform 0.2s ease;
 
       &:active {
-        transform: scale(1);
+        transform: scale(0.88);
       }
     }
   }

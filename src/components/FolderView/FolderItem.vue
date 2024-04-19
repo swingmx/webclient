@@ -3,10 +3,10 @@
     <div
       v-auto-animate
       class="f-item"
-      :style="{
-        backgroundColor: is_checked ? '#234ece' : '',
+      :class="{
+        selected: is_checked,
+        context_menu_showing: context_menu_showing,
       }"
-      :class="{ context_menu_showing }"
       @click="(e) => (folder_page ? null : handleClick(e))"
       @mouseover="mouse_over = true"
       @mouseleave="mouse_over = false"
@@ -39,8 +39,8 @@ import SymLinkSvg from "@/assets/icons/symlink.svg";
 
 import CheckFilledSvg from "@/assets/icons/check.filled.svg";
 import CheckSvg from "@/assets/icons/square.svg";
-import { showFolderContextMenu } from "@/helpers/contextMenuHandler";
 import { ContextSrc } from "@/enums";
+import { showFolderContextMenu } from "@/helpers/contextMenuHandler";
 
 const props = defineProps<{
   folder: Folder;
@@ -70,12 +70,7 @@ function handleClick(e: MouseEvent) {
 }
 
 function showContextMenu(e: MouseEvent) {
-  showFolderContextMenu(
-    e,
-    context_menu_showing,
-    ContextSrc.FolderCard,
-    props.folder.path
-  );
+  showFolderContextMenu(e, context_menu_showing, ContextSrc.FolderCard, props.folder.path);
 }
 </script>
 
@@ -90,6 +85,7 @@ function showContextMenu(e: MouseEvent) {
   position: relative;
   padding: 0 0 0 1rem;
   gap: $small;
+  transition: background-color 0.2s ease-out;
 
   &.context_menu_showing {
     background-color: $gray4;
@@ -123,6 +119,7 @@ function showContextMenu(e: MouseEvent) {
   }
 
   .f-item-text {
+    font-weight: 600;
     margin-right: 1rem;
   }
 

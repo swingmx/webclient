@@ -1,7 +1,7 @@
 <template>
   <div class="generichead">
     <div class="left">
-      <h1><slot name="name"></slot></h1>
+      <h1 class="title"><slot name="name"></slot></h1>
       <div class="desc">
         <slot name="description"></slot>
       </div>
@@ -28,9 +28,14 @@
     font-size: 3.25rem;
   }
 
+  .title {
+    font-weight: 700;
+  }
+
   .desc {
     font-size: 1rem;
     line-height: 1.5;
+    font-weight: 500;
   }
 }
 </style>

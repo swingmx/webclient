@@ -12,15 +12,14 @@
       </div>
     </div>
     <div v-if="!items.length" class="option-list-item" style="opacity: 0.5">
-      Root directories not configured. Use the "Configure" button above to
-      configure
+      Root directories not configured. Use the "Configure" button above to configure
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import FolderSvg from "@/assets/icons/folder.svg";
 import DeleteSvg from "@/assets/icons/delete.svg";
+import FolderSvg from "@/assets/icons/folder.svg";
 
 const props = defineProps<{
   items: {
@@ -67,6 +66,7 @@ const icon_ = getIcon();
       gap: $small;
       align-items: center;
       font-family: "SF Mono", monospace;
+      font-weight: 500;
       font-size: 0.9rem;
     }
 

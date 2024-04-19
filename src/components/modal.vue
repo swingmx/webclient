@@ -5,8 +5,7 @@
       v-motion-slide-top
       class="m-content rounded"
       :style="{
-        maxWidth:
-          modal.component == modal.options.setRootDirs ? '56rem' : '30rem',
+        maxWidth: modal.component == modal.options.setRootDirs ? '56rem' : '30rem',
       }"
     >
       <div class="heading">{{ modal.title }}</div>
@@ -30,22 +29,16 @@
           :confirm-action="deletePlaylist"
         />
       </div>
-      <SetRootDirs
-        v-if="modal.component == modal.options.setRootDirs"
-        @hideModal="hideModal"
-      />
-      <RootDirsPrompt
-        v-if="modal.component == modal.options.rootDirsPrompt"
-        @hideModal="hideModal"
-      />
+      <SetRootDirs v-if="modal.component == modal.options.setRootDirs" @hideModal="hideModal" />
+      <RootDirsPrompt v-if="modal.component == modal.options.rootDirsPrompt" @hideModal="hideModal" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { deletePlaylist as delPlaylist } from "@/requests/playlists";
-import { useRouter } from "vue-router";
 import useModalStore from "@/stores/modal";
+import { useRouter } from "vue-router";
 
 import WelcomeModal from "./WelcomeModal.vue";
 import ConfirmModal from "./modals/ConfirmModal.vue";
@@ -88,7 +81,7 @@ function deletePlaylist() {
 
     color: #fff;
     width: 100%;
-    padding: 0.5rem;
+    padding: $small $medium;
     font-size: 14px;
     outline: none;
     height: 2.75rem !important;

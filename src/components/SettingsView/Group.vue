@@ -11,9 +11,7 @@
     </div>
     <div class="setting rounded pad-lg">
       <div
-        v-for="(setting, index) in group.settings.filter((s) =>
-          s.show_if ? s.show_if() : true
-        )"
+        v-for="(setting, index) in group.settings.filter((s) => (s.show_if ? s.show_if() : true))"
         :key="index"
         class="setting-item"
         :class="{
@@ -21,31 +19,18 @@
           'is-list': setting.type === SettingType.root_dirs,
         }"
       >
-        <div
-          class="text"
-          @click="
-            setting.defaultAction ? setting.defaultAction() : setting.action()
-          "
-        >
+        <div class="text" @click="setting.defaultAction ? setting.defaultAction() : setting.action()">
           <div class="title">
             <span class="ellip">
               {{ setting.title }}
-              <span
-                v-if="setting.experimental"
-                class="badge experimental circular"
-              >
+              <span v-if="setting.experimental" class="badge experimental circular">
                 {{ setting.experimental ? "experimental" : "" }}
               </span>
               <span v-if="setting.new" class="badge new circular">
                 {{ setting.new ? "new" : "" }}
               </span>
             </span>
-            <button
-              v-if="setting.type == SettingType.root_dirs"
-              @click="setting.action"
-            >
-              <ReloadSvg /> rescan
-            </button>
+            <button v-if="setting.type == SettingType.root_dirs" @click="setting.action"><ReloadSvg /> rescan</button>
           </div>
           <div v-if="setting.desc" class="desc">
             {{ setting.desc }}
@@ -63,10 +48,7 @@
             :source="setting.state !== null ? setting.state : () => ''"
             :setter-fn="setting.action"
           />
-          <button
-            v-if="setting.type === SettingType.button"
-            @click="setting.action"
-          >
+          <button v-if="setting.type === SettingType.button" @click="setting.action">
             {{ setting.button_text && setting.button_text() }}
           </button>
           <LockedNumberInput
@@ -97,16 +79,16 @@
 </template>
 
 <script setup lang="ts">
-import { SettingType } from "@/settings/enums";
 import { SettingGroup } from "@/interfaces/settings";
+import { SettingType } from "@/settings/enums";
 
-import List from "./Components/List.vue";
-import Switch from "./Components/Switch.vue";
-import Select from "./Components/Select.vue";
 import ReloadSvg from "@/assets/icons/reload.svg";
-import QuickActions from "./Components/QuickSettings.vue";
-import SeparatorsInput from "./Components/SeparatorsInput.vue";
+import List from "./Components/List.vue";
 import LockedNumberInput from "./Components/LockedNumberInput.vue";
+import QuickActions from "./Components/QuickSettings.vue";
+import Select from "./Components/Select.vue";
+import SeparatorsInput from "./Components/SeparatorsInput.vue";
+import Switch from "./Components/Switch.vue";
 
 defineProps<{
   group: SettingGroup;
@@ -188,6 +170,7 @@ defineProps<{
       align-items: self-start;
 
       .title {
+        font-weight: 500;
         margin: auto 0;
         display: flex;
         justify-content: space-between;

@@ -165,6 +165,7 @@ onMounted(() => {
 
         svg {
           color: #000;
+          transform: scale(0.75);
         }
       }
     }

@@ -95,7 +95,7 @@ onMounted(() => {
   overflow: scroll;
   background-color: rgb(122, 122, 122);
   scroll-margin-top: 15rem;
-  font-weight: 900;
+  font-weight: 700;
   font-size: 3rem;
   position: relative;
   overflow-x: hidden;

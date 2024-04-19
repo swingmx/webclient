@@ -1,18 +1,9 @@
 <template>
   <div class="artist-separators-input">
     <form @submit.prevent="submitInput">
-      <input
-        ref="separatorinput"
-        type="search"
-        class="rounded-sm"
-        @input="updateInput"
-      />
+      <input ref="separatorinput" type="search" class="rounded-sm" @input="updateInput" />
       <div class="preview">
-        <span
-          v-for="p in preview_items"
-          :key="p"
-          class="circular"
-          :class="!default_input_list.includes(p) ? 'new' : ''"
+        <span v-for="p in preview_items" :key="p" class="circular" :class="!default_input_list.includes(p) ? 'new' : ''"
           ><b>
             {{ p }}
           </b></span
@@ -68,9 +59,7 @@ function submitInput() {
 }
 
 const preview_items = computed(() => splitInput(input.value));
-const default_input = computed(() =>
-  props.default ? props.default.join(", ") : ""
-);
+const default_input = computed(() => (props.default ? props.default.join(", ") : ""));
 
 onMounted(() => {
   const text = props.default.join(", ");
@@ -95,6 +84,7 @@ onMounted(() => {
     background-color: $gray5;
     color: white;
     font-size: 1rem;
+    appearance: none;
   }
 
   .preview {

@@ -43,6 +43,7 @@ const optionsWithActive = computed(() => {
     user-select: none;
     min-width: 4rem;
     text-align: center;
+    transition: background-color 0.2s ease-out;
   }
 
   .option.active {

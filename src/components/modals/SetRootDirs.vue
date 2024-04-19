@@ -2,12 +2,14 @@
   <br /><br />
   <div style="position: relative">
     <div id="bread-nav" class="bread-nav rounded-sm">
-      &nbsp;&nbsp;<span @click="fetchDirs('$root')">$root</span
-      >&nbsp;&nbsp;<BreadCrumbNav :sub-paths="subPaths" @navigate="fetchDirs" />
+      &nbsp;&nbsp;<span @click="fetchDirs('$root')">$root</span>&nbsp;&nbsp;<BreadCrumbNav
+        :sub-paths="subPaths"
+        @navigate="fetchDirs"
+      />
     </div>
     <div class="set-root-dirs-browser">
       <h4 v-if="no_more_dirs">
-        📂 No folders here. Use the "Select here" button to select this
+        <span class="folder_icon">📂</span> No folders here. Click the "Add this folder" button below to select this
         location.
       </h4>
       <div class="scrollable">
@@ -16,21 +18,15 @@
             v-for="dir in dirs"
             :key="dir.name"
             :folder="dir"
-            :is_checked="
-              selected.filter((p) => p == dir.path).length > 0 ? true : false
-            "
+            :is_checked="selected.filter((p) => p == dir.path).length > 0 ? true : false"
             @navigate="fetchDirs(dir.path)"
             @check="handleCheck(dir.path)"
           />
         </div>
       </div>
       <div class="buttons">
-        <button class="btn-active select-here" @click="selectHere">
-          Add this folder
-        </button>
-        <button class="btn-active finish" @click="submitFolders">
-          Add all checked ({{ getNewDirs().length }})
-        </button>
+        <button class="btn-active select-here" @click="selectHere">Add this folder</button>
+        <button class="btn-active finish" @click="submitFolders">Add all checked ({{ getNewDirs().length }})</button>
       </div>
     </div>
   </div>
@@ -39,11 +35,7 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref } from "vue";
 
-import {
-  addRootDirs,
-  getFolders,
-  getRootDirs,
-} from "@/requests/settings/rootdirs";
+import { addRootDirs, getFolders, getRootDirs } from "@/requests/settings/rootdirs";
 
 import { Folder, subPath } from "@/interfaces";
 import useSettingsStore from "@/stores/settings";
@@ -169,6 +161,11 @@ onMounted(() => {
   grid-template-rows: 1fr max-content;
   gap: 1.25rem;
 
+  .folder_icon {
+    vertical-align: 1px;
+    margin-right: 4px;
+  }
+
   .scrollable {
     overflow-x: hidden;
     height: 100%;
@@ -182,7 +179,7 @@ onMounted(() => {
       overflow: hidden;
     }
 
-    overflow-y: scroll;
+    overflow-y: auto;
     scrollbar-gutter: stable;
   }
 
@@ -206,10 +203,23 @@ onMounted(() => {
 
   .f-item {
     background-color: $gray5;
+    transition: background-color 0.2s ease-out;
 
     &:hover {
       background-color: $gray3;
     }
+
+    > svg {
+      transition: color 0.2s ease-out;
+    }
+  }
+
+  .f-item.selected {
+    background-color: #234ece;
+  }
+
+  .f-item.selected > svg {
+    color: $white;
   }
 }
 </style>
