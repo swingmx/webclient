@@ -111,7 +111,6 @@ onBeforeUnmount(() => {
   gap: 1rem;
   font-weight: 500;
   height: $song-item-height;
-  letter-spacing: 0.5px;
   user-select: none;
   padding: 0 $small;
   position: relative;

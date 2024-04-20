@@ -120,7 +120,7 @@ function handleButton() {
       line-height: 2.25rem;
       color: inherit;
       font-size: 14px;
-      letter-spacing: 0.5px;
+      font-weight: 500;
       background-color: transparent;
       outline: none;
       appearance: none;

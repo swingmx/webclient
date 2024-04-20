@@ -73,7 +73,7 @@ context.$subscribe((mutation, state) => {
   background: $context;
   transform-origin: top left;
   font-size: 0.875rem;
-  letter-spacing: 0.5px;
+  font-weight: 500;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s ease-out, visibility 0.25s ease-out;

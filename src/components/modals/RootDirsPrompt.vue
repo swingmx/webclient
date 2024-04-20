@@ -76,6 +76,7 @@ onMounted(() => {
     .info {
       margin-top: $smaller;
       font-size: small;
+      font-weight: 500;
     }
   }
 }

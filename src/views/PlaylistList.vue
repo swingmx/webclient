@@ -95,12 +95,12 @@ const playlists = computed(() => {
   }
 
   #playlistsearch {
-    width: 16.5rem;
+    width: 16rem;
     margin-top: 1rem;
     background-color: $gray5;
     color: white;
-    font-size: 1rem;
-    letter-spacing: 0.5px;
+    font-size: 0.95rem;
+    font-weight: 500;
     padding: $medium;
     outline: none;
     appearance: none;

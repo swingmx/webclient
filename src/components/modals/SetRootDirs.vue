@@ -124,7 +124,8 @@ onMounted(() => {
 <style lang="scss">
 .bread-nav {
   background-color: $gray4;
-  padding: $small;
+  padding: $smaller;
+  padding-right: 0;
   width: max-content;
   margin-bottom: 1rem;
   position: absolute;
@@ -162,7 +163,7 @@ onMounted(() => {
   gap: 1.25rem;
 
   .folder_icon {
-    vertical-align: 1px;
+    vertical-align: 2px;
     margin-right: 4px;
   }
 
@@ -196,8 +197,9 @@ onMounted(() => {
     }
 
     button {
-      font-weight: normal;
+      font-weight: 500;
       padding: 0 1rem;
+      font-variant-numeric: tabular-nums;
     }
   }
 
