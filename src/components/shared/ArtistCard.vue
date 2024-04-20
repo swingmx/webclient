@@ -55,7 +55,7 @@ defineProps<{
   justify-content: center;
   padding: 1.2rem 1rem !important;
   font-size: 0.9rem;
-  font-weight: bolder;
+  font-weight: 700;
   height: max-content;
   transition: background-color 0.2s ease-out;
 

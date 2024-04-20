@@ -41,6 +41,7 @@ import { menus } from "./navitems";
     align-items: center;
     padding: $small 0;
     font-size: 14px;
+    font-weight: 500;
 
     & > div {
       display: flex;

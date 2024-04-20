@@ -32,6 +32,7 @@ defineProps<{
   border-bottom: solid 1px $gray;
 
   .tab {
+    font-weight: 500;
     padding: $medium;
     position: relative;
     color: $gray1;

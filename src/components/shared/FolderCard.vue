@@ -22,7 +22,7 @@
       <span class="help">{{ folder.help_text }}</span>
       <span class="time">{{ folder.time }}</span>
     </div>
-    <div class="ellip" :title="name(folder.path)">
+    <div class="ellip title" :title="name(folder.path)">
       {{ name(folder.path) }}
     </div>
     <div class="rtcount">
@@ -66,6 +66,11 @@ const name = (path: string) => {
   height: max-content;
   transition: background-color 0.2s ease-out;
 
+  .title {
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
   .play-btn {
     position: absolute;
     width: 4rem;
@@ -102,7 +107,7 @@ const name = (path: string) => {
   }
 
   .rtcount {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #ffffffbf;
     margin-top: $smaller;
   }

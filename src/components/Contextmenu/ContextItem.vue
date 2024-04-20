@@ -121,7 +121,8 @@ function runChildAction(action: () => void) {
     height: 1.5rem;
     width: 1.5rem;
     position: absolute;
-    right: 0;
+    right: 2px;
+    bottom: 5px;
     transform: scale(0.65);
   }
 
@@ -146,7 +147,7 @@ function runChildAction(action: () => void) {
 
     .context-item {
       padding: $small 1rem;
-      padding: 0.4rem;
+      padding: 0.4rem 0.6rem;
     }
 
     .separator {

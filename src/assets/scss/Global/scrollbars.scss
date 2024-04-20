@@ -21,6 +21,7 @@
 }
 
 /* Custom scrollbar version for dropdowns etc */
+/* Context dropdown menus */
 .context-item .children > .wrapper::-webkit-scrollbar {
   width: 6px !important;
   background-color: transparent !important;
@@ -35,5 +36,23 @@
 }
 
 .context-item .children > .wrapper::-webkit-scrollbar-thumb:hover {
+  border: none !important;
+}
+
+/* Select root dirs */
+.set-root-dirs-browser .scrollable::-webkit-scrollbar {
+  width: 6px !important;
+  background-color: transparent !important;
+}
+
+.set-root-dirs-browser .scrollable::-webkit-scrollbar-track {
+  background-color: transparent !important;
+}
+
+.set-root-dirs-browser .scrollable::-webkit-scrollbar-thumb {
+  border: none !important;
+}
+
+.set-root-dirs-browser .scrollable::-webkit-scrollbar-thumb:hover {
   border: none !important;
 }

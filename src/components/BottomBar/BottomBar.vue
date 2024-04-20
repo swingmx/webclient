@@ -9,18 +9,18 @@
     <div class="center">
       <div v-if="!isMobile" class="with-time">
         <div class="time time-current">
-          <span>
+          <div class="numbers">
             {{ formatSeconds(queue.duration.current || 0) }}
-          </span>
+          </div>
         </div>
 
         <div class="buttons rounded-sm border">
           <HotKeys />
         </div>
         <div class="time time-full">
-          <span>
+          <div class="numbers">
             {{ formatSeconds(queue.duration.full) }}
-          </span>
+          </div>
         </div>
       </div>
       <Progress />
@@ -146,20 +146,18 @@ function handleFav() {
     }
 
     .time {
+      font-family: "SF Mono", monospace;
+      font-weight: 600;
       font-size: $medium;
-      height: fit-content;
-      width: 3rem;
+      line-height: 1.5;
 
-      span {
+      .numbers {
         background-color: $gray3;
         border-radius: $smaller;
-        padding: 1px $smaller;
+        padding: 0 $smaller;
+        font-feature-settings: "ss03" 1, "ss04" 1;
         font-variant-numeric: tabular-nums;
       }
-    }
-
-    .time-full {
-      text-align: end;
     }
   }
 

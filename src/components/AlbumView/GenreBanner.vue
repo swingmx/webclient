@@ -82,7 +82,7 @@ onMounted(hookAction);
     text-align: center;
     padding: $small 1rem;
     font-weight: 700;
-    transition: background-color 0.2s ease-out;
+    transition: background-color 0.2s ease-out, color 0.2s ease-out;
 
     &:first-child {
       background-color: white;

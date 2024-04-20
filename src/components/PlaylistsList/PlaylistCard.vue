@@ -61,9 +61,13 @@ defineProps<{
     justify-content: flex-end;
     transition: all 0.25s ease;
 
+    .p-name {
+      font-weight: 600;
+    }
+
     .p-count {
-      opacity: 0.75;
       font-size: 0.75rem;
+      color: #ffffffbf;
       margin-top: $smaller;
     }
   }

@@ -1,11 +1,6 @@
 <template>
   <div v-if="notifStore.notifs" class="toasts">
-    <div
-      v-for="notif in notifStore.notifs"
-      :key="notif.text"
-      class="new-notif rounded-sm"
-      :class="notif.type"
-    >
+    <div v-for="notif in notifStore.notifs" :key="notif.text" class="new-notif rounded-sm" :class="notif.type">
       <component :is="getSvg(notif.type)" class="notif-icon" />
       <div class="notif-text">{{ notif.text }}</div>
     </div>
@@ -13,12 +8,12 @@
 </template>
 
 <script setup lang="ts">
-import { useNotifStore, NotifType } from "../stores/notification";
+import { NotifType, useNotifStore } from "../stores/notification";
 
 import HeartSvg from "../assets/icons/heart.svg";
+import ErrorSvg from "../assets/icons/toast/error.svg";
 import InfoSvg from "../assets/icons/toast/info.svg";
 import SuccessSvg from "../assets/icons/toast/ok.svg";
-import ErrorSvg from "../assets/icons/toast/error.svg";
 import WorkingSvg from "../assets/icons/toast/working.svg";
 
 const notifStore = useNotifStore();
@@ -51,13 +46,14 @@ function getSvg(notif: NotifType) {
 }
 
 .new-notif {
+  font-size: 0.85rem;
+  font-weight: 500;
   width: 18rem;
   height: 4rem;
   background-color: $gray;
   display: grid;
   place-items: center;
   box-shadow: 0px 0px 2rem rgba(0, 0, 0, 0.466);
-  font-size: 0.85rem;
   padding: 1rem $small;
 
   grid-template-columns: 2rem 3fr;
@@ -74,7 +70,8 @@ function getSvg(notif: NotifType) {
 }
 
 .new-notif.info,
-.new-notif.favorite,.new-notif.success {
+.new-notif.favorite,
+.new-notif.success {
   $bg: rgb(255, 255, 255);
   background-color: $bg;
   color: $black;

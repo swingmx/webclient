@@ -74,10 +74,6 @@ defineEmits<{
     }
 
     cursor: pointer;
-
-    .title {
-      margin-bottom: 2px;
-    }
   }
 }
 </style>

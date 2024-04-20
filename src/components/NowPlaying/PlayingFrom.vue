@@ -1,23 +1,12 @@
 <template>
   <div class="now-playing-top">
-    <router-link
-      class="now-playling-from-link"
-      :to="(data.location as RouteLocationRaw)"
-      title="Go to Play Source"
-    >
+    <router-link class="now-playling-from-link" :to="(data.location as RouteLocationRaw)" title="Go to Play Source">
       <div class="from">
         <img
-          v-if="
-            tracklist.from.type === FromOptions.album ||
-            tracklist.from.type === FromOptions.artist
-          "
+          v-if="tracklist.from.type === FromOptions.album || tracklist.from.type === FromOptions.artist"
           :src="data.image + '.webp'"
           :alt="`Now Playing ${tracklist.from.type} image`"
-          :class="`${
-            tracklist.from.type === FromOptions.artist
-              ? 'circular'
-              : 'rounded-sm'
-          }`"
+          :class="`${tracklist.from.type === FromOptions.artist ? 'circular' : 'rounded-sm'}`"
         />
         <div v-else class="from-icon border rounded-sm">
           <component :is="data.icon"></component>
@@ -108,6 +97,7 @@ function showContextMenu(e: MouseEvent) {
     text-transform: capitalize;
     font-size: 0.8rem;
     color: $gray1;
+    font-weight: 500;
   }
 }
 </style>

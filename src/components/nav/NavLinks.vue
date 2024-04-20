@@ -39,6 +39,7 @@ import { topnavitems } from "../LeftSidebar/navitems";
 
     display: flex;
     align-items: center;
+    font-weight: 600;
 
     svg {
       transform: scale(0.75);

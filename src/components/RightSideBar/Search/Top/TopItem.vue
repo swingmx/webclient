@@ -156,6 +156,7 @@ function showMenu(e: MouseEvent) {
 
   .type {
     font-size: 0.8rem;
+    letter-spacing: 0.5px;
     color: white;
     background-color: $darkblue;
     width: max-content;
@@ -174,6 +175,7 @@ function showMenu(e: MouseEvent) {
 
     .artists {
       font-size: 14px;
+      letter-spacing: 0.5px;
       opacity: 0.8;
     }
 

@@ -120,8 +120,11 @@ function handleButton() {
       line-height: 2.25rem;
       color: inherit;
       font-size: 14px;
+      letter-spacing: 0.5px;
       background-color: transparent;
       outline: none;
+      appearance: none;
+      padding-right: 1rem;
 
       @media screen and (max-width: 500px) {
         width: 7rem;

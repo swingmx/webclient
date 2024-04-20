@@ -72,6 +72,7 @@ const browselist = [
   }
 
   .browseitem {
+    font-weight: 500;
     padding: 1.5rem 0;
     background-color: $gray;
     color: $white;

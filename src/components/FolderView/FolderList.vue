@@ -6,23 +6,16 @@
     }"
   >
     <div id="f-items" class="rounded">
-      <FolderItem
-        v-for="folder in folders"
-        :key="folder.path"
-        :folder="folder"
-        :folder_page="true"
-      />
+      <FolderItem v-for="folder in folders" :key="folder.path" :folder="folder" :folder_page="true" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Folder } from "@/interfaces";
-import FolderItem from "./FolderItem.vue";
-import useSettingsStore from "@/stores/settings";
 import { isIphoneSE } from "@/stores/content-width";
-
-import { ref } from "vue";
+import useSettingsStore from "@/stores/settings";
+import FolderItem from "./FolderItem.vue";
 
 defineProps<{
   folders: Folder[];
@@ -56,6 +49,7 @@ const settings = useSettingsStore();
     border-radius: $small;
     background-color: transparent;
     padding-left: $small;
+    transition: background-color 0.2s ease-out;
 
     .options {
       display: block;
@@ -66,7 +60,7 @@ const settings = useSettingsStore();
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-right: $small;
+      padding-right: $medium;
     }
 
     &:hover {

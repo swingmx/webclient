@@ -127,6 +127,7 @@ onBeforeUnmount(() => {
   .tags {
     .title {
       width: fit-content;
+      font-weight: 500;
     }
   }
 
@@ -206,7 +207,7 @@ onBeforeUnmount(() => {
   .artist {
     opacity: 0.67;
     width: fit-content;
-    font-weight: bold;
+    font-weight: 500;
   }
 }
 </style>

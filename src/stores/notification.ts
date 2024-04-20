@@ -27,4 +27,3 @@ class Notification {
 }
 
 export { NotifType, Notification, useNotifStore };
-

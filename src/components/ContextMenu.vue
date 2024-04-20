@@ -66,13 +66,14 @@ context.$subscribe((mutation, state) => {
   position: fixed;
   top: 0;
   left: 0;
-  width: 12.5rem;
+  width: 13rem;
   z-index: 10000 !important;
   height: min-content;
   padding: $small;
   background: $context;
   transform-origin: top left;
   font-size: 0.875rem;
+  letter-spacing: 0.5px;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s ease-out, visibility 0.25s ease-out;

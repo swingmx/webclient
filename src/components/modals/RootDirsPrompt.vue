@@ -2,13 +2,7 @@
   <div class="root-dirs-prompt">
     <h3 class="t-center">Where do you want to look for music?</h3>
     <div class="options-group">
-      <div
-        v-for="option in options"
-        :key="option.id"
-        v-motion-slide-bottom
-        class="option"
-        @click="option.action()"
-      >
+      <div v-for="option in options" :key="option.id" v-motion-slide-bottom class="option" @click="option.action()">
         <b>{{ option.title }}</b>
         <div class="info">{{ option.info }}</div>
       </div>
@@ -19,9 +13,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 
+import { addRootDirs, getRootDirs } from "@/requests/settings/rootdirs";
 import useModalStore from "@/stores/modal";
 import useSettingsStore from "@/stores/settings";
-import { addRootDirs, getRootDirs } from "@/requests/settings/rootdirs";
 
 const settings = useSettingsStore();
 
@@ -73,6 +67,7 @@ onMounted(() => {
     background-color: #4e4b4b3f;
     margin-top: 1.25rem;
     cursor: pointer;
+    transition: background-color 0.2s ease-out;
 
     &:hover {
       background-color: $darkblue;

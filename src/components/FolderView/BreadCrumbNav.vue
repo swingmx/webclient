@@ -55,7 +55,9 @@ onUpdated(() => {
     align-items: center;
 
     .text {
-      padding: $smaller;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: $smaller $small;
       border-radius: $smaller;
       transition: background-color 0.2s ease-out;
     }

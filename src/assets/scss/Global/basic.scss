@@ -72,10 +72,14 @@ a {
 
 // BUTTONS
 button {
-  border: none;
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 0.9rem !important;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
   color: inherit;
   border-radius: $small;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,7 +88,7 @@ button {
   transition: background-color 0.2s ease-out, color 0.2s ease-out;
 
   background-color: $gray4;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
 
   svg {
@@ -223,7 +227,7 @@ button {
   text-transform: uppercase;
   font-size: 11px;
   color: $purple;
-  font-weight: bold;
+  font-weight: 700;
   margin: $smaller 0;
 
   &.album {
