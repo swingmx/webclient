@@ -5128,6 +5128,11 @@ vite@^3.0.4:
   optionalDependencies:
     fsevents "~2.3.2"
 
+vue-boring-avatars@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/vue-boring-avatars/-/vue-boring-avatars-1.4.0.tgz#528b6a2566755c804c821742c4f293c33ac24313"
+  integrity sha512-J1TpAKKteZXoQ+KqU894lPfEWF1YdybeIFnKg4KSyZT3r+lY4X+XtniBxTFEfoJXX8eI0pJErrjHmrGsO7n1fA==
+
 vue-debounce@^3.0.2:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/vue-debounce/-/vue-debounce-3.1.1.tgz#8b3accba7bea8a81791e8476300b21481c9492e9"

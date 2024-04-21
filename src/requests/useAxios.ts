@@ -1,13 +1,25 @@
 import { FetchProps } from "@/interfaces";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import useModal from "@/stores/modal";
 
 import useLoaderStore from "@/stores/loader";
 
-export default async (args: FetchProps) => {
-  let data: any = null;
-  let error: string | null = null;
-  let status: number = 0;
+const development = import.meta.env.DEV;
 
+export function getBaseUrl() {
+  const base_url = window.location.origin;
+
+  if (!development) {
+    return base_url;
+  }
+
+  const splits = base_url.split(":");
+  return base_url.replace(splits[splits.length - 1], "1980");
+}
+
+axios.defaults.baseURL = getBaseUrl();
+
+export default async (args: FetchProps) => {
   const on_ngrok = args.url.includes("ngrok");
   const ngrok_config = {
       "ngrok-skip-browser-warning": "stupid-SOAB!",
@@ -23,7 +35,8 @@ export default async (args: FetchProps) => {
       // INFO: Most requests use POST
       method: args.method || "POST",
       // INFO: Add ngrok header and provided headers
-      headers: {...args.headers, ...on_ngrok ? ngrok_config : {}}
+      headers: {...args.headers, ...on_ngrok ? ngrok_config : {}},
+      withCredentials: true,
     })
 
     stopLoading();
@@ -34,8 +47,14 @@ export default async (args: FetchProps) => {
 
   } catch (error: any) {
     stopLoading();
+
+    if (error.response?.status === 401) {
+      useModal().showLoginModal()
+    }
+
     return {
       error: error.message,
+      data: error.response?.data,
       status: error.response?.status
     }
   }

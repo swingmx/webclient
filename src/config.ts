@@ -1,6 +1,6 @@
 const development = import.meta.env.DEV;
 
-function getBaseUrl() {
+export function getBaseUrl() {
   const base_url = window.location.origin;
 
   if (!development) {
@@ -144,6 +144,21 @@ export const paths = {
         return this.base + "/recents/played";
       },
     },
+    auth: {
+      base: "/auth",
+      get login() {
+        return this.base + "/login";
+      },
+      get logout() {
+        return this.base + "/logout";
+      },
+      get allUsers() {
+        return this.base + "/users";
+      },
+      get currentUser() {
+        return this.base + "/user";
+      }
+    }
   },
   images: {
     thumb: {

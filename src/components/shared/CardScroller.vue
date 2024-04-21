@@ -60,14 +60,11 @@ defineEmits<{
 }>()
 
 const itemlist = computed(() => {
-  console.log('props.items', props.items)
     if (!props.items.length) {
         const items = Array.from(Array(maxAbumCards.value)).fill({
             type: 'placeholder',
             with_helptext: true,
         })
-
-        console.log('items', items)
 
         return items
     }

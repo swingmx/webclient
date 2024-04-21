@@ -9,6 +9,7 @@ enum ModalOptions {
   rootDirsPrompt,
   setRootDirs,
   saveFolderAsPlaylist,
+  login
 }
 
 export default defineStore("newModal", {
@@ -77,6 +78,9 @@ export default defineStore("newModal", {
     },
     showSetRootDirsModal() {
       this.showModal(ModalOptions.setRootDirs);
+    },
+    showLoginModal(){
+      this.showModal(ModalOptions.login);
     },
     hideModal() {
       this.visible = false;
