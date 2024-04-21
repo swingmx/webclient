@@ -5,11 +5,7 @@
     >
         <Avatar :name="user.id.toString()" />
         <div class="username">
-            {{
-                selected
-                    ? `Hi ${user.username}`
-                    : user.username + ` ${user.id + 1}`
-            }}
+            {{ (selected ? `Hi ` : '') + user.username }}
         </div>
     </div>
 </template>

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-enum ModalOptions {
+export enum ModalOptions {
   newPlaylist,
   updatePlaylist,
   welcome,

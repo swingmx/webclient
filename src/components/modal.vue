@@ -1,6 +1,7 @@
 <template>
+    <!-- 👇 login modal should not be dismissable -->
     <div
-        v-if="modal.visible"
+        v-if="modal.visible || modal.component == ModalOptions.login"
         class="modal"
     >
         <div
@@ -53,7 +54,7 @@
 
 <script setup lang="ts">
 import { deletePlaylist as delPlaylist } from '@/requests/playlists'
-import useModalStore from '@/stores/modal'
+import useModalStore, { ModalOptions } from '@/stores/modal'
 import { useRouter } from 'vue-router'
 
 import WelcomeModal from './WelcomeModal.vue'

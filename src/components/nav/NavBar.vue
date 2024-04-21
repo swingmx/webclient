@@ -41,7 +41,7 @@
                     class="img circular"
                 >
                     <Avatar
-                        :name="auth.user.username"
+                        :name="auth.user.username || ''"
                         :size="36"
                     />
                 </RouterLink>
@@ -184,8 +184,6 @@ onMounted(() => {
             border-radius: 40%;
 
             .img {
-                // border-radius: 50%;
-                // outline: solid 1px;
                 height: 36px;
 
                 &::after {
@@ -209,7 +207,6 @@ onMounted(() => {
 
             .profiledrop {
                 opacity: 0;
-                // scale: .9;
                 transform: translateY(0.5rem);
                 transition: all 0.25s ease-out;
                 visibility: hidden;
@@ -220,10 +217,7 @@ onMounted(() => {
                 .profiledrop {
                     visibility: visible;
                     opacity: 1;
-                    // scale: 1;
                     transform: translateY(0);
-                    transform-origin: top right;
-                    transition-delay: 0;
                     transition-delay: 0.15s;
                 }
             }

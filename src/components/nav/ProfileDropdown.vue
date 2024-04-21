@@ -7,7 +7,7 @@
         <div class="item">Profile</div>
         <div class="item">Settings</div>
         <div class="separator"></div>
-        <div class="item critical">Logout</div>
+        <div class="item critical" @click="auth.logout">Logout</div>
     </div>
 </template>
 
@@ -44,6 +44,10 @@ const auth = useAuth()
         &:hover {
             background-color: $gray4;
         }
+    }
+
+    .info {
+        pointer-events: none;
     }
 
     .critical:hover {

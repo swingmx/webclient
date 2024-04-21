@@ -7,7 +7,6 @@
             class="head"
             :class="{ selected }"
         >
-            <!-- <LogoSvg /> Swing Music -->
             <button
                 class="back rounded-sm"
                 title="Back to selection"
@@ -25,8 +24,6 @@
         </div>
         <div class="helptext">
             <div class="h2">Welcome back</div>
-            <!-- <div class="help">Please log in to access your music</div> -->
-            <!-- <div class="desc">Please select your account to continue</div> -->
         </div>
 
         <div
@@ -37,7 +34,6 @@
                 :user="selected"
                 :selected="true"
             />
-            <!-- <div class="help">Please log in to access your music</div> -->
         </div>
         <div
             class="userlist"
@@ -54,7 +50,7 @@
         <form
             class="passinput"
             v-if="selected"
-            @submit.prevent="login"
+            @submit.prevent="loginUser"
         >
             <input
                 type="password"
@@ -68,33 +64,35 @@
             class="guestlink"
             v-if="!selected"
         >
-            <div>Login with username</div>
-            <div>Or continue as guest</div>
+            <div
+                @click="() => guestLogin()"
+                v-if="guestAllowed"
+            >
+                Continue as guest
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Ref, nextTick, onMounted, ref } from 'vue'
-
-import { UserSimplified } from '@/interfaces'
-import { getAllUsers, loginUser } from '@/requests/auth'
+import { Ref, computed, nextTick, onMounted, ref } from 'vue'
 
 import useAuth from '@/stores/auth'
-import useModal from '@/stores/modal'
-import { NotifType, useNotifStore } from '@/stores/notification'
+import { UserSimplified } from '@/interfaces'
+import { getAllUsers } from '@/requests/auth'
 
 import Logo from '../Logo.vue'
 import User from '../shared/LoginUserCard.vue'
 import ArrowSvg from '../../assets/icons/expand.svg'
 
-const modal = useModal()
-const toast = useNotifStore()
 const auth = useAuth()
-
 const loginpass: Ref<HTMLInputElement | null> = ref(null)
 const users: Ref<UserSimplified[]> = ref([])
 const selected = ref<UserSimplified | null>(null)
+
+const guestAllowed = computed(() =>
+    users.value.some((user) => user.username === 'admin')
+)
 
 async function setUser(user: UserSimplified) {
     selected.value = user
@@ -107,22 +105,20 @@ function resetSelected() {
     selected.value = null
 }
 
-async function login() {
+async function loginUser() {
     const password = loginpass.value?.value
     if (!password) {
         return
     }
 
-    const res = await loginUser(selected.value!.username, password)
-    if (res.status === 200) {
-        console.log('logged in')
-        toast.showNotification(res.data.msg, NotifType.Success)
-        modal.hideModal()
-        window.location.reload()
-    } else {
-        console.log('login failed', res)
-        toast.showNotification(res.data.msg, NotifType.Error)
-    }
+    await auth.login(selected.value!.username, password)
+}
+
+async function guestLogin(
+    username: string = 'guest',
+    password: string = 'guest'
+) {
+    await auth.login(username, password)
 }
 
 onMounted(async () => {
