@@ -89,7 +89,7 @@ onMounted(() => {
 }
 
 #lyricscontent {
-  padding: 0 4rem;
+  padding: 0 2rem;
   padding-bottom: 4rem;
   height: 100%;
   overflow: scroll;

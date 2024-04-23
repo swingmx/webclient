@@ -118,10 +118,12 @@ onMounted(() => {
 
     .info {
       margin: auto 0;
+      width: fit-content;
+      overflow: hidden;
 
       .title {
         font-size: 1.5rem;
-        font-weight: bold;
+        font-weight: 700;
         display: flex;
         align-items: center;
       }
@@ -167,6 +169,10 @@ onMounted(() => {
           color: #000;
           transform: scale(0.75);
         }
+      }
+
+      @include allPhones {
+        display: none;
       }
     }
   }

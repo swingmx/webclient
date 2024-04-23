@@ -62,6 +62,10 @@ const search = useSearchStore();
     grid-template-columns: max-content 1fr;
     gap: 1rem;
 
+    .top > h3 {
+      margin-left: $medium;
+    }
+
     @include allPhones {
       grid-template-columns: 1fr;
     }
@@ -92,6 +96,11 @@ const search = useSearchStore();
     overflow-x: auto;
 
     @include hideScrollbars;
+  }
+
+  @include allPhones {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 </style>

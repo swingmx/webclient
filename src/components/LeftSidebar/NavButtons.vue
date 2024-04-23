@@ -42,6 +42,7 @@ import { menus } from "./navitems";
     padding: $small 0;
     font-size: 14px;
     font-weight: 500;
+    transition: background-color 0.2s ease-out;
 
     & > div {
       display: flex;

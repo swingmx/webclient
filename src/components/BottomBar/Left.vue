@@ -79,6 +79,7 @@ defineEmits<{
   align-items: center;
   font-size: small;
   font-weight: 700;
+  line-height: 1.2;
 
   .np-image {
     position: relative;
@@ -128,6 +129,10 @@ defineEmits<{
       display: flex;
       align-items: center;
       margin-bottom: 2px;
+
+      .master-flag {
+        margin-bottom: -2px;
+      }
     }
 
     .artistname {
@@ -138,18 +143,19 @@ defineEmits<{
       }
     }
   }
+
   @include allPhones {
     height: 4rem;
-    grid-template-columns: max-content 1fr max-content;
+    grid-template-columns: max-content 1fr max-content max-content;
 
     .heart-button {
       height: max-content;
-      border: none !important;
+      border: 1px solid transparent;
     }
   }
 
-  @media screen and (min-width: 550px) {
-    grid-template-columns: max-content 1fr max-content max-content;
+  @include isSmallestPhone {
+    gap: $small;
   }
 }
 </style>

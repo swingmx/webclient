@@ -2,7 +2,7 @@
   <div
     class="f-container rounded-sm"
     :class="{
-      'list-mode': isIphoneSE ? true : settings.folder_list_mode,
+      'list-mode': isSmallestPhone ? true : settings.folder_list_mode,
     }"
   >
     <div id="f-items" class="rounded">
@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { Folder } from "@/interfaces";
-import { isIphoneSE } from "@/stores/content-width";
+import { isSmallestPhone } from "@/stores/content-width";
 import useSettingsStore from "@/stores/settings";
 import FolderItem from "./FolderItem.vue";
 
@@ -44,6 +44,7 @@ const settings = useSettingsStore();
   gap: 0;
 
   .f-item {
+    line-height: 1.2;
     transition: none;
     height: 3.25rem;
     border-radius: $small;

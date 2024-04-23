@@ -30,6 +30,18 @@ $g-border: solid 1px $gray5;
   }
 }
 
+@include allPhones {
+  #app-grid.is_alt_layout {
+    grid-template-columns: 1fr !important;
+    // grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr 9.5rem !important;
+    grid-template-areas:
+      "nav"
+      "content"
+      "bottombar" !important;
+  }
+}
+
 #acontent {
   width: 100%;
   grid-area: content;
@@ -42,6 +54,10 @@ $g-border: solid 1px $gray5;
   height: $navheight;
   padding: 1rem $padleft;
   padding-right: $padright;
+
+  @include allPhones {
+    padding: 0 1rem;
+  }
 }
 
 .b-bar {
@@ -54,6 +70,12 @@ $g-border: solid 1px $gray5;
   padding-left: $padleft;
   padding-right: $padright;
   padding-bottom: $padbottom;
+  -webkit-overflow-scrolling: touch;
+
+  @include allPhones {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 .vue-recycle-scroller__item-wrapper {
@@ -132,7 +154,7 @@ $g-border: solid 1px $gray5;
     margin-top: 0;
   }
 
-  @media (min-width: 1980px) {
+  @media only screen and (min-width: 1980px) {
     // NOTE: Styles for 1680px and below
     $alt_layout_pad: max(2rem, calc((100% - 1680px) / 2));
 
@@ -195,6 +217,11 @@ $g-border: solid 1px $gray5;
     width: 100%;
     padding-bottom: $content-padding-bottom;
     padding-bottom: $padbottom;
+
+    @include allPhones {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
   }
 }
 

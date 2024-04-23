@@ -1,23 +1,14 @@
 <template>
   <div class="queue-actions">
     <div class="left">
-      <button
-        v-if="!onNowPlaying"
-        v-wave
-        class="shuffle-queue action"
-        @click="queue.shuffleQueue"
-      >
+      <button v-if="!onNowPlaying" v-wave class="shuffle-queue action" @click="queue.shuffleQueue">
         <ShuffleSvg />
         <span>Shuffle</span>
       </button>
       <h2 v-else style="margin: 0">Now Playing</h2>
     </div>
     <div class="right">
-      <button
-        class="menu"
-        :class="{ 'btn-active': context_showing }"
-        @click="showContextMenu"
-      >
+      <button class="menu" :class="{ 'btn-active': context_showing }" @click="showContextMenu">
         <OptionsSvg />
       </button>
     </div>
@@ -25,9 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import useQueue from "@/stores/queue";
 import useTracklist from "@/stores/queue/tracklist";
+import { ref } from "vue";
 
 import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
 
@@ -67,7 +58,7 @@ defineProps<{
     }
 
     // hide on screens less than 600px
-    @media screen and (max-width: 600px) {
+    @media only screen and (max-width: 600px) {
       display: none;
     }
   }

@@ -110,6 +110,7 @@ onBeforeUnmount(() => {
   justify-content: flex-start;
   gap: 1rem;
   font-weight: 500;
+  line-height: 1.2;
   height: $song-item-height;
   user-select: none;
   padding: 0 $small;

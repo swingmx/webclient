@@ -86,7 +86,9 @@ const playlists = computed(() => {
   overflow: auto;
 
   .generichead {
-    padding-left: 0;
+    @include allPhones {
+      padding: 1rem 0 1rem $small;
+    }
   }
 
   .grid {
@@ -107,7 +109,7 @@ const playlists = computed(() => {
   }
 
   .nothing {
-    height: max-content;
+    height: 50%;
 
     svg {
       margin-bottom: 0;

@@ -28,7 +28,7 @@ function navigate(path: string) {
 
 <style lang="scss">
 #folder-nav-title {
-  width: 100%;
+  width: fit-content;
   display: grid;
   overflow: hidden;
 
@@ -38,9 +38,9 @@ function navigate(path: string) {
     height: 2.188rem;
     display: flex;
     align-items: center;
-    width: fit-content;
     max-width: 100%;
-    overflow: scroll;
+    overflow-x: auto;
+    overflow-y: hidden;
     scrollbar-width: none;
 
     &::-webkit-scrollbar {

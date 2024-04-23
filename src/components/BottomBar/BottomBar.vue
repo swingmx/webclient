@@ -92,6 +92,17 @@ function handleFav() {
     @include allPhones {
       height: 3rem;
     }
+
+    @include isSmallestPhone {
+      width: $larger;
+      height: $larger;
+    }
+  }
+
+  button:nth-child(2) {
+    @include isSmallestPhone {
+      width: 3rem;
+    }
   }
 
   &:hover {
@@ -136,7 +147,7 @@ function handleFav() {
 
     width: 30rem;
 
-    @media (max-width: 1080px) {
+    @media only screen and (max-width: 1080px) {
       width: 20rem !important;
     }
 

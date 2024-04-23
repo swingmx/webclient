@@ -98,8 +98,9 @@ function handleButton() {
     button {
       background: transparent;
       border: none;
-      width: 3rem;
+      width: 2.5rem;
       padding: 0;
+      margin-left: 4px;
       border-radius: 3rem;
       height: 100%;
       cursor: pointer;
@@ -125,8 +126,9 @@ function handleButton() {
       outline: none;
       appearance: none;
       padding-right: 1rem;
+      text-overflow: ellipsis;
 
-      @media screen and (max-width: 500px) {
+      @media only screen and (max-width: 500px) {
         width: 7rem;
       }
     }

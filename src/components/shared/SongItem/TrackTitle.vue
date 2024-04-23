@@ -71,6 +71,10 @@ defineEmits<{
     .with-flag {
       display: flex;
       align-items: center;
+
+      .master-flag {
+        margin-bottom: -2px;
+      }
     }
 
     cursor: pointer;

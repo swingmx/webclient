@@ -19,8 +19,8 @@
 import { computed } from "vue";
 
 import { Album } from "@/interfaces";
-import { formatSeconds } from "@/utils";
 import { isSmallPhone } from "@/stores/content-width";
+import { formatSeconds } from "@/utils";
 
 import ArtistName from "@/components/shared/ArtistName.vue";
 
@@ -33,18 +33,14 @@ const statsText = computed(() => {
 
   // hide track count if it's a single, also add an s to track if it's plural
   return `• ${props.album.date} ${
-    !is_single
-      ? `• ${props.album.count.toLocaleString()} Track${
-          props.album.count > 1 ? "s" : ""
-        }`
-      : ""
+    !is_single ? `• ${props.album.count.toLocaleString()} Track${props.album.count > 1 ? "s" : ""}` : ""
   } • ${formatSeconds(props.album.duration, true)}`;
 });
 </script>
 
 <style lang="scss">
 .album-stats {
-  font-weight: bold;
+  font-weight: 700;
   margin-bottom: 0.75rem;
   font-size: 14px;
   padding-left: $smaller;

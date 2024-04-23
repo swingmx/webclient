@@ -138,6 +138,18 @@ function runChildAction(action: () => void) {
     visibility: hidden;
     transition: opacity 0.25s ease-out, visibility 0.25s ease-out;
 
+    ::-webkit-scrollbar-thumb {
+      background-color: transparent;
+    }
+
+    &:hover ::-webkit-scrollbar-thumb {
+      background-color: $gray2;
+    }
+
+    &:hover ::-webkit-scrollbar-thumb:hover {
+      background-color: $gray1;
+    }
+
     .wrapper {
       padding: $smaller;
       overflow-y: auto;
@@ -146,6 +158,7 @@ function runChildAction(action: () => void) {
     }
 
     .context-item {
+      line-height: 1.2;
       padding: $small 1rem;
       padding: 0.4rem 0.6rem;
     }

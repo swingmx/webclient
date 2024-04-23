@@ -3,8 +3,7 @@
     <GenericHeader>
       <template #name>Favorites</template>
       <template #description
-        >{{ count.tracks }} Tracks • {{ count.albums }} Albums •
-        {{ count.artists }} Artists</template
+        >{{ count.tracks }} Tracks • {{ count.albums }} Albums • {{ count.artists }} Artists</template
       >
     </GenericHeader>
     <CardScroller
@@ -39,12 +38,7 @@
       :route="'/favorites/artists'"
     />
 
-    <NoItems
-      :flag="noFavs"
-      :icon="HeartSvg"
-      :title="'No favorites found'"
-      :description="description"
-    />
+    <NoItems :flag="noFavs" :icon="HeartSvg" :title="'No favorites found'" :description="description" />
   </div>
 </template>
 
@@ -96,10 +90,7 @@ onMounted(() => {
       count.value = favs.count;
     })
     .then(() => {
-      noFavs.value =
-        !favAlbums.value.length &&
-        !favTracks.value.length &&
-        !favArtists.value.length;
+      noFavs.value = !favAlbums.value.length && !favTracks.value.length && !favArtists.value.length;
     })
     .then(async () => {
       await nextTick();

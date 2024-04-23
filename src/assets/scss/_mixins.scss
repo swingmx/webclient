@@ -6,50 +6,50 @@
 
 // media query mixins
 @mixin smallPhone {
-  @media (max-width: 550px) {
+  @media only screen and (max-width: 550px) {
     @content;
   }
 }
 
-@mixin iphoneSE {
-  @media (max-width: 386px) {
+@mixin isSmallestPhone {
+  @media only screen and (max-width: 440px) {
     @content;
   }
 }
 
 @mixin allPhones {
-  @media (max-width: 900px) {
+  @media only screen and (max-width: 900px) {
     @content;
   }
 }
 
 @mixin largePhones {
   // 550px <= width < 900px
-  @media (min-width: 550px) {
+  @media only screen and (min-width: 550px) {
     @content;
   }
 }
 
 @mixin tablet-landscape {
-  @media (max-width: 1080px) {
+  @media only screen and (max-width: 1080px) {
     @content;
   }
 }
 
 @mixin tablet-portrait {
-  @media (max-width: 810px) {
+  @media only screen and (max-width: 810px) {
     @content;
   }
 }
 
 @mixin for-desktop-down {
-  @media (max-width: 1600px) {
+  @media only screen and (max-width: 1600px) {
     @content;
   }
 }
 
 @mixin for-desktop-up {
-  @media (min-width: 1800px) {
+  @media only screen and (min-width: 1800px) {
     @content;
   }
 }
