@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { Playlist } from "@/interfaces";
 import PlaylistCard from "@/components/PlaylistsList/PlaylistCard.vue";
+import { Playlist } from "@/interfaces";
 
 defineProps<{
   playlists: Playlist[];
@@ -21,7 +21,7 @@ defineProps<{
 .playlistcardgroup {
   margin-bottom: 4rem;
   h3 {
-    margin-left: $small;
+    margin-left: $medium;
   }
 }
 </style>

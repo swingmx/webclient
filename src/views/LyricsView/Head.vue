@@ -50,7 +50,7 @@ defineProps<{
   z-index: 1;
 
   @include tablet-portrait {
-    padding: $medium 0;
+    padding: $large 0;
   }
 
   img {

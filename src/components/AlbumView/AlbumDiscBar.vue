@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="album_disc.is_album_disc_number"
-    class="album_disc_header no-select"
-  >
+  <div v-if="album_disc.is_album_disc_number" class="album_disc_header no-select">
     <div class="disc_number">Disc {{ album_disc.album_page_disc_number }}</div>
     <div></div>
   </div>
@@ -26,6 +23,7 @@ defineProps<{
 
   .disc_number {
     font-size: $medium;
+    font-weight: 500;
     opacity: 0.75;
   }
 }

@@ -132,6 +132,7 @@ onMounted(() => {
   top: -3.25rem;
   max-width: calc(100% - 2rem);
   overflow-x: scroll;
+  overflow-y: hidden;
   scrollbar-width: none;
 
   display: flex;
@@ -182,6 +183,7 @@ onMounted(() => {
 
     overflow-y: auto;
     scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
   }
 
   .buttons {

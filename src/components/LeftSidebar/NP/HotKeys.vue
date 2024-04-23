@@ -72,5 +72,9 @@ const { buffering } = usePlayer();
       margin-left: $small;
     }
   }
+
+  @include isSmallestPhone {
+    gap: $small;
+  }
 }
 </style>

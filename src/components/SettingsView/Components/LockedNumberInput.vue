@@ -32,6 +32,7 @@ function submit(action: "plus" | "minus") {
   .number {
     text-align: center;
     font-weight: 500;
+    font-variant-numeric: tabular-nums;
   }
 
   button {

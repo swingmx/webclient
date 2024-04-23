@@ -36,6 +36,7 @@ const optionsWithActive = computed(() => {
 .setting-select {
   display: flex;
   background-color: $gray3;
+  margin-left: 8px;
 
   .option {
     font-weight: 500;

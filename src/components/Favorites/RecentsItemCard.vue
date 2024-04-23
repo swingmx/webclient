@@ -4,27 +4,19 @@
     :class="fav.type"
     :to="{
       name: fav.type === 'album' ? Routes.album : Routes.artist,
-      params:
-        fav.type === 'album'
-          ? { albumhash: fav.item.albumhash }
-          : { hash: fav.item.artisthash },
+      params: fav.type === 'album' ? { albumhash: fav.item.albumhash } : { hash: fav.item.artisthash },
     }"
   >
     <div class="imagegroup">
       <img
         :src="
-          fav.type === 'album'
-            ? paths.images.thumb.large + fav.item.image
-            : paths.images.artist.large + fav.item.image
+          fav.type === 'album' ? paths.images.thumb.large + fav.item.image : paths.images.artist.large + fav.item.image
         "
         alt=""
         class="rounded-sm"
       />
     </div>
-    <div
-      class="name ellip"
-      :title="fav.type === 'artist' ? fav.item.name : fav.item.title"
-    >
+    <div class="name ellip" :title="fav.type === 'artist' ? fav.item.name : fav.item.title">
       {{ fav.type === "artist" ? fav.item.name : fav.item.title }}
     </div>
     <div class="label ellip" :class="{ on_artist: fav.type === 'artist' }">
@@ -73,7 +65,7 @@ defineProps<{
   .label {
     font-size: 0.8rem;
     color: $gray1;
-    font-weight: bold;
+    font-weight: 700;
     border-radius: 1rem;
     text-transform: capitalize;
     margin-top: -$smaller;

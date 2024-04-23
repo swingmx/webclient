@@ -6,7 +6,7 @@
     height: 100%;
     padding-right: $small;
 
-    @include largePhones {
+    @include allPhones {
       grid-template-columns: 1fr 9.2rem;
     }
 

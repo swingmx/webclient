@@ -78,12 +78,23 @@ function handleFav() {
     margin-top: 1rem;
 
     .time {
-      font-size: 12px;
+      font-size: $medium;
+      font-weight: 500;
       background-color: $gray3;
-      padding: 0 $smaller;
+      padding: 1px $smaller;
       min-width: 2.5rem;
       text-align: center;
       border-radius: $smaller;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Responsive */
+    @media only screen and (max-width: 640px) {
+      .right-group button.speaker {
+        border-top: 1px solid transparent !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+      }
     }
   }
 

@@ -29,7 +29,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .heading {
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 a {
@@ -76,7 +76,7 @@ button {
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 0.9rem !important;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.2;
   color: inherit;
   border-radius: $small;
   border: none;
@@ -85,7 +85,7 @@ button {
   justify-content: center;
   height: 2.25rem;
   padding: 0 $small;
-  transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  transition: background-color 0.2s ease-out, color 0.2s ease-out, border 0.2s ease-out;
 
   background-color: $gray4;
   cursor: pointer;

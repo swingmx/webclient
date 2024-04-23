@@ -103,7 +103,6 @@ defineProps<{
   }
 
   .artist-name {
-    margin-bottom: $smaller;
     word-break: break-word;
   }
 

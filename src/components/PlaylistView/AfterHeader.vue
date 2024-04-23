@@ -4,7 +4,6 @@
   </div>
 </template>
 
-
 <style lang="scss">
 .p-after-header {
   display: flex;
@@ -13,6 +12,7 @@
   padding: 0 1rem;
 
   font-size: 14px;
+  font-weight: 500;
   color: $gray1;
 }
 </style>
