@@ -78,6 +78,7 @@ defineEmits<{
   gap: $medium;
   align-items: center;
   font-size: small;
+  font-weight: 700;
 
   .np-image {
     position: relative;
@@ -123,8 +124,6 @@ defineEmits<{
 
   .track-info {
     .title {
-      font-size: 0.85rem;
-      font-weight: 700;
       color: $white;
       display: flex;
       align-items: center;
@@ -132,9 +131,7 @@ defineEmits<{
     }
 
     .artistname {
-      font-size: 0.85rem;
       opacity: 0.75;
-      font-weight: 700;
 
       a {
         font-size: 0.8rem;

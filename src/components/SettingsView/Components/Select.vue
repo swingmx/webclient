@@ -38,6 +38,7 @@ const optionsWithActive = computed(() => {
   background-color: $gray3;
 
   .option {
+    font-weight: 500;
     padding: 0.5rem;
     cursor: pointer;
     user-select: none;

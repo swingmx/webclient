@@ -109,12 +109,14 @@ defineProps<{
     opacity: 0.75;
     padding: 0 $smaller;
     border-radius: $smaller;
-    font-size: 12px !important;
+    font-size: 12px;
+    font-weight: 500;
   }
 
   .experimental {
     border: solid 1px $yellow;
     color: $yellow;
+    font-weight: 600;
   }
 
   .badge.new {
@@ -138,6 +140,7 @@ defineProps<{
   .desc {
     opacity: 0.5;
     font-size: 0.8rem;
+    font-weight: 500;
   }
 
   .setting {

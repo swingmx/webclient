@@ -146,16 +146,13 @@ function handleFav() {
     }
 
     .time {
-      font-family: "SF Mono", monospace;
-      font-weight: 600;
+      font-weight: 500;
       font-size: $medium;
-      line-height: 1.5;
 
       .numbers {
         background-color: $gray3;
         border-radius: $smaller;
-        padding: 0 $smaller;
-        font-feature-settings: "ss03" 1, "ss04" 1;
+        padding: 1px $smaller;
         font-variant-numeric: tabular-nums;
       }
     }
