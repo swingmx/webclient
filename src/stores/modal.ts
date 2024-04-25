@@ -9,7 +9,8 @@ export enum ModalOptions {
   rootDirsPrompt,
   setRootDirs,
   saveFolderAsPlaylist,
-  login
+  login,
+  settings
 }
 
 export default defineStore("newModal", {

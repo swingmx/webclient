@@ -7,4 +7,5 @@ export enum SettingType {
   root_dirs,
   locked_number_input,
   quick_actions,
+  profile,
 }

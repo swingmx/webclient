@@ -1,74 +1,83 @@
-import useSettingsStore from "@/stores/settings";
+import useSettingsStore from '@/stores/settings'
 
-import { SettingCategory } from "@/interfaces/settings";
-import * as strings from "../strings";
-import contextChildrenShowMode from "./context-children-show-mode";
-import extendWidth from "./extend-width";
-import nowPlaying from "./now-playing-group";
-import sidebarSettings from "./sidebar";
-import rootDirSettings from "./root-dirs";
-import albums from "./albums";
-import separators from "./separators";
-import tracks from "./tracks";
-import circularArtistImg from "./circular-artist-img";
-import quickactions from "./quickactions";
-import layout from "./layout";
-import folderlistmode from "./folderlistmode";
+import { SettingCategory } from '@/interfaces/settings'
+import * as strings from '../strings'
+import contextChildrenShowMode from './context-children-show-mode'
+import extendWidth from './extend-width'
+import nowPlaying from './now-playing-group'
+import sidebarSettings from './sidebar'
+import rootDirSettings from './root-dirs'
+import albums from './albums'
+import separators from './separators'
+import tracks from './tracks'
+import circularArtistImg from './circular-artist-img'
+import layout from './layout'
+import folderlistmode from './folderlistmode'
 
-const npStrings = strings.nowPlayingStrings;
-const rootRootStrings = strings.manageRootDirsStrings;
+// icons
+import AppearanceSvg from '@/assets/icons/paintbrush.svg?raw'
+import FolderSvg from '@/assets/icons/folder.svg?raw'
+import TrackSvg from '@/assets/icons/mic.svg?raw'
+import AlbumSvg from '@/assets/icons/album.svg?raw'
+import AvatarSvg from '@/assets/icons/artist.svg?raw'
 
-export default {
-  title: "General",
-  groups: [
-    {
-      settings: quickactions,
-    },
-    {
-      title: "UI Settings",
-      desc: "Settings for various parts of the user interface.",
-      settings: [
-        ...layout,
-        ...extendWidth,
-        ...sidebarSettings,
-        circularArtistImg,
-        ...contextChildrenShowMode,
-        ...folderlistmode,
-      ],
-    },
-    {
-      title: npStrings.title,
-      desc: npStrings.desc,
-      settings: [...nowPlaying],
-      show_if: () => !useSettingsStore().is_alt_layout,
-    },
-    {
-      title: rootRootStrings.title,
-      desc: rootRootStrings.desc,
-      settings: [...rootDirSettings],
-    },
-    {
-      // null means settings table is not created yet
-      show_if: () => useSettingsStore().feat !== null,
-      title: "Track settings",
-      desc: "Settings relating to track information",
-      settings: [...tracks],
-    },
-    {
-      // null means settings table is not created yet
-      show_if: () => useSettingsStore().feat !== null,
-      title: "Album settings",
-      desc: "Settings relating to album information",
-      settings: [...albums],
-    },
-    {
-      // null means settings table is not created yet
-      show_if: () => useSettingsStore().feat !== null,
-      title: "Separators",
-      desc: "Customize artist separators",
-      settings: [separators],
-    },
-  ],
-} as SettingCategory;
+const npStrings = strings.nowPlayingStrings
+const rootRootStrings = strings.manageRootDirsStrings
+
+export const general = {
+    // title: 'General',
+    groups: [
+        {
+            title: 'Appearance',
+            desc: 'Settings for various parts of the user interface.',
+            icon: AppearanceSvg,
+            settings: [
+                ...layout,
+                ...extendWidth,
+                ...sidebarSettings,
+                circularArtistImg,
+                ...contextChildrenShowMode,
+                ...folderlistmode,
+                ...nowPlaying,
+            ],
+        },
+    ],
+} as SettingCategory
+
+export const library = {
+    title: 'Library',
+    groups: [
+        {
+            title: rootRootStrings.title,
+            icon: FolderSvg,
+            desc: rootRootStrings.desc,
+            settings: [...rootDirSettings],
+        },
+        {
+            // null means settings table is not created yet
+            show_if: () => useSettingsStore().feat !== null,
+            title: 'Tracks',
+            icon: TrackSvg,
+            desc: 'Settings relating to track information',
+            settings: [...tracks],
+        },
+        {
+            // null means settings table is not created yet
+            show_if: () => useSettingsStore().feat !== null,
+            title: 'Albums',
+            icon: AlbumSvg,
+            desc: 'Settings relating to album information',
+            settings: [...albums],
+        },
+        {
+            // null means settings table is not created yet
+            show_if: () => useSettingsStore().feat !== null,
+            title: 'Artists',
+            icon: AvatarSvg,
+            desc: 'Customize artist separators',
+            settings: [separators],
+        },
+    ],
+} as SettingCategory
 
 // ENHANCEMENT: Decouple components from Group.vue and pass them as part of the Setting interface (maybe?)

@@ -1,9 +1,10 @@
 <template>
     <!-- 👇 login modal should not be dismissable -->
     <div
-        v-if="modal.visible || modal.component == ModalOptions.login"
+        v-if="true"
         class="modal"
     >
+        <!-- v-if="modal.visible || modal.component == ModalOptions.login" -->
         <div
             class="bg"
             @click="modal.hideModal"
@@ -11,6 +12,9 @@
         <div
             v-motion-slide-top
             class="m-content rounded"
+            :class="{
+                settings: modal.component == modal.options.settings || true,
+            }"
             :style="{
                 maxWidth:
                     modal.component == modal.options.setRootDirs
@@ -18,6 +22,7 @@
                         : '30rem',
             }"
         >
+            <!-- TODO: MOVE MAX WIDTH TO CLASS -->
             <div class="heading">{{ modal.title }}</div>
             <AuthLogin v-if="modal.component == modal.options.login" />
             <NewPlaylist
@@ -48,6 +53,7 @@
                 v-if="modal.component == modal.options.rootDirsPrompt"
                 @hideModal="hideModal"
             />
+            <Settings @set-title="setTitle" />
         </div>
     </div>
 </template>
@@ -64,6 +70,7 @@ import NewPlaylist from './modals/NewPlaylist.vue'
 import RootDirsPrompt from './modals/RootDirsPrompt.vue'
 import SetRootDirs from './modals/SetRootDirs.vue'
 import UpdatePlaylist from './modals/updatePlaylist.vue'
+import Settings from './modals/Settings.vue'
 
 const modal = useModalStore()
 const router = useRouter()
@@ -111,7 +118,7 @@ function deletePlaylist() {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(12, 12, 12, 0.767);
+        background-color: rgba(31, 30, 30, 0.329);
         backdrop-filter: blur(15px);
     }
 
@@ -126,6 +133,13 @@ function deletePlaylist() {
             width: calc(100% - 2rem);
             padding: 2rem 1rem;
         }
+    }
+
+    .m-content.settings {
+        max-width: 50rem !important;
+        padding: 0;
+        overflow: hidden;
+        // min-height: 39rem;
     }
 }
 </style>

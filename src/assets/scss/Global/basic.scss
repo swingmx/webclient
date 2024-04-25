@@ -246,3 +246,22 @@ button {
     color: $green;
   }
 }
+
+// Badges used in settings
+.badge {
+  margin-left: $small;
+  opacity: 0.75;
+  padding: 0 $smaller;
+  border-radius: $smaller;
+  font-size: 12px !important;
+}
+
+.experimental {
+  border: solid 1px $yellow;
+  color: $yellow;
+}
+
+.badge.new {
+  background-color: $blue;
+  opacity: 1;
+}

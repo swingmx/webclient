@@ -157,6 +157,9 @@ export const paths = {
       },
       get currentUser() {
         return this.base + "/user";
+      },
+      get updateProfile() {
+        return this.base + "/profile/update";
       }
     }
   },

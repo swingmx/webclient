@@ -40,3 +40,13 @@ export async function getLoggedInUser() {
 
     return res
 }
+
+export async function updateUserProfile(user: any) {
+    const res = await useAxios({
+        url: paths.api.auth.updateProfile,
+        method: 'PUT',
+        props: user,
+    })
+
+    return res
+}

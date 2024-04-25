@@ -10,6 +10,7 @@ const disable_np_img: Setting = {
   type: SettingType.binary,
   state: () => !settings().use_np_img,
   action: () => settings().toggleUseNPImg(),
+  show_if: () => !settings().is_alt_layout,
 };
 
 export default [disable_np_img];

@@ -2,7 +2,12 @@ import { defineStore } from 'pinia'
 import { User } from '@/interfaces'
 import useModal from '@/stores/modal'
 
-import { loginUser, logoutUser } from '@/requests/auth'
+import {
+    loginUser,
+    logoutUser,
+    getLoggedInUser,
+    updateUserProfile,
+} from '@/requests/auth'
 import { NotifType, useNotifStore } from '@/stores/notification'
 
 export default defineStore('authStore', {
@@ -10,6 +15,12 @@ export default defineStore('authStore', {
         user: {} as User,
     }),
     actions: {
+        async getLoggedInUser() {
+            const res = await getLoggedInUser()
+            if (res.status === 200) {
+                this.setUser(res.data)
+            }
+        },
         setUser(user: User) {
             this.user = user
         },
@@ -30,6 +41,27 @@ export default defineStore('authStore', {
         async logout() {
             await logoutUser()
             window.location.reload()
+        },
+        async updateProfile(user: { [key: string]: any }) {
+            const toast = useNotifStore()
+            const res = await updateUserProfile(user)
+
+            if (res.status === 200) {
+                this.user = res.data
+                toast.showNotification(
+                    'Profile updated successfully!',
+                    res.status === 200 ? NotifType.Success : NotifType.Error
+                )
+
+                return true
+            }
+
+            toast.showNotification(
+                'Failed! Something went wrong!',
+                NotifType.Error
+            )
+
+            return false
         },
     },
 })
