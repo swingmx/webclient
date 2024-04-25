@@ -2,13 +2,13 @@ import { paths } from '@/config'
 import useAxios from './useAxios'
 import { User, UserSimplified } from '@/interfaces'
 
-export async function getAllUsers() {
+export async function getAllUsers<T extends boolean>(simple: T = true as T) {
     const data = await useAxios({
-        url: paths.api.auth.allUsers,
+        url: paths.api.auth.allUsers + (simple ? '?simplified=true' : ''),
         method: 'GET',
     })
 
-    return data.data as UserSimplified[]
+    return data.data as T extends true ? UserSimplified[] : User[]
 }
 
 export async function loginUser(username: string, password: string) {

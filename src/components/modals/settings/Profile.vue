@@ -138,29 +138,7 @@ onMounted(async () => {
         }
     }
 
-    .roles {
-        display: flex;
 
-        .role {
-            margin: $small $smaller;
-            padding: 0 $small;
-            border-radius: $smaller;
-            border: solid 1px $brown;
-            color: $brown;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-
-            display: flex;
-            align-items: center;
-            gap: $small;
-
-            svg {
-                height: 1rem;
-                aspect-ratio: 1;
-            }
-        }
-    }
 
     .updateprof {
         width: 60%;

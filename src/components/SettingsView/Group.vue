@@ -73,6 +73,7 @@
           :default="setting.state ? setting.state() : []"
         />
         <Profile v-if="setting.type === SettingType.profile"/>
+        <Accounts v-if="setting.type === SettingType.accounts"/>
       </div>
     </div>
   </div>
@@ -88,7 +89,9 @@ import LockedNumberInput from "./Components/LockedNumberInput.vue";
 import Select from "./Components/Select.vue";
 import SeparatorsInput from "./Components/SeparatorsInput.vue";
 import Switch from "./Components/Switch.vue";
+
 import Profile from "../modals/settings/Profile.vue";
+import Accounts from "../modals/settings/custom/Accounts.vue";
 
 defineProps<{
   group: SettingGroup;

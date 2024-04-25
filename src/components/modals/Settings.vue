@@ -54,7 +54,7 @@ const currentGroup = computed(() => {
 
     for (const group of settingGroups) {
         for (const settings of group.groups) {
-            if (settings.title === 'Profile') {
+            if (settings.title === 'Accounts') {
                 return settings
             }
         }
@@ -95,6 +95,27 @@ $modalheight: 35rem;
                 opacity: 0.5;
                 font-size: 0.8rem;
             }
+        }
+    }
+
+
+    // Role badges used in Profile and Accounts tabs
+    .roles {
+        display: flex;
+
+        .role {
+            margin: $smaller $small 0 0;
+            padding: 3px $smaller;
+            border-radius: $smaller;
+            border: solid 1px $brown;
+            color: $brown;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+
+            display: flex;
+            align-items: center;
+            gap: $small;
         }
     }
 }

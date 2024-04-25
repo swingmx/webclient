@@ -8,4 +8,5 @@ export enum SettingType {
   locked_number_input,
   quick_actions,
   profile,
+  accounts
 }
