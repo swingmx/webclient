@@ -3,9 +3,16 @@
         <div class="avatar">
             <Avatar :name="username || auth.user.username" />
             <div class="name">
-                Hi {{ auth.user.firstname || auth.user.username }}
+                {{
+                    adding_user
+                        ? username
+                        : `Hi ${auth.user.firstname || auth.user.username}`
+                }}
             </div>
-            <div class="roles">
+            <div
+                class="roles"
+                v-if="!adding_user"
+            >
                 <span
                     class="role"
                     v-for="role in auth.user.roles"
@@ -18,12 +25,12 @@
         <form
             class="updateprof"
             v-auto-animate
-            @submit.prevent="updateProfile"
+            @submit.prevent="handleSubmit"
         >
             <div class="names">
                 <label for="username">Username</label>
                 <Input
-                    :placeholder="auth.user.username"
+                    :placeholder="adding_user ? 'username' : auth.user.username"
                     @input="(input) => (username = input)"
                 />
             </div>
@@ -49,7 +56,9 @@
                     >{{ errorText }}</label
                 >
             </div>
-            <button v-if="showSubmit">Update</button>
+            <button v-if="showSubmit">
+                {{ adding_user ? 'Add user' : 'Update' }}
+            </button>
         </form>
     </div>
 </template>
@@ -59,8 +68,16 @@ import { ref, computed, onMounted } from 'vue'
 
 import useAuth from '@/stores/auth'
 import Avatar from '@/components/shared/Avatar.vue'
-// import Switch from '@/components/SettingsView/Components/Switch.vue'
 import Input from '@/components/shared/Input.vue'
+import { User } from '@/interfaces'
+
+const props = defineProps<{
+    adding_user?: boolean
+}>()
+
+const emit = defineEmits<{
+    (e: 'userAdded', value: User): void
+}>()
 
 const auth = useAuth()
 
@@ -69,6 +86,14 @@ const password = ref('')
 const confirmPassword = ref('')
 
 const showSubmit = computed(() => {
+    if (props.adding_user) {
+        return (
+            username.value.length &&
+            password.value.length &&
+            confirmPassword.value.length &&
+            !errorText.value
+        )
+    }
     // show submit button if:
     // username has changed
     // password has changed and is confirmed
@@ -110,6 +135,19 @@ const payload = computed(() => {
     return payload
 })
 
+async function handleSubmit() {
+    if (props.adding_user) {
+        const user = await auth.addNewUser(payload.value)
+        if (user) {
+            return emit('userAdded', user)
+        }
+
+        return
+    }
+
+    await updateProfile()
+}
+
 async function updateProfile() {
     const success = await auth.updateProfile(payload.value)
     if (success) {
@@ -121,6 +159,9 @@ async function updateProfile() {
 }
 
 onMounted(async () => {
+    if (props.adding_user) {
+        return
+    }
     await auth.getLoggedInUser()
 })
 </script>
@@ -138,7 +179,9 @@ onMounted(async () => {
         }
     }
 
-
+    .roles {
+        margin-top: $small;
+    }
 
     .updateprof {
         width: 60%;

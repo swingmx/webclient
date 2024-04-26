@@ -1,5 +1,13 @@
 <template>
-    <div class="accountsettings">
+    <Profile
+        :adding_user="true"
+        v-if="showAddUser"
+        @user-added="userAdded"
+    />
+    <div
+        class="accountsettings"
+        v-else
+    >
         <div class="asettings">
             <ToggleSetting
                 v-for="s in gsettings"
@@ -12,7 +20,7 @@
         </div>
         <div class="ahead">
             <div class="h2">All users</div>
-            <button class="adduser">
+            <button class="adduser" @click="showAddUser = true">
                 <PlusSvg />
                 new user
             </button>
@@ -70,15 +78,17 @@
 import { onMounted, ref } from 'vue'
 import { User } from '@/interfaces'
 import { SettingType } from '@/settings/enums'
-
 import { getAllUsers } from '@/requests/auth'
-import Avatar from '@/components/shared/Avatar.vue'
+
+import Profile from '../Profile.vue'
 import PlusSvg from '@/assets/icons/plus.svg'
 import ToggleSetting from './ToggleSetting.vue'
+import Avatar from '@/components/shared/Avatar.vue'
 
 const selectedUser = ref(0)
 const users = ref(<User[]>[])
 
+const showAddUser = ref(false)
 const enableGuest = ref(false)
 const showAllUsers = ref(false)
 
@@ -118,6 +128,13 @@ const settings = [
         ],
     },
 ]
+
+function userAdded(user: User){
+    showAddUser.value = false
+    
+    // insert user at index 1
+    users.value.splice(1, 0, user)
+}
 
 function selectUser(id: number) {
     if (selectedUser.value === id) {

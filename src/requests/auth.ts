@@ -50,3 +50,13 @@ export async function updateUserProfile(user: any) {
 
     return res
 }
+
+export async function addNewUser(user: any) {
+    const res = await useAxios({
+        url: paths.api.auth.addUser,
+        method: 'POST',
+        props: user,
+    })
+
+    return res
+}

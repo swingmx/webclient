@@ -25,7 +25,7 @@
                         <!-- <DummySvg /> -->
                         <Avatar
                             :size="18"
-                            :name="''"
+                            :name="auth.user.username"
                             v-if="item.title === 'Profile'"
                         />
                         <span
@@ -45,11 +45,13 @@
 </template>
 
 <script setup lang="ts">
+import useAuth from '@/stores/auth'
 import settingGroups from '@/settings'
 import { SettingGroup } from '@/interfaces/settings'
 
-import DummySvg from '@/assets/icons/delete.svg'
 import Avatar from '@/components/shared/Avatar.vue'
+
+const auth = useAuth()
 
 defineProps<{
     currentGroup: SettingGroup
@@ -79,7 +81,7 @@ defineEmits<{
     .gtitle {
         font-weight: bold;
         font-size: 14px;
-        margin: $medium $small;
+        margin: $medium 0 $small $small
     }
 
     .gitems {

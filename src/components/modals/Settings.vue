@@ -18,7 +18,6 @@
                         {{ currentGroup?.experimental ? 'experimental' : '' }}
                     </span>
                 </div>
-                <!-- <div class="desc" v-if="currentGroup?.desc">{{ currentGroup?.desc }}</div> -->
             </div>
             <Content :settings="(currentGroup as SettingGroup)" />
         </div>
@@ -102,9 +101,10 @@ $modalheight: 35rem;
     // Role badges used in Profile and Accounts tabs
     .roles {
         display: flex;
+        gap: $small;
 
         .role {
-            margin: $smaller $small 0 0;
+            // margin: $smaller $small 0 0;
             padding: 3px $smaller;
             border-radius: $smaller;
             border: solid 1px $brown;

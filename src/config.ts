@@ -158,6 +158,9 @@ export const paths = {
       get currentUser() {
         return this.base + "/user";
       },
+      get addUser() {
+        return this.base + "/profile/create";
+      },
       get updateProfile() {
         return this.base + "/profile/update";
       }

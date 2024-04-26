@@ -5,6 +5,7 @@ import useModal from '@/stores/modal'
 import {
     loginUser,
     logoutUser,
+    addNewUser,
     getLoggedInUser,
     updateUserProfile,
 } from '@/requests/auth'
@@ -41,6 +42,26 @@ export default defineStore('authStore', {
         async logout() {
             await logoutUser()
             window.location.reload()
+        },
+        async addNewUser(user: { [key: string]: any }){
+            const toast = useNotifStore()
+            const res = await addNewUser(user)
+
+            if (res.status === 200) {
+                toast.showNotification(
+                    'User added successfully!',
+                    res.status === 200 ? NotifType.Success : NotifType.Error
+                )
+
+                return res.data as User
+            }
+
+            toast.showNotification(
+                'Failed! Something went wrong!',
+                NotifType.Error
+            )
+
+            return false
         },
         async updateProfile(user: { [key: string]: any }) {
             const toast = useNotifStore()
