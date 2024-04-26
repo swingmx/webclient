@@ -1,10 +1,30 @@
 <template>
     <div class="accountsettings">
+        <div class="asettings">
+            <ToggleSetting
+                v-for="s in gsettings"
+                :key="s.title"
+                :title="s.title"
+                :value="s.value.value"
+                :desc="s.desc"
+                @click="s.action"
+            />
+        </div>
+        <div class="ahead">
+            <div class="h2">All users</div>
+            <button class="adduser">
+                <PlusSvg />
+                new user
+            </button>
+        </div>
         <div class="userlist">
             <div
-                class="usercard rounded-sm"
+                class="usercard rounded"
+                v-auto-animate
                 v-for="user in users"
                 :key="user.id"
+                :class="{ selected: user.id === selectedUser }"
+                @click="() => selectUser(user.id)"
             >
                 <div class="userinfo">
                     <Avatar
@@ -24,28 +44,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="settings">
+                <div
+                    class="usettins"
+                    v-if="user.id === selectedUser"
+                >
                     <div
                         v-for="setting in settings"
                         :key="setting.title"
                     >
-                        <!-- <div class="label">{{ setting.title }}</div> -->
-                        <div
-                            class="setting rounded-sm"
+                        <ToggleSetting
                             v-for="option in setting.options"
                             :key="option.title"
-                        >
-                            <div class="text">
-                                <div>{{ option.title }}</div>
-                                <div class="desc">{{ option.desc }}</div>
-                            </div>
-                            <Switch
-                                :state="option.value.value"
-                                @click="
-                                    option.value.value = !option.value.value
-                                "
-                            />
-                        </div>
+                            :title="option.title"
+                            :desc="option.desc"
+                            :value="option.value.value"
+                        />
                     </div>
                 </div>
             </div>
@@ -60,9 +73,32 @@ import { SettingType } from '@/settings/enums'
 
 import { getAllUsers } from '@/requests/auth'
 import Avatar from '@/components/shared/Avatar.vue'
-import Switch from '@/components/SettingsView/Components/Switch.vue'
+import PlusSvg from '@/assets/icons/plus.svg'
+import ToggleSetting from './ToggleSetting.vue'
 
+const selectedUser = ref(0)
 const users = ref(<User[]>[])
+
+const enableGuest = ref(false)
+const showAllUsers = ref(false)
+
+const gsettings = [
+    {
+        title: 'Enable guest access',
+        desc: 'Allow users to access the site without an account',
+        type: SettingType.binary,
+        value: enableGuest,
+        action: () => {
+            enableGuest.value = !enableGuest.value
+        },
+    },
+    {
+        title: 'Show users on login',
+        desc: 'Show a list of users on your server when logging in',
+        type: SettingType.binary,
+        value: showAllUsers,
+    },
+]
 
 const settings = [
     {
@@ -83,6 +119,15 @@ const settings = [
     },
 ]
 
+function selectUser(id: number) {
+    if (selectedUser.value === id) {
+        selectedUser.value = 0
+        return
+    }
+
+    selectedUser.value = id
+}
+
 onMounted(async () => {
     const res = await getAllUsers(false)
     users.value = res
@@ -93,48 +138,66 @@ onMounted(async () => {
 .accountsettings {
     width: 100%;
 
+    .adduser svg {
+        height: 75%;
+    }
+
+    .asettings {
+        margin: 0 0 1rem 0;
+        padding-bottom: 1rem;
+        border-bottom: solid 1px $gray5;
+    }
+
+    .ahead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-right: $smaller;
+    }
+
+    .h2 {
+        padding-left: $smaller;
+        font-size: 1.15rem;
+        font-weight: bold;
+    }
+
     .usercard {
         width: 100%;
         padding: 1rem;
+        padding-bottom: 0;
+        margin-top: 1rem;
         border: solid 1px $gray5;
 
         .userinfo {
-            display: flex;
+            display: grid;
+            grid-template-columns: max-content 1fr;
             align-items: center;
             gap: 1rem;
-            border-bottom: solid 1px $gray4;
-            padding-bottom: $small;
+            padding-bottom: 1rem;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            max-width: 100%;
         }
     }
 
-    .settings {
+    .usercard.selected {
+        padding-bottom: 1rem;
+
+        .usettins {
+            border-top: solid 1px $gray4;
+        }
+    }
+
+    .usettins {
         padding-top: $small;
 
         .label {
             color: $gray1;
-            // text-transform: uppercase;
             font-size: 14px;
             margin-top: $small;
-        }
-
-        .setting {
-            // background-color: $gray;
-            // padding: $small;
-            // margin-top: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            padding: $small;
-            cursor: pointer;
-
-            &:hover {
-                background-color: $gray5;
-            }
-        }
-
-        .switch {
-            display: unset;
         }
     }
 }

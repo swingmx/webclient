@@ -62,6 +62,7 @@
           />
         </div>
 
+        <!-- Custom components -->
         <List
           v-if="setting.type === SettingType.root_dirs"
           icon="folder"
