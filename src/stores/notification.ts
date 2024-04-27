@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { NotifType } from "../enums";
 import { Notif } from "../interfaces";
 
-const useNotifStore = defineStore("notification", {
+const useToast = defineStore("notification", {
   state: () => ({
     notifs: <Notif[]>[],
   }),
@@ -17,13 +17,22 @@ const useNotifStore = defineStore("notification", {
         this.notifs.shift();
       }, 3000);
     },
+    showError(text: string) {
+      this.showNotification(text, NotifType.Error);
+    },
+    showSuccess(text: string){
+      this.showNotification(text, NotifType.Success);
+    },
+    showGenericError(){
+      this.showError("Failed! Something went wrong!")
+    }
   },
 });
 
 class Notification {
   constructor(text: string, type: NotifType = NotifType.Info) {
-    useNotifStore().showNotification(text, type);
+    useToast().showNotification(text, type);
   }
 }
 
-export { NotifType, Notification, useNotifStore };
+export { NotifType, Notification, useToast };

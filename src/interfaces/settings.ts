@@ -32,4 +32,5 @@ export interface SettingGroup {
 export interface SettingCategory {
   title: string;
   groups: SettingGroup[];
+  show_if?: () => boolean;
 }

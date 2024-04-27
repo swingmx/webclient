@@ -1,4 +1,5 @@
-import useSettingsStore from '@/stores/settings'
+import { loggedInUserIsAdmin } from '../utils'
+import useSettings from '@/stores/settings'
 
 import { SettingCategory } from '@/interfaces/settings'
 import * as strings from '../strings'
@@ -46,6 +47,7 @@ export const general = {
 
 export const library = {
     title: 'Library',
+    show_if: loggedInUserIsAdmin,
     groups: [
         {
             title: rootRootStrings.title,
@@ -55,7 +57,7 @@ export const library = {
         },
         {
             // null means settings table is not created yet
-            show_if: () => useSettingsStore().feat !== null,
+            show_if: () => useSettings().feat !== null,
             title: 'Tracks',
             icon: TrackSvg,
             desc: 'Settings relating to track information',
@@ -63,7 +65,7 @@ export const library = {
         },
         {
             // null means settings table is not created yet
-            show_if: () => useSettingsStore().feat !== null,
+            show_if: () => useSettings().feat !== null,
             title: 'Albums',
             icon: AlbumSvg,
             desc: 'Settings relating to album information',
@@ -71,7 +73,7 @@ export const library = {
         },
         {
             // null means settings table is not created yet
-            show_if: () => useSettingsStore().feat !== null,
+            show_if: () => useSettings().feat !== null,
             title: 'Artists',
             icon: AvatarSvg,
             desc: 'Customize artist separators',

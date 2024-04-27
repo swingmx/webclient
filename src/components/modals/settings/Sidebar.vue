@@ -3,7 +3,9 @@
         <div class="groups">
             <div
                 class="group"
-                v-for="group in settingGroups"
+                v-for="group in settingGroups.filter((g) => {
+                    return g.show_if ? g.show_if() : true
+                })"
                 :key="group.title"
             >
                 <div
@@ -25,7 +27,7 @@
                         <!-- <DummySvg /> -->
                         <Avatar
                             :size="18"
-                            :name="auth.user.username"
+                            :name="auth.user.username || ''"
                             v-if="item.title === 'Profile'"
                         />
                         <span
@@ -81,7 +83,7 @@ defineEmits<{
     .gtitle {
         font-weight: bold;
         font-size: 14px;
-        margin: $medium 0 $small $small
+        margin: $medium 0 $small $small;
     }
 
     .gitems {

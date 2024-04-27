@@ -10,7 +10,7 @@
     >
         <div class="asettings">
             <ToggleSetting
-                v-for="s in gsettings"
+                v-for="s in account_settings"
                 :key="s.title"
                 :title="s.title"
                 :value="s.value.value"
@@ -20,21 +20,29 @@
         </div>
         <div class="ahead">
             <div class="h2">All users</div>
-            <button class="adduser" @click="showAddUser = true">
+            <button
+                class="adduser"
+                @click="showAddUser = true"
+            >
                 <PlusSvg />
                 new user
             </button>
         </div>
-        <div class="userlist">
+        <TransitionGroup name="list">
             <div
                 class="usercard rounded"
                 v-auto-animate
-                v-for="user in users"
+                v-for="(user, index) in users"
                 :key="user.id"
-                :class="{ selected: user.id === selectedUser }"
-                @click="() => selectUser(user.id)"
+                :class="{
+                    selected: user.id === selectedUser,
+                    firstchild: index == 0,
+                }"
             >
-                <div class="userinfo">
+                <div
+                    class="userinfo"
+                    @click="() => selectUser(user.id)"
+                >
                     <Avatar
                         :name="user.username"
                         :size="47"
@@ -51,89 +59,166 @@
                             >
                         </div>
                     </div>
+                    <DeleteSvg
+                        class="delete"
+                        v-if="auth.user.username !== user.username"
+                    />
                 </div>
                 <div
                     class="usettins"
                     v-if="user.id === selectedUser"
                 >
-                    <div
-                        v-for="setting in settings"
+                    <ToggleSetting
+                        v-for="setting in usettings.filter((s) => {
+                            // if there's only one admin and it's the current user
+                            // don't show the admin setting
+                            if (
+                                s.title === 'Admin' &&
+                                users.filter((u) => u.roles.includes('admin'))
+                                    .length === 1 &&
+                                user.roles.includes('admin') &&
+                                user.username === auth.user.username
+                            ) {
+                                return false
+                            }
+
+                            return true
+                        })"
                         :key="setting.title"
-                    >
-                        <ToggleSetting
-                            v-for="option in setting.options"
-                            :key="option.title"
-                            :title="option.title"
-                            :desc="option.desc"
-                            :value="option.value.value"
-                        />
-                    </div>
+                        :title="setting.title"
+                        :desc="setting.desc"
+                        :value="setting.value(user.roles)"
+                        @click="() => setting.action(user)"
+                    />
                 </div>
             </div>
-        </div>
+        </TransitionGroup>
     </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { User } from '@/interfaces'
-import { SettingType } from '@/settings/enums'
 import { getAllUsers } from '@/requests/auth'
+import { SettingType } from '@/settings/enums'
+import { updateConfig } from '@/requests/settings'
+
+import useAuth from '@/stores/auth'
+import { useToast } from '@/stores/notification'
 
 import Profile from '../Profile.vue'
 import PlusSvg from '@/assets/icons/plus.svg'
 import ToggleSetting from './ToggleSetting.vue'
 import Avatar from '@/components/shared/Avatar.vue'
+import DeleteSvg from '@/assets/icons/delete.svg'
+
+const auth = useAuth()
+const toast = useToast()
 
 const selectedUser = ref(0)
 const users = ref(<User[]>[])
-
 const showAddUser = ref(false)
-const enableGuest = ref(false)
-const showAllUsers = ref(false)
 
-const gsettings = [
+const settingsMap = {
+    enableGuest: ref(false),
+    usersOnLogin: ref(false),
+} as { [key: string]: { value: boolean } }
+
+const account_settings = [
     {
         title: 'Enable guest access',
         desc: 'Allow users to access the site without an account',
         type: SettingType.binary,
-        value: enableGuest,
-        action: () => {
-            enableGuest.value = !enableGuest.value
+        value: settingsMap.enableGuest,
+        action: async () => {
+            if (settingsMap.enableGuest.value) {
+                const success = await auth.deleteUser('guest')
+
+                if (success) {
+                    settingsMap.enableGuest.value =
+                        !settingsMap.enableGuest.value
+                }
+                return
+            }
+
+            settingsMap.enableGuest.value = await auth.addGuestUser()
         },
     },
     {
         title: 'Show users on login',
         desc: 'Show a list of users on your server when logging in',
         type: SettingType.binary,
-        value: showAllUsers,
+        value: settingsMap.usersOnLogin,
+        action: async () => {
+            const res = await updateConfig(
+                'usersOnLogin',
+                !settingsMap.usersOnLogin.value
+            )
+
+            if (res.status === 200) {
+                settingsMap.usersOnLogin.value = !settingsMap.usersOnLogin.value
+                return
+            }
+
+            if (res.data.msg) {
+                return toast.showError(res.data.msg)
+            }
+
+            toast.showGenericError()
+        },
     },
 ]
 
-const settings = [
+const usettings = [
     {
-        title: 'User roles',
-        type: SettingType.binary,
-        options: [
-            {
-                title: 'Admin',
-                desc: 'Can do anything',
-                value: ref(false),
-            },
-            {
-                title: 'Curator',
-                desc: 'Can create and edit content',
-                value: ref(false),
-            },
-        ],
+        title: 'Admin',
+        desc: 'Can do anything',
+        value: (roles: string[]) => {
+            return roles.includes('admin')
+        },
+        action: async (user: User) => {
+            let roles = user.roles
+            if (roles.includes('admin')) {
+                roles = roles.filter((r) => r !== 'admin')
+            } else {
+                roles.push('admin')
+            }
+
+            const success = await auth.updateProfile({
+                id: user.id,
+                roles: roles,
+            })
+
+            console.log('success', success)
+            if (success) {
+                user.roles = roles
+            } else {
+                user.roles = roles.filter((r) => r !== 'admin')
+            }
+        },
+    },
+    {
+        title: 'Curator',
+        desc: 'Can create and edit content',
+        value: (roles: string[]) => {
+            return roles.includes('curator')
+        },
+        action: (user: User) => {
+            console.log(user)
+        },
     },
 ]
 
-function userAdded(user: User){
+function userAdded(user: User) {
     showAddUser.value = false
-    
-    // insert user at index 1
-    users.value.splice(1, 0, user)
+
+    setTimeout(() => {
+        // insert user after last admin
+        const lastAdmin = users.value.findIndex((u) =>
+            u.roles.includes('admin')
+        )
+        users.value.splice(lastAdmin + 1, 0, user)
+    }, 250)
 }
 
 function selectUser(id: number) {
@@ -147,13 +232,52 @@ function selectUser(id: number) {
 
 onMounted(async () => {
     const res = await getAllUsers(false)
-    users.value = res
+
+    if (res.users) {
+        users.value = res.users
+    }
+    if (Object.keys(res.settings).length) {
+        // loop through settings
+        // find keys that match the settingsMap keys
+        // and set values
+
+        for (const key in res.settings) {
+            if (settingsMap[key]) {
+                settingsMap[key].value = res.settings[key]
+            }
+        }
+    }
 })
 </script>
 
 <style lang="scss">
 .accountsettings {
     width: 100%;
+
+    /* apply transition to moving elements */
+    .list-move,
+    .list-leave-active {
+        // moving elements
+        // eg. when expanding a userinfo card
+        transition: all 0.1s ease;
+    }
+
+    .list-enter-active {
+        // first entrance
+        transition: all 0.5s ease;
+    }
+
+    .list-enter-from,
+    .list-leave-to {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    /* ensure leaving items are taken out of layout flow so that moving
+   animations can be calculated correctly. */
+    .list-leave-active {
+        position: absolute;
+    }
 
     .adduser svg {
         height: 75%;
@@ -187,16 +311,44 @@ onMounted(async () => {
 
         .userinfo {
             display: grid;
-            grid-template-columns: max-content 1fr;
+            grid-template-columns: max-content 1fr max-content;
             align-items: center;
-            gap: 1rem;
+            // gap: 1rem;
             padding-bottom: 1rem;
         }
 
         .details {
             display: flex;
             justify-content: space-between;
-            max-width: 100%;
+            padding-left: 1rem;
+            width: 100%;
+        }
+
+        .delete {
+            cursor: pointer;
+            color: $white;
+            margin-left: 1rem;
+            transition: all 0.25s ease;
+
+            &:hover {
+                color: rgb(248, 115, 115);
+            }
+        }
+    }
+
+    .usercard.firstchild {
+        margin-bottom: 2rem !important;
+        background-color: $gray5;
+        border: none;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 45%;
+            width: 10%;
+            height: 1px;
+            background-color: $gray5;
         }
     }
 
@@ -219,3 +371,10 @@ onMounted(async () => {
     }
 }
 </style>
+
+<!--
+CHECKPOINT
+
+TRYING TO KEEP THE CURRENT USER CARD AT THE BEGINNING OF THE USERS LIST
+ADDING A BORDER BOTTOM TO THE FIRST CARD
+-->

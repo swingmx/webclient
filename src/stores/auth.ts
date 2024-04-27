@@ -1,15 +1,17 @@
-import { defineStore } from 'pinia'
 import { User } from '@/interfaces'
 import useModal from '@/stores/modal'
+import { defineStore } from 'pinia'
 
 import {
+    addGuestUser,
+    addNewUser,
+    deleteUser,
+    getLoggedInUser,
     loginUser,
     logoutUser,
-    addNewUser,
-    getLoggedInUser,
     updateUserProfile,
 } from '@/requests/auth'
-import { NotifType, useNotifStore } from '@/stores/notification'
+import { NotifType, useToast } from '@/stores/notification'
 
 export default defineStore('authStore', {
     state: () => ({
@@ -25,64 +27,97 @@ export default defineStore('authStore', {
         setUser(user: User) {
             this.user = user
         },
+        // toast helpers
+        showToast(msg: string, type: NotifType) {
+            const toast = useToast()
+            toast.showNotification(msg, type)
+        },
+        showSuccess(msg: string) {
+            this.showToast(msg, NotifType.Success)
+        },
+        showError(msg: string) {
+            this.showToast(msg, NotifType.Error)
+        },
+        showGenericError() {
+            this.showError('Failed! Something went wrong!')
+        },
+        showResMsgOrGenericError(res: any) {
+            if (res.data.msg) {
+                this.showError(res.data.msg)
+            } else {
+                this.showGenericError()
+            }
+        },
+        // auth actions
         async login(username: string, password: string) {
             const res = await loginUser(username, password)
-            console.log(res)
             const modal = useModal()
-            const toast = useNotifStore()
 
             if (res.status === 200) {
-                toast.showNotification(res.data.msg, NotifType.Success)
+                this.showSuccess(res.data.msg)
                 modal.hideModal()
                 window.location.reload()
             } else {
-                toast.showNotification(res.data.msg, NotifType.Error)
+                this.showResMsgOrGenericError(res)
             }
         },
         async logout() {
             await logoutUser()
             window.location.reload()
         },
-        async addNewUser(user: { [key: string]: any }){
-            const toast = useNotifStore()
+        async addNewUser(user: { [key: string]: any }) {
             const res = await addNewUser(user)
 
             if (res.status === 200) {
-                toast.showNotification(
-                    'User added successfully!',
-                    res.status === 200 ? NotifType.Success : NotifType.Error
-                )
+                this.showSuccess('User added successfully!')
 
                 return res.data as User
             }
 
-            toast.showNotification(
-                'Failed! Something went wrong!',
-                NotifType.Error
-            )
-
+            this.showResMsgOrGenericError(res)
             return false
         },
-        async updateProfile(user: { [key: string]: any }) {
-            const toast = useNotifStore()
-            const res = await updateUserProfile(user)
-
+        async addGuestUser() {
+            const res = await addGuestUser()
             if (res.status === 200) {
-                this.user = res.data
-                toast.showNotification(
-                    'Profile updated successfully!',
-                    res.status === 200 ? NotifType.Success : NotifType.Error
-                )
-
+                this.showSuccess('Guest user added successfully!')
                 return true
             }
 
-            toast.showNotification(
-                'Failed! Something went wrong!',
-                NotifType.Error
-            )
+            this.showResMsgOrGenericError(res)
+            return false
+        },
+        async updateProfile(user: { [key: string]: any }) {
+            const res = await updateUserProfile(user)
 
+            console.log(user)
+            if (res.status === 200) {
+                // if we're updating self, update the user object
+                // NOTE: self update won't have an id
+                if (!user.id) {
+                    console.log('updating user')
+                    this.user = res.data
+                }
+                this.showSuccess('Profile updated successfully!')
+                return true
+            }
+
+            this.showResMsgOrGenericError(res)
+            return false
+        },
+        async deleteUser(username: string) {
+            const res = await deleteUser(username)
+
+            if (res.status === 200) {
+                this.showSuccess(`${username} deleted successfully!`)
+                return true
+            }
+
+            this.showResMsgOrGenericError(res)
             return false
         },
     },
 })
+
+// CHECKPOINT
+// I WAS TRYING TO FIGURE OUT TO TOGGLE ENABLING GUEST ACCESS

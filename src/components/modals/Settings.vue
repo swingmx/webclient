@@ -53,7 +53,7 @@ const currentGroup = computed(() => {
 
     for (const group of settingGroups) {
         for (const settings of group.groups) {
-            if (settings.title === 'Accounts') {
+            if (settings.title === 'Appearance') {
                 return settings
             }
         }

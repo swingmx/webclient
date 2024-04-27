@@ -34,7 +34,9 @@
                     @input="(input) => (username = input)"
                 />
             </div>
-            <label for="pswd">Change password</label>
+            <label for="pswd"
+                >{{ adding_user ? 'Create' : 'Change' }} password</label
+            >
             <Input
                 type="password"
                 placeholder="⏺⏺⏺⏺⏺⏺⏺⏺"
