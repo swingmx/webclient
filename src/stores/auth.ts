@@ -94,7 +94,8 @@ export default defineStore('authStore', {
             if (res.status === 200) {
                 // if we're updating self, update the user object
                 // NOTE: self update won't have an id
-                if (!user.id) {
+                // When updating self from accounts, the id == this.user.id
+                if (!user.id || user.id === this.user.id) {
                     console.log('updating user')
                     this.user = res.data
                 }

@@ -177,7 +177,9 @@ const usettings = [
             return roles.includes('admin')
         },
         action: async (user: User) => {
-            let roles = user.roles
+            let initialRoles = [...user.roles]
+            let roles = [...user.roles]
+
             if (roles.includes('admin')) {
                 roles = roles.filter((r) => r !== 'admin')
             } else {
@@ -189,22 +191,11 @@ const usettings = [
                 roles: roles,
             })
 
-            console.log('success', success)
             if (success) {
                 user.roles = roles
             } else {
-                user.roles = roles.filter((r) => r !== 'admin')
+                user.roles = initialRoles
             }
-        },
-    },
-    {
-        title: 'Curator',
-        desc: 'Can create and edit content',
-        value: (roles: string[]) => {
-            return roles.includes('curator')
-        },
-        action: (user: User) => {
-            console.log(user)
         },
     },
 ]
@@ -333,6 +324,11 @@ onMounted(async () => {
             &:hover {
                 color: rgb(248, 115, 115);
             }
+        }
+
+        .delete {
+            height: 1.5rem;
+            color: $gray1;
         }
     }
 
