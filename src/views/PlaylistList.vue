@@ -85,19 +85,19 @@ const playlists = computed(() => {
   height: 100%;
   overflow: auto;
 
-  .generichead {
-    @include allPhones {
-      padding: 1rem 0 1rem $small;
-    }
-  }
-
   .grid {
     grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
     gap: 2.5rem 1.5rem;
+
+    @include smallPhones {
+      grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+      gap: 2rem 1rem;
+    }
   }
 
   #playlistsearch {
     width: 16rem;
+    max-width: 100%;
     margin-top: 1rem;
     background-color: $gray5;
     color: white;

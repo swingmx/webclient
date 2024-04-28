@@ -113,7 +113,7 @@ onBeforeUnmount(() => {
   line-height: 1.2;
   height: $song-item-height;
   user-select: none;
-  padding: 0 $small;
+  padding-left: $small;
   position: relative;
   transition: background-color 0.2s ease-out;
 

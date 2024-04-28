@@ -68,6 +68,10 @@ const icon_ = getIcon();
       font-family: "SF Mono", monospace;
       font-weight: 500;
       font-size: 0.9rem;
+
+      > svg {
+        flex-shrink: 0;
+      }
     }
 
     .icon {

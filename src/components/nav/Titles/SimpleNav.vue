@@ -10,7 +10,7 @@ defineProps<{
 
 <style lang="scss">
 .simple-nav-title {
-  @include isSmallestPhone {
+  @include smallPhones {
     font-size: 1.3rem;
   }
 }

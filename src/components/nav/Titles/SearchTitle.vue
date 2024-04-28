@@ -17,8 +17,8 @@
 <script setup lang="ts">
 import { Routes } from "@/router";
 
-import useSearchStore from "@/stores/search";
 import { content_width } from "@/stores/content-width";
+import useSearchStore from "@/stores/search";
 
 import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
 

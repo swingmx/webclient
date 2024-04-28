@@ -98,16 +98,21 @@ function handleButton() {
     button {
       background: transparent;
       border: none;
-      width: 2.5rem;
+      width: 2rem;
+      height: 2rem;
       padding: 0;
       margin-left: 4px;
       border-radius: 3rem;
-      height: 100%;
       cursor: pointer;
+      flex-shrink: 0;
 
       &:hover {
         transition: all 0.2s ease;
         background-color: $gray2;
+      }
+
+      @include allPhones {
+        display: none;
       }
     }
 
@@ -128,14 +133,29 @@ function handleButton() {
       padding-right: 1rem;
       text-overflow: ellipsis;
 
-      @media only screen and (max-width: 500px) {
-        width: 7rem;
+      @include allPhones {
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding-right: $small;
       }
     }
+
+    @include allPhones {
+      border-radius: unset;
+      background-color: transparent;
+    }
+  }
+
+  @include allPhones {
+    width: 100%;
   }
 }
 
 .search-focused {
-  outline: solid 2px #fff !important;
+  outline: solid 2px #fff;
+
+  @include allPhones {
+    outline: none;
+  }
 }
 </style>

@@ -26,5 +26,9 @@ defineProps<{
     font-weight: 500;
     opacity: 0.75;
   }
+
+  @media only screen and (max-width: 614px) {
+    padding-left: 0.5rem !important;
+  }
 }
 </style>

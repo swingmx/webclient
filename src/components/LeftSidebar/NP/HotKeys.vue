@@ -67,14 +67,16 @@ const { buffering } = usePlayer();
     grid-template-columns: 1fr max-content 1fr;
     position: relative;
     margin-right: -$small;
+    gap: 0;
 
     button:first-child {
       margin-left: $small;
     }
   }
 
-  @include isSmallestPhone {
-    gap: $small;
+  @include largePhones {
+    display: flex;
+    flex-shrink: 0;
   }
 }
 </style>

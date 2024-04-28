@@ -15,6 +15,7 @@ import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
   padding-left: 1rem;
   border: solid 1px $gray5;
   background-image: linear-gradient(37deg, rgb(29, 28, 28), transparent);
+  transition: background-color 0.2s ease-out;
 
   svg {
     transform: scale(1.25);

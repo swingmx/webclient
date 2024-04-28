@@ -1,34 +1,42 @@
 <template>
-  <div
-    class="topnav"
-    :class="{
-      use_links: settings.is_alt_layout,
-      use_sidebar: settings.use_sidebar && isSmall,
-    }"
-  >
-    <div class="left">
-      <NavButtons />
-      <NavLinks v-if="settings.is_alt_layout" />
-      <div v-if="settings.is_default_layout && $route.name == Routes.folder" class="info">
-        <Folder :sub-paths="subPaths" />
+  <div class="topnav_container">
+    <div
+      class="topnav"
+      :class="{
+        use_links: settings.is_alt_layout,
+        use_sidebar: settings.use_sidebar && isSmall,
+      }"
+    >
+      <div class="left">
+        <NavButtons />
+        <NavLinks v-if="settings.is_alt_layout" />
+        <div v-if="settings.is_default_layout && $route.name == Routes.folder" class="info">
+          <Folder :sub-paths="subPaths" />
+        </div>
+        <NavTitles v-else-if="settings.is_default_layout && !isSmall" />
       </div>
-      <NavTitles v-else-if="settings.is_default_layout && !isSmall" />
-    </div>
-    <RouterLink v-if="settings.is_alt_layout" to="/" class="logo rounded-sm"><LogoSvg /></RouterLink>
-    <div v-if="settings.is_alt_layout || !settings.use_sidebar" class="right">
-      <SearchInput :on_nav="true" />
-      <!-- v-if="settings.is_alt_layout" -->
-      <RouterLink
-        :to="{
-          name: Routes.settings,
-          params: {
-            tab: 'general',
-          },
-        }"
-        class="avatar"
-      >
-        <AvatarSvg />
-      </RouterLink>
+      <div class="sidenav_toggle" @click="toggleSidenav">
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+      <NavSidenav @close="toggleSidenav" :class="{ active: sidenavActive }" />
+      <div class="dimmer noSelect" :class="{ active: sidenavActive }" @click="toggleSidenav"></div>
+      <RouterLink v-if="settings.is_alt_layout" to="/" class="logo rounded-sm"><LogoSvg /></RouterLink>
+      <div v-if="settings.is_alt_layout || !settings.use_sidebar" class="right">
+        <SearchInput :on_nav="true" />
+        <!-- v-if="settings.is_alt_layout" -->
+        <RouterLink
+          :to="{
+            name: Routes.settings,
+            params: {
+              tab: 'general',
+            },
+          }"
+          class="avatar"
+        >
+          <AvatarSvg />
+        </RouterLink>
+      </div>
     </div>
   </div>
 </template>
@@ -48,6 +56,7 @@ import AvatarSvg from "@/assets/icons/settings.svg";
 import SearchInput from "../RightSideBar/SearchInput.vue";
 import NavButtons from "./NavButtons.vue";
 import NavLinks from "./NavLinks.vue";
+import NavSidenav from "./NavSidenav.vue";
 import NavTitles from "./NavTitles.vue";
 import Folder from "./Titles/Folder.vue";
 
@@ -88,6 +97,12 @@ onMounted(() => {
     [oldpath, subPaths.value] = createSubPaths(route.params.path as string, oldpath);
   }
 });
+
+const sidenavActive = ref(false);
+
+function toggleSidenav() {
+  sidenavActive.value = !sidenavActive.value;
+}
 </script>
 
 <style lang="scss">
@@ -128,12 +143,15 @@ onMounted(() => {
         align-items: center;
       }
     }
+
+    @include allPhones {
+      display: none;
+    }
   }
 
   .logo {
     width: max-content;
     margin: 0 auto;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -172,9 +190,19 @@ onMounted(() => {
       }
 
       @include allPhones {
-        display: none;
+        height: unset;
+        background-color: transparent;
       }
     }
+
+    @include allPhones {
+      gap: unset;
+      justify-content: unset;
+    }
+  }
+
+  @include allPhones {
+    display: flex;
   }
 }
 </style>

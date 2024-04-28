@@ -101,14 +101,14 @@ onMounted(() => {
   overflow-x: hidden;
   @include hideScrollbars;
 
-  @include tablet-portrait {
+  @include allPhones {
     font-size: 2rem !important;
     padding: 0 1.5rem;
   }
 
   .nolyrics {
     color: rgba(255, 255, 255, 0.521);
-    margin-top: 2rem;
+    margin-bottom: 1rem;
   }
 
   .line {

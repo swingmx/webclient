@@ -171,12 +171,16 @@ defineProps<{
       display: flex;
       flex-direction: column;
       align-items: self-start;
+      width: 100%;
 
       .title {
         font-weight: 500;
         margin: auto 0;
         display: flex;
+        align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: $small;
         width: 100%;
 
         button > svg {
@@ -197,6 +201,19 @@ defineProps<{
   .setting-item:last-child {
     border-bottom: none;
     padding-bottom: 0;
+  }
+
+  @include smallestPhones {
+    .info ~ .setting > .setting-item {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: $small;
+
+      .options > .setting-select {
+        margin-left: unset;
+      }
+    }
   }
 }
 </style>

@@ -30,9 +30,14 @@ defineProps<{
 .generictabs {
   display: flex;
   border-bottom: solid 1px $gray;
+  max-width: 100%;
+  overflow: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 
   .tab {
     font-weight: 500;
+    white-space: nowrap;
     padding: $medium;
     position: relative;
     color: $gray1;
@@ -61,5 +66,9 @@ defineProps<{
       visibility: visible;
     }
   }
+}
+
+.designatedOS .generictabs::-webkit-scrollbar {
+  display: none;
 }
 </style>

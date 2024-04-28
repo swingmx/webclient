@@ -21,19 +21,17 @@ $g-border: solid 1px $gray5;
 
   @include allPhones {
     grid-template-columns: 1fr;
-    // grid-template-columns: 1fr;
-    grid-template-rows: max-content 1fr 9.5rem;
     grid-template-areas:
       "nav"
       "content"
       "bottombar";
+    grid-template-rows: auto 1fr auto;
   }
 }
 
 @include allPhones {
   #app-grid.is_alt_layout {
     grid-template-columns: 1fr !important;
-    // grid-template-columns: 1fr;
     grid-template-rows: max-content 1fr 9.5rem !important;
     grid-template-areas:
       "nav"
@@ -56,7 +54,13 @@ $g-border: solid 1px $gray5;
   padding-right: $padright;
 
   @include allPhones {
-    padding: 0 1rem;
+    gap: $small;
+    height: unset;
+    padding: 6px 8px;
+    margin: $medium 1rem;
+    border-radius: 1rem;
+    border: solid 1px $gray5;
+    background-image: linear-gradient(37deg, rgb(29, 28, 28), transparent);
   }
 }
 
@@ -150,10 +154,6 @@ $g-border: solid 1px $gray5;
     padding-right: 2rem;
   }
 
-  .nolyrics {
-    margin-top: 0;
-  }
-
   @media only screen and (min-width: 1980px) {
     // NOTE: Styles for 1680px and below
     $alt_layout_pad: max(2rem, calc((100% - 1680px) / 2));
@@ -217,6 +217,7 @@ $g-border: solid 1px $gray5;
     width: 100%;
     padding-bottom: $content-padding-bottom;
     padding-bottom: $padbottom;
+    -webkit-overflow-scrolling: touch;
 
     @include allPhones {
       padding-left: 1rem;

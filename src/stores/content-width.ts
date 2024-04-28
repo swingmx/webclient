@@ -37,17 +37,19 @@ const maxAbumCards = computed(() => {
 });
 
 // WINDOW SIZES
-const MOBILE_WIDTH = 900;
-const SMALL_MOBILE_WIDTH = 660;
-const SMALLEST_MOBILE_WIDTH = 460; // very small screens
+const ALL_MOBILE_WIDTH = 900;
+const LARGE_MOBILE_WIDTH = 620;
+const SMALL_MOBILE_WIDTH = 460;
 
 const { width: win_width } = useWindowSize();
 
-export const isSmallPhone = computed(() => win_width.value <= SMALL_MOBILE_WIDTH);
-export const isMobile = computed(() => win_width.value <= MOBILE_WIDTH);
-export const isLargerMobile = computed(() => win_width.value >= SMALL_MOBILE_WIDTH && win_width.value <= MOBILE_WIDTH);
+export const isSmallPhone = computed(() => win_width.value <= LARGE_MOBILE_WIDTH);
+export const isMobile = computed(() => win_width.value <= ALL_MOBILE_WIDTH);
+export const isLargerMobile = computed(
+  () => win_width.value >= LARGE_MOBILE_WIDTH && win_width.value <= ALL_MOBILE_WIDTH
+);
 
-export const isSmallestPhone = computed(() => win_width.value <= SMALLEST_MOBILE_WIDTH);
+export const isSmallestPhone = computed(() => win_width.value <= SMALL_MOBILE_WIDTH);
 
 const updateCardWidth = () => {
   // if (album_card_with.value !== 161.6) return;

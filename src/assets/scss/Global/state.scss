@@ -10,6 +10,7 @@
 .last_played {
   background-image: url(../../assets/icons/playing.webp);
   transition: all 0.3s ease-in-out;
+  image-rendering: auto;
 }
 
 .hidden {

@@ -80,6 +80,16 @@ import { menus } from "./navitems";
     }
   }
 
+  @include allPhones {
+    .circular.nav-item:last-child {
+      display: none;
+    }
+
+    .circular.nav-item:nth-child(3) {
+      display: none;
+    }
+  }
+
   svg {
     margin: 0 $small 0 $small;
     border-radius: $small;

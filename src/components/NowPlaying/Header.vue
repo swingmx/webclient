@@ -89,11 +89,36 @@ function handleFav() {
     }
 
     /* Responsive */
-    @media only screen and (max-width: 640px) {
+    @include largePhones {
       .right-group button.speaker {
         border-top: 1px solid transparent !important;
         border-top-left-radius: 0 !important;
         border-top-right-radius: 0 !important;
+      }
+    }
+
+    @media only screen and (max-width: 320px) {
+      position: relative;
+      flex-direction: column;
+      align-items: unset;
+      gap: $small;
+
+      .time:first-child {
+        align-self: baseline;
+        margin-left: 4px;
+      }
+
+      .time:last-child {
+        align-self: end;
+        position: absolute;
+        top: 0;
+        right: 4px;
+      }
+
+      .right-group {
+        width: 100% !important;
+        display: flex;
+        justify-content: space-between;
       }
     }
   }

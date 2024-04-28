@@ -68,16 +68,15 @@ defineEmits<{
   }
 
   .song-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: pointer;
+
     .with-flag {
       display: flex;
       align-items: center;
-
-      .master-flag {
-        margin-bottom: -2px;
-      }
     }
-
-    cursor: pointer;
   }
 }
 </style>
