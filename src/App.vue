@@ -14,12 +14,13 @@
     :style="{
       maxWidth: `${settings.is_default_layout ? (content_height > 1080 ? '2220px' : '1760px') : ''}`,
     }"
+    ref="appcontent"
   >
     <div class="teeemp">{{ settings.is_alt_layout }}</div>
     <LeftSidebar v-if="settings.is_default_layout && !isMobile" />
     <NavBar />
     <div id="acontent" v-element-size="updateContentElemSize">
-      <div id="contentresizer" ref="appcontent"></div>
+      <div id="contentresizer"></div>
       <BalancerProvider>
         <RouterView />
       </BalancerProvider>

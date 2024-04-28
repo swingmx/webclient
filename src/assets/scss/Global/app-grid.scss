@@ -15,10 +15,6 @@ $g-border: solid 1px $gray5;
   border-bottom: none;
   margin: 0 auto;
 
-  #contentresizer {
-    margin: 0 $padright 0 $padleft;
-  }
-
   @include allPhones {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -123,10 +119,6 @@ $g-border: solid 1px $gray5;
     padding: 0 $alt_layout_pad;
   }
 
-  #contentresizer {
-    margin: 0 $alt_layout_pad;
-  }
-
   .topnav {
     background-color: $gray;
   }
@@ -164,10 +156,6 @@ $g-border: solid 1px $gray5;
     #songlist-scroller {
       padding-left: $alt_layout_pad;
       padding-right: $alt_layout_pad;
-    }
-
-    #contentresizer {
-      margin: 0 $alt_layout_pad;
     }
 
     .search-view .buttons-area {
