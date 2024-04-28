@@ -14,5 +14,9 @@
   font-size: 14px;
   font-weight: 500;
   color: $gray1;
+
+  @media only screen and (max-width: 614px) {
+    padding-left: 0.5rem;
+  }
 }
 </style>

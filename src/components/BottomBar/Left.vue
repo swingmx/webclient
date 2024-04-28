@@ -114,6 +114,10 @@ defineEmits<{
         height: 130%;
       }
     }
+
+    @include largePhones {
+      flex-shrink: 0;
+    }
   }
 
   .heart-button {
@@ -129,10 +133,6 @@ defineEmits<{
       display: flex;
       align-items: center;
       margin-bottom: 2px;
-
-      .master-flag {
-        margin-bottom: -2px;
-      }
     }
 
     .artistname {
@@ -142,10 +142,13 @@ defineEmits<{
         font-size: 0.8rem;
       }
     }
+
+    @include largePhones {
+      flex-grow: 1;
+    }
   }
 
   @include allPhones {
-    height: 4rem;
     grid-template-columns: max-content 1fr max-content max-content;
 
     .heart-button {
@@ -154,8 +157,9 @@ defineEmits<{
     }
   }
 
-  @include isSmallestPhone {
-    gap: $small;
+  @include largePhones {
+    display: flex;
+    max-width: calc(100% - 8px);
   }
 }
 </style>

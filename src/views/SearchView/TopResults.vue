@@ -82,6 +82,11 @@ const search = useSearchStore();
     h3 {
       margin-left: 0;
     }
+
+    @include smallPhones {
+      min-width: unset;
+      max-width: 100%;
+    }
   }
 
   .track-item {

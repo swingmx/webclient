@@ -56,8 +56,17 @@ defineEmits<{
 
 #tab-content {
   height: 100%;
-  overflow: scroll;
+  overflow: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.designatedOS #tab-content::-webkit-scrollbar-track {
+  background-color: $gray;
+}
+
+.designatedOS #tab-content::-webkit-scrollbar-thumb {
+  border: 4px solid $gray;
 }
 
 #right-tabs.tabContent {

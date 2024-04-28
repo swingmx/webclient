@@ -90,8 +90,17 @@ onMounted(() => {
     position: relative;
     padding-left: $padleft;
 
+    #right-tabs {
+      max-width: calc(100% - 16px);
+    }
+
     .tabheaders {
       margin: 0;
+      border-radius: 10rem;
+      max-width: calc(100% - 16px);
+      overflow: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
     @include allPhones {
@@ -108,5 +117,9 @@ onMounted(() => {
       padding-top: 0 !important;
     }
   }
+}
+
+.designatedOS .tabheaders::-webkit-scrollbar {
+  display: none;
 }
 </style>

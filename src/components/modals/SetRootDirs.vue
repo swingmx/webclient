@@ -131,20 +131,22 @@ onMounted(() => {
   position: absolute;
   top: -3.25rem;
   max-width: calc(100% - 2rem);
-  overflow-x: scroll;
+  max-width: 100%;
+  overflow: auto;
   overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 
   display: flex;
   align-items: center;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
   span {
     cursor: pointer;
   }
+}
+
+.designatedOS .bread-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .bottom-text {
@@ -189,6 +191,7 @@ onMounted(() => {
   .buttons {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: $medium;
     margin-right: 1rem;
     margin-bottom: -$medium;

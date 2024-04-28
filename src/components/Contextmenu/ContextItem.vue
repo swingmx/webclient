@@ -132,7 +132,7 @@ function runChildAction(action: () => void) {
     z-index: 10;
     transform: scale(0);
     background-color: $context;
-    padding: $smaller;
+    padding: $small $smaller;
     border: solid 1px $gray3;
     opacity: 0;
     visibility: hidden;
@@ -151,10 +151,11 @@ function runChildAction(action: () => void) {
     }
 
     .wrapper {
-      padding: $smaller;
-      overflow-y: auto;
+      padding: 0 $smaller;
+      overflow: auto;
       overflow-x: hidden;
       max-height: calc(100vh / 2);
+      -webkit-overflow-scrolling: touch;
     }
 
     .context-item {

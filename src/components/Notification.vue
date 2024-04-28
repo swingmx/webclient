@@ -39,7 +39,7 @@ function getSvg(notif: NotifType) {
   bottom: 6rem;
   left: 50%;
   transform: translate(-50%);
-  z-index: 100;
+  z-index: 1003;
   display: flex;
   flex-direction: column-reverse;
   gap: 1rem;

@@ -1,11 +1,6 @@
 <template>
   <div class="settings-quickactions grid">
-    <button
-      v-for="a in actions"
-      :key="a.label"
-      class="qaction rounded-sm"
-      @click="a.action"
-    >
+    <button v-for="a in actions" :key="a.label" class="qaction rounded-sm" @click="a.action">
       <component :is="a.icon" v-if="a.icon" />
       <div class="label">{{ a.label }}</div>
       <Switch v-if="a.state" :state="a.state()" />
@@ -14,11 +9,11 @@
 </template>
 
 <script setup lang="ts">
-import useSettings from "@/stores/settings";
 import { triggerScan } from "@/requests/settings/rootdirs";
+import useSettings from "@/stores/settings";
 
-import Switch from "./Switch.vue";
 import ReloadSvg from "@/assets/icons/reload.svg";
+import Switch from "./Switch.vue";
 
 const settings = useSettings();
 
@@ -75,6 +70,19 @@ const actions = [
   }
   .qaction:nth-child(2) svg {
     transform: rotate(90deg);
+  }
+
+  @include smallPhones {
+    gap: $medium;
+  }
+
+  @include smallerPhones {
+    grid-template-columns: 1fr 0fr;
+  }
+
+  @include smallestPhones {
+    display: flex;
+    flex-direction: column;
   }
 }
 </style>

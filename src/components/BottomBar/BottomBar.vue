@@ -2,7 +2,8 @@
   <div
     class="b-bar"
     :style="{
-      padding: `${settings.is_default_layout ? '0 1rem 0 1rem' : ''}`,
+      paddingLeft: `${settings.is_default_layout ? '1rem' : ''}`,
+      paddingRight: `${settings.is_default_layout ? '1rem' : ''}`,
     }"
   >
     <LeftGroup @handleFav="handleFav" />
@@ -69,9 +70,11 @@ function handleFav() {
   z-index: 1;
 
   @include allPhones {
-    grid-template-columns: 1fr;
-    grid-template-rows: max-content 1.5rem max-content;
-    padding: 0 1rem $medium 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: unset;
+    gap: $small;
+    padding: $medium 1rem;
 
     .center > input {
       height: 2px !important;
@@ -93,15 +96,13 @@ function handleFav() {
       height: 3rem;
     }
 
-    @include isSmallestPhone {
-      width: $larger;
-      height: $larger;
-    }
-  }
+    @include largePhones {
+      width: 2.5rem;
+      height: 2.5rem;
 
-  button:nth-child(2) {
-    @include isSmallestPhone {
-      width: 3rem;
+      &:nth-child(2) {
+        width: 3.5rem;
+      }
     }
   }
 
@@ -153,7 +154,7 @@ function handleFav() {
 
     @include allPhones {
       width: 100% !important;
-      margin-bottom: $small;
+      margin-bottom: unset;
     }
 
     .time {

@@ -13,10 +13,7 @@
       background: colors.bg ? colors.bg : '',
     }"
   >
-    <div
-      class="big-img no-scroll"
-      :class="`${isHeaderSmall ? 'imgSmall' : ''} shadow-lg rounded-sm`"
-    >
+    <div class="big-img no-scroll" :class="`${isHeaderSmall ? 'imgSmall' : ''} shadow-lg rounded-sm`">
       <img :src="imguri.thumb.large + album.image" class="rounded-sm" />
     </div>
     <Info />
@@ -24,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 
 import { paths } from "@/config";
 import { isHeaderSmall } from "@/stores/content-width";
@@ -111,7 +108,7 @@ useVisibility(albumheaderthing, handleVisibilityState);
     }
   }
 
-  @include smallPhone {
+  @include largePhones {
     grid-template-columns: 1fr;
     padding: 2rem 1rem;
     height: 25rem;

@@ -62,6 +62,7 @@ const browselist = [
   .btitle {
     font-size: 1.15rem;
     margin-bottom: 1rem;
+    padding-left: 0.25rem;
   }
 
   .browselist {

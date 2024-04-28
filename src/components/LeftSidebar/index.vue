@@ -31,7 +31,8 @@ const settings = useSettingsStore();
 
   .scrollable {
     height: 100%;
-    overflow-y: scroll;
+    overflow: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     padding: 1rem 0;
 
