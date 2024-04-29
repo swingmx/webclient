@@ -37,11 +37,6 @@ const emit = defineEmits<{
 }>()
 
 const currentTab = ref<string>('')
-
-function setTab(title: string) {
-    currentTab.value = title
-}
-
 const currentGroup = computed(() => {
     for (const group of settingGroups) {
         for (const settings of group.groups) {
@@ -53,15 +48,12 @@ const currentGroup = computed(() => {
 
     for (const group of settingGroups) {
         for (const settings of group.groups) {
-            if (settings.title === 'Accounts') {
+            if (settings.title === 'Appearance') {
                 return settings
             }
         }
     }
 })
-// onMounted(() => {
-//   emit("setTitle", "Settings");
-// });
 </script>
 
 <style lang="scss">

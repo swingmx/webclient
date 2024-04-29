@@ -72,6 +72,7 @@ defineEmits<{
 
     display: grid;
     grid-template-rows: 1fr max-content;
+    user-select: none;
 
     .appversion {
         pointer-events: none;

@@ -11,6 +11,9 @@
                 class="back rounded-sm"
                 title="Back to selection"
                 @click="resetSelected"
+                :style="{
+                    visibility: users.length ? 'visible' : 'hidden',
+                }"
             >
                 <span>back</span> <ArrowSvg />
             </button>
@@ -22,54 +25,70 @@
                 <span>back</span> <ArrowSvg />
             </button>
         </div>
-        <div class="helptext">
+        <!-- <div class="helptext">
             <div class="h2">Welcome back</div>
-        </div>
+        </div> -->
 
-        <div
-            class="selected-user"
-            v-if="selected"
-        >
-            <User
-                :user="selected"
-                :selected="true"
-            />
-        </div>
-        <div
-            class="userlist"
-            v-auto-animate
-            v-else
-        >
-            <User
-                v-for="user in users"
-                @click="setUser(user)"
-                :user="user"
-                :key="user.id"
-            />
-        </div>
-        <form
-            class="passinput"
-            v-if="selected"
-            @submit.prevent="loginUser"
-        >
-            <input
-                type="password"
-                class="rounded-sm"
-                placeholder="Enter password"
-                ref="loginpass"
-            />
-            <button class="submit">Login</button>
-        </form>
-        <div
-            class="guestlink"
-            v-if="!selected"
-        >
+        <div class="alcontent">
             <div
-                @click="() => guestLogin()"
-                v-if="guestAllowed"
+                class="selected-user"
+                v-if="selected"
             >
-                Continue as guest
+                <User
+                    :user="
+                        selected.username === ''
+                            ? { id: 0, username: username, firstname: '' }
+                            : selected
+                    "
+                    :selected="true"
+                />
             </div>
+
+            <div
+                class="userlist"
+                v-auto-animate
+                v-else
+            >
+                <User
+                    v-for="user in users"
+                    @click="setUser(user)"
+                    :user="user"
+                    :key="user.id"
+                />
+            </div>
+            <form
+                class="passinput"
+                v-if="selected"
+                v-auto-animate
+                @submit.prevent="loginUser"
+            >
+                <!-- Only show username input if there's no user list -->
+                <Input
+                    placeholder="Enter username"
+                    v-if="selected.username === ''"
+                    input-id="loginuserinput"
+                    @input="(input: string) => username = input"
+                />
+                <Input
+                    type="password"
+                    placeholder="Enter password"
+                    input-id="loginpassinput"
+                    @input="(input: string) => password = input"
+                />
+                <button
+                    v-if="username.length && password.length"
+                    class="submit"
+                >
+                    Login
+                </button>
+            </form>
+        </div>
+        <div
+            v-if="guestAllowed || true"
+            class="guestlink"
+            @click="() => guestLogin()"
+        >
+            <span> Continue as guest </span>
         </div>
     </div>
 </template>
@@ -84,21 +103,34 @@ import { getAllUsers } from '@/requests/auth'
 import Logo from '../Logo.vue'
 import User from '../shared/LoginUserCard.vue'
 import ArrowSvg from '../../assets/icons/expand.svg'
+import Input from '../shared/Input.vue'
 
 const auth = useAuth()
-const loginpass: Ref<HTMLInputElement | null> = ref(null)
+
+const username = ref('')
+const password = ref('')
+
 const users: Ref<UserSimplified[]> = ref([])
 const selected = ref<UserSimplified | null>(null)
 
 const guestAllowed = computed(() =>
-    users.value.some((user) => user.username === 'admin')
+    users.value.some((user) => user.username === 'guest')
 )
 
 async function setUser(user: UserSimplified) {
     selected.value = user
+    username.value = user.username
 
+    // if user has no username, focus on username input
     await nextTick()
-    loginpass.value?.focus()
+    if (user.username === '') {
+        document.getElementById('loginuserinput')?.focus()
+    } else {
+        document.getElementById('loginpassinput')?.focus()
+    }
+
+    // await nextTick()
+    // loginpass.value?.focus()
 }
 
 function resetSelected() {
@@ -106,12 +138,11 @@ function resetSelected() {
 }
 
 async function loginUser() {
-    const password = loginpass.value?.value
-    if (!password) {
+    if (!password.value) {
         return
     }
 
-    await auth.login(selected.value!.username, password)
+    await auth.login(username.value, password.value)
 }
 
 async function guestLogin(
@@ -124,28 +155,49 @@ async function guestLogin(
 onMounted(async () => {
     let res = await getAllUsers()
 
-    if (res.length === 1) {
+    // if there are no users, or only the guest user, set the user to empty user
+    if (
+        res.users.length === 0 ||
+        (res.users.length == 1 && res.users[0].username === 'guest')
+    ) {
+        setUser({ id: 0, username: '', firstname: '' })
+    }
+
+    // if there's only one user, and it's not the guest user, select them
+    if (res.users.length === 1 && res.users[0].username !== 'guest') {
         setTimeout(() => {
-            setUser(res[0])
+            setUser(res.users[0])
         }, 250)
     }
 
-    users.value = res
+    // remove guest user
+    res.users = res.users.filter((user) => user.username !== 'guest')
+
+    // finally, set the users
+    users.value = res.users
 })
 </script>
 
 <style lang="scss">
 .loginmodal {
-    min-height: 30rem;
-    position: relative;
+    height: 35rem;
+    display: grid;
+    grid-template-rows: max-content 1fr max-content;
 
-    .messages {
-        text-align: center;
-        padding: $small;
-        margin-top: 1rem;
+    .alcontent {
+        overflow: auto;
+    }
 
-        .success {
-            color: $green;
+    .guestlink {
+        padding: $medium;
+        width: fit-content;
+        margin: 0 auto;
+        color: $gray2;
+        display: flex;
+        text-decoration: underline;
+
+        & > * {
+            cursor: pointer;
         }
     }
 
@@ -164,11 +216,9 @@ onMounted(async () => {
 
     .head {
         text-align: center;
-        // margin-bottom: 2rem;
         border-bottom: solid 1px $gray5;
-        width: calc(100% + 2.5rem);
-        margin-left: -1.25rem;
-        padding: 0 1rem 1rem 1rem;
+        padding: 1rem;
+        user-select: none;
 
         display: flex;
         justify-content: space-between;
@@ -221,12 +271,12 @@ onMounted(async () => {
         padding: 1rem 0;
     }
 
-    .passinput {
+    form {
         width: 60%;
         margin: 0 auto;
         margin-top: 1rem;
         display: grid;
-        gap: 1rem;
+        // gap: 1rem;
         align-items: center;
 
         input {
@@ -244,22 +294,7 @@ onMounted(async () => {
         .submit {
             height: 3rem;
             background-color: $darkblue;
-        }
-    }
-
-    .guestlink {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-        margin-top: 2rem;
-        padding: 0 $medium;
-        color: $gray2;
-        display: flex;
-        justify-content: space-around;
-        text-decoration: underline;
-
-        & > * {
-            cursor: pointer;
+            margin-top: 1rem;
         }
     }
 }

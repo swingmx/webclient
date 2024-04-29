@@ -83,6 +83,9 @@ export default defineStore("newModal", {
     showLoginModal(){
       this.showModal(ModalOptions.login);
     },
+    showSettingsModal(){
+      this.showModal(ModalOptions.settings);
+    },
     hideModal() {
       this.visible = false;
       this.setTitle("");

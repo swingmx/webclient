@@ -5,7 +5,7 @@
         </div>
         <div class="separator"></div>
         <div class="item">Profile</div>
-        <div class="item">Settings</div>
+        <div class="item" @click="modal.showSettingsModal">Settings</div>
         <div class="separator"></div>
         <div class="item critical" @click="auth.logout">Logout</div>
     </div>
@@ -13,8 +13,10 @@
 
 <script setup lang="ts">
 import useAuth from '@/stores/auth'
+import useModal from '@/stores/modal';
 
 const auth = useAuth()
+const modal = useModal()
 </script>
 
 <style lang="scss">

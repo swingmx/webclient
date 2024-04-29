@@ -7,12 +7,27 @@ export async function getAllUsers<T extends boolean>(simple: T = true as T) {
         users: T extends true ? UserSimplified[] : User[]
         settings: { [key: string]: any }
     }
-    const data = await useAxios({
+    const res = await useAxios({
         url: paths.api.auth.allUsers + (simple ? '?simplified=true' : ''),
         method: 'GET',
     })
 
-    return data.data as res
+    if (res.status === 200) {
+        return res.data as res
+    }
+
+    if (res.status === 401) {
+        const res = await logoutUser()
+
+        if (res.status === 200) {
+            return await getAllUsers()
+        }
+    }
+
+    return {
+        users: [],
+        settings: {},
+    }
 }
 
 export async function loginUser(username: string, password: string) {

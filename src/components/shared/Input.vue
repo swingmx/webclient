@@ -1,8 +1,7 @@
 <template>
-    <div
-        class="passinput"
-    >
+    <div class="passinput">
         <input
+            :id="props.inputId"
             class="passinput"
             :type="type"
             :placeholder="placeholder"
@@ -12,7 +11,7 @@
         <div
             class="showpass rounded-sm"
             v-if="props.type === 'password'"
-            :class="{ 'show': value.length }"
+            :class="{ show: value.length }"
             @click="toggleShowPassword"
         >
             <EyeSlashSvg v-if="showingPassword" />
@@ -28,8 +27,9 @@ import EyeSvg from '@/assets/icons/eye.svg'
 import EyeSlashSvg from '@/assets/icons/eye.slash.svg'
 
 const props = defineProps<{
-    placeholder?: string
     type?: string
+    placeholder?: string
+    inputId?: string
 }>()
 
 const value = ref('')

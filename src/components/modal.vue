@@ -1,10 +1,9 @@
 <template>
     <!-- 👇 login modal should not be dismissable -->
     <div
-        v-if="true"
+        v-if="modal.visible || modal.component == ModalOptions.login"
         class="modal"
     >
-        <!-- v-if="modal.visible || modal.component == ModalOptions.login" -->
         <div
             class="bg"
             @click="modal.hideModal"
@@ -13,7 +12,8 @@
             v-motion-slide-top
             class="m-content rounded"
             :class="{
-                settings: modal.component == modal.options.settings || true,
+                settings: modal.component == modal.options.settings,
+                authlogin: modal.component == modal.options.login,
             }"
             :style="{
                 maxWidth:
@@ -53,7 +53,10 @@
                 v-if="modal.component == modal.options.rootDirsPrompt"
                 @hideModal="hideModal"
             />
-            <Settings @set-title="setTitle" />
+            <Settings
+                @set-title="setTitle"
+                v-if="modal.component == modal.options.settings"
+            />
         </div>
     </div>
 </template>
@@ -118,8 +121,8 @@ function deletePlaylist() {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(31, 30, 30, 0.329);
-        backdrop-filter: blur(15px);
+        background-color: rgba(22, 22, 22, 0.753);
+        // backdrop-filter: blur(5px);
     }
 
     .m-content {
@@ -140,6 +143,10 @@ function deletePlaylist() {
         padding: 0;
         overflow: hidden;
         // min-height: 39rem;
+    }
+
+    .m-content.authlogin {
+        padding: 0;
     }
 }
 </style>
