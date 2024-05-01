@@ -37,6 +37,7 @@
                 :class="{
                     selected: user.id === selectedUser,
                     firstchild: index == 0,
+                    secondchild: index == 1,
                 }"
             >
                 <div
@@ -62,6 +63,7 @@
                     <DeleteSvg
                         class="delete"
                         v-if="auth.user.username !== user.username"
+                        @click.stop="() => deleteUser(user)"
                     />
                 </div>
                 <div
@@ -200,6 +202,20 @@ const usettings = [
     },
 ]
 
+async function deleteUser(user: User) {
+    if (user.username === auth.user.username) {
+        return toast.showError('Sorry! You cannot delete yourself')
+    }
+
+    const success = await auth.deleteUser(user.username)
+
+    if (success) {
+        setTimeout(() => {
+            users.value = users.value.filter((u) => u.id !== user.id)
+        }, 500)
+    }
+}
+
 function userAdded(user: User) {
     showAddUser.value = false
 
@@ -337,14 +353,17 @@ onMounted(async () => {
     }
 
     .usercard.firstchild {
-        margin-bottom: 2rem !important;
         background-color: $gray5;
         border: none;
+    }
 
-        &::after {
+    .usercard.secondchild {
+        margin-top: 1.75rem !important;
+
+        &::before {
             content: '';
             position: absolute;
-            bottom: -1rem;
+            top: -1rem;
             left: 45%;
             width: 10%;
             height: 1px;
