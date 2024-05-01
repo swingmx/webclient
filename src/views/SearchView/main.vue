@@ -36,7 +36,7 @@ import TracksPage from "./tracks.vue";
 const settings = useSettings();
 const search = useSearchStore();
 
-const is_alt_layout = computed(() => settings.is_alt_layout || content_width.value < 800);
+const is_alt_layout = computed(() => settings.is_alt_layout || content_width.value < 1100);
 
 const pages = ["top", "tracks", "albums", "artists"];
 

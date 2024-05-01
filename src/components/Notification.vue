@@ -38,9 +38,11 @@ function getSvg(notif: NotifType) {
   position: fixed;
   bottom: 6rem;
   left: 50%;
+  width: 100%;
   transform: translate(-50%);
   z-index: 1003;
   display: flex;
+  align-items: center;
   flex-direction: column-reverse;
   gap: 1rem;
 }
@@ -61,6 +63,10 @@ function getSvg(notif: NotifType) {
 
   .notif-text {
     width: 100%;
+  }
+
+  @include smallestPhones {
+    max-width: calc(100% - 2rem);
   }
 }
 

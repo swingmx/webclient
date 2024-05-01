@@ -1,7 +1,7 @@
 <template>
   <div class="nav-search-input">
     <Tabs
-      v-if="!(content_width < 800)"
+      v-if="!(content_width < 1100)"
       :tabs="tabs"
       :current-tab="($route.params.page as string)"
       @switchTab="(tab: string) => {

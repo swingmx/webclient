@@ -10,12 +10,13 @@
   align-items: center;
   height: 64px;
   padding: 0 1rem;
+  margin-top: $small;
 
   font-size: 14px;
   font-weight: 500;
   color: $gray1;
 
-  @media only screen and (max-width: 614px) {
+  @include largePhones {
     padding-left: 0.5rem;
   }
 }

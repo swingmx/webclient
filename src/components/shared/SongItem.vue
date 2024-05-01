@@ -122,14 +122,14 @@ onBeforeUnmount(() => {
 
     .index {
       .text {
-        transition-delay: 500ms;
+        transition-delay: 400ms;
 
         transform: translateX($smaller);
         opacity: 0;
       }
 
       .heart-icon {
-        transition-delay: 500ms;
+        transition-delay: 400ms;
         transform: translateX(0);
         opacity: 1;
         visibility: visible;

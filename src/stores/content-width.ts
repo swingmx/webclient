@@ -5,7 +5,7 @@ const content_width = ref(0);
 const content_height = ref(0);
 
 const brk = {
-  small: 550,
+  small: 660,
   album_header_small: 700,
   medium: 950,
 };
@@ -38,7 +38,7 @@ const maxAbumCards = computed(() => {
 
 // WINDOW SIZES
 const ALL_MOBILE_WIDTH = 900;
-const LARGE_MOBILE_WIDTH = 620;
+const LARGE_MOBILE_WIDTH = 660;
 const SMALL_MOBILE_WIDTH = 460;
 
 const { width: win_width } = useWindowSize();

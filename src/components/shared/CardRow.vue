@@ -24,10 +24,9 @@ defineProps<{
   grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
   padding-bottom: 2rem;
   z-index: -1;
-  /*
-  @include smallPhones {
+
+  @include mediumPhones {
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   }
-*/
 }
 </style>

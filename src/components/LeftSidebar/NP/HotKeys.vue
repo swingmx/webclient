@@ -77,6 +77,10 @@ const { buffering } = usePlayer();
   @include largePhones {
     display: flex;
     flex-shrink: 0;
+
+    button:first-child {
+      margin-left: $smaller;
+    }
   }
 }
 </style>

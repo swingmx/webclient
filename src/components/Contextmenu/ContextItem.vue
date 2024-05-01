@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { createPopper, Instance } from "@popperjs/core";
+import { createPopper, Instance, Modifier, Placement, Rect } from "@popperjs/core";
 import { ref } from "vue";
 
 import { contextChildrenShowMode } from "@/enums";
@@ -58,15 +58,40 @@ function showChildren() {
     return;
   }
 
+  const offsetModifier: Modifier<
+    "offset",
+    { offset: [number, number] | ((args: { placement: Placement; reference: Rect; popper: Rect }) => [number, number]) }
+  > = {
+    name: "offset",
+    options: {
+      offset: ({ placement }) => {
+        // Correct type for placement automatically inferred
+        if (placement.includes("right") || placement.includes("left")) {
+          return [-7, 0];
+        }
+        return [0, 0];
+      },
+    },
+  };
+
   popperInstance = createPopper(parentRef.value as HTMLElement, childRef.value as HTMLElement, {
     placement: "right-start",
     modifiers: [
       {
+        name: "preventOverflow",
+        options: {
+          altAxis: true,
+          boundariesElement: "viewport",
+        },
+      },
+      {
         name: "flip",
         options: {
           fallbackPlacements: ["left-start", "auto"],
+          boundariesElement: "viewport",
         },
       },
+      offsetModifier,
     ],
   });
   childRef.value ? (childRef.value.style.visibility = "visible") : null;
@@ -154,7 +179,7 @@ function runChildAction(action: () => void) {
       padding: 0 $smaller;
       overflow: auto;
       overflow-x: hidden;
-      max-height: calc(100vh / 2);
+      max-height: calc(100vh / 2 - 2rem);
       -webkit-overflow-scrolling: touch;
     }
 

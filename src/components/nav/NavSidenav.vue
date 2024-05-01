@@ -54,7 +54,7 @@ function closeSidenav() {
 
     > .bar {
       height: 2px;
-      width: calc(100% - 12px);
+      width: calc(100% - 14px);
       border-radius: 1rem;
       background-color: $white;
       opacity: 0.75;
@@ -96,7 +96,7 @@ function closeSidenav() {
       .sidenav_logo {
         display: flex;
         align-items: center;
-        gap: $medium;
+        gap: 1rem;
 
         .title {
           font-size: 1rem;
@@ -125,7 +125,7 @@ function closeSidenav() {
         position: relative;
         display: flex;
         align-items: center;
-        gap: $medium;
+        gap: 1rem;
         margin: $smaller $medium;
         padding: $small $medium;
         cursor: pointer;

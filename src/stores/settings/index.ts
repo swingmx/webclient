@@ -225,17 +225,7 @@ export default defineStore("settings", {
       return this.use_crossfade && this.crossfade_duration > 0;
     },
     is_default_layout: (state) => state.layout === "",
-    is_alt_layout: (state) => {
-      const is_alt = state.layout === "alternate";
-      const width_is_large = content_width.value > 800;
-
-      console.log("+++++++++++++++++++");
-      console.log("content width: ", content_width.value);
-      console.log("is_alt: ", is_alt);
-      console.log("width_is_large: ", width_is_large);
-
-      return is_alt && width_is_large;
-    },
+    is_alt_layout: (state) => state.layout === "alternate" && content_width.value > 900,
   },
   persist: {
     afterRestore: (context) => {

@@ -72,15 +72,15 @@ const actions = [
     transform: rotate(90deg);
   }
 
-  @include smallPhones {
+  @include mediumPhones {
     gap: $medium;
   }
 
-  @include smallerPhones {
+  @include smallPhones {
     grid-template-columns: 1fr 0fr;
   }
 
-  @include smallestPhones {
+  @include smallerPhones {
     display: flex;
     flex-direction: column;
   }

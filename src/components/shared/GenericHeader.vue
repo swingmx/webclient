@@ -48,5 +48,10 @@
     line-height: 1.5;
     font-weight: 500;
   }
+
+  @include mediumPhones {
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, 100%);
+  }
 }
 </style>

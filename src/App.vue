@@ -16,11 +16,9 @@
     }"
     ref="appcontent"
   >
-    <div class="teeemp">{{ settings.is_alt_layout }}</div>
     <LeftSidebar v-if="settings.is_default_layout && !isMobile" />
     <NavBar />
     <div id="acontent" v-element-size="updateContentElemSize">
-      <div id="contentresizer"></div>
       <BalancerProvider>
         <RouterView />
       </BalancerProvider>
@@ -175,12 +173,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.teeemp {
-  position: absolute;
-}
 @import "./assets/scss/mixins.scss";
 
-.r-sidebar {
+.designatedOS .r-sidebar {
   &::-webkit-scrollbar {
     display: none;
   }

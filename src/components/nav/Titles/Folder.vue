@@ -27,10 +27,24 @@ function navigate(path: string) {
 </script>
 
 <style lang="scss">
+.info > #folder-nav-title {
+  display: grid;
+}
+
+.is_alt_layout #folder-nav-title {
+  display: grid;
+}
+
 #folder-nav-title {
   width: fit-content;
-  display: grid;
   overflow: hidden;
+  display: none;
+
+  @include allPhones {
+    display: grid;
+    padding-top: $medium;
+    padding-bottom: 1rem;
+  }
 
   .fname {
     background-color: $gray4;
@@ -39,13 +53,9 @@ function navigate(path: string) {
     display: flex;
     align-items: center;
     max-width: 100%;
-    overflow-x: auto;
+    overflow: auto;
     overflow-y: hidden;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    -webkit-overflow-scrolling: touch;
 
     .icon {
       height: 2rem;
@@ -53,6 +63,16 @@ function navigate(path: string) {
       background-image: url("../../../assets/icons/folder.fill.svg");
       background-size: 1.5rem;
       margin-left: $smaller;
+    }
+  }
+}
+
+.designatedOS #folder-nav-title {
+  .fname {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
 }

@@ -122,6 +122,14 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+.designatedOS .bread-nav {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .bread-nav {
   background-color: $gray4;
   padding: $smaller;
@@ -135,7 +143,6 @@ onMounted(() => {
   overflow: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
 
   display: flex;
   align-items: center;
@@ -143,10 +150,6 @@ onMounted(() => {
   span {
     cursor: pointer;
   }
-}
-
-.designatedOS .bread-nav::-webkit-scrollbar {
-  display: none;
 }
 
 .bottom-text {

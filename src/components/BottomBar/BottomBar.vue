@@ -76,8 +76,24 @@ function handleFav() {
     gap: $small;
     padding: $medium 1rem;
 
-    .center > input {
-      height: 2px !important;
+    /* Hiding the dot/thumb/handle for readonly input */
+    /* Webkit browsers, Firefox, IE etc */
+    &:hover > .center > #progress::-webkit-slider-thumb {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &:hover > .center > #progress::-moz-range-thumb {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &:hover > .center > #progress::-ms-thumb {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
     }
   }
 
@@ -102,6 +118,20 @@ function handleFav() {
 
       &:nth-child(2) {
         width: 3.5rem;
+      }
+    }
+
+    @include smallestPhones {
+      &:first-child {
+        display: none;
+      }
+
+      &:nth-child(2) {
+        margin-left: $smaller;
+      }
+
+      &:last-child {
+        display: none;
       }
     }
   }
@@ -154,7 +184,15 @@ function handleFav() {
 
     @include allPhones {
       width: 100% !important;
-      margin-bottom: unset;
+      margin: 4px -16px;
+      user-select: none;
+      pointer-events: none;
+
+      > #progress {
+        height: 1px !important;
+        width: 100vw !important;
+        margin: unset;
+      }
     }
 
     .time {

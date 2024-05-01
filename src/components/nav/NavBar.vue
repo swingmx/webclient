@@ -22,7 +22,7 @@
       <NavSidenav @close="toggleSidenav" :class="{ active: sidenavActive }" />
       <div class="dimmer noSelect" :class="{ active: sidenavActive }" @click="toggleSidenav"></div>
       <RouterLink v-if="settings.is_alt_layout" to="/" class="logo rounded-sm"><LogoSvg /></RouterLink>
-      <div v-if="settings.is_alt_layout || !settings.use_sidebar" class="right">
+      <div v-if="settings.is_alt_layout || !settings.use_sidebar || !xl" class="right">
         <SearchInput :on_nav="true" />
         <!-- v-if="settings.is_alt_layout" -->
         <RouterLink
@@ -50,6 +50,7 @@ import { subPath } from "@/interfaces";
 import { content_width } from "@/stores/content-width";
 import useSettings from "@/stores/settings";
 import { createSubPaths } from "@/utils";
+import { xl } from "./../../composables/useBreakpoints";
 
 import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
 import AvatarSvg from "@/assets/icons/settings.svg";
@@ -120,10 +121,6 @@ function toggleSidenav() {
 
   &.use_links {
     grid-template-columns: 1fr max-content 1fr;
-  }
-
-  &.use_sidebar {
-    gap: 0;
   }
 
   .left {

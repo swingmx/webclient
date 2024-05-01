@@ -55,7 +55,7 @@ defineProps<{
     padding-left: 1rem !important; // applies to favorite page
     padding-right: $small;
 
-    @media only screen and (max-width: 614px) {
+    @include largePhones {
       padding-left: $small !important;
     }
   }

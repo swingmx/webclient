@@ -15,7 +15,7 @@
         </span>
         <MasterFlag :bitrate="track.bitrate" />
       </div>
-      <div class="isSmallArtists" style="display: none">
+      <div class="isSmallArtists">
         <ArtistName :artists="track.artists" :albumartists="track.albumartists" />
       </div>
     </div>
@@ -64,6 +64,10 @@ defineEmits<{
       left: $small;
       top: $small;
       z-index: 20;
+    }
+
+    @include smallerPhones {
+      margin-right: $small;
     }
   }
 

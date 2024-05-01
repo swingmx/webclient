@@ -203,7 +203,7 @@ defineProps<{
     padding-bottom: 0;
   }
 
-  @include smallestPhones {
+  @include smallerPhones {
     .info ~ .setting > .setting-item {
       display: flex;
       justify-content: space-between;

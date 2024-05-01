@@ -80,6 +80,7 @@ defineEmits<{
   font-size: small;
   font-weight: 700;
   line-height: 1.2;
+  margin-right: $medium;
 
   .np-image {
     position: relative;
@@ -117,6 +118,11 @@ defineEmits<{
 
     @include largePhones {
       flex-shrink: 0;
+      margin-right: $medium;
+    }
+
+    @include smallerPhones {
+      margin-right: $small;
     }
   }
 
@@ -143,13 +149,19 @@ defineEmits<{
       }
     }
 
+    @include allPhones {
+      width: calc(100% + 8px);
+    }
+
     @include largePhones {
+      width: unset;
       flex-grow: 1;
     }
   }
 
   @include allPhones {
     grid-template-columns: max-content 1fr max-content max-content;
+    margin-right: unset;
 
     .heart-button {
       height: max-content;
@@ -159,6 +171,7 @@ defineEmits<{
 
   @include largePhones {
     display: flex;
+    gap: 0;
     max-width: calc(100% - 8px);
   }
 }

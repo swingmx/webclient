@@ -104,6 +104,10 @@ onBeforeRouteLeave(() => artist.resetStore());
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
     gap: 2rem 0;
+
+    @include mediumPhones {
+      grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    }
   }
 
   .generichead {

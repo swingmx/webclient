@@ -19,6 +19,7 @@ defineProps<{
   grid-template-columns: 1fr max-content;
   align-items: center;
   padding-left: 1rem;
+  margin-top: $small;
   height: $song-item-height;
 
   .disc_number {
@@ -27,7 +28,7 @@ defineProps<{
     opacity: 0.75;
   }
 
-  @media only screen and (max-width: 614px) {
+  @include largePhones {
     padding-left: 0.5rem !important;
   }
 }
