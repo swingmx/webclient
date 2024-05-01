@@ -118,7 +118,12 @@ export default defineStore('authStore', {
             return false
         },
     },
+    getters: {
+        is_admin(): boolean {
+            if (!this.user.roles) {
+                return false
+            }
+            return this.user.roles.includes('admin')
+        },
+    },
 })
-
-// CHECKPOINT
-// I WAS TRYING TO FIGURE OUT TO TOGGLE ENABLING GUEST ACCESS

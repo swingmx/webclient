@@ -6,7 +6,10 @@ export enum SettingType {
   button,
   root_dirs,
   locked_number_input,
+  
+  // custom components 👇
   quick_actions,
   profile,
-  accounts
+  accounts,
+  about
 }

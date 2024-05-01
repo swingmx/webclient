@@ -1,92 +1,89 @@
 <template>
-  <div class="aboutswingmusic">
-    Swing Music is a labor of love developed by
-    <a href="https://github.com/cwilvx" target="_blank">@<u>cwilvx</u></a> on
-    GitHub. If you like this software, please consider donating to support
-    development and giving it a star on GitHub. <br /><br /><br />
-    <div class="flex">
-      <a href="https://swingmusic.vercel.app/support-us.html" target="_blank">
-        <button>Donate</button></a
-      ><a href="https://github.com/cwilvx/swingmusic" target="_blank"
-        ><button>Star on Github</button></a
-      >
-      <a href="https://github.com/cwilvx" target="_blank"
-        ><button>Follow @cwilvx on Github</button></a
-      >
-    </div>
-
-    <br /><br />
-    If you encounter any bugs, please open an issue on GitHub. If you would like
-    to get involved in development, start with the
-    <a
-      href="https://github.com/cwilvx/swingmusic/blob/master/.github/contributing.md"
-      target="_blank"
-      ><u>contribution guidelines</u></a
-    >.
-
-    <br /><br /><br />
-    <div class="flex">
-      <a
-        href="https://github.com/cwilvx/swingmusic/issues/new/choose"
-        target="_blank"
-      >
-        <button>Open an Issue</button>
-      </a>
-      <a
-        href="https://github.com/cwilvx/swingmusic/blob/master/.github/contributing.md"
-        target="_blank"
-        ><button>Contribute</button></a
-      >
-    </div>
-    <br /><br />
-    Hope you enjoy using Swing Music as much as I enjoy building it.
-    <br /><br />
-    <div class="hireme rounded">
-      <h2>Hire me</h2>
-      If you like my work, and would like me to work for you or your company,
-      I'm open to offers. Feel free to reach out to me via email.
-      <br /><br />
-      <div class="flex">
+    <div class="aboutswingmusic">
+        <div class="version">Swing Music v{{ settings.version }}</div>
+        Swing Music is a labor of love developed by
         <a
-          href="mailto:geoffreymungai45@gmail.com?subject=Job Offer&body=Hi Mungai,
-        "
-          target="_blank"
-          ><button>Write Email</button></a
+            href="https://github.com/cwilvx"
+            target="_blank"
+            >@<u>cwilvx</u></a
         >
-      </div>
+        on GitHub. If you like this software, a star on GitHub would be nice.
+        Hope you enjoy using it as much as I enjoy building it. 😁🤗
+        <br /><br />
+        <div class="links">
+            <h2>Links</h2>
+            <div class="flex">
+                <a
+                    href="https://swingmusic.vercel.app/guide/introduction.html"
+                    target="_blank"
+                    ><button>Docs</button></a
+                >
+                <a
+                    href="https://github.com/cwilvx/swingmusic"
+                    target="_blank"
+                    ><button>Star on Github</button></a
+                >
+                <a
+                    href="https://github.com/cwilvx/swingmusic/issues/new/choose"
+                    target="_blank"
+                >
+                    <button>Report issue</button>
+                </a>
+                <a
+                    href="https://github.com/cwilvx/swingmusic/blob/master/.github/contributing.md"
+                    target="_blank"
+                    ><button>Contribute</button></a
+                >
+            </div>
+        </div>
+        <br />
+        <div class="contact">
+            <h2>Get in touch</h2>
+            If you like my work, and would like to say hi, I'd like to hear from
+            you.
+            <br /><br />
+            <div class="flex">
+                <a
+                    href="mailto:geoffreymungai45@gmail.com?subject=Hiii 👋😁&body=Hi Mungai,
+        "
+                    target="_blank"
+                    ><button>Send email</button></a
+                >
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import useSettings from '@/stores/settings'
+
+const settings = useSettings()
+</script>
 
 <style lang="scss">
 .aboutswingmusic {
-  padding: $small;
-  margin-top: 2rem;
+    padding: $small;
 
-  .flex {
-    gap: 1rem;
-  }
+    .version {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: $small;
+        border-bottom: solid 1px $separator;
+        padding-bottom: 1rem;
+    }
 
-  .hireme {
-    background-color: #ffffff;
-    background-image: linear-gradient(
-      37deg,
-      #bfeaf0 0%,
-      #ffffff00 50%,
-      #a7dcff 100%
-    );
-    padding: 1rem;
-    color: $black;
+    .links .flex {
+        margin-top: $small;
+        gap: 1rem;
+    }
 
-    button {
-      background-color: $blue;
+    .contact button {
+        background-color: $blue;
     }
 
     h2 {
-      margin-top: $small;
+        margin-top: 0;
+        margin-bottom: $smaller;
     }
-  }
 }
 </style>

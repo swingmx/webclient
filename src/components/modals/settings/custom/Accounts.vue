@@ -225,8 +225,11 @@ onMounted(async () => {
     const res = await getAllUsers(false)
 
     if (res.users) {
+        // remove guest user from list
+        res.users = res.users.filter((u) => u.username !== 'guest')
         users.value = res.users
     }
+
     if (Object.keys(res.settings).length) {
         // loop through settings
         // find keys that match the settingsMap keys
@@ -234,6 +237,7 @@ onMounted(async () => {
 
         for (const key in res.settings) {
             if (settingsMap[key]) {
+                // @ts-expect-error
                 settingsMap[key].value = res.settings[key]
             }
         }

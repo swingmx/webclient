@@ -4,6 +4,7 @@
             <div
                 class="group"
                 v-for="group in settingGroups.filter((g) => {
+                    // return true
                     return g.show_if ? g.show_if() : true
                 })"
                 :key="group.title"
@@ -21,10 +22,10 @@
                         :key="item.title"
                         :class="{
                             active: item.title === currentGroup.title,
+                            about: item.title === 'About',
                         }"
                         @click="() => $emit('setTab', item.title || '')"
                     >
-                        <!-- <DummySvg /> -->
                         <Avatar
                             :size="18"
                             :name="auth.user.username || ''"
@@ -42,7 +43,6 @@
                 </div>
             </div>
         </div>
-        <div class="appversion">Swing Music v2.0.0</div>
     </div>
 </template>
 
@@ -101,6 +101,8 @@ defineEmits<{
         color: rgb(156, 156, 156);
         font-weight: 500;
         font-size: 14px;
+        margin-top: $smaller;
+        position: relative;
 
         svg {
             width: 1.25rem;
@@ -122,6 +124,21 @@ defineEmits<{
             svg {
                 color: $white;
             }
+        }
+
+        &.about {
+            margin-top: 1rem;
+        }
+
+        &.about::before {
+            content: '';
+            height: 1px;
+            position: absolute;
+            top: -$small;
+            left: 0;
+
+            background-color: $gray5;
+            width: 100%;
         }
     }
 }

@@ -93,6 +93,7 @@ function showContextMenu(e: MouseEvent) {
 
   svg {
     color: $gray1;
+    height: 1.75rem;
   }
 
   .f-count {

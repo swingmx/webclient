@@ -2,7 +2,7 @@
     <div class="settingsmodal">
         <Sidebar
             :current-group="(currentGroup as SettingGroup)"
-            @set-tab="setTab"
+            @set-tab="(tab) => (currentTab = tab)"
         />
         <div class="content">
             <div

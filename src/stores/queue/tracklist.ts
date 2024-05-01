@@ -65,6 +65,8 @@ export default defineStore('tracklist', {
             usePlayer().clearNextAudio()
         },
         setFromFolder(path: string, tracks: Track[]) {
+            // remove trailing slash
+            path = path.replace(/\/$/, '')
             const name = path.split('/').pop()
             this.from = <fromFolder>{
                 type: FromOptions.folder,

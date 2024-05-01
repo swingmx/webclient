@@ -25,7 +25,10 @@ const auto_download_on_unsynced = <Setting>{
   type: SettingType.binary,
   state: () => useSettings().lyrics_plugin_settings.overide_unsynced,
   action: () => useSettings().toggleLyricsOverideUnsynced(),
-  show_if: () => useSettings().lyrics_plugin_settings.auto_download,
+  show_if: () => {
+    const settings = useSettings();
+    return settings.use_lyrics_plugin && settings.lyrics_plugin_settings.auto_download;
+  },
 };
 
 export default [

@@ -75,6 +75,7 @@
         />
         <Profile v-if="setting.type === SettingType.profile"/>
         <Accounts v-if="setting.type === SettingType.accounts"/>
+        <About v-if="setting.type === SettingType.about"/>
       </div>
     </div>
   </div>
@@ -91,6 +92,7 @@ import Select from "./Components/Select.vue";
 import SeparatorsInput from "./Components/SeparatorsInput.vue";
 import Switch from "./Components/Switch.vue";
 
+import About from "./About.vue";
 import Profile from "../modals/settings/Profile.vue";
 import Accounts from "../modals/settings/custom/Accounts.vue";
 

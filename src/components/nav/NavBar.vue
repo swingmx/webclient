@@ -31,20 +31,12 @@
         >
             <SearchInput :on_nav="true" />
             <div class="avatar">
-                <RouterLink
-                    :to="{
-                        name: Routes.settings,
-                        params: {
-                            tab: 'general',
-                        },
-                    }"
-                    class="img circular"
-                >
+                <div class="img circular">
                     <Avatar
                         :name="auth.user.username || ''"
                         :size="36"
                     />
-                </RouterLink>
+                </div>
                 <ProfileDropdown />
             </div>
         </div>
@@ -195,7 +187,7 @@ onMounted(() => {
                     left: 0;
                     background-color: #00000000;
                     border-radius: 5rem;
-                    transition: all .75s ease-out;
+                    transition: all 0.75s ease-out;
                 }
 
                 &:hover {

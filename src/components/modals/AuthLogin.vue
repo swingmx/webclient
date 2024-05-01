@@ -25,11 +25,11 @@
                 <span>back</span> <ArrowSvg />
             </button>
         </div>
-        <!-- <div class="helptext">
-            <div class="h2">Welcome back</div>
-        </div> -->
-
+        
         <div class="alcontent">
+            <div class="helptext" v-if="!selected">
+                <div class="h2">Welcome back</div>
+            </div>
             <div
                 class="selected-user"
                 v-if="selected"
@@ -75,8 +75,8 @@
                     input-id="loginpassinput"
                     @input="(input: string) => password = input"
                 />
+                <!-- v-if="username.length && password.length" -->
                 <button
-                    v-if="username.length && password.length"
                     class="submit"
                 >
                     Login
@@ -88,7 +88,7 @@
             class="guestlink"
             @click="() => guestLogin()"
         >
-            <span> Continue as guest </span>
+            <span>Or continue as guest </span>
         </div>
     </div>
 </template>
@@ -189,7 +189,7 @@ onMounted(async () => {
     }
 
     .guestlink {
-        padding: $medium;
+        padding: 1rem;
         width: fit-content;
         margin: 0 auto;
         color: $gray2;
@@ -292,6 +292,9 @@ onMounted(async () => {
         }
 
         .submit {
+            width: 7rem;
+            border-radius: 4rem;
+            margin: 0 auto;
             height: 3rem;
             background-color: $darkblue;
             margin-top: 1rem;
