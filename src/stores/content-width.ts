@@ -27,7 +27,7 @@ const isMedium = computed(() => {
 
 const heightLarge = computed(() => content_height.value > 1080);
 
-const paddings = 64;
+const paddings = 0;
 const album_card_with = ref(161.6);
 
 const elemclass = "hlistitem";
