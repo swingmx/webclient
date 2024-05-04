@@ -4,6 +4,9 @@ import { computed, ref } from "vue";
 const content_width = ref(0);
 const content_height = ref(0);
 
+const resizer_width = ref(0);
+const resizer_height = ref(0);
+
 const brk = {
   small: 660,
   album_header_small: 700,
@@ -30,9 +33,10 @@ const album_card_with = ref(161.6);
 const elemclass = "hlistitem";
 
 const maxAbumCards = computed(() => {
-  const max = Math.round((content_width.value - paddings) / album_card_with.value);
+  const max = Math.round((resizer_width.value - paddings) / album_card_with.value);
 
   if (max == 0) return 7;
+
   return max;
 });
 
@@ -69,6 +73,8 @@ export {
   isMedium,
   isSmall,
   maxAbumCards,
+  resizer_height,
+  resizer_width,
   updateCardWidth,
   win_width,
 };

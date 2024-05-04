@@ -3,10 +3,22 @@
     <div class="thumbnail" @click.prevent="$emit('play')">
       <img :src="imguri + track.image" class="album-art image rounded-sm" />
       <div
-        v-if="is_current"
-        class="now-playing-track-indicator image"
-        :class="{ last_played: !is_current_playing }"
-      ></div>
+        class="now-playing-track-indicator"
+        :class="{ 'now-playing-track-indicator': is_current, last_played: !is_current_playing, active: is_current }"
+      >
+        <svg id="wave" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 30">
+          <title>Audio Wave</title>
+          <rect id="Line_1" x="1" y="11" width="2" height="8" rx="1" ry="1" />
+          <rect id="Line_2" x="4" y="8" width="2" height="14" rx="1" ry="1" />
+          <rect id="Line_3" x="7" y="4" width="2" height="22" rx="1" ry="1" />
+          <rect id="Line_4" x="10" y="6" width="2" height="18" rx="1" ry="1" />
+          <rect id="Line_5" x="13" y="11" width="2" height="8" rx="1" ry="1" />
+          <rect id="Line_6" x="16" y="6" width="2" height="18" rx="1" ry="1" />
+          <rect id="Line_7" x="19" y="4" width="2" height="22" rx="1" ry="1" />
+          <rect id="Line_8" x="22" y="8" width="2" height="14" rx="1" ry="1" />
+          <rect id="Line_9" x="25" y="11" width="2" height="8" rx="1" ry="1" />
+        </svg>
+      </div>
     </div>
     <div v-tooltip class="song-title">
       <div class="with-flag" @click.prevent="$emit('play')">

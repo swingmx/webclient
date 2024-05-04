@@ -1,42 +1,40 @@
 <template>
-  <div class="topnav_container">
-    <div
-      class="topnav"
-      :class="{
-        use_links: settings.is_alt_layout,
-        use_sidebar: settings.use_sidebar && isSmall,
-      }"
-    >
-      <div class="left">
-        <NavButtons />
-        <NavLinks v-if="settings.is_alt_layout" />
-        <div v-if="settings.is_default_layout && $route.name == Routes.folder" class="info">
-          <Folder :sub-paths="subPaths" />
-        </div>
-        <NavTitles v-else-if="settings.is_default_layout && !isSmall" />
+  <div
+    class="topnav"
+    :class="{
+      use_links: settings.is_alt_layout,
+      use_sidebar: settings.use_sidebar && isSmall,
+    }"
+  >
+    <div class="left">
+      <NavButtons />
+      <NavLinks v-if="settings.is_alt_layout" />
+      <div v-if="settings.is_default_layout && $route.name == Routes.folder" class="info">
+        <Folder :sub-paths="subPaths" />
       </div>
-      <div class="sidenav_toggle" @click="toggleSidenav">
-        <div class="bar"></div>
-        <div class="bar"></div>
-      </div>
-      <NavSidenav @close="toggleSidenav" :class="{ active: sidenavActive }" />
-      <div class="dimmer noSelect" :class="{ active: sidenavActive }" @click="toggleSidenav"></div>
-      <RouterLink v-if="settings.is_alt_layout" to="/" class="logo rounded-sm"><LogoSvg /></RouterLink>
-      <div v-if="settings.is_alt_layout || !settings.use_sidebar || !xl" class="right">
-        <SearchInput :on_nav="true" />
-        <!-- v-if="settings.is_alt_layout" -->
-        <RouterLink
-          :to="{
-            name: Routes.settings,
-            params: {
-              tab: 'general',
-            },
-          }"
-          class="avatar"
-        >
-          <AvatarSvg />
-        </RouterLink>
-      </div>
+      <NavTitles v-else-if="settings.is_default_layout && !isSmall" />
+    </div>
+    <div class="sidenav_toggle" @click="toggleSidenav">
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <NavSidenav @close="toggleSidenav" :class="{ active: sidenavActive }" />
+    <div class="dimmer noSelect" :class="{ active: sidenavActive }" @click="toggleSidenav"></div>
+    <RouterLink v-if="settings.is_alt_layout" to="/" class="logo rounded-sm"><LogoSvg /></RouterLink>
+    <div v-if="settings.is_alt_layout || !settings.use_sidebar || !xl" class="right">
+      <SearchInput :on_nav="true" />
+      <!-- v-if="settings.is_alt_layout" -->
+      <RouterLink
+        :to="{
+          name: Routes.settings,
+          params: {
+            tab: 'general',
+          },
+        }"
+        class="avatar"
+      >
+        <AvatarSvg />
+      </RouterLink>
     </div>
   </div>
 </template>

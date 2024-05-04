@@ -67,13 +67,11 @@ function navigate(path: string) {
   }
 }
 
-.designatedOS #folder-nav-title {
-  .fname {
-    scrollbar-width: none;
+.fname {
+  scrollbar-width: none;
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 </style>

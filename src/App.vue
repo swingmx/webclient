@@ -19,6 +19,7 @@
     <LeftSidebar v-if="settings.is_default_layout && !isMobile" />
     <NavBar />
     <div id="acontent" v-element-size="updateContentElemSize">
+      <div id="contentresizer" ref="resizercontent"></div>
       <BalancerProvider>
         <RouterView />
       </BalancerProvider>
@@ -38,7 +39,14 @@ import { useRouter } from "vue-router";
 import { BalancerProvider } from "vue-wrap-balancer";
 
 // @stores
-import { content_height, content_width, isMobile, updateCardWidth } from "@/stores/content-width";
+import {
+  content_height,
+  content_width,
+  isMobile,
+  resizer_height,
+  resizer_width,
+  updateCardWidth,
+} from "@/stores/content-width";
 import useLyrics from "@/stores/lyrics";
 import useModal from "@/stores/modal";
 import useQueue from "@/stores/queue";
@@ -66,6 +74,7 @@ import { getRootDirs } from "@/requests/settings/rootdirs";
 // import BubbleManager from "./components/bubbles/BinManager.vue";
 
 const appcontent: Ref<HTMLLegendElement | null> = ref(null);
+const resizercontent: Ref<HTMLLegendElement | null> = ref(null);
 const queue = useQueue();
 const modal = useModal();
 const lyrics = useLyrics();
@@ -99,6 +108,11 @@ function updateContentElemSize({ width, height }: { width: number; height: numbe
 
   content_width.value = elem_width;
   content_height.value = height;
+
+  const elem_resizer_width = resizercontent.value?.offsetWidth || 0;
+  resizer_width.value = elem_resizer_width;
+  resizer_height.value = height;
+
   updateCardWidth();
 }
 
@@ -174,7 +188,6 @@ export default defineComponent({
 
 <style lang="scss">
 @import "./assets/scss/mixins.scss";
-
 .designatedOS .r-sidebar {
   &::-webkit-scrollbar {
     display: none;

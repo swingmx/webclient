@@ -68,7 +68,11 @@ defineProps<{
   }
 }
 
-.designatedOS .generictabs::-webkit-scrollbar {
-  display: none;
+.generictabs {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>
