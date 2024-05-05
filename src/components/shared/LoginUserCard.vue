@@ -3,7 +3,7 @@
         class="loginuser rounded-sm"
         :class="{ selected }"
     >
-        <Avatar :name="user.id.toString()" />
+        <Avatar :name="user.username" />
         <div class="username">
             {{ (selected ? `Hi ` : '') + user.username }}
         </div>

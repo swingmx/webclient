@@ -80,6 +80,7 @@ import { menus } from "./navitems";
   }
 
   svg {
+    height: 1.5rem;
     margin: 0 $small 0 $small;
     border-radius: $small;
     transform: scale(0.9);

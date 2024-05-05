@@ -8,9 +8,9 @@
         <div
             v-if="Number.isInteger(playlist.info.id)"
             class="edit"
-            @click="editPlaylist"
+            
         >
-        &#160;&#160;|&#160;&#160; Edit&#160;&#160;
+        &#160;&#160;|&#160;&#160; <span @click="editPlaylist">Edit</span>&#160;&#160;
             {{ Number.isInteger(playlist.info.id) ? ' | ' : '' }}
             <DeleteSvg
                 class="edit"

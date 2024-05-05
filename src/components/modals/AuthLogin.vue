@@ -12,7 +12,7 @@
                 title="Back to selection"
                 @click="resetSelected"
                 :style="{
-                    visibility: users.length ? 'visible' : 'hidden',
+                    visibility: shownUsers.length > 1 ? 'visible' : 'hidden',
                 }"
             >
                 <span>back</span> <ArrowSvg />
@@ -25,7 +25,7 @@
                 <span>back</span> <ArrowSvg />
             </button>
         </div>
-        
+
         <div class="alcontent">
             <div class="helptext" v-if="!selected">
                 <div class="h2">Welcome back</div>
@@ -50,7 +50,7 @@
                 v-else
             >
                 <User
-                    v-for="user in users"
+                    v-for="user in shownUsers"
                     @click="setUser(user)"
                     :user="user"
                     :key="user.id"
@@ -78,13 +78,14 @@
                 <!-- v-if="username.length && password.length" -->
                 <button
                     class="submit"
+                    :class="{ long: selected.username !== ''}"
                 >
                     Login
                 </button>
             </form>
         </div>
         <div
-            v-if="guestAllowed || true"
+            v-if="guestAllowed"
             class="guestlink"
             @click="() => guestLogin()"
         >
@@ -111,6 +112,7 @@ const username = ref('')
 const password = ref('')
 
 const users: Ref<UserSimplified[]> = ref([])
+const shownUsers = computed(() => users.value.filter((user) => user.username !== 'guest'))
 const selected = ref<UserSimplified | null>(null)
 
 const guestAllowed = computed(() =>
@@ -164,14 +166,14 @@ onMounted(async () => {
     }
 
     // if there's only one user, and it's not the guest user, select them
-    if (res.users.length === 1 && res.users[0].username !== 'guest') {
+    if (res.users.filter((user) => user.username !== 'guest').length === 1) {
         setTimeout(() => {
             setUser(res.users[0])
         }, 250)
     }
 
     // remove guest user
-    res.users = res.users.filter((user) => user.username !== 'guest')
+    // res.users = res.users
 
     // finally, set the users
     users.value = res.users
@@ -276,7 +278,6 @@ onMounted(async () => {
         margin: 0 auto;
         margin-top: 1rem;
         display: grid;
-        // gap: 1rem;
         align-items: center;
 
         input {
@@ -298,6 +299,11 @@ onMounted(async () => {
             height: 3rem;
             background-color: $darkblue;
             margin-top: 1rem;
+        }
+
+        .submit.long {
+            width: 100%;
+            border-radius: $small;
         }
     }
 }
