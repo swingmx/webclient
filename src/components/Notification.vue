@@ -51,7 +51,7 @@ function getSvg(notif: NotifType) {
   font-size: 0.85rem;
   font-weight: 600;
   width: 18rem;
-  height: 4rem;
+  min-height: 4rem;
   background-color: $gray;
   display: grid;
   place-items: center;

@@ -107,6 +107,10 @@ const playlists = computed(() => {
     appearance: none;
   }
 
+  .playlist-button {
+    padding-right: $medium;
+  }
+
   .nothing {
     height: 50%;
 
