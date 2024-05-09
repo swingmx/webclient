@@ -36,7 +36,7 @@ import TracksPage from "./tracks.vue";
 const settings = useSettings();
 const search = useSearchStore();
 
-const is_alt_layout = computed(() => settings.is_alt_layout || content_width.value < 800);
+const is_alt_layout = computed(() => settings.is_alt_layout || content_width.value < 1100);
 
 const pages = ["top", "tracks", "albums", "artists"];
 
@@ -90,8 +90,17 @@ onMounted(() => {
     position: relative;
     padding-left: $padleft;
 
+    #right-tabs {
+      max-width: calc(100% - 16px);
+    }
+
     .tabheaders {
       margin: 0;
+      border-radius: 10rem;
+      max-width: calc(100% - 16px);
+      overflow: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
     @include allPhones {
@@ -108,5 +117,9 @@ onMounted(() => {
       padding-top: 0 !important;
     }
   }
+}
+
+.designatedOS .tabheaders::-webkit-scrollbar {
+  display: none;
 }
 </style>

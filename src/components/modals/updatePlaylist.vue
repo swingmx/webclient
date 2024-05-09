@@ -184,6 +184,7 @@ function update_playlist(e: Event) {
     display: grid;
     grid-template-columns: 1fr max-content;
     align-items: center;
+    gap: $small;
     margin: $small 0 1rem 0;
   }
 
@@ -214,9 +215,11 @@ function update_playlist(e: Event) {
       border-radius: $small;
       border: dashed 1px $gray4;
       cursor: pointer;
+      padding: $medium;
 
       svg {
         transform: scale(0.75);
+        flex-shrink: 0;
       }
     }
 

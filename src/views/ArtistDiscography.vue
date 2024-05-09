@@ -13,9 +13,7 @@
           >{{ route.query.artist }}</RouterLink
         >
         • {{ artist.toShow.length }}
-        <span class="caps">{{
-          getTypeString(route.params.type.toString())
-        }}</span></template
+        <span class="caps">{{ getTypeString(route.params.type.toString()) }}</span></template
       >
     </GenericHeader>
     <GenericTabs
@@ -38,9 +36,7 @@
     /><br />
     <div v-if="artist.toShow.length" class="cards">
       <AlbumCard
-        v-for="album in artist.toShow.sort(
-          (a, b) => parseInt(b.date) - parseInt(a.date)
-        )"
+        v-for="album in artist.toShow.sort((a, b) => parseInt(b.date) - parseInt(a.date))"
         :key="album.albumhash"
         :album="album"
         :artist_page="true"
@@ -52,9 +48,7 @@
       :title="'No contributions'"
       :flag="!artist.toShow.length"
       :icon="AlbumSvg"
-      :description="`No ${getTypeName($route.params.type)} found for ${
-        route.query.artist
-      }`"
+      :description="`No ${getTypeName($route.params.type)} found for ${route.query.artist}`"
     />
   </div>
 </template>
@@ -110,6 +104,10 @@ onBeforeRouteLeave(() => artist.resetStore());
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
     gap: 2rem 0;
+
+    @include mediumPhones {
+      grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    }
   }
 
   .generichead {

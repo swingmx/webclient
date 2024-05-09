@@ -31,16 +31,16 @@
         @blur.prevent="removeFocusedClass"
         @focus.prevent="addFocusedClass"
       />
+      <div class="clear_input noSelect" :class="{ active: search.query.length > 0 }" @click="clearInput">X</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
 import useSearch from "@/stores/search";
 import useSettings from "@/stores/settings";
 import useTabStore from "@/stores/tabs";
+import { ref } from "vue";
 
 import BackSvg from "@/assets/icons/arrow.svg";
 import SearchSvg from "@/assets/icons/search.svg";
@@ -55,16 +55,27 @@ const search = useSearch();
 const settings = useSettings();
 
 // HANDLE FOCUS
-const inputRef = ref<HTMLElement>();
+const inputRef = ref<HTMLInputElement | null>(null);
 
 // NOTE: Functions are used because classes are added to the sorrounding element
 // and not the input itself.
 function addFocusedClass() {
-  inputRef.value?.classList.add("search-focused");
+  if (inputRef.value) {
+    inputRef.value.classList.add("search-focused");
+  }
 }
 
 function removeFocusedClass() {
-  inputRef.value?.classList.remove("search-focused");
+  if (inputRef.value) {
+    inputRef.value.classList.remove("search-focused");
+  }
+}
+
+function clearInput() {
+  search.query = "";
+  if (inputRef.value) {
+    inputRef.value.focus();
+  }
 }
 
 // @end
@@ -80,7 +91,23 @@ function handleButton() {
 }
 </script>
 
+<style>
+.clear_search {
+  /* Style applied when clear_search class is active */
+  visibility: visible;
+  cursor: pointer;
+}
+</style>
+
 <style lang="scss">
+.right > .gsearch-input > #ginner > input {
+  width: 140px;
+
+  @include allPhones {
+    width: 100%;
+  }
+}
+
 .gsearch-input {
   display: grid;
   grid-template-columns: 1fr max-content;
@@ -98,16 +125,21 @@ function handleButton() {
     button {
       background: transparent;
       border: none;
-      width: 2.5rem;
+      width: 2rem;
+      height: 2rem;
       padding: 0;
       margin-left: 4px;
       border-radius: 3rem;
-      height: 100%;
       cursor: pointer;
+      flex-shrink: 0;
 
       &:hover {
         transition: all 0.2s ease;
         background-color: $gray2;
+      }
+
+      @include allPhones {
+        display: none;
       }
     }
 
@@ -125,17 +157,54 @@ function handleButton() {
       background-color: transparent;
       outline: none;
       appearance: none;
-      padding-right: 1rem;
       text-overflow: ellipsis;
 
-      @media only screen and (max-width: 500px) {
-        width: 7rem;
+      @include allPhones {
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding-right: $small;
       }
     }
+
+    .clear_input {
+      cursor: pointer;
+      padding: 10px 1rem;
+      border-top-right-radius: 3rem;
+      border-bottom-right-radius: 3rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+
+      @include allPhones {
+        border-radius: unset;
+      }
+    }
+
+    .clear_input.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .clear_input.active:active {
+      opacity: 0.3;
+    }
+
+    @include allPhones {
+      border-radius: unset;
+      background-color: transparent;
+    }
+  }
+
+  @include allPhones {
+    width: 100%;
   }
 }
 
 .search-focused {
-  outline: solid 2px #fff !important;
+  outline: solid 2px #fff;
+
+  @include allPhones {
+    outline: none;
+  }
 }
 </style>

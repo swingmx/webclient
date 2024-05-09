@@ -4,7 +4,7 @@ $g-border: solid 1px $gray5;
   display: grid;
   // grid-template-columns: min-content 1fr 29rem;
   grid-template-columns: min-content 1fr;
-  grid-template-rows: $navheight 1fr $navheight;
+  grid-template-rows: $navheight 1fr 5rem;
   grid-template-areas:
     "l-sidebar nav"
     "l-sidebar content"
@@ -14,6 +14,7 @@ $g-border: solid 1px $gray5;
   border-top: none;
   border-bottom: none;
   margin: 0 auto;
+  position: relative;
 
   #contentresizer {
     margin: 0 $padright 0 $padleft;
@@ -21,24 +22,11 @@ $g-border: solid 1px $gray5;
 
   @include allPhones {
     grid-template-columns: 1fr;
-    // grid-template-columns: 1fr;
-    grid-template-rows: max-content 1fr 9.5rem;
     grid-template-areas:
       "nav"
       "content"
       "bottombar";
-  }
-}
-
-@include allPhones {
-  #app-grid.is_alt_layout {
-    grid-template-columns: 1fr !important;
-    // grid-template-columns: 1fr;
-    grid-template-rows: max-content 1fr 9.5rem !important;
-    grid-template-areas:
-      "nav"
-      "content"
-      "bottombar" !important;
+    grid-template-rows: auto 1fr auto;
   }
 }
 
@@ -56,7 +44,13 @@ $g-border: solid 1px $gray5;
   padding-right: $padright;
 
   @include allPhones {
-    padding: 0 1rem;
+    gap: $small;
+    height: unset;
+    padding: 6px 8px;
+    margin: $medium 1rem;
+    border-radius: 1rem;
+    border: solid 1px $gray5;
+    background-image: linear-gradient(37deg, rgb(29, 28, 28), transparent);
   }
 }
 
@@ -106,6 +100,15 @@ $g-border: solid 1px $gray5;
     "content"
     "bottombar";
 
+  @include allPhones {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: max-content 1fr 9.5rem !important;
+    grid-template-areas:
+      "nav"
+      "content"
+      "bottombar" !important;
+  }
+
   .vue-recycle-scroller,
   .content-page,
   .topnav,
@@ -148,10 +151,6 @@ $g-border: solid 1px $gray5;
     padding-top: 0;
     padding-left: 2rem;
     padding-right: 2rem;
-  }
-
-  .nolyrics {
-    margin-top: 0;
   }
 
   @media only screen and (min-width: 1980px) {
@@ -217,6 +216,7 @@ $g-border: solid 1px $gray5;
     width: 100%;
     padding-bottom: $content-padding-bottom;
     padding-bottom: $padbottom;
+    -webkit-overflow-scrolling: touch;
 
     @include allPhones {
       padding-left: 1rem;
@@ -225,9 +225,18 @@ $g-border: solid 1px $gray5;
   }
 }
 
+.song-title > .isSmallArtists {
+  display: none;
+}
+
 .isSmall {
   .songlist-item {
     grid-template-columns: 2fr 5.5rem !important;
+
+    @include mediumPhones {
+      grid-template-columns: 2fr 2.5rem !important;
+      gap: $small !important;
+    }
   }
 
   .song-artists,
@@ -236,7 +245,9 @@ $g-border: solid 1px $gray5;
   }
 
   .isSmallArtists {
-    display: unset !important;
+    display: flex !important;
+    align-items: center;
+    gap: 4px;
     font-size: small;
     color: $white;
     opacity: 0.67;

@@ -28,37 +28,32 @@
       class="album-header-ambient rounded-lg"
       style="height: 100%; width: 100%"
       :style="{
-        boxShadow: colors.bg
-          ? `0 .5rem 2rem ${colors.bg}`
-          : '0 .5rem 2rem black',
+        boxShadow: colors.bg ? `0 .5rem 2rem ${colors.bg}` : '0 .5rem 2rem black',
       }"
     ></div>
     <div v-if="info.has_image && useSqrImg" class="sqr_img">
       <img :src="(playlist.info.image as string)" class="rounded-sm" />
     </div>
-    <BannerImages
-      v-if="playlist.info.count && !info.has_image && useSqrImg"
-      class="sqr_img rounded-sm"
-    />
+    <BannerImages v-if="playlist.info.count && !info.has_image && useSqrImg" class="sqr_img rounded-sm" />
     <Info :text-color="textColor" :btn_color="colors.btn" />
     <LastUpdated />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
-import usePStore from "@/stores/pages/playlist";
-import { getTextColor } from "@/utils/colortools/shift";
 import { pinUnpinPlaylist } from "@/requests/playlists";
 import { heightLarge, isSmallPhone } from "@/stores/content-width";
+import usePStore from "@/stores/pages/playlist";
+import { getTextColor } from "@/utils/colortools/shift";
 
-import Info from "./Header/Info.vue";
-import PinSvg from "@/assets/icons/pin.svg";
-import LastUpdated from "./Header/LastUpdated.vue";
-import BannerImages from "./Header/BannerImages.vue";
 import PinFillSvg from "@/assets/icons/pin.fill.svg";
+import PinSvg from "@/assets/icons/pin.svg";
+import BannerImages from "./Header/BannerImages.vue";
+import Info from "./Header/Info.vue";
+import LastUpdated from "./Header/LastUpdated.vue";
 
 const playlist = usePStore();
 
@@ -66,10 +61,7 @@ const { info, colors } = storeToRefs(playlist);
 
 const bg = computed(() => {
   if (playlist.info.has_image) {
-    if (
-      isSmallPhone.value ||
-      (!playlist.info.settings.square_img && !isSmallPhone.value)
-    ) {
+    if (isSmallPhone.value || (!playlist.info.settings.square_img && !isSmallPhone.value)) {
       return `url(${info.value.image})`;
     }
   }
@@ -77,9 +69,7 @@ const bg = computed(() => {
   return colors.value.bg ? colors.value.bg : "";
 });
 
-const useSqrImg = computed(
-  () => !playlist.info.has_image || !bg.value.startsWith("url")
-);
+const useSqrImg = computed(() => !playlist.info.has_image || !bg.value.startsWith("url"));
 
 const textColor = computed(() => {
   if (colors.value.bg !== "") {
@@ -130,7 +120,7 @@ function pinPlaylist(pid: number) {
       font-size: 3.75rem !important;
     }
 
-    @include smallPhone {
+    @include largePhones {
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -176,7 +166,7 @@ function pinPlaylist(pid: number) {
     opacity: 0.5;
   }
 
-  @include smallPhone {
+  @include largePhones {
     .title {
       font-size: 2.5rem !important;
     }

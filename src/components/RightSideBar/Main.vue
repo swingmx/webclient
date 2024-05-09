@@ -18,9 +18,9 @@
 <script setup lang="ts">
 import useTabStore from "@/stores/tabs";
 
+import DashBoard from "./Home/Main.vue";
 import Queue from "./Queue.vue";
 import Search from "./Search/Main.vue";
-import DashBoard from "./Home/Main.vue";
 import SearchInput from "./SearchInput.vue";
 
 const tabs = useTabStore();
@@ -63,5 +63,13 @@ const tabs = useTabStore();
       grid-template-rows: max-content 1fr;
     }
   }
+}
+
+.designatedOS .r-sidebar > .r-content > .r-queue > .queue-virtual-scroller > .scroller::-webkit-scrollbar-track {
+  background-color: $gray;
+}
+
+.designatedOS .r-sidebar > .r-content > .r-queue > .queue-virtual-scroller > .scroller::-webkit-scrollbar-thumb {
+  border: 4px solid $gray;
 }
 </style>

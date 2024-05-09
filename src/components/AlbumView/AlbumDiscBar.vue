@@ -19,12 +19,17 @@ defineProps<{
   grid-template-columns: 1fr max-content;
   align-items: center;
   padding-left: 1rem;
+  margin-top: $small;
   height: $song-item-height;
 
   .disc_number {
     font-size: $medium;
     font-weight: 500;
     opacity: 0.75;
+  }
+
+  @include largePhones {
+    padding-left: 0.5rem !important;
   }
 }
 </style>

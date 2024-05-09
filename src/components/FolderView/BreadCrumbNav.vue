@@ -39,13 +39,15 @@ onUpdated(() => {
 </script>
 
 <style lang="scss">
-.breadcrumb-nav {
-  display: flex;
-  gap: $smaller;
-
+.designatedOS .breadcrumb-nav {
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.breadcrumb-nav {
+  display: flex;
+  gap: $smaller;
 
   .path {
     white-space: nowrap;

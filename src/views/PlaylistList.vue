@@ -16,8 +16,8 @@
           />
         </form>
       </template>
-      <template v-if="!isSmall" #right>
-        <button @click="showNewPlaylistModal()"><PlusSvg /> New Playlist</button>
+      <template #right>
+        <button class="playlist-button" @click="showNewPlaylistModal()"><PlusSvg /> New Playlist</button>
       </template>
     </Header>
     <PlaylistCardGroup v-if="!query && pinnedPlaylists.length" :playlists="pinnedPlaylists" :title="'Pinned'" />
@@ -35,7 +35,6 @@
 import { debouncedRef } from "@vueuse/core";
 import { computed, onMounted, ref } from "vue";
 
-import { isSmall } from "@/stores/content-width";
 import usePStore from "@/stores/pages/playlists";
 import { useFuse } from "@/utils";
 import updatePageTitle from "@/utils/updatePageTitle";
@@ -85,19 +84,19 @@ const playlists = computed(() => {
   height: 100%;
   overflow: auto;
 
-  .generichead {
-    @include allPhones {
-      padding: 1rem 0 1rem $small;
-    }
-  }
-
   .grid {
     grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
     gap: 2.5rem 1.5rem;
+
+    @include mediumPhones {
+      grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+      gap: 1rem;
+    }
   }
 
   #playlistsearch {
     width: 16rem;
+    max-width: 100%;
     margin-top: 1rem;
     background-color: $gray5;
     color: white;
@@ -106,6 +105,10 @@ const playlists = computed(() => {
     padding: $medium;
     outline: none;
     appearance: none;
+  }
+
+  .playlist-button {
+    padding-right: $medium;
   }
 
   .nothing {

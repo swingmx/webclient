@@ -16,8 +16,8 @@
 import { Track } from "@/interfaces";
 
 import useQueueStore from "@/stores/queue";
-import useSearchStore from "@/stores/search";
 import useTracklist from "@/stores/queue/tracklist";
+import useSearchStore from "@/stores/search";
 
 import TrackItem from "@/components/shared/TrackItem.vue";
 
@@ -37,7 +37,7 @@ function handlePlay(track: Track) {
   margin-bottom: 2rem;
 
   .track-item {
-    padding: $small 1.1rem;
+    padding: $small;
   }
 }
 </style>

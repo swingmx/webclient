@@ -136,6 +136,10 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
     gap: 1.5rem 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
+
+    @include mediumPhones {
+      grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    }
   }
 
   .p-card {

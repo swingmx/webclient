@@ -66,7 +66,7 @@ const search = useSearchStore();
       margin-left: $medium;
     }
 
-    @include allPhones {
+    @include largePhones {
       grid-template-columns: 1fr;
     }
   }
@@ -81,6 +81,15 @@ const search = useSearchStore();
 
     h3 {
       margin-left: 0;
+    }
+
+    @include largePhones {
+      max-width: 100%;
+    }
+
+    @include mediumPhones {
+      min-width: unset;
+      max-width: 100%;
     }
   }
 

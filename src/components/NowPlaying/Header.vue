@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <h3 v-if="queue.next">Up Next</h3>
+    <h3 class="nowplaying_title" v-if="queue.next">Up Next</h3>
     <SongItem
       v-if="queue.next"
       :track="queue.next"
@@ -34,7 +34,7 @@
       :source="dropSources.folder"
       @play-this="queue.playNext"
     />
-    <h3>Queue</h3>
+    <h3 class="nowplaying_title">Queue</h3>
   </div>
 </template>
 
@@ -68,8 +68,22 @@ function handleFav() {
 
 <style lang="scss">
 .now-playing-header {
-  padding-bottom: 1rem;
+  padding-bottom: $smaller;
   position: relative;
+
+  .nowplaying_title {
+    padding-left: 1rem;
+    margin: 1.25rem 0;
+
+    &:last-child {
+      padding-top: $large;
+      margin: 1rem 0;
+    }
+
+    @include largePhones {
+      padding-left: 0.5rem;
+    }
+  }
 
   .below-progress {
     display: flex;
@@ -89,11 +103,36 @@ function handleFav() {
     }
 
     /* Responsive */
-    @media only screen and (max-width: 640px) {
+    @include largePhones {
       .right-group button.speaker {
         border-top: 1px solid transparent !important;
         border-top-left-radius: 0 !important;
         border-top-right-radius: 0 !important;
+      }
+    }
+
+    @include smallestPhones {
+      position: relative;
+      flex-direction: column;
+      align-items: unset;
+      gap: $small;
+
+      .time:first-child {
+        align-self: baseline;
+        margin-left: 4px;
+      }
+
+      .time:last-child {
+        align-self: end;
+        position: absolute;
+        top: 0;
+        right: 4px;
+      }
+
+      .right-group {
+        width: 100% !important;
+        display: flex;
+        justify-content: space-between;
       }
     }
   }

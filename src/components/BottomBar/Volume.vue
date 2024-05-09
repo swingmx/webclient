@@ -101,6 +101,7 @@ const handleMouseWheel = (event: WheelEvent) => {
       width: max-content;
       max-width: 87px;
       margin: 0;
+      touch-action: pan-x;
 
       &::-webkit-slider-thumb {
         height: 1rem;
@@ -126,6 +127,7 @@ const handleMouseWheel = (event: WheelEvent) => {
   .volume_indicator {
     font-weight: 600;
     width: 24px;
+    height: 18px;
     transform: rotate(90deg) translate3d(0, 0, 0);
   }
 }

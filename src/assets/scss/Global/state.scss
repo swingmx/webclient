@@ -1,15 +1,61 @@
 .now-playing-track-indicator {
-  background-image: url(../../assets/icons/playing.gif);
-  height: 2rem;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 2rem;
+  height: 2rem;
   border-radius: 50%;
-  background-color: #fefefe;
-  background-size: 1.5rem !important;
+  background-color: $white;
+  transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  #wave {
+    fill: #000000;
+    width: 28px;
+    height: auto;
+
+    @for $i from 1 through 9 {
+      #Line_#{$i} {
+        animation: pulse 0.4s infinite;
+        animation-delay: $i * 0.12s;
+        transform: scaleY(0.8);
+        transform-origin: center;
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scaleY(0.8);
+        transform-origin: 50% 50%;
+      }
+
+      50% {
+        transform: scaleY(0.6);
+        transform-origin: 50% 50%;
+      }
+
+      100% {
+        transform: scaleY(0.8);
+        transform-origin: 50% 50%;
+      }
+    }
+  }
 }
 
-.last_played {
-  background-image: url(../../assets/icons/playing.webp);
-  transition: all 0.3s ease-in-out;
+.now-playing-track-indicator.last_played {
+  #wave {
+    @for $i from 1 through 9 {
+      #Line_#{$i} {
+        animation-play-state: paused;
+      }
+    }
+  }
 }
 
 .hidden {

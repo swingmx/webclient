@@ -5,13 +5,7 @@
     <button
       class="repeat"
       :class="{ 'repeat-disabled': settings.no_repeat }"
-      :title="
-        settings.repeat_all
-          ? 'Repeat all'
-          : settings.no_repeat
-          ? 'No repeat'
-          : 'Repeat one'
-      "
+      :title="settings.repeat_all ? 'Repeat all' : settings.no_repeat ? 'No repeat' : 'Repeat one'"
       @click="settings.toggleRepeatMode"
     >
       <RepeatOneSvg v-if="settings.repeat_one" />
@@ -33,12 +27,12 @@
 import useQueue from "@/stores/queue";
 import useSettings from "@/stores/settings";
 
-import Volume from "./Volume.vue";
+import RepeatOneSvg from "@/assets/icons/repeat-one.svg";
+import RepeatAllSvg from "@/assets/icons/repeat.svg";
+import ShuffleSvg from "@/assets/icons/shuffle.svg";
 import HeartSvg from "../shared/HeartSvg.vue";
 import LyricsButton from "../shared/LyricsButton.vue";
-import RepeatAllSvg from "@/assets/icons/repeat.svg";
-import RepeatOneSvg from "@/assets/icons/repeat-one.svg";
-import ShuffleSvg from "@/assets/icons/shuffle.svg";
+import Volume from "./Volume.vue";
 
 const queue = useQueue();
 const settings = useSettings();
@@ -62,6 +56,7 @@ defineEmits<{
 
   @include allPhones {
     width: max-content;
+    height: unset;
   }
 
   button {

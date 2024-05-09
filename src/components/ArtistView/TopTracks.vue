@@ -53,10 +53,10 @@ defineProps<{
     display: flex;
     justify-content: space-between;
     padding-left: 1rem !important; // applies to favorite page
+    padding-right: $small;
 
-    @include allPhones {
+    @include largePhones {
       padding-left: $small !important;
-      padding-right: $small !important;
     }
   }
 }

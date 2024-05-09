@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted } from "vue";
+import { nextTick, onMounted } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 
 import { playSources } from "@/enums";

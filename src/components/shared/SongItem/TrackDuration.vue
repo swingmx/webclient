@@ -26,15 +26,27 @@ defineEmits<{
   align-items: center;
   gap: 1rem;
 
+  @include allPhones {
+    gap: $small;
+    justify-content: end;
+    margin-right: $small;
+  }
+
   .song-duration {
     font-size: small;
+    font-variant-numeric: tabular-nums;
     text-align: left;
+
+    @include mediumPhones {
+      display: none;
+    }
   }
 
   .options-icon {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     aspect-ratio: 1;
     width: 2rem;
     transition: background-color 0.2s ease-out;

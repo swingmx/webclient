@@ -14,8 +14,14 @@
       </div>
       <NavTitles v-else-if="settings.is_default_layout && !isSmall" />
     </div>
+    <div class="sidenav_toggle" @click="toggleSidenav">
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <NavSidenav @close="toggleSidenav" :class="{ active: sidenavActive }" />
+    <div class="dimmer noSelect" :class="{ active: sidenavActive }" @click="toggleSidenav"></div>
     <RouterLink v-if="settings.is_alt_layout" to="/" class="logo rounded-sm"><LogoSvg /></RouterLink>
-    <div v-if="settings.is_alt_layout || !settings.use_sidebar" class="right">
+    <div v-if="settings.is_alt_layout || !settings.use_sidebar || !xl" class="right">
       <SearchInput :on_nav="true" />
       <!-- v-if="settings.is_alt_layout" -->
       <RouterLink
@@ -42,12 +48,14 @@ import { subPath } from "@/interfaces";
 import { content_width } from "@/stores/content-width";
 import useSettings from "@/stores/settings";
 import { createSubPaths } from "@/utils";
+import { xl } from "./../../composables/useBreakpoints";
 
 import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
 import AvatarSvg from "@/assets/icons/settings.svg";
 import SearchInput from "../RightSideBar/SearchInput.vue";
 import NavButtons from "./NavButtons.vue";
 import NavLinks from "./NavLinks.vue";
+import NavSidenav from "./NavSidenav.vue";
 import NavTitles from "./NavTitles.vue";
 import Folder from "./Titles/Folder.vue";
 
@@ -88,6 +96,12 @@ onMounted(() => {
     [oldpath, subPaths.value] = createSubPaths(route.params.path as string, oldpath);
   }
 });
+
+const sidenavActive = ref(false);
+
+function toggleSidenav() {
+  sidenavActive.value = !sidenavActive.value;
+}
 </script>
 
 <style lang="scss">
@@ -107,10 +121,6 @@ onMounted(() => {
     grid-template-columns: 1fr max-content 1fr;
   }
 
-  &.use_sidebar {
-    gap: 0;
-  }
-
   .left {
     display: grid;
     grid-template-columns: max-content 1fr;
@@ -128,12 +138,15 @@ onMounted(() => {
         align-items: center;
       }
     }
+
+    @include allPhones {
+      display: none;
+    }
   }
 
   .logo {
     width: max-content;
     margin: 0 auto;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -172,9 +185,19 @@ onMounted(() => {
       }
 
       @include allPhones {
-        display: none;
+        height: unset;
+        background-color: transparent;
       }
     }
+
+    @include allPhones {
+      gap: unset;
+      justify-content: unset;
+    }
+  }
+
+  @include allPhones {
+    display: flex;
   }
 }
 </style>

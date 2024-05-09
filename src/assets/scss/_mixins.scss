@@ -5,51 +5,47 @@
 }
 
 // media query mixins
-@mixin smallPhone {
-  @media only screen and (max-width: 550px) {
+@mixin smallestPhones {
+  @media only screen and (max-width: 320px) {
     @content;
   }
 }
 
-@mixin isSmallestPhone {
-  @media only screen and (max-width: 440px) {
+@mixin smallerPhones {
+  @media only screen and (max-width: 360px) {
     @content;
   }
 }
 
+@mixin smallPhones {
+  @media only screen and (max-width: 420px) {
+    @content;
+  }
+}
+
+/* This query is "synced" with content-width.ts values */
+@mixin mediumPhones {
+  @media only screen and (max-width: 460px) {
+    @content;
+  }
+}
+
+/* This query is "synced" with content-width.ts values */
+@mixin largePhones {
+  @media only screen and (max-width: 660px) {
+    @content;
+  }
+}
+
+/* This query is "synced" with content-width.ts and index.ts values */
 @mixin allPhones {
   @media only screen and (max-width: 900px) {
     @content;
   }
 }
 
-@mixin largePhones {
-  // 550px <= width < 900px
-  @media only screen and (min-width: 550px) {
-    @content;
-  }
-}
-
-@mixin tablet-landscape {
-  @media only screen and (max-width: 1080px) {
-    @content;
-  }
-}
-
-@mixin tablet-portrait {
-  @media only screen and (max-width: 810px) {
-    @content;
-  }
-}
-
 @mixin for-desktop-down {
   @media only screen and (max-width: 1600px) {
-    @content;
-  }
-}
-
-@mixin for-desktop-up {
-  @media only screen and (min-width: 1800px) {
     @content;
   }
 }

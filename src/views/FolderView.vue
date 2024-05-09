@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="folder-view v-scroll-page"
-    style="height: 100%"
-    :class="{ isSmall, isMedium, is_alt_layout }"
-  >
+  <div class="folder-view v-scroll-page" style="height: 100%" :class="{ isSmall, isMedium, is_alt_layout }">
     <NoItems
       :flag="folder.tracks.length === 0 && folder.dirs.length === 0"
       :title="folder.query === '' ? 'Folder is empty' : 'No results found'"
@@ -22,17 +18,12 @@
       class="scroller"
       style="height: 100%"
     >
-      <template v-if="is_alt_layout" #before>
+      <template #before>
         <Folder :sub-paths="subPaths" />
       </template>
 
       <template #default="{ item, index, active }">
-        <DynamicScrollerItem
-          :item="item"
-          :active="active"
-          :size-dependencies="[item.props]"
-          :data-index="index"
-        >
+        <DynamicScrollerItem :item="item" :active="active" :size-dependencies="[item.props]" :data-index="index">
           <component
             :is="item.component"
             :key="index"
@@ -46,26 +37,26 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, ref, watch, nextTick } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 
-import useQueue from "@/stores/queue";
+import { isMedium, isSmall } from "@/stores/content-width";
 import useLoader from "@/stores/loader";
-import useSettings from "@/stores/settings";
 import useFolder from "@/stores/pages/folder";
+import useQueue from "@/stores/queue";
 import useTracklist from "@/stores/queue/tracklist";
-import { content_width, isMedium, isSmall } from "@/stores/content-width";
+import useSettings from "@/stores/settings";
 
 import { dropSources } from "@/enums";
 import { Track, subPath } from "@/interfaces";
-import updatePageTitle from "@/utils/updatePageTitle";
 import { createSubPaths, createTrackProps } from "@/utils";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 import FolderSvg from "@/assets/icons/folder.svg";
+import FolderList from "@/components/FolderView/FolderList.vue";
+import Folder from "@/components/nav/Titles/Folder.vue";
 import NoItems from "@/components/shared/NoItems.vue";
 import SongItem from "@/components/shared/SongItem.vue";
-import Folder from "@/components/nav/Titles/Folder.vue";
-import FolderList from "@/components/FolderView/FolderList.vue";
 import { xl } from "@/composables/useBreakpoints";
 
 const queue = useQueue();

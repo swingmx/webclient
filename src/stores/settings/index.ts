@@ -61,14 +61,10 @@ export default defineStore("settings", {
       this.separators = settings.artist_separators;
       this.show_albums_as_singles = settings.show_albums_as_singles;
 
-      this.use_lyrics_plugin = settings.plugins.find(
-        (p) => p.name === "lyrics_finder"
-      )?.active;
+      this.use_lyrics_plugin = settings.plugins.find((p) => p.name === "lyrics_finder")?.active;
 
       if (this.use_lyrics_plugin) {
-        this.lyrics_plugin_settings = settings.plugins.find(
-          (p) => p.name === "lyrics_finder"
-        )?.settings;
+        this.lyrics_plugin_settings = settings.plugins.find((p) => p.name === "lyrics_finder")?.settings;
       }
     },
     setArtistSeparators(separators: string[]) {
@@ -229,8 +225,7 @@ export default defineStore("settings", {
       return this.use_crossfade && this.crossfade_duration > 0;
     },
     is_default_layout: (state) => state.layout === "",
-    is_alt_layout: (state) =>
-      state.layout === "alternate" && content_width.value > 800,
+    is_alt_layout: (state) => state.layout === "alternate" && content_width.value > 900,
   },
   persist: {
     afterRestore: (context) => {
