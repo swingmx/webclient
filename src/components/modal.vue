@@ -37,7 +37,6 @@
                 @hideModal="hideModal"
                 @setTitle="setTitle"
             />
-            <WelcomeModal v-if="modal.component == modal.options.welcome" />
             <div v-if="modal.component == modal.options.deletePlaylist">
                 <ConfirmModal
                     :text="'Are you sure you want to permanently delete this playlist?'"
@@ -66,7 +65,6 @@ import { deletePlaylist as delPlaylist } from '@/requests/playlists'
 import useModalStore, { ModalOptions } from '@/stores/modal'
 import { useRouter } from 'vue-router'
 
-import WelcomeModal from './WelcomeModal.vue'
 import AuthLogin from './modals/AuthLogin.vue'
 import ConfirmModal from './modals/ConfirmModal.vue'
 import NewPlaylist from './modals/NewPlaylist.vue'
