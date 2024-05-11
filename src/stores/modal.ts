@@ -3,7 +3,6 @@ import { defineStore } from "pinia";
 export enum ModalOptions {
   newPlaylist,
   updatePlaylist,
-  welcome,
   deletePlaylist,
   SetIP,
   rootDirsPrompt,
@@ -61,9 +60,6 @@ export default defineStore("newModal", {
     },
     showEditPlaylistModal() {
       this.showModal(ModalOptions.updatePlaylist);
-    },
-    showWelcomeModal() {
-      this.showModal(ModalOptions.welcome);
     },
     showDeletePlaylistModal(pid: number) {
       const props = {
