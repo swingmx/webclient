@@ -1,18 +1,16 @@
 <template>
-  <div class="generichead">
-    <div class="left">
-      <h1 class="title"><slot name="name"></slot></h1>
-      <div class="desc">
-        <slot name="description"></slot>
-      </div>
+    <div class="generichead">
+        <div class="left">
+            <h1 class="title"><slot name="name"></slot></h1>
+            <div class="desc">
+                <slot name="description"></slot>
+            </div>
+        </div>
+        <div class="right">
+            <slot name="right"></slot>
+        </div>
     </div>
-    <div class="right">
-      <slot name="right"></slot>
-    </div>
-  </div>
 </template>
-
-<script setup lang="ts"></script>
 
 <style lang="scss">
 .generichead {
@@ -29,11 +27,11 @@
     overflow: hidden;
   }
 
-  h1 {
-    width: max-content;
-    margin: 0;
-    font-size: 3.25rem;
-  }
+    h1 {
+        width: max-content;
+        margin: 0;
+        font-size: 3.25rem;
+    }
 
   .title {
     font-weight: 700;

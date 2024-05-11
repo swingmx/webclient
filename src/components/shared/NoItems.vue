@@ -34,12 +34,12 @@ defineProps<{
   }
 
   .nothingtitle {
-    margin-top: 2.75rem;
+    // margin-top: 2.75rem;
     font-size: 1.15rem;
   }
 
   svg {
-    transform: scale(5);
+    height: 9rem;
   }
 
   & > * {

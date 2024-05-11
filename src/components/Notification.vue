@@ -1,36 +1,47 @@
 <template>
-  <div v-if="notifStore.notifs" class="toasts">
-    <div v-for="notif in notifStore.notifs" :key="notif.text" class="new-notif rounded-sm" :class="notif.type">
-      <component :is="getSvg(notif.type)" class="notif-icon" />
-      <div class="notif-text">{{ notif.text }}</div>
+    <div
+        v-if="notifStore.notifs"
+        class="toasts"
+    >
+        <div
+            v-for="notif in notifStore.notifs"
+            :key="notif.text"
+            class="new-notif rounded-sm"
+            :class="notif.type"
+        >
+            <component
+                :is="getSvg(notif.type)"
+                class="notif-icon"
+            />
+            <div class="notif-text">{{ notif.text }}</div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
-import { NotifType, useNotifStore } from "../stores/notification";
+import { NotifType, useToast } from '../stores/notification'
 
-import HeartSvg from "../assets/icons/heart.svg";
-import ErrorSvg from "../assets/icons/toast/error.svg";
-import InfoSvg from "../assets/icons/toast/info.svg";
-import SuccessSvg from "../assets/icons/toast/ok.svg";
-import WorkingSvg from "../assets/icons/toast/working.svg";
+import HeartSvg from '../assets/icons/heart.svg'
+import ErrorSvg from '../assets/icons/toast/error.svg'
+import InfoSvg from '../assets/icons/toast/info.svg'
+import SuccessSvg from '../assets/icons/toast/ok.svg'
+import WorkingSvg from '../assets/icons/toast/working.svg'
 
-const notifStore = useNotifStore();
+const notifStore = useToast()
 
 function getSvg(notif: NotifType) {
-  switch (notif) {
-    case NotifType.Error:
-      return ErrorSvg;
-    case NotifType.Info:
-      return InfoSvg;
-    case NotifType.Success:
-      return SuccessSvg;
-    case NotifType.Working:
-      return WorkingSvg;
-    case NotifType.Favorite:
-      return HeartSvg;
-  }
+    switch (notif) {
+        case NotifType.Error:
+            return ErrorSvg
+        case NotifType.Info:
+            return InfoSvg
+        case NotifType.Success:
+            return SuccessSvg
+        case NotifType.Working:
+            return WorkingSvg
+        case NotifType.Favorite:
+            return HeartSvg
+    }
 }
 </script>
 <style lang="scss">
@@ -58,8 +69,8 @@ function getSvg(notif: NotifType) {
   box-shadow: 0px 0px 2rem rgba(0, 0, 0, 0.466);
   padding: 1rem $small;
 
-  grid-template-columns: 2rem 3fr;
-  gap: $smaller;
+    grid-template-columns: 2rem 3fr;
+    gap: $smaller;
 
   .notif-text {
     width: 100%;
@@ -71,20 +82,20 @@ function getSvg(notif: NotifType) {
 }
 
 .new-notif.error {
-  $bg: rgb(197, 72, 72);
-  background-color: $bg;
+    $bg: rgb(197, 72, 72);
+    background-color: $bg;
 }
 
 .new-notif.info,
 .new-notif.favorite,
 .new-notif.success {
-  $bg: rgb(255, 255, 255);
-  background-color: $bg;
-  color: $black;
+    $bg: rgb(255, 255, 255);
+    background-color: $bg;
+    color: $black;
 }
 
 .new-notif.working {
-  $bg: $gray4;
-  background-color: $bg;
+    $bg: $gray4;
+    background-color: $bg;
 }
 </style>

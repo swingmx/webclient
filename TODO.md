@@ -1,0 +1,2 @@
+- Remove welcome dialog
+- Update folder page breadcrumb when response has skipped empty folders

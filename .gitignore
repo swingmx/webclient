@@ -24,7 +24,7 @@ pnpm-debug.log*
 *.sw?
 
 # TODO
-TODO.md
+# TODO.md
 
 __pycache__
 dev-dist/*

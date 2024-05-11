@@ -229,3 +229,17 @@ export interface LyricsLine {
   time: number;
   text: string;
 }
+
+// Auth
+export interface UserSimplified {
+  id: number
+  username: string
+  firstname: string
+}
+
+export interface User extends UserSimplified {
+  lastname: string;
+  email: string
+  image: string
+  roles: string[]
+}

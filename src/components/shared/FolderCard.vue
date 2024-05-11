@@ -46,7 +46,6 @@ defineProps<{
 }>();
 
 const name = (path: string) => {
-  console.log(path);
   // remove trailing slash
   if (path.endsWith("/")) {
     path = path.slice(0, -1);

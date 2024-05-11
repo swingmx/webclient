@@ -1,6 +1,6 @@
 <template>
-  <div v-if="group.show_if ? group.show_if() : true" class="settingsgroup">
-    <div v-if="group.title || group.desc" class="info">
+  <div v-if="group && (group.show_if ? group.show_if() : true)" class="settingsgroup">
+    <!-- <div v-if="group.title || group.desc" class="info">
       <h4 v-if="group.title">
         {{ group.title
         }}<span v-if="group.experimental" class="badge experimental circular">
@@ -8,8 +8,8 @@
         </span>
       </h4>
       <div v-if="group.desc" class="desc">{{ group.desc }}</div>
-    </div>
-    <div class="setting rounded pad-lg">
+    </div> -->
+    <div class="setting pad-lg">
       <div
         v-for="(setting, index) in group.settings.filter((s) => (s.show_if ? s.show_if() : true))"
         :key="index"
@@ -62,7 +62,7 @@
           />
         </div>
 
-        <QuickActions v-if="setting.type == SettingType.quick_actions" />
+        <!-- Custom components -->
         <List
           v-if="setting.type === SettingType.root_dirs"
           icon="folder"
@@ -73,6 +73,9 @@
           :submit="setting.action"
           :default="setting.state ? setting.state() : []"
         />
+        <Profile v-if="setting.type === SettingType.profile"/>
+        <Accounts v-if="setting.type === SettingType.accounts"/>
+        <About v-if="setting.type === SettingType.about"/>
       </div>
     </div>
   </div>
@@ -85,10 +88,13 @@ import { SettingType } from "@/settings/enums";
 import ReloadSvg from "@/assets/icons/reload.svg";
 import List from "./Components/List.vue";
 import LockedNumberInput from "./Components/LockedNumberInput.vue";
-import QuickActions from "./Components/QuickSettings.vue";
 import Select from "./Components/Select.vue";
 import SeparatorsInput from "./Components/SeparatorsInput.vue";
 import Switch from "./Components/Switch.vue";
+
+import About from "./About.vue";
+import Profile from "../modals/settings/Profile.vue";
+import Accounts from "../modals/settings/custom/Accounts.vue";
 
 defineProps<{
   group: SettingGroup;
@@ -98,31 +104,9 @@ defineProps<{
 <style lang="scss">
 .settingsgroup {
   display: grid;
-  // grid-template-columns: 20rem 1fr;
   gap: $small;
   margin-top: 2rem;
-  border-bottom: solid 1px $gray;
   padding-bottom: 2rem;
-
-  .badge {
-    margin-left: $small;
-    opacity: 0.75;
-    padding: 0 $smaller;
-    border-radius: $smaller;
-    font-size: 12px;
-    font-weight: 500;
-  }
-
-  .experimental {
-    border: solid 1px $yellow;
-    color: $yellow;
-    font-weight: 600;
-  }
-
-  .badge.new {
-    background-color: $blue;
-    opacity: 1;
-  }
 
   &:first-child {
     margin-top: 0;
@@ -144,7 +128,7 @@ defineProps<{
   }
 
   .setting {
-    background-color: $gray;
+    // background-color: $gray;
 
     .inactive {
       opacity: 0.5;
@@ -160,7 +144,7 @@ defineProps<{
   .setting-item {
     user-select: none;
     border-bottom: solid 1px $gray5;
-    padding: $medium 0;
+    padding: 1.25rem 0;
 
     .options {
       margin: auto 0;

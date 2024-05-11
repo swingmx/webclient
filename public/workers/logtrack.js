@@ -11,5 +11,6 @@ onmessage = (e) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ trackhash, duration, source, timestamp }),
+    credentials: "include"
   });
 };

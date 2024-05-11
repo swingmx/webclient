@@ -1,61 +1,69 @@
 <template>
-  <div class="last-updated">
-    <span v-if="!isHeaderSmall" class="status"
-      >Last updated {{ playlist.info.last_updated }} &#160;|&#160;&#160;</span
-    >
-    <div
-      v-if="Number.isInteger(playlist.info.id)"
-      class="edit"
-      @click="editPlaylist"
-    >
-      Edit&#160;&#160;
+    <div class="last-updated">
+        <span
+            v-if="!isHeaderSmall"
+            class="status"
+            >Last updated {{ playlist.info.last_updated }}</span
+        >
+        <div
+            v-if="Number.isInteger(playlist.info.id)"
+            class="edit"
+            
+        >
+        &#160;&#160;|&#160;&#160; <span @click="editPlaylist">Edit</span>&#160;&#160;
+            {{ Number.isInteger(playlist.info.id) ? ' | ' : '' }}
+            <DeleteSvg
+                class="edit"
+                @click="deletePlaylist"
+            />
+        </div>
     </div>
-    {{ Number.isInteger(playlist.info.id) ? " | " : "" }}
-    <DeleteSvg class="edit" @click="deletePlaylist" />
-  </div>
 </template>
 <script setup lang="ts">
-import DeleteSvg from "@/assets/icons/delete.svg";
+import DeleteSvg from '@/assets/icons/delete.svg'
 
-import { isHeaderSmall } from "@/stores/content-width";
+import { isHeaderSmall } from '@/stores/content-width'
 
-import useModalStore from "@/stores/modal";
-import usePStore from "@/stores/pages/playlist";
+import useModalStore from '@/stores/modal'
+import usePStore from '@/stores/pages/playlist'
 
-const playlist = usePStore();
-const modal = useModalStore();
+const playlist = usePStore()
+const modal = useModalStore()
 
 function editPlaylist() {
-  modal.showEditPlaylistModal();
+    modal.showEditPlaylistModal()
 }
 
 function deletePlaylist() {
-  modal.showDeletePlaylistModal(playlist.info.id);
+    modal.showDeletePlaylistModal(playlist.info.id)
 }
 </script>
 
 <style lang="scss">
 .last-updated {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  padding: $smaller $small;
-  font-size: 0.9rem;
-  border-radius: $smaller;
-  z-index: 12;
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    padding: $smaller $small;
+    font-size: 0.9rem;
+    border-radius: $smaller;
+    z-index: 12;
 
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 
-  .edit {
-    cursor: pointer;
-    color: $brown;
-  }
+    .edit {
+        cursor: pointer;
+        color: $brown;
+        display: flex;
+        align-items: center;
+    }
 
-  svg {
-    transform: scale(0.75);
-    margin-bottom: -0.2rem;
-    color: $red !important;
-  }
+    svg {
+        transform: scale(0.75);
+        margin-bottom: -0.2rem;
+        color: $red !important;
+        height: 1.5rem;
+    }
 }
 </style>

@@ -25,7 +25,7 @@ const crossfade: Setting = {
   desc: "Duration of the crossfade in seconds",
   type: SettingType.locked_number_input,
   state: () => settings().crossfade_duration_seconds,
-  action: settings().setCrossfadeDuration,
+  action: (duration: number) => settings().setCrossfadeDuration(duration),
   defaultAction: () => {},
   show_if: () => settings().use_crossfade,
 };

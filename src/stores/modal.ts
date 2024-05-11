@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-enum ModalOptions {
+export enum ModalOptions {
   newPlaylist,
   updatePlaylist,
   welcome,
@@ -9,6 +9,8 @@ enum ModalOptions {
   rootDirsPrompt,
   setRootDirs,
   saveFolderAsPlaylist,
+  login,
+  settings
 }
 
 export default defineStore("newModal", {
@@ -77,6 +79,12 @@ export default defineStore("newModal", {
     },
     showSetRootDirsModal() {
       this.showModal(ModalOptions.setRootDirs);
+    },
+    showLoginModal(){
+      this.showModal(ModalOptions.login);
+    },
+    showSettingsModal(){
+      this.showModal(ModalOptions.settings);
     },
     hideModal() {
       this.visible = false;

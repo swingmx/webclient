@@ -11,6 +11,7 @@ onmessage = async (e) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ ending_file, starting_file }),
+    credentials: "include"
   });
 
   const data = await res.json();

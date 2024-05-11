@@ -67,7 +67,7 @@ import useAlbumStore from "@/stores/pages/album";
 import { paths } from "../../config";
 import MasterFlag from "./MasterFlag.vue";
 
-const imguri = paths.images.thumb.large;
+const imguri = paths.images.thumb.medium;
 const route = useRoute();
 
 const props = defineProps<{

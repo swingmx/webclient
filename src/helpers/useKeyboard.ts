@@ -34,7 +34,7 @@ export default function (queue: typeof useQueue, modal: typeof useModal) {
       const targett = target as HTMLInputElement;
 
       return (
-        (targett.tagName === "INPUT" && targett.type === "search") ||
+        (targett.tagName === "INPUT" && targett.type !== "range") ||
         targett.tagName === "TEXTAREA"
       );
     }

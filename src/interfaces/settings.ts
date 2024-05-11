@@ -26,9 +26,11 @@ export interface SettingGroup {
   settings: Setting[];
   show_if?: () => boolean;
   experimental?: boolean;
+  icon?: string;
 }
 
 export interface SettingCategory {
   title: string;
   groups: SettingGroup[];
+  show_if?: () => boolean;
 }
