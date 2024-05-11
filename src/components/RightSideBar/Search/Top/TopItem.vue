@@ -7,7 +7,7 @@
     class="top-result-item rounded"
   >
     <img
-      :src="res_type === 'artist' ? paths.images.artist.large + item.image : paths.images.thumb.large + item.image"
+      :src="res_type === 'artist' ? paths.images.artist.medium + item.image : paths.images.thumb.medium + item.image"
       alt=""
       class="rounded-sm"
       :class="{ circular: res_type === 'artist' }"

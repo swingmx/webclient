@@ -132,19 +132,6 @@ function updateContentElemSize({ width, height }: { width: number; height: numbe
   resizer_height.value = height;
 
   updateCardWidth();
-function updateContentElemSize({
-    width,
-    height,
-}: {
-    width: number
-    height: number
-}) {
-    // 1572 is the maxwidth of the #acontent. see app-grid.scss > $maxwidth
-    const elem_width = appcontent.value?.offsetWidth || 0
-
-    content_width.value = elem_width
-    content_height.value = height
-    updateCardWidth()
 }
 
 function handleWelcomeModal() {

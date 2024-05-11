@@ -39,7 +39,7 @@ import { Routes } from "@/router";
 import { playSources } from "@/enums";
 import PlayBtn from "./PlayBtn.vue";
 
-const imguri = paths.images.artist.large;
+const imguri = paths.images.artist.medium;
 
 defineProps<{
   artist: Artist;
