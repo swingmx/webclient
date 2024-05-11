@@ -5,11 +5,7 @@
     :class="{ isSmallPhone }"
     style="height: 100%; width: 100%"
     :style="{
-      boxShadow: !useCircularImage
-        ? colors.bg.length
-          ? `0 .5rem 2rem ${colors.bg}`
-          : undefined
-        : undefined,
+      boxShadow: !useCircularImage ? (colors.bg.length ? `0 .5rem 2rem ${colors.bg}` : undefined) : undefined,
     }"
   ></div>
   <div
@@ -27,11 +23,7 @@
         height: containerHeight,
       }"
     >
-      <img
-        id="artist-avatar"
-        :src="paths.images.artist.large + artist.image"
-        @load="store.setBgColor"
-      />
+      <img id="artist-avatar" :src="paths.images.artist.large + artist.image" @load="store.setBgColor" />
     </div>
     <div
       v-if="!useCircularImage"
@@ -39,10 +31,7 @@
       :style="{
         backgroundImage: colors.bg
           ? `linear-gradient(${gradientDirection}, transparent ${
-              isSmall
-                ? 60
-                : gradientTransparentWidth -
-                  (width < 700 ? 40 : width < 900 ? 20 : 10)
+              isSmall ? 60 : gradientTransparentWidth - (width < 700 ? 40 : width < 900 ? 20 : 10)
             }%,
       ${colors.bg} ${gradientWidth}%,
       ${colors.bg} 100%)`
@@ -53,19 +42,18 @@
 </template>
 
 <script setup lang="ts">
+import useSettingsStore from "@/stores/settings";
+import { useElementSize } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { Ref, computed, onMounted, ref } from "vue";
 import { onBeforeRouteUpdate } from "vue-router";
-import { useElementSize } from "@vueuse/core";
-import useSettingsStore from "@/stores/settings";
 
 import { paths } from "@/config";
 import updatePageTitle from "@/utils/updatePageTitle";
 
-import Info from "./HeaderComponents/Info.vue";
-import useArtistStore from "@/stores/pages/artist";
-import { getShift } from "@/utils/colortools/shift";
 import { isSmall } from "@/stores/content-width";
+import useArtistStore from "@/stores/pages/artist";
+import Info from "./HeaderComponents/Info.vue";
 
 const image_width_px = 450;
 const store = useArtistStore();
@@ -87,18 +75,12 @@ onBeforeRouteUpdate(() => updateTitle());
 const artistheader: Ref<HTMLElement | null> = ref(null);
 const { width } = useElementSize(artistheader);
 
-const gradientTransparentWidth = computed(() =>
-  Math.floor((image_width_px / (width.value || 1)) * 100)
-);
+const gradientTransparentWidth = computed(() => Math.floor((image_width_px / (width.value || 1)) * 100));
 
-const isSmallPhone = computed(() => width.value <= 550);
-const useCircularImage = computed(
-  () => !isSmallPhone.value && settings.useCircularArtistImg
-);
+const isSmallPhone = computed(() => width.value <= 660);
+const useCircularImage = computed(() => !isSmallPhone.value && settings.useCircularArtistImg);
 
-const gradientDirection = computed(() =>
-  isSmallPhone.value ? "210deg" : "to left"
-);
+const gradientDirection = computed(() => (isSmallPhone.value ? "210deg" : "to left"));
 
 const gradientWidth = computed(() => {
   return isSmallPhone.value ? "80" : Math.min(gradientTransparentWidth.value, 50);
@@ -155,22 +137,12 @@ const containerHeight = computed(() => {
 
   .gradient {
     position: absolute;
-    background-image: linear-gradient(
-      to left,
-      transparent 10%,
-      $gray 50%,
-      $gray 100%
-    );
+    background-image: linear-gradient(to left, transparent 10%, $gray 50%, $gray 100%);
     height: 100%;
     width: 100%;
 
     &.isSmallPhone {
-      background-image: linear-gradient(
-        210deg,
-        transparent 20%,
-        $gray 80%,
-        $gray 100%
-      );
+      background-image: linear-gradient(210deg, transparent 20%, $gray 80%, $gray 100%);
     }
   }
 

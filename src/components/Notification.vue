@@ -46,33 +46,39 @@ function getSvg(notif: NotifType) {
 </script>
 <style lang="scss">
 .toasts {
-    position: fixed;
-    bottom: 6rem;
-    left: 50%;
-    transform: translate(-50%);
-    z-index: 100;
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 1rem;
+  position: fixed;
+  bottom: 6rem;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%);
+  z-index: 1003;
+  display: flex;
+  align-items: center;
+  flex-direction: column-reverse;
+  gap: 1rem;
 }
 
 .new-notif {
-    font-size: 0.85rem;
-    font-weight: 500;
-    width: 18rem;
-    height: 4rem;
-    background-color: $gray;
-    display: grid;
-    place-items: center;
-    box-shadow: 0px 0px 2rem rgba(0, 0, 0, 0.466);
-    padding: 1rem $small;
+  font-size: 0.85rem;
+  font-weight: 600;
+  width: 18rem;
+  min-height: 4rem;
+  background-color: $gray;
+  display: grid;
+  place-items: center;
+  box-shadow: 0px 0px 2rem rgba(0, 0, 0, 0.466);
+  padding: 1rem $small;
 
     grid-template-columns: 2rem 3fr;
     gap: $smaller;
 
-    .notif-text {
-        width: 100%;
-    }
+  .notif-text {
+    width: 100%;
+  }
+
+  @include smallestPhones {
+    max-width: calc(100% - 2rem);
+  }
 }
 
 .new-notif.error {

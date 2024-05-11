@@ -28,12 +28,7 @@
       @change="handleUpload"
     />
     <div id="upload" class="boxed rounded-sm">
-      <div
-        class="clickable"
-        tabindex="0"
-        @click="selectFiles"
-        @keydown.space.enter.stop="selectFiles"
-      >
+      <div class="clickable" tabindex="0" @click="selectFiles" @keydown.space.enter.stop="selectFiles">
         <ImageIcon />
         Click to {{ playlist.has_image ? "update" : "upload" }} cover image
       </div>
@@ -45,32 +40,18 @@
         }"
         tabindex="0"
       >
-        <div
-          v-if="!image && playlist.has_image"
-          class="delete-icon"
-          @click="pStore.removeBanner()"
-        >
+        <div v-if="!image && playlist.has_image" class="delete-icon" @click="pStore.removeBanner()">
           <DeleteIcon />
         </div>
       </div>
     </div>
-    <label v-if="playlist.has_image && !playlist.settings.square_img"
-      >Settings</label
-    >
+    <label v-if="playlist.has_image && !playlist.settings.square_img">Settings</label>
     <div v-if="image || playlist.has_image" class="banner-settings rounded-sm">
       <div>Show square cover image</div>
-      <Switch
-        :state="playlist.settings.square_img || false"
-        @click="pStore.toggleSquareImage"
-      />
+      <Switch :state="playlist.settings.square_img || false" @click="pStore.toggleSquareImage" />
     </div>
-    <div
-      v-if="playlist.has_image && !playlist.settings.square_img"
-      class="boxed banner-position-adjust rounded-sm"
-    >
-      <div class="t-center">
-        Adjust image position • {{ pStore.info.settings.banner_pos }}%
-      </div>
+    <div v-if="playlist.has_image && !playlist.settings.square_img" class="boxed banner-position-adjust rounded-sm">
+      <div class="t-center">Adjust image position • {{ pStore.info.settings.banner_pos }}%</div>
       <div class="buttons">
         <button @click.stop.prevent="pStore.minusBannerPos">
           <ExpandSvg />
@@ -118,16 +99,12 @@ const emit = defineEmits<{
 emit("setTitle", "Update Playlist");
 
 function selectFiles() {
-  const input = document.getElementById(
-    "update-pl-image-upload"
-  ) as HTMLInputElement;
+  const input = document.getElementById("update-pl-image-upload") as HTMLInputElement;
   input.click();
 }
 
 function handleUpload() {
-  const input = document.getElementById(
-    "update-pl-image-upload"
-  ) as HTMLInputElement;
+  const input = document.getElementById("update-pl-image-upload") as HTMLInputElement;
 
   if (input.files) {
     handleFile(input.files[0]);
@@ -153,9 +130,7 @@ function handleFile(file: File) {
 let clicked = ref(false);
 
 function update_playlist(e: Event) {
-  const form = document.getElementById(
-    "playlist-update-modal"
-  ) as HTMLFormElement;
+  const form = document.getElementById("playlist-update-modal") as HTMLFormElement;
   const formData = new FormData(form);
 
   const name = formData.get("name") as string;
@@ -203,11 +178,13 @@ function update_playlist(e: Event) {
   }
 
   .banner-settings {
-    background-color: $gray5;
+    font-weight: 500;
     padding: 1rem;
+    background-color: $gray5;
     display: grid;
     grid-template-columns: 1fr max-content;
     align-items: center;
+    gap: $small;
     margin: $small 0 1rem 0;
   }
 
@@ -228,6 +205,7 @@ function update_playlist(e: Event) {
     }
 
     .clickable {
+      font-weight: 500;
       height: 100%;
       width: 100%;
       display: flex;
@@ -237,9 +215,11 @@ function update_playlist(e: Event) {
       border-radius: $small;
       border: dashed 1px $gray4;
       cursor: pointer;
+      padding: $medium;
 
       svg {
         transform: scale(0.75);
+        flex-shrink: 0;
       }
     }
 
@@ -278,6 +258,8 @@ function update_playlist(e: Event) {
 
     .t-center {
       position: relative;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
     }
 
     .buttons {

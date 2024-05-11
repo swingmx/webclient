@@ -42,6 +42,7 @@ import { menus } from "./navitems";
     padding: $small 0;
     font-size: 14px;
     font-weight: 500;
+    transition: background-color 0.2s ease-out;
 
     & > div {
       display: flex;
@@ -75,6 +76,16 @@ import { menus } from "./navitems";
     }
 
     .separator {
+      display: none;
+    }
+  }
+
+  @include allPhones {
+    .circular.nav-item:last-child {
+      display: none;
+    }
+
+    .circular.nav-item:nth-child(3) {
       display: none;
     }
   }

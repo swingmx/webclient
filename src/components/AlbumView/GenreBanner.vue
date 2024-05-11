@@ -74,6 +74,7 @@ onMounted(hookAction);
     gap: 1rem;
     padding-right: $medium;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   .genre-pill {

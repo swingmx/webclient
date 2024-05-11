@@ -12,9 +12,9 @@
 <script setup lang="ts">
 import useSettingsStore from "@/stores/settings";
 
+import Navigation from "@/components/LeftSidebar/NavButtons.vue";
 import Logo from "@/components/Logo.vue";
 import SongCard from "./NP/SongCard.vue";
-import Navigation from "@/components/LeftSidebar/NavButtons.vue";
 
 const settings = useSettingsStore();
 </script>
@@ -31,10 +31,22 @@ const settings = useSettingsStore();
 
   .scrollable {
     height: 100%;
-    overflow-y: scroll;
+    overflow: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     padding: 1rem 0;
 
-    @include hideScrollbars;
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+    }
+  }
+
+  &:hover .scrollable::-webkit-scrollbar-thumb {
+    background-color: $gray2;
+  }
+
+  &:hover .scrollable::-webkit-scrollbar-thumb:hover {
+    background-color: $gray1;
   }
 }
 </style>

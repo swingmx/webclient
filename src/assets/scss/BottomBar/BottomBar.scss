@@ -6,7 +6,7 @@
     height: 100%;
     padding-right: $small;
 
-    @include largePhones {
+    @include allPhones {
       grid-template-columns: 1fr 9.2rem;
     }
 
@@ -41,12 +41,6 @@
       display: flex;
       align-items: center;
       gap: $small;
-    }
-
-    .volume-group {
-      @include tablet-portrait {
-        display: none;
-      }
     }
   }
 }

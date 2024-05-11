@@ -15,8 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import usePStore from "@/stores/pages/playlist";
 import { paths } from "@/config";
+import usePStore from "@/stores/pages/playlist";
 
 const playlist = usePStore();
 </script>
@@ -32,7 +32,7 @@ const playlist = usePStore();
     transition: all 0.2s ease-in-out;
   }
 
-  @include smallPhone {
+  @include largePhones {
     right: -4rem;
 
     img {

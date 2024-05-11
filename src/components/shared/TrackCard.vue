@@ -75,8 +75,8 @@ defineEmits<{
   }
 
   .ttitle {
-    font-weight: 700;
-    font-size: 0.9rem;
+    font-weight: 600;
+    font-size: 0.95rem;
   }
 
   img {

@@ -124,24 +124,31 @@ onMounted(() => {
 <style lang="scss">
 .bread-nav {
   background-color: $gray4;
-  padding: $small;
+  padding: $smaller;
+  padding-right: 0;
   width: max-content;
   margin-bottom: 1rem;
   position: absolute;
   top: -3.25rem;
   max-width: calc(100% - 2rem);
-  overflow-x: scroll;
-  scrollbar-width: none;
+  max-width: 100%;
+  overflow: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 
   display: flex;
   align-items: center;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
   span {
     cursor: pointer;
+  }
+}
+
+.bread-nav {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -162,7 +169,7 @@ onMounted(() => {
   gap: 1.25rem;
 
   .folder_icon {
-    vertical-align: 1px;
+    vertical-align: 2px;
     margin-right: 4px;
   }
 
@@ -181,11 +188,13 @@ onMounted(() => {
 
     overflow-y: auto;
     scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
   }
 
   .buttons {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: $medium;
     margin-right: 1rem;
     margin-bottom: -$medium;
@@ -196,8 +205,9 @@ onMounted(() => {
     }
 
     button {
-      font-weight: normal;
+      font-weight: 500;
       padding: 0 1rem;
+      font-variant-numeric: tabular-nums;
     }
   }
 

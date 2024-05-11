@@ -62,7 +62,11 @@ const search = useSearchStore();
     grid-template-columns: max-content 1fr;
     gap: 1rem;
 
-    @include allPhones {
+    .top > h3 {
+      margin-left: $medium;
+    }
+
+    @include largePhones {
       grid-template-columns: 1fr;
     }
   }
@@ -78,6 +82,15 @@ const search = useSearchStore();
     h3 {
       margin-left: 0;
     }
+
+    @include largePhones {
+      max-width: 100%;
+    }
+
+    @include mediumPhones {
+      min-width: unset;
+      max-width: 100%;
+    }
   }
 
   .track-item {
@@ -92,6 +105,11 @@ const search = useSearchStore();
     overflow-x: auto;
 
     @include hideScrollbars;
+  }
+
+  @include allPhones {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 </style>

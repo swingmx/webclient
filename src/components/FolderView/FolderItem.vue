@@ -115,10 +115,6 @@ function showContextMenu(e: MouseEvent) {
     transform: scale(0.75);
   }
 
-  @include largePhones {
-    height: 4rem;
-  }
-
   .f-item-text {
     font-weight: 600;
     margin-right: 1rem;

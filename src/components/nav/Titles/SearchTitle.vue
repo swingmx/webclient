@@ -1,7 +1,7 @@
 <template>
   <div class="nav-search-input">
     <Tabs
-      v-if="!(content_width < 800)"
+      v-if="!(content_width < 1100)"
       :tabs="tabs"
       :current-tab="($route.params.page as string)"
       @switchTab="(tab: string) => {
@@ -17,8 +17,8 @@
 <script setup lang="ts">
 import { Routes } from "@/router";
 
-import useSearchStore from "@/stores/search";
 import { content_width } from "@/stores/content-width";
+import useSearchStore from "@/stores/search";
 
 import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
 

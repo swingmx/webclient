@@ -6,6 +6,7 @@
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
     padding: 0 1rem;
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     max-height: 100%;
     gap: 2rem 1rem;
   }

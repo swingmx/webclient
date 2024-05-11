@@ -20,25 +20,23 @@
 
 <script setup lang="ts">
 import { Routes } from "@/router";
-import { useRoute } from "vue-router";
 import { computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
+import { content_width } from "@/stores/content-width";
 import useSearchStore from "@/stores/search";
 import useSettings from "@/stores/settings";
-import { content_width } from "@/stores/content-width";
 import updatePageTitle from "@/utils/updatePageTitle";
 
-import TracksPage from "./tracks.vue";
-import TopResults from "./TopResults.vue";
-import CardGridPage from "./CardGridPage.vue";
 import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
+import CardGridPage from "./CardGridPage.vue";
+import TopResults from "./TopResults.vue";
+import TracksPage from "./tracks.vue";
 
 const settings = useSettings();
 const search = useSearchStore();
 
-const is_alt_layout = computed(
-  () => settings.is_alt_layout || content_width.value < 800
-);
+const is_alt_layout = computed(() => settings.is_alt_layout || content_width.value < 1100);
 
 const pages = ["top", "tracks", "albums", "artists"];
 
@@ -92,8 +90,21 @@ onMounted(() => {
     position: relative;
     padding-left: $padleft;
 
+    #right-tabs {
+      max-width: calc(100% - 16px);
+    }
+
     .tabheaders {
       margin: 0;
+      border-radius: 10rem;
+      max-width: calc(100% - 16px);
+      overflow: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @include allPhones {
+      padding-left: 1rem;
     }
   }
 
@@ -106,5 +117,9 @@ onMounted(() => {
       padding-top: 0 !important;
     }
   }
+}
+
+.designatedOS .tabheaders::-webkit-scrollbar {
+  display: none;
 }
 </style>

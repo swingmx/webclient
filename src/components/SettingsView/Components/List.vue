@@ -75,14 +75,14 @@ const icon_ = getIcon()
             width: 1.25rem;
         }
 
-        .with-icon {
-            display: flex;
-            gap: $small;
-            align-items: center;
-            font-family: 'SF Mono', monospace;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
+    .with-icon {
+      display: flex;
+      gap: $small;
+      align-items: center;
+      font-family: "SF Mono", monospace;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
 
         .icon {
             cursor: pointer;

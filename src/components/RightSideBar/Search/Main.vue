@@ -1,11 +1,6 @@
 <template>
   <div class="right-search">
-    <TabsWrapper
-      :tabs="tabs"
-      :current-tab="currentTab"
-      :tab-content="true"
-      @switchTab="switchTab"
-    >
+    <TabsWrapper :tabs="tabs" :current-tab="currentTab" :tab-content="true" @switchTab="switchTab">
       <Tab :name="currentTab" />
     </TabsWrapper>
   </div>
@@ -41,6 +36,10 @@ function switchTab(tab: string) {
 
   .tabheaders {
     padding: 1rem;
+    max-width: 100%;
+    overflow: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   .input {
@@ -48,7 +47,5 @@ function switchTab(tab: string) {
     align-items: center;
     position: relative;
   }
-
-  
 }
 </style>

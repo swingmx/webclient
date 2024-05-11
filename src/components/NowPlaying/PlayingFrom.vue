@@ -86,6 +86,7 @@ function showContextMenu(e: MouseEvent) {
     padding: $smaller;
     aspect-ratio: 1;
     width: 2.5rem;
+    margin-right: 2px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -97,6 +98,10 @@ function showContextMenu(e: MouseEvent) {
     text-transform: capitalize;
     font-size: 0.8rem;
     color: $gray1;
+    font-weight: 500;
+  }
+
+  .type + div {
     font-weight: 500;
   }
 }

@@ -51,6 +51,7 @@ function showMenu(e: MouseEvent) {
   grid-template-columns: 1fr max-content;
   gap: 1rem;
   margin-top: 1rem;
+  font-weight: 500;
 
   .artist {
     font-size: 0.8rem;

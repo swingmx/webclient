@@ -49,8 +49,9 @@ defineProps<{
   top: 0;
   z-index: 1;
 
-  @include tablet-portrait {
-    padding: $medium 0;
+  @include allPhones {
+    padding: $large 0;
+    margin-bottom: -$small;
   }
 
   img {

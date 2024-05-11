@@ -132,7 +132,7 @@ function deletePlaylist() {
         position: relative;
         background-color: $black;
 
-        @include smallPhone {
+        @include largePhones {
             width: calc(100% - 2rem);
             padding: 2rem 1rem;
         }

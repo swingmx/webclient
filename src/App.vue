@@ -58,7 +58,9 @@ import {
     content_height,
     content_width,
     isMobile,
-    updateCardWidth,
+    resizer_height,
+  resizer_width,
+  updateCardWidth,
 } from '@/stores/content-width'
 import useLyrics from '@/stores/lyrics'
 import useModal from '@/stores/modal'
@@ -90,6 +92,7 @@ import { getRootDirs } from '@/requests/settings/rootdirs'
 
 const appcontent: Ref<HTMLLegendElement | null> = ref(null)
 const auth = useAuth()
+const resizercontent: Ref<HTMLLegendElement | null> = ref(null);
 const queue = useQueue()
 const modal = useModal()
 const lyrics = useLyrics()
@@ -117,6 +120,18 @@ function getContentSize() {
     }
 }
 
+function updateContentElemSize({ width, height }: { width: number; height: number }) {
+  // 1572 is the maxwidth of the #acontent. see app-grid.scss > $maxwidth
+  const elem_width = appcontent.value?.offsetWidth || 0;
+
+  content_width.value = elem_width;
+  content_height.value = height;
+
+  const elem_resizer_width = resizercontent.value?.offsetWidth || 0;
+  resizer_width.value = elem_resizer_width;
+  resizer_height.value = height;
+
+  updateCardWidth();
 function updateContentElemSize({
     width,
     height,
@@ -189,8 +204,7 @@ onMounted(async () => {
 
 <style lang="scss">
 @import './assets/scss/mixins.scss';
-
-.r-sidebar {
+.designatedOS .r-sidebar {
     &::-webkit-scrollbar {
         display: none;
     }

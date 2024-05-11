@@ -3,8 +3,7 @@
     <GenericHeader>
       <template #name>Favorites</template>
       <template #description
-        >{{ count.tracks }} Tracks • {{ count.albums }} Albums •
-        {{ count.artists }} Artists</template
+        >{{ count.tracks }} Tracks • {{ count.albums }} Albums • {{ count.artists }} Artists</template
       >
     </GenericHeader>
     <CardScroller
@@ -39,33 +38,28 @@
       :route="'/favorites/artists'"
     />
 
-    <NoItems
-      :flag="noFavs"
-      :icon="HeartSvg"
-      :title="'No favorites found'"
-      :description="description"
-    />
+    <NoItems :flag="noFavs" :icon="HeartSvg" :title="'No favorites found'" :description="description" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { nextTick, onMounted, Ref, ref } from "vue";
 
+import { maxAbumCards, updateCardWidth } from "@/stores/content-width";
 import useQueueStore from "@/stores/queue";
 import useTracklist from "@/stores/queue/tracklist";
-import { maxAbumCards, updateCardWidth } from "@/stores/content-width";
 
 import { dropSources, playSources } from "@/enums";
-import { getAllFavs } from "@/requests/favorite";
-import updatePageTitle from "@/utils/updatePageTitle";
 import { playFromFavorites } from "@/helpers/usePlayFrom";
 import { Album, Artist, RecentFavResult, Track } from "@/interfaces";
+import { getAllFavs } from "@/requests/favorite";
+import updatePageTitle from "@/utils/updatePageTitle";
 
 import HeartSvg from "@/assets/icons/heart-no-color.svg";
 import TopTracks from "@/components/ArtistView/TopTracks.vue";
 import CardScroller from "@/components/shared/CardScroller.vue";
-import NoItems from "@/components/shared/NoItems.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
+import NoItems from "@/components/shared/NoItems.vue";
 
 const description = `You can add tracks, albums and artists to your favorites by clicking the heart icon`;
 
@@ -96,10 +90,7 @@ onMounted(() => {
       count.value = favs.count;
     })
     .then(() => {
-      noFavs.value =
-        !favAlbums.value.length &&
-        !favTracks.value.length &&
-        !favArtists.value.length;
+      noFavs.value = !favAlbums.value.length && !favTracks.value.length && !favArtists.value.length;
     })
     .then(async () => {
       await nextTick();
@@ -134,7 +125,7 @@ function handlePlay(index: number) {
 
     .artist-top-tracks {
       h3 {
-        padding-right: $smaller;
+        padding-right: $small;
       }
     }
   }

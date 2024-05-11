@@ -9,28 +9,13 @@
       <PlayBtnRect :source="playSources.playlist" :bg_color="btn_color" />
     </div>
     <div class="duration">
-      {{
-        playlist.info.count.toLocaleString() +
-        ` ${playlist.info.count == 1 ? "Track" : "Tracks"}`
-      }}
+      {{ playlist.info.count.toLocaleString() + ` ${playlist.info.count == 1 ? "Track" : "Tracks"}` }}
       •
       {{ formatSeconds(playlist.info.duration, true) }}
     </div>
     <div ref="test_elem"></div>
-    <div
-      class="title"
-      :class="`${
-        playlist.info.settings.square_img && isSmall ? 'ellip' : 'ellip2'
-      }`"
-    >
-      <span
-        v-for="t in balanceText(
-          playlist.info.name,
-          test_elem?.offsetWidth || 0,
-          '4rem'
-        )"
-        :key="t"
-      >
+    <div class="title" :class="`${playlist.info.settings.square_img && isSmall ? 'ellip' : 'ellip2'}`">
+      <span v-for="t in balanceText(playlist.info.name, test_elem?.offsetWidth || 0, '4rem')" :key="t">
         {{ t }}
         <br />
       </span>
@@ -40,11 +25,11 @@
 </template>
 <script setup lang="ts">
 import { playSources } from "@/enums";
-import { formatSeconds } from "@/utils";
 import { isSmall } from "@/stores/content-width";
+import { formatSeconds } from "@/utils";
 
-import usePStore from "@/stores/pages/playlist";
 import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";
+import usePStore from "@/stores/pages/playlist";
 import { balanceText } from "@/utils/balanceText";
 import { Ref, ref } from "vue";
 
@@ -64,7 +49,7 @@ const test_elem: Ref<HTMLElement | null> = ref(null);
   height: 100%;
   display: grid;
   z-index: 10;
-  padding-left: 1.25rem;
+  padding: 0 1.25rem;
   display: flex;
   flex-direction: column-reverse;
 

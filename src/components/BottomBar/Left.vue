@@ -78,6 +78,9 @@ defineEmits<{
   gap: $medium;
   align-items: center;
   font-size: small;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-right: $medium;
 
   .np-image {
     position: relative;
@@ -112,6 +115,15 @@ defineEmits<{
         height: 130%;
       }
     }
+
+    @include largePhones {
+      flex-shrink: 0;
+      margin-right: $medium;
+    }
+
+    @include smallerPhones {
+      margin-right: $small;
+    }
   }
 
   .heart-button {
@@ -123,8 +135,6 @@ defineEmits<{
 
   .track-info {
     .title {
-      font-size: 0.85rem;
-      font-weight: 700;
       color: $white;
       display: flex;
       align-items: center;
@@ -132,27 +142,37 @@ defineEmits<{
     }
 
     .artistname {
-      font-size: 0.85rem;
       opacity: 0.75;
-      font-weight: 700;
 
       a {
         font-size: 0.8rem;
       }
     }
-  }
-  @include allPhones {
-    height: 4rem;
-    grid-template-columns: max-content 1fr max-content;
 
-    .heart-button {
-      height: max-content;
-      border: none !important;
+    @include allPhones {
+      width: calc(100% + 8px);
+    }
+
+    @include largePhones {
+      width: unset;
+      flex-grow: 1;
     }
   }
 
-  @media screen and (min-width: 550px) {
+  @include allPhones {
     grid-template-columns: max-content 1fr max-content max-content;
+    margin-right: unset;
+
+    .heart-button {
+      height: max-content;
+      border: 1px solid transparent;
+    }
+  }
+
+  @include largePhones {
+    display: flex;
+    gap: 0;
+    max-width: calc(100% - 8px);
   }
 }
 </style>

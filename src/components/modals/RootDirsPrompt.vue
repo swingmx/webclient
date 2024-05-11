@@ -58,8 +58,6 @@ onMounted(() => {
 
 <style lang="scss">
 .root-dirs-prompt {
-  height: 14rem;
-
   .option {
     padding: 1.25rem;
     border-radius: $small;
@@ -76,6 +74,7 @@ onMounted(() => {
     .info {
       margin-top: $smaller;
       font-size: small;
+      font-weight: 500;
     }
   }
 }

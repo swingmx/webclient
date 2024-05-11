@@ -2,7 +2,8 @@
   <div
     class="b-bar"
     :style="{
-      padding: `${settings.is_default_layout ? '0 1rem 0 1rem' : ''}`,
+      paddingLeft: `${settings.is_default_layout ? '1rem' : ''}`,
+      paddingRight: `${settings.is_default_layout ? '1rem' : ''}`,
     }"
   >
     <LeftGroup @handleFav="handleFav" />
@@ -69,12 +70,30 @@ function handleFav() {
   z-index: 1;
 
   @include allPhones {
-    grid-template-columns: 1fr;
-    grid-template-rows: max-content 1.5rem max-content;
-    padding: 0 1rem $medium 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: unset;
+    gap: $small;
+    padding: $medium 1rem;
 
-    .center > input {
-      height: 2px !important;
+    /* Hiding the dot/thumb/handle for readonly input */
+    /* Webkit browsers, Firefox, IE etc */
+    &:hover > .center > #progress::-webkit-slider-thumb {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &:hover > .center > #progress::-moz-range-thumb {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &:hover > .center > #progress::-ms-thumb {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
     }
   }
 
@@ -91,6 +110,29 @@ function handleFav() {
 
     @include allPhones {
       height: 3rem;
+    }
+
+    @include largePhones {
+      width: 2.5rem;
+      height: 2.5rem;
+
+      &:nth-child(2) {
+        width: 3.5rem;
+      }
+    }
+
+    @include smallestPhones {
+      &:first-child {
+        display: none;
+      }
+
+      &:nth-child(2) {
+        margin-left: $smaller;
+      }
+
+      &:last-child {
+        display: none;
+      }
     }
   }
 
@@ -136,26 +178,31 @@ function handleFav() {
 
     width: 30rem;
 
-    @media (max-width: 1080px) {
+    @media only screen and (max-width: 1080px) {
       width: 20rem !important;
     }
 
     @include allPhones {
       width: 100% !important;
-      margin-bottom: $small;
+      margin: 4px -16px;
+      user-select: none;
+      pointer-events: none;
+
+      > #progress {
+        height: 1px !important;
+        width: 100vw !important;
+        margin: unset;
+      }
     }
 
     .time {
-      font-family: "SF Mono", monospace;
-      font-weight: 600;
+      font-weight: 500;
       font-size: $medium;
-      line-height: 1.5;
 
       .numbers {
         background-color: $gray3;
         border-radius: $smaller;
-        padding: 0 $smaller;
-        font-feature-settings: "ss03" 1, "ss04" 1;
+        padding: 1px $smaller;
         font-variant-numeric: tabular-nums;
       }
     }

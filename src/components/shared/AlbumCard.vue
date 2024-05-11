@@ -164,8 +164,8 @@ const artists = computed(() => {
   }
 
   .title {
-    margin-bottom: $smaller;
-    font-size: 0.9rem;
+    margin-bottom: $smallest;
+    font-size: 0.95rem;
     width: fit-content;
     position: relative;
   }

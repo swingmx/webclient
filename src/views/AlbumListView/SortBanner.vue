@@ -76,6 +76,7 @@ const artistitems = [
   padding: 1rem $medium 2rem $medium;
   position: relative;
   font-size: 14px;
+  font-weight: 500;
   text-transform: capitalize;
   user-select: none;
 

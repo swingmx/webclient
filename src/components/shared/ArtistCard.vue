@@ -54,7 +54,7 @@ defineProps<{
   border-radius: $medium;
   justify-content: center;
   padding: 1.2rem 1rem !important;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
   height: max-content;
   transition: background-color 0.2s ease-out;
@@ -103,7 +103,6 @@ defineProps<{
   }
 
   .artist-name {
-    margin-bottom: $smaller;
     word-break: break-word;
   }
 

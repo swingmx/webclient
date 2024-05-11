@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { createPopper, Instance } from "@popperjs/core";
+import { createPopper, Instance, Modifier, Placement, Rect } from "@popperjs/core";
 import { ref } from "vue";
 
 import { contextChildrenShowMode } from "@/enums";
@@ -58,15 +58,40 @@ function showChildren() {
     return;
   }
 
+  const offsetModifier: Modifier<
+    "offset",
+    { offset: [number, number] | ((args: { placement: Placement; reference: Rect; popper: Rect }) => [number, number]) }
+  > = {
+    name: "offset",
+    options: {
+      offset: ({ placement }) => {
+        // Correct type for placement automatically inferred
+        if (placement.includes("right") || placement.includes("left")) {
+          return [-7, 0];
+        }
+        return [0, 0];
+      },
+    },
+  };
+
   popperInstance = createPopper(parentRef.value as HTMLElement, childRef.value as HTMLElement, {
     placement: "right-start",
     modifiers: [
       {
+        name: "preventOverflow",
+        options: {
+          altAxis: true,
+          boundariesElement: "viewport",
+        },
+      },
+      {
         name: "flip",
         options: {
           fallbackPlacements: ["left-start", "auto"],
+          boundariesElement: "viewport",
         },
       },
+      offsetModifier,
     ],
   });
   childRef.value ? (childRef.value.style.visibility = "visible") : null;
@@ -132,20 +157,34 @@ function runChildAction(action: () => void) {
     z-index: 10;
     transform: scale(0);
     background-color: $context;
-    padding: $smaller;
+    padding: $small $smaller;
     border: solid 1px $gray3;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.25s ease-out, visibility 0.25s ease-out;
 
+    ::-webkit-scrollbar-thumb {
+      background-color: transparent;
+    }
+
+    &:hover ::-webkit-scrollbar-thumb {
+      background-color: $gray2;
+    }
+
+    &:hover ::-webkit-scrollbar-thumb:hover {
+      background-color: $gray1;
+    }
+
     .wrapper {
-      padding: $smaller;
-      overflow-y: auto;
+      padding: 0 $smaller;
+      overflow: auto;
       overflow-x: hidden;
-      max-height: calc(100vh / 2);
+      max-height: calc(100vh / 2 - 2rem);
+      -webkit-overflow-scrolling: touch;
     }
 
     .context-item {
+      line-height: 1.2;
       padding: $small 1rem;
       padding: 0.4rem 0.6rem;
     }
