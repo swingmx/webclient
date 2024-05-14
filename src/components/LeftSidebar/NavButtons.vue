@@ -5,7 +5,7 @@
       :key="index"
       v-wave
       :to="{
-        name: menu.route_name,
+        name: menu.route_name || '',
         params: menu?.params,
         query: menu.query && menu.query(),
       }"
@@ -14,6 +14,7 @@
         separator: menu.separator,
         active: $route.name === menu.route_name,
       }"
+      @click="menu.action && menu.action()"
     >
       <div v-if="!menu.separator">
         <component :is="menu.icon" />

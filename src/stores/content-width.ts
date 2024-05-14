@@ -5,7 +5,6 @@ const content_width = ref(0);
 const content_height = ref(0);
 
 const resizer_width = ref(0);
-const resizer_height = ref(0);
 
 const brk = {
   small: 660,
@@ -73,7 +72,6 @@ export {
   isMedium,
   isSmall,
   maxAbumCards,
-  resizer_height,
   resizer_width,
   updateCardWidth,
   win_width,

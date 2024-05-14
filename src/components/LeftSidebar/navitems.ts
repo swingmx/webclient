@@ -1,5 +1,6 @@
 import { Routes } from "@/router";
-import useSearchStore from "@/stores/search";
+import useDialog from "@/stores/modal";
+import useSearch from "@/stores/search";
 
 import FolderSvg from "@/assets/icons/folder-1.svg";
 import HeartSvg from "@/assets/icons/heart.svg";
@@ -40,7 +41,7 @@ export const menus = [
     name: "search",
     route_name: Routes.search,
     params: { page: "top" },
-    query: () => ({ q: useSearchStore().query }),
+    query: () => ({ q: useSearch().query }),
     icon: SearchSvg,
   },
   {
@@ -53,9 +54,11 @@ export const menus = [
   },
   {
     name: "settings",
-    route_name: Routes.settings,
-    params: { tab: "general" },
+    route_name: null,
     icon: SettingsSvg,
+    action: () => {
+      useDialog().showSettingsModal()
+    }
   },
 ];
 

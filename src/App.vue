@@ -58,7 +58,6 @@ import {
     content_height,
     content_width,
     isMobile,
-    resizer_height,
   resizer_width,
   updateCardWidth,
 } from '@/stores/content-width'
@@ -71,7 +70,6 @@ import useAuth from '@/stores/auth'
 
 // @utils
 import handleShortcuts from '@/helpers/useKeyboard'
-import { readLocalStorage, writeLocalStorage } from '@/utils'
 import { xl, xxl } from './composables/useBreakpoints'
 
 // @small-components
@@ -92,7 +90,6 @@ import { getRootDirs } from '@/requests/settings/rootdirs'
 
 const appcontent: Ref<HTMLLegendElement | null> = ref(null)
 const auth = useAuth()
-const resizercontent: Ref<HTMLLegendElement | null> = ref(null);
 const queue = useQueue()
 const modal = useModal()
 const lyrics = useLyrics()
@@ -127,24 +124,8 @@ function updateContentElemSize({ width, height }: { width: number; height: numbe
   content_width.value = elem_width;
   content_height.value = height;
 
-  const elem_resizer_width = resizercontent.value?.offsetWidth || 0;
-  resizer_width.value = elem_resizer_width;
-  resizer_height.value = height;
-
+  resizer_width.value = elem_width;
   updateCardWidth();
-}
-
-function handleWelcomeModal() {
-    let welcomeShowCount = readLocalStorage('shown-welcome-message')
-
-    if (!welcomeShowCount) {
-        welcomeShowCount = 0
-    }
-
-    if (welcomeShowCount < 2) {
-        modal.showWelcomeModal()
-        writeLocalStorage('shown-welcome-message', welcomeShowCount + 1)
-    }
 }
 
 function handleRootDirsPrompt() {
@@ -169,7 +150,6 @@ onMounted(async () => {
         return
     }
 
-    handleWelcomeModal()
     settings.initializeVolume()
 
     handleRootDirsPrompt()
