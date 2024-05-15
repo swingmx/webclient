@@ -1,87 +1,151 @@
 <template>
-  <div class="homebrowse">
-    <div class="btitle"><b>Browse Library</b></div>
-    <div class="browselist">
-      <RouterLink
-        v-for="i in browselist"
-        :key="i.title"
-        class="browseitem rounded-sm t-center"
-        :to="{ name: i.route, params: i.params }"
-        :style="{ width: `${album_card_with - 24}px` }"
-      >
-        {{ i.title }}
-      </RouterLink>
+    <div class="homebrowse">
+        <div class="btitle"><b>Browse Library</b></div>
+        <div class="browselist">
+            <RouterLink
+                v-for="i in browselist"
+                :key="i.title"
+                class="browseitem rounded-sm"
+                :to="{ name: i.route || '', params: i.params }"
+                :style="{ width: `${album_card_with - 24}px` }"
+                @click="i.action && i.action()"
+                :class="i.class"
+            >
+                <div
+                    class="icon"
+                    v-html="i.icon"
+                ></div>
+                <div style="width: 100%">
+                    {{ i.title }}
+                </div>
+            </RouterLink>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router";
-import { album_card_with } from "@/stores/content-width";
+import {
+    AlbumIcon,
+    ArtistIcon,
+    FolderIcon,
+    HeartIcon,
+    PlaylistIcon,
+    SettingsIcon,
+} from '@/icons'
+import { Routes } from '@/router'
+import { album_card_with } from '@/stores/content-width'
+import useDialog from '@/stores/modal'
 
 const browselist = [
-  {
-    title: "Folders",
-    route: Routes.folder,
-    params: {
-      path: "$home",
+    {
+        title: 'Folders',
+        route: Routes.folder,
+        params: {
+            path: '$home',
+        },
+        icon: FolderIcon,
     },
-  },
-  {
-    title: "Albums",
-    route: Routes.AlbumList,
-  },
-  {
-    title: "Artists",
-    route: Routes.ArtistList,
-  },
-  {
-    title: "Playlists",
-    route: Routes.playlists,
-  },
-  {
-    title: "Favorites",
-    route: Routes.favorites,
-  },
-  {
-    title: "Favorite Tracks",
-    route: Routes.favoriteTracks,
-  },
-  {
-    title: "Favorite Artists",
-    route: Routes.favoriteArtists,
-  },
-];
+    {
+        title: 'Albums',
+        route: Routes.AlbumList,
+        icon: AlbumIcon,
+    },
+    {
+        title: 'Artists',
+        route: Routes.ArtistList,
+        icon: ArtistIcon,
+    },
+    {
+        title: 'Playlists',
+        route: Routes.playlists,
+        icon: PlaylistIcon,
+    },
+    {
+        title: 'Favorites',
+        route: Routes.favorites,
+        icon: HeartIcon,
+        class: 'favorite',
+    },
+    {
+        title: 'Fav. Tracks',
+        route: Routes.favoriteTracks,
+        icon: HeartIcon,
+        class: 'favorite',
+    },
+    {
+        title: 'Fav. Artists',
+        route: Routes.favoriteArtists,
+        icon: HeartIcon,
+        class: 'favorite',
+    },
+    {
+        title: 'Fav. Albums',
+        route: Routes.favoriteArtists,
+        icon: HeartIcon,
+        class: 'favorite',
+    },
+    {
+        title: 'Settings',
+        route: null,
+        icon: SettingsIcon,
+        action: () => {
+            useDialog().showSettingsModal()
+        },
+        class: 'settings',
+    },
+]
 </script>
 
 <style lang="scss">
 .homebrowse {
-  padding: 1.5rem 0;
-  padding-left: $small;
-
-  .btitle {
-    font-size: 1.15rem;
-    margin-bottom: 1rem;
-    padding-left: 0.25rem;
-  }
-
-  .browselist {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-top: $small;
-  }
-
-  .browseitem {
-    font-weight: 500;
     padding: 1.5rem 0;
-    background-color: $gray;
-    color: $white;
-    transition: background-color 0.2s ease-out;
-  }
+    padding-left: $small;
 
-  .browseitem:hover {
-    background-color: $gray5;
-  }
+    .btitle {
+        font-size: 1.15rem;
+        margin-bottom: 1rem;
+        padding-left: 0.25rem;
+    }
+
+    .browselist {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-top: $small;
+    }
+
+    .browseitem {
+        font-weight: 500;
+        padding: 1.25rem 1rem;
+        background-color: $gray;
+        color: $white;
+        transition: background-color 0.2s ease-out;
+
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        place-items: center;
+        gap: $small;
+
+        .icon {
+            height: 1.75rem;
+        }
+
+        svg {
+            height: 1.75rem;
+            color: $gray1;
+        }
+    }
+
+    // .favorite svg {
+    //     color: rgb(235, 78, 104);
+    // }
+
+    .settings svg {
+        color: $brown;
+    }
+
+    .browseitem:hover {
+        background-color: $gray5;
+    }
 }
 </style>

@@ -2,8 +2,9 @@
   <div class="homepageview content-page">
     <GenericHeader>
       <template #name>Home</template>
-      <template #description>{{ getGreetings("") }}</template>
+      <template #description>{{ getGreetings(auth.user.firstname || auth.user.username) }}</template>
     </GenericHeader>
+    <Browse />
     <!-- v-if="home.recentlyPlayed.length" -->
     <RecentItems :title="'Recently Played'" :items="home.recentlyPlayed" :play-source="playSources.track" />
     <!-- v-if="home.recentlyAdded.length" -->
@@ -13,13 +14,13 @@
       :play-source="playSources.recentlyAdded"
       :route="'/playlist/recentlyadded'"
     />
-    <Browse />
   </div>
 </template>
 
 <script setup lang="ts">
 import { nextTick, onMounted } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
+import useAuth from "@/stores/auth";
 
 import { playSources } from "@/enums";
 import { updateCardWidth } from "@/stores/content-width";
@@ -31,6 +32,7 @@ import RecentItems from "@/components/shared/CardScroller.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
 
 const home = useHome();
+const auth = useAuth();
 
 // const recentlyPlayed = computed(() => {
 //     if (!home.recentlyPlayed.length) {
