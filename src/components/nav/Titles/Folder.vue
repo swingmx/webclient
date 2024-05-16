@@ -13,7 +13,6 @@
                 <FolderSvg />
             </div>
             <BreadCrumbNav
-                :sub-paths="subPaths"
                 @navigate="navigate"
             />
         </div>
@@ -23,7 +22,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 
-import { subPath } from '@/interfaces'
 import { Routes } from '@/router'
 
 import BreadCrumbNav from '@/components/FolderView/BreadCrumbNav.vue'
@@ -31,9 +29,6 @@ import FolderSvg from '@/assets/icons/folder.svg'
 
 const router = useRouter()
 
-defineProps<{
-    subPaths: subPath[]
-}>()
 
 function navigate(path: string) {
     router.push({ name: Routes.folder, params: { path } })

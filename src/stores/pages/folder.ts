@@ -16,10 +16,15 @@ export default defineStore("FolderDirs&Tracks", {
     allTracks: <Track[]>[],
   }),
   actions: {
-    async fetchAll(path: string) {
-      const { tracks, folders } = await getFiles(path);
+    async fetchAll(fpath: string) {
+      this.path = fpath;
+      const { tracks, folders, path } = await getFiles(fpath);
 
-      [this.path, this.allDirs, this.allTracks] = [path, folders, tracks];
+      if (path !== fpath){
+        fpath = path;
+      }
+
+      [this.path, this.allDirs, this.allTracks] = [fpath, folders, tracks];
     },
     resetQuery() {
       this.query = "";

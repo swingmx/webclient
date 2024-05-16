@@ -14,18 +14,34 @@
 </template>
 
 <script setup lang="ts">
-import { onUpdated } from "vue";
+import { Ref, onMounted, onUpdated, ref, watch } from "vue";
 
 import { subPath } from "@/interfaces";
-import { focusElemByClass } from "@/utils";
+import { createSubPaths, focusElemByClass } from "@/utils";
 
 import useSettings from "@/stores/settings";
+import useFolder from "@/stores/pages/folder";
 
+const folder = useFolder();
 const settings = useSettings();
 
-defineProps<{
-  subPaths: subPath[];
-}>();
+const subPaths: Ref<subPath[]> = ref([])
+
+let oldpath = "";
+
+const getSubPaths = (newPath: string) => {
+  [oldpath, subPaths.value] = createSubPaths(newPath, oldpath);
+};
+
+watch(
+  () => folder.path,
+  (newPath) => {
+    newPath = newPath as string;
+    if (newPath == undefined) return;
+
+    getSubPaths(newPath);
+  }
+);
 
 defineEmits<{
   (e: "navigate", path: string): void;
@@ -35,6 +51,10 @@ onUpdated(() => {
   if (settings.is_default_layout) {
     focusElemByClass("inthisfolder");
   }
+});
+
+onMounted(() => {
+  getSubPaths(folder.path);
 });
 </script>
 

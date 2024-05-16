@@ -37,8 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from "vue";
-import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
+import { computed, nextTick, onMounted, ref } from "vue";
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 
 import { isMedium, isSmall } from "@/stores/content-width";
 import useLoader from "@/stores/loader";
@@ -49,7 +49,7 @@ import useSettings from "@/stores/settings";
 
 import { dropSources } from "@/enums";
 import { Track, subPath } from "@/interfaces";
-import { createSubPaths, createTrackProps } from "@/utils";
+import { createTrackProps } from "@/utils";
 import updatePageTitle from "@/utils/updatePageTitle";
 
 import FolderSvg from "@/assets/icons/folder.svg";
@@ -65,26 +65,10 @@ const folder = useFolder();
 const settings = useSettings();
 const tracklist = useTracklist();
 
-const route = useRoute();
 const subPaths = ref<subPath[]>([]);
 
 const is_alt_layout = computed(() => settings.is_alt_layout || !xl);
 
-let oldpath = "";
-
-const getSubPaths = (newPath: string) => {
-  [oldpath, subPaths.value] = createSubPaths(newPath, oldpath);
-};
-
-watch(
-  () => route.params.path,
-  (newPath) => {
-    newPath = newPath as string;
-    if (newPath == undefined) return;
-
-    getSubPaths(newPath);
-  }
-);
 
 interface ScrollerItem {
   id: string | undefined;
@@ -154,7 +138,6 @@ onBeforeRouteLeave(() => {
 
 onMounted(() => {
   updatePageTitle("Folders");
-  getSubPaths(route.params.path as string);
 });
 </script>
 
