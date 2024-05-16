@@ -76,7 +76,7 @@ function showContextMenu(e: MouseEvent) {
 
 <style lang="scss">
 .f-item {
-  height: 5rem;
+  height: 4rem;
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: center;
