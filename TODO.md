@@ -8,7 +8,6 @@
 - Hide "Go to folder" context action when in folder page
 - Hide "Go to album" context action when in album page
 - Remove old settings page files
-- Remove track item hover effect on mobile view
 - Fix: Breadcrumb align center (shifts when the the position of the highlighted folder is auto-scrolled to)
 - Fix: Tracklist item index slightly shifts up and down on hover/unhover
 
@@ -17,5 +16,6 @@
 - Reduce folder item height
 - Fix max album cards calculator
 - Replace the search input X with an SVG
+- Remove track item hover effect on mobile view
 - Add auth info to home page greetings. eg. Good afternoon cwilvx
 - Update folder page breadcrumb when response has skipped empty folders

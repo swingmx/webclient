@@ -233,6 +233,12 @@ $g-border: solid 1px $gray5;
   .songlist-item {
     grid-template-columns: 2fr 5.5rem !important;
 
+    // disable hover on mobile
+    // to prevent tap effect
+    &:hover {
+      background-color: unset;
+    }
+
     @include mediumPhones {
       grid-template-columns: 2fr 2.5rem !important;
       gap: $small !important;

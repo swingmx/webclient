@@ -103,6 +103,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
+// NOTE: CSS for responsiveness is at app-grid.scss
 .songlist-item {
   display: grid;
   grid-template-columns: 1.75rem 1.25fr 1fr 1fr 5.5rem;
