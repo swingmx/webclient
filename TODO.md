@@ -5,7 +5,6 @@
     - color placeholder loader on tracklist item
     - album page header
 - Check out the mobile sidebar and navbar
-- Replace the search input X with an SVG
 - Hide "Go to folder" context action when in folder page
 - Hide "Go to album" context action when in album page
 - Remove old settings page files
@@ -17,5 +16,6 @@
 - Remove welcome dialog
 - Reduce folder item height
 - Fix max album cards calculator
+- Replace the search input X with an SVG
 - Add auth info to home page greetings. eg. Good afternoon cwilvx
 - Update folder page breadcrumb when response has skipped empty folders

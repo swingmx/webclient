@@ -31,7 +31,7 @@
         @blur.prevent="removeFocusedClass"
         @focus.prevent="addFocusedClass"
       />
-      <div class="clear_input noSelect" :class="{ active: search.query.length > 0 }" @click="clearInput">X</div>
+      <div class="clear_input circular noSelect" :class="{ active: search.query.length > 0 }" @click="clearInput"><CancelSvg /></div>
     </div>
   </div>
 </template>
@@ -44,6 +44,7 @@ import { ref } from "vue";
 
 import BackSvg from "@/assets/icons/arrow.svg";
 import SearchSvg from "@/assets/icons/search.svg";
+import CancelSvg from "@/assets/icons/a.svg";
 import { Routes } from "@/router";
 
 const props = defineProps<{
@@ -116,7 +117,6 @@ function handleButton() {
     width: 100%;
     display: flex;
     align-items: center;
-    // gap: $small;
     border-radius: 3rem;
     background-color: $gray5;
     outline: solid 2px transparent;
@@ -168,12 +168,23 @@ function handleButton() {
 
     .clear_input {
       cursor: pointer;
-      padding: 10px 1rem;
-      border-top-right-radius: 3rem;
-      border-bottom-right-radius: 3rem;
+      margin-right: $smaller;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+      transition: opacity 0.3s ease-out, visibility 0.3s ease-out, background-color 0.2s ease-out;
+      width: 1.75rem;
+      aspect-ratio: 1;
+
+      display: grid;
+      place-items: center;
+
+      &:hover {
+        background-color: $gray;
+      }
+
+      svg {
+        height: 1rem;
+      }
 
       @include allPhones {
         border-radius: unset;
