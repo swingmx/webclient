@@ -36,7 +36,6 @@
                 :key="user.id"
                 :class="{
                     selected: user.id === selectedUser,
-                    firstchild: index == 0,
                     secondchild: index == 1,
                 }"
             >
@@ -71,25 +70,16 @@
                     v-if="user.id === selectedUser"
                 >
                     <ToggleSetting
-                        v-for="setting in usettings.filter((s) => {
-                            // if there's only one admin and it's the current user
-                            // don't show the admin setting
-                            if (
-                                s.title === 'Admin' &&
-                                users.filter((u) => u.roles.includes('admin'))
-                                    .length === 1 &&
-                                user.roles.includes('admin') &&
-                                user.username === auth.user.username
-                            ) {
-                                return false
-                            }
-
-                            return true
-                        })"
+                        v-for="setting in usettings"
                         :key="setting.title"
                         :title="setting.title"
                         :desc="setting.desc"
                         :value="setting.value(user.roles)"
+                        :class="{ disabled:  (setting.title === 'Admin' &&
+                                users.filter((u) => u.roles.includes('admin'))
+                                    .length === 1 &&
+                                user.roles.includes('admin') &&
+                                user.username === auth.user.username)}"
                         @click="() => setting.action(user)"
                     />
                 </div>
@@ -319,6 +309,11 @@ onMounted(async () => {
         padding-bottom: 0;
         margin-top: 1rem;
         border: solid 1px $gray5;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $gray5;
+        }
 
         .userinfo {
             display: grid;
@@ -350,11 +345,6 @@ onMounted(async () => {
             height: 1.5rem;
             color: $gray1;
         }
-    }
-
-    .usercard.firstchild {
-        background-color: $gray5;
-        border: none;
     }
 
     .usercard.secondchild {

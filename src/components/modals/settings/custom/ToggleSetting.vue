@@ -36,6 +36,11 @@ defineEmits<{
     align-items: center;
     padding: $small;
 
+    &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
     &:hover {
         background-color: $gray5;
     }

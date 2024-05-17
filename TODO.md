@@ -8,6 +8,7 @@
 - Remove old settings page files
 - Fix: Breadcrumb align center (shifts when the the position of the highlighted folder is auto-scrolled to)
 - Fix: Tracklist item index slightly shifts up and down on hover/unhover
+- Fix: track loading indicator in bottom bar
 - Add generic headers to favorite subpages
 
 # DONE ✅
