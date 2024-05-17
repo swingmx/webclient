@@ -10,6 +10,11 @@
 - Fix: Tracklist item index slightly shifts up and down on hover/unhover
 - Fix: track loading indicator in bottom bar
 - Add generic headers to favorite subpages
+- Rewrite context menu to only fetch server side data when you need it:
+    - WHY: To remove popup delays!
+    - REVIEW: Is this really what we need?
+    - HOW: eg. fetch playlists when you hover/click "Add to playlist"
+    - IDEA: Maybe have a store for available playlists, and fetch new items when you read the store? Or something!
 
 # DONE ✅
 - Remove welcome dialog
