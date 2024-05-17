@@ -7,14 +7,6 @@
       v-if="$route.name == Routes.artistTracks"
       :text="$route.query.artist as string || 'Artist Tracks'"
     />
-    <SimpleNav
-      v-if="$route.name === Routes.favoriteAlbums"
-      :text="'Favorite Albums'"
-    />
-    <SimpleNav
-      v-if="$route.name === Routes.favoriteArtists"
-      :text="'Favorite Artists'"
-    />
     <SimpleNav v-if="$route.name === Routes.nowPlaying" :text="'Now Playing'" />
   </div>
 </template>

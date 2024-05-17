@@ -12,6 +12,9 @@
       :min-item-size="64"
       :items="scrollerItems"
     >
+      <template #before>
+        <slot name="header"></slot>
+      </template>
       <template #default="{ item, index, active }">
         <DynamicScrollerItem
           :item="item"

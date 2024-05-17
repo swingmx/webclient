@@ -46,8 +46,6 @@
 import { nextTick, onMounted, Ref, ref } from "vue";
 
 import { maxAbumCards, updateCardWidth } from "@/stores/content-width";
-import useQueueStore from "@/stores/queue";
-import useTracklist from "@/stores/queue/tracklist";
 
 import { dropSources, playSources } from "@/enums";
 import { playFromFavorites } from "@/helpers/usePlayFrom";
@@ -62,9 +60,6 @@ import GenericHeader from "@/components/shared/GenericHeader.vue";
 import NoItems from "@/components/shared/NoItems.vue";
 
 const description = `You can add tracks, albums and artists to your favorites by clicking the heart icon`;
-
-const queue = useQueueStore();
-const tracklist = useTracklist();
 
 const recentFavs: Ref<RecentFavResult[]> = ref([]);
 const favAlbums: Ref<Album[]> = ref([]);

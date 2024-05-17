@@ -1,5 +1,12 @@
 <template>
-  <CardGridPage :page="itemtype" :items="items" />
+  <CardGridPage :page="itemtype" :items="items">
+    <template #header>
+      <GenericHeader>
+        <template #name>Favorite {{ itemtype }}s</template>
+        <template #description>You have {{ items.length }} favorited {{ itemtype + (items.length == 1 ? '' : 's')}}</template>
+      </GenericHeader>
+    </template>
+  </CardGridPage>
 </template>
 
 <script setup lang="ts">
@@ -11,6 +18,7 @@ import { Album, Artist } from "@/interfaces";
 import { getFavAlbums, getFavArtists } from "@/requests/favorite";
 
 import CardGridPage from "./SearchView/CardGridPage.vue";
+import GenericHeader from "@/components/shared/GenericHeader.vue";
 
 const route = useRoute();
 const albums: Ref<Album[]> = ref([]);
