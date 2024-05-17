@@ -15,10 +15,6 @@
       v-if="$route.name === Routes.favoriteArtists"
       :text="'Favorite Artists'"
     />
-    <SimpleNav
-      v-if="$route.name === Routes.favoriteTracks"
-      :text="'Favorite Tracks'"
-    />
     <SimpleNav v-if="$route.name === Routes.nowPlaying" :text="'Now Playing'" />
   </div>
 </template>
