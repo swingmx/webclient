@@ -5,7 +5,7 @@
       {
         background: bg,
         backgroundPosition: `center ${info.settings.banner_pos}%`,
-        height: `${heightLarge || isSmallPhone ? '24rem' : '18rem'}`,
+        height: `${isSmallPhone ? '24rem' : '18rem'}`,
       },
     ]"
     :class="{ 'use-sqr_img': useSqrImg }"
