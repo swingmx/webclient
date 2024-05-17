@@ -84,6 +84,12 @@ const playlists = computed(() => {
   height: 100%;
   overflow: auto;
 
+  .playlist-button {
+    svg {
+      height: 1.5rem;
+    }
+  }
+
   .grid {
     grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
     gap: 2.5rem 1.5rem;
