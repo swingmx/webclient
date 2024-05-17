@@ -35,5 +35,3 @@
 <script setup lang="ts">
 import { menus } from "./navitems";
 </script>
-
-<style scoped></style>

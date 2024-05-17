@@ -80,7 +80,7 @@ const browselist = [
     },
     {
         title: 'Fav. Albums',
-        route: Routes.favoriteArtists,
+        route: Routes.favoriteAlbums,
         icon: HeartIcon,
         class: 'favorite',
     },
