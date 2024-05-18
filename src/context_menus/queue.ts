@@ -53,7 +53,7 @@ export default async () => {
 
   const addToPlaylist: Option = {
     label: "Add queue to playlist",
-    children: await getAddToPlaylistOptions(AddToPlaylistAction, {
+    children: () => getAddToPlaylistOptions(AddToPlaylistAction, {
       trackhash: store.tracklist.map((t) => t.trackhash).join(","),
     }),
     icon: PlusIcon,

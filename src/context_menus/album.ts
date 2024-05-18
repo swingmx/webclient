@@ -38,7 +38,7 @@ export default async () => {
 
   const add_to_playlist: Option = {
     label: "Add to Playlist",
-    children: await getAddToPlaylistOptions(AddToPlaylistAction, {
+    children: () => getAddToPlaylistOptions(AddToPlaylistAction, {
       albumhash: useAlbum().info.albumhash,
     }),
     icon: PlusIcon,

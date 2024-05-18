@@ -41,7 +41,7 @@ export default async (path: string) => {
 
   const add_to_playlist = <Option>{
     label: "Add to Playlist",
-    children: await getAddToPlaylistOptions(AddToPlaylistAction, {
+    children: () => getAddToPlaylistOptions(AddToPlaylistAction, {
       path,
     }),
     icon: icons.PlusIcon,
