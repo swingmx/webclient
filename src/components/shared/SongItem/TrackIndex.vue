@@ -37,8 +37,9 @@ defineEmits<{
 
   .text {
     opacity: 0.5;
-    display: block;
     margin: auto 0;
+    transform: translateX($smaller);
+
     transition: all 0.25s;
     width: 100%;
   }
@@ -51,6 +52,7 @@ defineEmits<{
     align-content: center;
     transition: all 0.2s;
     transform: translateX(-1.5rem);
+
 
     button {
       border: none;

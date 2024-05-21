@@ -8,7 +8,6 @@
         <div
             v-if="Number.isInteger(playlist.info.id)"
             class="edit"
-            
         >
         &#160;&#160;|&#160;&#160; <span @click="editPlaylist">Edit</span>&#160;&#160;
             {{ Number.isInteger(playlist.info.id) ? ' | ' : '' }}

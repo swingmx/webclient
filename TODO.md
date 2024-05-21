@@ -4,10 +4,7 @@
 - Check out the mobile sidebar and navbar
 - Remove old settings page files
 - Fix: Breadcrumb align center (shifts when the the position of the highlighted folder is auto-scrolled to)
-- Fix: Tracklist item index slightly shifts up and down on hover/unhover
 - Fix: track loading indicator in bottom bar
-- Fix: Edit playlist button hiding on playlist update
-- Merge "Save as playlist" with "Add to playlist > New Playlist"
 
 # DONE ✅
 - Remove welcome dialog
@@ -23,3 +20,6 @@
     - HOW: eg. fetch playlists when you hover/click "Add to playlist"
     - IDEA: Maybe have a store for available playlists, and fetch new items when you read the store? Or something!
 - Add generic headers to favorite subpages
+- Fix: Edit playlist button hiding on playlist update
+- Merge "Save as playlist" with "Add to playlist > New Playlist"
+- Fix: Tracklist item index slightly shifts up and down on hover/unhover

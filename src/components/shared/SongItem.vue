@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
       .text {
         transition-delay: 400ms;
 
-        transform: translateX($smaller);
+        transform: translateX(0);
         opacity: 0;
       }
 
