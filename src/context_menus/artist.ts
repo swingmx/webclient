@@ -40,24 +40,15 @@ export default async (artisthash: string, artistname: string) => {
     label: "Add to Playlist",
     children: () => getAddToPlaylistOptions(AddToPlaylistAction, {
       artisthash,
+      playlist_name: `This is ${artistname}`,
     }),
     icon: PlusIcon,
-  };
-
-  const save_as_playlist: Option = {
-    label: "Save as Playlist",
-    action: () => {
-      const store = modal();
-      store.showSaveArtistAsPlaylistModal(artistname, artisthash);
-    },
-    icon: PlaylistIcon,
   };
 
   return [
     play_next,
     add_to_queue,
     add_to_playlist,
-    save_as_playlist,
     get_find_on_social("artist"),
   ];
 };

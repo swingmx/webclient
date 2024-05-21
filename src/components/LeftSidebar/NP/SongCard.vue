@@ -38,7 +38,7 @@ import useQueueStore from "@/stores/queue";
 
 import Bitrate from "./Bitrate.vue";
 
-const imguri = paths.images.thumb.large;
+const imguri = paths.images.thumb.medium;
 const q = useQueueStore();
 </script>
 

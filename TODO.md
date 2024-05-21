@@ -1,15 +1,13 @@
 # TODO 📦
 - Track share page
     - Add right-click option to copy track url
-- Add image loader
-    - color placeholder loader on tracklist item
-    - album page header
 - Check out the mobile sidebar and navbar
 - Remove old settings page files
 - Fix: Breadcrumb align center (shifts when the the position of the highlighted folder is auto-scrolled to)
 - Fix: Tracklist item index slightly shifts up and down on hover/unhover
 - Fix: track loading indicator in bottom bar
-- Add generic headers to favorite subpages
+- Fix: Edit playlist button hiding on playlist update
+- Merge "Save as playlist" with "Add to playlist > New Playlist"
 
 # DONE ✅
 - Remove welcome dialog
@@ -24,3 +22,4 @@
     - REVIEW: Is this really what we need?
     - HOW: eg. fetch playlists when you hover/click "Add to playlist"
     - IDEA: Maybe have a store for available playlists, and fetch new items when you read the store? Or something!
+- Add generic headers to favorite subpages

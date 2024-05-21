@@ -42,6 +42,7 @@ const props = defineProps<{
 const store = usePlaylistStore();
 
 onMounted(() => {
+  console.log(props.albumhash)
   const input_elem = document.getElementById("modal-playlist-name-input") as HTMLInputElement;
   input_elem.focus();
   input_elem.value = props.playlist_name || "";

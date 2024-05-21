@@ -2,7 +2,7 @@
   <CardGridPage :page="itemtype" :items="items">
     <template #header>
       <GenericHeader>
-        <template #name>Favorite {{ itemtype }}s</template>
+        <template #name>Favorite <span style="text-transform: capitalize;">{{ itemtype }}s</span></template>
         <template #description>You have {{ items.length }} favorited {{ itemtype + (items.length == 1 ? '' : 's')}}</template>
       </GenericHeader>
     </template>

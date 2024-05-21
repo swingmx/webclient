@@ -43,15 +43,10 @@ export default async (path: string) => {
     label: "Add to Playlist",
     children: () => getAddToPlaylistOptions(AddToPlaylistAction, {
       path,
+      playlist_name: path.split("/").pop(),
     }),
     icon: icons.PlusIcon,
   };
 
-  const save_as_playlist = <Option>{
-    label: "Save as Playlist",
-    action: () => modal.showSaveFolderAsPlaylistModal(path),
-    icon: icons.PlaylistIcon,
-  };
-
-  return [play_next, add_to_queue, add_to_playlist, save_as_playlist];
+  return [play_next, add_to_queue, add_to_playlist];
 };
