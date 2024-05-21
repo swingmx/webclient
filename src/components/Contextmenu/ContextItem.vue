@@ -75,7 +75,6 @@ const parentRef = ref<HTMLElement>()
 const hasChildren = computed(() => {
     return (
         props.option.children &&
-        !isSmall.value &&
         props.childrenShowMode === contextChildrenShowMode.hover
     )
 })
@@ -181,12 +180,11 @@ function hideChildren() {
 }
 
 function hideContextMenu() {
-    if (props.option.children) return
     emit('hideContextMenu')
 }
 
 function runAction() {
-    if (props.option.children) {
+    if (!props.option.singleChild && props.option.children) {
         if (childrenShown.value) {
             hideChildren()
             return

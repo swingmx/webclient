@@ -130,6 +130,10 @@ function closeSidenav() {
         padding: $small $medium;
         cursor: pointer;
       }
+
+      svg {
+        height: 1.5rem;
+      }
     }
 
     .sidenav_footer {

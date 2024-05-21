@@ -19,7 +19,7 @@
       style="height: 100%"
     >
       <template #before>
-        <Folder :sub-paths="subPaths" />
+        <Folder />
       </template>
 
       <template #default="{ item, index, active }">
