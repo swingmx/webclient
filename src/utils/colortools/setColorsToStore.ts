@@ -15,6 +15,6 @@ export default (store: any, img_url: string, btn_only: boolean = false) => {
     store.colors.btn = listToRgbString(palette.LightVibrant?.getRgb()) || "";
 
     if (btn_only) return;
-    store.colors.bg = listToRgbString(palette.DarkVibrant?.getRgb()) || "";
+    store.colors.bg = listToRgbString(palette.DarkMuted?.getRgb()) || "";
   });
 };

@@ -83,7 +83,7 @@ defineProps<{
   }
 
   &:hover {
-    background-color: $gray4;
+    background-color: $gray5;
 
     .play-btn {
       opacity: 1;

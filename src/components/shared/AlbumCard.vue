@@ -151,7 +151,7 @@ const artists = computed(() => {
   }
 
   &:hover {
-    background-color: $gray4;
+    background-color: $gray5;
   }
 
   img {
