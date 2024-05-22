@@ -180,9 +180,9 @@ function toggleSidenav() {
             .profiledrop {
                 opacity: 0;
                 transform: translateY(0.5rem);
-                transition: all 0.25s ease-out;
+                transition: all 0.15s ease-out;
                 visibility: hidden;
-                transition-delay: 0.35s;
+                transition-delay: 0.05s;
             }
 
             &:hover {

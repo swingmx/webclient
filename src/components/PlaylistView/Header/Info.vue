@@ -14,7 +14,7 @@
       {{ formatSeconds(playlist.info.duration, true) }}
     </div>
     <div ref="test_elem"></div>
-    <div class="title" :class="`${playlist.info.settings.square_img && isSmall ? 'ellip' : 'ellip2'}`">
+    <div class="title ellip2">
       <span v-for="t in balanceText(playlist.info.name, test_elem?.offsetWidth || 0, '4rem')" :key="t">
         {{ t }}
         <br />

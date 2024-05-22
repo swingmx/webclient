@@ -74,7 +74,7 @@ const scrollerItems = computed(() => {
   const header: ScrollerItem = {
     id: "header",
     component: Header,
-    size: isSmallPhone.value ? 25 * 16 : 18 * 16,
+    size: isSmallPhone.value ? 24 * 16 : 18 * 16,
   };
 
   const afterHeader: ScrollerItem = {

@@ -6,6 +6,7 @@
         :albumartists="''"
         :small="true"
         :append="!isSmallPhone ? statsText : ''"
+        :prepend="isSmallPhone ? 'Album by ' : ''"
       />
     </div>
     <div v-if="isSmallPhone" class="stats2">

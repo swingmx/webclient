@@ -195,6 +195,10 @@ function update_playlist(e: Event) {
     border: none;
     margin: $small 0 1rem 0;
 
+    svg {
+      height: 2rem;
+    }
+
     #update-pl-img-preview {
       width: 4.5rem;
       height: 4.5rem;

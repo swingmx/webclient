@@ -10,6 +10,15 @@
     ]"
     :class="{ 'use-sqr_img': useSqrImg }"
   >
+  <div
+    v-if="!info.has_image || info.settings.square_img"
+    class="album-header-ambient rounded-lg"
+    style="height: 100%; width: 100%"
+    :style="{
+      // hide shadow on small screen
+      boxShadow: isSmallPhone ? '' : colors.bg ? `0 .5rem 2rem ${colors.bg}` : '0 .5rem 2rem black',
+    }"
+  ></div>
     <div
       v-if="Number.isInteger(info.id)"
       class="float"
@@ -22,15 +31,7 @@
       <PinSvg v-else />
     </div>
 
-    <div v-if="info.has_image" class="gradient rounded-lg"></div>
-    <div
-      v-if="!info.has_image || info.settings.square_img"
-      class="album-header-ambient rounded-lg"
-      style="height: 100%; width: 100%"
-      :style="{
-        boxShadow: colors.bg ? `0 .5rem 2rem ${colors.bg}` : '0 .5rem 2rem black',
-      }"
-    ></div>
+    <div v-if="!isSmallPhone && info.has_image" class="gradient rounded-lg"></div>
     <div v-if="info.has_image && useSqrImg" class="sqr_img">
       <img :src="(playlist.info.image as string)" class="rounded-sm" />
     </div>
@@ -60,6 +61,11 @@ const playlist = usePStore();
 const { info, colors } = storeToRefs(playlist);
 
 const bg = computed(() => {
+  // hide background on small screen
+  if (isSmallPhone.value){
+    return "";
+  }
+
   if (playlist.info.has_image) {
     if (isSmallPhone.value || (!playlist.info.settings.square_img && !isSmallPhone.value)) {
       return `url(${info.value.image})`;
@@ -127,14 +133,20 @@ function pinPlaylist(pid: number) {
       align-items: flex-start;
       gap: 1rem;
 
+      // take up the space left by the gradient element
+      height: 25rem !important;
+
+
       .playlist-info {
+        text-align: center;
         height: max-content;
       }
 
       .sqr_img {
-        height: 13rem;
-        width: 13rem;
+        height: 12rem;
+        width: 12rem;
         margin-top: 1rem;
+        margin: 0 auto;
       }
 
       .title {

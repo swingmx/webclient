@@ -12,6 +12,7 @@
       <span class="artist">{{ albumartists }}</span>
     </div>
     <div v-else v-tooltip>
+      <span>{{ prepend ? prepend : "" }}</span>
       <template v-for="(artist, index) in artists" :key="index">
         <RouterLink
           class="artist"
@@ -38,6 +39,7 @@ defineProps<{
   artists: Artist[] | null;
   albumartists: Artist[] | string | null;
   append?: string;
+  prepend?: string;
   small?: boolean;
   smaller?: boolean;
 }>();
