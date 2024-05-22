@@ -1,15 +1,32 @@
 <template>
-    <div class="settingsmodal">
+    <div
+        class="settingsmodal"
+        :class="{
+            isSmallPhone,
+        }"
+        v-auto-animate
+    >
         <Sidebar
             :current-group="(currentGroup as SettingGroup)"
             @set-tab="(tab) => (currentTab = tab)"
+            v-if="!(isSmallPhone && showContent)"
         />
-        <div class="content">
+        <div
+            class="content"
+            v-if="showContent"
+        >
             <div
                 class="head"
                 v-auto-animate
             >
                 <div class="h2">
+                    <button
+                        class="back"
+                        v-if="isSmallPhone"
+                        @click="handleGoBack"
+                    >
+                        <ArrowSvg />
+                    </button>
                     {{ currentGroup?.title }}
                     <span
                         v-if="currentGroup?.experimental"
@@ -31,6 +48,8 @@ import Content from './settings/Content.vue'
 import Sidebar from './settings/Sidebar.vue'
 import { computed, ref } from 'vue'
 import { SettingGroup } from '@/interfaces/settings'
+import { isSmallPhone } from '@/stores/content-width'
+import ArrowSvg from '@/assets/icons/arrow.svg'
 
 const emit = defineEmits<{
     (e: 'setTitle', title: string): void
@@ -46,6 +65,11 @@ const currentGroup = computed(() => {
         }
     }
 
+    if (isSmallPhone.value) {
+        return null
+    }
+
+    // select default tab
     for (const group of settingGroups) {
         for (const settings of group.groups) {
             if (settings.title === 'Appearance') {
@@ -54,6 +78,14 @@ const currentGroup = computed(() => {
         }
     }
 })
+
+const showContent = computed(() => {
+    return currentGroup.value !== null
+})
+
+function handleGoBack() {
+    currentTab.value = ''
+}
 </script>
 
 <style lang="scss">
@@ -80,6 +112,15 @@ $modalheight: 35rem;
                 margin: 0;
                 font-size: 1.15rem;
                 font-weight: bold;
+
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .back {
+                margin-left: -1rem;
+                background-color: transparent;
             }
 
             .desc {
@@ -88,7 +129,6 @@ $modalheight: 35rem;
             }
         }
     }
-
 
     // Role badges used in Profile and Accounts tabs
     .roles {
@@ -109,6 +149,14 @@ $modalheight: 35rem;
             align-items: center;
             gap: $small;
         }
+    }
+}
+
+.settingsmodal.isSmallPhone {
+    grid-template-columns: 1fr;
+
+    .settingssidebar {
+        border-right: none;
     }
 }
 </style>

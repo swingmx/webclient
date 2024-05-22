@@ -21,7 +21,7 @@
                         v-for="item in group.groups"
                         :key="item.title"
                         :class="{
-                            active: item.title === currentGroup.title,
+                            active: currentGroup && item.title === currentGroup.title,
                             about: item.title === 'About',
                         }"
                         @click="() => $emit('setTab', item.title || '')"

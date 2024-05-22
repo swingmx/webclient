@@ -73,6 +73,7 @@ const settings = useSettings()
     }
 
     .links .flex {
+        flex-wrap: wrap;
         margin-top: $small;
         gap: 1rem;
     }
