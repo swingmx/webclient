@@ -2,7 +2,7 @@
     <div id="folder-nav-title">
         <div class="fname">
             <div
-                class="icon image"
+                class="icon"
                 @click="
                     $router.push({
                         name: Routes.folder,
@@ -68,7 +68,7 @@ function navigate(path: string) {
 
     .icon {
             aspect-ratio: 1;
-            margin: $small;
+            margin: 0 $small;
             display: flex;
 
             svg {

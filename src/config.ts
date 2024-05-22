@@ -18,6 +18,7 @@ const imageRoutes = {
     thumb: {
         large: '/thumbnail/',
         small: '/thumbnail/xsmall/',
+        smallish: '/thumbnail/small/',
         medium: "/thumbnail/medium/"
     },
     artist: {
@@ -179,6 +180,7 @@ export const paths = {
     images: {
         thumb: {
             small: baseImgUrl + imageRoutes.thumb.small,
+            smallish: baseImgUrl + imageRoutes.thumb.smallish,
             large: baseImgUrl + imageRoutes.thumb.large,
             medium: baseImgUrl + imageRoutes.thumb.medium
         },

@@ -8,7 +8,7 @@
     <img
       v-for="(img, index) in playlist.info.images"
       :key="index"
-      :src="paths.images.thumb.large + (img as any).image"
+      :src="paths.images.thumb.medium + (img as any).image"
       class=""
     />
   </div>
