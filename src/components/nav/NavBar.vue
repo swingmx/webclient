@@ -9,50 +9,24 @@
         <div class="left">
             <NavButtons />
             <NavLinks v-if="settings.is_alt_layout" />
-            <div
-                v-if="
-                    settings.is_default_layout && $route.name == Routes.folder
-                "
-                class="info"
-            >
+            <div v-if="settings.is_default_layout && $route.name == Routes.folder" class="info">
                 <Folder />
             </div>
             <NavTitles v-else-if="settings.is_default_layout && !isSmall" />
         </div>
-        <div
-            class="sidenav_toggle"
-            @click="toggleSidenav"
-        >
+        <div class="sidenav_toggle" @click="toggleSidenav">
             <div class="bar"></div>
             <div class="bar"></div>
         </div>
-        <NavSidenav
-            @close="toggleSidenav"
-            :class="{ active: sidenavActive }"
-        />
-        <div
-            class="dimmer noSelect"
-            :class="{ active: sidenavActive }"
-            @click="toggleSidenav"
-        ></div>
-        <RouterLink
-            v-if="settings.is_alt_layout"
-            to="/"
-            class="logo rounded-sm"
-            ><LogoSvg
-        /></RouterLink>
-        <div
-            v-if="settings.is_alt_layout || !settings.use_sidebar || !xl"
-            class="right"
-        >
+        <NavSidenav @close="toggleSidenav" :class="{ active: sidenavActive }" />
+        <div class="dimmer noSelect" :class="{ active: sidenavActive }" @click="toggleSidenav"></div>
+        <RouterLink v-if="settings.is_alt_layout" to="/" class="logo rounded-sm"><LogoSvg /></RouterLink>
+        <div v-if="settings.is_alt_layout || !settings.use_sidebar || !xl" class="right">
             <SearchInput :on_nav="true" />
             <!-- v-if="settings.is_alt_layout" -->
             <div class="avatar">
                 <div class="img circular">
-                    <Avatar
-                        :name="auth.user.username || ''"
-                        :size="36"
-                    />
+                    <Avatar :name="auth.user.username || ''" :size="36" />
                 </div>
                 <ProfileDropdown />
             </div>
@@ -61,32 +35,32 @@
 </template>
 
 <script setup lang="ts">
-import { Routes } from '@/router'
-import { computed, ref } from 'vue'
+import { Routes } from "@/router";
+import { computed, ref } from "vue";
 
-import { content_width } from '@/stores/content-width'
-import useSettings from '@/stores/settings'
-import useAuth from '@/stores/auth'
-import { xl } from './../../composables/useBreakpoints'
+import useAuth from "@/stores/auth";
+import { content_width } from "@/stores/content-width";
+import useSettings from "@/stores/settings";
+import { xl } from "./../../composables/useBreakpoints";
 
-import LogoSvg from '@/assets/icons/logos/logo-fill.light.svg'
-import SearchInput from '../RightSideBar/SearchInput.vue'
-import NavButtons from './NavButtons.vue'
-import NavLinks from './NavLinks.vue'
-import NavSidenav from './NavSidenav.vue'
-import NavTitles from './NavTitles.vue'
-import Avatar from '../shared/Avatar.vue'
-import Folder from './Titles/Folder.vue'
-import ProfileDropdown from './ProfileDropdown.vue'
+import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
+import SearchInput from "../RightSideBar/SearchInput.vue";
+import Avatar from "../shared/Avatar.vue";
+import NavButtons from "./NavButtons.vue";
+import NavLinks from "./NavLinks.vue";
+import NavSidenav from "./NavSidenav.vue";
+import NavTitles from "./NavTitles.vue";
+import ProfileDropdown from "./ProfileDropdown.vue";
+import Folder from "./Titles/Folder.vue";
 
-const auth = useAuth()
-const settings = useSettings()
-const isSmall = computed(() => content_width.value < 800)
+const auth = useAuth();
+const settings = useSettings();
+const isSmall = computed(() => content_width.value < 800);
 
-const sidenavActive = ref(false)
+const sidenavActive = ref(false);
 
 function toggleSidenav() {
-    sidenavActive.value = !sidenavActive.value
+    sidenavActive.value = !sidenavActive.value;
 }
 </script>
 
@@ -159,7 +133,7 @@ function toggleSidenav() {
                 height: 36px;
 
                 &::after {
-                    content: '';
+                    content: "";
                     height: 100%;
                     width: 100%;
                     position: absolute;
@@ -179,18 +153,16 @@ function toggleSidenav() {
 
             .profiledrop {
                 opacity: 0;
-                transform: translateY(0.5rem);
-                transition: all 0.15s ease-out;
                 visibility: hidden;
-                transition-delay: 0.05s;
+                transform: translateY(0.5rem);
+                transition: opacity 0.2s ease-out, visibility 0.2s ease-out, transform 0.2s ease-out;
             }
 
             &:hover {
                 .profiledrop {
-                    visibility: visible;
                     opacity: 1;
+                    visibility: visible;
                     transform: translateY(0);
-                    transition-delay: 0.15s;
                 }
             }
 

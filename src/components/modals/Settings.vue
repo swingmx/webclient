@@ -8,31 +8,18 @@
     >
         <Sidebar
             :current-group="(currentGroup as SettingGroup)"
-            @set-tab="(tab) => (currentTab = tab)"
+            @set-tab="tab => (currentTab = tab)"
             v-if="!(isSmallPhone && showContent)"
         />
-        <div
-            class="content"
-            v-if="showContent"
-        >
-            <div
-                class="head"
-                v-auto-animate
-            >
+        <div class="content" v-if="showContent">
+            <div class="head" v-auto-animate>
                 <div class="h2">
-                    <button
-                        class="back"
-                        v-if="isSmallPhone"
-                        @click="handleGoBack"
-                    >
+                    <button class="back" v-if="isSmallPhone" @click="handleGoBack">
                         <ArrowSvg />
                     </button>
                     {{ currentGroup?.title }}
-                    <span
-                        v-if="currentGroup?.experimental"
-                        class="badge experimental circular"
-                    >
-                        {{ currentGroup?.experimental ? 'experimental' : '' }}
+                    <span v-if="currentGroup?.experimental" class="badge experimental circular">
+                        {{ currentGroup?.experimental ? "experimental" : "" }}
                     </span>
                 </div>
             </div>
@@ -42,49 +29,49 @@
 </template>
 
 <script setup lang="ts">
-import settingGroups from '@/settings'
+import settingGroups from "@/settings";
 
-import Content from './settings/Content.vue'
-import Sidebar from './settings/Sidebar.vue'
-import { computed, ref } from 'vue'
-import { SettingGroup } from '@/interfaces/settings'
-import { isSmallPhone } from '@/stores/content-width'
-import ArrowSvg from '@/assets/icons/arrow.svg'
+import ArrowSvg from "@/assets/icons/arrow.svg";
+import { SettingGroup } from "@/interfaces/settings";
+import { isSmallPhone } from "@/stores/content-width";
+import { computed, ref } from "vue";
+import Content from "./settings/Content.vue";
+import Sidebar from "./settings/Sidebar.vue";
 
 const emit = defineEmits<{
-    (e: 'setTitle', title: string): void
-}>()
+    (e: "setTitle", title: string): void;
+}>();
 
-const currentTab = ref<string>('')
+const currentTab = ref<string>("");
 const currentGroup = computed(() => {
     for (const group of settingGroups) {
         for (const settings of group.groups) {
             if (settings.title === currentTab.value) {
-                return settings
+                return settings;
             }
         }
     }
 
     if (isSmallPhone.value) {
-        return null
+        return null;
     }
 
     // select default tab
     for (const group of settingGroups) {
         for (const settings of group.groups) {
-            if (settings.title === 'Appearance') {
-                return settings
+            if (settings.title === "Appearance") {
+                return settings;
             }
         }
     }
-})
+});
 
 const showContent = computed(() => {
-    return currentGroup.value !== null
-})
+    return currentGroup.value !== null;
+});
 
 function handleGoBack() {
-    currentTab.value = ''
+    currentTab.value = "";
 }
 </script>
 
@@ -107,6 +94,10 @@ $modalheight: 35rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
+
+            @include mediumPhones {
+                padding: 0 1.75rem;
+            }
 
             .h2 {
                 margin: 0;
@@ -137,7 +128,7 @@ $modalheight: 35rem;
 
         .role {
             // margin: $smaller $small 0 0;
-            padding: 3px $smaller;
+            padding: 2px $smaller;
             border-radius: $smaller;
             border: solid 1px $brown;
             color: $brown;
