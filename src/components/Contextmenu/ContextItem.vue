@@ -278,13 +278,12 @@ function runChildAction(action: () => void) {
         svg {
             height: 100%;
             width: 100%;
-            transform: scale(1.15);
         }
     }
 
     // add to queue icon
-    &:nth-child(3) .icon > svg {
-        transform: scale(0.9);
+    &:nth-child(2) .icon > svg {
+        transform: scale(0.85);
     }
 
     .label {

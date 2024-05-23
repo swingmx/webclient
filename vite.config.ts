@@ -65,7 +65,7 @@ export default defineConfig({
             url: "/#/favorites",
             icons: [
               {
-                src: "/icons/heart.fill.svg",
+                src: "/icons/heart.svg",
                 type: "image/svg+xml",
               },
             ],

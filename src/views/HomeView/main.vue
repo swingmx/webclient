@@ -6,7 +6,7 @@
     </GenericHeader>
     <Browse />
     <!-- v-if="home.recentlyPlayed.length" -->
-    <RecentItems :title="'Recently Played'" :items="home.recentlyPlayed" :play-source="playSources.track" />
+    <RecentItems :title="'Recently Played'" :items="home.recentlyPlayed" :play-source="playSources.track" :route="'/playlist/recentlyplayed'"/>
     <!-- v-if="home.recentlyAdded.length" -->
     <RecentItems
       :title="'Recently Added'"
