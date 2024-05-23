@@ -11,39 +11,40 @@ export default () => {
       return;
     }
 
-    const url = paths.images.thumb.large;
+    const url = paths.images.thumb;
 
     navigator.mediaSession.metadata = new window.MediaMetadata({
       title: track.title,
+      album: track.album,
       artist: track.artists.map((a) => a.name).join(", "),
       artwork: [
         {
-          src: url + track.image,
+          src: url.small + track.image,
           sizes: "96x96",
           type: "image/jpeg",
         },
         {
-          src: url + track.image,
+          src: url.medium + track.image,
           sizes: "128x128",
           type: "image/webp",
         },
         {
-          src: url + track.image,
+          src: url.medium + track.image,
           sizes: "192x192",
           type: "image/webp",
         },
         {
-          src: url + track.image,
+          src: url.medium + track.image,
           sizes: "256x256",
           type: "image/webp",
         },
         {
-          src: url + track.image,
+          src: url.large + track.image,
           sizes: "384x384",
           type: "image/webp",
         },
         {
-          src: url + track.image,
+          src: url.large + track.image,
           sizes: "512x512",
           type: "image/webp",
         },

@@ -1,4 +1,4 @@
-<svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="28px" height="28px"
+<svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" 
     baseProfile="basic">
     <path d="M51,48H25c-1.104,0-2-0.896-2-2s0.896-2,2-2h26c1.104,0,2,0.896,2,2S52.104,48,51,48z" />
     <path
