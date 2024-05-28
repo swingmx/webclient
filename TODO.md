@@ -11,6 +11,7 @@
 - Merge all cards into one generic card or something! ... for better control and updates. ie. have a layout card to controls the sections and general style. Use slots, props and emits to create child components.
 - Merge sidenav dimmer and modal dimmer
 - Fix: Add to favorite button on headers icon alignment
+- Add trailing slash to folder url accessed from the breadcrumb
 
 # DONE ✅
 - Remove welcome dialog
