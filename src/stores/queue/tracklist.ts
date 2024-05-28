@@ -118,16 +118,10 @@ export default defineStore('tracklist', {
             this.setNewList(tracks)
         },
         addTrack(track: Track) {
-            this.insertAt([track], this.tracklist.length - 1)
-
-            const Toast = useToast()
-            Toast.showNotification(
-                `Added ${track.title} to queue`,
-                NotifType.Success
-            )
+            return this.addTracks([track])
         },
         addTracks(tracks: Track[]) {
-            this.insertAt(tracks, this.tracklist.length - 1)
+            this.insertAt(tracks, this.tracklist.length)
 
             const Toast = useToast()
             Toast.showNotification(
