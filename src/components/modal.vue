@@ -1,13 +1,7 @@
 <template>
     <!-- 👇 login modal should not be dismissable -->
-    <div
-        v-if="modal.visible || modal.component == ModalOptions.login"
-        class="modal"
-    >
-        <div
-            class="bg"
-            @click="modal.hideModal"
-        ></div>
+    <div v-if="modal.visible || modal.component == ModalOptions.login" class="modal">
+        <div class="bg" @click="modal.hideModal"></div>
         <div
             v-motion-slide-top
             class="m-content rounded"
@@ -16,10 +10,7 @@
                 authlogin: modal.component == modal.options.login,
             }"
             :style="{
-                maxWidth:
-                    modal.component == modal.options.setRootDirs
-                        ? '56rem'
-                        : '30rem',
+                maxWidth: modal.component == modal.options.setRootDirs ? '56rem' : '30rem',
             }"
         >
             <!-- TODO: MOVE MAX WIDTH TO CLASS -->
@@ -44,50 +35,41 @@
                     :confirm-action="deletePlaylist"
                 />
             </div>
-            <SetRootDirs
-                v-if="modal.component == modal.options.setRootDirs"
-                @hideModal="hideModal"
-            />
-            <RootDirsPrompt
-                v-if="modal.component == modal.options.rootDirsPrompt"
-                @hideModal="hideModal"
-            />
-            <Settings
-                @set-title="setTitle"
-                v-if="modal.component == modal.options.settings"
-            />
+            <SetRootDirs v-if="modal.component == modal.options.setRootDirs" @hideModal="hideModal" />
+            <RootDirsPrompt v-if="modal.component == modal.options.rootDirsPrompt" @hideModal="hideModal" />
+            <Settings @set-title="setTitle" v-if="modal.component == modal.options.settings" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { deletePlaylist as delPlaylist } from '@/requests/playlists'
-import useModalStore, { ModalOptions } from '@/stores/modal'
-import { useRouter } from 'vue-router'
+import { deletePlaylist as delPlaylist } from "@/requests/playlists";
+import useModalStore, { ModalOptions } from "@/stores/modal";
+import { useRouter } from "vue-router";
 
-import AuthLogin from './modals/AuthLogin.vue'
-import ConfirmModal from './modals/ConfirmModal.vue'
-import NewPlaylist from './modals/NewPlaylist.vue'
-import RootDirsPrompt from './modals/RootDirsPrompt.vue'
-import SetRootDirs from './modals/SetRootDirs.vue'
-import UpdatePlaylist from './modals/updatePlaylist.vue'
-import Settings from './modals/Settings.vue'
+import AuthLogin from "./modals/AuthLogin.vue";
+import ConfirmModal from "./modals/ConfirmModal.vue";
+import NewPlaylist from "./modals/NewPlaylist.vue";
+import RootDirsPrompt from "./modals/RootDirsPrompt.vue";
+import SetRootDirs from "./modals/SetRootDirs.vue";
+import Settings from "./modals/Settings.vue";
+import UpdatePlaylist from "./modals/updatePlaylist.vue";
 
-const modal = useModalStore()
-const router = useRouter()
+const modal = useModalStore();
+const router = useRouter();
 
 function setTitle(title: string) {
-    modal.setTitle(title)
+    modal.setTitle(title);
 }
 
 function hideModal() {
-    modal.hideModal()
+    modal.hideModal();
 }
 
 function deletePlaylist() {
     delPlaylist(modal.props.pid)
         .then(() => modal.hideModal())
-        .then(() => router.back())
+        .then(() => router.back());
 }
 </script>
 
@@ -100,7 +82,7 @@ function deletePlaylist() {
     display: grid;
     place-items: center;
 
-    input[type='search'] {
+    input[type="search"] {
         margin: $small 0;
         border: none;
         background-color: $gray5;
@@ -119,19 +101,24 @@ function deletePlaylist() {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(22, 22, 22, 0.753);
+        // opacity: 0;
+        // visibility: hidden;
+        background-color: rgb(0, 0, 0, 0.6);
+        // transition: opacity 300ms ease, visibility 300ms ease;
+        //background-color: rgba(22, 22, 22, 0.8);
         // backdrop-filter: blur(5px);
     }
 
     .m-content {
         width: calc(100% - 4rem);
-        max-height: 40rem;
+        max-height: calc(100% - 4rem);
         padding: 2rem 1.25rem;
         position: relative;
         background-color: $black;
 
-        @include largePhones {
+        @include allPhones {
             width: calc(100% - 2rem);
+            max-height: calc(100% - 2rem);
             padding: 2rem 1rem;
         }
     }

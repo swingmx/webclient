@@ -3,16 +3,13 @@
         <div class="groups">
             <div
                 class="group"
-                v-for="group in settingGroups.filter((g) => {
+                v-for="group in settingGroups.filter(g => {
                     // return true
-                    return g.show_if ? g.show_if() : true
+                    return g.show_if ? g.show_if() : true;
                 })"
                 :key="group.title"
             >
-                <div
-                    class="gtitle"
-                    v-if="group.title"
-                >
+                <div class="gtitle" v-if="group.title">
                     {{ group.title }}
                 </div>
                 <div class="gitems">
@@ -26,16 +23,8 @@
                         }"
                         @click="() => $emit('setTab', item.title || '')"
                     >
-                        <Avatar
-                            :size="18"
-                            :name="auth.user.username || ''"
-                            v-if="item.title === 'Profile'"
-                        />
-                        <span
-                            class="icon"
-                            v-html="item.icon"
-                            v-else
-                        ></span>
+                        <Avatar :size="18" :name="auth.user.username || ''" v-if="item.title === 'Profile'" />
+                        <span class="icon" v-html="item.icon" v-else></span>
                         <span>
                             {{ item.title }}
                         </span>
@@ -47,21 +36,21 @@
 </template>
 
 <script setup lang="ts">
-import useAuth from '@/stores/auth'
-import settingGroups from '@/settings'
-import { SettingGroup } from '@/interfaces/settings'
+import { SettingGroup } from "@/interfaces/settings";
+import settingGroups from "@/settings";
+import useAuth from "@/stores/auth";
 
-import Avatar from '@/components/shared/Avatar.vue'
+import Avatar from "@/components/shared/Avatar.vue";
 
-const auth = useAuth()
+const auth = useAuth();
 
 defineProps<{
-    currentGroup: SettingGroup
-}>()
+    currentGroup: SettingGroup;
+}>();
 
 defineEmits<{
-    (e: 'setTab', title: string): void
-}>()
+    (e: "setTab", title: string): void;
+}>();
 </script>
 
 <style lang="scss">
@@ -74,6 +63,34 @@ defineEmits<{
     grid-template-rows: 1fr max-content;
     user-select: none;
 
+    overflow: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(100vh - 4rem);
+
+    @include allPhones {
+        max-height: calc(100vh - 2rem);
+    }
+
+    @include largePhones {
+        padding: 1rem;
+    }
+
+    .groups {
+        display: flex;
+        flex-direction: column;
+
+        .group {
+            &:first-child {
+                .gitems {
+                    .gitem {
+                        margin-top: 0;
+                    }
+                }
+            }
+        }
+    }
+
     .appversion {
         pointer-events: none;
         font-size: 12px;
@@ -84,7 +101,7 @@ defineEmits<{
     .gtitle {
         font-weight: bold;
         font-size: 14px;
-        margin: $medium 0 $small $small;
+        margin: 1rem 0 $smaller $small;
     }
 
     .gitems {
@@ -103,9 +120,15 @@ defineEmits<{
         font-size: 14px;
         margin-top: $smaller;
         position: relative;
+        transition: background-color 0.2s ease-out, color 0.2s ease-out;
+
+        @include largePhones {
+            padding: 0.551rem;
+        }
 
         svg {
             width: 1.25rem;
+            transition: color 0.2s ease-out;
         }
 
         .icon {
@@ -127,11 +150,11 @@ defineEmits<{
         }
 
         &.about {
-            margin-top: 1rem;
+            margin-top: 14px;
         }
 
         &.about::before {
-            content: '';
+            content: "";
             height: 1px;
             position: absolute;
             top: -$small;

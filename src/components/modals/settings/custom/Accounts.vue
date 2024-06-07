@@ -1,13 +1,6 @@
 <template>
-    <Profile
-        :adding_user="true"
-        v-if="showAddUser"
-        @user-added="userAdded"
-    />
-    <div
-        class="accountsettings"
-        v-else
-    >
+    <Profile :adding_user="true" v-if="showAddUser" @user-added="userAdded" />
+    <div class="accountsettings" v-else>
         <div class="asettings">
             <ToggleSetting
                 v-for="s in account_settings"
@@ -20,10 +13,7 @@
         </div>
         <div class="ahead">
             <div class="h2">All users</div>
-            <button
-                class="adduser"
-                @click="showAddUser = true"
-            >
+            <button class="adduser" @click="showAddUser = true">
                 <PlusSvg />
                 new user
             </button>
@@ -39,24 +29,14 @@
                     secondchild: index == 1,
                 }"
             >
-                <div
-                    class="userinfo"
-                    @click="() => selectUser(user.id)"
-                >
-                    <Avatar
-                        :name="user.username"
-                        :size="47"
-                    />
+                <div class="userinfo" @click="() => selectUser(user.id)">
+                    <Avatar :name="user.username" :size="47" />
                     <div class="details">
                         <div class="name">
                             {{ user.firstname || user.username }}
                         </div>
                         <div class="roles">
-                            <span
-                                class="role"
-                                v-for="role in user.roles"
-                                >{{ role }}</span
-                            >
+                            <span class="role" v-for="role in user.roles">{{ role }}</span>
                         </div>
                     </div>
                     <DeleteSvg
@@ -65,21 +45,20 @@
                         @click.stop="() => deleteUser(user)"
                     />
                 </div>
-                <div
-                    class="usettins"
-                    v-if="user.id === selectedUser"
-                >
+                <div class="usettins" v-if="user.id === selectedUser">
                     <ToggleSetting
                         v-for="setting in usettings"
                         :key="setting.title"
                         :title="setting.title"
                         :desc="setting.desc"
                         :value="setting.value(user.roles)"
-                        :class="{ disabled:  (setting.title === 'Admin' &&
-                                users.filter((u) => u.roles.includes('admin'))
-                                    .length === 1 &&
+                        :class="{
+                            disabled:
+                                setting.title === 'Admin' &&
+                                users.filter(u => u.roles.includes('admin')).length === 1 &&
                                 user.roles.includes('admin') &&
-                                user.username === auth.user.username)}"
+                                user.username === auth.user.username,
+                        }"
                         @click="() => setting.action(user)"
                     />
                 </div>
@@ -89,151 +68,145 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { User } from '@/interfaces'
-import { getAllUsers } from '@/requests/auth'
-import { SettingType } from '@/settings/enums'
-import { updateConfig } from '@/requests/settings'
+import { User } from "@/interfaces";
+import { getAllUsers } from "@/requests/auth";
+import { updateConfig } from "@/requests/settings";
+import { SettingType } from "@/settings/enums";
+import { onMounted, ref } from "vue";
 
-import useAuth from '@/stores/auth'
-import { useToast } from '@/stores/notification'
+import useAuth from "@/stores/auth";
+import { useToast } from "@/stores/notification";
 
-import Profile from '../Profile.vue'
-import PlusSvg from '@/assets/icons/plus.svg'
-import ToggleSetting from './ToggleSetting.vue'
-import Avatar from '@/components/shared/Avatar.vue'
-import DeleteSvg from '@/assets/icons/delete.svg'
+import DeleteSvg from "@/assets/icons/delete.svg";
+import PlusSvg from "@/assets/icons/plus.svg";
+import Avatar from "@/components/shared/Avatar.vue";
+import Profile from "../Profile.vue";
+import ToggleSetting from "./ToggleSetting.vue";
 
-const auth = useAuth()
-const toast = useToast()
+const auth = useAuth();
+const toast = useToast();
 
-const selectedUser = ref(0)
-const users = ref(<User[]>[])
-const showAddUser = ref(false)
+const selectedUser = ref(0);
+const users = ref(<User[]>[]);
+const showAddUser = ref(false);
 
 const settingsMap = {
     enableGuest: ref(false),
     usersOnLogin: ref(false),
-} as { [key: string]: { value: boolean } }
+} as { [key: string]: { value: boolean } };
 
 const account_settings = [
     {
-        title: 'Enable guest access',
-        desc: 'Allow users to access the site without an account',
+        title: "Enable guest access",
+        desc: "Allow users to access the site without an account",
         type: SettingType.binary,
         value: settingsMap.enableGuest,
         action: async () => {
             if (settingsMap.enableGuest.value) {
-                const success = await auth.deleteUser('guest')
+                const success = await auth.deleteUser("guest");
 
                 if (success) {
-                    settingsMap.enableGuest.value =
-                        !settingsMap.enableGuest.value
+                    settingsMap.enableGuest.value = !settingsMap.enableGuest.value;
                 }
-                return
+                return;
             }
 
-            settingsMap.enableGuest.value = await auth.addGuestUser()
+            settingsMap.enableGuest.value = await auth.addGuestUser();
         },
     },
     {
-        title: 'Show users on login',
-        desc: 'Show a list of users on your server when logging in',
+        title: "Show users on login",
+        desc: "Show a list of users on your server when logging in",
         type: SettingType.binary,
         value: settingsMap.usersOnLogin,
         action: async () => {
-            const res = await updateConfig(
-                'usersOnLogin',
-                !settingsMap.usersOnLogin.value
-            )
+            const res = await updateConfig("usersOnLogin", !settingsMap.usersOnLogin.value);
 
             if (res.status === 200) {
-                settingsMap.usersOnLogin.value = !settingsMap.usersOnLogin.value
-                return
+                settingsMap.usersOnLogin.value = !settingsMap.usersOnLogin.value;
+                return;
             }
 
             if (res.data.msg) {
-                return toast.showError(res.data.msg)
+                return toast.showError(res.data.msg);
             }
 
-            toast.showGenericError()
+            toast.showGenericError();
         },
     },
-]
+];
 
 const usettings = [
     {
-        title: 'Admin',
-        desc: 'Can do anything',
+        title: "Admin",
+        desc: "Can do anything",
         value: (roles: string[]) => {
-            return roles.includes('admin')
+            return roles.includes("admin");
         },
         action: async (user: User) => {
-            let initialRoles = [...user.roles]
-            let roles = [...user.roles]
+            let initialRoles = [...user.roles];
+            let roles = [...user.roles];
 
-            if (roles.includes('admin')) {
-                roles = roles.filter((r) => r !== 'admin')
+            if (roles.includes("admin")) {
+                roles = roles.filter(r => r !== "admin");
             } else {
-                roles.push('admin')
+                roles.push("admin");
             }
 
             const success = await auth.updateProfile({
                 id: user.id,
                 roles: roles,
-            })
+            });
 
             if (success) {
-                user.roles = roles
+                user.roles = roles;
             } else {
-                user.roles = initialRoles
+                user.roles = initialRoles;
             }
         },
     },
-]
+];
 
 async function deleteUser(user: User) {
     if (user.username === auth.user.username) {
-        return toast.showError('Sorry! You cannot delete yourself')
+        return toast.showError("Sorry! You cannot delete yourself");
     }
 
-    const success = await auth.deleteUser(user.username)
+    const success = await auth.deleteUser(user.username);
 
     if (success) {
         setTimeout(() => {
-            users.value = users.value.filter((u) => u.id !== user.id)
-        }, 500)
+            users.value = users.value.filter(u => u.id !== user.id);
+        }, 500);
     }
 }
 
 function userAdded(user: User) {
-    showAddUser.value = false
+    showAddUser.value = false;
 
     setTimeout(() => {
         // insert user after last admin
-        const lastAdmin = users.value.findIndex((u) =>
-            u.roles.includes('admin')
-        )
-        users.value.splice(lastAdmin + 1, 0, user)
-    }, 250)
+        const lastAdmin = users.value.findIndex(u => u.roles.includes("admin"));
+        users.value.splice(lastAdmin + 1, 0, user);
+    }, 250);
 }
 
 function selectUser(id: number) {
     if (selectedUser.value === id) {
-        selectedUser.value = 0
-        return
+        selectedUser.value = 0;
+        return;
     }
 
-    selectedUser.value = id
+    selectedUser.value = id;
 }
 
 onMounted(async () => {
-    const res = await getAllUsers(false)
+    const res = await getAllUsers(false);
 
     if (res.users) {
         // remove guest user from list
-        res.users = res.users.filter((u) => u.username !== 'guest')
-        users.value = res.users
+        res.users = res.users.filter(u => u.username !== "guest");
+        users.value = res.users;
     }
 
     if (Object.keys(res.settings).length) {
@@ -244,11 +217,11 @@ onMounted(async () => {
         for (const key in res.settings) {
             if (settingsMap[key]) {
                 // @ts-expect-error
-                settingsMap[key].value = res.settings[key]
+                settingsMap[key].value = res.settings[key];
             }
         }
     }
-})
+});
 </script>
 
 <style lang="scss">
@@ -351,7 +324,7 @@ onMounted(async () => {
         margin-top: 1.75rem !important;
 
         &::before {
-            content: '';
+            content: "";
             position: absolute;
             top: -1rem;
             left: 45%;
@@ -376,6 +349,10 @@ onMounted(async () => {
             color: $gray1;
             font-size: 14px;
             margin-top: $small;
+        }
+
+        .togglesetting:last-child {
+            padding-bottom: 0;
         }
     }
 }
