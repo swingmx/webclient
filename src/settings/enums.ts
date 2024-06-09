@@ -11,5 +11,6 @@ export enum SettingType {
   quick_actions,
   profile,
   accounts,
+  pairing,
   about
 }

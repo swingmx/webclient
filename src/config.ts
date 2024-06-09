@@ -175,6 +175,9 @@ export const paths = {
             get deleteUser() {
                 return this.base + '/profile/delete'
             },
+            get pair(){
+                return this.base + '/pair'
+            }
         },
     },
     images: {
