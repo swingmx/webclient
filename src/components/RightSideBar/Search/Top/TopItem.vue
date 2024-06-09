@@ -63,7 +63,6 @@
 import { Routes } from "@/router";
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
 
 import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
 import useSearchStore from "@/stores/search";
@@ -78,7 +77,6 @@ import PlayBtn from "@/components/shared/PlayBtn.vue";
 import { playSources } from "@/enums";
 
 const search = useSearchStore();
-const route = useRoute();
 
 const { top_results } = storeToRefs(search);
 
@@ -95,7 +93,7 @@ const item = computed(() => {
 const context_menu_showing = ref(false);
 
 function showMenu(e: MouseEvent) {
-  showContext(e, item.value as Track, context_menu_showing, route);
+  showContext(e, item.value as Track, context_menu_showing);
 }
 </script>
 

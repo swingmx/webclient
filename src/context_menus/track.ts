@@ -1,5 +1,4 @@
-import { useRoute } from 'vue-router'
-
+import { router } from '@/router'
 import { Artist, Playlist, Track } from '@/interfaces'
 import { router as Router, Routes } from '@/router'
 
@@ -19,7 +18,6 @@ import {
 import usePlaylistStore from '@/stores/pages/playlist'
 import useQueueStore from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
-import { ref } from 'vue'
 import { getAddToPlaylistOptions, get_find_on_social } from './utils'
 
 /**
@@ -28,12 +26,11 @@ import { getAddToPlaylistOptions, get_find_on_social } from './utils'
  * @return {Array<Option>()} a list of context menu items.
  */
 
-export default async (
-    track: Track,
-    route: ReturnType<typeof useRoute>,
-    on_playlist = false
-): Promise<Option[]> => {
-    const playlists = ref([] as Playlist[])
+export default async (track: Track): Promise<Option[]> => {
+    const route = router.currentRoute.value
+    const on_playlist =
+        route.name === Routes.playlist &&
+        !Number.isNaN(parseInt(route.params.pid as string))
     const single_artist = track.artists.length === 1
     const single_album_artist = track.albumartists.length === 1
 

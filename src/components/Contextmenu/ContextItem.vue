@@ -52,7 +52,6 @@ import { computed, ref } from 'vue'
 import { contextChildrenShowMode } from '@/enums'
 import { ExpandIcon } from '@/icons'
 import { Option } from '@/interfaces'
-import { isSmall } from '@/stores/content-width'
 
 const props = defineProps<{
     option: Option
@@ -82,7 +81,6 @@ const hasChildren = computed(() => {
 let popperInstance: Instance | null = null
 
 async function handleMouseEnter() {
-    console.log(hasChildren.value)
     if (!hasChildren.value) return
 
     stillWaitingForChildren.value = true

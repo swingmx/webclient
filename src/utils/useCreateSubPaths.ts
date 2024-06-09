@@ -10,7 +10,6 @@ export default function createSubPaths(
   oldpath: string
 ): [string, subPath[]] {
   if (oldpath === undefined) oldpath = "";
-  console.log("newpath: ", newpath);
   if (newpath.endsWith("/")) {
     newpath = newpath.slice(0, -1);
   }

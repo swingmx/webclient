@@ -21,9 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router";
 import { onBeforeUnmount, ref, watch } from "vue";
-import { useRoute } from "vue-router";
 
 import { dropSources, favType } from "@/enums";
 import { showTrackContextMenu as showContext } from "@/helpers/contextMenuHandler";
@@ -41,7 +39,6 @@ import TrackTitle from "./SongItem/TrackTitle.vue";
 const context_menu_showing = ref(false);
 
 const queue = useQueueStore();
-const route = useRoute();
 
 const props = defineProps<{
   track: Track;
@@ -53,7 +50,7 @@ const props = defineProps<{
   source: dropSources;
 }>();
 
-const is_fav = ref(props.track.is_favorite);
+const is_fav = ref(props.track.is_favorite || false);
 
 const emit = defineEmits<{
   (e: "playThis"): void;
@@ -65,7 +62,7 @@ function emitUpdate() {
 }
 
 function showMenu(e: MouseEvent) {
-  showContext(e, props.track, context_menu_showing, route, route.name === Routes.playlist);
+  showContext(e, props.track, context_menu_showing);
 }
 
 function isCurrent() {

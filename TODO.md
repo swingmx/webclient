@@ -13,7 +13,6 @@
 - Fix: Add to favorite button on headers icon alignment
 - Add trailing slash to folder url accessed from the breadcrumb
 - ADD QR CODE SOMEWHERE ON THE WEB
-- Fix: Audio not being muted (when audio is muted by user) on queue repeat
 
 # DONE ✅
 - Remove welcome dialog
@@ -34,3 +33,5 @@
 - Fix: Tracklist item index slightly shifts up and down on hover/unhover
 - Settings dialog responsiveness
 - Fix: Breadcrumb align center (shifts when the the position of the highlighted folder is auto-scrolled to)
+- Fix: Audio not being muted (when audio is muted by user) on queue repeat
+- hide "remove from playlist" option on system playlists

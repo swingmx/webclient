@@ -45,7 +45,6 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from "vue";
-import { useRoute } from "vue-router";
 
 import useTracklist from "@/stores/queue/tracklist";
 
@@ -69,12 +68,11 @@ const props = defineProps<{
 
 const player = useTracklist();
 
-const route = useRoute();
 const context_on = ref(false);
 const is_fav = ref(props.track.is_favorite);
 
 function showMenu(e: MouseEvent) {
-  showContext(e, props.track, context_on, route);
+  showContext(e, props.track, context_on);
 }
 
 const emit = defineEmits<{

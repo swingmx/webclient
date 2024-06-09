@@ -32,11 +32,9 @@ export const showTrackContextMenu = (
   e: MouseEvent,
   track: Track,
   flag: Ref<boolean>,
-  route: ReturnType<typeof useRoute>,
-  on_playlist = false
 ) => {
   const menu = useContextStore();
-  const options = () => trackContextItems(track, route, on_playlist);
+  const options = () => trackContextItems(track);
 
   menu.showContextMenu(e, options, ContextSrc.Track);
 
