@@ -58,7 +58,6 @@ import UpdatePlaylist from "./modals/updatePlaylist.vue";
 const modal = useModalStore();
 const router = useRouter();
 
-modal.showSettingsModal()
 function setTitle(title: string) {
     modal.setTitle(title);
 }
