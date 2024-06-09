@@ -13,6 +13,7 @@ import useTracker from './tracker'
 import { paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
+import settings from './settings'
 
 export function getUrl(filepath: string, trackhash: string) {
     return `${paths.api.files}/${trackhash}?filepath=${encodeURIComponent(
@@ -252,7 +253,7 @@ export const usePlayer = defineStore('player', () => {
 
         const uri = getUrl(queue.next.filepath, queue.next.trackhash)
         nextAudioData.audio = new Audio(uri)
-        audio.muted = settings.mute
+        nextAudioData.audio.muted = settings.mute
         nextAudioData.filepath = queue.next.filepath
         nextAudioData.audio.oncanplay = handleNextAudioCanPlay
         nextAudioData.audio.load()

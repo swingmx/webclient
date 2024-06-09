@@ -28,8 +28,6 @@
 import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
 import { topnavitems } from "../LeftSidebar/navitems";
 
-import { defineEmits } from "vue";
-
 const emit = defineEmits(["close"]);
 
 function closeSidenav() {

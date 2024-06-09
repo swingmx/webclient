@@ -31,7 +31,7 @@
                 @blur.prevent="removeFocusedClass"
                 @focus.prevent="addFocusedClass"
             />
-            <div class="clear_input circular noSelect" :class="{ active: search.query.length > 0 }" @click="clearInput">
+            <div class="clear_input circular noSelect" :class="{ active: search.query.length > 0 }" @click.stop="clearInput">
                 <CancelSvg />
             </div>
         </div>

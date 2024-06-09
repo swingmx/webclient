@@ -12,6 +12,8 @@
 - Merge sidenav dimmer and modal dimmer
 - Fix: Add to favorite button on headers icon alignment
 - Add trailing slash to folder url accessed from the breadcrumb
+- ADD QR CODE SOMEWHERE ON THE WEB
+- Fix: Audio not being muted (when audio is muted by user) on queue repeat
 
 # DONE ✅
 - Remove welcome dialog
