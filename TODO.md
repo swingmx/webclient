@@ -12,7 +12,7 @@
 - Merge sidenav dimmer and modal dimmer
 - Fix: Add to favorite button on headers icon alignment
 - Add trailing slash to folder url accessed from the breadcrumb
-- ADD QR CODE SOMEWHERE ON THE WEB
+- Clip the browseable items on the homepage
 
 # DONE ✅
 - Remove welcome dialog
@@ -35,3 +35,5 @@
 - Fix: Breadcrumb align center (shifts when the the position of the highlighted folder is auto-scrolled to)
 - Fix: Audio not being muted (when audio is muted by user) on queue repeat
 - hide "remove from playlist" option on system playlists
+- ADD QR CODE SOMEWHERE ON THE WEB
+- Add a "Rescan folders" item to the "Browse Library" section
