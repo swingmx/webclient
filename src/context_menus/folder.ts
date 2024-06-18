@@ -41,10 +41,17 @@ export default async (path: string) => {
 
   const add_to_playlist = <Option>{
     label: "Add to Playlist",
-    children: () => getAddToPlaylistOptions(AddToPlaylistAction, {
-      path,
-      playlist_name: path.split("/").pop(),
-    }),
+    children: () =>
+      getAddToPlaylistOptions(AddToPlaylistAction, {
+        path,
+        playlist_name: (() => {
+          if (path.endsWith("/")) {
+            path = path.slice(0, -1);
+          }
+
+          return path.split("/").pop();
+        })(),
+      }),
     icon: icons.PlusIcon,
   };
 

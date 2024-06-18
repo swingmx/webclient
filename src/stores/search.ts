@@ -157,6 +157,8 @@ export default defineStore("search", () => {
   watch(
     () => debouncedQuery.value,
     (newQuery) => {
+      if (newQuery.trim() == "") return;
+
       if (!settings.use_sidebar && route.value.name !== Routes.search) {
         router.push({
           name: Routes.search,

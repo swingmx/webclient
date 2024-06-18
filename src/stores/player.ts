@@ -13,15 +13,14 @@ import useTracker from './tracker'
 import { paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
-import settings from './settings'
 
 export function getUrl(filepath: string, trackhash: string) {
-    return `${paths.api.files}/${trackhash}?filepath=${encodeURIComponent(
-        filepath
-    )}`
+    return `${paths.api.files}/${trackhash}?filepath=${encodeURIComponent(filepath)}`
 }
 
 let audio = new Audio()
+const buffering = ref(true)
+const maxSeekPercent = ref(0)
 
 export const usePlayer = defineStore('player', () => {
     const queue = useQueue()
@@ -76,8 +75,6 @@ export const usePlayer = defineStore('player', () => {
     let sourceTime = 0
     let lastTime = 0
 
-    const buffering = ref(false)
-
     function setVolume(new_value: number) {
         audio.volume = new_value
     }
@@ -96,59 +93,46 @@ export const usePlayer = defineStore('player', () => {
         if (err instanceof DOMException) {
             queue.playPause()
 
-            return toast.showNotification(
-                'Tap anywhere in the page and try again (autoplay blocked))',
-                NotifType.Error
-            )
+            return toast.showNotification('Tap anywhere in the page and try again (autoplay blocked))', NotifType.Error)
         }
 
-        showNotification(
-            "Can't play: " + queue.currenttrack.title,
-            NotifType.Error
-        )
+        showNotification("Can't load: " + queue.currenttrack.title, NotifType.Error)
 
-        if (queue.currentindex !== tracklist.tracklist.length - 1) {
-            if (!queue.playing) return
+        // if (queue.currentindex !== tracklist.tracklist.length - 1) {
+        //     if (!queue.playing) return
 
-            let onErrorPrevTrackHash: string = queue.currenttrackhash
+        //     let onErrorPrevTrackHash: string = queue.currenttrackhash
 
-            setTimeout(() => {
-                // if another track has been played, don't play next track
-                if (queue.currenttrackhash !== onErrorPrevTrackHash) {
-                    return
-                }
+        //     setTimeout(() => {
+        //         // if another track has been played, don't play next track
+        //         if (queue.currenttrackhash !== onErrorPrevTrackHash) {
+        //             return
+        //         }
 
-                queue.playNext()
-            }, 3000)
-            return
-        }
+        //         queue.playNext()
+        //     }, 3000)
+        //     return
+        // }
 
         // TODO: move this to a queue action
-        queue.setPlaying(false)
+        // queue.setPlaying(false)
     }
 
     const handlePlayErrors = (e: Event) => {
         if (e instanceof DOMException) {
             queue.playPause()
 
-            return toast.showNotification(
-                'Tap anywhere in the page and try again (autoplay blocked))',
-                NotifType.Error
-            )
+            return toast.showNotification('Tap anywhere in the page and try again (autoplay blocked))', NotifType.Error)
         }
 
-        toast.showNotification(
-            "Can't play: " + queue.currenttrack.title,
-            NotifType.Error
-        )
+        toast.showNotification("Can't load: " + queue.currenttrack.title, NotifType.Error)
     }
 
     const runActionsOnPlay = () => {
         if (
             !queue.manual &&
             !audio.src.includes('sm.radio.jingles') &&
-            audio.currentTime - currentAudioData.silence.starting_file / 1000 <=
-                4
+            audio.currentTime - currentAudioData.silence.starting_file / 1000 <= 4
         ) {
             crossFade({
                 audio,
@@ -158,19 +142,14 @@ export const usePlayer = defineStore('player', () => {
         }
 
         updateMediaNotif()
-        colors.setTheme1Color(
-            paths.images.thumb.small + queue.currenttrack.image
-        )
+        colors.setTheme1Color(paths.images.thumb.small + queue.currenttrack.image)
 
         if (router.currentRoute.value.name == Routes.Lyrics) {
             return lyrics.getLyrics()
         }
 
         if (!settings.use_lyrics_plugin) {
-            lyrics.checkExists(
-                queue.currenttrack.filepath,
-                queue.currenttrack.trackhash
-            )
+            lyrics.checkExists(queue.currenttrack.filepath, queue.currenttrack.trackhash)
         }
     }
 
@@ -187,7 +166,7 @@ export const usePlayer = defineStore('player', () => {
     const onAudioEnded = () => {
         const { submitData } = tracker
         submitData()
-        queue.autoPlayNext()
+        // queue.autoPlayNext()
     }
 
     const onAudioPlay = () => {
@@ -199,8 +178,7 @@ export const usePlayer = defineStore('player', () => {
     }
 
     const updateLyricsPosition = () => {
-        if (!lyrics.exists || router.currentRoute.value.name !== Routes.Lyrics)
-            return
+        if (!lyrics.exists || router.currentRoute.value.name !== Routes.Lyrics) return
 
         const millis = Math.round(audio.currentTime * 1000)
         const diff = lyrics.nextLineTime - millis
@@ -213,11 +191,7 @@ export const usePlayer = defineStore('player', () => {
 
         if (diff < 1200) {
             // set timer to next line
-            if (
-                lyrics.lyrics &&
-                !(lyrics.lyrics.length <= lyrics.currentLine + 1) &&
-                !lyrics.ticking
-            ) {
+            if (lyrics.lyrics && !(lyrics.lyrics.length <= lyrics.currentLine + 1) && !lyrics.ticking) {
                 lyrics.setNextLineTimer(diff)
             }
         }
@@ -226,9 +200,7 @@ export const usePlayer = defineStore('player', () => {
     const handleNextAudioCanPlay = async () => {
         if (!settings.use_silence_skip) {
             nextAudioData.silence.starting_file = 0
-            currentAudioData.silence.ending_file = Math.floor(
-                audio.duration * 1000
-            )
+            currentAudioData.silence.ending_file = Math.floor(audio.duration * 1000)
             nextAudioData.loaded = true
             return
         }
@@ -240,7 +212,7 @@ export const usePlayer = defineStore('player', () => {
             starting_file: queue.next.filepath,
         })
 
-        worker.onmessage = (e) => {
+        worker.onmessage = e => {
             const silence = e.data
             nextAudioData.silence.starting_file = silence.starting_file
             currentAudioData.silence.ending_file = silence.ending_file
@@ -303,32 +275,18 @@ export const usePlayer = defineStore('player', () => {
             loadNextTrack()
         }
 
-        if (
-            nextAudioData.loaded &&
-            !nextAudioData.ticking &&
-            currentAudioData.silence.ending_file
-        ) {
+        if (nextAudioData.loaded && !nextAudioData.ticking && currentAudioData.silence.ending_file) {
             const { crossfade_duration, use_crossfade } = settings
-            const diff =
-                currentAudioData.silence.ending_file -
-                Math.floor(audio.currentTime * 1000)
+            const diff = currentAudioData.silence.ending_file - Math.floor(audio.currentTime * 1000)
 
-            const is_jingle =
-                queue.currenttrack.filepath.includes('sm.radio.jingles')
-            const newdiff =
-                crossfade_duration > diff || is_jingle || !use_crossfade
-                    ? diff
-                    : diff - crossfade_duration
+            const is_jingle = queue.currenttrack.filepath.includes('sm.radio.jingles')
+            const newdiff = crossfade_duration > diff || is_jingle || !use_crossfade ? diff : diff - crossfade_duration
 
             if (diff > 0) {
                 nextAudioData.ticking = true
                 movingNextTimer = setTimeout(() => {
                     nextAudioData.ticking = false
-                    if (
-                        !queue.playing &&
-                        nextAudioData.filepath == queue.next.filepath
-                    )
-                        return
+                    if (!queue.playing && nextAudioData.filepath == queue.next.filepath) return
                     moveLoadedForward()
                 }, newdiff)
             }
@@ -345,20 +303,17 @@ export const usePlayer = defineStore('player', () => {
     }
 
     const handleBufferingStatus = () => {
-        const difference = Math.abs(sourceTime - lastTime)
-
-        if (difference > 600 && queue.playing) {
+        try {
+            const buffer = audio.seekable.end(0) - audio.currentTime
+            buffering.value = buffer < 1
+            maxSeekPercent.value = Math.max(maxSeekPercent.value, (audio.buffered.end(0) / audio.duration) * 100)
+        } catch (error) {
             buffering.value = true
-            return
         }
-
-        buffering.value = false
     }
 
     const updateBufferWatcherTime = () => {
         if (!queue.playing) return
-        const date = new Date()
-        lastTime = date.getTime()
         handleBufferingStatus()
     }
 
@@ -370,18 +325,13 @@ export const usePlayer = defineStore('player', () => {
         }
 
         updateBufferWatcherTime()
-    }, 100)
+    }, 1000)
 
     function playCurrentTrack() {
         tracker.changeKey()
         clearEventHandlers(audio)
 
-        if (
-            !queue.manual &&
-            queue.playing &&
-            audio.src !== '' &&
-            !audio.src.includes('sm.radio.jingles')
-        ) {
+        if (!queue.manual && queue.playing && audio.src !== '' && !audio.src.includes('sm.radio.jingles')) {
             const oldAudio = audio
             crossFade({
                 audio: oldAudio,
@@ -394,9 +344,7 @@ export const usePlayer = defineStore('player', () => {
         }
 
         const { currenttrack: track } = queue
-        const uri = `${paths.api.files}/${
-            track.trackhash
-        }?filepath=${encodeURIComponent(track.filepath as string)}`
+        const uri = `${paths.api.files}/${track.trackhash}?filepath=${encodeURIComponent(track.filepath as string)}`
 
         audio.src = uri
 
@@ -428,7 +376,6 @@ export const usePlayer = defineStore('player', () => {
 
     return {
         audio,
-        buffering,
         setMute,
         setVolume,
         playCurrent: playCurrentTrack,
@@ -437,4 +384,4 @@ export const usePlayer = defineStore('player', () => {
     }
 })
 
-export { audio }
+export { audio, buffering, maxSeekPercent }

@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { usePlayer } from "@/stores/player";
+import { buffering } from "@/stores/player";
 import useQStore from "@/stores/queue";
 
 import { default as NextSvg, default as PrevSvg } from "@/assets/icons/next.svg";
@@ -24,7 +24,6 @@ import PlaySvg from "@/assets/icons/play.svg";
 import Spinner from "@/components/shared/Spinner.vue";
 
 const queue = useQStore();
-const { buffering } = usePlayer();
 </script>
 
 <style lang="scss">

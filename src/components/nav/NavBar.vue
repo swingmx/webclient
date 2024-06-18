@@ -35,32 +35,32 @@
 </template>
 
 <script setup lang="ts">
-import { Routes } from "@/router";
-import { computed, ref } from "vue";
+import { Routes } from '@/router'
+import { computed, ref } from 'vue'
 
-import useAuth from "@/stores/auth";
-import { content_width } from "@/stores/content-width";
-import useSettings from "@/stores/settings";
-import { xl } from "./../../composables/useBreakpoints";
+import useAuth from '@/stores/auth'
+import { content_width } from '@/stores/content-width'
+import useSettings from '@/stores/settings'
+import { xl } from './../../composables/useBreakpoints'
 
-import LogoSvg from "@/assets/icons/logos/logo-fill.light.svg";
-import SearchInput from "../RightSideBar/SearchInput.vue";
-import Avatar from "../shared/Avatar.vue";
-import NavButtons from "./NavButtons.vue";
-import NavLinks from "./NavLinks.vue";
-import NavSidenav from "./NavSidenav.vue";
-import NavTitles from "./NavTitles.vue";
-import ProfileDropdown from "./ProfileDropdown.vue";
-import Folder from "./Titles/Folder.vue";
+import LogoSvg from '@/assets/icons/logos/logo-fill.light.svg'
+import SearchInput from '../RightSideBar/SearchInput.vue'
+import Avatar from '../shared/Avatar.vue'
+import NavButtons from './NavButtons.vue'
+import NavLinks from './NavLinks.vue'
+import NavSidenav from './NavSidenav.vue'
+import NavTitles from './NavTitles.vue'
+import ProfileDropdown from './ProfileDropdown.vue'
+import Folder from './Titles/Folder.vue'
 
-const auth = useAuth();
-const settings = useSettings();
-const isSmall = computed(() => content_width.value < 800);
+const auth = useAuth()
+const settings = useSettings()
+const isSmall = computed(() => content_width.value < 800)
 
-const sidenavActive = ref(false);
+const sidenavActive = ref(false)
 
 function toggleSidenav() {
-    sidenavActive.value = !sidenavActive.value;
+    sidenavActive.value = !sidenavActive.value
 }
 </script>
 
@@ -133,7 +133,7 @@ function toggleSidenav() {
                 height: 36px;
 
                 &::after {
-                    content: "";
+                    content: '';
                     height: 100%;
                     width: 100%;
                     position: absolute;
