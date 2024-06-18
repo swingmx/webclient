@@ -243,10 +243,12 @@ export const usePlayer = defineStore('player', () => {
             then_destroy: true,
         })
 
+        // INFO: Set stuff
         audio = nextAudioData.audio
         audio.currentTime = nextAudioData.silence.starting_file / 1000
         currentAudioData.silence = nextAudioData.silence
         currentAudioData.filepath = nextAudioData.filepath
+        maxSeekPercent.value = 0
 
         clearNextAudioData()
         queue.moveForward()
@@ -330,6 +332,7 @@ export const usePlayer = defineStore('player', () => {
     function playCurrentTrack() {
         tracker.changeKey()
         clearEventHandlers(audio)
+        maxSeekPercent.value = 0
 
         if (!queue.manual && queue.playing && audio.src !== '' && !audio.src.includes('sm.radio.jingles')) {
             const oldAudio = audio
