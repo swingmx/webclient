@@ -72,8 +72,8 @@ export const usePlayer = defineStore('player', () => {
         clearMovingNextTimeout()
     }
 
-    let sourceTime = 0
-    let lastTime = 0
+    // let sourceTime = 0
+    // let lastTime = 0
 
     function setVolume(new_value: number) {
         audio.volume = new_value
@@ -171,8 +171,8 @@ export const usePlayer = defineStore('player', () => {
 
     const onAudioPlay = () => {
         // reset sourceTime to prevent false positives
-        const date = new Date()
-        sourceTime = date.getTime()
+        // const date = new Date()
+        // sourceTime = date.getTime()
 
         runActionsOnPlay()
     }
@@ -300,15 +300,15 @@ export const usePlayer = defineStore('player', () => {
         initLoadingNextTrackAudio()
         queue.setCurrentDuration(audio.currentTime)
 
-        const date = new Date()
-        sourceTime = date.getTime()
+        // const date = new Date()
+        // sourceTime = date.getTime()
     }
 
     const handleBufferingStatus = () => {
         try {
-            const buffer = audio.seekable.end(0) - audio.currentTime
+            const buffer = audio.buffered.end(audio.buffered.length - 1) - audio.currentTime
             buffering.value = buffer < 1
-            maxSeekPercent.value = Math.max(maxSeekPercent.value, (audio.buffered.end(0) / audio.duration) * 100)
+            maxSeekPercent.value = Math.max(maxSeekPercent.value, (audio.buffered.end(audio.buffered.length - 1) / audio.duration) * 100)
         } catch (error) {
             buffering.value = true
         }

@@ -10,6 +10,7 @@
             background: `#3a3a3c linear-gradient(90deg, white ${currentPercent}%, #48484a ${currentPercent}%, #48484a ${maxSeekPercent}%, #3a3a3c ${maxSeekPercent}%)`,
         }"
         @change="seek"
+        @click="seek"
     />
 </template>
 
