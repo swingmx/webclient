@@ -15,7 +15,6 @@ import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
 
 export function getUrl(filepath: string, trackhash: string, use_legacy: boolean) {
-    console.log(use_legacy)
     return `${paths.api.files}/${trackhash + (use_legacy ? '/legacy' : '')}?filepath=${encodeURIComponent(filepath)}`
 }
 
@@ -79,6 +78,7 @@ export const usePlayer = defineStore('player', () => {
     function setVolume(new_value: number) {
         audio.volume = new_value
     }
+
 
     function setMute(new_value: boolean) {
         audio.muted = new_value
