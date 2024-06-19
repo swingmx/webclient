@@ -16,7 +16,7 @@ import { crossFade } from '@/utils/audio/crossFade'
 
 export function getUrl(filepath: string, trackhash: string, use_legacy: boolean) {
     console.log(use_legacy)
-    return `${paths.api.files}/${trackhash + (use_legacy ? '/classic' : '')}?filepath=${encodeURIComponent(filepath)}`
+    return `${paths.api.files}/${trackhash + (use_legacy ? '/legacy' : '')}?filepath=${encodeURIComponent(filepath)}`
 }
 
 let audio = new Audio()
