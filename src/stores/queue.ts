@@ -88,7 +88,7 @@ export default defineStore('Queue', {
 
             const resetQueue = () => {
                 this.currentindex = 0
-                audio.src = getUrl(this.next.filepath, this.next.trackhash)
+                audio.src = getUrl(this.next.filepath, this.next.trackhash, settings.use_legacy_streaming_endpoint)
                 audio.pause()
                 this.playing = false
 
@@ -173,13 +173,11 @@ export default defineStore('Queue', {
             const { tracklist } = useTracklist()
             const current = tracklist[this.currentindex]
 
-            isFavorite(current?.trackhash || '', favType.track).then(
-                (is_fav) => {
-                    if (current) {
-                        current.is_favorite = is_fav
-                    }
+            isFavorite(current?.trackhash || '', favType.track).then(is_fav => {
+                if (current) {
+                    current.is_favorite = is_fav
                 }
-            )
+            })
 
             return current
         },
@@ -194,9 +192,7 @@ export default defineStore('Queue', {
                 return this.currentindex
             }
 
-            return this.currentindex === 0
-                ? tracklist.length - 1
-                : this.currentindex - 1
+            return this.currentindex === 0 ? tracklist.length - 1 : this.currentindex - 1
         },
         nextindex(): number {
             const { tracklist } = useTracklist()
@@ -206,13 +202,11 @@ export default defineStore('Queue', {
                 return this.currentindex
             }
 
-            return this.currentindex === tracklist.length - 1
-                ? 0
-                : this.currentindex + 1
+            return this.currentindex === tracklist.length - 1 ? 0 : this.currentindex + 1
         },
     },
     persist: {
-        afterRestore: (context) => {
+        afterRestore: context => {
             let store = context.store
             store.duration.current = 0
             store.playing = false

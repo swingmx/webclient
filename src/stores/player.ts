@@ -14,8 +14,9 @@ import { paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
 
-export function getUrl(filepath: string, trackhash: string) {
-    return `${paths.api.files}/${trackhash}?filepath=${encodeURIComponent(filepath)}`
+export function getUrl(filepath: string, trackhash: string, use_legacy: boolean) {
+    console.log(use_legacy)
+    return `${paths.api.files}/${trackhash + (use_legacy ? '/classic' : '')}?filepath=${encodeURIComponent(filepath)}`
 }
 
 let audio = new Audio()
@@ -223,7 +224,7 @@ export const usePlayer = defineStore('player', () => {
     function loadNextTrack() {
         if (nextAudioData.filepath === queue.next.filepath) return
 
-        const uri = getUrl(queue.next.filepath, queue.next.trackhash)
+        const uri = getUrl(queue.next.filepath, queue.next.trackhash, settings.use_legacy_streaming_endpoint)
         nextAudioData.audio = new Audio(uri)
         nextAudioData.audio.muted = settings.mute
         nextAudioData.filepath = queue.next.filepath
@@ -306,9 +307,10 @@ export const usePlayer = defineStore('player', () => {
 
     const handleBufferingStatus = () => {
         try {
-            const buffer = audio.buffered.end(audio.buffered.length - 1) - audio.currentTime
+            const latestBufferedTime = audio.buffered.end(audio.buffered.length - 1)
+            const buffer = latestBufferedTime - audio.currentTime
             buffering.value = buffer < 1
-            maxSeekPercent.value = Math.max(maxSeekPercent.value, (audio.buffered.end(audio.buffered.length - 1) / audio.duration) * 100)
+            maxSeekPercent.value = Math.max(maxSeekPercent.value, (latestBufferedTime / audio.duration) * 100)
         } catch (error) {
             buffering.value = true
         }
@@ -347,7 +349,8 @@ export const usePlayer = defineStore('player', () => {
         }
 
         const { currenttrack: track } = queue
-        const uri = `${paths.api.files}/${track.trackhash}?filepath=${encodeURIComponent(track.filepath as string)}`
+        // const uri = `${paths.api.files}/${track.trackhash}?filepath=${encodeURIComponent(track.filepath as string)}`
+        const uri = getUrl(track.filepath, track.trackhash, settings.use_legacy_streaming_endpoint)
 
         audio.src = uri
 

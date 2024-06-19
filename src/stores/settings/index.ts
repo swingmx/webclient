@@ -45,6 +45,7 @@ export default defineStore('settings', {
         use_silence_skip: true,
         use_crossfade: false,
         crossfade_duration: 2000, // milliseconds
+        use_legacy_streaming_endpoint: false,
 
         // layout
         layout: '',
@@ -61,25 +62,25 @@ export default defineStore('settings', {
             this.separators = settings.artist_separators
             this.show_albums_as_singles = settings.show_albums_as_singles
 
-      this.use_lyrics_plugin = settings.plugins.find((p) => p.name === "lyrics_finder")?.active;
+            this.use_lyrics_plugin = settings.plugins.find(p => p.name === 'lyrics_finder')?.active
 
-      if (this.use_lyrics_plugin) {
-        this.lyrics_plugin_settings = settings.plugins.find((p) => p.name === "lyrics_finder")?.settings;
-      }
-    },
-    setArtistSeparators(separators: string[]) {
-      this.separators = separators;
-    },
-    // now playing 👇
-    toggleUseNPImg() {
-      this.use_np_img = !this.use_np_img;
-    },
-    // sidebar 👇
-    toggleDisableSidebar() {
-      if (this.is_alt_layout) {
-        this.use_sidebar = false;
-        return;
-      }
+            if (this.use_lyrics_plugin) {
+                this.lyrics_plugin_settings = settings.plugins.find(p => p.name === 'lyrics_finder')?.settings
+            }
+        },
+        setArtistSeparators(separators: string[]) {
+            this.separators = separators
+        },
+        // now playing 👇
+        toggleUseNPImg() {
+            this.use_np_img = !this.use_np_img
+        },
+        // sidebar 👇
+        toggleDisableSidebar() {
+            if (this.is_alt_layout) {
+                this.use_sidebar = false
+                return
+            }
 
             this.use_sidebar = !this.use_sidebar
         },
@@ -165,16 +166,12 @@ export default defineStore('settings', {
             this.useCircularArtistImg = !this.useCircularArtistImg
         },
         toggleLyricsPlugin() {
-            pluginSetActive('lyrics_finder', !this.use_lyrics_plugin).then(
-                () => {
-                    this.use_lyrics_plugin = !this.use_lyrics_plugin
-                }
-            )
+            pluginSetActive('lyrics_finder', !this.use_lyrics_plugin).then(() => {
+                this.use_lyrics_plugin = !this.use_lyrics_plugin
+            })
         },
         toggleLyricsAutoDownload() {
-            const state = this.lyrics_plugin_settings.auto_download
-                ? false
-                : true
+            const state = this.lyrics_plugin_settings.auto_download ? false : true
 
             updatePluginSettings('lyrics_finder', {
                 ...this.lyrics_plugin_settings,
@@ -184,9 +181,7 @@ export default defineStore('settings', {
             })
         },
         toggleLyricsOverideUnsynced() {
-            const state = this.lyrics_plugin_settings.overide_unsynced
-                ? false
-                : true
+            const state = this.lyrics_plugin_settings.overide_unsynced ? false : true
 
             updatePluginSettings('lyrics_finder', {
                 ...this.lyrics_plugin_settings,
@@ -205,6 +200,12 @@ export default defineStore('settings', {
         setCrossfadeDuration(duration: number) {
             this.crossfade_duration = duration * 1000
         },
+
+        toggleUseLegacyStreamingEndpoint() {
+            this.use_legacy_streaming_endpoint = !this.use_legacy_streaming_endpoint
+        },
+
+        // layout 👇
         toggleLayout() {
             if (this.layout == '') {
                 this.layout = 'alternate'
@@ -213,31 +214,31 @@ export default defineStore('settings', {
                 return
             }
 
-      this.layout = "";
-      this.use_np_img = true;
+            this.layout = ''
+            this.use_np_img = true
+        },
     },
-  },
-  getters: {
-    can_extend_width(): boolean {
-      return this.is_default_layout && xxl.value;
+    getters: {
+        can_extend_width(): boolean {
+            return this.is_default_layout && xxl.value
+        },
+        no_repeat(): boolean {
+            return !this.repeat_all && !this.repeat_one
+        },
+        crossfade_duration_seconds(): number {
+            return this.crossfade_duration / 1000
+        },
+        crossfade_on(): boolean {
+            return this.use_crossfade && this.crossfade_duration > 0
+        },
+        is_default_layout: state => state.layout === '',
+        is_alt_layout: state => state.layout === 'alternate' && content_width.value > 900,
     },
-    no_repeat(): boolean {
-      return !this.repeat_all && !this.repeat_one;
-    },
-    crossfade_duration_seconds(): number {
-      return this.crossfade_duration / 1000;
-    },
-    crossfade_on(): boolean {
-      return this.use_crossfade && this.crossfade_duration > 0;
-    },
-    is_default_layout: (state) => state.layout === "",
-    is_alt_layout: (state) => state.layout === "alternate" && content_width.value > 900,
-  },
-  persist: {
-    afterRestore: (context) => {
-      let store = context.store;
-      store.root_dirs = [];
-      store.root_dir_set = false;
+    persist: {
+        afterRestore: context => {
+            let store = context.store
+            store.root_dirs = []
+            store.root_dir_set = false
 
             // reset plugin settings
             store.use_lyrics_plugin = false
