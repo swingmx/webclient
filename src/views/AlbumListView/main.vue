@@ -36,7 +36,7 @@ import { useAlbumList, useArtistList } from "@/stores/pages/itemlist";
 import Fetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import CardRow from "@/components/shared/CardRow.vue";
 import Header from "./Header.vue";
-import SortBanner from "./SortBanner.vue";
+import SortBanner from "@/components/CardListView/SortBanner.vue";
 
 const route = useRoute();
 const store = route.name == Routes.AlbumList ? useAlbumList() : useArtistList();
