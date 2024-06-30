@@ -55,7 +55,7 @@ const albumitems = [
   { key: "title", displayName: "Title" },
   { key: "albumartists", displayName: "Artist" },
   { key: "date", displayName: "Year released" },
-  { key: "count", displayName: "No. of tracks" },
+  { key: "trackcount", displayName: "No. of tracks" },
 ];
 
 const artistitems = [

@@ -5,8 +5,8 @@
       :state="artist.info.is_favorite"
       :color="
         !useCircularImage
-          ? artist.info.colors[0]
-            ? artist.info.colors[0]
+          ? artist.info.color
+            ? artist.info.color
             : ''
           : ''
       "
@@ -26,8 +26,8 @@
 import { ref } from "vue";
 
 import { favType, playSources } from "@/enums";
-import favoriteHandler from "@/helpers/favoriteHandler";
 import { showArtistContextMenu } from "@/helpers/contextMenuHandler";
+import favoriteHandler from "@/helpers/favoriteHandler";
 import useArtistPageStore from "@/stores/pages/artist";
 
 import MoreSvg from "@/assets/icons/more.svg";

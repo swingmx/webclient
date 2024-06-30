@@ -11,13 +11,13 @@
       </div>
       <div
         v-for="genre in genres"
-        :key="genre"
+        :key="genre.genrehash"
         class="genre-pill rounded pad-sm"
         :style="{
           backgroundColor: color,
         }"
       >
-        {{ genre }}
+        {{ genre.name }}
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@ const props = defineProps<{
 }>();
 
 const genres = computed(() => {
-  return props.source === "album" ? album.info.genres : store.genres;
+  return props.source === "album" ? album.info.genres : store.info.genres;
 });
 
 const color = computed(() => {

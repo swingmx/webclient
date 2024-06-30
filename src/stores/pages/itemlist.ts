@@ -1,117 +1,119 @@
-import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
 
-import { paths } from "@/config";
-import { Album } from "@/interfaces";
-import useAxios from "@/requests/useAxios";
-import { Routes, router } from "@/router";
+import { paths } from '@/config'
+import { Album } from '@/interfaces'
+import useAxios from '@/requests/useAxios'
+import { Routes, router } from '@/router'
 
 const state = () => {
-  const total = ref(0);
+    const total = ref(0)
 
-  const items = ref(<Album[]>[]);
+    const items = ref(<Album[]>[])
 
-  const sortby = ref("created_date");
+    const sortby = ref('created_date')
 
-  const reverse = ref(true);
+    const reverse = ref(true)
 
-  const reverse_string = computed(() => {
-    return reverse.value ? "1" : "";
-  });
+    const reverse_string = computed(() => {
+        return reverse.value ? '1' : ''
+    })
 
-  let latestIndex = 0;
-  const canFetch = ref(true);
-  const pageSize = 50;
+    let latestIndex = 0
+    const canFetch = ref(true)
+    const pageSize = 50
 
-  function restart() {
-    items.value = [];
-    latestIndex = 0;
-    return getAlbums(latestIndex);
-  }
-
-  function setSort(newval: string) {
-    if (newval === sortby.value) {
-      reverse.value = !reverse.value;
-      return;
+    function restart() {
+        items.value = []
+        latestIndex = 0
+        return getAlbums(latestIndex)
     }
 
-    sortby.value = newval;
-    reverse.value = true;
-  }
+    function setSort(newval: string) {
+        if (newval === sortby.value) {
+            reverse.value = !reverse.value
+            return
+        }
 
-  function setReverse(reverse_new: boolean) {
-    reverse.value = reverse_new;
-  }
+        sortby.value = newval
+        reverse.value = true
+    }
 
-  async function getAlbums(start: number) {
-    if (!canFetch.value) return;
+    function setReverse(reverse_new: boolean) {
+        reverse.value = reverse_new
+    }
 
-    canFetch.value = false;
+    async function getAlbums(start: number) {
+        if (!canFetch.value) return
 
-    const res = await useAxios({
-      url:
-        (router.currentRoute.value.name == Routes.AlbumList
-          ? paths.api.getall.albums
-          : paths.api.getall.artists) +
-        `?start=${start}&limit=${pageSize}&sortby=${sortby.value}&reverse=${reverse_string.value}`,
-      method: "GET",
-    });
+        canFetch.value = false
 
-    const { data } = res;
-    total.value = data.total;
+        const res = await useAxios({
+            url:
+                (router.currentRoute.value.name == Routes.AlbumList
+                    ? paths.api.getall.albums
+                    : paths.api.getall.artists) +
+                `?start=${start}&limit=${pageSize}&sortby=${sortby.value}&reverse=${reverse_string.value}`,
+            method: 'GET',
+        })
 
-    items.value.push(...data.items);
-    latestIndex += pageSize;
-    canFetch.value = true;
-  }
+        const { data } = res
+        if (!total.value) {
+            total.value = data.total
+        }
 
-  function getMoreAlbums() {
-    return getAlbums(latestIndex);
-  }
+        items.value.push(...data.items)
+        latestIndex += pageSize
+        canFetch.value = true
+    }
 
-  function clearStore(routeName: string) {
-    setTimeout(() => {
-      if (router.currentRoute.value.name == routeName) {
-        return;
-      }
+    function getMoreAlbums() {
+        return getAlbums(latestIndex)
+    }
 
-      items.value = [];
-      total.value = 0;
-      latestIndex = 0;
-      canFetch.value = true;
-    }, 5000);
-  }
+    function clearStore(routeName: string) {
+        setTimeout(() => {
+            if (router.currentRoute.value.name == routeName) {
+                return
+            }
 
-  return {
-    total,
-    items,
-    sortby,
-    reverse,
-    canFetch,
-    restart,
-    setSort,
-    setReverse,
-    getAlbums,
-    getMoreAlbums,
-    clearStore,
-  };
-};
+            items.value = []
+            total.value = 0
+            latestIndex = 0
+            canFetch.value = true
+        }, 5000)
+    }
+
+    return {
+        total,
+        items,
+        sortby,
+        reverse,
+        canFetch,
+        restart,
+        setSort,
+        setReverse,
+        getAlbums,
+        getMoreAlbums,
+        clearStore,
+    }
+}
 
 const afterRestore = (context: any) => {
-  context.store.$state.items = [];
-  context.store.$state.total = 0;
-  context.store.$state.latestIndex = 0;
-  context.store.$state.canFetch = true;
-};
+    context.store.$state.items = []
+    context.store.$state.total = 0
+    context.store.$state.latestIndex = 0
+    context.store.$state.canFetch = true
+}
 
-export const useAlbumList = defineStore("albumlistpage", state, {
-  persist: {
-    afterRestore: afterRestore,
-  },
-});
+export const useAlbumList = defineStore('albumlistpage', state, {
+    persist: {
+        afterRestore: afterRestore,
+    },
+})
 
-export const useArtistList = defineStore("artistlistpage", state, {
-  persist: {
-    afterRestore: afterRestore,
-  },
-});
+export const useArtistList = defineStore('artistlistpage', state, {
+    persist: {
+        afterRestore: afterRestore,
+    },
+})

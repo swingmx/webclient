@@ -48,11 +48,23 @@ export default async (args: FetchProps) => {
     } catch (error: any) {
         stopLoading()
 
+        // was unauthorized
         if (error.response?.status === 401) {
             useModal().showLoginModal()
         }
 
-        if (error.response?.status === 422) {
+        // server config folder nuked which can
+        // can cause a signature mismatch error
+        // console.log(error.response.data.msg == "Signature verification failed")
+        let isSignatureError = false
+
+        try {
+            isSignatureError = error.response.data.msg == 'Signature verification failed'
+        } catch (error) {
+            console.log('Error:', error)
+        }
+
+        if (error.response?.status === 422 && isSignatureError) {
             await logoutUser()
             useModal().showLoginModal()
         }

@@ -118,7 +118,7 @@ function getSongItems() {
 }
 
 function getArtistAlbumComponents(): ScrollerItem[] {
-  return album.albumArtists.map((ar) => {
+  return album.artistAlbums.map((ar) => {
     const artist = album.info.albumartists.find(
       (a) => a.artisthash === ar.artisthash
     );
