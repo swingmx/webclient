@@ -59,16 +59,12 @@ export interface Album {
     image: string
     artistimg: string
     albumhash: string
+    type?: string
 
     color?: string
     copyright?: string
     help_text?: string
     time?: string
-    is_live: boolean
-    is_compilation: boolean
-    is_soundtrack: boolean
-    is_single: boolean
-    is_EP: boolean
     is_favorite: boolean
     genres: Genre[]
     versions: string[]

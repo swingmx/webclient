@@ -15,6 +15,7 @@
 - Clip the browseable items on the homepage
 - Fix: The responsiveness glitch between 900px - 964px 😅
 - Fix: Queue repeat
+- Make All Albums/Artists view sort banner sticky
 
 # DONE ✅
 - Remove welcome dialog

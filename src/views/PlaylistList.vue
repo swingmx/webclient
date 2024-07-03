@@ -26,8 +26,7 @@
       :playlists="playlists"
       :title="query ? 'Search Results' : `${pinnedPlaylists.length ? 'Other' : 'All'} Playlists`"
     />
-
-    <NoItems :flag="!playlists.length" :icon="PlaylistSvg" :title="'No playlists found'" :description="description" />
+    <NoItems :flag="!(playlists.length + pinnedPlaylists.length)" :icon="PlaylistSvg" :title="'No playlists found'" :description="description" />
   </div>
 </template>
 
