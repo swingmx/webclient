@@ -98,16 +98,16 @@ interface Plugin {
 }
 
 export interface DBSettings {
-  root_dirs: string[];
-  exclude_dirs: string[];
-  artist_separators: string[];
-  extract_feat: boolean;
-  remove_prod: boolean;
-  clean_album_title: boolean;
-  show_album_version: boolean;
-  remove_remaster: boolean;
-  merge_albums: boolean;
-  show_albums_as_singles: boolean;
+  rootDirs: string[];
+  excludeDirs: string[];
+  artistSeparators: string[];
+  extractFeaturedArtists: boolean;
+  removeProdBy: boolean;
+  cleanAlbumTitle: boolean;
+  removeRemasterInfo: boolean;
+  mergeAlbums: boolean;
+  showAlbumsAsSingles: boolean;
+  enablePeriodicScans: boolean
   plugins: Plugin[];
   version: string;
 }

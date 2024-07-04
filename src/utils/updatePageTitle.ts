@@ -1,9 +1,16 @@
-export default (title: string) => {
-  const base = "Swing Music";
+import useSettings from '@/stores/settings'
 
-  if (title) {
-    document.title = `${title} | ${base}`;
-  } else {
-    document.title = base;
-  }
-};
+export default (title: string, isNowPlayingInfo: boolean = false) => {
+    const settings = useSettings()
+    if (settings.nowPlayingTrackOnTabTitle && !isNowPlayingInfo) {
+        return
+    }
+
+    const base = 'Swing Music'
+
+    if (title) {
+        document.title = `${title} | ${base}`
+    } else {
+        document.title = base
+    }
+}

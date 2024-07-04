@@ -176,7 +176,7 @@ export const paths = {
                 return this.base + '/profile/delete'
             },
             get pair(){
-                return this.base + '/pair'
+                return this.base + '/getpaircode'
             }
         },
     },

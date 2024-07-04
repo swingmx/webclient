@@ -13,6 +13,7 @@ import useTracker from './tracker'
 import { paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
+import updatePageTitle from '@/utils/updatePageTitle'
 
 export function getUrl(filepath: string, trackhash: string, use_legacy: boolean) {
     return `${paths.api.files}/${trackhash + (use_legacy ? '/legacy' : '')}?filepath=${encodeURIComponent(filepath)}`
@@ -79,7 +80,6 @@ export const usePlayer = defineStore('player', () => {
         audio.volume = new_value
     }
 
-
     function setMute(new_value: boolean) {
         audio.muted = new_value
     }
@@ -143,6 +143,7 @@ export const usePlayer = defineStore('player', () => {
         }
 
         updateMediaNotif()
+        updatePageTitle(`${queue.currenttrack.title} - ${queue.currenttrack.artists[0].name}`, true)
         colors.setTheme1Color(paths.images.thumb.small + queue.currenttrack.image)
 
         if (router.currentRoute.value.name == Routes.Lyrics) {

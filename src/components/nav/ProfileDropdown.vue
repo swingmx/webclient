@@ -2,7 +2,7 @@
   <div class="profiledrop rounded-sm pad-sm shadow-lg">
     <div class="info item">
       <div class="username ellip2">
-        Hi {{ auth.user.firstname || auth.user.username }}
+        Hi {{ auth.user.username }}
       </div>
     </div>
     <div class="separator"></div>

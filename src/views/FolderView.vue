@@ -65,8 +65,6 @@ const folder = useFolder();
 const settings = useSettings();
 const tracklist = useTracklist();
 
-const subPaths = ref<subPath[]>([]);
-
 const is_alt_layout = computed(() => settings.is_alt_layout || !xl);
 
 

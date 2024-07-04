@@ -6,6 +6,7 @@ import { pluginSetActive, updatePluginSettings } from '@/requests/plugins'
 
 import { usePlayer } from '@/stores/player'
 import { content_width } from '../content-width'
+import { updateConfig } from '@/requests/settings'
 
 export default defineStore('settings', {
     state: () => ({
@@ -19,6 +20,10 @@ export default defineStore('settings', {
         repeat_one: false,
         root_dir_set: false,
         root_dirs: <string[]>[],
+
+        enablePeriodicScans: false,
+        periodicInterval: 0,
+
         folder_list_mode: false,
         volume: 1.0,
         mute: false,
@@ -33,6 +38,7 @@ export default defineStore('settings', {
 
         // client
         useCircularArtistImg: true,
+        nowPlayingTrackOnTabTitle: false,
 
         // plugins
         use_lyrics_plugin: <boolean | undefined>false,
@@ -53,14 +59,16 @@ export default defineStore('settings', {
     actions: {
         mapDbSettings(settings: DBSettings) {
             this.version = settings.version
-            this.root_dirs = settings.root_dirs
-            this.feat = settings.extract_feat
-            this.prodby = settings.remove_prod
-            this.clean_titles = settings.clean_album_title
-            this.hide_remaster = settings.remove_remaster
-            this.merge_albums = settings.merge_albums
-            this.separators = settings.artist_separators
-            this.show_albums_as_singles = settings.show_albums_as_singles
+            this.root_dirs = settings.rootDirs
+            this.feat = settings.extractFeaturedArtists
+            this.prodby = settings.removeProdBy
+            this.clean_titles = settings.cleanAlbumTitle
+            this.hide_remaster = settings.removeRemasterInfo
+            this.merge_albums = settings.mergeAlbums
+            this.separators = settings.artistSeparators
+            this.show_albums_as_singles = settings.showAlbumsAsSingles
+
+            this.enablePeriodicScans = settings.enablePeriodicScans
 
             this.use_lyrics_plugin = settings.plugins.find(p => p.name === 'lyrics_finder')?.active
 
@@ -216,6 +224,23 @@ export default defineStore('settings', {
 
             this.layout = ''
             this.use_np_img = true
+        },
+
+        toggleNowPlayingTrackOnTabTitle() {
+            this.nowPlayingTrackOnTabTitle = !this.nowPlayingTrackOnTabTitle
+        },
+
+        async updatePeriodicInterval(interval: number) {
+            const oldValue = this.periodicInterval
+            this.periodicInterval = interval
+            const res = await updateConfig('periodicInterval', interval)
+
+            if (res.status !== 200) {
+                this.periodicInterval = oldValue
+                return false
+            }
+
+            return true
         },
     },
     getters: {

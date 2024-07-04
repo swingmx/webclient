@@ -1,12 +1,12 @@
 <template>
     <div class="profilesettings">
-        <div class="avatar">
+        <div class="profileavatar">
             <Avatar :name="username || auth.user.username" />
             <div class="name">
                 {{
                     adding_user
                         ? username
-                        : `Hi ${auth.user.firstname || auth.user.username}`
+                        : `Hi ${auth.user.username}`
                 }}
             </div>
             <div
@@ -66,12 +66,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
-import useAuth from '@/stores/auth'
 import Avatar from '@/components/shared/Avatar.vue'
 import Input from '@/components/shared/Input.vue'
 import { User } from '@/interfaces'
+import useAuth from '@/stores/auth'
 
 const props = defineProps<{
     adding_user?: boolean
@@ -170,7 +170,7 @@ onMounted(async () => {
 
 <style lang="scss">
 .profilesettings {
-    .avatar {
+    .profileavatar {
         display: flex;
         flex-direction: column;
         align-items: center;

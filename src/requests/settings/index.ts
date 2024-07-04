@@ -19,7 +19,7 @@ export async function getAllSettings() {
         method: 'GET',
     })
 
-    const settings = data.settings as DBSettings
+    const settings = data as DBSettings
 
     return { settings, status }
 }
