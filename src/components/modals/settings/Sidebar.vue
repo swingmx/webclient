@@ -5,7 +5,7 @@
                 class="group"
                 v-for="group in settingGroups.filter(g => {
                     // return true
-                    return g.show_if ? g.show_if() : true;
+                    return g.show_if ? g.show_if() : true
                 })"
                 :key="group.title"
             >
@@ -36,21 +36,21 @@
 </template>
 
 <script setup lang="ts">
-import { SettingGroup } from "@/interfaces/settings";
-import settingGroups from "@/settings";
-import useAuth from "@/stores/auth";
+import { SettingGroup } from '@/interfaces/settings'
+import settingGroups from '@/settings'
+import useAuth from '@/stores/auth'
 
-import Avatar from "@/components/shared/Avatar.vue";
+import Avatar from '@/components/shared/Avatar.vue'
 
-const auth = useAuth();
+const auth = useAuth()
 
 defineProps<{
-    currentGroup: SettingGroup;
-}>();
+    currentGroup: SettingGroup
+}>()
 
 defineEmits<{
-    (e: "setTab", title: string): void;
-}>();
+    (e: 'setTab', title: string): void
+}>()
 </script>
 
 <style lang="scss">
@@ -101,7 +101,7 @@ defineEmits<{
     .gtitle {
         font-weight: bold;
         font-size: 14px;
-        margin: 1rem 0 $smaller $small;
+        margin: 1.25rem 0 $smaller $small;
     }
 
     .gitems {
@@ -154,7 +154,7 @@ defineEmits<{
         }
 
         &.about::before {
-            content: "";
+            content: '';
             height: 1px;
             position: absolute;
             top: -$small;

@@ -18,28 +18,28 @@
 </template>
 
 <script setup lang="ts">
-import DeleteSvg from "@/assets/icons/delete.svg";
-import FolderSvg from "@/assets/icons/folder.svg";
+import DeleteSvg from '@/assets/icons/delete.svg'
+import FolderSvg from '@/assets/icons/folder.svg'
 
 const props = defineProps<{
     items: {
-        title: string;
-        action: () => void;
-    }[];
-    icon: "folder";
-}>();
+        title: string
+        action: () => void
+    }[]
+    icon: 'folder'
+}>()
 
 function getIcon() {
     switch (props.icon) {
-        case "folder":
-            return FolderSvg;
+        case 'folder':
+            return FolderSvg
 
         default:
-            return FolderSvg;
+            return FolderSvg
     }
 }
 
-const icon_ = getIcon();
+const icon_ = getIcon()
 </script>
 
 <style lang="scss">
@@ -60,6 +60,7 @@ const icon_ = getIcon();
         gap: 1rem;
 
         svg {
+            flex-shrink: 0;
             width: 1.25rem;
             display: block;
         }
@@ -68,7 +69,7 @@ const icon_ = getIcon();
             display: flex;
             gap: $small;
             align-items: center;
-            font-family: "SF Mono", monospace;
+            font-family: 'SF Mono', monospace;
             font-weight: 500;
             font-size: 0.9rem;
 
