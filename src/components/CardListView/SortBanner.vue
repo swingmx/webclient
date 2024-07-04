@@ -9,7 +9,7 @@
             />
         </div>
         <div class="right group">
-            <div class="tt select circular"> <ChartSvg /></div>
+            <div class="tt select circular"><ChartSvg /></div>
             <SortKey :items="statitems" :sortby="store.sortby" :reverse="store.reverse" />
         </div>
     </div>
@@ -57,10 +57,18 @@ const artistitems = [
     grid-template-columns: max-content 1fr max-content;
     gap: 1rem;
 
+    @include allPhones {
+        grid-template-columns: 1fr;
+
+        .tt {
+            display: none !important;
+        }
+    }
+
     .group {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: flex-start;
         gap: 1rem;
     }
 
@@ -98,7 +106,7 @@ const artistitems = [
         background-color: #fff;
         color: #000;
         border: none;
-        // width: 10rem;
+        height: max-content;
 
         display: flex;
         gap: $small;

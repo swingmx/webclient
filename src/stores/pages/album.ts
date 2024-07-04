@@ -54,7 +54,9 @@ export default defineStore('album', {
             }
         >{},
         srcTracks: <Track[]>[],
-        artistAlbums: <{ artisthash: string; albums: Album[] }[]>[],
+        artistAlbums: <{
+            [key: string]: Album[]
+        }>{},
         otherVersions: <Album[]>[],
         similarAlbums: <Album[]>[],
         bio: null,
@@ -102,7 +104,7 @@ export default defineStore('album', {
 
             this.fetched_other_hash = this.info.albumhash
             this.artistAlbums = await getAlbumsFromArtist(
-                this.info.albumartists,
+                this.info.albumartists.map(a => a.artisthash),
                 maxAbumCards.value,
                 this.info.base_title
             )
@@ -133,7 +135,7 @@ export default defineStore('album', {
         resetAlbumArtists() {
             setTimeout(() => {
                 if (router.currentRoute.value.name == Routes.album) return
-                this.artistAlbums = []
+                this.artistAlbums = {}
                 this.fetched_other_hash = ''
             }, 10000)
         },

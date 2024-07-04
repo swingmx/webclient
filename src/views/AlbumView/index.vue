@@ -118,18 +118,22 @@ function getSongItems() {
 }
 
 function getArtistAlbumComponents(): ScrollerItem[] {
-  return album.artistAlbums.map((ar) => {
+  // remove keys that have no albums
+  const keys = Object.keys(album.artistAlbums).filter(
+    (key) => album.artistAlbums[key].length > 0
+  );
+
+  return keys.map((artisthash) => {
     const artist = album.info.albumartists.find(
-      (a) => a.artisthash === ar.artisthash
+      (a) => a.artisthash === artisthash
     );
     const artistname = artist?.name;
-    const artisthash = artist?.artisthash;
 
     return {
       id: artisthash,
       component: CardScroller,
       props: {
-        items: ar.albums.map((album) => ({
+        items: album.artistAlbums[artisthash].map((album) => ({
           type: "album",
           item: album,
         })),
@@ -143,6 +147,7 @@ function getArtistAlbumComponents(): ScrollerItem[] {
 function getAlbumVersionsComponent(): ScrollerItem | null {
   if (album.otherVersions.length == 0) return null;
 
+  console.log(album.otherVersions);
   return {
     id: "otherVersions",
     component: CardScroller,
@@ -179,15 +184,16 @@ const scrollerItems = computed(() => {
 
   let components = [header, ...getSongItems(), genreBanner];
 
-  if (album.tracks.length) {
-    components.push(AlbumVersionsFetcher);
-  }
+  // if (album.tracks.length) {
+  //   components.push(AlbumVersionsFetcher);
+  // }
 
-  if (otherVersionsComponent !== null) {
-    components.push(otherVersionsComponent);
-  }
+  // if (otherVersionsComponent !== null) {
+  //   components.push(otherVersionsComponent);
+  // }
 
   components.push(...moreFrom);
+  console.log(moreFrom)
 
   if (album.tracks.length) {
     components.push(fetched_similar_hash);
