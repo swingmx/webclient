@@ -136,7 +136,7 @@ onBeforeRouteUpdate((to, from) => {
         .then(async () => {
             await nextTick()
 
-            document.getElementById('folder-scroller')?.scrollTo({
+            document.getElementById('contentscroller')?.scrollTo({
                 top: 0,
             })
         })
