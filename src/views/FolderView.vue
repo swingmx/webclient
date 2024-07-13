@@ -45,7 +45,7 @@
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router'
 
-import { isMedium, isSmall } from '@/stores/content-width'
+import { isMedium, isSmall, track_limit } from '@/stores/content-width'
 import useLoader from '@/stores/loader'
 import useFolder from '@/stores/pages/folder'
 import useQueue from '@/stores/queue'
@@ -66,12 +66,9 @@ import { xl } from '@/composables/useBreakpoints'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 
 const queue = useQueue()
-const loader = useLoader()
 const folder = useFolder()
 const settings = useSettings()
 const tracklist = useTracklist()
-
-let tracktotal = 0
 
 const is_alt_layout = computed(() => settings.is_alt_layout || !xl)
 
@@ -109,14 +106,18 @@ const scrollerItems = computed(() => {
         items.push(new songItem(track))
     })
 
-    items.push({
-        id: Math.random(),
-        component: AlbumsFetcher,
-        props: {
-            fetch_callback: () => folder.fetchAll(folder.path),
-        },
-    })
+    console.log('track_limit', track_limit.value, folder.tracks.length)
+    if (folder.tracks.length >= track_limit.value) {
+        items.push({
+            id: Math.random(),
+            component: AlbumsFetcher,
+            props: {
+                fetch_callback: () => folder.fetchAll(folder.path),
+            },
+        })
+    }
 
+    console.log('scrollerItems', items)
     return items
 })
 
@@ -126,15 +127,11 @@ function playFromPage(index: number) {
 }
 
 onBeforeRouteUpdate((to, from) => {
-    loader.startLoading()
     folder
         .fetchAll(to.params.path as string)
 
         .then(() => {
             folder.resetQuery()
-        })
-        .then(() => {
-            loader.stopLoading()
         })
         .then(async () => {
             await nextTick()

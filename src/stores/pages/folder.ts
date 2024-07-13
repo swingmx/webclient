@@ -18,15 +18,23 @@ export default defineStore('FolderDirs&Tracks', {
     }),
     actions: {
         async fetchAll(fpath: string) {
-            // if (this.tracktotal && this.allTracks.length == this.allTracks.length) return
+            console.log('fpath', fpath)
+            console.log('this.path', this.path)
 
-            this.path = fpath
             const { tracks, folders, path } = await getFiles(
                 fpath,
                 this.allTracks.length,
                 this.allTracks.length + track_limit.value
             )
 
+            if (this.path !== fpath) {
+                this.allDirs = []
+                this.allTracks = []
+            }
+
+            this.path = fpath
+
+            // If the requested path was redirected, update store path
             if (path !== fpath) {
                 fpath = path
             }
