@@ -32,11 +32,9 @@ import { Ref, onMounted, ref } from 'vue'
 import useQueueStore from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
 
-import { dropSources } from '@/enums'
 import { Track } from '@/interfaces'
 import { getFavTracks } from '@/requests/favorite'
 
-import SongList from '@/components/shared/SongList.vue'
 import GenericHeader from '@/components/shared/GenericHeader.vue'
 import GenericTrackPagination from '@/components/shared/GenericTrackPagination.vue'
 import HeartSvg from '@/assets/icons/heart.svg'

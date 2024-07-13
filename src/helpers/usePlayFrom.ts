@@ -76,7 +76,7 @@ export async function playFromFolderCard(folderpath: string) {
     const queue = useQueue()
     const tracklist = useTracklist()
 
-    const data = await getFiles(folderpath, true)
+    const data = await getFiles(folderpath, 0, -1, true)
     const tracks = data.tracks
 
     if (tracks.length === 0) {
