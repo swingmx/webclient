@@ -85,13 +85,12 @@ export const getAlbumsFromArtist = async (albumartists: {}, limit: number = 2, b
     return []
 }
 
-export const getAlbumVersions = async (og_album_title: string, base_title: string, artisthash: string) => {
+export const getAlbumVersions = async (og_album_title: string, albumhash: string) => {
     const { data } = await useAxios({
         url: albumVersions,
         props: {
             og_album_title,
-            base_title,
-            artisthash,
+            albumhash,
         },
     })
 

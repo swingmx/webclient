@@ -115,8 +115,7 @@ export default defineStore('album', {
             this.fetched_version_hash = this.info.albumhash
             this.otherVersions = await getAlbumVersions(
                 this.info.og_title,
-                this.info.base_title,
-                this.info.albumartists[0].artisthash
+                this.info.albumhash,
             )
         },
         async fetchSimilarAlbums() {

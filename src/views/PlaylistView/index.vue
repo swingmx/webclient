@@ -26,7 +26,6 @@ import { computed } from "vue";
 import { onMounted, onUpdated } from "vue";
 
 import {
-  heightLarge,
   isMedium,
   isSmall,
   isSmallPhone,

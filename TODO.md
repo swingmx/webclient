@@ -40,3 +40,4 @@
 - hide "remove from playlist" option on system playlists
 - ADD QR CODE SOMEWHERE ON THE WEB
 - Add a "Rescan folders" item to the "Browse Library" section
+- Paginate playlist page

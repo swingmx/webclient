@@ -108,7 +108,7 @@ export interface Playlist {
     has_image: boolean
     tracks: Track[]
     count: number
-    last_updated: string
+    _last_updated: string
     thumb: string
     duration: number
     settings: PlaylistSettings
@@ -119,8 +119,7 @@ export interface Playlist {
         | {
               image: string
               color: string
-          }[] // for playlist page
-        | string[] // for playlist list page
+          }[]
 }
 
 export interface Radio {
