@@ -110,9 +110,9 @@ export default defineStore(
     function submitData() {
       if (!can_submit) return;
       lockSubmit();
+      setTimestamp();
       sendLogData(trackhash.value, duration.value, from.value, timestamp.value);
       resetData();
-      setTimestamp();
       prevKey.value = key.value;
     }
 
