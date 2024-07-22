@@ -73,3 +73,12 @@
 .designatedOS .settingsmodalcontent::-webkit-scrollbar-thumb {
     border-color: $black;
 }
+
+/* Login modal */
+.designatedOS .loginmodal .alcontent::-webkit-scrollbar-track {
+    background-color: $black;
+}
+
+.designatedOS .loginmodal .alcontent::-webkit-scrollbar-thumb {
+    border-color: $black;
+}
