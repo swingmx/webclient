@@ -31,7 +31,11 @@
                 @blur.prevent="removeFocusedClass"
                 @focus.prevent="addFocusedClass"
             />
-            <div class="clear_input circular noSelect" :class="{ active: search.query.length > 0 }" @click.stop="clearInput">
+            <div
+                class="clear_input circular noSelect"
+                :class="{ active: search.query.length > 0 }"
+                @click.stop="clearInput"
+            >
                 <CancelSvg />
             </div>
         </div>
@@ -39,57 +43,57 @@
 </template>
 
 <script setup lang="ts">
-import useSearch from "@/stores/search";
-import useSettings from "@/stores/settings";
-import useTabStore from "@/stores/tabs";
-import { ref } from "vue";
+import useSearch from '@/stores/search'
+import useSettings from '@/stores/settings'
+import useTabStore from '@/stores/tabs'
+import { ref } from 'vue'
 
-import CancelSvg from "@/assets/icons/a.svg";
-import BackSvg from "@/assets/icons/arrow.svg";
-import SearchSvg from "@/assets/icons/search.svg";
-import { Routes } from "@/router";
+import CancelSvg from '@/assets/icons/a.svg'
+import BackSvg from '@/assets/icons/arrow.svg'
+import SearchSvg from '@/assets/icons/search.svg'
+import { Routes } from '@/router'
 
 const props = defineProps<{
-    on_nav?: boolean;
-}>();
+    on_nav?: boolean
+}>()
 
-const tabs = useTabStore();
-const search = useSearch();
-const settings = useSettings();
+const tabs = useTabStore()
+const search = useSearch()
+const settings = useSettings()
 
 // HANDLE FOCUS
-const inputRef = ref<HTMLInputElement | null>(null);
+const inputRef = ref<HTMLInputElement | null>(null)
 
 // NOTE: Functions are used because classes are added to the sorrounding element
 // and not the input itself.
 function addFocusedClass() {
     if (inputRef.value) {
-        inputRef.value.classList.add("search-focused");
+        inputRef.value.classList.add('search-focused')
     }
 }
 
 function removeFocusedClass() {
     if (inputRef.value) {
-        inputRef.value.classList.remove("search-focused");
+        inputRef.value.classList.remove('search-focused')
     }
 }
 
 function clearInput() {
-    search.query = "";
+    search.query = ''
     if (inputRef.value) {
-        inputRef.value.focus();
+        inputRef.value.focus()
     }
 }
 
 // @end
 
 function handleButton() {
-    if (props.on_nav) return;
+    if (props.on_nav) return
 
     if (tabs.current === tabs.tabs.search) {
-        tabs.switchToQueue();
+        tabs.switchToQueue()
     } else {
-        tabs.switchToSearch();
+        tabs.switchToSearch()
     }
 }
 </script>
@@ -127,10 +131,11 @@ function handleButton() {
         button {
             background: transparent;
             border: none;
-            width: 2rem;
-            height: 2rem;
+            width: 1.625rem;
+            height: 1.625rem;
             padding: 0;
-            margin-left: 4px;
+            margin-left: 6px;
+            margin-right: $smallest;
             border-radius: 3rem;
             cursor: pointer;
             flex-shrink: 0;
@@ -179,6 +184,7 @@ function handleButton() {
 
             display: grid;
             place-items: center;
+            flex-shrink: 0;
 
             &:hover {
                 background-color: $gray;
