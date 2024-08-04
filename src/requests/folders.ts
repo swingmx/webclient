@@ -2,7 +2,7 @@ import { paths } from '@/config'
 import { Folder, Track } from '@/interfaces'
 import useAxios from './useAxios'
 
-export async function getFiles(path: string, start: number, end: number, tracks_only = false) {
+export async function getFiles(path: string, start: number, limit: number, tracks_only = false) {
     interface FolderData {
         tracks: Track[]
         folders: Folder[]
@@ -15,7 +15,7 @@ export async function getFiles(path: string, start: number, end: number, tracks_
         props: {
             folder: path,
             start,
-            end,
+            limit,
             tracks_only,
         },
     })

@@ -3,7 +3,7 @@
         <GenericHeader>
             <template #name>Home</template>
             <template #description>{{
-                getGreetings(auth.user.firstname || auth.user.username)
+                getGreetings(auth.user.username)
             }}</template>
         </GenericHeader>
         <Browse />
@@ -42,16 +42,6 @@ import GenericHeader from '@/components/shared/GenericHeader.vue'
 const home = useHome()
 const auth = useAuth()
 
-// const recentlyPlayed = computed(() => {
-//     if (!home.recentlyPlayed.length) {
-//         return []
-//     }
-//     return home.recentlyPlayed.fill({
-//         type: 'placeholder',
-//         with_helptext: true,
-//     })
-// })
-
 function getGreetings(username: string) {
     const date = new Date()
     const hour = date.getHours()
@@ -62,7 +52,7 @@ function getGreetings(username: string) {
         return 'Hey there early bird'
     } else if (hour <= 12) {
         return 'Good morning ' + username
-    } else if (hour <= 18) {
+    } else if (hour <= 17) {
         return 'Good afternoon ' + username
     } else {
         return 'Goooood evening ' + username

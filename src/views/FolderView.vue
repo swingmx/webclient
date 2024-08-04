@@ -117,7 +117,6 @@ const scrollerItems = computed(() => {
         })
     }
 
-    console.log('scrollerItems', items)
     return items
 })
 
@@ -128,7 +127,7 @@ function playFromPage(index: number) {
 
 onBeforeRouteUpdate((to, from) => {
     folder
-        .fetchAll(to.params.path as string)
+        .fetchAll(to.params.path as string, true)
 
         .then(() => {
             folder.resetQuery()
