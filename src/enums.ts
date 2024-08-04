@@ -77,19 +77,6 @@ export enum dropSources {
   favorite = "favorite",
 }
 
-export enum DbSettingKeys {
-  root_dirs = "root_dirs",
-  exclude_dirs = "exclude_dirs",
-  artist_separators = "artist_separators",
-  extract_feat = "extract_feat",
-  remove_prod = "remove_prod",
-  clean_album_title = "clean_album_title",
-  show_album_version = "show_album_version",
-  remove_remaster = "remove_remaster",
-  merge_albums = "merge_albums",
-  show_albums_as_singles = "show_albums_as_singles",
-}
-
 interface Plugin {
   active: boolean;
   description: string;
@@ -98,6 +85,7 @@ interface Plugin {
 }
 
 export interface DBSettings {
+  enableWatchDog: boolean;
   rootDirs: string[];
   excludeDirs: string[];
   artistSeparators: string[];
@@ -108,6 +96,7 @@ export interface DBSettings {
   mergeAlbums: boolean;
   showAlbumsAsSingles: boolean;
   enablePeriodicScans: boolean
+  scanInterval: number
   plugins: Plugin[];
   version: string;
 }

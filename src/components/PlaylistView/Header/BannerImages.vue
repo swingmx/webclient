@@ -2,7 +2,7 @@
     <div
         class="playlist-banner-images no-scroll"
         :style="{
-      background: (playlist.info.images[1] as any).color,
+      background: playlist.info.images.length ? (playlist.info.images[1] as any).color : undefined,
     }"
     >
         <img

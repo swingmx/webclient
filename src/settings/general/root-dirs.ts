@@ -38,19 +38,19 @@ const list_root_dirs: Setting = {
   action: () => triggerScan(),
 };
 
-const use_sidebar: Setting = {
+const enable_scans: Setting = {
   title: "Enable periodic scans",
   type: SettingType.binary,
-  state: () => useSettingsStore().use_sidebar,
-  action: () => useSettingsStore().toggleDisableSidebar(),
+  state: () => useSettingsStore().enablePeriodicScans,
+  action: () => useSettingsStore().togglePeriodicScans(),
 };
 
 const useWatchdog: Setting = {
   title: "Watch root dirs for new music",
   experimental: true,
   type: SettingType.binary,
-  state: () => useSettingsStore().use_sidebar,
-  action: () => useSettingsStore().toggleDisableSidebar(),
+  state: () => useSettingsStore().enableWatchDog,
+  action: () => useSettingsStore().toggleWatchdog(),
 };
 
 const periodicScanInterval: Setting = {
@@ -60,6 +60,4 @@ const periodicScanInterval: Setting = {
   action: (newValue: number) => useSettingsStore().updatePeriodicInterval(newValue),
 };
 
-
-
-export default [change_root_dirs, list_root_dirs, useWatchdog, use_sidebar, periodicScanInterval];
+export default [change_root_dirs, list_root_dirs, useWatchdog, enable_scans, periodicScanInterval];

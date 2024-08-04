@@ -4,9 +4,9 @@ import { xxl } from '@/composables/useBreakpoints'
 import { DBSettings, contextChildrenShowMode } from '@/enums'
 import { pluginSetActive, updatePluginSettings } from '@/requests/plugins'
 
+import { updateConfig } from '@/requests/settings'
 import { usePlayer } from '@/stores/player'
 import { content_width } from '../content-width'
-import { updateConfig } from '@/requests/settings'
 
 export default defineStore('settings', {
     state: () => ({
@@ -23,6 +23,7 @@ export default defineStore('settings', {
 
         enablePeriodicScans: false,
         periodicInterval: 0,
+        enableWatchDog: false,
 
         folder_list_mode: false,
         volume: 1.0,
@@ -69,6 +70,8 @@ export default defineStore('settings', {
             this.show_albums_as_singles = settings.showAlbumsAsSingles
 
             this.enablePeriodicScans = settings.enablePeriodicScans
+            this.periodicInterval = settings.scanInterval
+            this.enableWatchDog = settings.enableWatchDog
 
             this.use_lyrics_plugin = settings.plugins.find(p => p.name === 'lyrics_finder')?.active
 
@@ -123,10 +126,6 @@ export default defineStore('settings', {
                 this.repeat_all = true
             }
         },
-        // root dirs 👇
-        toggleRootDirSet() {
-            this.root_dir_set = !this.root_dir_set
-        },
         setRootDirs(dirs: string[]) {
             this.root_dirs = dirs
         },
@@ -134,21 +133,8 @@ export default defineStore('settings', {
         toggleFolderListMode() {
             this.folder_list_mode = !this.folder_list_mode
         },
-        // titles 👇
-        toggleProcessFeaturedArtists() {
-            this.feat = !this.feat
-        },
-        toggleRemoveProdBy() {
-            this.prodby = !this.prodby
-        },
         toggleCleanTrackTitles() {
             this.clean_titles = !this.clean_titles
-        },
-        toggleRemoveRemasterInfoFromTitles() {
-            this.hide_remaster = !this.hide_remaster
-        },
-        toggleMergeAlbumVersions() {
-            this.merge_albums = !this.merge_albums
         },
         toggleShowAlbumAsSingle() {
             this.show_albums_as_singles = !this.show_albums_as_singles
@@ -230,17 +216,64 @@ export default defineStore('settings', {
             this.nowPlayingTrackOnTabTitle = !this.nowPlayingTrackOnTabTitle
         },
 
-        async updatePeriodicInterval(interval: number) {
-            const oldValue = this.periodicInterval
-            this.periodicInterval = interval
-            const res = await updateConfig('periodicInterval', interval)
+        async genericToggleSetting(key: string, value: any, prop: string) {
+            const oldValue = this[prop]
+            this[prop] = value
+
+            console.log(this[prop])
+
+            const res = await updateConfig(key, value)
 
             if (res.status !== 200) {
-                this.periodicInterval = oldValue
+                prop = oldValue
                 return false
             }
 
             return true
+        },
+
+        async updatePeriodicInterval(interval: number) {
+            return await this.genericToggleSetting('scanInterval', interval, 'periodicInterval')
+        },
+
+        async toggleWatchdog() {
+            return await this.genericToggleSetting('enableWatchDog', !this.enableWatchDog, 'enableWatchDog')
+        },
+
+        async togglePeriodicScans() {
+            return await this.genericToggleSetting(
+                'enablePeriodicScans',
+                !this.enablePeriodicScans,
+                'enablePeriodicScans'
+            )
+        },
+
+        async toggleExtractFeaturedArtists() {
+            return await this.genericToggleSetting('extractFeaturedArtists', !this.feat, 'feat')
+        },
+
+        async toggleRemoveProdBy() {
+            return await this.genericToggleSetting('removeProdBy', !this.prodby, 'prodby')
+        },
+
+        async toggleRemoveRemasterInfo() {
+            return await this.genericToggleSetting('removeRemasterInfo', !this.hide_remaster, 'hide_remaster')
+        },
+
+        async toggleCleanAlbumTitle() {
+            return await this.genericToggleSetting('cleanAlbumTitle', !this.clean_titles, 'clean_titles')
+        },
+
+        async toggleMergeAlbums() {
+            return await this.genericToggleSetting('mergeAlbums', !this.merge_albums, 'merge_albums')
+        },
+
+        async toggleShowAlbumsAsSingles() {
+            return await this.genericToggleSetting(
+                'showAlbumsAsSingles',
+                !this.show_albums_as_singles,
+                'show_albums_as_singles'
+            )
         },
     },
     getters: {

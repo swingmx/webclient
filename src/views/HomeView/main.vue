@@ -7,15 +7,14 @@
             }}</template>
         </GenericHeader>
         <Browse />
-        <!-- v-if="home.recentlyPlayed.length" -->
         <RecentItems
             v-if="home.recentlyPlayedFetched && home.recentlyPlayed.length"
             :title="'Recently Played'"
             :items="home.recentlyPlayed"
             :play-source="playSources.track"
             :route="'/playlist/recentlyplayed'"
+            :see-all-text="'VIEW HISTORY'"
         />
-        <!-- v-if="home.recentlyAdded.length" -->
         <RecentItems
             v-if="home.recentlyAddedFetched && home.recentlyAdded.length"
             :title="'Recently Added'"
