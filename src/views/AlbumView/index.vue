@@ -19,6 +19,7 @@
                         :key="index"
                         v-bind="item.props"
                         @playThis="playFromAlbum(item.props.track.master_index)"
+                        @playDisc="playDisc"
                     ></component>
                 </DynamicScrollerItem>
             </template>
@@ -177,11 +178,11 @@ const scrollerItems = computed(() => {
     let components = [header, ...getSongItems(), genreBanner]
 
     if (album.tracks.length) {
-      components.push(AlbumVersionsFetcher);
+        components.push(AlbumVersionsFetcher)
     }
 
     if (otherVersionsComponent !== null) {
-      components.push(otherVersionsComponent);
+        components.push(otherVersionsComponent)
     }
 
     components.push(...moreFrom)
@@ -207,10 +208,15 @@ const scrollerItems = computed(() => {
     return components
 })
 
-function playFromAlbum(index: number) {
+function playFromAlbum(index: number, tracks = album.srcTracks) {
     const { title, albumhash } = album.info
-    tracklist.setFromAlbum(title, albumhash, album.srcTracks)
+    tracklist.setFromAlbum(title, albumhash, tracks)
     queue.play(index)
+}
+
+function playDisc(disc_number: number) {
+    const tracks = album.srcTracks.filter(t => t.disc == disc_number)
+    playFromAlbum(0, tracks)
 }
 
 onBeforeRouteUpdate(async to => {

@@ -23,7 +23,7 @@ import useSettings from '@/stores/settings'
 import useFolder from '@/stores/pages/folder'
 
 const props = defineProps<{
-    subPaths: subPath[]
+    subPaths?: subPath[]
 }>()
 
 const folder = useFolder()

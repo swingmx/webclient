@@ -160,7 +160,9 @@ export const usePlayer = defineStore('player', () => {
             audio.pause()
             return
         }
-        queue.setDurationFromFile(audio.duration)
+        // queue.setDurationFromFile(audio.duration == Infinity ? queue.currenttrack.duration || 0 : audio.duration)
+        // console.log(audio.duration == Infinity)
+        queue.setDurationFromFile(queue.currenttrack.duration || 0)
 
         audio.play().catch(handlePlayErrors)
     }
@@ -301,9 +303,6 @@ export const usePlayer = defineStore('player', () => {
         updateLyricsPosition()
         initLoadingNextTrackAudio()
         queue.setCurrentDuration(audio.currentTime)
-
-        // const date = new Date()
-        // sourceTime = date.getTime()
     }
 
     const handleBufferingStatus = () => {

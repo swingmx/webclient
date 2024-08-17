@@ -106,7 +106,6 @@ const scrollerItems = computed(() => {
         items.push(new songItem(track))
     })
 
-    console.log('track_limit', track_limit.value, folder.tracks.length)
     if (folder.tracks.length >= track_limit.value) {
         items.push({
             id: Math.random(),

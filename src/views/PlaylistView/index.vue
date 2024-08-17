@@ -1,26 +1,3 @@
-<!-- <template>
-  <div
-    class="playlist-virtual-scroller v-scroll-page"
-    :class="{ isSmall, isMedium }"
-    style="height: 100%"
-  >
-    <RecycleScroller
-      v-slot="{ item }"
-      class="scroller"
-      :items="scrollerItems"
-      :item-size="null"
-      key-field="id"
-      style="height: 100%"
-    >
-      <component
-        :is="item.component"
-        v-bind="item.props"
-        @playThis="playFromPlaylistPage(item.props.index - 1)"
-      />
-    </RecycleScroller>
-  </div>
-</template> -->
-
 <template>
     <div class="folder-view v-scroll-page" style="height: 100%" :class="{ isSmall, isMedium }">
         <DynamicScroller

@@ -131,7 +131,7 @@ export default defineStore('playlist-tracks', {
             setTimeout(() => {
                 if (router.currentRoute.value.name == Routes.playlist) return
                 this.allTracks = []
-            }, 5000)
+            }, 1000)
         },
     },
     getters: {
