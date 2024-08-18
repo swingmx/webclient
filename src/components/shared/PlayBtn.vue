@@ -78,6 +78,7 @@ function handlePlay() {
 
   svg {
     transition: transform 0.2s ease;
+    height: 1.75rem;
   }
 }
 </style>

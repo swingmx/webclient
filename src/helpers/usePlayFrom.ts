@@ -84,10 +84,13 @@ export async function playFromFolderCard(folderpath: string) {
 export async function playFromFavorites(track: Track | undefined) {
     const queue = useQueue()
     const tracklist = useTracklist()
+    console.log(track)
 
+    // if our tracklist is not from favorites, we need to fetch the favorites
     if (tracklist.from.type !== FromOptions.favorite) {
-        const tracks = await getFavTracks(0)
-        tracklist.setFromFav(tracks)
+        const res = await getFavTracks(0, -1)
+        console.log(res)
+        tracklist.setFromFav(res.tracks)
     }
 
     let index = 0
@@ -96,6 +99,7 @@ export async function playFromFavorites(track: Track | undefined) {
         index = tracklist.tracklist.findIndex(t => t.trackhash === track?.trackhash)
     }
 
+    console.log(tracklist.tracklist)
     queue.play(index)
 }
 
