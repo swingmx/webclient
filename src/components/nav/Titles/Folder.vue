@@ -12,10 +12,9 @@
             >
                 <FolderSvg />
             </div>
-            <BreadCrumbNav
-                @navigate="navigate"
-            />
+            <BreadCrumbNav @navigate="navigate" />
         </div>
+        <DropDown :items="items" :current="current" component_key="sortbar" />
     </div>
 </template>
 
@@ -26,47 +25,64 @@ import { Routes } from '@/router'
 
 import BreadCrumbNav from '@/components/FolderView/BreadCrumbNav.vue'
 import FolderSvg from '@/assets/icons/folder.svg'
+import DropDown from '@/components/shared/DropDown.vue'
+import { ref } from 'vue'
 
 const router = useRouter()
-
 
 function navigate(path: string) {
     router.push({ name: Routes.folder, params: { path } })
 }
+
+const items = [
+    { key: 'title', title: 'Title' },
+    { key: 'artist', title: 'Artist' },
+    { key: 'album', title: 'Album' },
+    { key: 'playcount', title: 'Play count' },
+    { key: 'playduration', title: 'Play duration' },
+    { key: 'release_date', title: 'Release date' },
+    { key: 'lastmod', title: 'Date added' },
+    { key: 'duration', title: 'Duration' },
+]
+const current = ref(items[0])
 </script>
 
 <style lang="scss">
-.info > #folder-nav-title {
-  display: grid;
-}
+// .info > #folder-nav-title {
+//   display: grid;
+// }
 
-.is_alt_layout #folder-nav-title {
-  display: grid;
-}
+// .is_alt_layout #folder-nav-title {
+//   display: grid;
+// }
 
 #folder-nav-title {
-  width: fit-content;
-  overflow: hidden;
-  display: none;
-
-  @include allPhones {
+    width: fit-content;
+    // overflow: hidden;
     display: grid;
-    padding-top: $medium;
-    padding-bottom: 1rem;
-  }
+    grid-template-columns: auto 9rem;
+    gap: 1rem;
+    justify-content: space-between;
+    width: 100%;
 
-  .fname {
-    background-color: $gray4;
-    border-radius: $small;
-    height: 2.188rem;
-    display: flex;
-    align-items: center;
-    max-width: 100%;
-    overflow: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
+    @include allPhones {
+        display: grid;
+        padding-top: $medium;
+        padding-bottom: 1rem;
+    }
 
-    .icon {
+    .fname {
+        background-color: $gray4;
+        border-radius: $small;
+        height: 2.188rem;
+        display: flex;
+        align-items: center;
+        max-width: 100%;
+        overflow: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+
+        .icon {
             aspect-ratio: 1;
             margin: 0 $small;
             display: flex;
@@ -75,14 +91,14 @@ function navigate(path: string) {
                 height: 1.5rem;
             }
         }
-  }
+    }
 }
 
 .fname {
-  scrollbar-width: none;
+    scrollbar-width: none;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 </style>
