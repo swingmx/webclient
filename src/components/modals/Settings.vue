@@ -19,7 +19,7 @@
                     </button>
                     {{ currentGroup?.title }}
                     <span v-if="currentGroup?.experimental" class="badge experimental circular">
-                        {{ currentGroup?.experimental ? "experimental" : "" }}
+                        {{ currentGroup?.experimental ? 'experimental' : '' }}
                     </span>
                 </div>
             </div>
@@ -29,64 +29,60 @@
 </template>
 
 <script setup lang="ts">
-import settingGroups from "@/settings";
+import settingGroups from '@/settings'
 
-import ArrowSvg from "@/assets/icons/arrow.svg";
-import { SettingGroup } from "@/interfaces/settings";
-import { isSmallPhone } from "@/stores/content-width";
-import { computed, ref } from "vue";
-import Content from "./settings/Content.vue";
-import Sidebar from "./settings/Sidebar.vue";
+import ArrowSvg from '@/assets/icons/arrow.svg'
+import { SettingGroup } from '@/interfaces/settings'
+import { isSmallPhone } from '@/stores/content-width'
+import { computed, ref } from 'vue'
+import Content from './settings/Content.vue'
+import Sidebar from './settings/Sidebar.vue'
 
 const emit = defineEmits<{
-    (e: "setTitle", title: string): void;
-}>();
+    (e: 'setTitle', title: string): void
+}>()
 
-const currentTab = ref<string>("");
+const currentTab = ref<string>('')
 const currentGroup = computed(() => {
     for (const group of settingGroups) {
         for (const settings of group.groups) {
             if (settings.title === currentTab.value) {
-                return settings;
+                return settings
             }
         }
     }
 
     if (isSmallPhone.value) {
-        return null;
+        return null
     }
 
     // select default tab
     for (const group of settingGroups) {
         for (const settings of group.groups) {
-            if (settings.title === "Appearance") {
-                return settings;
+            if (settings.title === 'Appearance') {
+                return settings
             }
         }
     }
-});
+})
 
 const showContent = computed(() => {
-    return currentGroup.value !== null;
-});
+    return currentGroup.value !== null
+})
 
 function handleGoBack() {
-    currentTab.value = "";
+    currentTab.value = ''
 }
 </script>
 
 <style lang="scss">
-$modalheight: 35rem;
-
 .settingsmodal {
     display: grid;
     grid-template-columns: 15rem 1fr;
-    height: $modalheight;
 
     .content {
         display: grid;
         grid-template-rows: 4rem 1fr;
-        height: $modalheight;
 
         .head {
             border-bottom: solid 1px $gray4;
