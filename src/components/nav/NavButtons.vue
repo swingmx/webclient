@@ -33,6 +33,10 @@ import ArrowSvg from '../../assets/icons/right-arrow.svg'
         border-radius: 5rem;
         background-color: $gray5;
 
+        &:hover {
+            background-color: $gray4;
+        }
+
         svg {
             transform: scale(1.12);
             transition: transform 0.2s ease;
