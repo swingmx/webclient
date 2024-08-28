@@ -46,6 +46,7 @@ const tabs = useTabStore()
                 width: 2rem;
                 height: 2rem;
                 margin-left: 4px;
+                margin-right: $smallest;
 
                 > svg {
                     width: 1.75rem;

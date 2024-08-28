@@ -108,7 +108,7 @@ function handleButton() {
 
 <style lang="scss">
 .right > .gsearch-input > #ginner > input {
-    width: 140px;
+    width: 150px;
 
     @include allPhones {
         width: 100%;
@@ -135,7 +135,7 @@ function handleButton() {
             height: 1.625rem;
             padding: 0;
             margin-left: 6px;
-            margin-right: $smallest;
+            margin-right: $smaller;
             border-radius: 3rem;
             cursor: pointer;
             flex-shrink: 0;
