@@ -1,12 +1,14 @@
 <template>
     <div class="smdropdown buttons" :class="component_key">
-        <div v-auto-animate="{ duration: 10 }" class="select rounded-sm">
-            <button class="selected" :class="{ showDropDown }" @click.prevent="handleOpener">
-                <span class="ellip">{{ current.title }}</span>
-                <ArrowSvg />
-                <!-- <div class="icon">
-                    <ArrowSvg />
-                </div> -->
+        <div class="select rounded-sm">
+            <button
+                class="selected"
+                :class="{ showDropDown }"
+                @click.prevent="handleOpener"
+                :title="`sort by: ${current.title} ${reverse ? 'Descending' : 'Ascending'}`.toUpperCase()"
+            >
+                <span class="ellip">sort: {{ current.title }}</span>
+                <ArrowSvg :class="{ reverse }" />
             </button>
             <div v-if="showDropDown" ref="dropOptionsRef" class="options rounded no-scroll shadow-lg">
                 <div
@@ -28,7 +30,7 @@ import { onClickOutside } from '@vueuse/core'
 
 import ArrowSvg from '@/assets/icons/arrow.svg'
 
-const showDropDown = ref(true)
+const showDropDown = ref(false)
 const dropOptionsRef: Ref<HTMLElement | undefined> = ref()
 
 interface Item {
@@ -40,6 +42,7 @@ defineProps<{
     items: Item[]
     current: Item
     component_key: string
+    reverse: boolean
 }>()
 
 const emit = defineEmits<{
@@ -71,12 +74,18 @@ onClickOutside(dropOptionsRef, e => {
         gap: $smaller;
         padding-left: $medium;
         padding-right: 0;
+        text-transform: uppercase;
+        font-size: 12px !important;
 
         background-color: transparent;
         outline: solid 1px $gray5;
 
         svg {
             transform: rotate(90deg) scale(0.65);
+        }
+
+        svg.reverse {
+            transform: rotate(-90deg) scale(0.65);
         }
 
         &.showDropDown {

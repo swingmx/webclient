@@ -18,7 +18,7 @@
             class="scroller"
             style="height: 100%"
         >
-            <template #before>
+            <template #before v-if="is_alt_layout || isMedium || isSmall">
                 <Folder />
             </template>
 
@@ -46,7 +46,6 @@ import { computed, nextTick, onMounted, ref } from 'vue'
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router'
 
 import { isMedium, isSmall, track_limit } from '@/stores/content-width'
-import useLoader from '@/stores/loader'
 import useFolder from '@/stores/pages/folder'
 import useQueue from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
@@ -64,6 +63,7 @@ import NoItems from '@/components/shared/NoItems.vue'
 import SongItem from '@/components/shared/SongItem.vue'
 import { xl } from '@/composables/useBreakpoints'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
+import { getFiles } from '@/requests/folders'
 
 const queue = useQueue()
 const folder = useFolder()
@@ -119,8 +119,20 @@ const scrollerItems = computed(() => {
     return items
 })
 
-function playFromPage(index: number) {
-    tracklist.setFromFolder(folder.path, folder.allTracks)
+async function playFromPage(index: number) {
+    let tracks = folder.allTracks
+
+    if (folder.trackTotal !== folder.allTracks.length) {
+        const { tracks: newTracks } = await getFiles(folder.path, 0, folder.trackTotal, true, {
+            sorttracksby: folder.trackSortBy,
+            tracksort_reverse: folder.trackSortReverse,
+            sortfoldersby: folder.folderSortBy,
+            foldersort_reverse: folder.folderSortReverse,
+        })
+        tracks = newTracks
+    }
+
+    tracklist.setFromFolder(folder.path, tracks)
     queue.play(index)
 }
 

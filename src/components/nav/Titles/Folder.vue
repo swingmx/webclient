@@ -14,7 +14,13 @@
             </div>
             <BreadCrumbNav @navigate="navigate" />
         </div>
-        <DropDown :items="items" :current="current" component_key="sortbar" />
+        <DropDown
+            :items="items"
+            :current="current"
+            component_key="sortbar"
+            :reverse="folder.trackSortReverse"
+            @item-clicked="handleSortKeySet"
+        />
     </div>
 </template>
 
@@ -23,28 +29,47 @@ import { useRouter } from 'vue-router'
 
 import { Routes } from '@/router'
 
-import BreadCrumbNav from '@/components/FolderView/BreadCrumbNav.vue'
 import FolderSvg from '@/assets/icons/folder.svg'
+import BreadCrumbNav from '@/components/FolderView/BreadCrumbNav.vue'
 import DropDown from '@/components/shared/DropDown.vue'
-import { ref } from 'vue'
+import useFolder from '@/stores/pages/folder'
+import { computed } from 'vue'
 
 const router = useRouter()
+const folder = useFolder()
 
 function navigate(path: string) {
     router.push({ name: Routes.folder, params: { path } })
 }
 
-const items = [
-    { key: 'title', title: 'Title' },
-    { key: 'artist', title: 'Artist' },
+interface SortItem {
+    key: string;
+    title: string;
+}
+
+const items: SortItem[] = [
+    { key: 'default', title: 'Default' },
     { key: 'album', title: 'Album' },
-    { key: 'playcount', title: 'Play count' },
-    { key: 'playduration', title: 'Play duration' },
-    { key: 'release_date', title: 'Release date' },
-    { key: 'lastmod', title: 'Date added' },
+    { key: 'albumartists', title: 'Album Artists' },
+    { key: 'artists', title: 'Artists' },
+    { key: 'bitrate', title: 'Bitrate' },
+    { key: 'date', title: 'Release Date' },
+    { key: 'disc', title: 'Disc' },
     { key: 'duration', title: 'Duration' },
+    { key: 'lastmod', title: 'Date Added' },
+    { key: 'lastplayed', title: 'Last Played' },
+    { key: 'playduration', title: 'Play Duration' },
+    { key: 'playcount', title: 'Play Count' },
+    { key: 'title', title: 'Title' },
 ]
-const current = ref(items[0])
+
+const handleSortKeySet = (item: SortItem) => {
+    folder.setFolderTrackSortKey(item.key)
+}
+
+const current = computed(() => {
+    return items.find(item => item.key === folder.trackSortBy) || items[0]
+})
 </script>
 
 <style lang="scss">

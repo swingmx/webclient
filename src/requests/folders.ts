@@ -2,12 +2,28 @@ import { paths } from '@/config'
 import { Folder, Track } from '@/interfaces'
 import useAxios from './useAxios'
 
-export async function getFiles(path: string, start: number, limit: number, tracks_only = false) {
+export async function getFiles(
+    path: string,
+    start: number,
+    limit: number,
+    tracks_only = false,
+    options: {
+        sorttracksby: string
+        tracksort_reverse: boolean
+        sortfoldersby: string
+        foldersort_reverse: boolean
+    } = {
+        sorttracksby: 'default',
+        tracksort_reverse: false,
+        sortfoldersby: 'default',
+        foldersort_reverse: false,
+    }
+) {
     interface FolderData {
         tracks: Track[]
         folders: Folder[]
         path: string
-        tracktotal: number
+        total: number
     }
 
     const { data, error } = await useAxios({
@@ -17,6 +33,7 @@ export async function getFiles(path: string, start: number, limit: number, track
             start,
             limit,
             tracks_only,
+            ...options,
         },
     })
 
@@ -32,7 +49,7 @@ export async function getFiles(path: string, start: number, limit: number, track
         path: '',
         tracks: [],
         folders: [],
-        tracktotal: 0,
+        total: 0,
     }
 }
 

@@ -1,5 +1,5 @@
-import { ComputedRef } from 'vue'
 import { defineStore } from 'pinia'
+import { ComputedRef } from 'vue'
 
 import { useFuse } from '@/utils'
 
@@ -15,19 +15,31 @@ export default defineStore('FolderDirs&Tracks', {
         path: <string>{},
         allDirs: <Folder[]>[],
         allTracks: <Track[]>[],
+        trackTotal: 0,
+        trackSortBy: 'playcount',
+        folderSortBy: 'default',
+        trackSortReverse: true,
+        folderSortReverse: true,
     }),
     actions: {
         async fetchAll(fpath: string, restart?: boolean) {
-            const { tracks, folders, path } = await getFiles(
+            const { tracks, folders, path, total } = await getFiles(
                 fpath,
                 restart ? 0 : this.allTracks.length,
                 track_limit.value,
-                !restart && this.allTracks.length > 0
+                !restart && this.allTracks.length > 0,
+                {
+                    sorttracksby: this.trackSortBy,
+                    tracksort_reverse: this.trackSortReverse,
+                    sortfoldersby: this.folderSortBy,
+                    foldersort_reverse: this.folderSortReverse,
+                }
             )
 
-            if (this.path !== fpath) {
-                this.allDirs = []
+            if (restart || this.path !== fpath) {
                 this.allTracks = []
+                this.allDirs = []
+                this.trackTotal = 0
             }
 
             this.path = fpath
@@ -37,8 +49,20 @@ export default defineStore('FolderDirs&Tracks', {
                 fpath = path
             }
 
+            this.trackTotal = total
             ;[this.path, this.allDirs] = [fpath, folders]
             this.allTracks = this.allTracks.concat(tracks)
+        },
+        setFolderTrackSortKey(key: string) {
+            // INFO: If the key is the same as the current key, reverse the sort order
+            if (key === this.trackSortBy) {
+                this.trackSortReverse = !this.trackSortReverse
+            } else {
+                this.trackSortBy = key
+                this.trackSortReverse = true
+            }
+
+            this.fetchAll(this.path, true)
         },
         resetQuery() {
             this.query = ''
