@@ -7,7 +7,7 @@
                 @click.prevent="handleOpener"
                 :title="`sort by: ${current.title} ${reverse ? 'Descending' : 'Ascending'}`.toUpperCase()"
             >
-                <span class="ellip">sort: {{ current.title }}</span>
+                <span class="ellip">{{ current.title }}</span>
                 <ArrowSvg :class="{ reverse }" />
             </button>
             <div v-if="showDropDown" ref="dropOptionsRef" class="options rounded no-scroll shadow-lg">
@@ -67,6 +67,7 @@ onClickOutside(dropOptionsRef, e => {
 
 <style lang="scss">
 .smdropdown {
+    z-index: 1000;
     .selected {
         width: 100%;
         display: grid;

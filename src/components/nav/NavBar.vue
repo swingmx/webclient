@@ -78,6 +78,7 @@ function toggleSidenav() {
         display: grid;
         grid-template-columns: max-content 1fr;
         gap: 1rem;
+        position: relative;
 
         .info {
             margin: auto 0;
@@ -94,6 +95,12 @@ function toggleSidenav() {
 
         @include allPhones {
             display: none;
+        }
+
+        // INFO: Folder page sort bar overrides
+        .sortbar {
+            top: 0 !important;
+            right: 0 !important;
         }
     }
 

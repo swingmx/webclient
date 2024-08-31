@@ -49,18 +49,18 @@ interface SortItem {
 
 const items: SortItem[] = [
     { key: 'default', title: 'Default' },
-    { key: 'album', title: 'Album' },
-    { key: 'albumartists', title: 'Album Artists' },
-    { key: 'artists', title: 'Artists' },
-    { key: 'bitrate', title: 'Bitrate' },
-    { key: 'date', title: 'Release Date' },
-    { key: 'disc', title: 'Disc' },
-    { key: 'duration', title: 'Duration' },
-    { key: 'lastmod', title: 'Date Added' },
-    { key: 'lastplayed', title: 'Last Played' },
-    { key: 'playduration', title: 'Play Duration' },
-    { key: 'playcount', title: 'Play Count' },
     { key: 'title', title: 'Title' },
+    { key: 'album', title: 'Album' },
+    // { key: 'albumartists', title: 'Album Artist' },
+    { key: 'artists', title: 'Artist' },
+    // { key: 'bitrate', title: 'Bitrate' },
+    { key: 'date', title: 'Release Date' },
+    // { key: 'disc', title: 'Disc' },
+    // { key: 'duration', title: 'Duration' },
+    { key: 'last_mod', title: 'Date Added' },
+    { key: 'lastplayed', title: 'Last Played' },
+    { key: 'playcount', title: 'Play Count' },
+    { key: 'playduration', title: 'Play Duration' },
 ]
 
 const handleSortKeySet = (item: SortItem) => {
@@ -85,15 +85,29 @@ const current = computed(() => {
     width: fit-content;
     // overflow: hidden;
     display: grid;
-    grid-template-columns: auto 9rem;
-    gap: 1rem;
+    grid-template-columns: 1fr;
+    // gap: 1rem;
     justify-content: space-between;
-    width: 100%;
+    // width: 100%;
+    margin-right: 10rem; // sortbar width
 
     @include allPhones {
         display: grid;
         padding-top: $medium;
         padding-bottom: 1rem;
+
+        // INFO: Folder page sort bar overrides
+        .sortbar {
+            top: $medium !important;
+            right: 1rem !important;
+        }
+    }
+
+    .sortbar {
+        position: absolute;
+        top: 1rem;
+        right: 0;
+        width: 9rem;
     }
 
     .fname {
