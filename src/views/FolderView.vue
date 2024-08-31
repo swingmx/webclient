@@ -123,7 +123,7 @@ async function playFromPage(index: number) {
     let tracks = folder.allTracks
 
     if (folder.trackTotal !== folder.allTracks.length) {
-        const { tracks: newTracks } = await getFiles(folder.path, 0, folder.trackTotal, true, {
+        const { tracks: newTracks } = await getFiles(folder.path, 0, -1, true, {
             sorttracksby: folder.trackSortBy,
             tracksort_reverse: folder.trackSortReverse,
             sortfoldersby: folder.folderSortBy,
