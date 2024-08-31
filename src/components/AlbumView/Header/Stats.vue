@@ -10,7 +10,7 @@
       />
     </div>
     <div v-if="isSmallPhone" class="stats2">
-      {{ album.date }} {{ !album.is_single ? `• ${album.count} Tracks` : "" }} •
+      {{ new Date(album.date * 1000).getFullYear() }} {{ !album.is_single ? `• ${album.trackcount} Tracks` : "" }} •
       {{ formatSeconds(album.duration, true) }}
     </div>
   </div>
@@ -33,8 +33,8 @@ const statsText = computed(() => {
   const is_single = props.album.is_single;
 
   // hide track count if it's a single, also add an s to track if it's plural
-  return `• ${props.album.date} ${
-    !is_single ? `• ${props.album.count.toLocaleString()} Track${props.album.count > 1 ? "s" : ""}` : ""
+  return `• ${new Date(props.album.date * 1000).getFullYear()} ${
+    !is_single ? `• ${props.album.trackcount.toLocaleString()} Track${props.album.trackcount > 1 ? "s" : ""}` : ""
   } • ${formatSeconds(props.album.duration, true)}`;
 });
 </script>

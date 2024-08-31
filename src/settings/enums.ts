@@ -5,6 +5,7 @@ export enum SettingType {
   binary,
   button,
   root_dirs,
+  free_number_input,
   locked_number_input,
   
   // custom components 👇

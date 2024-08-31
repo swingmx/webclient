@@ -6,15 +6,7 @@ import { Option } from '@/interfaces'
 import { openInFiles } from '@/requests/folders'
 import { addTracksToPlaylist, removeTracks } from '@/requests/playlists'
 
-import {
-    AddToQueueIcon,
-    AlbumIcon,
-    ArtistIcon,
-    DeleteIcon,
-    FolderIcon,
-    PlayNextIcon,
-    PlusIcon,
-} from '@/icons'
+import { AddToQueueIcon, AlbumIcon, ArtistIcon, DeleteIcon, FolderIcon, PlayNextIcon, PlusIcon } from '@/icons'
 import usePlaylistStore from '@/stores/pages/playlist'
 import useQueueStore from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
@@ -28,18 +20,21 @@ import { getAddToPlaylistOptions, get_find_on_social } from './utils'
 
 export default async (track: Track): Promise<Option[]> => {
     const route = router.currentRoute.value
-    const on_playlist =
-        route.name === Routes.playlist &&
-        !Number.isNaN(parseInt(route.params.pid as string))
-    const single_artist = track.artists.length === 1
-    const single_album_artist = track.albumartists.length === 1
+    const on_playlist = route.name === Routes.playlist && !Number.isNaN(parseInt(route.params.pid as string))
+
+    const track_artists = Object.values(
+        [...track.artists, ...track.albumartists].reduce((acc, artist) => {
+            acc[artist.artisthash] = artist
+            return acc
+        }, {} as Record<string, Artist>)
+    )
 
     const goToArtist = async (artists: Artist[]) => {
         if (artists.length === 1) {
             return false
         }
 
-        return artists.map((artist) => {
+        return artists.map(artist => {
             return <Option>{
                 label: artist.name,
                 action: () =>
@@ -54,14 +49,8 @@ export default async (track: Track): Promise<Option[]> => {
     }
 
     const AddToPlaylistAction = (playlist: Playlist) => {
-        addTracksToPlaylist(playlist, [track]).then((success) => {
-            if (
-                !(
-                    route.name == Routes.playlist &&
-                    parseInt(route.params.pid as string) == playlist.id
-                )
-            )
-                return
+        addTracksToPlaylist(playlist, [track]).then(success => {
+            if (!(route.name == Routes.playlist && parseInt(route.params.pid as string) == playlist.id)) return
 
             if (!success) return
             const store = usePlaylistStore()
@@ -111,7 +100,7 @@ export default async (track: Track): Promise<Option[]> => {
         label: `Go to Artist`,
         icon: ArtistIcon,
         action: () => {
-            single_artist
+            track_artists.length == 1
                 ? Router.push({
                       name: Routes.artist,
                       params: {
@@ -120,25 +109,8 @@ export default async (track: Track): Promise<Option[]> => {
                   })
                 : null
         },
-        singleChild: track.artists.length === 1,
-        children: () => goToArtist(track.artists),
-    }
-
-    const go_to_alb_artist: Option = {
-        label: `Go to Album Artist`,
-        action: () => {
-            single_album_artist
-                ? Router.push({
-                      name: Routes.artist,
-                      params: {
-                          hash: track.albumartists[0].artisthash,
-                      },
-                  })
-                : null
-        },
-        icon: ArtistIcon,
-        singleChild: track.albumartists.length === 1,
-        children: () => goToArtist(track.albumartists),
+        singleChild: track_artists.length === 1,
+        children: () => goToArtist(track_artists),
     }
 
     const open_in_explorer: Option = {
@@ -190,7 +162,6 @@ export default async (track: Track): Promise<Option[]> => {
         go_to_album,
         go_to_folder,
         go_to_artist,
-        go_to_alb_artist,
         open_in_explorer,
         get_find_on_social('track', `${track.title} ${track.artists[0].name}`),
         // del_track,

@@ -39,46 +39,41 @@ export async function removeFavorite(favtype: favType, itemhash: string) {
     return true
 }
 
-export async function getAllFavs(
-    track_limit = 6,
-    album_limit = 6,
-    artist_limit = 6
-) {
+export async function getAllFavs(track_limit = 6, album_limit = 6, artist_limit = 6) {
     const { data } = await useAxios({
         url:
-            paths.api.favorites +
-            `?track_limit=${track_limit}&album_limit=${album_limit}&artist_limit=${artist_limit}`,
+            paths.api.favorites + `?track_limit=${track_limit}&album_limit=${album_limit}&artist_limit=${artist_limit}`,
         method: 'GET',
     })
 
     return data
 }
 
-export async function getFavAlbums(limit = 6) {
+export async function getFavAlbums(start=0, limit = 6) {
     const { data } = await useAxios({
-        url: paths.api.favAlbums + `?limit=${limit}`,
+        url: paths.api.favAlbums + `?start=${start}&limit=${limit}`,
         method: 'GET',
     })
 
-    return data.albums as Album[]
+    return data as { albums: Album[]; total: number }
 }
 
-export async function getFavTracks(limit = 5) {
+export async function getFavTracks(start = 0, limit = 5) {
     const { data } = await useAxios({
-        url: paths.api.favTracks + `?limit=${limit}`,
+        url: paths.api.favTracks + `?start=${start}&limit=${limit}`,
         method: 'GET',
     })
 
-    return data.tracks as Track[]
+    return data as { tracks: Track[]; total: number }
 }
 
-export async function getFavArtists(limit = 6) {
+export async function getFavArtists(start = 0, limit = 6) {
     const { data } = await useAxios({
-        url: paths.api.favArtists + `?limit=${limit}`,
+        url: paths.api.favArtists + `?start=${start}&limit=${limit}`,
         method: 'GET',
     })
 
-    return data.artists as Artist[]
+    return data as { artists: Artist[]; total: number }
 }
 
 export async function isFavorite(itemhash: string, type: favType) {

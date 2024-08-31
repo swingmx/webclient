@@ -33,7 +33,7 @@ const folder = {
   beforeEnter: async (to: any) => {
     state.loading.value = true;
     await useFolderPageStore()
-      .fetchAll(to.params.path)
+      .fetchAll(to.params.path, true)
       .then(() => {
         state.loading.value = false;
       });

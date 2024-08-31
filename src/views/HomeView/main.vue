@@ -3,19 +3,18 @@
         <GenericHeader>
             <template #name>Home</template>
             <template #description>{{
-                getGreetings(auth.user.firstname || auth.user.username)
+                getGreetings(auth.user.username)
             }}</template>
         </GenericHeader>
         <Browse />
-        <!-- v-if="home.recentlyPlayed.length" -->
         <RecentItems
             v-if="home.recentlyPlayedFetched && home.recentlyPlayed.length"
             :title="'Recently Played'"
             :items="home.recentlyPlayed"
             :play-source="playSources.track"
             :route="'/playlist/recentlyplayed'"
+            :see-all-text="'VIEW HISTORY'"
         />
-        <!-- v-if="home.recentlyAdded.length" -->
         <RecentItems
             v-if="home.recentlyAddedFetched && home.recentlyAdded.length"
             :title="'Recently Added'"
@@ -43,16 +42,6 @@ import GenericHeader from '@/components/shared/GenericHeader.vue'
 const home = useHome()
 const auth = useAuth()
 
-// const recentlyPlayed = computed(() => {
-//     if (!home.recentlyPlayed.length) {
-//         return []
-//     }
-//     return home.recentlyPlayed.fill({
-//         type: 'placeholder',
-//         with_helptext: true,
-//     })
-// })
-
 function getGreetings(username: string) {
     const date = new Date()
     const hour = date.getHours()
@@ -63,7 +52,7 @@ function getGreetings(username: string) {
         return 'Hey there early bird'
     } else if (hour <= 12) {
         return 'Good morning ' + username
-    } else if (hour <= 18) {
+    } else if (hour <= 17) {
         return 'Good afternoon ' + username
     } else {
         return 'Goooood evening ' + username

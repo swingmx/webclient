@@ -24,6 +24,7 @@ const update = async () => {
 };
 
 onMounted(async () => {
+  console.log("mounted");
   props.fetch_callback().then(update);
 });
 

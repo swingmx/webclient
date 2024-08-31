@@ -13,7 +13,7 @@
       <div
         class="overlay circular"
         :style="{
-          background: `linear-gradient(to top, ${artist.colors[0]} 20%, transparent)`,
+          background: `linear-gradient(to top, ${artist.color} 20%, transparent)`,
         }"
       ></div>
       <PlayBtn :artisthash="artist.artisthash" :artistname="artist.name" :source="playSources.artist" />

@@ -15,6 +15,11 @@ const getAlbumData = async (albumhash: string, ToastStore: typeof useToast) => {
     interface AlbumData {
         info: Album
         tracks: Track[]
+        copyright: string
+        extra: {
+            track_total: number
+            avg_bitrate: number
+        }
     }
 
     const { data, status } = await useAxios({
@@ -63,11 +68,7 @@ const getAlbumBio = async (hash: string) => {
     }
 }
 
-export const getAlbumsFromArtist = async (
-    albumartists: string,
-    limit: number = 2,
-    base_title: string
-) => {
+export const getAlbumsFromArtist = async (albumartists: {}, limit: number = 2, base_title: string) => {
     const { data } = await useAxios({
         url: albumsByArtistUrl,
         props: {
@@ -84,17 +85,12 @@ export const getAlbumsFromArtist = async (
     return []
 }
 
-export const getAlbumVersions = async (
-    og_album_title: string,
-    base_title: string,
-    artisthash: string
-) => {
+export const getAlbumVersions = async (og_album_title: string, albumhash: string) => {
     const { data } = await useAxios({
         url: albumVersions,
         props: {
             og_album_title,
-            base_title,
-            artisthash,
+            albumhash,
         },
     })
 
@@ -114,18 +110,9 @@ export async function getAlbumTracks(albumhash: string): Promise<Track[]> {
     return data
 }
 
-export async function getSimilarAlbums(
-    artisthash: string,
-    limit: number = 5
-): Promise<Album[]> {
+export async function getSimilarAlbums(artisthash: string, limit: number = 5): Promise<Album[]> {
     const { data } = await useAxios({
-        url:
-            albumUrl +
-            '/similar?' +
-            'artisthash=' +
-            artisthash +
-            '&limit=' +
-            limit,
+        url: albumUrl + '/similar?' + 'artisthash=' + artisthash + '&limit=' + limit,
         method: 'GET',
     })
 
