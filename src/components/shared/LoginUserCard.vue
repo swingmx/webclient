@@ -1,8 +1,5 @@
 <template>
-    <div
-        class="loginuser rounded-sm"
-        :class="{ selected }"
-    >
+    <div class="loginuser rounded-sm" :class="{ selected }">
         <Avatar :name="user.username" />
         <div class="username">
             {{ (selected ? `Hi ` : '') + user.username }}
@@ -31,6 +28,10 @@ defineProps<{
 
     &.selected {
         pointer-events: none;
+    }
+
+    > .username {
+        font-weight: 500;
     }
 }
 
