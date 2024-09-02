@@ -6,8 +6,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useToast } from '@/stores/notification'
+import { ref } from 'vue'
 
 const toast = useToast()
 
@@ -48,6 +48,11 @@ async function submit(newValue: number) {
     position: relative;
 
     input {
+        font-family: 'SF Compact Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+            sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+        font-size: 0.875rem;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
         width: 4rem !important;
         border: none;
         outline: none;
