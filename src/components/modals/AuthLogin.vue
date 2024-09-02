@@ -137,9 +137,10 @@ onMounted(async () => {
     display: grid;
     grid-template-rows: max-content 1fr max-content;
 
-    max-height: calc(100vh - 2rem);
+    max-height: calc(100vh - 4rem);
 
     .alcontent {
+        padding-bottom: 2rem;
         overflow: auto;
         overflow-x: hidden;
         scrollbar-gutter: stable;
