@@ -1,12 +1,6 @@
 <template>
-    <div
-        class="loginmodal"
-        v-auto-animate
-    >
-        <div
-            class="head"
-            :class="{ selected }"
-        >
+    <div class="loginmodal" v-auto-animate>
+        <div class="head" :class="{ selected }">
             <button
                 class="back rounded-sm"
                 title="Back to selection"
@@ -18,50 +12,24 @@
                 <span>back</span> <ArrowSvg />
             </button>
             <Logo />
-            <button
-                class="back back2 rounded-sm"
-                title="Back to selection"
-            >
-                <span>back</span> <ArrowSvg />
-            </button>
+            <button class="back back2 rounded-sm" title="Back to selection"><span>back</span> <ArrowSvg /></button>
         </div>
 
         <div class="alcontent">
             <div class="helptext" v-if="!selected">
                 <div class="h2">Welcome back</div>
             </div>
-            <div
-                class="selected-user"
-                v-if="selected"
-            >
+            <div class="selected-user" v-if="selected">
                 <User
-                    :user="
-                        selected.username === ''
-                            ? { id: 0, username: username, firstname: '' }
-                            : selected
-                    "
+                    :user="selected.username === '' ? { id: 0, username: username, firstname: '' } : selected"
                     :selected="true"
                 />
             </div>
 
-            <div
-                class="userlist"
-                v-auto-animate
-                v-else
-            >
-                <User
-                    v-for="user in shownUsers"
-                    @click="setUser(user)"
-                    :user="user"
-                    :key="user.id"
-                />
+            <div class="userlist" v-auto-animate v-else>
+                <User v-for="user in shownUsers" @click="setUser(user)" :user="user" :key="user.id" />
             </div>
-            <form
-                class="passinput"
-                v-if="selected"
-                v-auto-animate
-                @submit.prevent="loginUser"
-            >
+            <form class="passinput" v-if="selected" v-auto-animate @submit.prevent="loginUser">
                 <!-- Only show username input if there's no user list -->
                 <Input
                     placeholder="Enter username"
@@ -76,19 +44,10 @@
                     @input="(input: string) => password = input"
                 />
                 <!-- v-if="username.length && password.length" -->
-                <button
-                    class="submit"
-                    :class="{ long: selected.username !== ''}"
-                >
-                    Login
-                </button>
+                <button class="submit" :class="{ long: selected.username !== '' }">Login</button>
             </form>
         </div>
-        <div
-            v-if="guestAllowed"
-            class="guestlink"
-            @click="() => guestLogin()"
-        >
+        <div v-if="guestAllowed" class="guestlink" @click="() => guestLogin()">
             <span>Or continue as guest </span>
         </div>
     </div>
@@ -97,14 +56,14 @@
 <script setup lang="ts">
 import { Ref, computed, nextTick, onMounted, ref } from 'vue'
 
-import useAuth from '@/stores/auth'
 import { UserSimplified } from '@/interfaces'
 import { getAllUsers } from '@/requests/auth'
+import useAuth from '@/stores/auth'
 
-import Logo from '../Logo.vue'
-import User from '../shared/LoginUserCard.vue'
 import ArrowSvg from '../../assets/icons/expand.svg'
+import Logo from '../Logo.vue'
 import Input from '../shared/Input.vue'
+import User from '../shared/LoginUserCard.vue'
 
 const auth = useAuth()
 
@@ -112,12 +71,10 @@ const username = ref('')
 const password = ref('')
 
 const users: Ref<UserSimplified[]> = ref([])
-const shownUsers = computed(() => users.value.filter((user) => user.username !== 'guest'))
+const shownUsers = computed(() => users.value.filter(user => user.username !== 'guest'))
 const selected = ref<UserSimplified | null>(null)
 
-const guestAllowed = computed(() =>
-    users.value.some((user) => user.username === 'guest')
-)
+const guestAllowed = computed(() => users.value.some(user => user.username === 'guest'))
 
 async function setUser(user: UserSimplified) {
     selected.value = user
@@ -147,10 +104,7 @@ async function loginUser() {
     await auth.login(username.value, password.value)
 }
 
-async function guestLogin(
-    username: string = 'guest',
-    password: string = 'guest'
-) {
+async function guestLogin(username: string = 'guest', password: string = 'guest') {
     await auth.login(username, password)
 }
 
@@ -158,15 +112,12 @@ onMounted(async () => {
     let res = await getAllUsers()
 
     // if there are no users, or only the guest user, set the user to empty user
-    if (
-        res.users.length === 0 ||
-        (res.users.length == 1 && res.users[0].username === 'guest')
-    ) {
+    if (res.users.length === 0 || (res.users.length == 1 && res.users[0].username === 'guest')) {
         setUser({ id: 0, username: '', firstname: '' })
     }
 
     // if there's only one user, and it's not the guest user, select them
-    if (res.users.filter((user) => user.username !== 'guest').length === 1) {
+    if (res.users.filter(user => user.username !== 'guest').length === 1) {
         setTimeout(() => {
             setUser(res.users[0])
         }, 250)
@@ -186,8 +137,14 @@ onMounted(async () => {
     display: grid;
     grid-template-rows: max-content 1fr max-content;
 
+    max-height: calc(100vh - 4rem);
+
     .alcontent {
+        padding-bottom: 2rem;
         overflow: auto;
+        overflow-x: hidden;
+        scrollbar-gutter: stable;
+        -webkit-overflow-scrolling: touch;
     }
 
     .guestlink {
@@ -281,15 +238,23 @@ onMounted(async () => {
         align-items: center;
 
         input {
+            font-family: 'SF Compact Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+                sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+            font-size: 1rem;
+            font-weight: 500;
             width: 100%;
             height: 3rem;
             padding: 1rem;
-            font-size: 1rem;
             border: none;
             outline: none;
             background-color: $gray5;
-            color: $gray1;
+            color: $white;
             text-align: center;
+
+            &::placeholder {
+                color: #d1d1d1;
+                opacity: 0.5;
+            }
         }
 
         .submit {
@@ -299,6 +264,11 @@ onMounted(async () => {
             height: 3rem;
             background-color: $darkblue;
             margin-top: 1rem;
+            transition: color 0.2s ease-out;
+
+            &:hover {
+                color: #ffffff;
+            }
         }
 
         .submit.long {

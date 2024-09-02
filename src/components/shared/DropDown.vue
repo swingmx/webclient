@@ -25,8 +25,8 @@
     </div>
 </template>
 <script setup lang="ts">
-import { Ref, ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
+import { Ref, ref } from 'vue'
 
 import ArrowSvg from '@/assets/icons/arrow.svg'
 
@@ -111,8 +111,11 @@ onClickOutside(dropOptionsRef, e => {
         }
 
         .option {
+            font-weight: 500;
+            cursor: pointer;
             padding: $small;
             border-radius: $small;
+            transition: background-color 0.2s ease-out;
 
             &:hover {
                 background-color: $gray5;

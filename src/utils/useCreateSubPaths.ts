@@ -9,9 +9,13 @@ export default function createSubPaths(newpath: string, oldpath: string): [strin
     if (oldpath === undefined) oldpath = ''
     if (newpath === undefined) newpath = ''
 
+    newpath = newpath.replace(/\\/g, '/')
+    oldpath = oldpath.replace(/\\/g, '/')
+
     if (newpath.endsWith('/')) {
         newpath = newpath.slice(0, -1)
     }
+
     if (oldpath.endsWith('/')) {
         oldpath = oldpath.slice(0, -1)
     }
@@ -24,31 +28,33 @@ export default function createSubPaths(newpath: string, oldpath: string): [strin
         newpath = newpath.replace('/', '')
     }
 
-    const newlist = newpath.split('/')
+    const newlist = newpath.split('/').filter(Boolean)
 
     // if (newlist[0] == "$home") {
     //   newlist.shift();
     // }
 
     if (oldpath.includes(newpath)) {
-        const oldlist = oldpath.split('/')
+        const oldlist = oldpath.split('/').filter(Boolean)
 
         const current = newlist.slice(-1)[0]
         return [oldpath, createSubs(oldlist, current)]
     } else {
         const current = newlist.slice(-1)[0]
-
         return [newpath, createSubs(newlist, current)]
     }
 
     function createSubs(list: string[], current: string) {
-        const paths = list.map((path, index) => {
-            return {
-                active: false,
-                name: path,
-                path: list.slice(0, index + 1).join('/'),
-            }
-        })
+        const paths = list
+            .map((path, index) => {
+                return {
+                    active: false,
+                    name: path,
+                    path: list.slice(0, index + 1).join('/'),
+                }
+            })
+            .filter(item => item.name)
+
         paths.reverse()
 
         for (let i = 0; i < paths.length; i++) {

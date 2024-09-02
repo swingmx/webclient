@@ -21,11 +21,11 @@
 <script setup lang="ts">
 import useTabStore from '@/stores/tabs'
 
+import AvatarWithDropdown from '@/components/nav/AvatarWithDropdown.vue'
 import DashBoard from './Home/Main.vue'
 import Queue from './Queue.vue'
 import Search from './Search/Main.vue'
 import SearchInput from './SearchInput.vue'
-import AvatarWithDropdown from '@/components/nav/AvatarWithDropdown.vue'
 
 const tabs = useTabStore()
 </script>
@@ -52,6 +52,24 @@ const tabs = useTabStore()
         height: 2.5rem;
         margin: 1rem;
         width: 100%;
+
+        #ginner {
+            button {
+                width: 2rem;
+                height: 2rem;
+                margin-left: 4px;
+                margin-right: $smallest;
+
+                > svg {
+                    width: 1.75rem;
+                    height: 1.75rem;
+                }
+            }
+            > .clear_input {
+                width: 2rem;
+                height: 2rem;
+            }
+        }
     }
 
     .r-content {
@@ -82,6 +100,6 @@ const tabs = useTabStore()
 }
 
 .designatedOS .r-sidebar > .r-content > .r-queue > .queue-virtual-scroller > .scroller::-webkit-scrollbar-thumb {
-    border: 4px solid $gray;
+    border-color: $gray;
 }
 </style>

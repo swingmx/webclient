@@ -43,46 +43,46 @@
 </template>
 
 <script setup lang="ts">
-import { deletePlaylist as delPlaylist } from "@/requests/playlists";
-import useModalStore, { ModalOptions } from "@/stores/modal";
-import { useRouter } from "vue-router";
+import { deletePlaylist as delPlaylist } from '@/requests/playlists'
+import useModalStore, { ModalOptions } from '@/stores/modal'
+import { useRouter } from 'vue-router'
 
-import AuthLogin from "./modals/AuthLogin.vue";
-import ConfirmModal from "./modals/ConfirmModal.vue";
-import NewPlaylist from "./modals/NewPlaylist.vue";
-import RootDirsPrompt from "./modals/RootDirsPrompt.vue";
-import SetRootDirs from "./modals/SetRootDirs.vue";
-import Settings from "./modals/Settings.vue";
-import UpdatePlaylist from "./modals/updatePlaylist.vue";
+import AuthLogin from './modals/AuthLogin.vue'
+import ConfirmModal from './modals/ConfirmModal.vue'
+import NewPlaylist from './modals/NewPlaylist.vue'
+import RootDirsPrompt from './modals/RootDirsPrompt.vue'
+import SetRootDirs from './modals/SetRootDirs.vue'
+import Settings from './modals/Settings.vue'
+import UpdatePlaylist from './modals/updatePlaylist.vue'
 
-const modal = useModalStore();
-const router = useRouter();
+const modal = useModalStore()
+const router = useRouter()
 
 function setTitle(title: string) {
-    modal.setTitle(title);
+    modal.setTitle(title)
 }
 
 function hideModal() {
-    modal.hideModal();
+    modal.hideModal()
 }
 
 function deletePlaylist() {
     delPlaylist(modal.props.pid)
         .then(() => modal.hideModal())
-        .then(() => router.back());
+        .then(() => router.back())
 }
 </script>
 
 <style lang="scss">
 .modal {
     position: fixed;
-    z-index: 20;
+    z-index: 21;
     height: 100vh;
     width: 100vw;
     display: grid;
     place-items: center;
 
-    input[type="search"] {
+    input[type='search'] {
         margin: $small 0;
         border: none;
         background-color: $gray5;
