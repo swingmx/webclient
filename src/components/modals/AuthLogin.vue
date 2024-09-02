@@ -263,6 +263,11 @@ onMounted(async () => {
             height: 3rem;
             background-color: $darkblue;
             margin-top: 1rem;
+            transition: color 0.2s ease-out;
+
+            &:hover {
+                color: #ffffff;
+            }
         }
 
         .submit.long {

@@ -11,8 +11,8 @@
 </template>
 
 <script setup lang="ts">
-import { AlbumDisc } from '@/interfaces'
 import PlaySvg from '@/assets/icons/play.svg'
+import { AlbumDisc } from '@/interfaces'
 
 defineProps<{
     album_disc: AlbumDisc
@@ -45,6 +45,7 @@ defineEmits<{
         cursor: pointer;
         display: flex;
         align-items: center;
+        transition: opacity 0.2s ease-out;
 
         svg {
             height: 12px;
