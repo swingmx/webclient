@@ -1,12 +1,7 @@
 import { defineStore } from 'pinia'
 import { ComputedRef } from 'vue'
 
-import {
-    getAlbum,
-    getAlbumsFromArtist,
-    getAlbumVersions,
-    getSimilarAlbums,
-} from '@/requests/album'
+import { getAlbum, getAlbumsFromArtist, getAlbumVersions, getSimilarAlbums } from '@/requests/album'
 
 import { paths } from '@/config'
 import { FuseTrackOptions } from '@/enums'
@@ -51,8 +46,17 @@ export default defineStore('album', {
     state: () => ({
         query: '',
         info: <Album>{},
+        copyright: '',
+        extra: <
+            {
+                track_total: number
+                avg_bitrate: number
+            }
+        >{},
         srcTracks: <Track[]>[],
-        albumArtists: <{ artisthash: string; albums: Album[] }[]>[],
+        artistAlbums: <{
+            [key: string]: Album[]
+        }>{},
         otherVersions: <Album[]>[],
         similarAlbums: <Album[]>[],
         bio: null,
@@ -76,19 +80,18 @@ export default defineStore('album', {
 
             this.srcTracks = album.tracks
             this.info = album.info
+            this.copyright = album.copyright
+            this.extra = album.extra
             this.extractColors()
 
             const tracks = sortByTrackNumber(this.srcTracks)
             this.discs = createDiscs(tracks)
 
-            this.srcTracks = Object.keys(this.discs).reduce(
-                (tracks: Track[], disc) => {
-                    const disc_tracks = this.discs[disc]
+            this.srcTracks = Object.keys(this.discs).reduce((tracks: Track[], disc) => {
+                const disc_tracks = this.discs[disc]
 
-                    return [...tracks, ...disc_tracks]
-                },
-                []
-            )
+                return [...tracks, ...disc_tracks]
+            }, [])
 
             this.srcTracks.forEach((t, index) => {
                 t.master_index = index
@@ -100,14 +103,8 @@ export default defineStore('album', {
             if (this.fetched_other_hash == this.info.albumhash) return
 
             this.fetched_other_hash = this.info.albumhash
-            const albumartists = this.info.albumartists
-
-            const albumartisthashes = albumartists.map(
-                (artist) => artist.artisthash
-            )
-
-            this.albumArtists = await getAlbumsFromArtist(
-                albumartisthashes.join(),
+            this.artistAlbums = await getAlbumsFromArtist(
+                this.info.albumartists.map(a => a.artisthash),
                 maxAbumCards.value,
                 this.info.base_title
             )
@@ -118,18 +115,14 @@ export default defineStore('album', {
             this.fetched_version_hash = this.info.albumhash
             this.otherVersions = await getAlbumVersions(
                 this.info.og_title,
-                this.info.base_title,
-                this.info.albumartists[0].artisthash
+                this.info.albumhash,
             )
         },
         async fetchSimilarAlbums() {
             if (this.fetched_similar_hash === this.info.albumhash) return
 
             this.fetched_similar_hash = this.info.albumhash
-            this.similarAlbums = await getSimilarAlbums(
-                this.info.albumartists[0].artisthash,
-                maxAbumCards.value
-            )
+            this.similarAlbums = await getSimilarAlbums(this.info.albumartists[0].artisthash, maxAbumCards.value)
         },
         extractColors() {
             const url = paths.images.thumb.small + this.info.image
@@ -141,7 +134,7 @@ export default defineStore('album', {
         resetAlbumArtists() {
             setTimeout(() => {
                 if (router.currentRoute.value.name == Routes.album) return
-                this.albumArtists = []
+                this.artistAlbums = {}
                 this.fetched_other_hash = ''
             }, 10000)
         },
@@ -173,7 +166,7 @@ export default defineStore('album', {
             const discs = this.discs
             let tracks: Track[] | AlbumDisc[] = []
 
-            Object.keys(discs).forEach((disc) => {
+            Object.keys(discs).forEach(disc => {
                 const discHeader = {
                     is_album_disc_number: true,
                     album_page_disc_number: parseInt(disc),
@@ -185,16 +178,14 @@ export default defineStore('album', {
             return useFuse(this.query, tracks, FuseTrackOptions)
         },
         tracks(): Track[] {
-            const tracks = this.filteredTracks.value.map(
-                (result: FuseResult) => {
-                    const t = {
-                        ...result.item,
-                        index: result.refIndex,
-                    }
-
-                    return t
+            const tracks = this.filteredTracks.value.map((result: FuseResult) => {
+                const t = {
+                    ...result.item,
+                    index: result.refIndex,
                 }
-            )
+
+                return t
+            })
 
             return tracks
         },

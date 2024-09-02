@@ -12,7 +12,6 @@
             :item-size="itemHeight"
             key-field="id"
         >
-            <!-- v-slot="{ item, index }" -->
             <template #before>
                 <slot name="header"></slot>
             </template>

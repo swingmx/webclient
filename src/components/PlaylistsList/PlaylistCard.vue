@@ -1,7 +1,7 @@
 <template>
   <router-link :to="{ name: 'PlaylistView', params: { pid: playlist.id } }" class="p-card rounded no-scroll">
     <div v-if="!playlist.has_image && playlist.images.length" class="image-grid rounded-sm no-scroll">
-      <img v-for="(img, index) in playlist.images" :key="index" :src="paths.images.thumb.smallish + img" />
+      <img v-for="(img, index) in playlist.images" :key="index" :src="paths.images.thumb.smallish + img['image']" />
     </div>
     <img v-else :src="imguri + playlist.thumb" class="rounded-sm" :class="{ border: !playlist.thumb }" />
     <div class="overlay rounded">

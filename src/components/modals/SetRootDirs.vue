@@ -66,8 +66,9 @@ function fetchDirs(path: string) {
     .then((folders) => {
       dirs.value = folders;
       no_more_dirs.value = folders.length == 0;
-
-      [oldpath, subPaths.value] = createSubPaths(path, oldpath);
+      const res = createSubPaths(path, oldpath);
+      oldpath = res[0];
+      subPaths.value = res[1];
     })
     .then(() => (current = path == "$home" ? "" : path));
 }

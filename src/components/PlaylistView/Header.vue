@@ -46,7 +46,7 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import { pinUnpinPlaylist } from "@/requests/playlists";
-import { heightLarge, isSmallPhone } from "@/stores/content-width";
+import { isSmallPhone } from "@/stores/content-width";
 import usePStore from "@/stores/pages/playlist";
 import { getTextColor } from "@/utils/colortools/shift";
 

@@ -76,6 +76,8 @@ function handleGoBack() {
 </script>
 
 <style lang="scss">
+$modalheight: 38rem;
+
 .settingsmodal {
     display: grid;
     grid-template-columns: 15rem 1fr;

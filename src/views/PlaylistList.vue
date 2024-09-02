@@ -1,39 +1,33 @@
 <template>
-    <div id="p-view" class="content-page">
-        <Header>
-            <template #name>Playlists</template>
-            <template #description>
-                You have {{ pStore.playlists.length }} playlists in your library
-                <br />
-                <form spellcheck="false" @submit.prevent="() => {}">
-                    <input
-                        id="playlistsearch"
-                        v-model="input"
-                        class="rounded-sm no-border"
-                        type="search"
-                        placeholder="Search playlists"
-                        name=""
-                    />
-                </form>
-            </template>
-            <template #right>
-                <button class="playlist-button" @click="showNewPlaylistModal()"><PlusSvg /> New Playlist</button>
-            </template>
-        </Header>
-        <PlaylistCardGroup v-if="!query && pinnedPlaylists.length" :playlists="pinnedPlaylists" :title="'Pinned'" />
-        <PlaylistCardGroup
-            v-if="playlists.length"
-            :playlists="playlists"
-            :title="query ? 'Search Results' : `${pinnedPlaylists.length ? 'Other' : 'All'} Playlists`"
-        />
-
-        <NoItems
-            :flag="!playlists.length"
-            :icon="PlaylistSvg"
-            :title="'No playlists found'"
-            :description="description"
-        />
-    </div>
+  <div id="p-view" class="content-page">
+    <Header>
+      <template #name>Playlists</template>
+      <template #description>
+        You have {{ pStore.playlists.length }} playlists in your library
+        <br />
+        <form spellcheck="false" @submit.prevent="() => {}">
+          <input
+            id="playlistsearch"
+            v-model="input"
+            class="rounded-sm no-border"
+            type="search"
+            placeholder="Search playlists"
+            name=""
+          />
+        </form>
+      </template>
+      <template #right>
+        <button class="playlist-button" @click="showNewPlaylistModal()"><PlusSvg /> New Playlist</button>
+      </template>
+    </Header>
+    <PlaylistCardGroup v-if="!query && pinnedPlaylists.length" :playlists="pinnedPlaylists" :title="'Pinned'" />
+    <PlaylistCardGroup
+      v-if="playlists.length"
+      :playlists="playlists"
+      :title="query ? 'Search Results' : `${pinnedPlaylists.length ? 'Other' : 'All'} Playlists`"
+    />
+    <NoItems :flag="!(playlists.length + pinnedPlaylists.length)" :icon="PlaylistSvg" :title="'No playlists found'" :description="description" />
+  </div>
 </template>
 
 <script setup lang="ts">

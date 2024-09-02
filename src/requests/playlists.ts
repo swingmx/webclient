@@ -3,11 +3,7 @@ import { Artist, Playlist, Track } from '@/interfaces'
 import { NotifType, Notification, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
 
-const {
-    new: newPlaylistUrl,
-    base: basePlaylistUrl,
-    artists: playlistArtistsUrl,
-} = paths.api.playlist
+const { new: newPlaylistUrl, base: basePlaylistUrl, artists: playlistArtistsUrl } = paths.api.playlist
 
 /**
  * Creates a new playlist on the server.
@@ -56,8 +52,8 @@ export async function getAllPlaylists(no_images = false): Promise<Playlist[]> {
     return []
 }
 
-export async function getPlaylist(pid: number | string, no_tracks = false) {
-    const uri = `${basePlaylistUrl}/${pid}?no_tracks=${no_tracks}`
+export async function getPlaylist(pid: number | string, no_tracks = false, start: number = 0, limit: number = 50) {
+    const uri = `${basePlaylistUrl}/${pid}?no_tracks=${no_tracks}&start=${start}&limit=${limit}`
 
     interface PlaylistData {
         info: Playlist
@@ -101,7 +97,7 @@ export async function addItemToPlaylist(playlist: Playlist, props: {}) {
 export function addTracksToPlaylist(playlist: Playlist, tracks: Track[]) {
     return addItemToPlaylist(playlist, {
         itemtype: 'tracks',
-        itemhash: tracks.map((t) => t.trackhash).join(','),
+        itemhash: tracks.map(t => t.trackhash).join(','),
     })
 }
 
@@ -137,10 +133,7 @@ export async function saveItemAsPlaylist(itemtype: string, props: {}) {
     const store = useToast()
 
     if (status === 201) {
-        store.showNotification(
-            'Playlist created successfully!',
-            NotifType.Success
-        )
+        store.showNotification('Playlist created successfully!', NotifType.Success)
         return data.playlist as Playlist
     }
 
@@ -183,11 +176,7 @@ export function saveArtistAsPlaylist(playlist_name: string, itemhash: string) {
 
 // ========== END =========
 
-export async function updatePlaylist(
-    pid: number,
-    playlist: FormData,
-    pStore: any
-) {
+export async function updatePlaylist(pid: number, playlist: FormData, pStore: any) {
     const uri = `${basePlaylistUrl}/${pid}/update`
 
     const { data, status } = await useAxios({
@@ -245,10 +234,7 @@ export async function deletePlaylist(pid: number) {
     }
 }
 
-export async function removeTracks(
-    pid: number,
-    tracks: { trackhash: string; index: number }[]
-) {
+export async function removeTracks(pid: number, tracks: { trackhash: string; index: number }[]) {
     const { status } = await useAxios({
         url: paths.api.playlist.base + `/${pid}/remove-tracks`,
         props: {

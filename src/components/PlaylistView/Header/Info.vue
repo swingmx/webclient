@@ -25,7 +25,6 @@
 </template>
 <script setup lang="ts">
 import { playSources } from "@/enums";
-import { isSmall } from "@/stores/content-width";
 import { formatSeconds } from "@/utils";
 
 import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";

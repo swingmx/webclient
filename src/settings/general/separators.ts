@@ -1,37 +1,33 @@
-import { Setting } from "@/interfaces/settings";
-import { SettingType } from "../enums";
+import { Setting } from '@/interfaces/settings'
+import { SettingType } from '../enums'
 
-import useSettingsStore from "@/stores/settings";
-import { setSetting } from "@/requests/settings";
-import { DbSettingKeys } from "@/enums";
+import useSettingsStore from '@/stores/settings'
+import { updateConfig } from '@/requests/settings'
 
 export default <Setting>{
-  title: "Enter separators separated by a comma",
-  desc: `These will be used to separate artists and album artists`,
-  state: () => {
-    const store = useSettingsStore();
+    title: 'Enter separators separated by a comma',
+    desc: `These will be used to separate artists and album artists`,
+    state: () => {
+        const store = useSettingsStore()
 
-    const root_dirs_set = store.root_dirs.length > 0;
+        const root_dirs_set = store.root_dirs.length > 0
 
-    if (root_dirs_set) {
-      return store.separators;
-    }
+        if (root_dirs_set) {
+            return store.separators
+        }
 
-    return [];
-  },
-  action: async (payload: string) => {
-    if (!payload) return;
+        return []
+    },
+    action: async (payload: string) => {
+        if (!payload) return
 
-    const { result } = await setSetting(
-      DbSettingKeys.artist_separators,
-      payload
-    );
+        const { status } = await updateConfig("artistSeparators", payload)
 
-    if (result) {
-      useSettingsStore().setArtistSeparators(payload.split(","));
-    }
+        if (status == 200) {
+            useSettingsStore().setArtistSeparators(payload.split(','))
+        }
 
-    return true;
-  },
-  type: SettingType.separators_input,
-};
+        return true
+    },
+    type: SettingType.separators_input,
+}

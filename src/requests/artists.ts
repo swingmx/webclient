@@ -1,5 +1,5 @@
 import { paths } from '@/config'
-import { Album, Artist, Track } from '@/interfaces'
+import { Album, Artist, Genre, Track } from '@/interfaces'
 import { NotifType, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
 
@@ -7,7 +7,7 @@ export const getArtistData = async (hash: string, limit: number = 5) => {
     interface ArtistData {
         artist: Artist
         tracks: Track[]
-        genres: string[]
+        genres: Genre[]
     }
 
     const { data, error, status } = await useAxios({

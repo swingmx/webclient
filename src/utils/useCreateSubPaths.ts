@@ -9,7 +9,6 @@ export default function createSubPaths(newpath: string, oldpath: string): [strin
     if (oldpath === undefined) oldpath = ''
     if (newpath === undefined) newpath = ''
 
-    // Normalize paths for forward slashes?
     newpath = newpath.replace(/\\/g, '/')
     oldpath = oldpath.replace(/\\/g, '/')
 
@@ -30,9 +29,14 @@ export default function createSubPaths(newpath: string, oldpath: string): [strin
     }
 
     const newlist = newpath.split('/').filter(Boolean)
-    const oldlist = oldpath.split('/').filter(Boolean)
+
+    // if (newlist[0] == "$home") {
+    //   newlist.shift();
+    // }
 
     if (oldpath.includes(newpath)) {
+        const oldlist = oldpath.split('/').filter(Boolean)
+
         const current = newlist.slice(-1)[0]
         return [oldpath, createSubs(oldlist, current)]
     } else {

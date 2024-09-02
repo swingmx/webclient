@@ -1,5 +1,10 @@
 import { FromOptions, NotifType } from './enums'
 
+export interface Genre {
+    name: string
+    genrehash: string
+}
+
 export interface AlbumDisc {
     is_album_disc_number?: boolean
     album_page_disc_number?: number
@@ -48,24 +53,20 @@ export interface Album {
     og_title: string
     base_title: string
     albumartists: Artist[]
-    count: number
+    trackcount: number
     duration: number
-    date: string
+    date: number
     image: string
     artistimg: string
     albumhash: string
-    colors: string[]
-    copyright?: string
+    type?: string
 
+    color?: string
+    copyright?: string
     help_text?: string
     time?: string
-    is_live: boolean
-    is_compilation: boolean
-    is_soundtrack: boolean
-    is_single: boolean
-    is_EP: boolean
     is_favorite: boolean
-    genres: string[]
+    genres: Genre[]
     versions: string[]
 }
 
@@ -76,10 +77,11 @@ export interface Artist {
     trackcount: number
     albumcount: number
     duration: number
-    colors: string[]
+    color: string
     is_favorite?: boolean
     help_text?: string
     time?: string
+    genres: Genre[]
 }
 
 export interface Option {
@@ -106,7 +108,7 @@ export interface Playlist {
     has_image: boolean
     tracks: Track[]
     count: number
-    last_updated: string
+    _last_updated: string
     thumb: string
     duration: number
     settings: PlaylistSettings
@@ -117,8 +119,7 @@ export interface Playlist {
         | {
               image: string
               color: string
-          }[] // for playlist page
-        | string[] // for playlist list page
+          }[]
 }
 
 export interface Radio {
@@ -235,12 +236,9 @@ export interface LyricsLine {
 export interface UserSimplified {
     id: number
     username: string
-    firstname: string
 }
 
 export interface User extends UserSimplified {
-    lastname: string
-    email: string
     image: string
     roles: string[]
 }

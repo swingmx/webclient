@@ -172,8 +172,11 @@ export default defineStore('Queue', {
         currenttrack(): Track {
             const { tracklist } = useTracklist()
             const current = tracklist[this.currentindex]
+            if (!current) {
+                return {} as Track
+            }
 
-            isFavorite(current?.trackhash || '', favType.track).then(is_fav => {
+            isFavorite(current?.trackhash || 'mehmehmeh', favType.track).then(is_fav => {
                 if (current) {
                     current.is_favorite = is_fav
                 }

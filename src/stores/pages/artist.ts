@@ -1,17 +1,17 @@
 import { defineStore } from "pinia";
 
 import {
-  getArtistAlbums,
-  getArtistData,
-  getSimilarArtists,
+    getArtistAlbums,
+    getArtistData,
+    getSimilarArtists,
 } from "@/requests/artists";
 
 import { paths } from "@/config";
-import { Album, Artist, Track } from "@/interfaces";
+import { Album, Artist, Genre, Track } from "@/interfaces";
+import { Routes, router } from "@/router";
 import { maxAbumCards } from "@/stores/content-width";
 import useSettingsStore from "@/stores/settings";
 import setColorsToStore from "@/utils/colortools/setColorsToStore";
-import { Routes, router } from "@/router";
 
 export default defineStore("artistPage", {
   state: () => ({
@@ -27,7 +27,6 @@ export default defineStore("artistPage", {
       bg: "",
       btn: "",
     },
-    genres: <string[]>[],
     fetched_similar_hash: "",
   }),
   actions: {
@@ -40,7 +39,6 @@ export default defineStore("artistPage", {
 
       this.info = artist;
       this.tracks = tracks;
-      this.genres = genres;
 
       this.extractColors();
     },
@@ -66,8 +64,8 @@ export default defineStore("artistPage", {
       setColorsToStore(this, url, true);
     },
     setBgColor() {
-      const colors = this.info.colors;
-      this.colors.bg = colors[0] ? colors[0] : "";
+      const colors = this.info.color;
+      this.colors.bg = colors ? colors : "";
     },
     resetAlbums() {
       this.colors.bg = "";

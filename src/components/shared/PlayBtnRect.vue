@@ -34,5 +34,9 @@ defineProps<{
   align-items: center;
   justify-content: center;
   color: $white;
+
+  svg {
+    height: 1.75rem;
+  }
 }
 </style>

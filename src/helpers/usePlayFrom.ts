@@ -25,11 +25,7 @@ export async function utilPlayFromArtist(index: number = 0) {
     if (artist.tracks.length === 0) return
 
     if (artist.info.trackcount <= settings.artist_top_tracks_count) {
-        tracklist.setFromArtist(
-            artist.info.artisthash,
-            artist.info.name,
-            artist.tracks
-        )
+        tracklist.setFromArtist(artist.info.artisthash, artist.info.name, artist.tracks)
         queue.play()
         return
     }
@@ -55,10 +51,7 @@ export async function playFromAlbumCard(albumhash: string, albumname: string) {
     queue.play()
 }
 
-export async function playFromArtistCard(
-    artisthash: string,
-    artistname: string
-) {
+export async function playFromArtistCard(artisthash: string, artistname: string) {
     const queue = useQueue()
     const tracklist = useTracklist()
     const tracks = await getArtistTracks(artisthash)
@@ -76,7 +69,7 @@ export async function playFromFolderCard(folderpath: string) {
     const queue = useQueue()
     const tracklist = useTracklist()
 
-    const data = await getFiles(folderpath, true)
+    const data = await getFiles(folderpath, 0, -1, true)
     const tracks = data.tracks
 
     if (tracks.length === 0) {
@@ -91,20 +84,22 @@ export async function playFromFolderCard(folderpath: string) {
 export async function playFromFavorites(track: Track | undefined) {
     const queue = useQueue()
     const tracklist = useTracklist()
+    console.log(track)
 
+    // if our tracklist is not from favorites, we need to fetch the favorites
     if (tracklist.from.type !== FromOptions.favorite) {
-        const tracks = await getFavTracks(0)
-        tracklist.setFromFav(tracks)
+        const res = await getFavTracks(0, -1)
+        console.log(res)
+        tracklist.setFromFav(res.tracks)
     }
 
     let index = 0
 
     if (track) {
-        index = tracklist.tracklist.findIndex(
-            (t) => t.trackhash === track?.trackhash
-        )
+        index = tracklist.tracklist.findIndex(t => t.trackhash === track?.trackhash)
     }
 
+    console.log(tracklist.tracklist)
     queue.play(index)
 }
 
@@ -120,7 +115,7 @@ export async function playFromPlaylist(id: string, track?: Track) {
     tracklist.setFromPlaylist(info.name, info.id, tracks)
 
     if (track) {
-        const index = tracks.findIndex((t) => t.trackhash === track.trackhash)
+        const index = tracks.findIndex(t => t.trackhash === track.trackhash)
         queue.play(index)
     } else {
         queue.play()
@@ -135,11 +130,7 @@ export const playFrom = async (source: playSources) => {
         case playSources.album: {
             const album = useAlbum()
 
-            tracklist.setFromAlbum(
-                album.info.title,
-                album.info.albumhash,
-                album.srcTracks
-            )
+            tracklist.setFromAlbum(album.info.title, album.info.albumhash, album.srcTracks)
             queue.play()
             break
         }
@@ -148,13 +139,13 @@ export const playFrom = async (source: playSources) => {
             const playlist = usePlaylist()
 
             if (playlist.tracks.length === 0) return
-
-            tracklist.setFromPlaylist(
-                playlist.info.name,
-                playlist.info.id,
-                playlist.tracks
-            )
+            if (playlist.tracks.length !== playlist.info.count) {
+                // Fetch all tracks if not already fetched
+                await playlist.fetchAll(playlist.info.id, false, true)
+            }
+            tracklist.setFromPlaylist(playlist.info.name, playlist.info.id, playlist.tracks)
             queue.play()
+
             break
         }
 

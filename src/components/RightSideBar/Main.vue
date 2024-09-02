@@ -1,6 +1,9 @@
 <template>
     <div class="r-sidebar">
-        <SearchInput />
+        <div class="rtopbar">
+            <SearchInput />
+            <AvatarWithDropdown />
+        </div>
         <div v-auto-animate class="r-content no-scroll">
             <div v-if="tabs.current === tabs.tabs.home" class="r-dash">
                 <DashBoard />
@@ -18,6 +21,7 @@
 <script setup lang="ts">
 import useTabStore from '@/stores/tabs'
 
+import AvatarWithDropdown from '@/components/nav/AvatarWithDropdown.vue'
 import DashBoard from './Home/Main.vue'
 import Queue from './Queue.vue'
 import Search from './Search/Main.vue'
@@ -37,9 +41,17 @@ const tabs = useTabStore()
     border-bottom: none;
     margin-bottom: -1rem;
 
+    .rtopbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-right: 1rem;
+    }
+
     .gsearch-input {
         height: 2.5rem;
         margin: 1rem;
+        width: 100%;
 
         #ginner {
             button {

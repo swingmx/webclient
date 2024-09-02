@@ -97,6 +97,7 @@ export default defineStore(
 
       duration.value += diff;
       prev_date = now;
+      timestamp.value = Math.floor(now / 1000);
     }
 
     function lockSubmit() {
@@ -112,12 +113,7 @@ export default defineStore(
       lockSubmit();
       sendLogData(trackhash.value, duration.value, from.value, timestamp.value);
       resetData();
-      setTimestamp();
       prevKey.value = key.value;
-    }
-
-    function setTimestamp() {
-      timestamp.value = Math.floor(Date.now() / 1000);
     }
 
     function reassignEventListener() {
@@ -159,7 +155,6 @@ export default defineStore(
       key,
       prevKey,
       submitData,
-      setTimestamp,
       reassignEventListener,
       changeKey,
       resetData,

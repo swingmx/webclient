@@ -1,7 +1,8 @@
 <template>
   <div class="album-info" :style="{ color: textColor }">
     <div class="top">
-      <AlbumType :album="album" />
+      <!-- <AlbumType :album="album" /> -->
+      <div class="albumtype">{{ album.type }}</div>
       <div id="albumheadertitle" class="title ellip2">
         <span v-for="t in titleSplits" :key="t">{{ t }}<br /></span>
       </div>
@@ -72,6 +73,7 @@ onBeforeRouteUpdate(() => {
     .albumtype {
       font-size: 14px;
       font-weight: 700;
+      text-transform: capitalize;
     }
 
     .title {

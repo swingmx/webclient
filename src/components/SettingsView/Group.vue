@@ -1,14 +1,5 @@
 <template>
     <div v-if="group && (group.show_if ? group.show_if() : true)" class="settingsgroup">
-        <!-- <div v-if="group.title || group.desc" class="info">
-      <h4 v-if="group.title">
-        {{ group.title
-        }}<span v-if="group.experimental" class="badge experimental circular">
-          {{ group.experimental ? "experimental" : "" }}
-        </span>
-      </h4>
-      <div v-if="group.desc" class="desc">{{ group.desc }}</div>
-    </div> -->
         <div class="setting pad-lg">
             <div
                 v-for="(setting, index) in group.settings.filter(s => (s.show_if ? s.show_if() : true))"
@@ -24,14 +15,14 @@
                         <span class="ellip">
                             {{ setting.title }}
                             <span v-if="setting.experimental" class="badge experimental circular">
-                                {{ setting.experimental ? "experimental" : "" }}
+                                {{ setting.experimental ? 'experimental' : '' }}
                             </span>
                             <span v-if="setting.new" class="badge new circular">
-                                {{ setting.new ? "new" : "" }}
+                                {{ setting.new ? 'new' : '' }}
                             </span>
                         </span>
                         <button v-if="setting.type == SettingType.root_dirs" @click="setting.action">
-                            <ReloadSvg /> rescan
+                            <ReloadSvg height="1.5rem" /> <span>Rescan</span>
                         </button>
                     </div>
                     <div v-if="setting.desc" class="desc">
@@ -49,6 +40,11 @@
                         :options="setting.options"
                         :source="setting.state !== null ? setting.state : () => ''"
                         :setter-fn="setting.action"
+                    />
+                    <NumberInput
+                        v-if="setting.type === SettingType.free_number_input"
+                        :value="setting.state && setting.state()"
+                        :callback="setting.action"
                     />
                     <button v-if="setting.type === SettingType.button" @click="setting.action">
                         {{ setting.button_text && setting.button_text() }}
@@ -85,24 +81,25 @@
 </template>
 
 <script setup lang="ts">
-import { SettingGroup } from "@/interfaces/settings";
-import { SettingType } from "@/settings/enums";
+import { SettingGroup } from '@/interfaces/settings'
+import { SettingType } from '@/settings/enums'
 
-import ReloadSvg from "@/assets/icons/reload.svg";
-import List from "./Components/List.vue";
-import LockedNumberInput from "./Components/LockedNumberInput.vue";
-import Select from "./Components/Select.vue";
-import SeparatorsInput from "./Components/SeparatorsInput.vue";
-import Switch from "./Components/Switch.vue";
+import ReloadSvg from '@/assets/icons/reload.svg'
+import List from './Components/List.vue'
+import LockedNumberInput from './Components/LockedNumberInput.vue'
+import Select from './Components/Select.vue'
+import SeparatorsInput from './Components/SeparatorsInput.vue'
+import Switch from './Components/Switch.vue'
+import NumberInput from './Components/NumberInput.vue'
 
-import About from "./About.vue";
-import Profile from "../modals/settings/Profile.vue";
-import Pairing from "../modals/settings/custom/Pairing.vue";
-import Accounts from "../modals/settings/custom/Accounts.vue";
+import About from './About.vue'
+import Profile from '../modals/settings/Profile.vue'
+import Pairing from '../modals/settings/custom/Pairing.vue'
+import Accounts from '../modals/settings/custom/Accounts.vue'
 
 defineProps<{
-    group: SettingGroup;
-}>();
+    group: SettingGroup
+}>()
 </script>
 
 <style lang="scss">

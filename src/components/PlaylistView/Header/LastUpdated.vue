@@ -3,7 +3,7 @@
         <span
             v-if="!isHeaderSmall"
             class="status"
-            >Last updated {{ playlist.info.last_updated }}</span
+            >Last updated {{ playlist.info._last_updated }}</span
         >
         <div
             v-if="Number.isInteger(playlist.info.id)"

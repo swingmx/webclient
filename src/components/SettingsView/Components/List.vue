@@ -44,6 +44,9 @@ const icon_ = getIcon()
 
 <style lang="scss">
 .setting-item.is-list {
+    display: block !important;
+    // border: solid 1px;
+
     .list-items {
         border: solid 1px $gray5;
         border-radius: $small;
