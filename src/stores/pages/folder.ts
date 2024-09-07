@@ -17,7 +17,7 @@ export default defineStore('FolderDirs&Tracks', {
         allTracks: <Track[]>[],
         trackTotal: 0,
         trackSortBy: 'playcount',
-        folderSortBy: 'default',
+        folderSortBy: 'lastmod',
         trackSortReverse: true,
         folderSortReverse: true,
     }),

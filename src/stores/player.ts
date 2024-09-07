@@ -62,7 +62,9 @@ export const usePlayer = defineStore('player', () => {
 
     function clearNextAudioData() {
         nextAudioData.filepath = ''
+        nextAudioData.audio.removeEventListener('canplay', () => null)
         nextAudioData.audio = new Audio()
+
         nextAudioData.loaded = false
         nextAudioData.ticking = false
         nextAudioData.silence = {
@@ -170,7 +172,16 @@ export const usePlayer = defineStore('player', () => {
     const onAudioEnded = () => {
         const { submitData } = tracker
         submitData()
-        // queue.autoPlayNext()
+
+        console.log('audio ended')
+        console.log(nextAudioData)
+
+        // INFO: if next audio is not loaded, manually move forward
+        if (nextAudioData.loaded === false) {
+            console.log('next audio not loaded')
+            clearNextAudioData()
+            queue.autoPlayNext()
+        }
     }
 
     const onAudioPlay = () => {
@@ -202,6 +213,9 @@ export const usePlayer = defineStore('player', () => {
     }
 
     const handleNextAudioCanPlay = async () => {
+        // INFO: Keep a key for this query to ignore the result if the track has changed
+        const key = queue.currenttrack.trackhash + queue.next.trackhash
+
         if (!settings.use_silence_skip) {
             nextAudioData.silence.starting_file = 0
             currentAudioData.silence.ending_file = Math.floor(audio.duration * 1000)
@@ -217,7 +231,13 @@ export const usePlayer = defineStore('player', () => {
         })
 
         worker.onmessage = e => {
+            // INFO: if the track has changed, abort.
+            if (queue.currenttrack.trackhash + queue.next.trackhash !== key) {
+                return
+            }
+
             const silence = e.data
+
             nextAudioData.silence.starting_file = silence.starting_file
             currentAudioData.silence.ending_file = silence.ending_file
             nextAudioData.loaded = silence !== null
