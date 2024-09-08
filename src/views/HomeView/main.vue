@@ -2,13 +2,11 @@
     <div class="homepageview content-page">
         <GenericHeader>
             <template #name>Home</template>
-            <template #description>{{
-                getGreetings(auth.user.username)
-            }}</template>
+            <template #description>{{ getGreetings(auth.user.username) }}</template>
         </GenericHeader>
         <Browse />
         <RecentItems
-            v-if="home.recentlyPlayedFetched && home.recentlyPlayed.length"
+            v-if="!home.recentlyPlayedFetched || home.recentlyPlayed.length > 0"
             :title="'Recently Played'"
             :items="home.recentlyPlayed"
             :play-source="playSources.track"
@@ -16,7 +14,7 @@
             :see-all-text="'VIEW HISTORY'"
         />
         <RecentItems
-            v-if="home.recentlyAddedFetched && home.recentlyAdded.length"
+            v-if="!home.recentlyAddedFetched || home.recentlyAdded.length > 0"
             :title="'Recently Added'"
             :items="home.recentlyAdded"
             :play-source="playSources.recentlyAdded"
@@ -61,14 +59,12 @@ function getGreetings(username: string) {
 
 onMounted(async () => {
     updatePageTitle('Home')
-    await home.fetchRecentlyAdded()
-
-    nextTick().then(updateCardWidth)
-
     await home.fetchRecentlyPlayed()
+    nextTick().then(updateCardWidth)
+    await home.fetchRecentlyAdded()
 })
 
-onBeforeRouteLeave(() => home.resetAll())
+// onBeforeRouteLeave(() => home.resetAll())
 </script>
 
 <style lang="scss">
