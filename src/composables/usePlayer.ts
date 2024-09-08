@@ -6,6 +6,7 @@ export default async function usePlayer(url: string) {
     const audioContext = new AudioContext()
     const track = audioContext.createBufferSource()
     const chunkSize = 524288 // 0.5MB in bytes
+
     let totalSize = 0
     let downloadedSize = 0
     let playedSize = 0
@@ -19,18 +20,22 @@ export default async function usePlayer(url: string) {
             withCredentials: true,
         })
 
-        console.log("response", response.headers)
+        console.log('response', response.headers)
 
         if (totalSize === 0) {
             const contentRange = response.headers['content-range']
             totalSize = parseInt(contentRange.split('/')[1])
         }
 
-        console.log("total size", totalSize)
-        console.log(response.data)
+        console.log(response.data.byteLength)
 
-        const audioData = await audioContext.decodeAudioData(response.data)
-        downloadedSize += audioData.length
+        const bytes = response.data as ArrayBuffer
+        downloadedSize += bytes.byteLength
+        console.log('byte length', bytes)
+        const audioData = await audioContext.decodeAudioData(bytes)
+
+        console.log('downloaded size', downloadedSize)
+        console.log('audiodata', audioData)
 
         if (!track.buffer) {
             track.buffer = audioData
@@ -78,7 +83,7 @@ export default async function usePlayer(url: string) {
         pause: () => track.stop(),
         getProgress: () => ({
             downloaded: downloadedSize / totalSize,
-            played: playedSize / totalSize
-        })
+            played: playedSize / totalSize,
+        }),
     }
 }

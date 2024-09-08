@@ -1,6 +1,9 @@
 <template>
     <div class="options-and-duration">
-        <div class="song-duration">{{ formatSeconds(duration) }}</div>
+        <div class="song-duration" :class="{ has_help_text: help_text }">{{ formatSeconds(duration) }}</div>
+        <div class="song-duration help-text" v-if="help_text">{{ help_text }}
+            <b></b>
+        </div>
         <div class="options-icon circular" @click.stop="$emit('showMenu', $event)" @dblclick.stop="() => {}">
             <OptionSvg />
         </div>
@@ -13,6 +16,7 @@ import { formatSeconds } from '@/utils'
 
 defineProps<{
     duration: number
+    help_text?: string
 }>()
 
 defineEmits<{
@@ -24,9 +28,10 @@ defineEmits<{
 .songlist-item > .options-and-duration {
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: space-between;
     gap: 1rem;
     margin-right: $small;
+    position: relative;
 
     @include allPhones {
         gap: $small;
@@ -40,6 +45,18 @@ defineEmits<{
         @include mediumPhones {
             display: none;
         }
+
+        transition: opacity 0.1s ease-out;
+    }
+
+    .song-duration.help-text {
+        position: absolute;
+        left: 0;
+        font-size: $medium;
+        text-transform: uppercase;
+        color: $orange;
+        opacity: 0;
+        transition: opacity 0.1s ease-out;
     }
 
     .options-icon {

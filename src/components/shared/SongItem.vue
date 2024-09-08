@@ -21,7 +21,7 @@
             :albumhash="track.albumhash || ''"
             :hide_album="hide_album || false"
         />
-        <TrackDuration :duration="track.duration || 0" @showMenu="showMenu" />
+        <TrackDuration :duration="track.duration || 0" @showMenu="showMenu" :help_text="track.help_text" />
     </div>
 </template>
 
@@ -108,7 +108,7 @@ onBeforeUnmount(() => {
 // NOTE: CSS for responsiveness is at app-grid.scss
 .songlist-item {
     display: grid;
-    grid-template-columns: 1.75rem 1.25fr 1fr 1fr 5.5rem;
+    grid-template-columns: 1.75rem 1.25fr 1fr 1fr 7.5rem;
     align-items: center;
     justify-content: flex-start;
     gap: 1rem;
@@ -137,6 +137,15 @@ onBeforeUnmount(() => {
                 opacity: 1;
                 visibility: visible;
             }
+        }
+
+        .song-duration.has_help_text {
+            opacity: 0;
+        }
+
+        // INFO: Show help text on hover
+        .song-duration.help-text {
+            opacity: 1;
         }
     }
 

@@ -147,6 +147,7 @@ onMounted(async () => {
 <script lang="ts">
 // Detect OS & browser agents and add class
 import { defineComponent } from "vue";
+import usePlayer from "./composables/usePlayer";
 export default defineComponent({
     name: "OsAndBrowserSpecificContent",
     mounted() {
