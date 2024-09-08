@@ -2,6 +2,7 @@ import { paths } from '@/config'
 import { Artist, Playlist, Track } from '@/interfaces'
 import { NotifType, Notification, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
+import useFolder from '@/stores/pages/folder'
 
 const { new: newPlaylistUrl, base: basePlaylistUrl, artists: playlistArtistsUrl } = paths.api.playlist
 
@@ -109,9 +110,14 @@ export function addAlbumToPlaylist(playlist: Playlist, albumhash: string) {
 }
 
 export function addFolderToPlaylist(playlist: Playlist, path: string) {
+    const folder = useFolder()
     return addItemToPlaylist(playlist, {
         itemtype: 'folder',
         itemhash: path,
+        sortoptions: {
+            tracksortby: folder.trackSortBy,
+            tracksortreverse: folder.trackSortReverse,
+        },
     })
 }
 
@@ -161,9 +167,14 @@ export function saveAlbumAsPlaylist(playlist_name: string, itemhash: string) {
 }
 
 export function saveFolderAsPlaylist(playlist_name: string, itemhash: string) {
+    const folder = useFolder()
     return saveItemAsPlaylist('folder', {
         itemhash,
         playlist_name,
+        sortoptions: {
+            tracksortby: folder.trackSortBy,
+            tracksortreverse: folder.trackSortReverse,
+        },
     })
 }
 
