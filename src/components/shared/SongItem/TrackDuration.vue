@@ -1,8 +1,8 @@
 <template>
     <div class="options-and-duration">
         <div class="song-duration" :class="{ has_help_text: help_text }">{{ formatSeconds(duration) }}</div>
-        <div class="song-duration help-text" v-if="help_text">{{ help_text }}
-            <b></b>
+        <div class="song-duration help-text" v-if="help_text">
+            {{ help_text }}
         </div>
         <div class="options-icon circular" @click.stop="$emit('showMenu', $event)" @dblclick.stop="() => {}">
             <OptionSvg />
@@ -28,7 +28,7 @@ defineEmits<{
 .songlist-item > .options-and-duration {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: end;
     gap: 1rem;
     margin-right: $small;
     position: relative;
@@ -51,7 +51,8 @@ defineEmits<{
 
     .song-duration.help-text {
         position: absolute;
-        left: 0;
+        // INFO: 3 rem is the width of the options icon (2rem) plus the gap of the flex container (1rem)
+        right: 3rem;
         font-size: $medium;
         text-transform: uppercase;
         color: $orange;
