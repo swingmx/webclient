@@ -87,15 +87,15 @@ import { SettingType } from '@/settings/enums'
 import ReloadSvg from '@/assets/icons/reload.svg'
 import List from './Components/List.vue'
 import LockedNumberInput from './Components/LockedNumberInput.vue'
+import NumberInput from './Components/NumberInput.vue'
 import Select from './Components/Select.vue'
 import SeparatorsInput from './Components/SeparatorsInput.vue'
 import Switch from './Components/Switch.vue'
-import NumberInput from './Components/NumberInput.vue'
 
-import About from './About.vue'
 import Profile from '../modals/settings/Profile.vue'
-import Pairing from '../modals/settings/custom/Pairing.vue'
 import Accounts from '../modals/settings/custom/Accounts.vue'
+import Pairing from '../modals/settings/custom/Pairing.vue'
+import About from './About.vue'
 
 defineProps<{
     group: SettingGroup
@@ -177,6 +177,10 @@ defineProps<{
                 flex-wrap: wrap;
                 gap: $small;
                 width: 100%;
+
+                button {
+                    padding-right: $medium;
+                }
 
                 button > svg {
                     transform: scale(0.65);

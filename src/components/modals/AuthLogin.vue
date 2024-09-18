@@ -238,10 +238,7 @@ onMounted(async () => {
         align-items: center;
 
         input {
-            font-family: 'SF Compact Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-                sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
             font-size: 1rem;
-            font-weight: 500;
             width: 100%;
             height: 3rem;
             padding: 1rem;
@@ -250,11 +247,6 @@ onMounted(async () => {
             background-color: $gray5;
             color: $white;
             text-align: center;
-
-            &::placeholder {
-                color: #d1d1d1;
-                opacity: 0.5;
-            }
         }
 
         .submit {

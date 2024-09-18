@@ -171,11 +171,6 @@ function handleButton() {
                 font-weight: 600;
                 padding-right: $small;
             }
-
-            &::placeholder {
-                color: #d1d1d1;
-                opacity: 0.5;
-            }
         }
 
         .clear_input {

@@ -167,11 +167,6 @@ function update_playlist(e: Event) {
 .playlist-modal {
     #modal-playlist-name-input {
         margin-bottom: 1rem;
-
-        &::placeholder {
-            color: #d1d1d1;
-            opacity: 0.5;
-        }
     }
 
     .boxed {

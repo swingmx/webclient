@@ -59,6 +59,7 @@ const modal = useModal()
         justify-content: space-between;
         gap: $smaller;
         padding: $small $medium;
+        max-height: 36px;
         border-radius: 6px;
         cursor: pointer;
         transition: background-color 0.2s ease-out;
