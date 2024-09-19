@@ -139,6 +139,7 @@ function handleButton() {
             border-radius: 3rem;
             cursor: pointer;
             flex-shrink: 0;
+            color: $white;
 
             &:hover {
                 transition: all 0.2s ease;
