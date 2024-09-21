@@ -5,7 +5,7 @@ const automatic_backups: Setting = {
     title: 'Automatic backups',
     desc: 'Automatically backup your favorites, playlists and scrobble data',
     type: SettingType.binary,
-    state: () => true,
+    state: () => false,
     action: () => {},
     inactive: () => true,
 }
