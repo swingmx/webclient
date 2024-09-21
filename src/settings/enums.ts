@@ -13,5 +13,7 @@ export enum SettingType {
   profile,
   accounts,
   pairing,
-  about
+  about,
+  streaming_quality,
+  backup
 }

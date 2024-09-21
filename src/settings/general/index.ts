@@ -1,26 +1,26 @@
-import { loggedInUserIsAdmin } from '../utils'
 import useSettings from '@/stores/settings'
+import { loggedInUserIsAdmin } from '../utils'
 
 import { SettingCategory } from '@/interfaces/settings'
 import * as strings from '../strings'
+import albums from './albums'
+import restore from './backup'
+import circularArtistImg from './circular-artist-img'
 import contextChildrenShowMode from './context-children-show-mode'
 import extendWidth from './extend-width'
-import nowPlaying from './now-playing-group'
-import sidebarSettings from './sidebar'
-import rootDirSettings from './root-dirs'
-import albums from './albums'
-import separators from './separators'
-import tracks from './tracks'
-import circularArtistImg from './circular-artist-img'
-import layout from './layout'
 import folderlistmode from './folderlistmode'
-
+import layout from './layout'
+import nowPlaying from './now-playing-group'
+import rootDirSettings from './root-dirs'
+import separators from './separators'
+import sidebarSettings from './sidebar'
+import tracks from './tracks'
 // icons
-import AppearanceSvg from '@/assets/icons/paintbrush.svg?raw'
-import FolderSvg from '@/assets/icons/folder.svg?raw'
-import TrackSvg from '@/assets/icons/mic.svg?raw'
 import AlbumSvg from '@/assets/icons/album.svg?raw'
 import AvatarSvg from '@/assets/icons/artist.svg?raw'
+import FolderSvg from '@/assets/icons/folder.svg?raw'
+import TrackSvg from '@/assets/icons/mic.svg?raw'
+import AppearanceSvg from '@/assets/icons/paintbrush.svg?raw'
 
 const npStrings = strings.nowPlayingStrings
 const rootRootStrings = strings.manageRootDirsStrings
@@ -79,6 +79,12 @@ export const library = {
             desc: 'Customize artist separators',
             settings: [separators],
         },
+        {
+            title: "Backup",
+            icon: AvatarSvg,
+            desc: "Backup and restore your settings",
+            settings: [...restore],
+        }
     ],
 } as SettingCategory
 

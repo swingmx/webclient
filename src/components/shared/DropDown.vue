@@ -5,10 +5,10 @@
                 class="selected"
                 :class="{ showDropDown }"
                 @click.prevent="handleOpener"
-                :title="`sort by: ${current.title} ${reverse ? 'Descending' : 'Ascending'}`.toUpperCase()"
+                :title="reverse !== 'hide' ? `sort by: ${current.title} ${reverse ? 'Descending' : 'Ascending'}`.toUpperCase() : undefined"
             >
                 <span class="ellip">{{ current.title }}</span>
-                <ArrowSvg :class="{ reverse }" />
+                <ArrowSvg :class="{ reverse }" v-if="reverse !== 'hide'" />
             </button>
             <div v-if="showDropDown" ref="dropOptionsRef" class="options rounded no-scroll shadow-lg">
                 <div
@@ -42,7 +42,7 @@ defineProps<{
     items: Item[]
     current: Item
     component_key: string
-    reverse: boolean
+    reverse: boolean | 'hide'
 }>()
 
 const emit = defineEmits<{
