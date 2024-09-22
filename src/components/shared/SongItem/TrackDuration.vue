@@ -80,6 +80,10 @@ defineEmits<{
         color: $orange;
         opacity: 0;
         transition: opacity 0.2s ease-out;
+
+        @include allPhones {
+            right: 2.5rem;
+        }
     }
 
     .options-icon {
