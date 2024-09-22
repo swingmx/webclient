@@ -16,7 +16,11 @@ import { crossFade } from '@/utils/audio/crossFade'
 import updatePageTitle from '@/utils/updatePageTitle'
 
 export function getUrl(filepath: string, trackhash: string, use_legacy: boolean) {
-    return `${paths.api.files}/${trackhash + (use_legacy ? '/legacy' : '')}?filepath=${encodeURIComponent(filepath)}`
+    const { streaming_container, streaming_quality } = useSettings()
+
+    return `${paths.api.files}/${trackhash + (use_legacy ? '/legacy' : '')}?filepath=${encodeURIComponent(
+        filepath
+    )}&container=${streaming_container}&quality=${streaming_quality}`
 }
 
 let audio = new Audio()

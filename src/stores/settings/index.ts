@@ -40,6 +40,8 @@ export default defineStore('settings', {
         // client
         useCircularArtistImg: true,
         nowPlayingTrackOnTabTitle: false,
+        streaming_quality: 'original',
+        streaming_container: 'mp3',
 
         // plugins
         use_lyrics_plugin: <boolean | undefined>false,
@@ -274,6 +276,9 @@ export default defineStore('settings', {
                 !this.show_albums_as_singles,
                 'show_albums_as_singles'
             )
+        },
+        setStreamingQuality(quality: string) {
+            this.streaming_quality = quality
         },
     },
     getters: {

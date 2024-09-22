@@ -38,4 +38,45 @@ const crossfade: Setting = {
     show_if: () => settings().use_crossfade,
 }
 
-export default [use_legacy_streaming_endpoint, use_silence, use_crossfade, crossfade]
+const streaming_quality_options = [
+    {
+        title: 'Original',
+        key: 'original',
+    },
+    // {
+    //     title: 'High (1024kbps) (FLAC)',
+    //     key: '1024',
+    // },
+    // {
+    //     title: 'Medium (640kbps) (FLAC)',
+    //     key: '640',
+    // },
+    {
+        title: '320kbps',
+        key: '320',
+    },
+    {
+        title: '128kbps',
+        key: '128',
+    },
+    {
+        title: '96kbps',
+        key: '96',
+    },
+]
+
+const transcoding: Setting = {
+    title: 'Streaming quality',
+    desc: 'Choose the streaming quality of the music',
+    type: SettingType.streaming_quality,
+    state: () => streaming_quality_options.find(option => option.key === settings().streaming_quality),
+    action: (quality: {
+        key: string
+        title: string
+    }) => settings().setStreamingQuality(quality.key),
+    defaultAction: () => {},
+    show_if: () => !settings().use_legacy_streaming_endpoint,
+    options: streaming_quality_options as any,
+}
+
+export default [use_legacy_streaming_endpoint, use_silence, transcoding, use_crossfade, crossfade]

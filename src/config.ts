@@ -19,12 +19,12 @@ const imageRoutes = {
         large: '/thumbnail/',
         small: '/thumbnail/xsmall/',
         smallish: '/thumbnail/small/',
-        medium: "/thumbnail/medium/"
+        medium: '/thumbnail/medium/',
     },
     artist: {
         large: '/artist/',
         small: '/artist/small/',
-        medium: "/artist/medium/"
+        medium: '/artist/medium/',
     },
     playlist: '/playlist/',
 }
@@ -135,9 +135,9 @@ export const paths = {
             get trigger_scan() {
                 return this.base + '/trigger-scan'
             },
-            get updateConfig(){
-                return this.base + "/update"
-            }
+            get updateConfig() {
+                return this.base + '/update'
+            },
         },
         files: base_url + '/file',
         home: {
@@ -166,7 +166,7 @@ export const paths = {
             get addUser() {
                 return this.base + '/profile/create'
             },
-            get addGuestUser(){
+            get addGuestUser() {
                 return this.base + '/profile/guest/create'
             },
             get updateProfile() {
@@ -175,9 +175,24 @@ export const paths = {
             get deleteUser() {
                 return this.base + '/profile/delete'
             },
-            get pair(){
+            get pair() {
                 return this.base + '/getpaircode'
-            }
+            },
+        },
+        backups: {
+            base: base_url + '/backup',
+            get get_backups() {
+                return this.base + '/list'
+            },
+            get create_backup() {
+                return this.base + '/create'
+            },
+            get restore_backup() {
+                return this.base + '/restore'
+            },
+            get delete_backup() {
+                return this.base + '/delete'
+            },
         },
     },
     images: {
@@ -185,12 +200,12 @@ export const paths = {
             small: baseImgUrl + imageRoutes.thumb.small,
             smallish: baseImgUrl + imageRoutes.thumb.smallish,
             large: baseImgUrl + imageRoutes.thumb.large,
-            medium: baseImgUrl + imageRoutes.thumb.medium
+            medium: baseImgUrl + imageRoutes.thumb.medium,
         },
         artist: {
             small: baseImgUrl + imageRoutes.artist.small,
             large: baseImgUrl + imageRoutes.artist.large,
-            medium: baseImgUrl + imageRoutes.artist.medium
+            medium: baseImgUrl + imageRoutes.artist.medium,
         },
         playlist: baseImgUrl + imageRoutes.playlist,
     },
