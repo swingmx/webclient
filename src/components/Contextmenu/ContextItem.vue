@@ -261,4 +261,9 @@ function runChildAction(action: () => void) {
         width: 9rem;
     }
 }
+
+/* Removes the cursor pointer on the empty area within children dropdown of context-items */
+.context-item:has(.children) > .children {
+    cursor: initial !important;
+}
 </style>
