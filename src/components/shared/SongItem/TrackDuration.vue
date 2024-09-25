@@ -50,6 +50,9 @@ defineEmits<{
     }
 
     > .heart-icon.is-favorited {
+        display: block;
+        width: 28px;
+        height: 28px;
         user-select: none;
         pointer-events: none;
         transition: opacity 0.2s ease-out;
@@ -93,6 +96,7 @@ defineEmits<{
         flex-shrink: 0;
         aspect-ratio: 1;
         width: 2rem;
+        cursor: pointer;
         transition: background-color 0.2s ease-out;
 
         svg {
