@@ -5,7 +5,11 @@
                 class="selected"
                 :class="{ showDropDown }"
                 @click.prevent="handleOpener"
-                :title="reverse !== 'hide' ? `sort by: ${current.title} ${reverse ? 'Descending' : 'Ascending'}`.toUpperCase() : undefined"
+                :title="
+                    reverse !== 'hide'
+                        ? `sort by: ${current.title} ${reverse ? 'Descending' : 'Ascending'}`.toUpperCase()
+                        : undefined
+                "
             >
                 <span class="ellip">{{ current.title }}</span>
                 <ArrowSvg :class="{ reverse }" v-if="reverse !== 'hide'" />
@@ -67,7 +71,7 @@ onClickOutside(dropOptionsRef, e => {
 
 <style lang="scss">
 .smdropdown {
-    z-index: 1000;
+    z-index: 19;
     .selected {
         width: 100%;
         display: grid;

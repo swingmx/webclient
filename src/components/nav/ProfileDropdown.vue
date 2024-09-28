@@ -37,7 +37,7 @@ const modal = useModal()
 .profiledrop {
     position: absolute;
     cursor: initial;
-    z-index: 1000;
+    z-index: 20;
     top: 2.3rem;
     right: 0;
     width: 10.25rem;
@@ -64,10 +64,14 @@ const modal = useModal()
         max-height: 36px;
         border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.2s ease-out;
+        transition: background-color 0.2s ease-out, opacity 0.2s ease-out, box-shadow 0.2s ease-out;
 
         &:hover {
             background-color: $gray4;
+        }
+
+        &:active {
+            opacity: 0.3;
         }
 
         svg {
@@ -96,8 +100,6 @@ const modal = useModal()
     }
 
     .info {
-        justify-content: unset;
-        align-items: center;
         gap: $small;
         cursor: auto;
         padding: $smaller $medium;
@@ -113,6 +115,8 @@ const modal = useModal()
 
     .info.item {
         max-height: unset;
+        opacity: unset;
+        pointer-events: none;
     }
 
     .critical {
@@ -121,7 +125,7 @@ const modal = useModal()
 
     .critical:hover {
         background-color: transparent;
-        outline: solid 1px;
+        box-shadow: 0 0 0 1px $red;
     }
 }
 </style>
