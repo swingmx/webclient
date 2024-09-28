@@ -57,6 +57,10 @@ defineEmits<{
         pointer-events: none;
         transition: opacity 0.2s ease-out;
 
+        @include mediumPhones {
+            display: none;
+        }
+
         > .heart-button {
             all: unset !important;
         }
