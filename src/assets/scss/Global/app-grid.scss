@@ -45,7 +45,7 @@ $g-border: solid 1px $gray5;
 
     @include allPhones {
         display: flex;
-        gap: $small;
+        gap: $smaller;
         height: unset;
         padding: 6px 8px;
         margin: $medium 1rem;

@@ -44,7 +44,7 @@ import ArrowSvg from '../../assets/icons/right-arrow.svg'
             transition: transform 0.2s ease;
 
             &:active {
-                transform: scale(0.8);
+                transform: scale(0.76);
             }
         }
     }
