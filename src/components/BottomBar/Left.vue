@@ -96,16 +96,17 @@ defineEmits<{
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(51, 51, 51, 0.575);
+            background-color: rgba(51, 51, 51, 0.6);
 
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: all 0.2s;
+            transition: opacity 0.2s ease-out, height 0.2s ease-out, transform 0.2s ease-out,
+                background-color 0.2s ease-out;
 
             svg {
-                transform: rotate(-90deg) scale(0.9);
+                transform: rotate(-90deg) scale(0.92);
             }
         }
 
@@ -118,7 +119,7 @@ defineEmits<{
 
         &:active {
             .expandicon {
-                background-color: rgba(51, 51, 51, 0.7);
+                background-color: rgba(51, 51, 51, 0.74);
             }
         }
 

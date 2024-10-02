@@ -75,10 +75,10 @@ defineEmits<{
     .repeat {
         svg {
             transform: scale(0.75);
+        }
 
-            &:active {
-                transform: scale(0.6);
-            }
+        &:active > svg {
+            transform: scale(0.6);
         }
     }
 
