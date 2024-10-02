@@ -4,7 +4,7 @@ $g-border: solid 1px $gray5;
     display: grid;
     // grid-template-columns: min-content 1fr 29rem;
     grid-template-columns: min-content 1fr;
-    grid-template-rows: $navheight 1fr 5rem;
+    grid-template-rows: $navheight 1fr 5.125rem;
     grid-template-areas:
         'l-sidebar nav'
         'l-sidebar content'
@@ -94,7 +94,7 @@ $g-border: solid 1px $gray5;
 
 #app-grid.is_alt_layout {
     grid-template-columns: 1fr;
-    grid-template-rows: max-content 1fr 5rem;
+    grid-template-rows: max-content 1fr 5.125rem;
     grid-template-areas:
         'nav'
         'content'

@@ -43,8 +43,8 @@ function navigate(path: string) {
 }
 
 interface SortItem {
-    key: string;
-    title: string;
+    key: string
+    title: string
 }
 
 const items: SortItem[] = [
@@ -111,7 +111,7 @@ const current = computed(() => {
     }
 
     .fname {
-        background-color: $gray4;
+        background-color: $gray5;
         border-radius: $small;
         height: 2.188rem;
         display: flex;
