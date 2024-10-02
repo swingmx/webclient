@@ -49,6 +49,10 @@ defineEmits<{
         padding: 0 $small;
     }
 
+    #tracks-results > .vue-recycle-scroller {
+        padding: unset;
+    }
+
     .cardlistrow {
         grid-template-columns: repeat(auto-fill, minmax(8.1rem, 1fr));
     }
@@ -66,6 +70,14 @@ defineEmits<{
 }
 
 .designatedOS #tab-content::-webkit-scrollbar-thumb {
+    border-color: $gray;
+}
+
+.designatedOS #tab-content .vue-recycle-scroller::-webkit-scrollbar-track {
+    background-color: $gray;
+}
+
+.designatedOS #tab-content .vue-recycle-scroller::-webkit-scrollbar-thumb {
     border-color: $gray;
 }
 
