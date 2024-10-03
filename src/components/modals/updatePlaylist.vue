@@ -242,6 +242,7 @@ function update_playlist(e: Event) {
             svg {
                 transform: scale(1);
                 color: rgb(255, 255, 255);
+                transition: transform 0.2s ease-out;
             }
 
             &:hover {
