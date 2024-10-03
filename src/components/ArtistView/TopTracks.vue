@@ -1,6 +1,6 @@
 <template>
     <div class="artist-top-tracks">
-        <h3 class="section-title">
+        <h3 class="section-title" :class="{ isSmall, isMedium }">
             {{ title }}
             <SeeAll :route="route" />
         </h3>
@@ -42,6 +42,10 @@ defineProps<{
     .section-title {
         margin-left: 0;
         align-items: baseline;
+    }
+
+    .section-title.isSmall {
+        padding-left: 0.5rem !important;
     }
 
     .error {
