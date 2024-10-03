@@ -15,13 +15,13 @@
                 <img v-motion-fade class="rounded" :src="paths.images.thumb.large + queue.currenttrack?.image" />
             </RouterLink>
             <NowPlayingInfo @handle-fav="handleFav" />
-            <Progress v-if="isSmallPhone" />
-            <div v-if="isSmallPhone" class="below-progress">
-                <div class="time">
+            <Progress v-if="isMobile" />
+            <div class="below-progress">
+                <div v-if="isMobile" class="time">
                     {{ formatSeconds(queue.duration.current) }}
                 </div>
-                <Buttons :hide-heart="true" @handleFav="() => {}" />
-                <div class="time">
+                <Buttons v-if="isSmallPhone" :hide-heart="true" @handleFav="() => {}" />
+                <div v-if="isMobile" class="time">
                     {{ formatSeconds(queue.duration.full) }}
                 </div>
             </div>
@@ -43,7 +43,7 @@ import { paths } from '@/config'
 import { dropSources, favType } from '@/enums'
 import favoriteHandler from '@/helpers/favoriteHandler'
 import { Routes } from '@/router'
-import { isSmallPhone } from '@/stores/content-width'
+import { isMobile, isSmallPhone } from '@/stores/content-width'
 import useQueueStore from '@/stores/queue'
 import { formatSeconds } from '@/utils'
 
@@ -113,7 +113,7 @@ function handleFav() {
         }
 
         /* Responsive */
-        @include largePhones {
+        @include allPhones {
             .right-group button.speaker {
                 border-top: 1px solid transparent !important;
                 border-top-left-radius: 0 !important;
