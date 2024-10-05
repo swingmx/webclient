@@ -36,6 +36,10 @@ export interface Track extends AlbumDisc {
     master_index?: number
     help_text?: string
     time?: string
+    trend?: {
+        trend: 'rising' | 'falling' | 'stable',
+        is_new: boolean
+    }
 }
 
 export interface Folder {
@@ -68,6 +72,10 @@ export interface Album {
     is_favorite: boolean
     genres: Genre[]
     versions: string[]
+    trend?: {
+        trend: 'rising' | 'falling' | 'stable',
+        is_new: boolean
+    }
 }
 
 export interface Artist {
@@ -82,6 +90,12 @@ export interface Artist {
     help_text?: string
     time?: string
     genres: Genre[]
+
+    // available in charts
+    trend?: {
+        trend: 'rising' | 'falling' | 'stable',
+        is_new: boolean
+    }
 }
 
 export interface Option {

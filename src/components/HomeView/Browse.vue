@@ -99,6 +99,11 @@ const browselist = [
     action: triggerScan,
     class: "reload",
   },
+  {
+    title: "Stats",
+    icon: AlbumIcon,
+    route: Routes.Stats,
+  }
 ];
 </script>
 

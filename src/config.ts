@@ -194,6 +194,18 @@ export const paths = {
                 return this.base + '/delete'
             },
         },
+        stats: {
+            base: base_url + '/logger',
+            get topArtists() {
+                return this.base + '/top-artists'
+            },
+            get topAlbums() {
+                return this.base + '/top-albums'
+            },
+            get topTracks() {
+                return this.base + '/top-tracks'
+            },
+        },
     },
     images: {
         thumb: {
