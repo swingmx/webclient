@@ -173,7 +173,7 @@ function handleFav() {
     .center {
         display: grid;
         align-items: center;
-        gap: $small;
+        gap: 0.625rem;
 
         width: 30rem;
 
