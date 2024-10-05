@@ -1,5 +1,5 @@
 export function getDuration(time: string): number {
-    return 23731580
+    return 604800
     
     const now = new Date()
     let start: Date
