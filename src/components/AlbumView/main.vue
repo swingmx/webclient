@@ -5,9 +5,7 @@
         :style="{
             boxShadow:
                 // hide shadow on small screen
-                isSmallPhone ? '' : colors.bg
-                    ? `0 .5rem 2rem ${colors.bg}`
-                    : '0 .5rem 2rem black',
+                isSmallPhone ? '' : colors.bg ? `0 .5rem 2rem ${colors.bg}` : '0 .5rem 2rem black',
         }"
     ></div>
     <div
@@ -18,14 +16,8 @@
             background: isSmallPhone ? '' : colors.bg ? colors.bg : '',
         }"
     >
-        <div
-            class="big-img no-scroll"
-            :class="`${isHeaderSmall ? 'imgSmall' : ''} shadow-lg rounded-sm`"
-        >
-            <img
-                :src="imguri.thumb.large + album.image"
-                class="rounded-sm"
-            />
+        <div class="big-img no-scroll" :class="`${isHeaderSmall ? 'imgSmall' : ''} shadow-lg rounded-sm`">
+            <img :src="imguri.thumb.large + album.image" class="rounded-sm" />
         </div>
         <Info />
     </div>
@@ -133,6 +125,10 @@ useVisibility(albumheaderthing, handleVisibilityState)
             img {
                 height: 14rem !important;
             }
+        }
+
+        .albumtype {
+            text-align: center;
         }
 
         .title {

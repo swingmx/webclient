@@ -7,21 +7,10 @@
         @mouseleave="handleMouseLeave"
         @click="runAction"
     >
-        <div
-            class="icon image"
-            v-html="option.icon"
-        ></div>
+        <div class="icon image" v-html="option.icon"></div>
         <div class="label ellip">{{ option.label }}</div>
-        <div
-            v-if="hasChildren && !option.singleChild"
-            class="more"
-            v-html="ExpandIcon"
-        ></div>
-        <div
-            v-if="children"
-            ref="childRef"
-            class="children rounded shadow-sm"
-        >
+        <div v-if="hasChildren && !option.singleChild" class="more" v-html="ExpandIcon"></div>
+        <div v-if="children" ref="childRef" class="children rounded shadow-sm">
             <div className="wrapper">
                 <div
                     v-for="child in children"
@@ -40,13 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-    createPopper,
-    Instance,
-    Modifier,
-    Placement,
-    Rect,
-} from '@popperjs/core'
+import { createPopper, Instance, Modifier, Placement, Rect } from '@popperjs/core'
 import { computed, ref } from 'vue'
 
 import { contextChildrenShowMode } from '@/enums'
@@ -72,10 +55,7 @@ const childRef = ref<HTMLElement>()
 const parentRef = ref<HTMLElement>()
 
 const hasChildren = computed(() => {
-    return (
-        props.option.children &&
-        props.childrenShowMode === contextChildrenShowMode.hover
-    )
+    return props.option.children && props.childrenShowMode === contextChildrenShowMode.hover
 })
 
 let popperInstance: Instance | null = null
@@ -84,7 +64,7 @@ async function handleMouseEnter() {
     if (!hasChildren.value) return
 
     stillWaitingForChildren.value = true
-    await new Promise((resolve) => setTimeout(resolve, showChildrenDelay))
+    await new Promise(resolve => setTimeout(resolve, showChildrenDelay))
 
     if (stillWaitingForChildren.value) {
         showChildren()
@@ -122,11 +102,7 @@ async function showChildren() {
         {
             offset:
                 | [number, number]
-                | ((args: {
-                      placement: Placement
-                      reference: Rect
-                      popper: Rect
-                  }) => [number, number])
+                | ((args: { placement: Placement; reference: Rect; popper: Rect }) => [number, number])
         }
     > = {
         name: 'offset',
@@ -141,30 +117,26 @@ async function showChildren() {
         },
     }
 
-    popperInstance = createPopper(
-        parentRef.value as HTMLElement,
-        childRef.value as HTMLElement,
-        {
-            placement: 'right-start',
-            modifiers: [
-                {
-                    name: 'preventOverflow',
-                    options: {
-                        altAxis: true,
-                        boundariesElement: 'viewport',
-                    },
+    popperInstance = createPopper(parentRef.value as HTMLElement, childRef.value as HTMLElement, {
+        placement: 'right-start',
+        modifiers: [
+            {
+                name: 'preventOverflow',
+                options: {
+                    altAxis: true,
+                    boundariesElement: 'viewport',
                 },
-                {
-                    name: 'flip',
-                    options: {
-                        fallbackPlacements: ['left-start', 'auto'],
-                        boundariesElement: 'viewport',
-                    },
+            },
+            {
+                name: 'flip',
+                options: {
+                    fallbackPlacements: ['left-start', 'auto'],
+                    boundariesElement: 'viewport',
                 },
-                offsetModifier,
-            ],
-        }
-    )
+            },
+            offsetModifier,
+        ],
+    })
     childRef.value ? (childRef.value.style.visibility = 'visible') : null
     childRef.value ? (childRef.value.style.opacity = '1') : null
     childrenShown.value = true
@@ -204,6 +176,7 @@ function runChildAction(action: () => void) {
 
 <style lang="scss">
 .context-item {
+    cursor: pointer;
     width: 100%;
     display: flex;
     align-items: center;
@@ -217,7 +190,7 @@ function runChildAction(action: () => void) {
         width: 1.5rem;
         position: absolute;
         right: 2px;
-        bottom: 5px;
+        bottom: 6px;
         transform: scale(0.65);
     }
 
@@ -287,5 +260,10 @@ function runChildAction(action: () => void) {
     .label {
         width: 9rem;
     }
+}
+
+/* Removes the cursor pointer on the empty area within children dropdown of context-items */
+.context-item:has(.children) > .children {
+    cursor: initial !important;
 }
 </style>

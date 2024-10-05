@@ -52,7 +52,7 @@ defineEmits<{
         }
     }
 
-    @include largePhones {
+    @media only screen and (max-width: 724px) {
         padding-left: 0.5rem !important;
     }
 
