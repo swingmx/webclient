@@ -24,6 +24,7 @@
         </div>
     </div>
 </template>
+
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 
@@ -69,9 +70,6 @@ onMounted(async () => {
 
 <style lang="scss">
 .chartgroup {
-    border: solid 1px #e0e0e01a;
-    padding: 1rem;
-
     .scrobbleinfo {
         display: flex;
         align-items: center;
@@ -82,8 +80,8 @@ onMounted(async () => {
         font-size: 0.75rem;
         font-weight: 900;
 
-        border: solid 1px $gray5;
-        padding: $medium 1.2rem;
+        // border: solid 1px $gray5;
+        margin: $medium 1.2rem;
         color: $gray1;
 
         .date {

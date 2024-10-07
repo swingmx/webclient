@@ -33,13 +33,13 @@ const periods = ['week', 'month', 'year', 'alltime']
 
 <style lang="scss">
 .chartheader {
-    padding: $smaller 3rem 1rem 2.5rem;
+    padding: $smaller 0 1rem 0;
+    margin: 0 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: solid 1px $gray5;
-    width: calc(100% + 2rem);
-    margin-left: -1rem;
+    // margin-left: -1rem;
 
     .title {
         font-size: 1.25rem;

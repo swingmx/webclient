@@ -1,34 +1,59 @@
 <template>
-    <div class="statshead">
+    <div class="statshead" v-if="statItems.length">
         <div class="left">
-            <StatItem />
-            <StatItem />
-            <StatItem />
+            <StatItem
+                v-for="item in statItems.slice(0, statItems.length - 1)"
+                :key="item.class"
+                :value="item.value"
+                :text="item.text"
+                :icon="item.class"
+            />
         </div>
         <div class="right">
-            <div class="statitem streamduration box">
-                
-            </div>
+            <StatItem
+                :value="statItems[statItems.length - 1].value"
+                :text="statItems[statItems.length - 1].text"
+                :icon="statItems[statItems.length - 1].class"
+            />
         </div>
     </div>
 </template>
 <script setup lang="ts">
+import { getStats } from '@/requests/stats'
+import { onMounted, ref } from 'vue'
 import StatItem from './StatItem.vue'
+
+interface StatItem {
+    class: string
+    value: string
+    text: string
+}
+
+const statItems = ref<StatItem[]>([])
+
+onMounted(async () => {
+    const res = await getStats()
+    if (res.status == 200) {
+        statItems.value = res.data.stats
+    }
+})
 </script>
 
 <style lang="scss">
 .statshead {
     display: grid;
     grid-template-columns: 1fr max-content;
-    gap: 1.25rem;
+    gap: 1.5rem;
     padding: 1rem;
 
     .left {
         display: flex;
-        gap: 1rem;
+        gap: 2rem;
     }
 
-    
+    .right .statitem {
+        aspect-ratio: 1.5;
+    }
 
     .streamduration {
         padding: 1rem;

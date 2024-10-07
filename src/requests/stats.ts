@@ -21,3 +21,12 @@ export async function getTopAlbums(duration: number, limit: number, order_by: st
 export async function getTopTracks(duration: number, limit: number, order_by: string) {
     return await getChartItem('tracks', duration, limit, order_by)
 }
+
+export async function getStats() {
+    const res = await useAxios({
+        url: paths.api.stats.base + "/stats",
+        method: 'GET',
+    })
+
+    return res
+}

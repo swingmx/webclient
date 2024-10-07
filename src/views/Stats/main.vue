@@ -5,6 +5,7 @@
             <template #description>Your listening stats and trends</template>
         </GenericHeader>
         <Stats />
+        <br>
         <Charts />
     </div>
 </template>

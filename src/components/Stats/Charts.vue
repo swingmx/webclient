@@ -19,7 +19,6 @@ import ChartItemGroup from './ChartItemGroup.vue'
 <style lang="scss">
 .stats-charts {
     .chartitemgroupsgrid {
-        padding: 1rem;
         display: grid;
         grid-template-columns: 2fr 1.25fr;
         grid-template-rows: 1fr 1fr;
