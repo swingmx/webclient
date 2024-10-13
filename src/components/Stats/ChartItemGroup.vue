@@ -2,6 +2,7 @@
     <div class="chartgroup rounded" :class="name">
         <ChartsHeader :name="name" @change-period="changePeriod" :period="period" />
         <br />
+        <div class="noitems rounded-sm" v-if="items.length === 0">No {{ name.slice(0, -1) }} data found for this period</div>
         <ChartItem
             v-for="(item, index) in items"
             :key="index"
@@ -11,9 +12,8 @@
         />
         <div class="scrobbleinfo rounded-sm">
             <div class="date">
-
                 <CalendarSvg />
-                {{ date }}
+                {{ scrobbleInfo?.dates }}
             </div>
             <div class="scrobbleinfo-trend">
                 <ArrowSvg class="trend" :class="scrobbleInfo?.trend" />
@@ -26,9 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
-import { getDateRange, getDateRangeFromSecondsAgo, getDuration } from '@/utils/stats'
 import { getChartItem } from '@/requests/stats'
 import { Artist, Album, Track } from '@/interfaces'
 
@@ -42,18 +41,16 @@ const props = defineProps<{
 }>()
 
 const period = ref('month')
-const items = ref<Artist | Album | Track[]>([])
+const items = ref<(Artist | Album | Track)[]>([])
+
 const scrobbleInfo = ref<{
     text: string
     trend: string
+    dates: string
 } | null>(null)
 
-const date = computed(() => {
-    return getDateRangeFromSecondsAgo(getDuration(period.value))
-})
-
 async function getItems() {
-    const res = await getChartItem(props.name, getDuration(period.value), 10, 'playduration')
+    const res = await getChartItem(props.name, period.value, 10, 'playduration')
     items.value = res.data[props.name]
     scrobbleInfo.value = res.data.scrobbles
 }
@@ -70,6 +67,14 @@ onMounted(async () => {
 
 <style lang="scss">
 .chartgroup {
+    .noitems {
+        padding: 1rem;
+        background-color: $gray;
+        margin: 1rem;
+        margin-bottom: 2rem;
+        color: $white;
+    }
+
     .scrobbleinfo {
         display: flex;
         align-items: center;

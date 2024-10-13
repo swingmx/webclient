@@ -120,7 +120,7 @@ const formattedValue = computed(() => {
         background-image: linear-gradient(to top, #a7a6cb 0%, #8989ba 52%, #8989ba 100%);    }
 
     &.toptrack {
-        background-image: linear-gradient(45deg, #8baaaa 0%, #ae8b9c 100%);
+        background-image: linear-gradient(45deg, #29527a 0%, #1d50db 100%);
     }
 
     .itemcontent {

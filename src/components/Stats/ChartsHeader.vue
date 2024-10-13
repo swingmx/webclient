@@ -2,9 +2,6 @@
     <div class="chartheader">
         <div class="title">{{ name }}</div>
         <div class="period">
-            <div class="period-item">
-                this week
-            </div>
             <div
                 class="period-item"
                 v-for="p in periods"
