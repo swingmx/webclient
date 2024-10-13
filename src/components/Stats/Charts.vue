@@ -6,7 +6,7 @@
         </GenericHeader>
 
         <div class="chartitemgroupsgrid">
-            <ChartItemGroup :name="item" v-for="item in ['albums', 'artists', 'tracks']" :key="item" />
+            <ChartItemGroup :name="(item as any)" v-for="item in ['artists', 'albums', 'tracks']" :key="item" />
         </div>
     </div>
 </template>
@@ -20,24 +20,8 @@ import ChartItemGroup from './ChartItemGroup.vue'
 .stats-charts {
     .chartitemgroupsgrid {
         display: grid;
-        grid-template-columns: 2fr 1.25fr;
-        grid-template-rows: 1fr 1fr;
+        grid-template-columns: 1fr;
         gap: 3rem;
-
-        grid-template-areas:
-            'tracks artists'
-            'albums albums';
-
-        .artists {
-            grid-area: artists;
-        }
-        .tracks {
-            grid-area: tracks;
-        }
-
-        .albums {
-            grid-area: albums;
-        }
     }
 }
 </style>

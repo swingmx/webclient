@@ -1,5 +1,5 @@
 <template>
-    <div class="statitem" :class="`${props.icon}`">
+    <div class="statitem" :class="props.icon">
         <svg
             class="noise"
             xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@
             <rect width="700" height="700" fill="#7957a8" filter="url(#nnnoise-filter)"></rect>
         </svg>
         <div class="itemcontent">
-            <div class="count">{{ formattedValue }}</div>
+            <div class="count ellip2">{{ formattedValue }}</div>
             <div class="title">{{ text }}</div>
         </div>
 
@@ -117,10 +117,11 @@ const formattedValue = computed(() => {
     }
 
     &.trackcount {
-        background-image: linear-gradient(to top, #a7a6cb 0%, #8989ba 52%, #8989ba 100%);    }
+        background-image: linear-gradient(to top, #6a66b9 0%, #7777db 52%, #7b7bd4 100%);
+    }
 
     &.toptrack {
-        background-image: linear-gradient(45deg, #29527a 0%, #1d50db 100%);
+        background-image: linear-gradient(-225deg, #65379b 0%, #6750b3 53%, #6457c6 100%);
     }
 
     .itemcontent {
@@ -159,5 +160,9 @@ const formattedValue = computed(() => {
         top: 0;
         left: 0;
     }
+}
+
+.statitem.toptrack {
+    aspect-ratio: 1.5;
 }
 </style>

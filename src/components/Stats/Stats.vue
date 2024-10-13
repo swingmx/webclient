@@ -52,10 +52,6 @@ onMounted(async () => {
         gap: 2rem;
     }
 
-    .right .statitem {
-        aspect-ratio: 1.5;
-    }
-
     .streamduration {
         padding: 1rem;
     }

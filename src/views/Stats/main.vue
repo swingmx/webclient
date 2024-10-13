@@ -1,12 +1,12 @@
 <template>
     <div class="content-page" style="height: 100%; overflow: auto">
+        <Charts />
+        <br><br>
         <GenericHeader>
             <template #name>Stats</template>
-            <template #description>Your listening stats and trends</template>
+            <template #description>Various listening stats and trends</template>
         </GenericHeader>
         <Stats />
-        <br>
-        <Charts />
     </div>
 </template>
 

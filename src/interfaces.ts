@@ -96,6 +96,7 @@ export interface Artist {
         trend: 'rising' | 'falling' | 'stable',
         is_new: boolean
     }
+    extra?: any
 }
 
 export interface Option {

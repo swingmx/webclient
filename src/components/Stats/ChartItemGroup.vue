@@ -40,7 +40,7 @@ const props = defineProps<{
     name: 'artists' | 'albums' | 'tracks'
 }>()
 
-const period = ref('month')
+const period = ref('week')
 const items = ref<(Artist | Album | Track)[]>([])
 
 const scrobbleInfo = ref<{

@@ -5,10 +5,10 @@
         <div class="index">{{ index }}</div>
         <img :src="getItemImage(item)" class="chartimage" :class="name" />
         <div class="iteminfo">
-            <div class="title" v-if="isArtist">
+            <div class="title" :title="item.name" v-if="isArtist">
                 {{ item.name }} <MasterFlag v-if="item.trend?.is_new" :text="item.trend?.is_new ? 'New' : ''" :bitrate="1900"/>
             </div>
-            <div class="title" v-if="isAlbumOrTrack">
+            <div class="title" :title="item.title" v-if="isAlbumOrTrack">
                 {{ item.title }} <MasterFlag v-if="item.trend?.is_new" :text="item.trend?.is_new ? 'New' : ''" :bitrate="1900"/>
             </div>
             <div class="artist" v-if="isAlbumOrTrack">
@@ -16,6 +16,9 @@
                     :artists="item.artists ? item.artists : item.albumartists"
                     :albumartists="item.albumartists"
                 />
+            </div>
+            <div class="artist" v-if="isArtist">
+                {{ item.extra['playcount'] }} track plays
             </div>
         </div>
         <div class="helptext">
@@ -32,7 +35,6 @@ import { Album, Artist, Track } from '@/interfaces'
 import ArrowSvg from '@/assets/icons/arrow.svg'
 import ArtistName from '../shared/ArtistName.vue'
 import { Routes } from '@/router'
-import ChartItemNumberOne from './ChartItemNumberOne.vue'
 import MasterFlag from '../shared/MasterFlag.vue'
 
 type name = 'artist' | 'album' | 'track'
@@ -74,7 +76,7 @@ function getRouterParams() {
     padding-left: 1.25rem;
 
     display: grid;
-    grid-template-columns: 1rem max-content max-content 1fr max-content;
+    grid-template-columns: 1rem 1rem max-content 1fr max-content;
     gap: 1.5rem;
     align-items: center;
 
