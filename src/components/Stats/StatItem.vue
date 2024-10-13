@@ -51,7 +51,7 @@
             <rect width="700" height="700" fill="#7957a8" filter="url(#nnnoise-filter)"></rect>
         </svg>
         <div class="itemcontent">
-            <div class="count ellip2">{{ formattedValue }}</div>
+            <div class="count ellip2" :title="formattedValue">{{ formattedValue }}</div>
             <div class="title">{{ text }}</div>
         </div>
 
