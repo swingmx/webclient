@@ -3,7 +3,11 @@
         <ChartsHeader :name="group" @change-period="changePeriod" @change-group="changeGroup" :period="period" />
         <br />
         <div class="noitems rounded-sm" v-if="items.length === 0">
-            No {{ group.slice(0, -1) }} data found for this period
+            <div v-if="loading" class="loading">
+                <div class="spinner"></div>
+                <span>fetching data...</span>
+            </div>
+            <div v-if="!loading && loaded">No {{ group.slice(0, -1) }} data found for this period</div>
         </div>
         <ChartItem
             v-for="(item, index) in items"
@@ -39,8 +43,11 @@ import ArrowSvg from '@/assets/icons/arrow.svg'
 import CalendarSvg from '@/assets/icons/calendar.svg'
 
 // Reactive variables
+const loading = ref(true)
+const loaded = ref(false)
+
 const group = ref('artists')
-const period = ref('week')
+const period = ref('alltime')
 const items2: any = reactive({
     tracks: <Track[]>[],
     albums: <Album[]>[],
@@ -59,11 +66,27 @@ const scrobbleInfo = ref<{
 
 // Functions
 async function getItems() {
-    const res = await getChartItem(group.value, period.value, 10, 'playduration')
     items2[group.value] = []
-    items2[group.value] = res.data[group.value]
+    loaded.value = false
+    let isPending = true
+    
+    // Set a timeout to show the loader after 250ms
+    setTimeout(() => {
+        if (isPending) {
+            loading.value = true
+        }
+    }, 450)
 
-    scrobbleInfo.value = res.data.scrobbles
+    try {
+        const res = await getChartItem(group.value, period.value, 10, 'playduration')
+        items2[group.value] = res.data[group.value]
+        scrobbleInfo.value = res.data.scrobbles
+        loaded.value = true
+    } finally {
+        isPending = false
+        loading.value = false
+        loaded.value = true
+    }
 }
 
 async function changePeriod(newPeriod: string) {
@@ -83,7 +106,13 @@ onMounted(async () => {
 
 <style lang="scss">
 .chartgroup {
+    .loading {
+        display: flex;
+        gap: $small;
+    }
+
     .noitems {
+        height: 3.25rem;
         padding: 1rem;
         background-color: $gray;
         margin: 1rem;
@@ -101,7 +130,6 @@ onMounted(async () => {
         font-size: 0.75rem;
         font-weight: 900;
 
-        // border: solid 1px $gray5;
         margin: $medium 1.2rem;
         color: $gray1;
 

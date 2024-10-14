@@ -55,7 +55,18 @@
             <div class="title">{{ text }}</div>
         </div>
 
-        <component :is="icon" class="staticon" />
+        <component :is="icon" class="staticon" v-if="props.icon !== 'toptrack'" />
+        <router-link
+            :to="{
+                name: Routes.album,
+                params: {
+                    albumhash: props.image?.replace('.webp', ''),
+                },
+            }"
+            v-if="props.icon === 'toptrack' && props.image"
+        >
+            <img class="staticon statimage shadow-sm" :src="paths.images.thumb.small + props.image" alt="" />
+        </router-link>
     </div>
 </template>
 
@@ -66,11 +77,14 @@ import StopWatchSvg from '@/assets/icons/timer.svg'
 import HeadphoneSvg from '@/assets/icons/headphones.svg'
 import FolderSvg from '@/assets/icons/folder.nopad.svg'
 import Index1Svg from '@/assets/icons/index1.svg'
+import { paths } from '@/config'
+import { Routes } from '@/router'
 
 const props = defineProps<{
     value: string
     text: string
     icon: string
+    image?: string
 }>()
 
 const icon = computed(() => {
@@ -153,6 +167,12 @@ const formattedValue = computed(() => {
         left: 1rem;
         width: 1.5rem;
         z-index: 1;
+    }
+
+    .statimage {
+        height: 54px;
+        width: 54px;
+        border-radius: $smaller;
     }
 
     svg.noise {

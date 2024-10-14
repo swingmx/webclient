@@ -7,6 +7,7 @@
                 :value="item.value"
                 :text="item.text"
                 :icon="item.cssclass"
+                :image="item.image"
             />
         </div>
         <div class="right">
@@ -17,25 +18,33 @@
             />
         </div>
     </div>
+    <div class="statsdates">
+        <CalendarSvg />
+        {{ dates }}
+    </div>
 </template>
 
 <script setup lang="ts">
 import { getStats } from '@/requests/stats'
 import { onMounted, ref } from 'vue'
 import StatItem from './StatItem.vue'
+import CalendarSvg from '@/assets/icons/calendar.svg'
 
 interface StatItem {
     cssclass: string
     value: string
     text: string
+    image?: string
 }
 
 const statItems = ref<StatItem[]>([])
+const dates = ref<string[]>([])
 
 onMounted(async () => {
     const res = await getStats()
     if (res.status == 200) {
         statItems.value = res.data.stats
+        dates.value = res.data.dates
     }
 })
 </script>
@@ -54,6 +63,21 @@ onMounted(async () => {
 
     .streamduration {
         padding: 1rem;
+    }
+}
+
+.statsdates {
+    display: flex;
+    align-items: center;
+    gap: $small;
+    color: $gray1;
+    padding: 1rem;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 900;
+
+    svg {
+        width: 1.25rem;
     }
 }
 </style>
