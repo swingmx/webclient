@@ -47,7 +47,7 @@ const loading = ref(true)
 const loaded = ref(false)
 
 const group = ref('artists')
-const period = ref('alltime')
+const period = ref('week')
 const items2: any = reactive({
     tracks: <Track[]>[],
     albums: <Album[]>[],
