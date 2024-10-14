@@ -1,6 +1,17 @@
 <template>
     <div class="chartheader">
-        <div class="title">{{ name }}</div>
+        <!-- <div class="title">{{ name }}</div> -->
+        <div class="group">
+            <div
+                class="group-item"
+                v-for="g in groups"
+                :key="g"
+                :class="g === name ? 'active' : ''"
+                @click="$emit('changeGroup', g)"
+            >
+                {{ g }}
+            </div>
+        </div>
         <div class="period">
             <div
                 class="period-item"
@@ -17,14 +28,16 @@
 
 <script setup lang="ts">
 defineProps<{
-    name: 'artists' | 'albums' | 'tracks'
+    name: string
     period: string
 }>()
 
 defineEmits<{
     (e: 'changePeriod', period: string): void
+    (e: 'changeGroup', group: string): void
 }>()
 
+const groups = ['artists', 'albums', 'tracks']
 const periods = ['week', 'month', 'year', 'alltime']
 </script>
 
@@ -39,17 +52,19 @@ const periods = ['week', 'month', 'year', 'alltime']
     // margin-left: -1rem;
 
     .title {
-        font-size: 1.25rem;
+        font-size: 1rem;
         font-weight: 600;
         text-transform: uppercase;
     }
 
-    .period {
+    .period,
+    .group {
         display: flex;
         gap: 1rem;
         text-transform: uppercase;
 
-        .period-item {
+        .period-item,
+        .group-item {
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;

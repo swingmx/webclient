@@ -6,7 +6,7 @@
         </GenericHeader>
 
         <div class="chartitemgroupsgrid">
-            <ChartItemGroup :name="(item as any)" v-for="item in ['artists', 'albums', 'tracks']" :key="item" />
+            <ChartItemGroup />
         </div>
     </div>
 </template>

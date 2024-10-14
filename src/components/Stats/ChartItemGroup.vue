@@ -1,14 +1,16 @@
 <template>
-    <div class="chartgroup rounded" :class="name">
-        <ChartsHeader :name="name" @change-period="changePeriod" :period="period" />
+    <div class="chartgroup rounded" :class="group">
+        <ChartsHeader :name="group" @change-period="changePeriod" @change-group="changeGroup" :period="period" />
         <br />
-        <div class="noitems rounded-sm" v-if="items.length === 0">No {{ name.slice(0, -1) }} data found for this period</div>
+        <div class="noitems rounded-sm" v-if="items.length === 0">
+            No {{ group.slice(0, -1) }} data found for this period
+        </div>
         <ChartItem
             v-for="(item, index) in items"
             :key="index"
             :item="item"
             :index="index + 1"
-            :name="(name.slice(0, -1) as any)"
+            :name="(group.slice(0, -1) as any)"
         />
         <div class="scrobbleinfo rounded-sm">
             <div class="date">
@@ -26,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 
 import { getChartItem } from '@/requests/stats'
 import { Artist, Album, Track } from '@/interfaces'
@@ -36,12 +38,18 @@ import ChartsHeader from './ChartsHeader.vue'
 import ArrowSvg from '@/assets/icons/arrow.svg'
 import CalendarSvg from '@/assets/icons/calendar.svg'
 
-const props = defineProps<{
-    name: 'artists' | 'albums' | 'tracks'
-}>()
+// Reactive variables
+const group = ref('artists')
+const period = ref('alltime')
+const items2: any = reactive({
+    tracks: <Track[]>[],
+    albums: <Album[]>[],
+    artists: <Artist[]>[],
+})
 
-const period = ref('week')
-const items = ref<(Artist | Album | Track)[]>([])
+const items = computed(() => {
+    return items2[group.value]
+})
 
 const scrobbleInfo = ref<{
     text: string
@@ -49,14 +57,22 @@ const scrobbleInfo = ref<{
     dates: string
 } | null>(null)
 
+// Functions
 async function getItems() {
-    const res = await getChartItem(props.name, period.value, 10, 'playduration')
-    items.value = res.data[props.name]
+    const res = await getChartItem(group.value, period.value, 10, 'playduration')
+    items2[group.value] = []
+    items2[group.value] = res.data[group.value]
+
     scrobbleInfo.value = res.data.scrobbles
 }
 
 async function changePeriod(newPeriod: string) {
     period.value = newPeriod
+    await getItems()
+}
+
+async function changeGroup(newGroup: string) {
+    group.value = newGroup
     await getItems()
 }
 

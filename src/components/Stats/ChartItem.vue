@@ -1,5 +1,4 @@
 <template>
-    <!-- <ChartItemNumberOne v-if="index === 1" :item="item" :index="index" :name="name" /> -->
     <RouterLink :to="getRouterParams()" class="chartitem rounded-sm">
         <ArrowSvg class="trend" :class="item.trend?.trend" />
         <div class="index">{{ index }}</div>
