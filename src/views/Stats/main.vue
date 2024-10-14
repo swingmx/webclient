@@ -4,7 +4,7 @@
         <br><br>
         <GenericHeader>
             <template #name>Stats</template>
-            <template #description>Various listening stats and trends</template>
+            <template #description>Your listening stats for the past week</template>
         </GenericHeader>
         <Stats />
     </div>

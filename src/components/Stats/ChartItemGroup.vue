@@ -40,7 +40,7 @@ import CalendarSvg from '@/assets/icons/calendar.svg'
 
 // Reactive variables
 const group = ref('artists')
-const period = ref('alltime')
+const period = ref('week')
 const items2: any = reactive({
     tracks: <Track[]>[],
     albums: <Album[]>[],

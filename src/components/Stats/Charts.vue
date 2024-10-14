@@ -4,7 +4,7 @@
             <template #name>Charts</template>
             <template #description>Your top artists, albums, and tracks</template>
         </GenericHeader>
-
+        <br>
         <div class="chartitemgroupsgrid">
             <ChartItemGroup />
         </div>
