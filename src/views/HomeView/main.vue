@@ -41,6 +41,8 @@ const home = useHome()
 const auth = useAuth()
 
 function getGreetings(username: string) {
+    username = username ? username : ''
+    
     const date = new Date()
     const hour = date.getHours()
 

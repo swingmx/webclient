@@ -1,5 +1,5 @@
 import { paths } from '@/config'
-import { Album, Track } from '@/interfaces'
+import { Album, StatItem, Track } from '@/interfaces'
 import { NotifType, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
 
@@ -11,7 +11,7 @@ const {
     albumVersions,
 } = paths.api
 
-const getAlbumData = async (albumhash: string, ToastStore: typeof useToast) => {
+const getAlbumData = async (albumhash: string, albumlimit: number) => {
     interface AlbumData {
         info: Album
         tracks: Track[]
@@ -20,17 +20,23 @@ const getAlbumData = async (albumhash: string, ToastStore: typeof useToast) => {
             track_total: number
             avg_bitrate: number
         }
+        stats: StatItem[]
+        more_from: {
+            [key: string]: Album[]
+        }
+        other_versions: Album[]
     }
 
     const { data, status } = await useAxios({
         url: albumUrl,
         props: {
             albumhash,
+            albumlimit,
         },
     })
 
     if (status == 204) {
-        ToastStore().showNotification('Album not created yet!', NotifType.Error)
+        useToast().showNotification('Album not created yet!', NotifType.Error)
     }
 
     return data as AlbumData
@@ -112,7 +118,7 @@ export async function getAlbumTracks(albumhash: string): Promise<Track[]> {
 
 export async function getSimilarAlbums(artisthash: string, limit: number = 5): Promise<Album[]> {
     const { data } = await useAxios({
-        url: albumUrl + '/similar?' + 'artisthash=' + artisthash + '&limit=' + limit,
+        url: albumUrl + '/similar?' + 'artisthash=' + artisthash + '&albumlimit=' + limit,
         method: 'GET',
     })
 

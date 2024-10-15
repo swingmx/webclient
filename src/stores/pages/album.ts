@@ -5,7 +5,7 @@ import { getAlbum, getAlbumsFromArtist, getAlbumVersions, getSimilarAlbums } fro
 
 import { paths } from '@/config'
 import { FuseTrackOptions } from '@/enums'
-import { Album, AlbumDisc, FuseResult, Track } from '@/interfaces'
+import { Album, AlbumDisc, FuseResult, StatItem, Track } from '@/interfaces'
 import { router, Routes } from '@/router'
 import { maxAbumCards } from '@/stores/content-width'
 import { useFuse } from '@/utils'
@@ -68,6 +68,7 @@ export default defineStore('album', {
         fetched_similar_hash: '',
         fetched_version_hash: '',
         fetched_other_hash: '',
+        stats: <StatItem[]>[],
     }),
     actions: {
         /**
@@ -76,12 +77,15 @@ export default defineStore('album', {
          * @param albumhash title of the album
          */
         async fetchTracksAndArtists(albumhash: string) {
-            const album = await getAlbum(albumhash, useToast)
+            const album = await getAlbum(albumhash, maxAbumCards.value)
 
             this.srcTracks = album.tracks
             this.info = album.info
             this.copyright = album.copyright
             this.extra = album.extra
+            this.stats = album.stats
+            this.artistAlbums = album.more_from
+            this.otherVersions = album.other_versions
             this.extractColors()
 
             const tracks = sortByTrackNumber(this.srcTracks)
@@ -99,25 +103,25 @@ export default defineStore('album', {
 
             this.extractColors()
         },
-        async fetchArtistAlbums() {
-            if (this.fetched_other_hash == this.info.albumhash) return
+        // async fetchArtistAlbums() {
+        //     if (this.fetched_other_hash == this.info.albumhash) return
 
-            this.fetched_other_hash = this.info.albumhash
-            this.artistAlbums = await getAlbumsFromArtist(
-                this.info.albumartists.map(a => a.artisthash),
-                maxAbumCards.value,
-                this.info.base_title
-            )
-        },
-        async fetchAlbumVersions() {
-            if (this.fetched_version_hash == this.info.albumhash) return
+        //     this.fetched_other_hash = this.info.albumhash
+        //     this.artistAlbums = await getAlbumsFromArtist(
+        //         this.info.albumartists.map(a => a.artisthash),
+        //         maxAbumCards.value,
+        //         this.info.base_title
+        //     )
+        // },
+        // async fetchAlbumVersions() {
+        //     if (this.fetched_version_hash == this.info.albumhash) return
 
-            this.fetched_version_hash = this.info.albumhash
-            this.otherVersions = await getAlbumVersions(
-                this.info.og_title,
-                this.info.albumhash,
-            )
-        },
+        //     this.fetched_version_hash = this.info.albumhash
+        //     this.otherVersions = await getAlbumVersions(
+        //         this.info.og_title,
+        //         this.info.albumhash,
+        //     )
+        // },
         async fetchSimilarAlbums() {
             if (this.fetched_similar_hash === this.info.albumhash) return
 

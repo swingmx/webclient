@@ -1,18 +1,25 @@
 import { paths } from '@/config'
-import { Album, Artist, Genre, Track } from '@/interfaces'
+import { Album, Artist, Genre, StatItem, Track } from '@/interfaces'
 import { NotifType, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
 
-export const getArtistData = async (hash: string, limit: number = 5) => {
+export const getArtistData = async (hash: string, limit: number = 5, albumlimit: number = 7) => {
     interface ArtistData {
         artist: Artist
         tracks: Track[]
+        albums: {
+            albums: Album[]
+            singles_and_eps: Album[]
+            appearances: Album[]
+            compilations: Album[]
+        }
         genres: Genre[]
+        stats: StatItem[]
     }
 
     const { data, error, status } = await useAxios({
         method: 'GET',
-        url: paths.api.artist + `/${hash}?limit=${limit}`,
+        url: paths.api.artist + `/${hash}?limit=${limit}&albumlimit=${albumlimit}`,
     })
 
     if (status == 404) {
@@ -63,7 +70,7 @@ export const getArtistTracks = async (hash: string) => {
 export const getSimilarArtists = async (hash: string, limit = 6) => {
     const { data, error } = await useAxios({
         method: 'GET',
-        url: paths.api.artist + `/${hash}/similar?limit=${limit}`,
+        url: paths.api.artist + `/${hash}/similar?artistlimit=${limit}`,
     })
 
     if (error) {

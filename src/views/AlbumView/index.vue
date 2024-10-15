@@ -43,6 +43,7 @@ import Header from '@/components/AlbumView/main.vue'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
 import SongItem from '@/components/shared/SongItem.vue'
+import Stats from '@/components/Stats/Stats.vue'
 
 import { dropSources } from '@/enums'
 import { isSmall } from '@/stores/content-width'
@@ -54,7 +55,13 @@ const route = useRoute()
 
 interface ScrollerItem {
     id: string | undefined
-    component: typeof Header | typeof SongItem | typeof GenreBanner | typeof CardScroller | typeof AlbumsFetcher
+    component:
+        | typeof Header
+        | typeof SongItem
+        | typeof GenreBanner
+        | typeof CardScroller
+        | typeof AlbumsFetcher
+        | typeof Stats
     props?: any
 }
 
@@ -77,18 +84,18 @@ class songItem {
     }
 }
 
-const AlbumVersionsFetcher: ScrollerItem = {
-    id: 'otherVersionsFetcherBanner',
-    component: AlbumsFetcher,
-    props: {
-        fetch_callback: album.fetchAlbumVersions,
-        reset_callback: () => {
-            album.resetOtherVersions()
-            return album.fetchAlbumVersions()
-        },
-        name: 'otherVersions',
-    },
-}
+// const AlbumVersionsFetcher: ScrollerItem = {
+//     id: 'otherVersionsFetcherBanner',
+//     component: AlbumsFetcher,
+//     props: {
+//         fetch_callback: album.fetchAlbumVersions,
+//         reset_callback: () => {
+//             album.resetOtherVersions()
+//             return album.fetchAlbumVersions()
+//         },
+//         name: 'otherVersions',
+//     },
+// }
 
 const fetched_similar_hash: ScrollerItem = {
     id: 'similarAlbumsFetcherBanner',
@@ -109,6 +116,15 @@ function getSongItems() {
     })
 }
 
+function getStatsComponent(): ScrollerItem {
+    return {
+        id: 'album-stats',
+        component: Stats,
+        props: {
+            items: album.stats,
+        },
+    }
+}
 function getArtistAlbumComponents(): ScrollerItem[] {
     // remove keys that have no albums
     const keys = Object.keys(album.artistAlbums).filter(key => album.artistAlbums[key].length > 0)
@@ -177,18 +193,20 @@ const scrollerItems = computed(() => {
 
     let components = [header, ...getSongItems(), genreBanner]
 
-    if (album.tracks.length) {
-        components.push(AlbumVersionsFetcher)
-    }
-
+    // if (album.tracks.length) {
+    //     components.push(AlbumVersionsFetcher)
+    // }
     if (otherVersionsComponent !== null) {
         components.push(otherVersionsComponent)
     }
-
     components.push(...moreFrom)
 
     if (album.tracks.length) {
         components.push(fetched_similar_hash)
+    }
+
+    if (album.stats.length) {
+        components.push(getStatsComponent())
     }
 
     if (album.fetched_similar_hash === route.params.albumhash && album.similarAlbums.length) {
@@ -222,7 +240,7 @@ function playDisc(disc_number: number) {
 onBeforeRouteUpdate(async to => {
     await album.fetchTracksAndArtists(to.params.albumhash.toString()).then(async () => {
         album.resetAlbumArtists()
-        album.fetchArtistAlbums()
+        // album.fetchArtistAlbums()
 
         await nextTick()
 
@@ -244,6 +262,11 @@ onBeforeRouteLeave(() => {
 
     .songlist-item {
         grid-template-columns: 1.75rem 1fr 1fr 7.5rem;
+    }
+
+    .statshead {
+        padding: $medium;
+        padding-top: 2rem;
     }
 }
 </style>

@@ -45,15 +45,15 @@ const color = computed(() => {
   return props.source === "album" ? album.colors.btn : "";
 });
 
-const hookAction = async () => {
-  if (props.source === "album") {
-    // fetch data to be used in the component below this one.
-    await album.fetchArtistAlbums();
-    return;
-  }
-};
+// const hookAction = async () => {
+//   if (props.source === "album") {
+//     // fetch data to be used in the component below this one.
+//     await album.fetchArtistAlbums();
+//     return;
+//   }
+// };
 
-onMounted(hookAction);
+// onMounted(hookAction);
 </script>
 
 <style lang="scss">

@@ -257,3 +257,10 @@ export interface User extends UserSimplified {
     image: string
     roles: string[]
 }
+
+export interface StatItem {
+    cssclass: string
+    value: string
+    text: string
+    image?: string
+}

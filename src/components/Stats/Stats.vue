@@ -15,12 +15,13 @@
                 :value="statItems[statItems.length - 1].value"
                 :text="statItems[statItems.length - 1].text"
                 :icon="statItems[statItems.length - 1].cssclass"
+                :image="statItems[statItems.length - 1].image"
             />
         </div>
     </div>
-    <div class="statsdates">
+    <div class="statsdates" v-if="date">
         <CalendarSvg />
-        {{ dates }}
+        {{ date }}
     </div>
 </template>
 
@@ -37,14 +38,23 @@ interface StatItem {
     image?: string
 }
 
+const props = defineProps<{
+    items?: StatItem[]
+}>()
+
 const statItems = ref<StatItem[]>([])
-const dates = ref<string[]>([])
+const date = ref<string | null>(null)
 
 onMounted(async () => {
+    if (props.items) {
+        statItems.value = props.items
+        return
+    }
+
     const res = await getStats()
     if (res.status == 200) {
         statItems.value = res.data.stats
-        dates.value = res.data.dates
+        date.value = res.data.dates
     }
 })
 </script>

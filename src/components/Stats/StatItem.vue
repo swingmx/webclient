@@ -55,7 +55,7 @@
             <div class="title">{{ text }}</div>
         </div>
 
-        <component :is="icon" class="staticon" v-if="props.icon !== 'toptrack'" />
+        <component :is="icon" class="staticon" v-if="!props.icon.startsWith('top')" />
         <router-link
             :to="{
                 name: Routes.album,
@@ -63,7 +63,7 @@
                     albumhash: props.image?.replace('.webp', ''),
                 },
             }"
-            v-if="props.icon === 'toptrack' && props.image"
+            v-if="props.icon.startsWith('top') && props.image"
         >
             <img class="staticon statimage shadow-sm" :src="paths.images.thumb.small + props.image" alt="" />
         </router-link>
@@ -77,6 +77,8 @@ import StopWatchSvg from '@/assets/icons/timer.svg'
 import HeadphoneSvg from '@/assets/icons/headphones.svg'
 import FolderSvg from '@/assets/icons/folder.nopad.svg'
 import Index1Svg from '@/assets/icons/index1.svg'
+import SparklesSvg from '@/assets/icons/sparkles.svg'
+
 import { paths } from '@/config'
 import { Routes } from '@/router'
 
@@ -101,7 +103,7 @@ const icon = computed(() => {
             return Index1Svg
 
         default:
-            return HeadphoneSvg
+            return SparklesSvg
     }
 })
 
@@ -182,7 +184,8 @@ const formattedValue = computed(() => {
     }
 }
 
-.statitem.toptrack {
+.statitem.toptrack,
+.statitem.topalbum {
     aspect-ratio: 1.5;
 }
 </style>

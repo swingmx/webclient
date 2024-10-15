@@ -1,20 +1,20 @@
 <template>
-    <div class="chartgroup rounded" :class="group">
-        <ChartsHeader :name="group" @change-period="changePeriod" @change-group="changeGroup" :period="period" />
+    <div class="chartgroup rounded" :class="settings.statsgroup">
+        <ChartsHeader :name="settings.statsgroup" @change-period="changePeriod" @change-group="changeGroup" :period="settings.statsperiod" />
         <br />
         <div class="noitems rounded-sm" v-if="items.length === 0">
             <div v-if="loading" class="loading">
                 <div class="spinner"></div>
                 <span>fetching data...</span>
             </div>
-            <div v-if="!loading && loaded">No {{ group.slice(0, -1) }} data found for this period</div>
+            <div v-if="!loading && loaded">No {{ settings.statsgroup.slice(0, -1) }} data found for this period</div>
         </div>
         <ChartItem
             v-for="(item, index) in items"
             :key="index"
             :item="item"
             :index="index + 1"
-            :name="(group.slice(0, -1) as any)"
+            :name="(settings.statsgroup.slice(0, -1) as any)"
         />
         <div class="scrobbleinfo rounded-sm">
             <div class="date">
@@ -36,18 +36,19 @@ import { computed, onMounted, reactive, ref } from 'vue'
 
 import { getChartItem } from '@/requests/stats'
 import { Artist, Album, Track } from '@/interfaces'
+import useSettings from '@/stores/settings'
 
 import ChartItem from './ChartItem.vue'
 import ChartsHeader from './ChartsHeader.vue'
 import ArrowSvg from '@/assets/icons/arrow.svg'
 import CalendarSvg from '@/assets/icons/calendar.svg'
 
+const settings = useSettings()
+
 // Reactive variables
 const loading = ref(true)
 const loaded = ref(false)
 
-const group = ref('artists')
-const period = ref('week')
 const items2: any = reactive({
     tracks: <Track[]>[],
     albums: <Album[]>[],
@@ -55,7 +56,7 @@ const items2: any = reactive({
 })
 
 const items = computed(() => {
-    return items2[group.value]
+    return items2[settings.statsgroup]
 })
 
 const scrobbleInfo = ref<{
@@ -66,7 +67,7 @@ const scrobbleInfo = ref<{
 
 // Functions
 async function getItems() {
-    items2[group.value] = []
+    items2[settings.statsgroup] = []
     loaded.value = false
     let isPending = true
     
@@ -78,8 +79,8 @@ async function getItems() {
     }, 450)
 
     try {
-        const res = await getChartItem(group.value, period.value, 10, 'playduration')
-        items2[group.value] = res.data[group.value]
+        const res = await getChartItem(settings.statsgroup, settings.statsperiod, 10, 'playduration')
+        items2[settings.statsgroup] = res.data[settings.statsgroup]
         scrobbleInfo.value = res.data.scrobbles
         loaded.value = true
     } finally {
@@ -90,12 +91,12 @@ async function getItems() {
 }
 
 async function changePeriod(newPeriod: string) {
-    period.value = newPeriod
+    settings.setStatsPeriod(newPeriod)
     await getItems()
 }
 
 async function changeGroup(newGroup: string) {
-    group.value = newGroup
+    settings.setStatsGroup(newGroup)
     await getItems()
 }
 
