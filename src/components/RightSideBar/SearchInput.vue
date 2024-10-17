@@ -139,6 +139,7 @@ function handleButton() {
             border-radius: 3rem;
             cursor: pointer;
             flex-shrink: 0;
+            color: $white;
 
             &:hover {
                 transition: all 0.2s ease;
@@ -170,11 +171,6 @@ function handleButton() {
                 font-size: 0.9rem;
                 font-weight: 600;
                 padding-right: $small;
-            }
-
-            &::placeholder {
-                color: #d1d1d1;
-                opacity: 0.5;
             }
         }
 

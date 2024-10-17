@@ -3,60 +3,26 @@
         <div class="profileavatar">
             <Avatar :name="username || auth.user.username" />
             <div class="name">
-                {{
-                    adding_user
-                        ? username
-                        : `Hi ${auth.user.username}`
-                }}
+                {{ adding_user ? username : `Hi ${auth.user.username}` }}
             </div>
-            <div
-                class="roles"
-                v-if="!adding_user"
-            >
-                <span
-                    class="role"
-                    v-for="role in auth.user.roles"
-                    :key="role"
-                >
-                    {{ role }}</span
-                >
+            <div class="roles" v-if="!adding_user">
+                <span class="role" v-for="role in auth.user.roles" :key="role"> {{ role }}</span>
             </div>
         </div>
-        <form
-            class="updateprof"
-            v-auto-animate
-            @submit.prevent="handleSubmit"
-        >
+        <form class="updateprof" v-auto-animate @submit.prevent="handleSubmit">
             <div class="names">
                 <label for="username">Username</label>
                 <Input
                     :placeholder="adding_user ? 'username' : auth.user.username"
-                    @input="(input) => (username = input)"
+                    @input="input => (username = input)"
                 />
             </div>
-            <label for="pswd"
-                >{{ adding_user ? 'Create' : 'Change' }} password</label
-            >
-            <Input
-                type="password"
-                placeholder="⏺⏺⏺⏺⏺⏺⏺⏺"
-                @input="(input) => (password = input)"
-            />
-            <div
-                class="confirmpassword"
-                v-if="password.length"
-            >
+            <label for="pswd">{{ adding_user ? 'Create' : 'Change' }} password</label>
+            <Input type="password" placeholder="⏺⏺⏺⏺⏺⏺⏺⏺" @input="input => (password = input)" />
+            <div class="confirmpassword" v-if="password.length">
                 <label for="confirmpswd">Confirm password</label>
-                <Input
-                    type="password"
-                    placeholder="⏺⏺⏺⏺⏺⏺⏺⏺"
-                    @input="(input) => (confirmPassword = input)"
-                />
-                <label
-                    class="error"
-                    v-if="errorText"
-                    >{{ errorText }}</label
-                >
+                <Input type="password" placeholder="⏺⏺⏺⏺⏺⏺⏺⏺" @input="input => (confirmPassword = input)" />
+                <label class="error" v-if="errorText">{{ errorText }}</label>
             </div>
             <button v-if="showSubmit">
                 {{ adding_user ? 'Add user' : 'Update' }}
@@ -89,19 +55,13 @@ const confirmPassword = ref('')
 
 const showSubmit = computed(() => {
     if (props.adding_user) {
-        return (
-            username.value.length &&
-            password.value.length &&
-            confirmPassword.value.length &&
-            !errorText.value
-        )
+        return username.value.length && password.value.length && confirmPassword.value.length && !errorText.value
     }
     // show submit button if:
     // username has changed
     // password has changed and is confirmed
     return (
-        (!confirmPassword.value.length ||
-            (confirmPassword.value && !errorText.value)) &&
+        (!confirmPassword.value.length || (confirmPassword.value && !errorText.value)) &&
         (payload.value.username || payload.value.password)
     )
 })
@@ -112,10 +72,7 @@ const errorText = computed(() => {
         return ''
     }
 
-    if (
-        confirmPassword.value.length &&
-        password.value !== confirmPassword.value
-    ) {
+    if (confirmPassword.value.length && password.value !== confirmPassword.value) {
         return 'Passwords do not match'
     }
 })
@@ -200,7 +157,8 @@ onMounted(async () => {
 
         label {
             margin-bottom: 0.5rem;
-            font-size: 14px;
+            font-weight: 500;
+            font-size: 0.9rem;
             color: $gray1;
         }
 

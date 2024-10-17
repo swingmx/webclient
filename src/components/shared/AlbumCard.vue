@@ -121,6 +121,7 @@ const artists = computed(() => {
             width: 100%;
             height: 100%;
             opacity: 0;
+            transition: opacity 0.25s ease;
         }
 
         &:hover {
@@ -130,7 +131,7 @@ const artists = computed(() => {
             }
 
             img {
-                border-radius: 0 0 $medium $medium;
+                /* border-radius: 0 0 $medium $medium; Not sure why this one was added, fugly with animation */
             }
 
             .gradient {
