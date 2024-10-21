@@ -49,11 +49,13 @@ async function loadMore() {
         trackCount.value = data.total
     }
 
-    // reverse the index so that the first track has the highest index
+    const startIndex = trackCount.value - start - 1
+    const startMasterIndex = start
+
     tracks.value.push(
         ...data.tracks.map((t, i) => {
-            const index = trackCount.value - i
-            const master_index = i
+            const index = startIndex - i
+            const master_index = startMasterIndex + i
             return { ...t, index, master_index }
         })
     )
@@ -76,3 +78,4 @@ async function handlePlay(index: number) {
     queue.play(index)
 }
 </script>
+
