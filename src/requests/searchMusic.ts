@@ -1,14 +1,12 @@
-import { paths } from "@/config";
-import axios from "axios";
-import useAxios from "./useAxios";
+import { paths } from '@/config'
+import axios from 'axios'
+import useAxios from './useAxios'
+import { Track, Album, Artist } from '@/interfaces'
 
 const {
-  top: searchTopResultsUrl,
-  tracks: searchTracksUrl,
-  albums: searchAlbumsUrl,
-  artists: searchArtistsUrl,
-  load: loadMoreUrl,
-} = paths.api.search;
+    top: searchTopResultsUrl,
+    base,
+} = paths.api.search
 
 /**
  * Fetch data from url
@@ -16,75 +14,40 @@ const {
  * @returns promise that resolves to the JSON
  */
 async function fetchData(url: string) {
-  const { data } = await useAxios({
-    url: url,
-    method: "GET",
-  });
+    const { data } = await useAxios({
+        url: url,
+        method: 'GET',
+    })
 
-  return data;
+    return data
 }
 
 async function searchTopResults(query: string, limit: number) {
-  const url =
-    searchTopResultsUrl + encodeURIComponent(query.trim()) + `&limit=${limit}`;
-  return await fetchData(url);
+    const url = searchTopResultsUrl + encodeURIComponent(query.trim()) + `&limit=${limit}`
+    return await fetchData(url)
 }
 
-async function searchTracks(query: string) {
-  const url = searchTracksUrl + encodeURIComponent(query.trim());
-  return await fetchData(url);
+async function searchItems(type: 'tracks' | 'albums' | 'artists', index: number, query: string) {
+    const { data } = await useAxios({
+        url: base + `/?itemtype=${type}&start=${index}&q=${query}&limit=30`,
+        method: 'GET',
+    })
+
+    return data
 }
 
-async function searchAlbums(query: string) {
-  const url = searchAlbumsUrl + encodeURIComponent(query.trim());
-  return await fetchData(url);
+async function searchTracks(query: string, start: number = 0): Promise<{ results: Track[]; more: boolean }> {
+    return searchItems('tracks', start, query)
 }
 
-async function searchArtists(query: string) {
-  const url = searchArtistsUrl + encodeURIComponent(query.trim());
-  return await fetchData(url);
+async function searchAlbums(query: string, start: number = 0): Promise<{ results: Album[]; more: boolean }> {
+    return searchItems('albums', start, query)
 }
 
-async function loadMoreTracks(index: number, query: string) {
-  const response = await axios.get(loadMoreUrl, {
-    params: {
-      type: "tracks",
-      index: index,
-      q: query,
-    },
-  });
-
-  return response.data;
+async function searchArtists(query: string, start: number = 0): Promise<{ results: Artist[]; more: boolean }> {
+    return searchItems('artists', start, query)
 }
 
-async function loadMoreAlbums(index: number, query: string) {
-  const response = await axios.get(loadMoreUrl, {
-    params: {
-      type: "albums",
-      index: index,
-      q: query,
-    },
-  });
-
-  return response.data;
-}
-
-async function loadMoreArtists(index: number, query: string) {
-  const response = await axios.get(loadMoreUrl, {
-    params: {
-      type: "artists",
-      index: index,
-      q: query,
-    },
-  });
-
-  return response.data;
-}
-
-export {
-    loadMoreAlbums,
-    loadMoreArtists, loadMoreTracks, searchAlbums,
-    searchArtists, searchTopResults, searchTracks
-};
+export { searchAlbums, searchArtists, searchTracks, searchTopResults }
 
 // TODO: Rewrite this module using `useAxios` hook
