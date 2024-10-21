@@ -16,6 +16,10 @@ import { crossFade } from '@/utils/audio/crossFade'
 import updatePageTitle from '@/utils/updatePageTitle'
 
 export function getUrl(filepath: string, trackhash: string, use_legacy: boolean) {
+    // INFO: Force using legacy streaming endpoint until
+    // we change the playback engine to properly support
+    // the chunked streaming endpoint.
+    use_legacy = true
     const { streaming_container, streaming_quality } = useSettings()
 
     return `${paths.api.files}/${trackhash + (use_legacy ? '/legacy' : '')}?filepath=${encodeURIComponent(
