@@ -3,7 +3,7 @@ import { SettingType } from '../enums'
 
 const automatic_backups: Setting = {
     title: 'Automatic backups',
-    desc: 'Automatically backup your favorites, playlists and scrobble data',
+    desc: 'Automatically backup your data, every 6 hours',
     type: SettingType.binary,
     state: () => false,
     action: () => {},

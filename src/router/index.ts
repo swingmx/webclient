@@ -25,6 +25,7 @@ const FavoriteTracks = () => import("@/views/FavoriteTracks.vue");
 const PlaylistView = () => import("@/views/PlaylistView/index.vue");
 const ArtistDiscographyView = () => import("@/views/ArtistDiscography.vue");
 const FavoriteCardScroller = () => import("@/views/FavoriteCardScroller.vue");
+const StatsView = () => import("@/views/Stats/main.vue");
 
 const folder = {
   path: "/folder/:path",
@@ -175,6 +176,12 @@ const AlbumListView = {
   component: AlbumList,
 };
 
+const Stats = {
+  path: "/stats",
+  name: "StatsView",
+  component: StatsView,
+};
+
 const ArtistListView = {
   ...AlbumListView,
   path: "/artists",
@@ -201,6 +208,7 @@ const routes = [
   AlbumListView,
   ArtistListView,
   LyricsView,
+  Stats,
 ];
 
 const Routes = {
@@ -223,6 +231,7 @@ const Routes = {
   AlbumList: AlbumListView.name,
   ArtistList: ArtistListView.name,
   Lyrics: LyricsView.name,
+  Stats: Stats.name,
 };
 
 const router = createRouter({

@@ -16,10 +16,10 @@ export default defineStore('FolderDirs&Tracks', {
         allDirs: <Folder[]>[],
         allTracks: <Track[]>[],
         trackTotal: 0,
-        trackSortBy: 'playcount',
+        trackSortBy: 'default',
         folderSortBy: 'lastmod',
-        trackSortReverse: true,
-        folderSortReverse: true,
+        trackSortReverse: false,
+        folderSortReverse: false,
     }),
     actions: {
         async fetchAll(fpath: string, restart?: boolean) {

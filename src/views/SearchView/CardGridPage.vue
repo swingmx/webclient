@@ -80,7 +80,9 @@ const scrollerItems = computed(() => {
     });
   }
 
-  if (props.fetch_callback) {
+  const moreItems = props.page === 'album' ? search.albums.more : search.artists.more
+
+  if (props.fetch_callback && moreItems) {
     items.push({
       id: Math.random(),
       component: AlbumsFetcher,

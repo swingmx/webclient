@@ -83,22 +83,20 @@ const browselist = [
     icon: AlbumIcon,
     class: "favorite",
   },
+  // {
+  //   title: "Settings",
+  //   route: null,
+  //   icon: SettingsIcon,
+  //   action: () => {
+  //     useDialog().showSettingsModal();
+  //   },
+  //   class: "settings",
+  // },
   {
-    title: "Settings",
-    route: null,
-    icon: SettingsIcon,
-    action: () => {
-      useDialog().showSettingsModal();
-    },
-    class: "settings",
-  },
-  {
-    title: "Quick scan",
-    route: null,
-    icon: ReloadIcon,
-    action: triggerScan,
-    class: "reload",
-  },
+    title: "Stats",
+    icon: AlbumIcon,
+    route: Routes.Stats,
+  }
 ];
 </script>
 

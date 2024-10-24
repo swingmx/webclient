@@ -1,16 +1,7 @@
 <template>
-    <!-- <SongList
-  :tracks="duplicateTracks(tracks)"
-    :handle-play="handlePlay"
-    :is_queue="false"
-    :drop-handler="() => {}"
-    :source="dropSources.favorite"
-    :total="tracks.length"
-    >
-  </SongList> -->
     <GenericTrackPagination
         :tracks="tracks"
-        :desc="`You have ${tracks.length} favorited track${tracks.length == 1 ? '' : 's'}`"
+        :desc="`You have ${trackCount} favorited track${trackCount == 1 ? '' : 's'}`"
         :noitemsicon="HeartSvg"
         :more-items-loader="loadMore"
         @playThis="handlePlay"
@@ -40,7 +31,7 @@ import GenericTrackPagination from '@/components/shared/GenericTrackPagination.v
 import HeartSvg from '@/assets/icons/heart.svg'
 import { track_limit } from '@/stores/content-width'
 
-let trackCount = 0
+const trackCount = ref(0)
 let waitingForMore = false
 
 const tracks: Ref<Track[]> = ref([])
@@ -48,21 +39,23 @@ const queue = useQueueStore()
 const tracklist = useTracklist()
 
 async function loadMore() {
-    if (waitingForMore || (trackCount && trackCount <= tracks.value.length)) return
+    if (waitingForMore || (trackCount.value && trackCount.value <= tracks.value.length)) return
 
     waitingForMore = true
-    const start = tracks.value.length ? track_limit.value + tracks.value.length : 0
+    const start = tracks.value.length ? tracks.value.length : 0
     const data = await getFavTracks(start, track_limit.value)
 
     if (data.total !== -1) {
-        trackCount = data.total
+        trackCount.value = data.total
     }
 
-    // reverse the index so that the first track has the highest index
+    const startIndex = trackCount.value - start - 1
+    const startMasterIndex = start
+
     tracks.value.push(
         ...data.tracks.map((t, i) => {
-            const index = trackCount - i
-            const master_index = i
+            const index = startIndex - i
+            const master_index = startMasterIndex + i
             return { ...t, index, master_index }
         })
     )
@@ -75,13 +68,14 @@ onMounted(async () => {
 })
 
 async function handlePlay(index: number) {
-    if (tracks.value.length === trackCount) {
+    if (tracks.value.length === trackCount.value) {
         tracklist.setFromFav(tracks.value)
     } else {
-        const tracks = (await getFavTracks(0, trackCount)).tracks
-        tracklist.setFromFav(tracks)
+        const remainder = (await getFavTracks(tracks.value.length, trackCount.value)).tracks
+        tracklist.setFromFav([...tracks.value, ...remainder])
     }
 
     queue.play(index)
 }
 </script>
+

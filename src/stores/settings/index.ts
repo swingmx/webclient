@@ -58,6 +58,10 @@ export default defineStore('settings', {
 
         // layout
         layout: '',
+
+        // stats
+        statsgroup: "artists",
+        statsperiod: "week",
     }),
     actions: {
         mapDbSettings(settings: DBSettings) {
@@ -279,6 +283,12 @@ export default defineStore('settings', {
         },
         setStreamingQuality(quality: string) {
             this.streaming_quality = quality
+        },
+        setStatsGroup(group: string) {
+            this.statsgroup = group
+        },
+        setStatsPeriod(period: string) {
+            this.statsperiod = period
         },
     },
     getters: {
