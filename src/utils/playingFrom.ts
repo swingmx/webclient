@@ -12,6 +12,7 @@ import FolderSvg from '@/assets/icons/folder.svg'
 import HeartSvg from '@/assets/icons/heart.fill.svg'
 import PlaylistSvg from '@/assets/icons/playlist.svg'
 import SearchSvg from '@/assets/icons/search.svg'
+import RadioSvg from '@/assets/icons/radio.svg'
 
 interface PlayingFrom {
     name: string
@@ -96,6 +97,19 @@ export default (source: From): PlayingFrom => {
                 icon: HeartSvg,
                 location: {
                     name: Routes.favoriteTracks,
+                },
+                image: '',
+            }
+
+        case FromOptions.artistMix:
+            return {
+                name: source.name,
+                icon: RadioSvg,
+                location: {
+                    name: Routes.Mix,
+                    params: {
+                        mixid: source.mixid,
+                    },
                 },
                 image: '',
             }

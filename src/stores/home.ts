@@ -1,20 +1,36 @@
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { getRecentlyAdded, getRecentlyPlayed } from '@/requests/home'
+import { getHomePageData, getRecentlyAdded, getRecentlyPlayed } from '@/requests/home'
 import { maxAbumCards } from './content-width'
 import { Routes, router } from '@/router'
+import { HomePageItem } from '@/interfaces'
 
 export default defineStore('homepage', () => {
     const recentlyAddedCutoff = ref(0)
     const recentlyAddedFetched = ref(false)
     const recentlyPlayedFetched = ref(false)
 
-    // with_helptext is used to enable enable the help text box on the content loader
     type itemlist = { type: string; item?: any; with_helptext?: boolean }[]
+    const homepageData = reactive({
+        artist_mixes: <HomePageItem>{
+            items: [],
+        },
+        recently_added: <HomePageItem>{},
+        recently_played: <HomePageItem>{},
+    })
+
+    // with_helptext is used to enable enable the help text box on the content loader
 
     const recentlyAdded = ref(<itemlist>[])
     const recentlyPlayed = ref(<itemlist>[])
+
+    async function fetchAll() {
+        const data = await getHomePageData()
+        console.log(data)
+
+        homepageData.artist_mixes = data.artist_mixes
+    }
 
     async function fetchRecentlyAdded() {
         recentlyAddedFetched.value = false
@@ -47,8 +63,10 @@ export default defineStore('homepage', () => {
         recentlyPlayed,
         recentlyAddedFetched,
         recentlyPlayedFetched,
+        homepageData,
         fetchRecentlyAdded,
         fetchRecentlyPlayed,
         resetAll,
+        fetchAll,
     }
 })

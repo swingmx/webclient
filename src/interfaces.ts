@@ -37,7 +37,7 @@ export interface Track extends AlbumDisc {
     help_text?: string
     time?: string
     trend?: {
-        trend: 'rising' | 'falling' | 'stable',
+        trend: 'rising' | 'falling' | 'stable'
         is_new: boolean
     }
 }
@@ -73,9 +73,36 @@ export interface Album {
     genres: Genre[]
     versions: string[]
     trend?: {
-        trend: 'rising' | 'falling' | 'stable',
+        trend: 'rising' | 'falling' | 'stable'
         is_new: boolean
     }
+}
+
+export interface Mix {
+    id: string
+    title: string
+    description: string
+    extra: {
+        type: string
+        artisthash?: string
+    }
+    images: {
+        image: string
+        color: string
+    }[]
+    duration: number
+    trackcount: number
+}
+
+export interface FullMix extends Mix {
+    tracks: Track[]
+    saved: boolean
+}
+
+export interface HomePageItem {
+    title?: string
+    description?: string
+    items: { type: string; item?: any; with_helptext?: boolean }[]
 }
 
 export interface Artist {
@@ -93,7 +120,7 @@ export interface Artist {
 
     // available in charts
     trend?: {
-        trend: 'rising' | 'falling' | 'stable',
+        trend: 'rising' | 'falling' | 'stable'
         is_new: boolean
     }
     extra?: any
@@ -174,6 +201,12 @@ export interface fromArtist {
     type: FromOptions.artist
     artisthash: string
     artistname: string
+}
+
+export interface fromMix {
+    type: FromOptions.artistMix
+    name: string
+    mixid: string
 }
 
 export interface fromFav {

@@ -5,7 +5,6 @@
         <img
           v-if="tracklist.from.type === FromOptions.album || tracklist.from.type === FromOptions.artist"
           :src="data.image + '.webp'"
-          :alt="`Now Playing ${tracklist.from.type} image`"
           :class="`${tracklist.from.type === FromOptions.artist ? 'circular' : 'rounded-sm'}`"
         />
         <div v-else class="from-icon border rounded-sm">
@@ -92,6 +91,11 @@ function showContextMenu(e: MouseEvent) {
     justify-content: center;
     background-color: $gray;
     border: solid 1px $gray4;
+
+    svg {
+      width: 1.5rem;
+      color: rgb(202, 197, 197);
+    }
   }
 
   .type {

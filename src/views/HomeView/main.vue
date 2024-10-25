@@ -5,7 +5,17 @@
             <template #description>{{ getGreetings(auth.user.username) }}</template>
         </GenericHeader>
         <Browse />
-        <RecentItems
+
+        <!-- {{ home.homepageData.artist_mixes }} -->
+        <PageItem
+            v-if="home.homepageData.artist_mixes.items.length > 0"
+            :title="home.homepageData.artist_mixes.title || ''"
+            :description="home.homepageData.artist_mixes.description"
+            :items="home.homepageData.artist_mixes.items"
+            :play-source="playSources.mix"
+            :route="'/mixes/artist'"
+        />
+        <PageItem
             v-if="!home.recentlyPlayedFetched || home.recentlyPlayed.length > 0"
             :title="'Recently Played'"
             :items="home.recentlyPlayed"
@@ -13,7 +23,7 @@
             :route="'/playlist/recentlyplayed'"
             :see-all-text="'VIEW HISTORY'"
         />
-        <RecentItems
+        <PageItem
             v-if="!home.recentlyAddedFetched || home.recentlyAdded.length > 0"
             :title="'Recently Added'"
             :items="home.recentlyAdded"
@@ -34,7 +44,7 @@ import useHome from '@/stores/home'
 import updatePageTitle from '@/utils/updatePageTitle'
 
 import Browse from '@/components/HomeView/Browse.vue'
-import RecentItems from '@/components/shared/CardScroller.vue'
+import PageItem from '@/components/shared/CardScroller.vue'
 import GenericHeader from '@/components/shared/GenericHeader.vue'
 
 const home = useHome()
@@ -61,6 +71,7 @@ function getGreetings(username: string) {
 
 onMounted(async () => {
     updatePageTitle('Home')
+    await home.fetchAll()
     await home.fetchRecentlyPlayed()
     nextTick().then(updateCardWidth)
     await home.fetchRecentlyAdded()
