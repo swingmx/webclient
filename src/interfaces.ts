@@ -85,6 +85,10 @@ export interface Mix {
     extra: {
         type: string
         artisthash?: string
+        image?: {
+            image: string
+            color: string
+        }
     }
     images: {
         image: string

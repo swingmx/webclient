@@ -3,7 +3,7 @@
         :to="{
             name: Routes.Mix,
             params: {
-                mixid: `${mix.extra['type'][0]}${mix.id}`,
+                mixid: mix.id,
             },
         }"
         class="mixcard rounded"

@@ -3,11 +3,11 @@
         <div
             class="infooverlay"
             :style="{
-                color: getTextColor(mix.image.color),
+                color: getTextColor(mix.extra.image?.color || ''),
             }"
         >
-            <div class="type" :style="{ color: getTypeColor(mix.image.color) }">{{ mix.extra['type'] }} mix</div>
-            <div class="title ellip">{{ mix.title }}</div>
+            <div class="type" :style="{ color: getTypeColor(mix.extra.image?.color || '') }">{{ mix.extra['type'] }} mix</div>
+            <div class="title ellip">{{ mix.title.replace('Radio', '') }}</div>
         </div>
         <img :src="paths.images.artist.large + mix.extra['artisthash'] + '.webp'" />
         <div
@@ -30,12 +30,7 @@ import { onMounted, ref } from 'vue'
 const gradient = ref('')
 
 async function getGradient() {
-    const image = paths.images.thumb.large + props.mix.images[0].image
-    // const vibrant = new Vibrant(image)
-    // const palette = await vibrant.getPalette()
-
-    // const color = listToRgbString(palette.DarkMuted?.getRgb())
-    const color = props.mix.image.color
+    const color = props.mix.extra.image?.color
 
     if (!color) return ''
 

@@ -27,8 +27,6 @@ export default defineStore('homepage', () => {
 
     async function fetchAll() {
         const data = await getHomePageData()
-        console.log(data)
-
         homepageData.artist_mixes = data.artist_mixes
     }
 

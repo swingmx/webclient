@@ -3,8 +3,8 @@
         <MixImage :mix="mix" :on_header="true" />
         <div class="mixinfo">
             <div class="header_type">{{ mix.extra['type'] }} mix</div>
-            <div class="header_title">{{ mix.title }} Radio</div>
-            <div class="header_description ellip2" :style="{ color: getTypeColor(mix.image.color) }">
+            <div class="header_title">{{ mix.title }}</div>
+            <div class="header_description ellip2" :style="{ color: getTypeColor(mix.extra.image?.color || '') }">
                 {{ mix.description }}
             </div>
             <div class="bunchofstuff">
