@@ -92,6 +92,10 @@ export interface Mix {
     }[]
     duration: number
     trackcount: number
+    image: {
+        image: string
+        color: string
+    }
 }
 
 export interface FullMix extends Mix {

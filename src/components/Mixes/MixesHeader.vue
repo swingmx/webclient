@@ -4,7 +4,7 @@
         <div class="mixinfo">
             <div class="header_type">{{ mix.extra['type'] }} mix</div>
             <div class="header_title">{{ mix.title }} Radio</div>
-            <div class="header_description ellip2" :style="{ color: getTypeColor(mix.images[0].color) }">
+            <div class="header_description ellip2" :style="{ color: getTypeColor(mix.image.color) }">
                 {{ mix.description }}
             </div>
             <div class="bunchofstuff">
@@ -60,7 +60,6 @@ defineEmits<{
     }
 
     .header_title {
-        margin-top: $smaller;
         font-size: 4rem;
         font-weight: 900;
     }

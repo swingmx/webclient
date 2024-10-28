@@ -1,22 +1,19 @@
 <template>
-    <div class="miximage rounded-sm no-scroll" :class="{ on_header }">
+    <div class="miximage" :class="{ on_header }">
         <div
             class="infooverlay"
             :style="{
-                color: getTextColor(mix.images[0].color),
+                color: getTextColor(mix.image.color),
             }"
         >
-            <div class="type" :style="{ color: getTypeColor(mix.images[0].color) }">{{ mix.extra['type'] }} mix</div>
+            <div class="type" :style="{ color: getTypeColor(mix.image.color) }">{{ mix.extra['type'] }} mix</div>
             <div class="title ellip">{{ mix.title }}</div>
         </div>
-        <img class="rounded-sm" :src="paths.images.artist.large + mix.extra['artisthash'] + '.webp'" />
+        <img :src="paths.images.artist.large + mix.extra['artisthash'] + '.webp'" />
         <div
             class="gradient rounded-sm"
             :style="{
-                background: `linear-gradient(27deg, ${mix.images[0].color} 21%, ${addOpacity(
-                    mix.images[0].color,
-                    0.15
-                )}),linear-gradient(-17deg, ${mix.images[0].color} 10%, ${addOpacity(mix.images[0].color, 0)} 30%)`,
+                background: gradient,
             }"
         ></div>
     </div>
@@ -28,11 +25,34 @@ import { Mix } from '@/interfaces'
 import { addOpacity } from '@/utils/colortools/shift'
 import { getTextColor } from '@/utils/colortools/shift'
 import { getTypeColor } from '@/utils/colortools'
+import { onMounted, ref } from 'vue'
 
-defineProps<{
+const gradient = ref('')
+
+async function getGradient() {
+    const image = paths.images.thumb.large + props.mix.images[0].image
+    // const vibrant = new Vibrant(image)
+    // const palette = await vibrant.getPalette()
+
+    // const color = listToRgbString(palette.DarkMuted?.getRgb())
+    const color = props.mix.image.color
+
+    if (!color) return ''
+
+    return `linear-gradient(27deg, ${color} 21%, ${addOpacity(
+        color,
+        0.15
+    )}),linear-gradient(-17deg, ${color} 10%, ${addOpacity(color, 0)} 30%)`
+}
+
+const props = defineProps<{
     mix: Mix
     on_header?: boolean
 }>()
+
+onMounted(async () => {
+    gradient.value = await getGradient()
+})
 </script>
 
 <style lang="scss">
@@ -69,16 +89,22 @@ defineProps<{
     }
 
     img {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
+        border-radius: 0.59rem;
     }
 }
 
 .miximage.on_header {
     height: 100%;
 
-    img,
+    img {
+        border-radius: 1.1rem;
+    }
     .gradient {
         border-radius: 1rem;
     }

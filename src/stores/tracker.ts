@@ -37,6 +37,8 @@ function getSource(source: From) {
       return `q:${source.query}`;
     case FromOptions.favorite:
       return `favorite`;
+    case FromOptions.artistMix:
+      return `mix:${source.mixid}`;
     default:
       return "";
   }

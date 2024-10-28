@@ -1,5 +1,5 @@
 <template>
-    <div class="folder-view v-scroll-page" style="height: 100%" :class="{ isSmall, isMedium }">
+    <div class="folder-view v-scroll-page" style="height: 100%" :class="{ isSmall, isMedium }" v-if="mix.title">
         <DynamicScroller
             id="contentscroller"
             :items="scrollerItems"
@@ -24,10 +24,13 @@
             </template>
         </DynamicScroller>
     </div>
+    <div v-if="!loading && !mix.title" class="content-page">
+        <h1>404: Mix not found</h1>
+    </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { onMounted } from 'vue'
 
 import { isMedium, isSmall, isSmallPhone } from '@/stores/content-width'
@@ -60,6 +63,7 @@ function handlePlay(index: number) {
     queue.play(index)
 }
 
+const loading = ref(false)
 const mix = reactive(<FullMix>{})
 
 const scrollerItems = computed(() => {
@@ -99,14 +103,14 @@ const scrollerItems = computed(() => {
 onMounted(async () => {
     updatePageTitle(mix.title)
 
+    loading.value = true
     await getMix(route.params.mixid as string).then(res => {
         for (const key in res.data) {
             // @ts-ignore
             mix[key] = res.data[key]
         }
+        loading.value = false
     })
-
-    console.log(mix)
 })
 </script>
 
