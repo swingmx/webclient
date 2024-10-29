@@ -6,10 +6,12 @@
                 color: getTextColor(mix.extra.image?.color || ''),
             }"
         >
-            <div class="type" :style="{ color: getTypeColor(mix.extra.image?.color || '') }">{{ mix.extra['type'] }} mix</div>
+            <div class="type" :style="{ color: getTypeColor(mix.extra.image?.color || '') }">
+                {{ mix.extra['type'] }} mix
+            </div>
             <div class="title ellip">{{ mix.title.replace('Radio', '') }}</div>
         </div>
-        <img :src="paths.images.artist.large + mix.extra['artisthash'] + '.webp'" />
+        <img :src="getImageUrl(mix.extra['image']?.image || '')" />
         <div
             class="gradient rounded-sm"
             :style="{
@@ -38,6 +40,16 @@ async function getGradient() {
         color,
         0.15
     )}),linear-gradient(-17deg, ${color} 10%, ${addOpacity(color, 0)} 30%)`
+}
+
+function getImageUrl(image: string) {
+    const is_custom = image.endsWith('.jpg')
+
+    if (props.on_header) {
+        return (is_custom ? paths.images.mix.medium : paths.images.artist.medium) + image
+    }
+
+    return (is_custom ? paths.images.mix.small : paths.images.artist.small) + image
 }
 
 const props = defineProps<{

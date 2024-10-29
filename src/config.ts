@@ -223,5 +223,9 @@ export const paths = {
             medium: baseImgUrl + imageRoutes.artist.medium,
         },
         playlist: baseImgUrl + imageRoutes.playlist,
+        mix: {
+            medium: baseImgUrl + '/mix/medium/',
+            small: baseImgUrl + '/mix/small/',
+        },
     },
 }
