@@ -33,7 +33,7 @@ export default (source: From): PlayingFrom => {
                         albumhash: source.albumhash,
                     },
                 },
-                image: paths.images.thumb.small + source.albumhash,
+                image: paths.images.thumb.small + source.albumhash + '.webp',
             }
 
         case FromOptions.folder:
@@ -88,7 +88,7 @@ export default (source: From): PlayingFrom => {
                         hash: source.artisthash,
                     },
                 },
-                image: paths.images.artist.small + source.artisthash,
+                image: paths.images.artist.small + source.artisthash + '.webp',
             }
 
         case FromOptions.favorite:
@@ -102,6 +102,7 @@ export default (source: From): PlayingFrom => {
             }
 
         case FromOptions.artistMix:
+            
             return {
                 name: source.name,
                 icon: RadioSvg,
@@ -111,9 +112,11 @@ export default (source: From): PlayingFrom => {
                         mixid: source.mixid,
                     },
                 },
-                image: '',
-            }
-
+                image: source.custom_image
+                    ? paths.images.mix.small + source.mixid.slice(1) + '.jpg'
+                    : paths.images.artist.small + source.mixid.slice(1) + '.webp',
+                }
+                
         default:
             return { name: '👻 No source', location: {}, icon: '' }
     }

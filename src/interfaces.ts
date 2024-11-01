@@ -215,6 +215,7 @@ export interface fromMix {
     type: FromOptions.artistMix
     name: string
     mixid: string
+    custom_image?: boolean
 }
 
 export interface fromFav {

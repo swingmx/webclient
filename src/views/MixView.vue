@@ -59,7 +59,7 @@ interface ScrollerItem {
 }
 
 function handlePlay(index: number) {
-    tracklist.setFromMix(`${mix.title} Mix`, mix.id, mix.tracks)
+    tracklist.setFromMix(mix.title, mix.id, mix.tracks, mix.extra.image?.image?.endsWith('.jpg') ?? false)
     queue.play(index)
 }
 
