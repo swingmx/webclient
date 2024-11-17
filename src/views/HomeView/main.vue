@@ -6,36 +6,20 @@
         </GenericHeader>
         <Browse />
 
-        <!-- {{ home.homepageData.artist_mixes }} -->
         <PageItem
-            v-if="home.homepageData.artist_mixes.items.length > 0"
-            :title="home.homepageData.artist_mixes.title || ''"
-            :description="home.homepageData.artist_mixes.description"
-            :items="home.homepageData.artist_mixes.items"
+            v-for="item in home.homepageItems"
+            :title="item.title || ''"
+            :description="item.description"
+            :items="item.items"
             :play-source="playSources.mix"
-            :route="'/mixes/artist'"
-        />
-        <PageItem
-            v-if="!home.recentlyPlayedFetched || home.recentlyPlayed.length > 0"
-            :title="'Recently Played'"
-            :items="home.recentlyPlayed"
-            :play-source="playSources.track"
-            :route="'/playlist/recentlyplayed'"
-            :see-all-text="'VIEW HISTORY'"
-        />
-        <PageItem
-            v-if="!home.recentlyAddedFetched || home.recentlyAdded.length > 0"
-            :title="'Recently Added'"
-            :items="home.recentlyAdded"
-            :play-source="playSources.recentlyAdded"
-            :route="'/playlist/recentlyadded'"
+            :route="item.path"
+            :see-all-text="item.seeAllText"
         />
     </div>
 </template>
 
 <script setup lang="ts">
 import { nextTick, onMounted } from 'vue'
-import { onBeforeRouteLeave } from 'vue-router'
 import useAuth from '@/stores/auth'
 
 import { playSources } from '@/enums'
@@ -52,7 +36,7 @@ const auth = useAuth()
 
 function getGreetings(username: string) {
     username = username ? username : ''
-    
+
     const date = new Date()
     const hour = date.getHours()
 
@@ -72,12 +56,9 @@ function getGreetings(username: string) {
 onMounted(async () => {
     updatePageTitle('Home')
     await home.fetchAll()
-    await home.fetchRecentlyPlayed()
-    nextTick().then(updateCardWidth)
-    await home.fetchRecentlyAdded()
+    await nextTick()
+    updateCardWidth()
 })
-
-// onBeforeRouteLeave(() => home.resetAll())
 </script>
 
 <style lang="scss">

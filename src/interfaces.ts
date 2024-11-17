@@ -108,9 +108,12 @@ export interface FullMix extends Mix {
 }
 
 export interface HomePageItem {
+    position: number
     title?: string
     description?: string
     items: { type: string; item?: any; with_helptext?: boolean }[]
+    path?: string
+    seeAllText?: string
 }
 
 export interface Artist {
