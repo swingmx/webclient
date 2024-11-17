@@ -18,9 +18,9 @@ export async function getRecentlyPlayed(limit: number) {
     return getRecents(paths.api.home.recentlyPlayed, limit)
 }
 
-export async function getHomePageData() {
+export async function getHomePageData(limit: number) {
     const { data } = await useAxios({
-        url: paths.api.home.base,
+        url: paths.api.home.base + '?limit=' + limit,
         method: 'GET',
     })
 
