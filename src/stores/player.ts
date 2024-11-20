@@ -19,6 +19,7 @@ class AudioSource {
     private sources: HTMLAudioElement[] = []
     private playingSourceIndex: number = 0
     private handlers: { [key: string]: (err: Event | string) => void } = {}
+    private requiredAPBlockBypass: boolean = false
     settings: ReturnType<typeof useSettings> | null = null
 
     constructor() {
@@ -29,6 +30,8 @@ class AudioSource {
             audio.id = `source-${index}`
             document.body.appendChild(audio)
         })
+
+        this.requiredAPBlockBypass = true
     }
 
     get standbySource() {
@@ -54,7 +57,7 @@ class AudioSource {
             audio: this.playingSource,
             duration: this.settings.crossfade_duration,
             start_volume: this.settings.volume,
-            then_destroy: false,
+            then_destroy: true,
         })
 
         this.playingSourceIndex = 1 - this.playingSourceIndex
@@ -79,9 +82,42 @@ class AudioSource {
         this.playingSource.pause()
     }
 
-    async playPlayingSource(onerror: (err: Event | string) => void = this.handlers.onPlaybackError) {
+    async playPlayingSource(
+        trackSilence?: { starting_file: number; ending_file: number }
+    ) {
+        const trackDuration = trackSilence
+            ? Math.floor(trackSilence.ending_file / 1000 - trackSilence.starting_file / 1000)
+            : null
+
+        if(this.requiredAPBlockBypass)
+            this.applyAPBlockBypass()
+
+        await this.playingSource.play().catch(this.handlers.onPlaybackError)
         navigator.mediaSession.playbackState = 'playing'
-        return this.playingSource.play().catch(onerror)
+        navigator.mediaSession.setPositionState({
+            duration: trackDuration || this.playingSource.duration,
+            position: this.playingSource.currentTime,
+        })
+    }
+
+    /**
+     * This is a workaround for the autoplay policy on mobile devices. (mainly IOS Safari)
+     *
+     * for Audio elements to be able to play without being blocked, two main conditions must be met:
+     * 1. The first time any Audio plays, it must be triggered by user interaction.
+     * 2. The Audio must exist in the DOM.
+     *
+     * without this workaround, the first time `standbySource` plays, it would be blocked by the browser.
+     *
+     * this workaround plays the `standbySource` along with the `playingSource` to meet the first condition.
+     */
+    private applyAPBlockBypass(){
+        this.standbySource.src = ''
+        this.standbySource.play().then(() => {
+            this.standbySource.pause()
+        }).catch(() => {})
+
+        this.requiredAPBlockBypass = false
     }
 }
 
@@ -195,7 +231,7 @@ export const usePlayer = defineStore('player', () => {
         if (e instanceof DOMException) {
             if(e.name === 'NotAllowedError') {
                 queue.playPause()
-                return toast.showNotification('Tap anywhere in the page and try again (autoplay blocked))', NotifType.Error)
+                return toast.showNotification('Tap anywhere in the page and try again (autoplay blocked)', NotifType.Error)
             }
 
             return toast.showNotification('Player Error: ' + e.message, NotifType.Error)
@@ -240,7 +276,7 @@ export const usePlayer = defineStore('player', () => {
         // console.log(audio.duration == Infinity)
         queue.setDurationFromFile(queue.currenttrack.duration || 0)
 
-        audioSource.playPlayingSource(handlePlayErrors)
+        audioSource.playPlayingSource(currentAudioData.silence)
     }
 
     const onAudioEnded = () => {
@@ -338,7 +374,7 @@ export const usePlayer = defineStore('player', () => {
         currentAudioData.silence = nextAudioData.silence
         currentAudioData.filepath = nextAudioData.filepath
         maxSeekPercent.value = 0
-        audioSource.playPlayingSource(handlePlayErrors)
+        audioSource.playPlayingSource(nextAudioData.silence);
 
         clearNextAudioData()
         queue.moveForward()
@@ -459,6 +495,7 @@ export const usePlayer = defineStore('player', () => {
     }
 
     assignEventHandlers(audio)
+    audioSource.assignEventHandlers(handlePlayErrors)
 
     return {
         audio,
