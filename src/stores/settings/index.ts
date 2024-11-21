@@ -57,7 +57,8 @@ export default defineStore('settings', {
         use_legacy_streaming_endpoint: false,
 
         // layout
-        layout: '',
+        // INFO: Force alternate layout from v2.0.0
+        layout: 'alternate',
 
         // stats
         statsgroup: "artists",
