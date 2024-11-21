@@ -12,7 +12,7 @@
                 "
             >
                 <span class="ellip">{{ current.title }}</span>
-                <ArrowSvg :class="{ reverse }" v-if="reverse !== 'hide'" />
+                <ArrowSvg :class="{ reverse }" class="dropdown-arrow" v-if="reverse !== 'hide'" />
             </button>
             <div v-if="showDropDown" ref="dropOptionsRef" class="options rounded no-scroll shadow-lg">
                 <div
@@ -71,7 +71,13 @@ onClickOutside(dropOptionsRef, e => {
 
 <style lang="scss">
 .smdropdown {
-    z-index: 19;
+    z-index: 1000;
+
+    .dropdown-arrow {
+        width: 100%;
+        aspect-ratio: 1;
+    }
+
     .selected {
         width: 100%;
         display: grid;

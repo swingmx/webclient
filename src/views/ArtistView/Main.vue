@@ -5,8 +5,11 @@
             :items="scrollerItems"
             :min-item-size="64"
             class="scroller"
-            style="height: 100%"
+            style="height: 100%;overflow-x: hidden;"
         >
+            <template #before>
+                <Header />
+            </template>
             <template #default="{ item, index, active }">
                 <DynamicScrollerItem
                     :item="item"
@@ -62,13 +65,6 @@ function fetchSimilarArtists() {
 function reFetchSimilarArtists() {
     store.resetSimilarArtists()
     return store.fetchSimilarArtists()
-}
-
-function getHeader() {
-    return <ScrollerItem>{
-        id: 'artist-header',
-        component: Header,
-    }
 }
 
 // const artist_albums_fetcher: ScrollerItem = {
@@ -167,7 +163,7 @@ const scrollerItems = computed(() => {
             source: 'artist',
         },
     }
-    let components = [getHeader()]
+    let components: ScrollerItem[] = []
 
     if (store.tracks.length > 0) {
         components.push(getTopTracksComponent())
@@ -255,6 +251,10 @@ onBeforeRouteLeave(() => store.resetAll())
     .statshead {
         padding: $medium;
         padding-top: 2rem;
+    }
+
+    .vue-recycle-scroller__item-view {
+        overflow: auto;
     }
 }
 </style>

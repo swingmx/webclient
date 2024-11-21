@@ -36,9 +36,9 @@ const modal = useModal()
 <style lang="scss">
 .profiledrop {
     position: absolute;
-    cursor: initial;
-    z-index: 20;
-    top: 2.3rem;
+
+    z-index: 9999;
+    top: 2.25rem;
     right: 0;
     width: 10.25rem;
     font-size: 0.95rem;

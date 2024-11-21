@@ -7,7 +7,7 @@ import { Track } from '@/interfaces'
 import { isFavorite } from '@/requests/favorite'
 import useInterface from './interface'
 
-import { audio, getUrl, usePlayer } from '@/stores/player'
+import { audioSource, getUrl, usePlayer } from '@/stores/player'
 import useLyrics from './lyrics'
 import { NotifType, useToast } from './notification'
 import useTracklist from './queue/tracklist'
@@ -55,19 +55,19 @@ export default defineStore('Queue', {
             focusCurrentInSidebar()
         },
         playPause() {
-            if (audio.src === '') {
+            if (audioSource.playingSource.src === '') {
                 this.play(this.currentindex)
                 return
             }
 
-            if (audio.paused && !this.playing) {
-                audio.currentTime === 0 ? this.play(this.currentindex) : null
-                audio.play()
+            if (audioSource.playingSource.paused && !this.playing) {
+                audioSource.playingSource.currentTime === 0 ? this.play(this.currentindex) : null
+                audioSource.playPlayingSource()
                 this.playing = true
                 return
             }
 
-            audio.pause()
+            audioSource.pausePlayingSource()
             this.playing = false
         },
         autoPlayNext() {
@@ -88,8 +88,8 @@ export default defineStore('Queue', {
 
             const resetQueue = () => {
                 this.currentindex = 0
-                audio.src = getUrl(this.next.filepath, this.next.trackhash, settings.use_legacy_streaming_endpoint)
-                audio.pause()
+                audioSource.playingSource.src = getUrl(this.next.filepath, this.next.trackhash, settings.use_legacy_streaming_endpoint)
+                audioSource.pausePlayingSource()
                 this.playing = false
 
                 updateMediaNotif()
@@ -104,7 +104,7 @@ export default defineStore('Queue', {
         playPrev() {
             const lyrics = useLyrics()
 
-            if (audio.currentTime > 3) {
+            if (audioSource.playingSource.currentTime > 3) {
                 this.seek(0)
                 lyrics.setCurrentLine(-1)
                 return
@@ -120,7 +120,7 @@ export default defineStore('Queue', {
             const lyrics = useLyrics()
 
             try {
-                audio.currentTime = pos
+                audioSource.playingSource.currentTime = pos
                 this.duration.current = pos
             } catch (error) {
                 if (error instanceof TypeError) {

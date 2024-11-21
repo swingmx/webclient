@@ -10,6 +10,9 @@
       class="scroller"
       style="height: 100%"
     >
+      <template #before>
+        <Header />
+      </template>
       <template #default="{ item, index, active }">
         <DynamicScrollerItem
           :item="item"
@@ -41,10 +44,6 @@ import Header from "@/components/NowPlaying/Header.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import updatePageTitle from "@/utils/updatePageTitle";
 
-const header: ScrollerItem = {
-  id: "header",
-  component: Header,
-};
 
 const queue = useQueueStore();
 const store = useTracklist();
@@ -54,7 +53,7 @@ function playFromQueue(index: number) {
 }
 
 const scrollerItems = computed(() => {
-  const items = [header];
+  const items: ScrollerItem[] = [];
 
   const trackComponents = store.tracklist.map((track, index) => {
     track.index = index; // used in context menu to remove from queue
