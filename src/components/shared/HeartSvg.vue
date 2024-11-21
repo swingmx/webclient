@@ -26,23 +26,23 @@
 </template>
 
 <script setup lang="ts">
-import { Motion } from "motion/vue";
+import { Motion } from 'motion/vue'
 
-import HeartFillSvg from "@/assets/icons/heart.fill.svg";
-import HeartSvg from "@/assets/icons/heart.svg";
+import HeartFillSvg from '@/assets/icons/heart.fill.svg'
+import HeartSvg from '@/assets/icons/heart.svg'
 
-import { getTextColor } from "@/utils/colortools/shift";
+import { getTextColor } from '@/utils/colortools/shift'
 
 defineProps<{
-    state: Boolean | undefined;
-    no_emit?: Boolean;
-    color?: string;
-}>();
+    state: Boolean | undefined
+    no_emit?: Boolean
+    color?: string
+}>()
 
 defineEmits<{
     // eslint-disable-next-line no-unused-vars
-    (event: "handleFav"): void;
-}>();
+    (event: 'handleFav'): void
+}>()
 </script>
 
 <style lang="scss">
@@ -62,7 +62,8 @@ $bg: rgb(255, 255, 255);
         transform: scale(1);
 
         svg {
-            height: 1.5rem;
+            height: 1.75rem;
+            width: 1.75rem;
             display: block;
         }
     }

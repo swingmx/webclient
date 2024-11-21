@@ -5,7 +5,11 @@
                 class="selected"
                 :class="{ showDropDown }"
                 @click.prevent="handleOpener"
-                :title="reverse !== 'hide' ? `sort by: ${current.title} ${reverse ? 'Descending' : 'Ascending'}`.toUpperCase() : undefined"
+                :title="
+                    reverse !== 'hide'
+                        ? `sort by: ${current.title} ${reverse ? 'Descending' : 'Ascending'}`.toUpperCase()
+                        : undefined
+                "
             >
                 <span class="ellip">{{ current.title }}</span>
                 <ArrowSvg :class="{ reverse }" class="dropdown-arrow" v-if="reverse !== 'hide'" />

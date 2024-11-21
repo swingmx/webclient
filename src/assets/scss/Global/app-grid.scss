@@ -1,272 +1,276 @@
 $g-border: solid 1px $gray5;
 
 #app-grid {
-  display: grid;
-  // grid-template-columns: min-content 1fr 29rem;
-  grid-template-columns: min-content 1fr;
-  grid-template-rows: $navheight 1fr 5rem;
-  grid-template-areas:
-    "l-sidebar nav"
-    "l-sidebar content"
-    "bottombar bottombar";
-  height: 100%;
-  border: $g-border;
-  border-top: none;
-  border-bottom: none;
-  margin: 0 auto;
-  position: relative;
-
-  #contentresizer {
-    margin: 0 $padright 0 $padleft;
-  }
-
-  @include allPhones {
-    grid-template-columns: 1fr;
+    display: grid;
+    // grid-template-columns: min-content 1fr 29rem;
+    grid-template-columns: min-content 1fr;
+    grid-template-rows: $navheight 1fr 5.125rem;
     grid-template-areas:
-      "nav"
-      "content"
-      "bottombar";
-    grid-template-rows: auto 1fr auto;
-  }
+        'l-sidebar nav'
+        'l-sidebar content'
+        'bottombar bottombar';
+    height: 100%;
+    border: $g-border;
+    border-top: none;
+    border-bottom: none;
+    margin: 0 auto;
+    position: relative;
+
+    #contentresizer {
+        margin: 0 $padright 0 $padleft;
+    }
+
+    @include allPhones {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            'nav'
+            'content'
+            'bottombar';
+        grid-template-rows: auto 1fr auto;
+    }
 }
 
 #acontent {
-  width: 100%;
-  grid-area: content;
-  overflow: hidden;
-  margin-right: $margright;
+    width: 100%;
+    grid-area: content;
+    overflow: hidden;
+    margin-right: $margright;
 }
 
 .topnav {
-  grid-area: nav;
-  height: $navheight;
-  padding: 1rem $padleft;
-  padding-right: $padright;
+    grid-area: nav;
+    height: $navheight;
+    padding: 1rem $padleft;
+    padding-right: $padright;
 
-  @include allPhones {
-    display: flex;
-    gap: $small;
-    height: unset;
-    padding: 6px 8px;
-    margin: $medium 1rem;
-    border-radius: 5rem;
-    background-color: $gray;
-  }
+    @include allPhones {
+        display: flex;
+        gap: $smaller;
+        height: unset;
+        padding: 6px 8px;
+        margin: $medium 1rem;
+        border-radius: 5rem;
+        background-color: $gray;
+    }
 }
 
 .b-bar {
-  grid-area: bottombar;
-  border-top: $g-border;
+    grid-area: bottombar;
+    border-top: $g-border;
 }
 
 .content-page {
-  scrollbar-gutter: stable;
-  padding-left: $padleft;
-  padding-right: $padright;
-  padding-bottom: $padbottom;
-  -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+    padding-left: $padleft;
+    padding-right: $padright;
+    padding-bottom: $padbottom;
+    -webkit-overflow-scrolling: touch;
 
-  @include allPhones {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+    @include allPhones {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
 
 .vue-recycle-scroller__item-wrapper {
-  overflow: visible !important;
+    overflow: visible !important;
 }
 
 .vue-recycle-scroller {
-  scrollbar-gutter: stable;
-  padding-left: $padleft;
+    scrollbar-gutter: stable;
+    padding-left: $padleft;
 }
 
 .r-sidebar {
-  grid-area: r-sidebar;
-  border-left: $g-border;
+    grid-area: r-sidebar;
+    border-left: $g-border;
 
-  .vue-recycle-scroller {
-    padding-left: 0;
-  }
+    .vue-recycle-scroller {
+        padding-left: 0;
+    }
 }
 
 // ====== MODIFIERS =======
 
 #app-grid.is_alt_layout {
-  grid-template-columns: 1fr;
-  grid-template-rows: max-content 1fr 5rem;
-  grid-template-areas:
-    "nav"
-    "content"
-    "bottombar";
-
-  @include allPhones {
-    grid-template-columns: 1fr !important;
-    grid-template-rows: max-content 1fr 9.5rem !important;
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr 5.125rem;
     grid-template-areas:
-      "nav"
-      "content"
-      "bottombar" !important;
-  }
+        'nav'
+        'content'
+        'bottombar';
 
-  .vue-recycle-scroller,
-  .content-page,
-  .topnav,
-  #songlist-scroller {
-    padding-left: $alt_layout_pad;
-    padding-right: $alt_layout_pad;
-  }
-
-  .b-bar,
-  .search-page-top-results {
-    padding: 0 $alt_layout_pad;
-  }
-
-  #contentresizer {
-    margin: 0 $alt_layout_pad;
-  }
-
-  .topnav {
-    background-color: $gray;
-  }
-
-  .vue-recycle-scroller,
-  .content-page {
-    padding-top: 2rem;
-  }
-
-  .search-page-top-results {
-    padding-bottom: $padbottom;
-  }
-
-  .search-view .buttons-area {
-    padding-left: $alt_layout_pad;
-  }
-
-  .lyricsview {
-    padding-bottom: 2rem;
-  }
-
-  #lyricscontent {
-    padding-top: 0;
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-
-  @media only screen and (min-width: 1980px) {
-    // NOTE: Styles for 1680px and below
-    $alt_layout_pad: max(2rem, calc((100% - 1680px) / 2));
+    @include allPhones {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: max-content 1fr 9.5rem !important;
+        grid-template-areas:
+            'nav'
+            'content'
+            'bottombar' !important;
+    }
 
     .vue-recycle-scroller,
     .content-page,
     .topnav,
     #songlist-scroller {
-      padding-left: $alt_layout_pad;
-      padding-right: $alt_layout_pad;
-    }
-
-    #contentresizer {
-      margin: 0 $alt_layout_pad;
-    }
-
-    .search-view .buttons-area {
-      padding-left: $alt_layout_pad;
+        padding-left: $alt_layout_pad;
+        padding-right: $alt_layout_pad;
     }
 
     .b-bar,
     .search-page-top-results {
-      padding: 0 $alt_layout_pad;
+        padding: 0 $alt_layout_pad;
     }
-  }
+
+    #contentresizer {
+        margin: 0 $alt_layout_pad;
+    }
+
+    .topnav {
+        background-color: $gray;
+    }
+
+    .vue-recycle-scroller,
+    .content-page {
+        padding-top: 2rem;
+    }
+
+    .search-page-top-results {
+        padding-bottom: $padbottom;
+    }
+
+    .search-view .buttons-area {
+        padding-left: $alt_layout_pad;
+    }
+
+    .lyricsview {
+        padding-bottom: 2rem;
+    }
+
+    #lyricscontent {
+        padding-top: 0;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    @media only screen and (min-width: 1980px) {
+        // NOTE: Styles for 1680px and below
+        $alt_layout_pad: max(2rem, calc((100% - 1680px) / 2));
+
+        .vue-recycle-scroller,
+        .content-page,
+        .topnav,
+        #songlist-scroller {
+            padding-left: $alt_layout_pad;
+            padding-right: $alt_layout_pad;
+        }
+
+        #contentresizer {
+            margin: 0 $alt_layout_pad;
+        }
+
+        .search-view .buttons-area {
+            padding-left: $alt_layout_pad;
+        }
+
+        .b-bar,
+        .search-page-top-results {
+            padding: 0 $alt_layout_pad;
+        }
+    }
 }
 
 #app-grid.extendWidth {
-  padding-right: 0;
-  border-left: none;
-  border-right: none;
-  max-width: 100% !important;
+    padding-right: 0;
+    border-left: none;
+    border-right: none;
+    max-width: 100% !important;
 }
 
 #app-grid.useSidebar {
-  grid-template-columns: min-content 1fr 28rem;
-  grid-template-areas:
-    "l-sidebar nav r-sidebar"
-    "l-sidebar content r-sidebar"
-    "bottombar bottombar bottombar";
+    grid-template-columns: min-content 1fr 28rem;
+    grid-template-areas:
+        'l-sidebar nav r-sidebar'
+        'l-sidebar content r-sidebar'
+        'bottombar bottombar bottombar';
 
-  @include for-desktop-down {
-    grid-template-columns: min-content 1fr 24rem;
-  }
+    @include for-desktop-down {
+        grid-template-columns: min-content 1fr 24rem;
+    }
 
-  #acontent {
-    // margin-right: 0 !important;
-    // padding-right: $medium !important;
-  }
+    #acontent {
+        // margin-right: 0 !important;
+        // padding-right: $medium !important;
+    }
 }
 
 #app-grid.NoSideBorders {
-  border-right: none !important;
-  border-left: none !important;
+    border-right: none !important;
+    border-left: none !important;
 }
 
 .v-scroll-page {
-  .scroller {
-    padding-right: $padright;
-    height: 100%;
-    width: 100%;
-    padding-bottom: $content-padding-bottom;
-    padding-bottom: $padbottom;
-    -webkit-overflow-scrolling: touch;
+    .scroller {
+        padding-right: $padright;
+        height: 100%;
+        width: 100%;
+        padding-bottom: $content-padding-bottom;
+        padding-bottom: $padbottom;
+        -webkit-overflow-scrolling: touch;
 
-    @include allPhones {
-      padding-left: 1rem;
-      padding-right: 1rem;
+        @include allPhones {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
     }
-  }
 }
 
 .song-title > .isSmallArtists {
-  display: none;
+    display: none;
 }
 
 .isSmall {
-  .songlist-item {
-    grid-template-columns: 2fr 7.5rem !important;
-
-    // disable hover on mobile
-    // to prevent tap effect
-    &:hover {
-      background-color: unset;
+    .album_disc_header {
+        padding-left: $small;
     }
 
-    @include mediumPhones {
-      grid-template-columns: 2fr 2.5rem !important;
-      gap: $small !important;
+    .songlist-item {
+        grid-template-columns: 2fr 7.5rem !important;
+
+        // disable hover on mobile
+        // to prevent tap effect
+        &:hover {
+            background-color: unset;
+        }
+
+        @include mediumPhones {
+            grid-template-columns: 2fr 2.5rem !important;
+            gap: $small !important;
+        }
     }
-  }
 
-  .song-artists,
-  .song-album {
-    display: none !important;
-  }
+    .song-artists,
+    .song-album {
+        display: none !important;
+    }
 
-  .isSmallArtists {
-    display: flex !important;
-    align-items: center;
-    gap: 4px;
-    font-size: small;
-    color: $white;
-    opacity: 0.67;
-  }
+    .isSmallArtists {
+        display: flex !important;
+        align-items: center;
+        gap: 4px;
+        font-size: small;
+        color: $white;
+        opacity: 0.67;
+    }
 }
 
 .isMedium {
-  // hide album column
-  .songlist-item {
-    grid-template-columns: 1.75rem 1.5fr 1fr 7.5rem;
-  }
+    // hide album column
+    .songlist-item {
+        grid-template-columns: 1.75rem 1.5fr 1fr 7.5rem;
+    }
 
-  .song-album {
-    display: none !important;
-  }
+    .song-album {
+        display: none !important;
+    }
 }
