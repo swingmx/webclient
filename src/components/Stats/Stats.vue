@@ -63,6 +63,7 @@ onMounted(async () => {
 .statshead {
     display: grid;
     grid-template-columns: 1fr max-content;
+    overflow-x: auto;
     gap: 1.5rem;
     padding: 1rem;
 
