@@ -17,33 +17,35 @@ import ArrowSvg from '../../assets/icons/right-arrow.svg'
 #back-forward {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: $medium;
     padding-right: 1rem;
     border-right: 1px solid $gray5;
     height: max-content;
 
     & > * {
-        width: 2.25rem;
-        height: 2.25rem;
+        width: 2.15rem;
+        height: 2.15rem;
         aspect-ratio: 1;
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 0;
         border-radius: 5rem;
-        background-color: $gray5;
+        background-color: transparent;
+        border: 1px solid $gray5;
 
         &:hover {
             background-color: $gray4;
+            border-color: $gray4;
         }
 
         svg {
-            transform: scale(1.12);
+            transform: scale(0.96);
             transition: transform 0.2s ease;
+        }
 
-            &:active {
-                transform: scale(0.88);
-            }
+        &:active > svg {
+            transform: scale(0.76);
         }
     }
 

@@ -15,6 +15,112 @@ import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
 import updatePageTitle from '@/utils/updatePageTitle'
 
+class AudioSource {
+    private sources: HTMLAudioElement[] = []
+    private playingSourceIndex: number = 0
+    private handlers: { [key: string]: (err: Event | string) => void } = {}
+    private requiredAPBlockBypass: boolean = false
+    settings: ReturnType<typeof useSettings> | null = null
+
+    constructor() {
+        this.sources = [new Audio(), new Audio()]
+
+        this.sources.forEach((audio, index) => {
+            audio.style.display = 'none'
+            audio.id = `source-${index}`
+            document.body.appendChild(audio)
+        })
+
+        this.requiredAPBlockBypass = true
+    }
+
+    get standbySource() {
+        return this.sources[1 - this.playingSourceIndex]
+    }
+    get playingSource() {
+        return this.sources[this.playingSourceIndex]
+    }
+
+    preloadWithUri(uri: string) {
+        const audio = this.standbySource
+        if (!this.settings) return audio
+        audio.src = uri
+        audio.muted = this.settings.mute
+        audio.volume = this.settings.volume
+        audio.load()
+        return audio
+    }
+
+    switchSources() {
+        if (!this.settings) return
+        crossFade({
+            audio: this.playingSource,
+            duration: this.settings.crossfade_duration,
+            start_volume: this.settings.volume,
+            then_destroy: true,
+        })
+
+        this.playingSourceIndex = 1 - this.playingSourceIndex
+    }
+
+    assignSettings(settings: ReturnType<typeof useSettings>) {
+        this.settings = settings
+        this.sources.forEach(audio => {
+            audio.muted = settings.mute
+            audio.volume = settings.volume
+        })
+    }
+
+    assignEventHandlers(onPlaybackError: (err: Event | string) => void) {
+        this.handlers = {
+            onPlaybackError,
+        }
+    }
+
+    pausePlayingSource() {
+        navigator.mediaSession.playbackState = 'paused'
+        this.playingSource.pause()
+    }
+
+    async playPlayingSource(
+        trackSilence?: { starting_file: number; ending_file: number }
+    ) {
+        const trackDuration = trackSilence
+            ? Math.floor(trackSilence.ending_file / 1000 - trackSilence.starting_file / 1000)
+            : null
+
+        if(this.requiredAPBlockBypass)
+            this.applyAPBlockBypass()
+
+        await this.playingSource.play().catch(this.handlers.onPlaybackError)
+        navigator.mediaSession.playbackState = 'playing'
+        navigator.mediaSession.setPositionState({
+            duration: trackDuration || this.playingSource.duration,
+            position: this.playingSource.currentTime,
+        })
+    }
+
+    /**
+     * This is a workaround for the autoplay policy on mobile devices. (mainly IOS Safari)
+     *
+     * for Audio elements to be able to play without being blocked, two main conditions must be met:
+     * 1. The first time any Audio plays, it must be triggered by user interaction.
+     * 2. The Audio must exist in the DOM.
+     *
+     * without this workaround, the first time `standbySource` plays, it would be blocked by the browser.
+     *
+     * this workaround plays the `standbySource` along with the `playingSource` to meet the first condition.
+     */
+    private applyAPBlockBypass(){
+        this.standbySource.src = ''
+        this.standbySource.play().then(() => {
+            this.standbySource.pause()
+        }).catch(() => {})
+
+        this.requiredAPBlockBypass = false
+    }
+}
+
 export function getUrl(filepath: string, trackhash: string, use_legacy: boolean) {
     // INFO: Force using legacy streaming endpoint until
     // we change the playback engine to properly support
@@ -27,7 +133,8 @@ export function getUrl(filepath: string, trackhash: string, use_legacy: boolean)
     )}&container=${streaming_container}&quality=${streaming_quality}`
 }
 
-let audio = new Audio()
+const audioSource = new AudioSource()
+let audio = audioSource.playingSource
 const buffering = ref(true)
 const maxSeekPercent = ref(0)
 
@@ -40,6 +147,8 @@ export const usePlayer = defineStore('player', () => {
     const settings = useSettings()
     const tracklist = useTracklist()
 
+    audioSource.assignSettings(settings)
+
     let currentAudioData = {
         filepath: '',
         silence: {
@@ -50,7 +159,7 @@ export const usePlayer = defineStore('player', () => {
 
     let nextAudioData = {
         filepath: '',
-        audio: new Audio(),
+        audio: audioSource.standbySource,
         loaded: false,
         ticking: false,
         silence: {
@@ -70,9 +179,6 @@ export const usePlayer = defineStore('player', () => {
 
     function clearNextAudioData() {
         nextAudioData.filepath = ''
-        nextAudioData.audio.removeEventListener('canplay', () => null)
-        nextAudioData.audio = new Audio()
-
         nextAudioData.loaded = false
         nextAudioData.ticking = false
         nextAudioData.silence = {
@@ -95,19 +201,11 @@ export const usePlayer = defineStore('player', () => {
     }
 
     const audio_onerror = (err: Event | string) => {
-        const { showNotification } = useToast()
-
         if (typeof err != 'string') {
             err.stopImmediatePropagation()
         }
 
-        if (err instanceof DOMException) {
-            queue.playPause()
-
-            return toast.showNotification('Tap anywhere in the page and try again (autoplay blocked))', NotifType.Error)
-        }
-
-        showNotification("Can't load: " + queue.currenttrack.title, NotifType.Error)
+        handlePlayErrors(err)
 
         // if (queue.currentindex !== tracklist.tracklist.length - 1) {
         //     if (!queue.playing) return
@@ -129,13 +227,17 @@ export const usePlayer = defineStore('player', () => {
         // queue.setPlaying(false)
     }
 
-    const handlePlayErrors = (e: Event) => {
+    const handlePlayErrors = (e: Event | string) => {
         if (e instanceof DOMException) {
-            queue.playPause()
+            if(e.name === 'NotAllowedError') {
+                queue.playPause()
+                return toast.showNotification('Tap anywhere in the page and try again (autoplay blocked)', NotifType.Error)
+            }
 
-            return toast.showNotification('Tap anywhere in the page and try again (autoplay blocked))', NotifType.Error)
+            return toast.showNotification('Player Error: ' + e.message, NotifType.Error)
         }
 
+        queue.playNext() // skip unplayable track
         toast.showNotification("Can't load: " + queue.currenttrack.title, NotifType.Error)
     }
 
@@ -167,14 +269,14 @@ export const usePlayer = defineStore('player', () => {
 
     const onAudioCanPlay = () => {
         if (!queue.playing) {
-            audio.pause()
+            audioSource.pausePlayingSource()
             return
         }
         // queue.setDurationFromFile(audio.duration == Infinity ? queue.currenttrack.duration || 0 : audio.duration)
         // console.log(audio.duration == Infinity)
         queue.setDurationFromFile(queue.currenttrack.duration || 0)
 
-        audio.play().catch(handlePlayErrors)
+        audioSource.playPlayingSource(currentAudioData.silence)
     }
 
     const onAudioEnded = () => {
@@ -188,7 +290,7 @@ export const usePlayer = defineStore('player', () => {
         if (nextAudioData.loaded === false) {
             console.log('next audio not loaded')
             clearNextAudioData()
-            queue.autoPlayNext()
+            queue.playNext()
         }
     }
 
@@ -265,31 +367,23 @@ export const usePlayer = defineStore('player', () => {
         if (nextAudioData.filepath === queue.next.filepath) return
 
         const uri = getUrl(queue.next.filepath, queue.next.trackhash, settings.use_legacy_streaming_endpoint)
-        nextAudioData.audio = new Audio(uri)
-        nextAudioData.audio.muted = settings.mute
+        nextAudioData.audio = audioSource.preloadWithUri(uri)
         nextAudioData.filepath = queue.next.filepath
         nextAudioData.audio.oncanplay = handleNextAudioCanPlay
-        nextAudioData.audio.load()
     }
 
     function moveLoadedForward() {
         clearEventHandlers(audio)
 
-        const oldAudio = audio
-        queue.setManual(false)
-        crossFade({
-            audio: oldAudio,
-            duration: settings.crossfade_duration,
-            start_volume: settings.volume,
-            then_destroy: true,
-        })
+        audioSource.switchSources()
 
         // INFO: Set stuff
-        audio = nextAudioData.audio
+        audio = audioSource.playingSource
         audio.currentTime = nextAudioData.silence.starting_file / 1000
         currentAudioData.silence = nextAudioData.silence
         currentAudioData.filepath = nextAudioData.filepath
         maxSeekPercent.value = 0
+        audioSource.playPlayingSource(nextAudioData.silence);
 
         clearNextAudioData()
         queue.moveForward()
@@ -374,15 +468,8 @@ export const usePlayer = defineStore('player', () => {
         maxSeekPercent.value = 0
 
         if (!queue.manual && queue.playing && audio.src !== '' && !audio.src.includes('sm.radio.jingles')) {
-            const oldAudio = audio
-            crossFade({
-                audio: oldAudio,
-                duration: settings.crossfade_duration,
-                start_volume: settings.volume,
-                then_destroy: true,
-            })
-            audio = new Audio()
-            audio.muted = settings.mute
+            audioSource.switchSources()
+            audio = audioSource.playingSource
         }
 
         const { currenttrack: track } = queue
@@ -390,6 +477,7 @@ export const usePlayer = defineStore('player', () => {
         const uri = getUrl(track.filepath, track.trackhash, settings.use_legacy_streaming_endpoint)
 
         audio.src = uri
+        audio.load() // on safari, audio won't play without load()
 
         clearNextAudioData()
         assignEventHandlers(audio)
@@ -416,6 +504,7 @@ export const usePlayer = defineStore('player', () => {
     }
 
     assignEventHandlers(audio)
+    audioSource.assignEventHandlers(handlePlayErrors)
 
     return {
         audio,
@@ -427,4 +516,4 @@ export const usePlayer = defineStore('player', () => {
     }
 })
 
-export { audio, buffering, maxSeekPercent }
+export { audioSource, buffering, maxSeekPercent }

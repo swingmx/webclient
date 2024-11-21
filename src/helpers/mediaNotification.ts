@@ -63,5 +63,12 @@ export default () => {
     navigator.mediaSession.setActionHandler("nexttrack", () => {
       queue.playNext();
     });
+    navigator.mediaSession.setActionHandler("seekto", (details) => {
+      if (details.fastSeek||details.seekTime == undefined) {
+        return;
+      }
+
+      queue.seek(details.seekTime);
+    });
   }
 };

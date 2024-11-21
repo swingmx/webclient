@@ -1,5 +1,5 @@
 <template>
-    <div class="profiledrop rounded-sm pad-sm shadow-lg">
+    <div class="profiledrop rounded-md pad-sm shadow-lg noSelect">
         <div class="info item">
             <div class="username ellip2">Hi {{ auth.user.firstname || auth.user.username }}</div>
         </div>
@@ -36,10 +36,11 @@ const modal = useModal()
 <style lang="scss">
 .profiledrop {
     position: absolute;
-    z-index: 10;
+
+    z-index: 9999;
     top: 2.25rem;
     right: 0;
-    width: 10rem;
+    width: 10.25rem;
     font-size: 0.95rem;
     font-weight: 400;
     display: flex;
@@ -59,15 +60,22 @@ const modal = useModal()
         justify-content: space-between;
         gap: $smaller;
         padding: $small $medium;
-        border-radius: 6px;
+        padding-right: $small;
+        max-height: 36px;
+        border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.2s ease-out;
+        transition: background-color 0.2s ease-out, opacity 0.2s ease-out, box-shadow 0.2s ease-out;
 
         &:hover {
             background-color: $gray4;
         }
 
+        &:active {
+            opacity: 0.3;
+        }
+
         svg {
+            display: block;
             height: 1.5rem;
         }
     }
@@ -92,19 +100,23 @@ const modal = useModal()
     }
 
     .info {
-        flex-direction: column;
-        align-items: baseline;
-        gap: $smallest;
+        gap: $small;
         cursor: auto;
-        padding: 0.25rem 0.75rem;
+        padding: $smaller $medium;
 
         &:hover {
             background-color: transparent;
         }
 
-        .username {
+        > .username {
             font-weight: 500;
         }
+    }
+
+    .info.item {
+        max-height: unset;
+        opacity: unset;
+        pointer-events: none;
     }
 
     .critical {
@@ -113,7 +125,7 @@ const modal = useModal()
 
     .critical:hover {
         background-color: transparent;
-        outline: solid 1px;
+        box-shadow: 0 0 0 1px $red;
     }
 }
 </style>
