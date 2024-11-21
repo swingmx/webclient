@@ -15,8 +15,8 @@
         <img v-motion-fade class="rounded" :src="paths.images.thumb.large + queue.currenttrack?.image" />
       </RouterLink>
       <NowPlayingInfo @handle-fav="handleFav" />
-      <Progress v-if="isSmallPhone" />
-      <div v-if="isSmallPhone" class="below-progress">
+      <Progress v-if="isLargerMobile || isSmallPhone" />
+      <div v-if="isLargerMobile || isSmallPhone" class="below-progress">
         <div class="time">
           {{ formatSeconds(queue.duration.current) }}
         </div>
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <h3 class="nowplaying_title" v-if="queue.next">Up Next</h3>
+    <h3 v-if="queue.next" class="nowplaying_title">Up Next</h3>
     <SongItem
       v-if="queue.next"
       :track="queue.next"
@@ -43,7 +43,7 @@ import { paths } from "@/config";
 import { dropSources, favType } from "@/enums";
 import favoriteHandler from "@/helpers/favoriteHandler";
 import { Routes } from "@/router";
-import { isSmallPhone } from "@/stores/content-width";
+import { isSmallPhone, isLargerMobile } from "@/stores/content-width";
 import useQueueStore from "@/stores/queue";
 import { formatSeconds } from "@/utils";
 

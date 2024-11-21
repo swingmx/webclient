@@ -2,7 +2,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 
 import useQueue from "./queue";
-import { audio } from "./player";
+import { audioSource } from "./player";
 import { FromOptions } from "@/enums";
 import useTracklist, { From } from "@/stores/queue/tracklist";
 
@@ -121,10 +121,10 @@ export default defineStore(
         trackhash.value = queue.currenttrackhash;
       }
 
-      audio.addEventListener(
+      audioSource.playingSource.addEventListener(
         "timeupdate",
         throttle(() => {
-          if (audio.paused) {
+          if (audioSource.playingSource.paused) {
             prev_date = 0;
           }
 

@@ -67,8 +67,6 @@ export function crossFade({
     if (then_destroy) {
       audio.pause();
       audio.src = "";
-      // @ts-ignore
-      audio = null;
     }
   }
 }
