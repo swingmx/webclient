@@ -37,7 +37,7 @@ export default defineStore('settings', {
 
         // client
         useCircularArtistImg: true,
-        nowPlayingTrackOnTabTitle: false,
+        nowPlayingTrackOnTabTitle: true,
         streaming_quality: 'original',
         streaming_container: 'mp3',
 

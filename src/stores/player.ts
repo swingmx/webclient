@@ -13,7 +13,6 @@ import useTracker from './tracker'
 import { paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
-import updatePageTitle from '@/utils/updatePageTitle'
 
 class AudioSource {
     private sources: HTMLAudioElement[] = []
@@ -255,7 +254,6 @@ export const usePlayer = defineStore('player', () => {
         }
 
         updateMediaNotif()
-        updatePageTitle(`${queue.currenttrack.title} - ${queue.currenttrack.artists[0].name}`, true)
         colors.setTheme1Color(paths.images.thumb.small + queue.currenttrack.image)
 
         if (router.currentRoute.value.name == Routes.Lyrics) {
@@ -272,10 +270,7 @@ export const usePlayer = defineStore('player', () => {
             audioSource.pausePlayingSource()
             return
         }
-        // queue.setDurationFromFile(audio.duration == Infinity ? queue.currenttrack.duration || 0 : audio.duration)
-        // console.log(audio.duration == Infinity)
         queue.setDurationFromFile(queue.currenttrack.duration || 0)
-
         audioSource.playPlayingSource(currentAudioData.silence)
     }
 
