@@ -13,7 +13,7 @@ import {
   playFromFolderCard,
   playFromPlaylist,
 } from "@/helpers/usePlayFrom";
-import { Track } from "@/interfaces";
+import { Playlist, Track } from "@/interfaces";
 
 import PlaySvg from "@/assets/icons/play.svg";
 import useQueue from "@/stores/queue";
@@ -27,6 +27,7 @@ const props = defineProps<{
   artisthash?: string;
   artistname?: string;
   folderpath?: string;
+  playlist?: string;
   track?: Track;
 }>();
 
@@ -60,6 +61,9 @@ function handlePlay() {
     }
     case playSources.favorite:
       playFromFavorites(props.track);
+      break;
+    case playSources.playlist:
+      playFromPlaylist(props.playlist as string);
       break;
 
     default:
