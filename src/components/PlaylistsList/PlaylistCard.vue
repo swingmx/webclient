@@ -2,11 +2,11 @@
   <router-link :to="{ name: 'PlaylistView', params: { pid: playlist.id } }" class="p-card rounded no-scroll">
     <div v-if="!playlist.has_image && playlist.images.length" class="image-grid rounded-sm no-scroll">
       <img v-for="(img, index) in playlist.images" :key="index" :src="paths.images.thumb.smallish + img['image']" />
-      <PlayBtn :source="playSources.playlist" :playlist="playlist"/>
+      <PlayBtn :source="playSources.playlist" :playlist="playlist.id.toString()"/>
     </div>
     <div v-else class="image">
       <img :src="imguri + playlist.thumb" class="rounded-sm" :class="{ border: !playlist.thumb }" />
-      <PlayBtn :source="playSources.playlist" :playlist="playlist"/>
+      <PlayBtn :source="playSources.playlist" :playlist="playlist.id.toString()"/>
     </div>
     <div class="overlay rounded">
       <div v-if="playlist.help_text" class="rhelp playlist">

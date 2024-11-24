@@ -27,7 +27,7 @@ const props = defineProps<{
   artisthash?: string;
   artistname?: string;
   folderpath?: string;
-  playlist?: Playlist;
+  playlist?: string;
   track?: Track;
 }>();
 
@@ -63,7 +63,7 @@ function handlePlay() {
       playFromFavorites(props.track);
       break;
     case playSources.playlist:
-      playFromPlaylist(props.playlist.id as string);
+      playFromPlaylist(props.playlist as string);
       break;
 
     default:

@@ -45,7 +45,6 @@ import SongItem from '@/components/shared/SongItem.vue'
 import AfterHeader from '@/components/PlaylistView/AfterHeader.vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
-import { getPlaylist } from '@/requests/playlists'
 
 const queue = useQueue()
 const tracklist = useTracklist()
