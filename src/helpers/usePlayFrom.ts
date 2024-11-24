@@ -106,7 +106,7 @@ export async function playFromFavorites(track: Track | undefined) {
 export async function playFromPlaylist(id: string, track?: Track) {
     const queue = useQueue()
     const tracklist = useTracklist()
-    const data = await getPlaylist(id)
+    const data = await getPlaylist(id, false, 0, -1)
 
     if (!data) return
 

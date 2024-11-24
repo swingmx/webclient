@@ -2,8 +2,12 @@
   <router-link :to="{ name: 'PlaylistView', params: { pid: playlist.id } }" class="p-card rounded no-scroll">
     <div v-if="!playlist.has_image && playlist.images.length" class="image-grid rounded-sm no-scroll">
       <img v-for="(img, index) in playlist.images" :key="index" :src="paths.images.thumb.smallish + img['image']" />
+      <PlayBtn :source="playSources.playlist" :playlist="playlist.id.toString()"/>
     </div>
-    <img v-else :src="imguri + playlist.thumb" class="rounded-sm" :class="{ border: !playlist.thumb }" />
+    <div v-else class="image">
+      <img :src="imguri + playlist.thumb" class="rounded-sm" :class="{ border: !playlist.thumb }" />
+      <PlayBtn :source="playSources.playlist" :playlist="playlist.id.toString()"/>
+    </div>
     <div class="overlay rounded">
       <div v-if="playlist.help_text" class="rhelp playlist">
         <span class="help">{{ playlist.help_text }}</span>
@@ -20,6 +24,8 @@
 <script setup lang="ts">
 import { paths } from "../../config";
 import { Playlist } from "../../interfaces";
+import { playSources } from '@/enums'
+import PlayBtn from '../shared/PlayBtn.vue'
 
 const imguri = paths.images.playlist;
 defineProps<{
@@ -38,14 +44,39 @@ defineProps<{
   height: max-content;
   transition: background-color 0.2s ease-out;
 
+  .image {
+    position: relative;
+  }
+
   .image-grid {
     display: grid;
     grid: repeat(2, 1fr) / repeat(2, 1fr);
+    position: relative;
   }
 
   &:hover {
     background-color: $gray4 !important;
     background-blend-mode: screen;
+  }
+
+  $btnwidth: 4rem;
+
+  .play-btn {
+    opacity: 0;
+    position: absolute;
+    width: 4rem;
+    bottom: $small;
+    left: calc(50% - ($btnwidth / 2));
+    transition: all 0.25s;
+  }
+
+  &:hover {
+    background-color: $gray4;
+
+    .play-btn {
+      opacity: 1;
+      transform: translateY(-0.75rem);
+    }
   }
 
   img {
