@@ -55,6 +55,7 @@ export default defineStore('settings', {
         use_crossfade: false,
         crossfade_duration: 2000, // milliseconds
         use_legacy_streaming_endpoint: false,
+        auto_shuffle: true,
 
         // layout
         layout: '',
@@ -203,6 +204,9 @@ export default defineStore('settings', {
 
         toggleUseLegacyStreamingEndpoint() {
             this.use_legacy_streaming_endpoint = !this.use_legacy_streaming_endpoint
+        },
+        toggleAutoShuffle() {
+            this.auto_shuffle = !this.auto_shuffle
         },
 
         // layout 👇

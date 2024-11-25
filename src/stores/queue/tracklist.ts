@@ -146,6 +146,12 @@ export default defineStore('tracklist', {
         shuffleList() {
             this.tracklist = shuffle(this.tracklist)
         },
+        shuffleListIfAutoShuffle() {
+            const settings = useSettings()
+            if (settings.auto_shuffle) {
+                this.shuffleList()
+            }
+        },
         removeByIndex(index: number) {
             const {
                 currentindex,
