@@ -11,8 +11,6 @@ import { content_width } from '../content-width'
 export default defineStore('settings', {
     state: () => ({
         version: '',
-        use_np_img: true,
-        use_sidebar: false,
         extend_width: false,
         contextChildrenShowMode: contextChildrenShowMode.hover,
         artist_top_tracks_count: 5,
@@ -39,7 +37,7 @@ export default defineStore('settings', {
 
         // client
         useCircularArtistImg: true,
-        nowPlayingTrackOnTabTitle: false,
+        nowPlayingTrackOnTabTitle: true,
         streaming_quality: 'original',
         streaming_container: 'mp3',
 
@@ -57,11 +55,14 @@ export default defineStore('settings', {
         use_legacy_streaming_endpoint: false,
 
         // layout
-        layout: '',
+        // INFO: Default to alternate layout from v2.0.0
+        layout: 'alternate',
+        use_np_img: false,
+        use_sidebar: false,
 
         // stats
-        statsgroup: "artists",
-        statsperiod: "week",
+        statsgroup: 'artists',
+        statsperiod: 'week',
     }),
     actions: {
         mapDbSettings(settings: DBSettings) {

@@ -28,3 +28,16 @@ export function getBackgroundColor(color: string) {
 }
 
 // TODO: Support more levels of brightness. ie. slightly light, light, slightly dark, dark
+export function addOpacity(rgbString: string, opacity = 1) {
+  // Remove spaces and match RGB values
+  const rgbValues = rgbString.replace(/\s/g, '').match(/^rgb\((\d+),(\d+),(\d+)\)$/);
+  
+  if (!rgbValues) {
+      throw new Error('Invalid RGB string format. Expected format: rgb(r,g,b)');
+  }
+  
+  // Convert opacity to a value between 0 and 1
+  const validOpacity = Math.max(0, Math.min(1, opacity));
+  
+  return `rgba(${rgbValues[1]}, ${rgbValues[2]}, ${rgbValues[3]}, ${validOpacity})`;
+}
