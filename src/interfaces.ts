@@ -89,8 +89,11 @@ export interface Mix {
             image: string
             color: string
         }
+        images?: {
+            image: string
+            color: string
+        }[]
     }
-    images: {
         image: string
         color: string
     }[]

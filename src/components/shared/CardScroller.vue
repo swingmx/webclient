@@ -190,6 +190,10 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
                 display: none;
             }
 
+            .keep {
+                display: block !important;
+            }
+
             // INFO: Set the time to display block on hover
             .rhelp .time {
                 display: block;

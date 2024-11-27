@@ -3,15 +3,31 @@
         <div
             class="infooverlay"
             :style="{
-                color: getTextColor(mix.extra.image?.color || ''),
+                color: getTextColor(mix.extra.image?.color || props.mix.extra.images?.[0]?.color || ''),
             }"
         >
-            <div class="type" :style="{ color: getTypeColor(mix.extra.image?.color || '') }">
+            <div
+                class="type"
+                :style="{ color: getTypeColor(mix.extra.image?.color || props.mix.extra.images?.[0]?.color || '') }"
+            >
                 {{ mix.extra['type'] }} mix
             </div>
             <div class="title ellip">{{ mix.title.replace('Radio', '') }}</div>
         </div>
-        <img :src="getImageUrl(mix.extra['image']?.image || '')" />
+        <img
+            class="main"
+            :src="getImageUrl(mix.extra['image']?.image || '', false)"
+            v-if="mix.extra['image']"
+            :key="mix.extra['image']['image']"
+        />
+        <div class="images" v-else>
+            <img
+                v-for="image in mix.extra['images']"
+                class="shadow-sm"
+                :src="getImageUrl(image, true)"
+                :key="image['image']"
+            />
+        </div>
         <div
             class="gradient rounded-sm"
             :style="{
@@ -29,20 +45,38 @@ import { getTextColor } from '@/utils/colortools/shift'
 import { getTypeColor } from '@/utils/colortools'
 import { onMounted, ref } from 'vue'
 
+const props = defineProps<{
+    mix: Mix
+    on_header?: boolean
+}>()
+
 const gradient = ref('')
 
 async function getGradient() {
-    const color = props.mix.extra.image?.color
+    let color = props.mix.extra.image?.color
 
-    if (!color) return ''
+    if (!color) {
+        color = props.mix.extra.images?.[0]?.color
+    }
 
-    return `linear-gradient(27deg, ${color} 21%, ${addOpacity(
-        color,
-        0.15
-    )}),linear-gradient(-17deg, ${color} 10%, ${addOpacity(color, 0)} 30%)`
+    if (color) {
+        return `linear-gradient(27deg, ${color} 21%, ${addOpacity(
+            color,
+            0.15
+        )}),linear-gradient(-17deg, ${color} 10%, ${addOpacity(color, 0)} 30%)`
+    }
+
+    return ''
 }
 
-function getImageUrl(image: string) {
+function getImageUrl(image: any, is_extra: boolean = false) {
+    if (is_extra) {
+        if (image['type'] == 'artist') {
+            return paths.images.artist.medium + image['image']
+        }
+
+        return paths.images.thumb.medium + image['image']
+    }
     const is_custom = image.endsWith('.jpg')
 
     if (props.on_header) {
@@ -51,11 +85,6 @@ function getImageUrl(image: string) {
 
     return (is_custom ? paths.images.mix.small : paths.images.artist.small) + image
 }
-
-const props = defineProps<{
-    mix: Mix
-    on_header?: boolean
-}>()
 
 onMounted(async () => {
     gradient.value = await getGradient()
@@ -95,7 +124,7 @@ onMounted(async () => {
         }
     }
 
-    img {
+    .main {
         position: absolute;
         top: 0;
         left: 0;
@@ -103,6 +132,32 @@ onMounted(async () => {
         height: 100%;
         object-fit: cover;
         border-radius: 0.59rem;
+    }
+
+    .images {
+        border-radius: 0.59rem;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        position: relative;
+
+        img {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 0;
+            height: 50%;
+            object-fit: cover;
+            border-radius: 0 !important;
+        }
+
+        img:nth-child(2) {
+            left: 25%;
+        }
+
+        img:nth-child(3) {
+            left: 50%;
+        }
     }
 }
 
