@@ -53,6 +53,9 @@ export const paths = {
         artist: base_url + '/artist',
         lyrics: base_url + '/lyrics',
         plugins: base_url + '/plugins',
+        get mixes() {
+            return this.plugins + '/mixes'
+        },
 
         // Single album
         album: base_url + '/album',
@@ -220,5 +223,9 @@ export const paths = {
             medium: baseImgUrl + imageRoutes.artist.medium,
         },
         playlist: baseImgUrl + imageRoutes.playlist,
+        mix: {
+            medium: baseImgUrl + '/mix/medium/',
+            small: baseImgUrl + '/mix/small/',
+        },
     },
 }
