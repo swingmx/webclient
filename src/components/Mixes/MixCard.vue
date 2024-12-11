@@ -10,9 +10,6 @@
     >
         <MixImage :mix="mix" :on_header="on_header" />
         <div class="info">
-            <!-- <div class="title">
-                {{ mix.title }}
-            </div> -->
             <div class="description ellip2">
                 {{ mix.description }}
             </div>

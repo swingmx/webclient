@@ -28,7 +28,7 @@ import PlayBtnRect from '../shared/PlayBtnRect.vue'
 import SaveSvg from '@/assets/icons/bookmark.svg'
 import SaveFilledSvg from '@/assets/icons/bookmark.fill.svg'
 import { playSources } from '@/enums'
-import { getTypeColor } from '@/utils/colortools'
+
 defineProps<{
     mix: FullMix
 }>()

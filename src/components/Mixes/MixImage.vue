@@ -2,14 +2,12 @@
     <div class="miximage" :class="{ on_header }">
         <div
             class="infooverlay"
+            v-if="!mix.extra['image']"
             :style="{
-                color: getTextColor(mix.extra.image?.color || props.mix.extra.images?.[0]?.color || ''),
+                color: getTextColor(mix.extra.images?.[0]?.color || ''),
             }"
         >
-            <div
-                class="type"
-                :style="{ color: getTypeColor(mix.extra.image?.color || props.mix.extra.images?.[0]?.color || '') }"
-            >
+            <div class="type" :style="{ color: getTypeColor(mix.extra.images?.[0]?.color || '') }">
                 {{ mix.extra['type'] }} mix
             </div>
             <div class="title ellip">{{ mix.title.replace('Radio', '') }}</div>
@@ -30,6 +28,7 @@
         </div>
         <div
             class="gradient rounded-sm"
+            v-if="!mix.extra['image']"
             :style="{
                 background: gradient,
             }"
@@ -77,13 +76,12 @@ function getImageUrl(image: any, is_extra: boolean = false) {
 
         return paths.images.thumb.medium + image['image']
     }
-    const is_custom = image.endsWith('.jpg')
 
     if (props.on_header) {
-        return (is_custom ? paths.images.mix.medium : paths.images.artist.medium) + image
+        return paths.images.mix.medium + image
     }
 
-    return (is_custom ? paths.images.mix.small : paths.images.artist.small) + image
+    return paths.images.mix.medium + image
 }
 
 onMounted(async () => {
