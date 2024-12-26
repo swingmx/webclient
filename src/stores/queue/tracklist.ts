@@ -95,12 +95,13 @@ export default defineStore('tracklist', {
 
             this.setNewList(tracks)
         },
-        setFromMix(name: string, id: string, tracks: Track[], custom_image: boolean) {
+        setFromMix(name: string, id: string, tracks: Track[], sourcehash: string, image: { type: 'mix' | 'track', image: string }) {
             this.from = <fromMix>{
-                type: FromOptions.artistMix,
+                type: FromOptions.mix,
                 name: name,
                 mixid: id,
-                custom_image,
+                sourcehash,
+                image,
             }
 
             this.setNewList(tracks)

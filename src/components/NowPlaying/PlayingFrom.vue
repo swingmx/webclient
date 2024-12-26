@@ -6,7 +6,7 @@
                     v-if="
                         tracklist.from.type === FromOptions.album ||
                         tracklist.from.type === FromOptions.artist ||
-                        tracklist.from.type === FromOptions.artistMix
+                        tracklist.from.type === FromOptions.mix
                     "
                     :src="data.image"
                     :class="`${tracklist.from.type === FromOptions.artist ? 'circular' : 'rounded-sm'}`"

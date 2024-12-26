@@ -88,8 +88,8 @@ export interface Mix {
     saved: boolean
     extra: {
         type: string
-        artisthash?: string
-        og_sourcehash?: string
+        artisthash: string
+        og_sourcehash: string
         image?: {
             image: string
             color: string
@@ -218,10 +218,14 @@ export interface fromArtist {
 }
 
 export interface fromMix {
-    type: FromOptions.artistMix
+    type: FromOptions.mix
     name: string
     mixid: string
-    custom_image?: boolean
+    sourcehash: string
+    image: {
+        type: 'mix' | 'track'
+        image: string
+    }
 }
 
 export interface fromFav {

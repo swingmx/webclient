@@ -101,8 +101,7 @@ export default (source: From): PlayingFrom => {
                 image: '',
             }
 
-        case FromOptions.artistMix:
-            
+        case FromOptions.mix:
             return {
                 name: source.name,
                 icon: RadioSvg,
@@ -111,12 +110,16 @@ export default (source: From): PlayingFrom => {
                     params: {
                         mixid: source.mixid,
                     },
+                    query: {
+                        src: source.sourcehash,
+                    },
                 },
-                image: source.custom_image
-                    ? paths.images.mix.small + source.mixid.slice(1) + '.jpg'
-                    : paths.images.artist.small + source.mixid.slice(1) + '.webp',
-                }
-                
+                image:
+                    source.image.type === 'mix'
+                        ? paths.images.mix.small + source.image.image
+                        : paths.images.thumb.small + source.image.image,
+            }
+
         default:
             return { name: '👻 No source', location: {}, icon: '' }
     }

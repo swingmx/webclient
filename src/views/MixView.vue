@@ -59,7 +59,15 @@ interface ScrollerItem {
 }
 
 function handlePlay(index: number) {
-    tracklist.setFromMix(mix.title, mix.id, mix.tracks, mix.extra.image?.image?.endsWith('.jpg') ?? false)
+    tracklist.setFromMix(
+        mix.extra.type === 'artist' ? mix.title : mix.title + ' Radio',
+        mix.id,
+        mix.tracks,
+        mix.extra.type === 'artist' ? mix.sourcehash : mix.extra.og_sourcehash,
+        mix.extra.type === 'artist'
+            ? { type: 'mix', image: mix.extra.image?.image || '' }
+            : { type: 'track', image: mix.extra.images?.[0]?.image || '' }
+    )
     queue.play(index)
 }
 
