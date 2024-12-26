@@ -1,13 +1,18 @@
 <template>
     <div class="generichead">
-        <div class="left">
-            <h1 class="title"><slot name="name"></slot></h1>
-            <div class="desc">
-                <slot name="description"></slot>
+        <div class="before">
+            <div class="left">
+                <h1 class="title"><slot name="name"></slot></h1>
+                <div class="desc">
+                    <slot name="description"></slot>
+                </div>
+            </div>
+            <div class="right">
+                <slot name="right"></slot>
             </div>
         </div>
-        <div class="right">
-            <slot name="right"></slot>
+        <div class="after">
+            <slot name="after"></slot>
         </div>
     </div>
 </template>
@@ -16,11 +21,19 @@
 .generichead {
     padding: 0 0 1rem $medium;
     height: max-content;
-    display: grid;
-    grid-template-columns: 1fr max-content;
     align-items: center;
-    max-width: 100%;
     overflow: hidden;
+    max-width: 100%;
+
+    .before {
+        display: grid;
+        grid-template-columns: 1fr max-content;
+    }
+
+    .after {
+        margin-top: 2rem;
+        margin-left: -$medium;
+    }
 
     .left {
         max-width: 100%;

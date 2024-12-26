@@ -82,9 +82,14 @@ export interface Mix {
     id: string
     title: string
     description: string
+    sourcehash: string
+    userid: number
+    timestamp: number | string
+    saved: boolean
     extra: {
         type: string
         artisthash?: string
+        og_sourcehash?: string
         image?: {
             image: string
             color: string
@@ -94,15 +99,10 @@ export interface Mix {
             color: string
         }[]
     }
-        image: string
-        color: string
-    }[]
     duration: number
     trackcount: number
-    image: {
-        image: string
-        color: string
-    }
+    help_text?: string
+    time?: string
 }
 
 export interface FullMix extends Mix {

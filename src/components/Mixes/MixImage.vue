@@ -117,7 +117,7 @@ onMounted(async () => {
         }
 
         .title {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 900;
         }
     }

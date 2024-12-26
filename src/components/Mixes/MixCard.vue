@@ -5,11 +5,16 @@
             params: {
                 mixid: mix.id,
             },
+            query: mix.extra.type === 'artist' ? { src: mix.sourcehash } : { src: mix.extra.og_sourcehash },
         }"
         class="mixcard rounded"
     >
         <MixImage :mix="mix" :on_header="on_header" />
         <div class="info">
+            <div class="mix rhelp" v-if="mix.time || mix.help_text">
+                <span class="help" v-if="mix.help_text">{{ mix.extra.type }} {{ mix.help_text }} </span>
+                <span class="time"> {{ mix.time }} </span>
+            </div>
             <div class="description ellip2">
                 {{ mix.description }}
             </div>

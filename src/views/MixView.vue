@@ -104,7 +104,7 @@ onMounted(async () => {
     updatePageTitle(mix.title)
 
     loading.value = true
-    await getMix(route.params.mixid as string).then(res => {
+    await getMix(route.params.mixid as string, route.query.src as string).then(res => {
         for (const key in res.data) {
             // @ts-ignore
             mix[key] = res.data[key]

@@ -75,19 +75,6 @@ export default async (args: FetchProps) => {
             status: error.response?.status,
         }
     }
-
-    // await getAxios()
-    //   .then((res: AxiosResponse) => {
-    //     data = res.data;
-    //     status = res.status;
-    //   })
-    //   .catch((err: AxiosError) => {
-    //     error = err.message as string;
-    //     status = err.response?.status as number;
-    //   })
-    //   .then(() => stopLoading());
-
-    // return { data, error, status };
 }
 
 // TODO: Set base url in axios config

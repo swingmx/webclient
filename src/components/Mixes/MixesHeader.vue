@@ -12,7 +12,7 @@
             </div>
             <div class="buttons">
                 <PlayBtnRect :source="playSources.mix" :bg_color="'#fff'" @click.prevent="$emit('playThis')" />
-                <button class="savebtn" :title="mix.saved ? 'Saved Mix' : 'Save Mix'">
+                <button class="savebtn" :title="mix.saved ? 'Saved Mix' : 'Save Mix'" @click="saveMix">
                     <SaveFilledSvg v-if="mix.saved" />
                     <SaveSvg v-else />
                 </button>
@@ -28,14 +28,38 @@ import PlayBtnRect from '../shared/PlayBtnRect.vue'
 import SaveSvg from '@/assets/icons/bookmark.svg'
 import SaveFilledSvg from '@/assets/icons/bookmark.fill.svg'
 import { playSources } from '@/enums'
+import useAxios from '@/requests/useAxios'
+import { paths } from '@/config'
 
-defineProps<{
+const props = defineProps<{
     mix: FullMix
 }>()
 
 defineEmits<{
     (e: 'playThis'): void
 }>()
+
+async function saveMix() {
+    const initialState = props.mix.saved
+    props.mix.saved = !initialState
+
+    const res = await useAxios({
+        url: paths.api.mixes + '/save',
+        method: 'POST',
+        props: {
+            type: props.mix.extra.type,
+            mixid: props.mix.id,
+            // INFO: save artist mixes using their sourcehash,
+            // but track mixes using their og_sourcehash, as track mixes are based
+            // on artist mixes
+            sourcehash: props.mix.extra.type === 'artist' ? props.mix.sourcehash : props.mix.extra.og_sourcehash,
+        },
+    })
+
+    if (res.status !== 200) {
+        props.mix.saved = initialState
+    }
+}
 </script>
 
 <style lang="scss">

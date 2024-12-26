@@ -244,6 +244,10 @@ button {
   &.playlist {
     color: $green;
   }
+
+  &.mix {
+    color: $lightbrown;
+  }
 }
 
 // Badges used in settings

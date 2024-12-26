@@ -13,7 +13,7 @@
             <component
                 :is="getComponent(i.type)"
                 v-for="(i, index) in itemlist.slice(0, maxAbumCards)"
-                :key="index"
+                :key="i"
                 class="hlistitem"
                 v-bind="getProps(i)"
                 @playThis="() => $emit('playThis', index)"
