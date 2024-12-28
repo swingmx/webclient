@@ -1,54 +1,52 @@
-import { ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
-import { getRecentlyAdded, getRecentlyPlayed } from '@/requests/home'
+import { getHomePageData } from '@/requests/home'
+import { HomePageItem } from '@/interfaces'
 import { maxAbumCards } from './content-width'
-import { Routes, router } from '@/router'
 
 export default defineStore('homepage', () => {
-    const recentlyAddedCutoff = ref(0)
-    const recentlyAddedFetched = ref(false)
-    const recentlyPlayedFetched = ref(false)
+    const homepageData = reactive(<HomePageItem[]>{})
 
-    // with_helptext is used to enable enable the help text box on the content loader
-    type itemlist = { type: string; item?: any; with_helptext?: boolean }[]
+    const homepageItems = computed(() => {
+        const items = Object.values(homepageData).filter(item => item.items.length > 0)
+        items.sort((a, b) => a.position - b.position)
 
-    const recentlyAdded = ref(<itemlist>[])
-    const recentlyPlayed = ref(<itemlist>[])
+        return items
+    })
 
-    async function fetchRecentlyAdded() {
-        recentlyAddedFetched.value = false
-        const data = await getRecentlyAdded(maxAbumCards.value)
-        recentlyAdded.value = data.items
-        recentlyAddedCutoff.value = data.cutoff
-        recentlyAddedFetched.value = true
+    const routes = {
+        recently_played: '/playlist/recentlyplayed',
+        artist_mixes: '/mixes/artist',
+        custom_mixes: '/mixes/track',
+        // top_streamed_weekly_artists: '',
+        // top_streamed_monthly_artists: '/featured-mixes',
+        recently_added: '/playlist/recentlyadded',
     }
 
-    async function fetchRecentlyPlayed() {
-        recentlyPlayedFetched.value = false
-        const data = await getRecentlyPlayed(maxAbumCards.value)
-
-        // setTimeout(() => {
-        recentlyPlayed.value = data.items
-        recentlyPlayedFetched.value = true
-        // }, 3000)
+    const seeAllTexts = {
+        recently_played: 'VIEW HISTORY',
     }
 
-    function resetAll() {
-        setTimeout(() => {
-            if (router.currentRoute.value.name == Routes.Home) return
-            ;[recentlyAdded.value, recentlyPlayed.value] = [[], []]
-        }, 5000)
+    async function fetchAll() {
+        const data: { [key: string]: HomePageItem }[] = await getHomePageData(maxAbumCards.value)
+
+        for (const [index, item] of data.entries()) {
+            const key = Object.keys(item)[0]
+            // @ts-ignore
+            homepageData[key] = item[key]
+            // @ts-ignore
+            homepageData[key].position = index
+            // @ts-ignore
+            homepageData[key].path = routes[key]
+            // @ts-ignore
+            homepageData[key].seeAllText = seeAllTexts[key]
+        }
     }
 
     return {
-        recentlyAddedCutoff,
-        recentlyAdded,
-        recentlyPlayed,
-        recentlyAddedFetched,
-        recentlyPlayedFetched,
-        fetchRecentlyAdded,
-        fetchRecentlyPlayed,
-        resetAll,
+        homepageData,
+        homepageItems,
+        fetchAll,
     }
 })

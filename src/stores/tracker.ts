@@ -37,6 +37,8 @@ function getSource(source: From) {
       return `q:${source.query}`;
     case FromOptions.favorite:
       return `favorite`;
+    case FromOptions.mix:
+      return `mix:${source.mixid}.${source.sourcehash}`;
     default:
       return "";
   }

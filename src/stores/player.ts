@@ -13,7 +13,6 @@ import useTracker from './tracker'
 import { paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
-import updatePageTitle from '@/utils/updatePageTitle'
 
 class AudioSource {
     private sources: HTMLAudioElement[] = []
@@ -255,7 +254,6 @@ export const usePlayer = defineStore('player', () => {
         }
 
         updateMediaNotif()
-        updatePageTitle(`${queue.currenttrack.title} - ${queue.currenttrack.artists[0].name}`, true)
         colors.setTheme1Color(paths.images.thumb.small + queue.currenttrack.image)
 
         if (router.currentRoute.value.name == Routes.Lyrics) {
@@ -272,10 +270,7 @@ export const usePlayer = defineStore('player', () => {
             audioSource.pausePlayingSource()
             return
         }
-        // queue.setDurationFromFile(audio.duration == Infinity ? queue.currenttrack.duration || 0 : audio.duration)
-        // console.log(audio.duration == Infinity)
         queue.setDurationFromFile(queue.currenttrack.duration || 0)
-
         audioSource.playPlayingSource(currentAudioData.silence)
     }
 
@@ -351,6 +346,15 @@ export const usePlayer = defineStore('player', () => {
             nextAudioData.silence.starting_file = silence.starting_file
             currentAudioData.silence.ending_file = silence.ending_file
             nextAudioData.loaded = silence !== null
+
+            // NOTE: This will lead to a merge conflict on this file: discard this and copy into master branch.
+            // INFO: This fixes the next track not playing after the current track has ended issue
+            // caused by silence data being late, causing the logic to break.
+
+            // INFO: If the ending track has already entered silence, move forward immediately
+            if (silence.ending_file <= audio.currentTime * 1000) {
+                moveLoadedForward()
+            }
         }
     }
 

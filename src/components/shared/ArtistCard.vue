@@ -19,7 +19,7 @@
             <PlayBtn :artisthash="artist.artisthash" :artistname="artist.name" :source="playSources.artist" />
         </div>
         <div v-if="artist.help_text" class="rhelp t-center">
-            <span class="help">{{ artist.help_text }}</span>
+            <span class="help" :class="{ keep: !artist.time }">{{ artist.help_text }}</span>
             <span class="time">{{ artist.time }}</span>
         </div>
         <div class="artist-name t-center">

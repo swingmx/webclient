@@ -13,7 +13,7 @@
             <component
                 :is="getComponent(i.type)"
                 v-for="(i, index) in itemlist.slice(0, maxAbumCards)"
-                :key="index"
+                :key="i"
                 class="hlistitem"
                 v-bind="getProps(i)"
                 @playThis="() => $emit('playThis', index)"
@@ -35,6 +35,7 @@ import CardContent from './CardContent.vue'
 import FavoritesCard from './FavoritesCard.vue'
 import FolderCard from './FolderCard.vue'
 import TrackCard from './TrackCard.vue'
+import MixCard from '@/components/Mixes/MixCard.vue'
 
 const props = defineProps<{
     title: string
@@ -85,6 +86,8 @@ function getComponent(type: string) {
             return PlaylistCard
         case 'favorite_tracks':
             return FavoritesCard
+        case 'mix':
+            return MixCard
     }
 }
 
@@ -121,6 +124,10 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
         case 'favorite_tracks':
             return {
                 item: item.item,
+            }
+        case 'mix':
+            return {
+                mix: item.item,
             }
     }
 }
@@ -181,6 +188,10 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
             // INFO: Set the help text to display none on hover
             .rhelp .help {
                 display: none;
+            }
+
+            .keep {
+                display: block !important;
             }
 
             // INFO: Set the time to display block on hover

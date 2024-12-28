@@ -12,6 +12,7 @@ import FolderSvg from '@/assets/icons/folder.svg'
 import HeartSvg from '@/assets/icons/heart.fill.svg'
 import PlaylistSvg from '@/assets/icons/playlist.svg'
 import SearchSvg from '@/assets/icons/search.svg'
+import RadioSvg from '@/assets/icons/radio.svg'
 
 interface PlayingFrom {
     name: string
@@ -32,7 +33,7 @@ export default (source: From): PlayingFrom => {
                         albumhash: source.albumhash,
                     },
                 },
-                image: paths.images.thumb.small + source.albumhash,
+                image: paths.images.thumb.small + source.albumhash + '.webp',
             }
 
         case FromOptions.folder:
@@ -87,7 +88,7 @@ export default (source: From): PlayingFrom => {
                         hash: source.artisthash,
                     },
                 },
-                image: paths.images.artist.small + source.artisthash,
+                image: paths.images.artist.small + source.artisthash + '.webp',
             }
 
         case FromOptions.favorite:
@@ -98,6 +99,25 @@ export default (source: From): PlayingFrom => {
                     name: Routes.favoriteTracks,
                 },
                 image: '',
+            }
+
+        case FromOptions.mix:
+            return {
+                name: source.name,
+                icon: RadioSvg,
+                location: {
+                    name: Routes.Mix,
+                    params: {
+                        mixid: source.mixid,
+                    },
+                    query: {
+                        src: source.sourcehash,
+                    },
+                },
+                image:
+                    source.image.type === 'mix'
+                        ? paths.images.mix.small + source.image.image
+                        : paths.images.thumb.small + source.image.image,
             }
 
         default:

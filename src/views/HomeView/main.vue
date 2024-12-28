@@ -5,27 +5,21 @@
             <template #description>{{ getGreetings(auth.user.username) }}</template>
         </GenericHeader>
         <Browse />
-        <RecentItems
-            v-if="!home.recentlyPlayedFetched || home.recentlyPlayed.length > 0"
-            :title="'Recently Played'"
-            :items="home.recentlyPlayed"
-            :play-source="playSources.track"
-            :route="'/playlist/recentlyplayed'"
-            :see-all-text="'VIEW HISTORY'"
-        />
-        <RecentItems
-            v-if="!home.recentlyAddedFetched || home.recentlyAdded.length > 0"
-            :title="'Recently Added'"
-            :items="home.recentlyAdded"
-            :play-source="playSources.recentlyAdded"
-            :route="'/playlist/recentlyadded'"
+
+        <PageItem
+            v-for="item in home.homepageItems"
+            :title="item.title || ''"
+            :description="item.description"
+            :items="item.items"
+            :play-source="playSources.mix"
+            :route="item.path"
+            :see-all-text="item.seeAllText"
         />
     </div>
 </template>
 
 <script setup lang="ts">
 import { nextTick, onMounted } from 'vue'
-import { onBeforeRouteLeave } from 'vue-router'
 import useAuth from '@/stores/auth'
 
 import { playSources } from '@/enums'
@@ -34,7 +28,7 @@ import useHome from '@/stores/home'
 import updatePageTitle from '@/utils/updatePageTitle'
 
 import Browse from '@/components/HomeView/Browse.vue'
-import RecentItems from '@/components/shared/CardScroller.vue'
+import PageItem from '@/components/shared/CardScroller.vue'
 import GenericHeader from '@/components/shared/GenericHeader.vue'
 
 const home = useHome()
@@ -42,7 +36,7 @@ const auth = useAuth()
 
 function getGreetings(username: string) {
     username = username ? username : ''
-    
+
     const date = new Date()
     const hour = date.getHours()
 
@@ -61,12 +55,10 @@ function getGreetings(username: string) {
 
 onMounted(async () => {
     updatePageTitle('Home')
-    await home.fetchRecentlyPlayed()
-    nextTick().then(updateCardWidth)
-    await home.fetchRecentlyAdded()
+    await home.fetchAll()
+    await nextTick()
+    updateCardWidth()
 })
-
-// onBeforeRouteLeave(() => home.resetAll())
 </script>
 
 <style lang="scss">

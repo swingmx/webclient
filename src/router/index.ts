@@ -26,6 +26,8 @@ const PlaylistView = () => import("@/views/PlaylistView/index.vue");
 const ArtistDiscographyView = () => import("@/views/ArtistDiscography.vue");
 const FavoriteCardScroller = () => import("@/views/FavoriteCardScroller.vue");
 const StatsView = () => import("@/views/Stats/main.vue");
+const MixView = () => import("@/views/MixView.vue");
+const MixListView = () => import("@/views/MixListView.vue");
 
 const folder = {
   path: "/folder/:path",
@@ -188,6 +190,18 @@ const ArtistListView = {
   name: "ArtistListView",
 };
 
+const Mix = {
+  path: "/mix/:mixid",
+  name: "MixView",
+  component: MixView,
+};
+
+const MixList = {
+  path: "/mixes/:type",
+  name: "MixListView",
+  component: MixListView,
+};
+
 const routes = [
   folder,
   playlists,
@@ -209,6 +223,8 @@ const routes = [
   ArtistListView,
   LyricsView,
   Stats,
+  Mix,
+  MixList,
 ];
 
 const Routes = {
@@ -232,6 +248,8 @@ const Routes = {
   ArtistList: ArtistListView.name,
   Lyrics: LyricsView.name,
   Stats: Stats.name,
+  Mix: Mix.name,
+  MixList: MixList.name,
 };
 
 const router = createRouter({

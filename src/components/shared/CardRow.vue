@@ -5,16 +5,20 @@
   <div v-else-if="type == 'artist'" class="cardlistrow">
     <ArtistCard v-for="item in items" :key="item.artisthash" class="hlistitem" :artist="(item as Artist)" />
   </div>
+  <div v-else-if="type == 'mix'" class="cardlistrow">
+    <MixCard v-for="item in items" :key="item.sourcehash" class="hlistitem" :mix="(item as Mix)" />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { Album, Artist } from "@/interfaces";
+import { Album, Artist, Mix } from "@/interfaces";
 import AlbumCard from "./AlbumCard.vue";
 import ArtistCard from "./ArtistCard.vue";
+import MixCard from "../Mixes/MixCard.vue";
 
 defineProps<{
-  type: "album" | "artist";
-  items: Album[] | Artist[];
+  type: string | "album" | "artist" | "mix";
+  items: Album[] | Artist[] | Mix[];
 }>();
 </script>
 

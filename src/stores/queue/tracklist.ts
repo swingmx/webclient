@@ -12,6 +12,7 @@ import {
     fromArtist,
     fromFav,
     fromFolder,
+    fromMix,
     fromPlaylist,
     fromSearch,
     Track,
@@ -24,6 +25,7 @@ export type From =
     | fromSearch
     | fromArtist
     | fromFav
+    | fromMix
 
 function shuffle(tracks: Track[]) {
     const shuffled = tracks.slice()
@@ -89,6 +91,17 @@ export default defineStore('tracklist', {
                 type: FromOptions.playlist,
                 name: name,
                 id: pid,
+            }
+
+            this.setNewList(tracks)
+        },
+        setFromMix(name: string, id: string, tracks: Track[], sourcehash: string, image: { type: 'mix' | 'track', image: string }) {
+            this.from = <fromMix>{
+                type: FromOptions.mix,
+                name: name,
+                mixid: id,
+                sourcehash,
+                image,
             }
 
             this.setNewList(tracks)

@@ -4,6 +4,7 @@
     :description="desc"
     :icon="SearchSvg"
     :flag="!items.length"
+    v-if="showNoItemsComponent"
   />
   <div class="v-scroll-page" style="height: 100%">
     <DynamicScroller
@@ -45,10 +46,11 @@ import CardRow from "@/components/shared/CardRow.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 
 const props = defineProps<{
-  page: "album" | "artist";
+  page: "album" | "artist" | "mix";
   fetch_callback?: () => Promise<void>;
   items: any[];
   outside_route?: boolean;
+  showNoItemsComponent?: boolean;
 }>();
 
 const search = useSearchStore();
