@@ -59,7 +59,7 @@ const currentGroup = computed(() => {
     // select default tab
     for (const group of settingGroups) {
         for (const settings of group.groups) {
-            if (settings.title === 'Last.fm') {
+            if (settings.title === 'Appearance') {
                 return settings
             }
         }
