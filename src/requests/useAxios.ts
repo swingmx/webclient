@@ -20,7 +20,7 @@ export function getBaseUrl() {
 
 axios.defaults.baseURL = getBaseUrl()
 
-export default async (args: FetchProps) => {
+export default async (args: FetchProps, withCredentials: boolean = true) => {
     const on_ngrok = args.url.includes('ngrok')
     const ngrok_config = {
         'ngrok-skip-browser-warning': 'stupid-SOAB!',
@@ -37,7 +37,7 @@ export default async (args: FetchProps) => {
             method: args.method || 'POST',
             // INFO: Add ngrok header and provided headers
             headers: { ...args.headers, ...(on_ngrok ? ngrok_config : {}) },
-            withCredentials: true,
+            withCredentials: withCredentials,
         })
 
         stopLoading()

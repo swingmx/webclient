@@ -102,4 +102,7 @@ export interface DBSettings {
   scanInterval: number
   plugins: Plugin[];
   version: string;
+  lastfmApiKey: string;
+  lastfmApiSecret: string;
+  lastfmSessionKey: string;
 }

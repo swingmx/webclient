@@ -7,7 +7,7 @@ export enum SettingType {
   root_dirs,
   free_number_input,
   locked_number_input,
-  
+
   // custom components 👇
   quick_actions,
   profile,
@@ -15,5 +15,6 @@ export enum SettingType {
   pairing,
   about,
   streaming_quality,
-  backup
+  backup,
+  secretinput,
 }
