@@ -32,7 +32,8 @@
                 <span class="ellip">
                     {{ queue.currenttrack?.title || 'Hello there' }}
                 </span>
-                <MasterFlag :bitrate="queue.currenttrack?.bitrate || 0" />
+                <ExplicitIcon class="explicit-icon" v-if="queue.currenttrack?.explicit" />
+                <MasterFlag :bitrate="queue.currenttrack?.bitrate + 3000 || 0" />
             </div>
             <ArtistName
                 :artists="queue.currenttrack?.artists || []"
@@ -61,6 +62,7 @@ import HotKeys from '../LeftSidebar/NP/HotKeys.vue'
 import HeartSvg from '../shared/HeartSvg.vue'
 import MasterFlag from '../shared/MasterFlag.vue'
 import Actions from './Right.vue'
+import ExplicitIcon from '@/assets/icons/explicit.svg'
 
 const queue = useQStore()
 const settings = useSettingsStore()

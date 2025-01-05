@@ -25,6 +25,7 @@
         <span class="title ellip">
           {{ track.title }}
         </span>
+        <ExplicitIcon  class="explicit-icon" v-if="track.explicit" />
         <MasterFlag :bitrate="track.bitrate" />
       </div>
       <div class="isSmallArtists">
@@ -40,6 +41,7 @@ const imguri = paths.images.thumb.small;
 
 import ArtistName from "../ArtistName.vue";
 import MasterFlag from "../MasterFlag.vue";
+import ExplicitIcon from "@/assets/icons/explicit.svg";
 
 import { paths } from "@/config";
 
@@ -58,6 +60,10 @@ defineEmits<{
 .songlist-item > .tracktitle {
   position: relative;
   align-items: center;
+
+  .explicit-icon {
+    margin-left: $small;
+  }
 
   .thumbnail {
     margin-right: $medium;

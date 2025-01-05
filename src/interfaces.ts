@@ -28,6 +28,7 @@ export interface Track extends AlbumDisc {
     trackhash: string
     filetype: string
     is_favorite: boolean
+    explicit: boolean
 
     og_title: string
     og_album: string

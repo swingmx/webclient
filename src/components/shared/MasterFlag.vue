@@ -28,7 +28,7 @@ defineProps<{
   font-weight: 600;
   margin-left: $smaller;
   padding: 2px 5px;
-  border-radius: 5px;
+  border-radius: 4px;
   opacity: 0.75;
   text-transform: uppercase;
 }
