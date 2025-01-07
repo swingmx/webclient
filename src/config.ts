@@ -144,7 +144,7 @@ export const paths = {
         },
         files: base_url + '/file',
         home: {
-            base: base_url + '/home',
+            base: base_url + '/nothome',
             get recentlyAdded() {
                 return this.base + '/recents/added'
             },
