@@ -4,8 +4,8 @@ import useArtist from '@/stores/pages/artist'
 
 import { SearchIcon } from '@/icons'
 import { Option, Page, Playlist } from '@/interfaces'
-import { getAllPlaylists } from '@/requests/playlists'
 import { getAllPages } from '@/requests/pages'
+import { getAllPlaylists } from '@/requests/playlists'
 
 export const separator: Option = {
     type: 'separator',
@@ -24,7 +24,7 @@ export function get_new_page_option(new_playlist_modal_props: any = {}): Option 
     return {
         label: 'New page',
         action: () => {
-            modal().showNewPageModal(new_playlist_modal_props)
+            modal().showPageModal(new_playlist_modal_props)
         },
     }
 }

@@ -30,7 +30,7 @@ export default defineStore('newModal', {
         showNewPlaylistModal(props: any = {}) {
             this.showModal(ModalOptions.newPlaylist, props)
         },
-        showNewPageModal(props: any = {}) {
+        showPageModal(props: any = {}) {
             this.showModal(ModalOptions.page, props)
         },
         showSaveFolderAsPlaylistModal(path: string) {

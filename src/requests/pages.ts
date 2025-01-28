@@ -105,3 +105,16 @@ export async function addItemToPage(page: Page, item: Album | Artist | Mix | Pla
 
     return false
 }
+
+export async function deletePage(page_number: number) {
+    const { data, status } = await useAxios({
+        url: basePageUrl + `/${page_number}`,
+        method: 'DELETE',
+    })
+
+    if (status == 200) {
+        return true
+    }
+
+    return false
+}

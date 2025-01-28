@@ -2,11 +2,17 @@
     <div class="cardscroller">
         <div class="rinfo">
             <div class="rtitle">
-                <b>{{ title }}</b>
+                <b>
+                    <RouterLink :to="route || ''">
+                        {{ title }}
+                    </RouterLink>
+                </b>
                 <SeeAll v-if="route && itemlist.length >= maxAbumCards" :route="route" :text="seeAllText" />
             </div>
             <div v-if="description" class="rdesc">
-                {{ description }}
+                <RouterLink :to="route || ''">
+                    {{ description }}
+                </RouterLink>
             </div>
         </div>
         <div class="recentitems">
@@ -26,7 +32,7 @@
 import { playSources } from '@/enums'
 import { maxAbumCards } from '@/stores/content-width'
 
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import PlaylistCard from '../PlaylistsList/PlaylistCard.vue'
 import SeeAll from '../shared/SeeAll.vue'
 import AlbumCard from './AlbumCard.vue'
@@ -131,6 +137,10 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
             }
     }
 }
+
+onMounted(() => {
+    console.log(props.items)
+})
 </script>
 
 <style lang="scss">

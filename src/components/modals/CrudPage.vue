@@ -1,5 +1,10 @@
 <template>
-    <form class="playlist-modal" @submit.prevent="submit">
+    <form action="" v-if="delete">
+        <div>Are you sure you want to delete this page?</div>
+        <br />
+        <button @click.prevent="submit" class="critical">Yes, Delete</button>
+    </form>
+    <form class="playlist-modal" @submit.prevent="submit" v-else>
         <label for="name">Page name</label>
         <br />
         <input type="search" class="rounded-sm" id="name" :value="page?.name" />
@@ -14,7 +19,8 @@
 
 <script setup lang="ts">
 import { Page } from '@/interfaces'
-import { createNewPage, updatePage } from '@/requests/pages'
+import { createNewPage, deletePage, updatePage } from '@/requests/pages'
+import { router } from '@/router';
 import { NotifType, Notification } from '@/stores/notification'
 
 const props = defineProps<{
@@ -22,6 +28,7 @@ const props = defineProps<{
     hash?: string
     type?: string
     extra?: any
+    delete?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -29,9 +36,19 @@ const emit = defineEmits<{
     (e: 'setTitle', title: string): void
 }>()
 
-emit('setTitle', props.page ? 'Update Page' : 'New Page')
+emit('setTitle', props.page ? (props.delete ? 'Delete Page' : 'Update Page') : 'New Page')
 
 async function submit(e: Event) {
+    if (props.delete && props.page) {
+        const deleted = await deletePage(props.page.id)
+        if (deleted) {
+            new Notification('Page deleted', NotifType.Success)
+            emit('hideModal')
+            router.push('/')
+        }
+        return
+    }
+
     e.preventDefault()
     const name = (e.target as any).elements['name'].value
     const description = (e.target as any).elements['description'].value
@@ -60,7 +77,5 @@ async function submit(e: Event) {
             emit('hideModal')
         }
     }
-
-    // If the page is not null, we are updating the page
 }
 </script>

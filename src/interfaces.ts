@@ -118,6 +118,7 @@ export interface HomePageItem {
     items: { type: string; item?: any; with_helptext?: boolean }[]
     path?: string
     seeAllText?: string
+    url?: string
 }
 
 export interface Artist {
