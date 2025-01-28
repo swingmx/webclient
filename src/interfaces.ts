@@ -179,6 +179,15 @@ export interface Playlist {
           }[]
 }
 
+export interface Page {
+    id: number
+    name: string
+    items: (Album | Artist | Mix | Playlist)[]
+    extra: {
+        description: string
+    }
+}
+
 export interface Radio {
     name: string
     image: string

@@ -30,6 +30,12 @@
         grid-template-columns: 1fr max-content;
     }
 
+    .right {
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+
     .after {
         margin-top: 2rem;
         margin-left: -$medium;
