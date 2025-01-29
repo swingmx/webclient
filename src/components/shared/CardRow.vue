@@ -26,23 +26,23 @@ const items = computed(() => {
         switch (item['type']) {
             case 'album':
                 i.component = AlbumCard
-                i.key = item.item.albumhash
+                i.key = item.albumhash
                 i.props = {
-                    album: item.item,
+                    album: item,
                 }
                 break
             case 'artist':
                 i.component = ArtistCard
-                i.key = item.item.artisthash
+                i.key = item.artisthash
                 i.props = {
-                    artist: item.item,
+                    artist: item,
                 }
                 break
             case 'mix':
                 i.component = MixCard
-                i.key = item.item.sourcehash
+                i.key = item.sourcehash
                 i.props = {
-                    mix: item.item,
+                    mix: item,
                 }
                 break
         }

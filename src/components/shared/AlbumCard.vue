@@ -142,10 +142,6 @@ function showMenu(e: MouseEvent) {
                 opacity: 1;
             }
 
-            img {
-                /* border-radius: 0 0 $medium $medium; Not sure why this one was added, fugly with animation */
-            }
-
             .gradient {
                 opacity: 1;
             }
