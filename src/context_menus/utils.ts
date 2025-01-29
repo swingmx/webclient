@@ -3,7 +3,7 @@ import useAlbum from '@/stores/pages/album'
 import useArtist from '@/stores/pages/artist'
 
 import { SearchIcon } from '@/icons'
-import { Option, Page, Playlist } from '@/interfaces'
+import { Album, Option, Page, Playlist } from '@/interfaces'
 import { getAllPages } from '@/requests/pages'
 import { getAllPlaylists } from '@/requests/playlists'
 
@@ -91,12 +91,10 @@ export async function getAddToPageOptions(addToPage: (page: Page) => void, new_p
     return [...items, separator, ...pages]
 }
 
-export const get_find_on_social = (page = 'album', query = '') => {
+export const get_find_on_social = (page = 'album', query = '', album?: Album) => {
     const is_album = page === 'album'
     const getAlbumSearchTerm = () => {
-        const store = useAlbum()
-
-        return `${store.info.title} - ${store.info.albumartists.map(a => a.name).join(', ')}`
+        return `${album?.title} - ${album?.albumartists.map(a => a.name).join(', ')}`
     }
     const search_term = query ? query : is_album ? getAlbumSearchTerm() : useArtist().info.name
 

@@ -1,6 +1,7 @@
-import { Album, Artist, Mix, Page, Playlist } from '@/interfaces'
-import useAxios from './useAxios'
 import { paths } from '@/config'
+import { Album, Artist, Mix, Page, Playlist } from '@/interfaces'
+import { Notification, NotifType } from '@/stores/notification'
+import useAxios from './useAxios'
 
 const { base: basePageUrl } = paths.api.pages
 
@@ -65,7 +66,12 @@ export async function updatePage(page: Page, name: string, description: string) 
     return null
 }
 
-export async function addItemToPage(page: Page, item: Album | Artist | Mix | Playlist, type: string) {
+export async function addOrRemoveItemFromPage(
+    page_number: number,
+    item: Album | Artist | Mix | Playlist,
+    type: string,
+    command: 'add' | 'remove'
+) {
     const payload = {
         type: type,
         hash: '',
@@ -92,17 +98,29 @@ export async function addItemToPage(page: Page, item: Album | Artist | Mix | Pla
     }
 
     const { data, status } = await useAxios({
-        url: basePageUrl + `/${page.id}/items`,
+        url: basePageUrl + `/${page_number}/items`,
         props: {
-            items: [payload],
+            item: payload,
         },
-        method: 'POST',
+        method: command == 'add' ? 'POST' : 'DELETE',
     })
 
     if (status == 200) {
+        new Notification(
+            `${payload.type[0].toUpperCase() + payload.type.slice(1)} ${
+                command == 'add' ? 'added' : 'removed'
+            } to page`,
+            NotifType.Success
+        )
         return true
     }
 
+    if (status == 400) {
+        new Notification(`${payload.type[0].toUpperCase() + payload.type.slice(1)} already in page`, NotifType.Error)
+        return false
+    }
+
+    new Notification('Failed: ' + data.error, NotifType.Error)
     return false
 }
 
