@@ -30,9 +30,11 @@ export default defineStore('homepage', () => {
 
     async function fetchAll() {
         const data: { [key: string]: HomePageItem }[] = await getHomePageData(maxAbumCards.value)
+        let keys = []
 
         for (const [index, item] of data.entries()) {
             const key = Object.keys(item)[0]
+            keys.push(key)
             // @ts-ignore
             homepageData[key] = item[key]
             // @ts-ignore
@@ -41,6 +43,18 @@ export default defineStore('homepage', () => {
             homepageData[key].path = routes[key]
             // @ts-ignore
             homepageData[key].seeAllText = seeAllTexts[key]
+
+            if (item[key].url) {
+                // @ts-ignore
+                homepageData[key].path = item[key].url
+            }
+        }
+
+        // remove keys not in response
+        for (const key in homepageData) {
+            if (!keys.includes(key)) {
+                delete homepageData[key]
+            }
         }
     }
 

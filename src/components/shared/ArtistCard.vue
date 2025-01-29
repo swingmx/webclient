@@ -7,6 +7,8 @@
             },
         }"
         class="artist-card"
+        @contextmenu.prevent="showContextMenu"
+        :class="{ 'context-menu-open': contextMenuFlag }"
     >
         <div class="image circular">
             <img class="artist-image circular" :src="imguri + artist.image" />
@@ -38,12 +40,19 @@ import { Routes } from '@/router'
 
 import { playSources } from '@/enums'
 import PlayBtn from './PlayBtn.vue'
+import { ref } from 'vue'
+import { showArtistContextMenu } from '@/helpers/contextMenuHandler'
 
 const imguri = paths.images.artist.medium
+const contextMenuFlag = ref(false)
 
-defineProps<{
+const props = defineProps<{
     artist: Artist
 }>()
+
+const showContextMenu = (e: MouseEvent) => {
+    showArtistContextMenu(e, contextMenuFlag, props.artist.artisthash, props.artist.name)
+}
 </script>
 
 <style lang="scss">
@@ -58,6 +67,10 @@ defineProps<{
     font-weight: 700;
     height: max-content;
     transition: background-color 0.2s ease-out;
+
+    &.context-menu-open {
+        background-color: $gray5;
+    }
 
     .image {
         position: relative;

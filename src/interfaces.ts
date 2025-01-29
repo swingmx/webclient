@@ -118,6 +118,7 @@ export interface HomePageItem {
     items: { type: string; item?: any; with_helptext?: boolean }[]
     path?: string
     seeAllText?: string
+    url?: string
 }
 
 export interface Artist {
@@ -177,6 +178,15 @@ export interface Playlist {
               image: string
               color: string
           }[]
+}
+
+export interface Page {
+    id: number
+    name: string
+    items: { item: Album | Artist | Mix | Playlist; type: string }[]
+    extra: {
+        description: string
+    }
 }
 
 export interface Radio {

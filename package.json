@@ -24,7 +24,7 @@
     "pinia-plugin-persistedstate": "^3.2.0",
     "qr-code-styling": "^1.6.0-rc.1",
     "v-wave": "^1.5.0",
-    "vue": "^v3.2.45",
+    "vue": "^v3.5.13",
     "vue-boring-avatars": "^1.4.0",
     "vue-debounce": "^3.0.2",
     "vue-router": "^4.1.3",

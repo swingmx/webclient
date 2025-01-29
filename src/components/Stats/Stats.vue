@@ -57,6 +57,10 @@ onMounted(async () => {
         date.value = res.data.dates
     }
 })
+
+defineOptions({
+    inheritAttrs: false,
+})
 </script>
 
 <style lang="scss">

@@ -5,6 +5,8 @@
             params: { albumhash: album.albumhash },
         }"
         class="album-card"
+        @contextmenu.prevent="showMenu"
+        :class="{ 'context-menu-open': contextMenuFlag }"
     >
         <div class="with-img rounded-sm no-scroll">
             <div
@@ -56,7 +58,7 @@
 
 <script setup lang="ts">
 import { Routes } from '@/router'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { Album } from '../../interfaces'
@@ -66,9 +68,11 @@ import { playSources } from '@/enums'
 import useAlbumStore from '@/stores/pages/album'
 import { paths } from '../../config'
 import MasterFlag from './MasterFlag.vue'
+import { showAlbumContextMenu } from '@/helpers/contextMenuHandler'
 
-const imguri = paths.images.thumb.medium
 const route = useRoute()
+const contextMenuFlag = ref(false)
+const imguri = paths.images.thumb.medium
 
 const props = defineProps<{
     album: Album
@@ -94,6 +98,10 @@ const artists = computed(() => {
 
     return albumartists
 })
+
+function showMenu(e: MouseEvent) {
+    showAlbumContextMenu(e, contextMenuFlag, props.album)
+}
 </script>
 
 <style lang="scss">
@@ -104,6 +112,10 @@ const artists = computed(() => {
     border-radius: 1rem;
     height: max-content;
     transition: background-color 0.2s ease-out;
+
+    &.context-menu-open {
+        background-color: $gray5;
+    }
 
     .with-img {
         position: relative;
@@ -128,10 +140,6 @@ const artists = computed(() => {
             .play-btn {
                 transform: translateY(0);
                 opacity: 1;
-            }
-
-            img {
-                /* border-radius: 0 0 $medium $medium; Not sure why this one was added, fugly with animation */
             }
 
             .gradient {

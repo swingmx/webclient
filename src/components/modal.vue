@@ -22,6 +22,12 @@
                 @hideModal="hideModal"
                 @setTitle="setTitle"
             />
+            <CrudPage
+                v-if="modal.component == modal.options.page"
+                @hideModal="hideModal"
+                @setTitle="setTitle"
+                v-bind="modal.props"
+            />
             <UpdatePlaylist
                 v-if="modal.component == modal.options.updatePlaylist"
                 v-bind="modal.props"
@@ -49,6 +55,7 @@ import { useRouter } from 'vue-router'
 
 import AuthLogin from './modals/AuthLogin.vue'
 import ConfirmModal from './modals/ConfirmModal.vue'
+import CrudPage from './modals/CrudPage.vue'
 import NewPlaylist from './modals/NewPlaylist.vue'
 import RootDirsPrompt from './modals/RootDirsPrompt.vue'
 import SetRootDirs from './modals/SetRootDirs.vue'
