@@ -1,14 +1,14 @@
 <template>
-    <CardGridPage :items="page?.items || []">
+    <CardGridPage :items="page.page?.items || []">
         <template #header>
             <GenericHeader>
                 <template #name>
                     <span @click="updatePage">
-                        {{ page?.name }} <span><PencilSvg height="0.8rem" width="0.8rem" /></span
+                        {{ page.page?.name }} <span><PencilSvg height="0.8rem" width="0.8rem" /></span
                     ></span>
                 </template>
-                <template #description v-if="page?.extra.description">
-                    <span @click="updatePage"> {{ page?.extra.description }} </span>
+                <template #description v-if="page.page?.extra.description">
+                    <span @click="updatePage"> {{ page.page?.extra.description }} </span>
                 </template>
                 <template #right>
                     <button @click="deletePage"><DeleteSvg height="1.2rem" width="1.2rem" /> Delete</button>
@@ -30,27 +30,27 @@ import GenericHeader from '@/components/shared/GenericHeader.vue'
 import CardGridPage from '@/views/SearchView/CardGridPage.vue'
 
 import useModal from '@/stores/modal'
+import usePage from '@/stores/pages/page'
 
 const modal = useModal()
-const page = ref<Page | null>(null)
+const page = usePage()
 
 onMounted(async () => {
     const route = useRoute()
     const page_id = route.params.page as string
-    page.value = await getPage(page_id)
-    console.log(page.value)
+    page.fetchPage(page_id)
 })
 
 function updatePage() {
     console.log('update page')
     modal.showPageModal({
-        page: page.value,
+        page: page.page,
     })
 }
 
 function deletePage() {
     modal.showPageModal({
-        page: page.value,
+        page: page.page,
         delete: true,
     })
 }

@@ -1,13 +1,16 @@
+import { router, Routes } from '@/router'
+
 import useAlbum from '@/stores/pages/album'
 import useTracklist from '@/stores/queue/tracklist'
+import usePage from '@/stores/pages/page'
 
-import { AddToQueueIcon, DeleteIcon, PlayNextIcon, PlusIcon } from '@/icons'
-import { Album, Option, Page, Playlist, Track } from '@/interfaces'
 import { getAlbumTracks } from '@/requests/album'
-import { addOrRemoveItemFromPage } from '@/requests/pages'
 import { addAlbumToPlaylist } from '@/requests/playlists'
+import { addOrRemoveItemFromPage } from '@/requests/pages'
+
+import { Album, Option, Page, Playlist, Track } from '@/interfaces'
+import { AddToQueueIcon, DeleteIcon, PlayNextIcon, PlusIcon } from '@/icons'
 import { getAddToPageOptions, getAddToPlaylistOptions, get_find_on_social } from './utils'
-import { router, Routes } from '@/router'
 
 export default async (album?: Album) => {
     const albumStore = useAlbum()
@@ -82,12 +85,16 @@ export default async (album?: Album) => {
     const remove_from_page: Option = {
         label: 'Remove from Page',
         action: async () => {
-            await addOrRemoveItemFromPage(
+            const success = await addOrRemoveItemFromPage(
                 parseInt(router.currentRoute.value.params.page as string),
                 album,
                 'album',
                 'remove'
             )
+
+            if (success) {
+                usePage().removeLocalItem(album, 'album')
+            }
         },
         icon: DeleteIcon,
     }

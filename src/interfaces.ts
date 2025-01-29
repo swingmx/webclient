@@ -183,7 +183,7 @@ export interface Playlist {
 export interface Page {
     id: number
     name: string
-    items: (Album | Artist | Mix | Playlist)[]
+    items: { item: Album | Artist | Mix | Playlist; type: string }[]
     extra: {
         description: string
     }
