@@ -14,11 +14,13 @@ export default defineStore('page', {
             if (!this.page) return
 
             if (type == 'album') {
-                this.page.items = this.page.items.filter(i => (i.item as Album).albumhash != (item as Album).albumhash)
+                this.page.items = this.page.items.filter(i => {
+                    return (i as Album).albumhash != (item as Album).albumhash
+                })
             } else {
-                this.page.items = this.page.items.filter(
-                    i => (i.item as Artist).artisthash != (item as Artist).artisthash
-                )
+                this.page.items = this.page.items.filter(i => {
+                    return (i as Artist).artisthash != (item as Artist).artisthash
+                })
             }
         },
     },

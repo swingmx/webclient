@@ -19,9 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { Page } from '@/interfaces'
-import { getPage } from '@/requests/pages'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import DeleteSvg from '@/assets/icons/delete.svg'
