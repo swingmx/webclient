@@ -50,8 +50,6 @@ const items = computed(() => {
         return i
     })
 })
-
-console.log(props)
 </script>
 
 <style lang="scss">

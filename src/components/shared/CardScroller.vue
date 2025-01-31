@@ -32,7 +32,7 @@
 import { playSources } from '@/enums'
 import { maxAbumCards } from '@/stores/content-width'
 
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import PlaylistCard from '../PlaylistsList/PlaylistCard.vue'
 import SeeAll from '../shared/SeeAll.vue'
 import AlbumCard from './AlbumCard.vue'
@@ -137,10 +137,6 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
             }
     }
 }
-
-onMounted(() => {
-    console.log(props.items)
-})
 </script>
 
 <style lang="scss">
