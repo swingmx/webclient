@@ -72,8 +72,8 @@ export default defineStore('settings', {
         // stats
         statsgroup: 'artists',
         statsperiod: 'week',
-        showInlineFavIcon: true,
-        _highlightFavoriteTracks: true,
+        showInlineFavIcon: false,
+        _highlightFavoriteTracks: false,
     }),
     actions: {
         mapDbSettings(settings: DBSettings) {
