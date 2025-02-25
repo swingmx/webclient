@@ -29,6 +29,7 @@ export interface Track extends AlbumDisc {
     filetype: string
     is_favorite: boolean
     explicit: boolean
+    type?: string
 
     og_title: string
     og_album: string
@@ -133,6 +134,7 @@ export interface Artist {
     help_text?: string
     time?: string
     genres: Genre[]
+    type?: string
 
     // available in charts
     trend?: {

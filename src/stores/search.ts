@@ -24,10 +24,7 @@ export default defineStore('search', () => {
     const currentTab = ref('top')
     const top_results = reactive({
         query: '',
-        top_result: {
-            type: <null | string>null,
-            item: <Track | Album | Artist>{},
-        },
+        top_result: <Track | Album | Artist>{},
         tracks: <Track[]>[],
         albums: <Album[]>[],
         artists: <Artist[]>[],
@@ -207,6 +204,7 @@ export default defineStore('search', () => {
                     break
 
                 case 'artists':
+                    console.log("switching to artists", current_query)
                     if (artists.query == current_query) break
                     fetchArtists(current_query)
                     break
@@ -218,6 +216,7 @@ export default defineStore('search', () => {
     )
 
     function switchTab(tab: string) {
+        console.log("switching tab", tab)
         currentTab.value = tab
     }
 

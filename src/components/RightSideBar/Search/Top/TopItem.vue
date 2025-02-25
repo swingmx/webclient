@@ -94,7 +94,7 @@ const res_type = computed(() => {
 type It = Album & Artist & Track
 
 const item = computed(() => {
-    return top_results.value.top_result.item as It
+    return top_results.value.top_result as It
 })
 
 const context_menu_showing = ref(false)

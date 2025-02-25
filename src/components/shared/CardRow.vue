@@ -9,7 +9,7 @@ import { Album, Artist, Mix } from '@/interfaces'
 import AlbumCard from './AlbumCard.vue'
 import ArtistCard from './ArtistCard.vue'
 import MixCard from '../Mixes/MixCard.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 
 const props = defineProps<{
     items: Album[] | Artist[] | Mix[]
@@ -32,6 +32,7 @@ const items = computed(() => {
                 }
                 break
             case 'artist':
+                console.log("artist", item)
                 i.component = ArtistCard
                 i.key = item.artisthash
                 i.props = {
@@ -49,6 +50,10 @@ const items = computed(() => {
 
         return i
     })
+})
+
+onMounted(() => {
+    console.log("cardrow", props.items)
 })
 </script>
 

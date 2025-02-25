@@ -53,6 +53,7 @@ const desc = computed(() =>
 )
 
 const scrollerItems = computed(() => {
+    console.log("scrollerItems page", props.items)
     let maxCards = maxAbumCards.value
 
     if (props.outside_route) {
@@ -69,6 +70,7 @@ const scrollerItems = computed(() => {
             props: {
                 items: props.items.slice(i * maxCards, (i + 1) * maxCards),
             },
+            key: i,
         })
     }
 
