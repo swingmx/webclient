@@ -182,7 +182,7 @@ export interface Playlist {
           }[]
 }
 
-export interface Page {
+export interface Collection {
     id: number
     name: string
     items: (Album | Artist | Mix | Playlist)[]

@@ -10,6 +10,7 @@ import { content_width } from '../content-width'
 import { getLastFmApiSig } from '@/context_menus/hashing'
 import useAxios from '@/requests/useAxios'
 import { paths } from '@/config'
+import { router, Routes } from '@/router'
 
 export default defineStore('settings', {
     state: () => ({
@@ -71,6 +72,8 @@ export default defineStore('settings', {
         // stats
         statsgroup: 'artists',
         statsperiod: 'week',
+        showInlineFavIcon: true,
+        _highlightFavoriteTracks: true,
     }),
     actions: {
         mapDbSettings(settings: DBSettings) {
@@ -103,6 +106,12 @@ export default defineStore('settings', {
         // now playing 👇
         toggleUseNPImg() {
             this.use_np_img = !this.use_np_img
+        },
+        toggleShowInlineFavIcon() {
+            this.showInlineFavIcon = !this.showInlineFavIcon
+        },
+        toggleHighlightFavoriteTracks() {
+            this._highlightFavoriteTracks = !this._highlightFavoriteTracks
         },
         // sidebar 👇
         toggleDisableSidebar() {
@@ -379,6 +388,9 @@ export default defineStore('settings', {
         },
         is_default_layout: state => state.layout === '',
         is_alt_layout: state => state.layout === 'alternate' && content_width.value > 900,
+        highlightFavoriteTracks(): boolean {
+            return !router.currentRoute.value.name?.toString().toLowerCase().startsWith('favorite') && this._highlightFavoriteTracks
+        },
     },
     persist: {
         afterRestore: context => {

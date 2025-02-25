@@ -2,10 +2,16 @@
     <div
         class="songlist-item rounded-sm"
         :class="[{ current: isCurrent() }, { contexton: context_menu_showing }]"
-        @dblclick.prevent="emitUpdate"
         @contextmenu.prevent="showMenu"
     >
-        <TrackIndex v-if="!isSmall" :index="index" :is_fav="is_fav" @add-to-fav="addToFav(track.trackhash)" />
+        <TrackIndex
+            v-if="!isSmall"
+            :index="index"
+            :is_fav="is_fav"
+            @add-to-fav="addToFav(track.trackhash)"
+            :show-inline-fav-icon="settings.showInlineFavIcon"
+        />
+
         <TrackTitle
             :track="track"
             :is_current="isCurrent()"
@@ -24,9 +30,12 @@
         <TrackDuration
             :duration="track.duration || 0"
             @showMenu="showMenu"
+            @toggleFav="addToFav(track.trackhash)"
             :help_text="track.help_text"
             :is_fav="is_fav"
             :showFavIcon="!isFavoritesPage"
+            :showInlineFavIcon="settings.showInlineFavIcon"
+            :highlightFavoriteTracks="settings.highlightFavoriteTracks"
         />
     </div>
 </template>
@@ -47,7 +56,9 @@ import TrackAlbum from './SongItem/TrackAlbum.vue'
 import TrackDuration from './SongItem/TrackDuration.vue'
 import TrackIndex from './SongItem/TrackIndex.vue'
 import TrackTitle from './SongItem/TrackTitle.vue'
+import useSettings from '@/stores/settings'
 
+const settings = useSettings()
 const context_menu_showing = ref(false)
 
 const queue = useQueueStore()
@@ -133,7 +144,7 @@ const isFavoritesPage = route.path.startsWith('/favorites')
     &:hover {
         background-color: $gray5;
 
-        .index {
+        .index.ready {
             .text {
                 transition-delay: 400ms;
 
@@ -156,6 +167,10 @@ const isFavoritesPage = route.path.startsWith('/favorites')
         // INFO: Show help text on hover
         .song-duration.help-text {
             opacity: 1;
+        }
+
+        .options-and-duration .heart-icon.showInlineFavIcon {
+            display: block;
         }
     }
 

@@ -1,16 +1,16 @@
 import { router, Routes } from '@/router'
 
 import useAlbum from '@/stores/pages/album'
+import useCollection from '@/stores/pages/collections'
 import useTracklist from '@/stores/queue/tracklist'
-import usePage from '@/stores/pages/page'
 
 import { getAlbumTracks } from '@/requests/album'
+import { addOrRemoveItemFromCollection } from '@/requests/collections'
 import { addAlbumToPlaylist } from '@/requests/playlists'
-import { addOrRemoveItemFromPage } from '@/requests/pages'
 
-import { Album, Option, Page, Playlist, Track } from '@/interfaces'
 import { AddToQueueIcon, DeleteIcon, PlayNextIcon, PlusIcon } from '@/icons'
-import { getAddToPageOptions, getAddToPlaylistOptions, get_find_on_social } from './utils'
+import { Album, Collection, Option, Playlist, Track } from '@/interfaces'
+import { get_find_on_social, getAddToCollectionOptions, getAddToPlaylistOptions } from './utils'
 
 export default async (album?: Album) => {
     const albumStore = useAlbum()
@@ -66,15 +66,15 @@ export default async (album?: Album) => {
         icon: PlusIcon,
     }
 
-    const addToPageAction = (page: Page) => {
-        addOrRemoveItemFromPage(page.id, album, 'album', 'add')
+    const addToPageAction = (page: Collection) => {
+        addOrRemoveItemFromCollection(page.id, album, 'album', 'add')
     }
 
     const add_to_page: Option = {
-        label: 'Add to Page',
+        label: 'Add to Collection',
         children: () =>
-            getAddToPageOptions(addToPageAction, {
-                page: null,
+            getAddToCollectionOptions(addToPageAction, {
+                collection: null,
                 hash: album.albumhash,
                 type: 'album',
                 extra: {},
@@ -83,17 +83,17 @@ export default async (album?: Album) => {
     }
 
     const remove_from_page: Option = {
-        label: 'Remove from Page',
+        label: 'Remove item',
         action: async () => {
-            const success = await addOrRemoveItemFromPage(
-                parseInt(router.currentRoute.value.params.page as string),
+            const success = await addOrRemoveItemFromCollection(
+                parseInt(router.currentRoute.value.params.collection as string),
                 album,
                 'album',
                 'remove'
             )
 
             if (success) {
-                usePage().removeLocalItem(album, 'album')
+                useCollection().removeLocalItem(album, 'album')
             }
         },
         icon: DeleteIcon,

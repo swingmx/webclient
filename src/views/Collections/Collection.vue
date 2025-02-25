@@ -1,14 +1,14 @@
 <template>
-    <CardGridPage :items="page.page?.items || []">
+    <CardGridPage :items="collection.collection?.items || []">
         <template #header>
-            <GenericHeader>
+            <GenericHeader v-if="collection.collection?.id">
                 <template #name>
                     <span @click="updatePage">
-                        {{ page.page?.name }} <span><PencilSvg height="0.8rem" width="0.8rem" /></span
+                        {{ collection.collection?.name }} <span><PencilSvg height="0.8rem" width="0.8rem" /></span
                     ></span>
                 </template>
-                <template #description v-if="page.page?.extra.description">
-                    <span @click="updatePage"> {{ page.page?.extra.description }} </span>
+                <template #description v-if="collection.collection?.extra.description">
+                    <span @click="updatePage"> {{ collection.collection?.extra.description }} </span>
                 </template>
                 <template #right>
                     <button @click="deletePage"><DeleteSvg height="1.2rem" width="1.2rem" /> Delete</button>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onBeforeUnmount, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import DeleteSvg from '@/assets/icons/delete.svg'
@@ -28,30 +28,33 @@ import GenericHeader from '@/components/shared/GenericHeader.vue'
 import CardGridPage from '@/views/SearchView/CardGridPage.vue'
 
 import useModal from '@/stores/modal'
-import usePage from '@/stores/pages/page'
+import useCollection from '@/stores/pages/collections'
 
 const modal = useModal()
-const page = usePage()
+const collection = useCollection()
 
 onMounted(async () => {
     const route = useRoute()
-    const page_id = route.params.page as string
-    page.fetchPage(page_id)
+    const collection_id = route.params.collection as string
+    collection.fetchCollection(collection_id)
 })
 
 function updatePage() {
-    console.log('update page')
-    modal.showPageModal({
-        page: page.page,
+    modal.showCollectionModal({
+        collection: collection.collection,
     })
 }
 
 function deletePage() {
-    modal.showPageModal({
-        page: page.page,
+    modal.showCollectionModal({
+        collection: collection.collection,
         delete: true,
     })
 }
+
+onBeforeUnmount(() => {
+    collection.clearStore()
+})
 </script>
 
 <style scoped lang="scss">

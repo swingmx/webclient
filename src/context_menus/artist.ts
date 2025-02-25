@@ -1,16 +1,15 @@
-import { Routes } from '@/router'
-import { router } from '@/router'
+import { Routes, router } from '@/router'
 
-import usePage from '@/stores/pages/page'
+import useCollection from '@/stores/pages/collections'
 import useTracklist from '@/stores/queue/tracklist'
 
 import { getArtistTracks } from '@/requests/artists'
+import { addOrRemoveItemFromCollection } from '@/requests/collections'
 import { addArtistToPlaylist } from '@/requests/playlists'
-import { addOrRemoveItemFromPage } from '@/requests/pages'
 
-import { Artist, Option, Page, Playlist } from '@/interfaces'
 import { AddToQueueIcon, DeleteIcon, PlayNextIcon, PlusIcon } from '@/icons'
-import { getAddToPageOptions, getAddToPlaylistOptions, get_find_on_social } from './utils'
+import { Artist, Collection, Option, Playlist } from '@/interfaces'
+import { getAddToCollectionOptions, getAddToPlaylistOptions, get_find_on_social } from './utils'
 
 export default async (artisthash: string, artistname: string) => {
     const play_next = <Option>{
@@ -50,9 +49,9 @@ export default async (artisthash: string, artistname: string) => {
         icon: PlusIcon,
     }
 
-    const addToPageAction = (page: Page) => {
-        addOrRemoveItemFromPage(
-            page.id,
+    const addToCollectionAction = (collection: Collection) => {
+        addOrRemoveItemFromCollection(
+            collection.id,
             {
                 artisthash,
             } as Artist,
@@ -62,10 +61,10 @@ export default async (artisthash: string, artistname: string) => {
     }
 
     const add_to_page: Option = {
-        label: 'Add to Page',
+        label: 'Add to Collection',
         children: () =>
-            getAddToPageOptions(addToPageAction, {
-                page: null,
+            getAddToCollectionOptions(addToCollectionAction, {
+                collection: null,
                 hash: artisthash,
                 type: 'artist',
                 extra: {},
@@ -73,11 +72,11 @@ export default async (artisthash: string, artistname: string) => {
         icon: PlusIcon,
     }
 
-    const remove_from_page: Option = {
-        label: 'Remove from Page',
+    const remove_from_collection: Option = {
+        label: 'Remove item',
         action: async () => {
-            const success = await addOrRemoveItemFromPage(
-                parseInt(router.currentRoute.value.params.page as string),
+            const success = await addOrRemoveItemFromCollection(
+                parseInt(router.currentRoute.value.params.collection as string),
                 {
                     artisthash,
                 } as Artist,
@@ -86,7 +85,7 @@ export default async (artisthash: string, artistname: string) => {
             )
 
             if (success) {
-                usePage().removeLocalItem({ artisthash } as Artist, 'artist')
+                useCollection().removeLocalItem({ artisthash } as Artist, 'artist')
             }
         },
         icon: DeleteIcon,
@@ -96,7 +95,7 @@ export default async (artisthash: string, artistname: string) => {
         play_next,
         add_to_queue,
         add_to_playlist,
-        ...[router.currentRoute.value.name === Routes.Page ? remove_from_page : add_to_page],
+        ...[router.currentRoute.value.name === Routes.Page ? remove_from_collection : add_to_page],
         get_find_on_social('artist'),
     ]
 }

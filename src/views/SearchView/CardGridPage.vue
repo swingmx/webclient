@@ -53,7 +53,6 @@ const desc = computed(() =>
 )
 
 const scrollerItems = computed(() => {
-    console.log("scrollerItems page", props.items)
     let maxCards = maxAbumCards.value
 
     if (props.outside_route) {

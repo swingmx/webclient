@@ -1,6 +1,11 @@
 <template>
     <div class="options-and-duration">
-        <div v-if="is_fav && showFavIcon !== false" class="heart-icon is-favorited">
+        <div
+            v-if="showInlineFavIcon"
+            class="heart-icon"
+            :class="{ showInlineFavIcon, 'is_fav': is_fav && highlightFavoriteTracks }"
+            @click.stop="$emit('toggleFav')"
+        >
             <HeartSvg :state="is_fav" :no_emit="true" />
         </div>
         <div class="song-duration" :class="{ has_help_text: help_text }">{{ formatSeconds(duration) }}</div>
@@ -21,12 +26,15 @@ import HeartSvg from '../HeartSvg.vue'
 defineProps<{
     duration: number
     is_fav: boolean
+    showInlineFavIcon: boolean
+    highlightFavoriteTracks: boolean
     showFavIcon?: boolean
     help_text?: string
 }>()
 
 defineEmits<{
     (e: 'showMenu', event: MouseEvent): void
+    (e: 'toggleFav'): void
 }>()
 </script>
 
@@ -39,23 +47,24 @@ defineEmits<{
     margin-right: $small;
     position: relative;
 
-    @include allPhones {
-        gap: $small;
-    }
-
     @include mediumPhones {
         > .heart-icon.is-favorited {
             display: none;
         }
     }
 
-    > .heart-icon.is-favorited {
-        display: block;
+    .heart-icon {
+        display: none;
         width: 28px;
         height: 28px;
         user-select: none;
-        pointer-events: none;
         transition: opacity 0.2s ease-out;
+        transform: scale(0.8);
+        margin-right: $small;
+
+        svg {
+            color: $red;
+        }
 
         @include mediumPhones {
             display: none;
@@ -64,6 +73,10 @@ defineEmits<{
         > .heart-button {
             all: unset !important;
         }
+    }
+
+    .heart-icon.is_fav {
+        display: block;
     }
 
     .song-duration {

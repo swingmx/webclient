@@ -1,39 +1,39 @@
 import { paths } from '@/config'
-import { Album, Artist, Mix, Page, Playlist } from '@/interfaces'
+import { Album, Artist, Collection, Mix, Playlist } from '@/interfaces'
 import { Notification, NotifType } from '@/stores/notification'
 import useAxios from './useAxios'
 
-const { base: basePageUrl } = paths.api.pages
+const { base: baseCollectionUrl } = paths.api.collections
 
-export async function getAllPages() {
+export async function getAllCollections() {
     const { data, status } = await useAxios({
-        url: basePageUrl,
+        url: baseCollectionUrl,
         method: 'GET',
     })
 
     if (status == 200) {
-        return data as Page[]
+        return data as Collection[]
     }
 
     return []
 }
 
-export async function getPage(page_id: string) {
+export async function getCollection(collection_id: string) {
     const { data, status } = await useAxios({
-        url: basePageUrl + `/${page_id}`,
+        url: baseCollectionUrl + `/${collection_id}`,
         method: 'GET',
     })
 
-    return data as Page
+    return data as Collection
 }
 
-export async function createNewPage(
+export async function createNewCollection(
     name: string,
     description: string,
     items?: { hash: string; type: string; extra: any }[]
 ) {
     const { data, status } = await useAxios({
-        url: basePageUrl,
+        url: baseCollectionUrl,
         props: {
             name,
             description,
@@ -49,9 +49,9 @@ export async function createNewPage(
     return false
 }
 
-export async function updatePage(page: Page, name: string, description: string) {
+export async function updateCollection(collection: Collection, name: string, description: string) {
     const { data, status } = await useAxios({
-        url: basePageUrl + `/${page.id}`,
+        url: baseCollectionUrl + `/${collection.id}`,
         props: {
             name,
             description,
@@ -60,14 +60,14 @@ export async function updatePage(page: Page, name: string, description: string) 
     })
 
     if (status == 200) {
-        return data.page as Page
+        return data as Collection
     }
 
     return null
 }
 
-export async function addOrRemoveItemFromPage(
-    page_number: number,
+export async function addOrRemoveItemFromCollection(
+    collection_id: number,
     item: Album | Artist | Mix | Playlist,
     type: string,
     command: 'add' | 'remove'
@@ -98,7 +98,7 @@ export async function addOrRemoveItemFromPage(
     }
 
     const { data, status } = await useAxios({
-        url: basePageUrl + `/${page_number}/items`,
+        url: baseCollectionUrl + `/${collection_id}/items`,
         props: {
             item: payload,
         },
@@ -124,9 +124,9 @@ export async function addOrRemoveItemFromPage(
     return false
 }
 
-export async function deletePage(page_number: number) {
+export async function deleteCollection(collection_id: number) {
     const { data, status } = await useAxios({
-        url: basePageUrl + `/${page_number}`,
+        url: baseCollectionUrl + `/${collection_id}`,
         method: 'DELETE',
     })
 

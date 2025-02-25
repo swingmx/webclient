@@ -85,8 +85,8 @@ export const paths = {
                 return this.base + '/artists'
             },
         },
-        pages: {
-            base: base_url + '/pages',
+        collections: {
+            base: base_url + '/collections',
         },
         search: {
             base: base_url + '/search',

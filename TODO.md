@@ -4,7 +4,6 @@
 - Check out the mobile sidebar and navbar
 - Remove old settings page files
 - Fix: track loading indicator in bottom bar
-
 - Unfuck javascript controlled responsiveness
 
 - Redesign the album page header for mobile
