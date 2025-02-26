@@ -204,7 +204,6 @@ export default defineStore('search', () => {
                     break
 
                 case 'artists':
-                    console.log("switching to artists", current_query)
                     if (artists.query == current_query) break
                     fetchArtists(current_query)
                     break
@@ -216,7 +215,6 @@ export default defineStore('search', () => {
     )
 
     function switchTab(tab: string) {
-        console.log("switching tab", tab)
         currentTab.value = tab
     }
 

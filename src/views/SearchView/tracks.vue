@@ -62,7 +62,6 @@ const scrollerItems = computed(() => {
     }))
 
     if (search.tracks.more) {
-        console.log('more tracks')
         items.push({
             // set to random to force re-render
             id: Math.random(),

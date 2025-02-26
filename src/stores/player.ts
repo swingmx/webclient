@@ -278,12 +278,9 @@ export const usePlayer = defineStore('player', () => {
         const { submitData } = tracker
         submitData()
 
-        console.log('audio ended')
-        console.log(nextAudioData)
 
         // INFO: if next audio is not loaded, manually move forward
         if (nextAudioData.loaded === false) {
-            console.log('next audio not loaded')
             clearNextAudioData()
             queue.playNext()
         }

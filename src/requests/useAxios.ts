@@ -61,7 +61,7 @@ export default async (args: FetchProps, withCredentials: boolean = true) => {
         try {
             isSignatureError = error.response.data.msg == 'Signature verification failed'
         } catch (error) {
-            console.log('Error:', error)
+            console.error('Error:', error)
         }
 
         if (error.response?.status === 422 && isSignatureError) {

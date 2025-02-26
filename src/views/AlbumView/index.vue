@@ -156,7 +156,6 @@ function getArtistAlbumComponents(): ScrollerItem[] {
 function getAlbumVersionsComponent(): ScrollerItem | null {
     if (album.otherVersions.length == 0) return null
 
-    console.log(album.otherVersions)
     return {
         id: 'otherVersions',
         component: CardScroller,

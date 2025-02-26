@@ -60,7 +60,7 @@ export default defineStore('settings', {
         // audio
         use_silence_skip: true,
         use_crossfade: false,
-        crossfade_duration: 2000, // milliseconds
+        crossfade_duration: 1000, // milliseconds
         use_legacy_streaming_endpoint: false,
 
         // layout
@@ -322,7 +322,6 @@ export default defineStore('settings', {
                 },
                 false
             )
-            console.log('res: ', data)
 
             if (data.status !== 200) {
                 return
@@ -341,8 +340,6 @@ export default defineStore('settings', {
                     token: this.lasftfm_token,
                 },
             })
-
-            console.log('res: ', res)
 
             if (res.status !== 200) {
                 return
