@@ -94,7 +94,7 @@ export async function addOrRemoveItemFromCollection(
     }
 
     if (payload.hash === '') {
-        throw new Error('Invalid item type. Item not added to page.')
+        throw new Error('Invalid item type. Item not added to collection.')
     }
 
     const { data, status } = await useAxios({
@@ -116,7 +116,7 @@ export async function addOrRemoveItemFromCollection(
     }
 
     if (status == 400) {
-        new Notification(`${payload.type[0].toUpperCase() + payload.type.slice(1)} already in page`, NotifType.Error)
+        new Notification(`${payload.type[0].toUpperCase() + payload.type.slice(1)} already in collection`, NotifType.Error)
         return false
     }
 
