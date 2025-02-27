@@ -81,15 +81,12 @@ class AudioSource {
         this.playingSource.pause()
     }
 
-    async playPlayingSource(
-        trackSilence?: { starting_file: number; ending_file: number }
-    ) {
+    async playPlayingSource(trackSilence?: { starting_file: number; ending_file: number }) {
         const trackDuration = trackSilence
             ? Math.floor(trackSilence.ending_file / 1000 - trackSilence.starting_file / 1000)
             : null
 
-        if(this.requiredAPBlockBypass)
-            this.applyAPBlockBypass()
+        if (this.requiredAPBlockBypass) this.applyAPBlockBypass()
 
         await this.playingSource.play().catch(this.handlers.onPlaybackError)
         navigator.mediaSession.playbackState = 'playing'
@@ -110,11 +107,14 @@ class AudioSource {
      *
      * this workaround plays the `standbySource` along with the `playingSource` to meet the first condition.
      */
-    private applyAPBlockBypass(){
+    private applyAPBlockBypass() {
         this.standbySource.src = ''
-        this.standbySource.play().then(() => {
-            this.standbySource.pause()
-        }).catch(() => {})
+        this.standbySource
+            .play()
+            .then(() => {
+                this.standbySource.pause()
+            })
+            .catch(() => {})
 
         this.requiredAPBlockBypass = false
     }
@@ -228,9 +228,12 @@ export const usePlayer = defineStore('player', () => {
 
     const handlePlayErrors = (e: Event | string) => {
         if (e instanceof DOMException) {
-            if(e.name === 'NotAllowedError') {
+            if (e.name === 'NotAllowedError') {
                 queue.playPause()
-                return toast.showNotification('Tap anywhere in the page and try again (autoplay blocked)', NotifType.Error)
+                return toast.showNotification(
+                    'Tap anywhere in the page and try again (autoplay blocked)',
+                    NotifType.Error
+                )
             }
 
             return toast.showNotification('Player Error: ' + e.message, NotifType.Error)
@@ -278,6 +281,11 @@ export const usePlayer = defineStore('player', () => {
         const { submitData } = tracker
         submitData()
 
+        if (settings.repeat == 'none') {
+            queue.playPause()
+            queue.moveForward()
+            return
+        }
 
         // INFO: if next audio is not loaded, manually move forward
         if (nextAudioData.loaded === false) {
@@ -375,7 +383,7 @@ export const usePlayer = defineStore('player', () => {
         currentAudioData.silence = nextAudioData.silence
         currentAudioData.filepath = nextAudioData.filepath
         maxSeekPercent.value = 0
-        audioSource.playPlayingSource(nextAudioData.silence);
+        audioSource.playPlayingSource(nextAudioData.silence)
 
         clearNextAudioData()
         queue.moveForward()
@@ -386,10 +394,10 @@ export const usePlayer = defineStore('player', () => {
     const initLoadingNextTrackAudio = () => {
         const { currentindex } = queue
         const { length } = tracklist
-        const { repeat_all, repeat_one } = settings
+        const { repeat } = settings
 
         // if no repeat && is last track, return
-        if (currentindex === length - 1 && !repeat_all && !repeat_one) {
+        if (currentindex === length - 1 && repeat == 'none') {
             return
         }
 

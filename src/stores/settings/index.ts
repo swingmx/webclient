@@ -18,8 +18,9 @@ export default defineStore('settings', {
         extend_width: false,
         contextChildrenShowMode: contextChildrenShowMode.hover,
         artist_top_tracks_count: 5,
-        repeat_all: true,
-        repeat_one: false,
+        // repeat_all: true,
+        // repeat_one: false,
+        repeat: <'all' | 'one' | 'none'>'all',
         root_dir_set: false,
         root_dirs: <string[]>[],
 
@@ -137,20 +138,18 @@ export default defineStore('settings', {
         },
         // repeat 👇
         toggleRepeatMode() {
-            if (this.repeat_all) {
-                this.repeat_all = false
-                this.repeat_one = true
+            if (this.repeat == 'all') {
+                this.repeat = 'one'
                 return
             }
 
-            if (this.repeat_one) {
-                this.repeat_one = false
-                this.repeat_all = false
+            if (this.repeat == 'one') {
+                this.repeat = 'none'
                 return
             }
 
-            if (!this.repeat_all && !this.repeat_one) {
-                this.repeat_all = true
+            if (this.repeat == 'none') {
+                this.repeat = 'all'
             }
         },
         setRootDirs(dirs: string[]) {
@@ -374,9 +373,6 @@ export default defineStore('settings', {
         can_extend_width(): boolean {
             return this.is_default_layout && xxl.value
         },
-        no_repeat(): boolean {
-            return !this.repeat_all && !this.repeat_one
-        },
         crossfade_duration_seconds(): number {
             return this.crossfade_duration / 1000
         },
@@ -386,7 +382,10 @@ export default defineStore('settings', {
         is_default_layout: state => state.layout === '',
         is_alt_layout: state => state.layout === 'alternate' && content_width.value > 900,
         highlightFavoriteTracks(): boolean {
-            return !router.currentRoute.value.name?.toString().toLowerCase().startsWith('favorite') && this._highlightFavoriteTracks
+            return (
+                !router.currentRoute.value.name?.toString().toLowerCase().startsWith('favorite') &&
+                this._highlightFavoriteTracks
+            )
         },
     },
     persist: {

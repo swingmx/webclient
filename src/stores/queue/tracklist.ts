@@ -7,25 +7,9 @@ import useQueue from '@/stores/queue'
 import useSettings from '@/stores/settings'
 
 import { FromOptions } from '@/enums'
-import {
-    fromAlbum,
-    fromArtist,
-    fromFav,
-    fromFolder,
-    fromMix,
-    fromPlaylist,
-    fromSearch,
-    Track,
-} from '@/interfaces'
+import { fromAlbum, fromArtist, fromFav, fromFolder, fromMix, fromPlaylist, fromSearch, Track } from '@/interfaces'
 
-export type From =
-    | fromFolder
-    | fromAlbum
-    | fromPlaylist
-    | fromSearch
-    | fromArtist
-    | fromFav
-    | fromMix
+export type From = fromFolder | fromAlbum | fromPlaylist | fromSearch | fromArtist | fromFav | fromMix
 
 function shuffle(tracks: Track[]) {
     const shuffled = tracks.slice()
@@ -54,12 +38,6 @@ export default defineStore('tracklist', {
             if (this.tracklist !== tracklist) {
                 this.tracklist = []
                 this.tracklist.push(...tracklist)
-            }
-
-            const settings = useSettings()
-
-            if (settings.repeat_one) {
-                settings.toggleRepeatMode()
             }
 
             const { focusCurrentInSidebar } = useInterface()
@@ -95,7 +73,13 @@ export default defineStore('tracklist', {
 
             this.setNewList(tracks)
         },
-        setFromMix(name: string, id: string, tracks: Track[], sourcehash: string, image: { type: 'mix' | 'track', image: string }) {
+        setFromMix(
+            name: string,
+            id: string,
+            tracks: Track[],
+            sourcehash: string,
+            image: { type: 'mix' | 'track'; image: string }
+        ) {
             this.from = <fromMix>{
                 type: FromOptions.mix,
                 name: name,
@@ -137,10 +121,7 @@ export default defineStore('tracklist', {
             this.insertAt(tracks, this.tracklist.length)
 
             const Toast = useToast()
-            Toast.showNotification(
-                `Added ${tracks.length} tracks to queue`,
-                NotifType.Success
-            )
+            Toast.showNotification(`Added ${tracks.length} tracks to queue`, NotifType.Success)
         },
         insertAt(tracks: Track[], index: number) {
             this.tracklist.splice(index, 0, ...tracks)
@@ -160,14 +141,7 @@ export default defineStore('tracklist', {
             this.tracklist = shuffle(this.tracklist)
         },
         removeByIndex(index: number) {
-            const {
-                currentindex,
-                nextindex,
-                playing,
-                playNext,
-                moveForward,
-                setCurrentIndex,
-            } = useQueue()
+            const { currentindex, nextindex, playing, playNext, moveForward, setCurrentIndex } = useQueue()
             const player = usePlayer()
 
             if (this.tracklist.length == 1) {
@@ -207,10 +181,7 @@ export default defineStore('tracklist', {
             this.tracklist.splice(currentindex + 1, 0, ...tracks)
 
             const Toast = useToast()
-            Toast.showNotification(
-                `Added ${tracks.length} tracks to queue`,
-                NotifType.Success
-            )
+            Toast.showNotification(`Added ${tracks.length} tracks to queue`, NotifType.Success)
         },
     },
     getters: {

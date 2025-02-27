@@ -4,11 +4,11 @@
         <Volume />
         <button
             class="repeat"
-            :class="{ 'repeat-disabled': settings.no_repeat }"
-            :title="settings.repeat_all ? 'Repeat all' : settings.no_repeat ? 'No repeat' : 'Repeat one'"
+            :class="{ 'repeat-disabled': settings.repeat == 'none' }"
+            :title="settings.repeat == 'all' ? 'Repeat all' : settings.repeat == 'one' ? 'Repeat one' : 'No repeat'"
             @click="settings.toggleRepeatMode"
         >
-            <RepeatOneSvg v-if="settings.repeat_one" />
+            <RepeatOneSvg v-if="settings.repeat == 'one'" />
             <RepeatAllSvg v-else />
         </button>
         <button title="Shuffle" @click="queue.shuffleQueue">

@@ -76,12 +76,12 @@ export default defineStore('Queue', {
             const { tracklist } = useTracklist()
             const is_last = this.currentindex === tracklist.length - 1
 
-            if (settings.repeat_one) {
+            if (settings.repeat == 'one') {
                 this.play(this.currentindex, false)
                 return
             }
 
-            if (settings.repeat_all) {
+            if (settings.repeat == 'all') {
                 this.play(is_last ? 0 : this.currentindex + 1, false)
                 return
             }
@@ -189,9 +189,9 @@ export default defineStore('Queue', {
         },
         previndex(): number {
             const { tracklist } = useTracklist()
-            const { repeat_one } = useSettings()
+            const { repeat } = useSettings()
 
-            if (repeat_one) {
+            if (repeat == 'one') {
                 return this.currentindex
             }
 
@@ -199,9 +199,9 @@ export default defineStore('Queue', {
         },
         nextindex(): number {
             const { tracklist } = useTracklist()
-            const { repeat_one } = useSettings()
+            const { repeat } = useSettings()
 
-            if (repeat_one) {
+            if (repeat == 'one') {
                 return this.currentindex
             }
 
