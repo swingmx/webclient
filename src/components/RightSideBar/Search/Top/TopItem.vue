@@ -106,7 +106,7 @@ function showMenu(e: MouseEvent) {
 
 <style lang="scss">
 .top-result-item {
-    background-color: $gray5;
+    background-color: $gray;
     padding: 1rem;
     display: grid;
     gap: 1rem;

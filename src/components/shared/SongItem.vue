@@ -142,7 +142,7 @@ const isFavoritesPage = route.path.startsWith('/favorites')
     transition: background-color 0.2s ease-out;
 
     &:hover {
-        background-color: $gray5;
+        background-color: $gray;
 
         .index.ready {
             .text {

@@ -57,6 +57,7 @@ $g-border: solid 1px $gray5;
 .b-bar {
     grid-area: bottombar;
     border-top: $g-border;
+    // background-color: $bars;
 }
 
 .content-page {
@@ -127,7 +128,8 @@ $g-border: solid 1px $gray5;
     }
 
     .topnav {
-        background-color: $gray;
+        // background-color: $bars;
+        border-bottom: $g-border;
     }
 
     .vue-recycle-scroller,

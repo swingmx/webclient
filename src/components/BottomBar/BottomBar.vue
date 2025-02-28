@@ -63,7 +63,6 @@ function handleFav() {
 
 <style lang="scss">
 .b-bar {
-    background-color: rgb(22, 22, 22);
     display: grid;
     grid-template-columns: 1fr max-content 1fr;
     align-items: center;
