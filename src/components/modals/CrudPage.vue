@@ -65,7 +65,7 @@ async function submit(e: Event) {
         ])
 
         if (created) {
-            new Notification('New page created', NotifType.Success)
+            new Notification('New collection created', NotifType.Success)
             emit('hideModal')
         }
     } else {
@@ -74,7 +74,7 @@ async function submit(e: Event) {
         if (updatedPage) {
             props.collection.name = updatedPage.name
             props.collection.extra.description = updatedPage.extra.description
-            new Notification('Page updated', NotifType.Success)
+            new Notification('Collection updated', NotifType.Success)
             emit('hideModal')
         }
     }
