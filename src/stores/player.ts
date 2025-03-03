@@ -263,9 +263,9 @@ export const usePlayer = defineStore('player', () => {
             return lyrics.getLyrics()
         }
 
-        if (!settings.use_lyrics_plugin) {
-            lyrics.checkExists(queue.currenttrack.filepath, queue.currenttrack.trackhash)
-        }
+        // if (!settings.use_lyrics_plugin) {
+        //     lyrics.checkExists(queue.currenttrack.filepath, queue.currenttrack.trackhash)
+        // }
     }
 
     const onAudioCanPlay = () => {
