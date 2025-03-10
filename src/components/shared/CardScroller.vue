@@ -90,7 +90,7 @@ function getComponent(type: string) {
             return FolderCard
         case 'playlist':
             return PlaylistCard
-        case 'favorite_tracks':
+        case 'favorite':
             return FavoritesCard
         case 'mix':
             return MixCard
@@ -127,7 +127,7 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
             return {
                 playlist: item.item,
             }
-        case 'favorite_tracks':
+        case 'favorite':
             return {
                 item: item.item,
             }
