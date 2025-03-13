@@ -348,6 +348,10 @@ export const usePlayer = defineStore('player', () => {
 
             const silence = e.data
 
+            if (!silence.ending_file){
+                return
+            }
+
             nextAudioData.silence.starting_file = silence.starting_file
             currentAudioData.silence.ending_file = silence.ending_file
             nextAudioData.loaded = silence !== null
