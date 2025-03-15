@@ -3,7 +3,7 @@ import { Album, Artist, Genre, StatItem, Track } from '@/interfaces'
 import { NotifType, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
 
-export const getArtistData = async (hash: string, limit: number = 5, albumlimit: number = 7) => {
+export const getArtistData = async (hash: string, limit: number = 15, albumlimit: number = 7) => {
     interface ArtistData {
         artist: Artist
         tracks: Track[]
@@ -19,7 +19,7 @@ export const getArtistData = async (hash: string, limit: number = 5, albumlimit:
 
     const { data, error, status } = await useAxios({
         method: 'GET',
-        url: paths.api.artist + `/${hash}?limit=${limit}&albumlimit=${albumlimit}`,
+        url: paths.api.artist + `/${hash}?tracklimit=${limit}&albumlimit=${albumlimit}`,
     })
 
     if (status == 404) {
