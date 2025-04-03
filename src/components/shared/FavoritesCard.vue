@@ -86,12 +86,11 @@ defineProps<{
         top: $medium;
         left: $medium;
         width: $size;
-        z-index: 100;
+        z-index: 1;
     }
 
     .heart {
         color: $pink;
-        z-index: 1000;
     }
 
     .play-btn {
