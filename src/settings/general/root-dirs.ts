@@ -4,7 +4,7 @@ import { SettingType } from '../enums'
 import { manageRootDirsStrings as data } from '../strings'
 
 import useModalStore from '@/stores/modal'
-import useSettingsStore from '@/stores/settings'
+import settings from '@/stores/settings'
 
 const text = data.settings
 
@@ -12,7 +12,7 @@ const change_root_dirs: Setting = {
     title: text.change,
     type: SettingType.button,
     state: null,
-    button_text: () => `\xa0 \xa0 ${useSettingsStore().root_dirs.length ? 'Modify' : 'Configure'} \xa0 \xa0`,
+    button_text: () => `\xa0 \xa0 ${settings().root_dirs.length ? 'Modify' : 'Configure'} \xa0 \xa0`,
     action: () => useModalStore().showRootDirsPromptModal(),
 }
 
@@ -20,16 +20,24 @@ const list_root_dirs: Setting = {
     title: text.list_root_dirs,
     type: SettingType.root_dirs,
     state: () =>
-        useSettingsStore().root_dirs.map(d => ({
+        settings().root_dirs.map(d => ({
             title: d,
             action: () => {
                 editRootDirs([], [d]).then(all_dirs => {
-                    useSettingsStore().setRootDirs(all_dirs)
+                    settings().setRootDirs(all_dirs)
                 })
             },
         })),
     defaultAction: () => {},
     action: () => triggerScan(),
+}
+
+const show_playlists_in_folders: Setting = {
+    title: 'Show playlists in folder view',
+    desc: 'Browse playlists and favorites in folders screen (meant for mobile app)',
+    type: SettingType.binary,
+    state: () => settings().show_playlists_in_folders,
+    action: () => settings().toggleShowPlaylistsInFolders(),
 }
 
 // const enable_scans: Setting = {
@@ -57,5 +65,6 @@ const list_root_dirs: Setting = {
 export default [
     change_root_dirs,
     list_root_dirs,
+    show_playlists_in_folders,
     // useWatchdog, enable_scans, periodicScanInterval
 ]

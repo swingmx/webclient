@@ -105,4 +105,5 @@ export interface DBSettings {
   lastfmApiKey: string;
   lastfmApiSecret: string;
   lastfmSessionKey: string;
+  showPlaylistsInFolderView: boolean;
 }

@@ -39,6 +39,7 @@ export default defineStore('settings', {
         merge_albums: false,
         show_albums_as_singles: false,
         separators: <string[]>[],
+        show_playlists_in_folders: false,
 
         // client
         useCircularArtistImg: true,
@@ -87,6 +88,7 @@ export default defineStore('settings', {
             this.merge_albums = settings.mergeAlbums
             this.separators = settings.artistSeparators
             this.show_albums_as_singles = settings.showAlbumsAsSingles
+            this.show_playlists_in_folders = settings.showPlaylistsInFolderView
 
             this.enablePeriodicScans = settings.enablePeriodicScans
             this.periodicInterval = settings.scanInterval
@@ -299,6 +301,10 @@ export default defineStore('settings', {
                 'showAlbumsAsSingles',
                 !this.show_albums_as_singles,
                 'show_albums_as_singles'
+            )
+        },
+        async toggleShowPlaylistsInFolders() {
+            return await this.genericToggleSetting('showPlaylistsInFolderView', !this.show_playlists_in_folders, 'show_playlists_in_folders'
             )
         },
         async setLastfmApiKey(key: string) {
