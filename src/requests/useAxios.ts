@@ -1,26 +1,12 @@
 import { FetchProps } from '@/interfaces'
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios from 'axios'
 import useModal from '@/stores/modal'
 
 import useLoaderStore from '@/stores/loader'
 import { logoutUser } from './auth'
 
-const development = import.meta.env.DEV
-
-export function getBaseUrl() {
-    const base_url = window.location.origin
-
-    if (!development) {
-        return base_url
-    }
-
-    const splits = base_url.split(':')
-    return base_url.replace(splits[splits.length - 1], '1980')
-}
-
-axios.defaults.baseURL = getBaseUrl()
-
 export default async (args: FetchProps, withCredentials: boolean = true) => {
+    console.log(args)
     const on_ngrok = args.url.includes('ngrok')
     const ngrok_config = {
         'ngrok-skip-browser-warning': 'stupid-SOAB!',

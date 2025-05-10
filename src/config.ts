@@ -1,12 +1,11 @@
 const development = import.meta.env.DEV
 
 export function getBaseUrl() {
-    const base_url = window.location.origin
-
     if (!development) {
-        return base_url
+        return ''
     }
 
+    const base_url = window.location.origin
     const splits = base_url.split(':')
     return base_url.replace(splits[splits.length - 1], '1980')
 }
