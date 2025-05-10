@@ -6,7 +6,6 @@ import useLoaderStore from '@/stores/loader'
 import { logoutUser } from './auth'
 
 export default async (args: FetchProps, withCredentials: boolean = true) => {
-    console.log(args)
     const on_ngrok = args.url.includes('ngrok')
     const ngrok_config = {
         'ngrok-skip-browser-warning': 'stupid-SOAB!',
