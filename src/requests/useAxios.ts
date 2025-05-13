@@ -5,6 +5,13 @@ import useModal from '@/stores/modal'
 import useLoaderStore from '@/stores/loader'
 import { logoutUser } from './auth'
 
+if (window.location.protocol === 'https:') {
+    const meta = document.createElement('meta');
+    meta.httpEquiv = 'Content-Security-Policy';
+    meta.content = 'upgrade-insecure-requests';
+    document.head.appendChild(meta);
+}
+
 export default async (args: FetchProps, withCredentials: boolean = true) => {
     const on_ngrok = args.url.includes('ngrok')
     const ngrok_config = {
