@@ -1,34 +1,29 @@
 <template>
     <div class="folder-view v-scroll-page" style="height: 100%" :class="{ isSmall, isMedium }">
-        <DynamicScroller
-            id="contentscroller"
-            :items="scrollerItems"
-            :min-item-size="64"
-            class="scroller"
-            style="height: 100%"
+        <draggable
+        v-model="playlistOrder"
+        item-key="id"
+        handle=".song-item"
+        @end="onDragEnd"
+        style="height: 100%"
         >
-            <template #default="{ item, index, active }">
-                <DynamicScrollerItem
-                    :item="item"
-                    :active="active"
-                    :size-dependencies="[item.props]"
-                    :data-index="index"
-                >
-                    <component
-                        :is="item.component"
-                        :key="index"
-                        v-bind="item.props"
-                        @playThis="playFromPlaylistPage(item.props.index - 1)"
-                    ></component>
-                </DynamicScrollerItem>
+            <template #item="{ element, index }">
+                    <SongItem
+                        :track="element"
+                        :index="index + 1"
+                        :source="dropSources.playlist"
+                        class="song-item"
+                        @playThis="playFromPlaylistPage(index)"
+                    ></SongItem>
             </template>
-        </DynamicScroller>
+        </draggable>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { onMounted, onUpdated } from 'vue'
+import { ref, watch } from 'vue'
 
 import { isMedium, isSmall, isSmallPhone, track_limit } from '@/stores/content-width'
 import { dropSources } from '@/enums'
@@ -45,16 +40,32 @@ import SongItem from '@/components/shared/SongItem.vue'
 import AfterHeader from '@/components/PlaylistView/AfterHeader.vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
+import Draggable from "vuedraggable";
 
 const queue = useQueue()
 const tracklist = useTracklist()
 const playlist = usePlaylistStore()
+
+const playlistOrder = ref([...playlist.tracks])
 
 interface ScrollerItem {
     id: string | number
     component: typeof Header | typeof SongItem | typeof NoItems | typeof AlbumsFetcher
     size: number
     props?: {}
+}
+
+watch(
+  () => playlist.allTracks,
+  (newList) => {
+    playlistOrder.value = [...newList];
+  }
+);
+
+function onDragEnd() {
+  // Update the store's tracklist with the new order
+  playlist.allTracks = [...playlistOrder.value];
+  playlist.updatePlaylistOrder();
 }
 
 const getNoItemsComponent = () =>

@@ -6,7 +6,7 @@ import { useFuse } from '@/utils'
 import { paths } from '@/config'
 import { FuseTrackOptions } from '@/enums'
 import { Artist, FuseResult, Playlist, Track } from '@/interfaces'
-import { getPlaylist, removeBannerImage } from '@/requests/playlists'
+import { getPlaylist, removeBannerImage, reorderPlaylist } from '@/requests/playlists'
 import setColorsToStore from '@/utils/colortools/setColorsToStore'
 import { Routes, router } from '@/router'
 import { track_limit } from '../content-width'
@@ -133,6 +133,10 @@ export default defineStore('playlist-tracks', {
                 this.allTracks = []
             }, 1000)
         },
+        updatePlaylistOrder() {
+            const hashes = this.allTracks.map(track => track.trackhash);
+            reorderPlaylist(this.info, {"trackhashes": hashes});
+        }
     },
     getters: {
         filteredTracks(): ComputedRef<FuseResult[]> {

@@ -77,6 +77,23 @@ export async function getPlaylist(pid: number | string, no_tracks = false, start
     return null
 }
 
+// ======== REORDER PLAYLIST ============
+export async function reorderPlaylist(playlist: Playlist, props: {}) {
+    const uri = `${basePlaylistUrl}/${playlist.id}/reorder`
+    const { status } = await useAxios({
+        url: uri,
+        props: props,
+    })
+
+    if (status == 400) {
+        new Notification('Unkown error occurred.', NotifType.Error)
+        return false
+    }
+
+    new Notification('Reordered playlist!')
+    return true;
+}
+
 // ======== ADD ITEM TO PLAYLIST ========
 export async function addItemToPlaylist(playlist: Playlist, props: {}) {
     const uri = `${basePlaylistUrl}/${playlist.id}/add`
