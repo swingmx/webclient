@@ -7,12 +7,12 @@
                         {{ title }}
                     </RouterLink>
                 </b>
-                <SeeAll v-if="route && itemlist.length >= maxAbumCards" :route="route" :text="seeAllText" />
             </div>
             <div v-if="description" class="rdesc">
                 <RouterLink :to="route || ''">
                     {{ description }}
                 </RouterLink>
+                <SeeAll v-if="route && itemlist.length >= maxAbumCards" :route="route" :text="seeAllText" />
             </div>
         </div>
         <div class="recentitems">
@@ -163,14 +163,14 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
 
         .rtitle {
             font-size: 1.15rem;
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
         }
 
         .rdesc {
             font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.747);
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
         }
     }
 

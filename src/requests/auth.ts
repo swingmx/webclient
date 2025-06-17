@@ -3,7 +3,7 @@ import useAxios from './useAxios'
 import { User, UserSimplified } from '@/interfaces'
 
 export async function getAllUsers<T extends boolean>(simple: T = true as T) {
-    interface res {
+    interface Response {
         users: T extends true ? UserSimplified[] : User[]
         settings: { [key: string]: any }
     }
@@ -13,7 +13,7 @@ export async function getAllUsers<T extends boolean>(simple: T = true as T) {
     })
 
     if (res.status === 200) {
-        return res.data as res
+        return res.data as Response
     }
 
     if (res.status === 401) {

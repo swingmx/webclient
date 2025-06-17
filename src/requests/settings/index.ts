@@ -32,6 +32,7 @@ export async function getBackups() {
         playlists: number
         scrobbles: number
         favorites: number
+        collections: number
         date: string
     }
 

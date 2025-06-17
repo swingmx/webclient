@@ -8,6 +8,7 @@
 
         <PageItem
             v-for="item in home.homepageItems"
+            :key="item.path"
             :title="item.title || ''"
             :description="item.description"
             :items="item.items"

@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 const development = import.meta.env.DEV
 
 export function getBaseUrl() {
@@ -11,6 +13,8 @@ export function getBaseUrl() {
 }
 
 const base_url = getBaseUrl()
+axios.defaults.baseURL = base_url
+
 const baseImgUrl = base_url + '/img'
 
 const imageRoutes = {
@@ -30,7 +34,7 @@ const imageRoutes = {
 
 export const paths = {
     api: {
-        favorites: base_url + '/favorites',
+        favorites: '/favorites',
         get favAlbums() {
             return this.favorites + '/albums'
         },
@@ -49,15 +53,15 @@ export const paths = {
         get removeFavorite() {
             return this.favorites + '/remove'
         },
-        artist: base_url + '/artist',
-        lyrics: base_url + '/lyrics',
-        plugins: base_url + '/plugins',
+        artist: '/artist',
+        lyrics: '/lyrics',
+        plugins: '/plugins',
         get mixes() {
             return this.plugins + '/mixes'
         },
 
         // Single album
-        album: base_url + '/album',
+        album: '/album',
         get albumartists() {
             return this.album + '/artists'
         },
@@ -71,12 +75,12 @@ export const paths = {
             return this.album + '/other-versions'
         },
         folder: {
-            base: base_url + '/folder',
-            showInFiles: base_url + '/folder/show-in-files',
+            base: '/folder',
+            showInFiles: '/folder/show-in-files',
         },
-        dir_browser: base_url + '/folder/dir-browser',
+        dir_browser: '/folder/dir-browser',
         playlist: {
-            base: base_url + '/playlists',
+            base: '/playlists',
             get new() {
                 return this.base + '/new'
             },
@@ -85,10 +89,10 @@ export const paths = {
             },
         },
         collections: {
-            base: base_url + '/collections',
+            base: '/collections',
         },
         search: {
-            base: base_url + '/search',
+            base: '/search',
             get top() {
                 return this.base + '/top?q='
             },
@@ -106,13 +110,13 @@ export const paths = {
             },
         },
         logger: {
-            base: base_url + '/logger',
+            base: '/logger',
             get logTrack() {
                 return this.base + '/track/log'
             },
         },
         getall: {
-            base: base_url + '/getall',
+            base: '/getall',
             get albums() {
                 return this.base + '/albums'
             },
@@ -121,7 +125,7 @@ export const paths = {
             },
         },
         colors: {
-            base: base_url + '/colors',
+            base: '/colors',
             get album() {
                 return this.base + '/album'
             },
@@ -144,9 +148,9 @@ export const paths = {
                 return this.base + '/update'
             },
         },
-        files: base_url + '/file',
+        files: '/file',
         home: {
-            base: base_url + '/nothome',
+            base: '/nothome',
             get recentlyAdded() {
                 return this.base + '/recents/added'
             },
@@ -185,7 +189,7 @@ export const paths = {
             },
         },
         backups: {
-            base: base_url + '/backup',
+            base: '/backup',
             get get_backups() {
                 return this.base + '/list'
             },
@@ -200,7 +204,7 @@ export const paths = {
             },
         },
         stats: {
-            base: base_url + '/logger',
+            base: '/logger',
             get topArtists() {
                 return this.base + '/top-artists'
             },
