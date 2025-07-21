@@ -5,7 +5,7 @@
         <button
             class="repeat"
             :class="{ 'repeat-disabled': settings.repeat == 'none' }"
-            :title="settings.repeat == 'all' ? 'Repeat all' : settings.repeat == 'one' ? 'Repeat one' : 'No repeat'"
+            :title="settings.repeat == 'all' ? t('BottomBar.RepeatOptions.All') : settings.repeat == 'one' ? t('BottomBar.RepeatOptions.One') : t('BottomBar.RepeatOptions.None')"
             @click="settings.toggleRepeatMode"
         >
             <RepeatOneSvg v-if="settings.repeat == 'one'" />
@@ -26,6 +26,9 @@
 <script setup lang="ts">
 import useQueue from '@/stores/queue'
 import useSettings from '@/stores/settings'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 import RepeatOneSvg from '@/assets/icons/repeat-one.svg'
 import RepeatAllSvg from '@/assets/icons/repeat.svg'

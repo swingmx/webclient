@@ -1,11 +1,15 @@
 <template>
   <div class="bin-drop-area t-center rounded-sm">
     <div class="bin-count circular">10</div>
-    DROP TRACKS HERE
+    {{ t('Bubbles.DropHere') }}
     <br />
   </div>
 </template>
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
+</script>
 <style lang="scss">
 .bin-drop-area {
   // background-color: $gray;

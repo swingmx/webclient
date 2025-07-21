@@ -1,8 +1,8 @@
 <template>
     <div class="last-updated">
-        <span v-if="!isHeaderSmall" class="status">Last updated {{ playlist.info._last_updated }}</span>
+        <span v-if="!isHeaderSmall" class="status">{{ t('PlaylistView.LastUpdated', { date: playlist.info._last_updated }) }}</span>
         <div v-if="Number.isInteger(playlist.info.id)" class="edit">
-            &#160;&#160;|&#160;&#160; <span @click="editPlaylist">Edit</span>&#160;&#160;
+            &#160;&#160;|&#160;&#160; <span @click="editPlaylist">{{ t('PlaylistView.Edit') }}</span>&#160;&#160;
             {{ Number.isInteger(playlist.info.id) ? ' | ' : '' }}
             <DeleteSvg class="edit" @click="deletePlaylist" />
         </div>
@@ -15,6 +15,9 @@ import { isHeaderSmall } from '@/stores/content-width'
 
 import useModalStore from '@/stores/modal'
 import usePStore from '@/stores/pages/playlist'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const playlist = usePStore()
 const modal = useModalStore()

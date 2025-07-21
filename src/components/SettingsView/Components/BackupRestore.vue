@@ -1,10 +1,10 @@
 <template>
     <div class="backup-restore">
-        <button class="backupnow" @click="doBackup">Backup</button>
+        <button class="backupnow" @click="doBackup">{{ t('Settings.Backup.Title') }}</button>
         <div class="separator"></div>
-        <h4>Restore backup</h4>
+        <h4>{{ t('Settings.Backup.RestoreBackup') }}</h4>
         <div class="helptext">
-            You have {{ backups.length }} backup{{ backups.length !== 1 ? 's' : '' }} in your backup directory.
+            {{ t('Settings.Backup.BackupCount', { count: backups.length }) }}
         </div>
         <div></div>
         <br />
@@ -20,29 +20,29 @@
                     </div>
                     <div class="item__stats">
                         <div class="item__playlists">
-                            {{ backup.playlists }} playlist{{ backup.playlists !== 1 ? 's' : '' }}
+                            {{ (backup.playlists !== 1 ? t('Settings.Backup.PlaylistCountPlural', { count: backup.playlists }) : t('Settings.Backup.PlaylistCount', { count: backup.playlists })) }}
                         </div>
                         •
                         <div class="item__scrobbles">
-                            {{ backup.scrobbles }} scrobble{{ backup.scrobbles !== 1 ? 's' : '' }}
+                            {{ (backup.scrobbles !== 1 ? t('Settings.Backup.ScrobbleCountPlural', { count: backup.scrobbles }) : t('Settings.Backup.ScrobbleCount', { count: backup.scrobbles })) }}
                         </div>
                         •
                         <div class="item__favorites">
-                            {{ backup.favorites }} favorite{{ backup.favorites !== 1 ? 's' : '' }}
+                            {{ (backup.favorites !== 1 ? t('Settings.Backup.FavoriteCountPlural', { count: backup.favorites }) : t('Settings.Backup.FavoriteCount', { count: backup.favorites })) }}
                         </div>
                         •
                         <div class="item__collections">
-                            {{ backup.collections }} collection{{ backup.collections !== 1 ? 's' : '' }}
+                            {{ (backup.collections !== 1 ? t('Settings.Backup.CollectionCountPlural', { count: backup.collections }) : t('Settings.Backup.CollectionCount', { count: backup.collections })) }}
                         </div>
                     </div>
                 </div>
                 <div class="buttons">
                     <DeleteSvg @click="() => deleteBackup(backup.name)" />
-                    <button class="restore" @click="() => restore(backup.name)">Restore</button>
+                    <button class="restore" @click="() => restore(backup.name)">{{ t('Settings.Backup.RestoreButton') }}</button>
                 </div>
             </div>
         </div>
-        <button class="restore-all" @click="() => restore()">Restore All</button>
+        <button class="restore-all" @click="() => restore()">{{ t('Settings.Backup.RestoreAllButton') }}</button>
     </div>
 </template>
 
@@ -51,6 +51,9 @@ import { backupNow, getBackups, restoreBackup, deleteBackup as deleteBackupReq }
 import { onMounted, ref } from 'vue'
 import { useToast } from '@/stores/notification'
 import DeleteSvg from '@/assets/icons/delete.svg'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const toast = useToast()
 

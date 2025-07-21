@@ -7,7 +7,7 @@
   >
     <div class="scrollable">
       <div class="rounded pad-sm genre-pill">
-        {{ genres.length ? "Genres" : "No genres" }}
+        {{ genres.length ? t('AlbumView.GenreBanner.GenreExists') : t('AlbumView.GenreBanner.GenreDoesNotExist') }}
       </div>
       <div
         v-for="genre in genres"
@@ -27,8 +27,11 @@
 import useAlbumStore from "@/stores/pages/album";
 import useArtistStore from "@/stores/pages/artist";
 import { computed, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 
 import { getShift } from "@/utils/colortools/shift";
+
+const { t } = useI18n();
 
 const album = useAlbumStore();
 const store = useArtistStore();

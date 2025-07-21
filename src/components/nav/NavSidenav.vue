@@ -26,7 +26,8 @@
 
 <script setup lang="ts">
 import LogoSvg from '@/assets/icons/logos/logo-fill.light.svg'
-import { topnavitems } from '../LeftSidebar/navitems'
+import { useNavItems } from "../LeftSidebar/navitems";
+const { topnavitems } = useNavItems();
 
 const emit = defineEmits(['close'])
 

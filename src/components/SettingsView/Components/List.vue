@@ -12,7 +12,7 @@
             </div>
         </div>
         <div v-if="!items.length" class="option-list-item" style="opacity: 0.5">
-            Root directories not configured. Use the "Configure" button above to configure
+            {{ t('Settings.List.RootNotConfigured') }}
         </div>
     </div>
 </template>
@@ -20,6 +20,9 @@
 <script setup lang="ts">
 import DeleteSvg from '@/assets/icons/delete.svg'
 import FolderSvg from '@/assets/icons/folder.svg'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps<{
     items: {
