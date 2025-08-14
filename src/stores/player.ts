@@ -10,7 +10,7 @@ import useTracklist from './queue/tracklist'
 import useSettings from './settings'
 import useTracker from './tracker'
 
-import { paths } from '@/config'
+import { getBaseUrl, paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
 
@@ -127,9 +127,11 @@ export function getUrl(filepath: string, trackhash: string, use_legacy: boolean)
     use_legacy = true
     const { streaming_container, streaming_quality } = useSettings()
 
-    return `${paths.api.files}/${trackhash + (use_legacy ? '/legacy' : '')}?filepath=${encodeURIComponent(
+    const url = `${paths.api.files}/${trackhash + (use_legacy ? '/legacy' : '')}?filepath=${encodeURIComponent(
         filepath
     )}&container=${streaming_container}&quality=${streaming_quality}`
+
+    return getBaseUrl() + url
 }
 
 const audioSource = new AudioSource()

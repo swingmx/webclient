@@ -7,11 +7,18 @@
                         {{ title }}
                     </RouterLink>
                 </b>
+                <!-- INFO: This SEE ALL is shown when there's no description. Eg. in favorites page -->
+                <SeeAll
+                    v-if="!description && route && itemlist.length >= maxAbumCards"
+                    :route="route"
+                    :text="seeAllText"
+                />
             </div>
             <div v-if="description" class="rdesc">
                 <RouterLink :to="route || ''">
                     {{ description }}
                 </RouterLink>
+                <!-- INFO: This SEE ALL is shown when there's a description. Eg. in the home page -->
                 <SeeAll v-if="route && itemlist.length >= maxAbumCards" :route="route" :text="seeAllText" />
             </div>
         </div>
@@ -163,6 +170,9 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
 
         .rtitle {
             font-size: 1.15rem;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
         }
 
         .rdesc {
