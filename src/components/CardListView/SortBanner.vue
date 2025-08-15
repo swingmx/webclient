@@ -1,6 +1,6 @@
 <template>
     <div class="itemsortby">
-        <div class="tt select circular">Sort By</div>
+        <div class="tt select circular">{{ t('CardList.SortBy') }}</div>
         <div class="left group">
             <SortKey
                 :items="($route.name == Routes.AlbumList ? albumitems : artistitems).concat(items)"
@@ -22,31 +22,34 @@ import { useRoute } from 'vue-router'
 import { useAlbumList, useArtistList } from '@/stores/pages/itemlist'
 import SortKey from './SortKey.vue'
 import ChartSvg from '@/assets/icons/chart.svg'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const route = useRoute()
 const store = route.name === Routes.AlbumList ? useAlbumList() : useArtistList()
 
 const items = [
-    { key: 'trackcount', displayName: 'No. of tracks' },
-    { key: 'duration', displayName: 'Duration' },
-    { key: 'created_date', displayName: 'Date added' },
-    { key: 'lastplayed', displayName: 'Last played' },
+    { key: 'trackcount', displayName: t('CardList.SortByOptions.TrackCount') },
+    { key: 'duration', displayName: t('CardList.SortByOptions.Duration') },
+    { key: 'created_date', displayName: t('CardList.SortByOptions.CreatedDate') },
+    { key: 'lastplayed', displayName: t('CardList.SortByOptions.LastPlayed') },
 ]
 
 const statitems = [
-    { key: 'playcount', displayName: 'Plays' },
-    { key: 'playduration', displayName: 'Play duration' },
+    { key: 'playcount', displayName: t('CardList.SortByOptions.PlayCount') },
+    { key: 'playduration', displayName: t('CardList.SortByOptions.PlayDuration') },
 ]
 
 const albumitems = [
-    { key: 'title', displayName: 'Title' },
-    { key: 'albumartists', displayName: 'Artist' },
-    { key: 'date', displayName: 'Year released' },
+    { key: 'title', displayName: t('CardList.SortByOptions.Title') },
+    { key: 'albumartists', displayName: t('CardList.SortByOptions.AlbumArtists') },
+    { key: 'date', displayName: t('CardList.SortByOptions.Date') },
 ]
 
 const artistitems = [
-    { key: 'name', displayName: 'Name' },
-    { key: 'albumcount', displayName: 'No. of albums' },
+    { key: 'name', displayName: t('CardList.SortByOptions.Name') },
+    { key: 'albumcount', displayName: t('CardList.SortByOptions.NoOfAlbums') },
 ]
 </script>
 

@@ -15,7 +15,7 @@
       </div>
       <div class="p-name ellip">{{ playlist.name }}</div>
       <div class="p-count">
-        <b>{{ playlist.count.toLocaleString() + ` Track${playlist.count === 1 ? "" : "s"}` }}</b>
+        <b>{{ playlist.count.toLocaleString() + ` ${playlist.count === 1 ? t('PlaylistsList.TrackCount') : t('PlaylistsList.TrackCountPlural')}` }}</b>
       </div>
     </div>
   </router-link>
@@ -26,6 +26,9 @@ import { paths } from "../../config";
 import { Playlist } from "../../interfaces";
 import { playSources } from '@/enums'
 import PlayBtn from '../shared/PlayBtn.vue'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const imguri = paths.images.playlist;
 defineProps<{

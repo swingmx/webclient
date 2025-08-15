@@ -14,7 +14,7 @@
         <div id="ginner" ref="inputRef" tabindex="0">
             <button
                 v-auto-animate
-                :title="tabs.current === tabs.tabs.search ? 'back to queue' : 'go to search'"
+                :title="tabs.current === tabs.tabs.search ? t('RightSidebar.BackToQueue') : t('RightSidebar.GoToSearch')"
                 :class="{ no_bg: on_nav }"
                 @click.prevent="handleButton"
             >
@@ -24,7 +24,7 @@
             <input
                 id="globalsearch"
                 v-model.trim="search.query"
-                placeholder="Start typing to search"
+                :placeholder="t('Search.SearchPlaceholder')"
                 type="search"
                 autocomplete="off"
                 spellcheck="false"
@@ -52,6 +52,9 @@ import CancelSvg from '@/assets/icons/a.svg'
 import BackSvg from '@/assets/icons/arrow.svg'
 import SearchSvg from '@/assets/icons/search.svg'
 import { Routes } from '@/router'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps<{
     on_nav?: boolean

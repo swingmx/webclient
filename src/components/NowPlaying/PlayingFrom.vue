@@ -1,6 +1,6 @@
 <template>
     <div class="now-playing-top">
-        <router-link class="now-playling-from-link" :to="(data.location as RouteLocationRaw)" title="Go to Play Source">
+        <router-link class="now-playling-from-link" :to="(data.location as RouteLocationRaw)" :title="t('NowPlaying.GoToPlaySource')">
             <div class="from">
                 <img
                     v-if="
@@ -37,6 +37,9 @@ import playingFrom from '@/utils/playingFrom'
 
 import MoreSvg from '@/assets/icons/more.svg'
 import { showQueueContextMenu } from '@/helpers/contextMenuHandler'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const tracklist = useTracklist()
 

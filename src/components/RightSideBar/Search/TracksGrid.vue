@@ -1,7 +1,7 @@
 <template>
   <div id="tracks-results">
     <div v-if="!search.tracks.value.length" class="t-center">
-      <h5>No tracks</h5>
+      <h5>{{ t('Search.NoTracksTitle') }}</h5>
     </div>
 
     <RecycleScroller
@@ -30,6 +30,9 @@ import useTracklist from "@/stores/queue/tracklist";
 
 import TrackItem from "@/components/shared/TrackItem.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const queue = useQueue();
 const search = useSearch();

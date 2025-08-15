@@ -1,53 +1,45 @@
 <template>
     <div class="aboutswingmusic">
         <div class="version">Swing Music v{{ settings.version }}</div>
-        Swing Music is a labor of love developed by
-        <a
-            href="https://github.com/cwilvx"
-            target="_blank"
-            >@<u>cwilvx</u></a
-        >
-        on GitHub. If you like this software, a star on GitHub would be nice.
-        Hope you enjoy using it as much as I enjoy building it. 😁🤗
+        <span v-html="t('Settings.About.Developer', { link: '<a href=&quot;https://github.com/cwilvx&quot; target=&quot;_blank&quot;>@<u>cwilvx</u></a>' })"></span>
         <br /><br />
         <div class="links">
-            <h2>Links</h2>
+            <h2>{{ t('Settings.About.LinksTitle') }}</h2>
             <div class="flex">
                 <a
                     href="https://swingmusic.vercel.app/guide/introduction.html"
                     target="_blank"
-                    ><button>Docs</button></a
+                    ><button>{{ t('Settings.About.LinksDocs') }}</button></a
                 >
                 <a
                     href="https://github.com/cwilvx/swingmusic"
                     target="_blank"
-                    ><button>Star on Github</button></a
+                    ><button>{{ t('Settings.About.LinksGitHub') }}</button></a
                 >
                 <a
                     href="https://github.com/cwilvx/swingmusic/issues/new/choose"
                     target="_blank"
                 >
-                    <button>Report issue</button>
+                    <button>{{ t('Settings.About.LinksIssue') }}</button>
                 </a>
                 <a
                     href="https://github.com/cwilvx/swingmusic/blob/master/.github/contributing.md"
                     target="_blank"
-                    ><button>Contribute</button></a
+                    ><button>{{ t('Settings.About.LinksContribute') }}</button></a
                 >
             </div>
         </div>
         <br />
         <div class="contact">
-            <h2>Get in touch</h2>
-            If you like my work, and would like to say hi, I'd like to hear from
-            you.
+            <h2>{{ t('Settings.About.GetInTouchTitle') }}</h2>
+            {{ t('Settings.About.GetInTouchDescription') }}
             <br /><br />
             <div class="flex">
                 <a
                     href="mailto:geoffreymungai45@gmail.com?subject=Hiii 👋😁&body=Hi Mungai,
         "
                     target="_blank"
-                    ><button>Send email</button></a
+                    ><button>{{ t('Settings.About.SendEmail') }}</button></a
                 >
             </div>
         </div>
@@ -56,6 +48,9 @@
 
 <script setup lang="ts">
 import useSettings from '@/stores/settings'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const settings = useSettings()
 </script>

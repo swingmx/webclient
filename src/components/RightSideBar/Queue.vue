@@ -7,8 +7,8 @@
   >
     <NoItems
       :flag="!store.tracklist.length"
-      :title="'No songs in queue'"
-      :description="'When you start playing songs, they will appear here.'"
+      :title="t('RightSidebar.NoQueueTitle')"
+      :description="t('RightSidebar.NoQueueDescription')"
       :icon="QueueSvg"
     />
     <RecycleScroller
@@ -43,6 +43,9 @@ import NoItems from "../shared/NoItems.vue";
 import QueueActions from "./Queue/QueueActions.vue";
 import TrackItem from "@/components/shared/TrackItem.vue";
 import QueueSvg from "@/assets/icons/queue.svg";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const itemHeight = 64;
 const queue = useQStore();

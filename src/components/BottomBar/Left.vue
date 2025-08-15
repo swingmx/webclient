@@ -30,14 +30,14 @@
         >
             <div v-tooltip class="title">
                 <span class="ellip">
-                    {{ queue.currenttrack?.title || 'Hello there' }}
+                    {{ queue.currenttrack?.title || t('BottomBar.PlaceholderTitle') }}
                 </span>
                 <ExplicitIcon class="explicit-icon" v-if="queue.currenttrack?.explicit" />
                 <MasterFlag :bitrate="queue.currenttrack?.bitrate || 0" />
             </div>
             <ArtistName
                 :artists="queue.currenttrack?.artists || []"
-                :albumartists="queue.currenttrack?.albumartists || 'Welcome to Swing Music'"
+                :albumartists="queue.currenttrack?.albumartists || t('BottomBar.PlaceholderArtist')"
                 class="artist"
             />
         </div>
@@ -55,6 +55,9 @@ import useColorStore from '@/stores/colors'
 import { isLargerMobile, isMobile } from '@/stores/content-width'
 import useQStore from '@/stores/queue'
 import useSettingsStore from '@/stores/settings'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 import ExpandSvg from '@/assets/icons/expand.svg'
 import ArtistName from '@/components/shared/ArtistName.vue'

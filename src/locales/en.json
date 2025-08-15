@@ -1,0 +1,162 @@
+{
+    "Common": {
+    },
+    "AlbumView": {
+        "AlbumBy": "Album by ",
+        "TrackCount": "Track",
+        "TrackCountPlural": "Tracks",
+        "GenreBanner": {
+            "GenreExists": "Genres",
+            "GenreDoesNotExist": "No Genres"
+        }
+    },
+    "ArtistView": {
+        "Title": "Artist",
+        "TrackCount": "Track",
+        "TrackCountPlural": "Tracks",
+        "AlbumCount": "Album",
+        "AlbumCountPlural": "Albums",
+        "NoTracks": "No tracks",
+        "RepeatOptions": {
+            "All": "Repeat all",
+            "One": "Repeat one",
+            "None": "No repeat"
+        }
+    },
+    "BottomBar": {
+        "GoToNowPlaying": "Go to Now Playing",
+        "PlaceholderTitle": "Hello there",
+        "PlaceholderArtist": "Welcome to Swing Music"
+    },
+    "Bubbles": {
+        "DropHere": "DROP TRACKS HERE"
+    },
+    "CardList": {
+        "SortBy": "Sort by",
+        "SortByOptions": {
+            "TrackCount": "No. of tracks",
+            "Duration": "Duration",
+            "CreatedDate": "Date added",
+            "LastPlayed": "Last played",
+            "PlayCount": "Plays",
+            "PlayDuration": "Play duration",
+            "Title": "Title",
+            "AlbumArtists": "Artist",
+            "Date": "Year Released",
+            "Name": "Name",
+            "NoOfAlbums": "No. of albums"
+        }
+    },
+    "FolderView": {
+        "FileCount": "File",
+        "FileCountPlural": "Files"
+    },
+    "HomeView": {
+        "Title": "Home",
+        "Greetings": {
+            "midnight": "Hey there night owl",
+            "dawn": "Hey there early bird",
+            "morning": "Good morning {name}",
+            "afternoon": "Good afternoon {name}",
+            "evening": "Good evening {name}"
+        },
+        "Browse": {
+            "Title": "Browse Library",
+            "BrowseList": {
+                "Folders": "Folders",
+                "Albums": "Albums",
+                "Artists": "Artists",
+                "Playlists": "Playlists",
+                "Favorites": "Favorites",
+                "FavTracks": "Fav. tracks",
+                "FavArtists": "Fav. artists",
+                "FavAlbums": "Fav. albums",
+                "Stats": "Stats"
+            }
+        }
+    },
+    "LeftSidebar": {
+        "NavItems": {
+            "Folder": "Folders",
+            "Favorites": "Favorites",
+            "Playlists": "Playlists",
+            "Home": "Home",
+            "Search": "Search",
+            "Settings": "Settings"
+        }
+    },
+    "NowPlaying": {
+        "GoToAlbum": "Go to album",
+        "UpNext": "Up Next",
+        "Queue": "Queue",
+        "GoToPlaySource": "Go to play source"
+    },
+    "PlaylistsList": {
+        "TrackCount": "Track",
+        "TrackCountPlural": "Tracks"
+    },
+    "PlaylistView": {
+        "TrackCount": "Track",
+        "TrackCountPlural": "Tracks",
+        "LastUpdated": "Last Updated {date}",
+        "Edit": "Edit",
+        "AllTracks": "All Tracks"
+    },
+    "RightSidebar": {
+        "SimilarTracks": "Similar Tracks",
+        "Shuffle": "Shuffle",
+        "NowPlaying": "Now Playing",
+        "NoQueueTitle": "No songs in queue",
+        "NoQueueDescription": "When you start playing songs, they will appear here."
+    },
+    "Search": {
+        "NoResultsTitle": "No results",
+        "NoTracksTitle": "No tracks",
+        "NoResultsDescription": "We can't find any results for your search.",
+        "TopResult": "Top Result",
+        "Tracks": "Tracks",
+        "Artists": "Artists",
+        "Albums": "Albums",
+        "BackToQueue": "Back to Queue",
+        "GoToSearch": "Go to Search",
+        "SearchPlaceholder": "Start typing to search"
+    },
+    "Settings": {
+        "Save": "Save",
+        "Cancel": "Cancel",
+        "Backup": {
+            "Title": "Backup",
+            "RestoreBackup": "Restore Backup",
+            "BackupCount": "You have {count} backup(s) in your backup directory.",
+            "PlaylistCount": "{count} playlist",
+            "PlaylistCountPlural": "{count} playlists",
+            "ScrobbleCount": "{count} scrobble",
+            "ScrobbleCountPlural": "{count} scrobbles",
+            "FavoriteCount": "{count} favorite",
+            "FavoriteCountPlural": "{count} favorites",
+            "CollectionCount": "{count} collection",
+            "CollectionCountPlural": "{count} collections",
+            "RestoreButton": "Restore",
+            "RestoreAllButton": "Restore All"
+        },
+        "List": {
+            "RootNotConfigured": "Root directories not configured. Use the \"Configure\" button above to configure"
+        },
+        "NumberInput": {
+            "InvalidNumber": "Invalid number",
+            "Updated": "Updated",
+            "UpdateFailed": "Failed to update"
+        },
+        "About": {
+            "Developer": "Swing Music is a labor of love developed by {link} on GitHub. If you like this software, a star on GitHub would be nice. Hope you enjoy using it as much as I enjoy building it. 😁🤗",
+            "LinksTitle": "Links",
+            "LinksDocs": "Docs",
+            "LinksGitHub": "Star on GitHub",
+            "LinksIssue": "Report an issue",
+            "LinksContribute": "Contribute",
+            "GetInTouchTitle": "Get in touch",
+            "GetInTouchDescription": "If you like my work, and would like to say hi, I'd like to hear from you.",
+            "SendEmail": "Send Email"
+        }
+    }
+}

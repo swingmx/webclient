@@ -1,3 +1,4 @@
+import { useI18n } from "vue-i18n";
 import { Routes } from "@/router";
 import useDialog from "@/stores/modal";
 import useSearch from "@/stores/search";
@@ -9,57 +10,63 @@ import SearchSvg from "@/assets/icons/search.svg";
 import SettingsSvg from "@/assets/icons/settings.svg";
 import HomeSvg from "@/assets/icons/home.svg";
 
-const folder = {
-  name: "folders",
-  route_name: Routes.folder,
-  params: { path: "$home" },
-  icon: FolderSvg,
+export const useNavItems = () => {
+  const { t } = useI18n();
+
+  const folder = {
+    name: t('LeftSidebar.NavItems.Folder'),
+    route_name: Routes.folder,
+    params: { path: "$home" },
+    icon: FolderSvg,
+  };
+
+  const favorites = {
+    name: t('LeftSidebar.NavItems.Favorites'),
+    route_name: Routes.favorites,
+    icon: HeartSvg,
+  };
+
+  const playlists = {
+    name: t('LeftSidebar.NavItems.Playlists'),
+    route_name: Routes.playlists,
+    icon: PlaylistSvg,
+  };
+
+  const home = {
+    name: t('LeftSidebar.NavItems.Home'),
+    route_name: Routes.Home,
+    icon: HomeSvg,
+  };
+
+  const menus = [
+    home,
+    folder,
+    {
+      name: t('LeftSidebar.NavItems.Search'),
+      route_name: Routes.search,
+      params: { page: "top" },
+      query: () => ({ q: useSearch().query }),
+      icon: SearchSvg,
+    },
+    {
+      separator: true,
+    },
+    favorites,
+    playlists,
+    {
+      separator: true,
+    },
+    {
+      name: t('LeftSidebar.NavItems.Settings'),
+      route_name: null,
+      icon: SettingsSvg,
+      action: () => {
+        useDialog().showSettingsModal()
+      }
+    },
+  ];
+
+  const topnavitems = [home, folder, favorites, playlists];
+  
+  return { menus, topnavitems };
 };
-
-const favorites = {
-  name: "favorites",
-  route_name: Routes.favorites,
-  icon: HeartSvg,
-};
-
-const playlists = {
-  name: "playlists",
-  route_name: Routes.playlists,
-  icon: PlaylistSvg,
-};
-
-const home = {
-  name: "home",
-  route_name: Routes.Home,
-  icon: HomeSvg,
-};
-
-export const menus = [
-  home,
-  folder,
-  {
-    name: "search",
-    route_name: Routes.search,
-    params: { page: "top" },
-    query: () => ({ q: useSearch().query }),
-    icon: SearchSvg,
-  },
-  {
-    separator: true,
-  },
-  favorites,
-  playlists,
-  {
-    separator: true,
-  },
-  {
-    name: "settings",
-    route_name: null,
-    icon: SettingsSvg,
-    action: () => {
-      useDialog().showSettingsModal()
-    }
-  },
-];
-
-export const topnavitems = [home, folder, favorites, playlists];
