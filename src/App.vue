@@ -1,9 +1,10 @@
 <template>
-    <ContextMenu />
-    <Modal />
-    <Notification />
+    <ContextMenu v-if="!hideUI" />
+    <Modal v-if="!hideUI" />
+    <Notification v-if="!hideUI" />
     <div id="drag-img" class="ellip2" style=""></div>
     <section
+        v-if="!hideUI"
         id="app-grid"
         :class="{
             useSidebar: settings.use_sidebar && xl,
@@ -27,153 +28,187 @@
         <BottomBar />
         <!-- <BubbleManager /> -->
     </section>
+    <div v-else id="noui">
+        <BalancerProvider>
+            <RouterView />
+        </BalancerProvider>
+    </div>
 </template>
 
 <script setup lang="ts">
 // @libraries
-import { vElementSize } from "@vueuse/components";
-import { onStartTyping } from "@vueuse/core";
-import { onMounted, Ref, ref } from "vue";
-import { useRouter } from "vue-router";
-import { BalancerProvider } from "vue-wrap-balancer";
+import { vElementSize } from '@vueuse/components'
+import { onStartTyping } from '@vueuse/core'
+import { onBeforeMount, onMounted, Ref, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { BalancerProvider } from 'vue-wrap-balancer'
 
 // @stores
-import useAuth from "@/stores/auth";
-import { content_height, content_width, isMobile, resizer_width, updateCardWidth } from "@/stores/content-width";
-import useLyrics from "@/stores/lyrics";
-import useModal from "@/stores/modal";
-import useQueue from "@/stores/queue";
-import useSettings from "@/stores/settings";
-import useTracker from "@/stores/tracker";
+import useAuth from '@/stores/auth'
+import { content_height, content_width, isMobile, resizer_width, updateCardWidth } from '@/stores/content-width'
+import useLyrics from '@/stores/lyrics'
+import useModal from '@/stores/modal'
+import useQueue from '@/stores/queue'
+import useSettings from '@/stores/settings'
+import useTracker from '@/stores/tracker'
 
 // @utils
-import handleShortcuts from "@/helpers/useKeyboard";
-import { xl, xxl } from "./composables/useBreakpoints";
+import handleShortcuts from '@/helpers/useKeyboard'
+import { xl, xxl } from './composables/useBreakpoints'
 
 // @small-components
-import ContextMenu from "@/components/ContextMenu.vue";
-import Modal from "@/components/modal.vue";
-import Notification from "@/components/Notification.vue";
+import ContextMenu from '@/components/ContextMenu.vue'
+import Modal from '@/components/modal.vue'
+import Notification from '@/components/Notification.vue'
 
 // @app-grid-components
-import BottomBar from "@/components/BottomBar/BottomBar.vue";
-import LeftSidebar from "@/components/LeftSidebar/index.vue";
-import NavBar from "@/components/nav/NavBar.vue";
-import RightSideBar from "@/components/RightSideBar/Main.vue";
+import BottomBar from '@/components/BottomBar/BottomBar.vue'
+import LeftSidebar from '@/components/LeftSidebar/index.vue'
+import NavBar from '@/components/nav/NavBar.vue'
+import RightSideBar from '@/components/RightSideBar/Main.vue'
 
-import { getAllSettings } from "@/requests/settings";
-import { getRootDirs } from "@/requests/settings/rootdirs";
-import { getLoggedInUser } from "./requests/auth";
+import { getAllSettings } from '@/requests/settings'
+import { getRootDirs } from '@/requests/settings/rootdirs'
+import { getLoggedInUser } from './requests/auth'
 // import BubbleManager from "./components/bubbles/BinManager.vue";
 
-const appcontent: Ref<HTMLLegendElement | null> = ref(null);
-const auth = useAuth();
-const queue = useQueue();
-const modal = useModal();
-const lyrics = useLyrics();
-const router = useRouter();
-const settings = useSettings();
-useTracker();
+const appcontent: Ref<HTMLLegendElement | null> = ref(null)
+const auth = useAuth()
+const queue = useQueue()
+const modal = useModal()
+const lyrics = useLyrics()
+const router = useRouter()
+const settings = useSettings()
+const hideUI = ref(false)
+useTracker()
 
-handleShortcuts(useQueue, useModal);
+handleShortcuts(useQueue, useModal)
 
 router.afterEach(() => {
-    (document.getElementById("acontent") as HTMLElement).scrollTo(0, 0);
-});
+    const acontent = document.getElementById('acontent') as HTMLElement
+
+    if (acontent) {
+        acontent.scrollTo(0, 0)
+    }
+})
 
 onStartTyping(() => {
-    const elem = document.getElementById("globalsearch") as HTMLInputElement;
-    elem.focus();
-    elem.value = "";
-});
+    const elem = document.getElementById('globalsearch') as HTMLInputElement
+    elem.focus()
+    elem.value = ''
+})
 
 function getContentSize() {
-    const elem = document.getElementById("acontent") as HTMLElement;
+    const elem = document.getElementById('acontent') as HTMLElement
     return {
         width: elem.offsetWidth,
         height: elem.offsetHeight,
-    };
+    }
 }
 
 function updateContentElemSize({ width, height }: { width: number; height: number }) {
     // 1572 is the maxwidth of the #acontent. see app-grid.scss > $maxwidth
-    const elem_width = appcontent.value?.offsetWidth || 0;
+    const elem_width = appcontent.value?.offsetWidth || 0
 
-    content_width.value = elem_width;
-    content_height.value = height;
+    content_width.value = elem_width
+    content_height.value = height
 
-    resizer_width.value = elem_width;
-    updateCardWidth();
+    resizer_width.value = elem_width
+    updateCardWidth()
 }
 
 function handleRootDirsPrompt() {
     getRootDirs().then(dirs => {
         if (dirs.length === 0) {
-            modal.showRootDirsPromptModal();
+            modal.showRootDirsPromptModal()
         } else {
-            settings.setRootDirs(dirs);
+            settings.setRootDirs(dirs)
         }
-    });
+    })
 }
 
+const getCookieValue = (name: string) => document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+
 onMounted(async () => {
-    const { width, height } = getContentSize();
-    updateContentElemSize({ width, height });
-
-    const res = await getLoggedInUser();
-
-    if (res.status == 200) {
-        auth.setUser(res.data);
-    } else {
-        return;
+    if (hideUI.value) {
+        return
     }
 
-    settings.initializeVolume();
+    const { width, height } = getContentSize()
+    updateContentElemSize({ width, height })
 
-    handleRootDirsPrompt();
+    const res = await getLoggedInUser()
+
+    if (res.status == 200) {
+        auth.setUser(res.data)
+    } else {
+        return
+    }
+
+    settings.initializeVolume()
+
+    handleRootDirsPrompt()
 
     getAllSettings()
         .then(({ settings: data }) => {
-            settings.mapDbSettings(data);
+            settings.mapDbSettings(data)
         })
         .then(() => {
             if (queue.currenttrack && !settings.use_lyrics_plugin) {
-                lyrics.checkExists(queue.currenttrack.filepath, queue.currenttrack.trackhash);
+                lyrics.checkExists(queue.currenttrack.filepath, queue.currenttrack.trackhash)
             }
-        });
-});
+        })
+})
+
+onBeforeMount(() => {
+    const onboardingComplete = getCookieValue('onboarding_complete')
+    console.log('onboardingComplete', onboardingComplete)
+
+    if (!onboardingComplete) {
+        hideUI.value = true
+        router.push({
+            name: Routes.Onboarding,
+        })
+    }
+})
 </script>
 
 <script lang="ts">
 // Detect OS & browser agents and add class
-import { defineComponent } from "vue";
-import usePlayer from "./composables/usePlayer";
+import { defineComponent } from 'vue'
+import usePlayer from './composables/usePlayer'
+import { Routes } from './router'
 export default defineComponent({
-    name: "OsAndBrowserSpecificContent",
+    name: 'OsAndBrowserSpecificContent',
     mounted() {
-        this.applyClassBasedOnAgent();
+        this.applyClassBasedOnAgent()
     },
     methods: {
         applyClassBasedOnAgent() {
-            const userAgent = navigator.userAgent;
-            const isWindows = /Win/.test(userAgent);
-            const isLinux = /Linux/.test(userAgent) && !/Android/.test(userAgent);
-            const isChrome = /Chrome/.test(userAgent) && /Google Inc/.test(navigator.vendor);
+            const userAgent = navigator.userAgent
+            const isWindows = /Win/.test(userAgent)
+            const isLinux = /Linux/.test(userAgent) && !/Android/.test(userAgent)
+            const isChrome = /Chrome/.test(userAgent) && /Google Inc/.test(navigator.vendor)
             if ((isWindows || isLinux) && isChrome) {
-                document.documentElement.classList.add("designatedOS");
+                document.documentElement.classList.add('designatedOS')
             } else {
-                document.documentElement.classList.add("otherOS");
+                document.documentElement.classList.add('otherOS')
             }
         },
     },
-});
+})
 </script>
 
 <style lang="scss">
-@import "./assets/scss/mixins.scss";
+@import './assets/scss/mixins.scss';
 .designatedOS .r-sidebar {
     &::-webkit-scrollbar {
         display: none;
     }
+}
+
+#noui {
+    height: 100vh;
+    width: 100vw;
 }
 </style>

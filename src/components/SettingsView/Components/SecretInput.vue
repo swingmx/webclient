@@ -1,7 +1,7 @@
 <template>
     <form class="secretinput" @submit.prevent="$emit('submit', input)">
         <div class="left rounded-sm no-scroll">
-            <input :type="showText ? 'text' : 'password'" v-model="input" @input="() => (showTextManual = true)" />
+            <input v-model="input" :type="showText ? 'text' : 'password'" @input="() => (showTextManual = true)" />
             <button @click.prevent="showTextManual = !showTextManual">
                 <EyeSvg v-if="showText" />
                 <EyeSlashSvg v-else />

@@ -2,15 +2,17 @@
     <div class="passinput">
         <input
             :id="props.inputId"
+            v-model="value"
             class="passinput"
             :type="type"
             :placeholder="placeholder"
+            :required="required"
             @input="$emit('input', ($event.target as HTMLInputElement).value)"
-            v-model="value"
+            disabled
         />
         <div
-            class="showpass rounded-sm"
             v-if="props.type === 'password'"
+            class="showpass rounded-sm"
             :class="{ show: value.length }"
             @click="toggleShowPassword"
         >
@@ -30,6 +32,8 @@ const props = defineProps<{
     type?: string
     placeholder?: string
     inputId?: string
+    required?: boolean
+    disabled?: boolean
 }>()
 
 const value = ref('')
