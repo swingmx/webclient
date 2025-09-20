@@ -74,7 +74,9 @@ defineEmits<{
     .lyrics,
     .repeat {
         svg {
-            transform: scale(0.75);
+            // transform: scale(0.75);
+            // height: 3rem !important;
+            // width: 3rem !important;
         }
 
         &:active > svg {

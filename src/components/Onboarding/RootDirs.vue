@@ -1,5 +1,5 @@
 <template>
-    <FilePicker v-if="showFilePicker" :userhome="userhome" @submitDirs="handleSubmitDirs" @cancel="toggleFilePicker" />
+    <FilePicker v-if="showFilePicker" :userhome="userHome" @submitDirs="handleSubmitDirs" @cancel="toggleFilePicker" />
     <div v-else class="rootdirconfig">
         <div class="heading">Configure root directories</div>
         <div class="description">Where do you want to look for music?</div>
@@ -9,7 +9,7 @@
                 <div>
                     <div class="option-title">Home directory</div>
                     <div class="option-description">
-                        Scan all folders in <span class="userhome">{{ userhome }}</span>
+                        Scan all folders in <span class="userhome">{{ userHome }}</span>
                     </div>
                 </div>
                 <div class="option-selected">
@@ -44,7 +44,7 @@
         <div class="folders">
             <div v-for="folder in finalRootDirs" :key="folder" class="folder">
                 <FolderSvg />
-                {{ folder.startsWith(userhome) ? folder.replace(userhome, '~') : folder }}
+                {{ folder.startsWith(userHome) ? folder.replace(userHome, '~') : folder }}
                 <div class="action" @click="handleRemoveFolder(folder)">
                     <SubtractSvg />
                 </div>
@@ -54,16 +54,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import FilePicker from './FilePicker.vue'
 import CheckSvg from '@/assets/icons/check.filled.svg'
 import FolderSvg from '@/assets/icons/folder.svg'
 import SubtractSvg from '@/assets/icons/subtract.svg'
+import useAxios from '@/requests/useAxios'
+import { paths } from '@/config'
 
 // SECTION: Props & Emits
 const props = defineProps<{
     userhome: string
 }>()
+
+const userHome = ref('')
 const emit = defineEmits<{
     (e: 'setRootDirs', dirs: string[]): void
     (e: 'error', error: string): void
@@ -79,7 +83,7 @@ const finalRootDirs = computed(() => {
 
     // Remove duplicates first
     const uniqueDirs = [...new Set(rootDirs.value)]
-    
+
     // Sort directories by length (shortest first) to process parents before children
     const sortedDirs = uniqueDirs.sort((a, b) => a.length - b.length)
     const filteredDirs: string[] = []
@@ -101,7 +105,7 @@ const finalRootDirs = computed(() => {
     return filteredDirs
 })
 const homeDirSelected = computed(() => {
-    return finalRootDirs.value.length == 1 && finalRootDirs.value[0] == props.userhome
+    return finalRootDirs.value.length == 1 && finalRootDirs.value[0] == userHome.value
 })
 const specificDirsSelected = computed(() => finalRootDirs.value.length && !homeDirSelected.value)
 
@@ -119,13 +123,13 @@ function toggleHomeDir() {
     if (homeDirSelected.value) {
         rootDirs.value = []
     } else {
-        rootDirs.value = [props.userhome]
+        rootDirs.value = [userHome.value]
     }
 }
 
 function handleSubmitDirs(dirs: string[]) {
     rootDirs.value.push(...dirs)
-    emit("error", "")
+    emit('error', '')
     showFilePicker.value = false
 }
 
@@ -141,6 +145,28 @@ function handleContinue() {
 
     emit('setRootDirs', rootDirs.value)
 }
+
+onMounted(async () => {
+    console.log('props.userhome', props.userhome)
+
+    if (!props.userhome) {
+        const res = await useAxios({
+            url: paths.api.onboardingData,
+            method: 'GET',
+        })
+
+        if (res.status !== 200) {
+            return
+        }
+
+        const { userHome: ResUserHome } = res.data
+        userHome.value = ResUserHome
+    } else {
+        userHome.value = props.userhome
+    }
+
+    console.log('userHome', userHome.value)
+})
 </script>
 
 <style lang="scss">

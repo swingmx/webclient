@@ -1,12 +1,9 @@
 <template>
-    <div class="onboarding pad-lg rounded-sm">
+    <div class="onboarding pad-lg rounded-sm shadow-lg">
         <component
             :is="steps[currentStepIndex].component"
-            v-bind="steps[currentStepIndex].props ?? {}"
-            @continue="handleContinue"
-            @account-created="handleAccountCreated"
-            @set-root-dirs="handleRootDirs"
-            @error="handleError"
+            v-bind="steps[currentStepIndex]?.props?.() ?? {}"
+            v-on="steps[currentStepIndex]?.events ?? {}"
         />
 
         <div class="progressbar">
@@ -28,30 +25,64 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { router, Routes } from '@/router'
+import useInterface from '@/stores/interface'
+import useModal from '@/stores/modal'
+
+const UI = useInterface()
+
 import ErrorSvg from '@/assets/icons/toast/error.svg'
+import Finish from '@/components/Onboarding/Finish.vue'
 import Welcome from '@/components/Onboarding/Welcome.vue'
 import Account from '@/components/Onboarding/Account.vue'
 import RootDirs from '@/components/Onboarding/RootDirs.vue'
+import { addRootDirs } from '@/requests/settings/rootdirs'
+import { storeToRefs } from 'pinia'
+import { Waiter } from '@/composables/waiter'
 
 const errorText = ref('')
-const currentStepIndex = ref(2)
-const userhome = ref('/Users/cwilvx')
+const userhome = ref('')
+const { onboardingStep: currentStepIndex } = storeToRefs(UI)
 
 const steps = [
-    { name: 'welcome', component: Welcome },
-    { name: 'account', component: Account },
-    { name: 'dirconfig', component: RootDirs, props: { userhome: userhome.value } },
-    { name: 'finish' },
+    {
+        name: 'welcome',
+        component: Welcome,
+        events: {
+            continue: handleContinue,
+        },
+    },
+    {
+        name: 'account',
+        component: Account,
+        events: {
+            accountCreated: handleAccountCreated,
+            error: handleError,
+        },
+    },
+    {
+        name: 'dirconfig',
+        component: RootDirs,
+        props: () => ({ userhome: userhome.value }),
+        events: {
+            setRootDirs: handleRootDirs,
+            error: handleError,
+        },
+    },
+    { name: 'finish', component: Finish, events: { finish: handleFinish } },
 ]
 
 function handleAccountCreated(user_home_path: string) {
+    console.log('user_home_path', user_home_path)
     userhome.value = user_home_path
+    console.log('userhome', userhome.value)
     currentStepIndex.value++
 }
 
-function handleRootDirs(dirs: string[]) {
-    console.log(dirs)
-    // rootDirs.value = dirs
+async function handleRootDirs(dirs: string[]) {
+    errorText.value = ''
+    currentStepIndex.value++
+    await addRootDirs(dirs, [])
 }
 
 function handleContinue() {
@@ -62,12 +93,23 @@ function handleContinue() {
 function handleError(error: string) {
     errorText.value = error
 }
+
+async function handleFinish() {
+    UI.setHideUi(false)
+    // INFO: In case the login dialog has been triggered
+    useModal().resetModal()
+    Waiter.resolve(Waiter.keys.ONBOARDING_COMPLETE)
+
+    return await router.push({
+        name: Routes.Home,
+    })
+}
 </script>
 
 <style lang="scss">
 .onboarding {
     background-color: $gray;
-    // border: solid 1px $gray4;
+    // border: solid 1px $gray5;
 
     height: 30rem;
     width: 50rem;

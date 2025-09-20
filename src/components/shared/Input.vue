@@ -7,8 +7,8 @@
             :type="type"
             :placeholder="placeholder"
             :required="required"
+            :disabled="disabled"
             @input="$emit('input', ($event.target as HTMLInputElement).value)"
-            disabled
         />
         <div
             v-if="props.type === 'password'"

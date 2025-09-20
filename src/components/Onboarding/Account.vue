@@ -13,7 +13,7 @@
             <div class="form">
                 <div class="names">
                     <label for="username">Username</label>
-                    <Input :placeholder="username" input-id="username" required @input="input => (username = input)" />
+                    <Input :placeholder="username" input-id="username" @input="input => (username = input)" />
                 </div>
                 <div class="passwords">
                     <div class="names">
@@ -78,8 +78,6 @@ async function createAccount() {
         username: username.value,
         password: password.value,
     })
-
-    console.log(response)
 
     if (response.status === 200) {
         emit('accountCreated', response.data.userhome)

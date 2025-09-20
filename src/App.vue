@@ -40,7 +40,7 @@
 import { vElementSize } from '@vueuse/components'
 import { onStartTyping } from '@vueuse/core'
 import { onBeforeMount, onMounted, Ref, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { BalancerProvider } from 'vue-wrap-balancer'
 
 // @stores
@@ -51,6 +51,7 @@ import useModal from '@/stores/modal'
 import useQueue from '@/stores/queue'
 import useSettings from '@/stores/settings'
 import useTracker from '@/stores/tracker'
+import useInterface from '@/stores/interface'
 
 // @utils
 import handleShortcuts from '@/helpers/useKeyboard'
@@ -78,8 +79,10 @@ const queue = useQueue()
 const modal = useModal()
 const lyrics = useLyrics()
 const router = useRouter()
+const route = useRoute()
 const settings = useSettings()
-const hideUI = ref(false)
+const UIStore = useInterface()
+const { hideUI } = storeToRefs(UIStore)
 useTracker()
 
 handleShortcuts(useQueue, useModal)
@@ -130,8 +133,52 @@ function handleRootDirsPrompt() {
 const getCookieValue = (name: string) => document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
 
 onMounted(async () => {
-    if (hideUI.value) {
-        return
+    if (import.meta.env.DEV) {
+        const onBoardingData = await useAxios({
+            url: paths.api.onboardingData,
+            method: 'GET',
+        })
+
+        if (onBoardingData.status !== 200) {
+            // INFO: What should we do 😱?
+            return
+        }
+
+        const { adminExists, rootDirsSet, onboardingComplete } = onBoardingData.data
+        if (!onboardingComplete) {
+            UIStore.setHideUi(true)
+            if (!rootDirsSet) {
+                UIStore.setOnboardingStep(2)
+            }
+
+            if (!adminExists) {
+                UIStore.setOnboardingStep(0)
+            }
+
+            router.push({
+                name: Routes.Onboarding,
+            })
+        }
+    }
+
+    if (UIStore.hideUI) {
+        // console.log('waiting for onboarding complete')
+        // return
+        await Waiter.wait(Waiter.keys.ONBOARDING_COMPLETE, null)
+    }
+
+    let path: string = ''
+    const splits = window.location.href.split('#')
+    if (splits.length > 1) {
+        path = splits[1]
+    }
+
+    // INFO: If we are stuck on the onboarding page at this point,
+    // redirect to the home page
+    if (path === '/onboarding') {
+        return router.push({
+            name: Routes.Home,
+        })
     }
 
     const { width, height } = getContentSize()
@@ -146,7 +193,6 @@ onMounted(async () => {
     }
 
     settings.initializeVolume()
-
     handleRootDirsPrompt()
 
     getAllSettings()
@@ -160,24 +206,44 @@ onMounted(async () => {
         })
 })
 
-onBeforeMount(() => {
-    const onboardingComplete = getCookieValue('onboarding_complete')
-    console.log('onboardingComplete', onboardingComplete)
-
-    if (!onboardingComplete) {
-        hideUI.value = true
-        router.push({
-            name: Routes.Onboarding,
-        })
+onBeforeMount(async () => {
+    if (import.meta.env.DEV) {
+        return
     }
+
+    const onboardingComplete = getCookieValue('x-onboarding-complete')
+
+    if (!onboardingComplete || onboardingComplete == 'true') {
+        return
+    }
+
+    UIStore.setHideUi(true)
+
+    const adminExists = getCookieValue('x-admin-exists')
+    const rootDirsSet = getCookieValue('x-root-dirs-set')
+
+    if (rootDirsSet == 'false') {
+        UIStore.setOnboardingStep(2)
+    }
+
+    if (adminExists == 'false') {
+        UIStore.setOnboardingStep(0)
+    }
+
+    return router.push({
+        name: Routes.Onboarding,
+    })
 })
 </script>
 
 <script lang="ts">
 // Detect OS & browser agents and add class
 import { defineComponent } from 'vue'
-import usePlayer from './composables/usePlayer'
 import { Routes } from './router'
+import { storeToRefs } from 'pinia'
+import useAxios from './requests/useAxios'
+import { paths } from './config'
+import { Waiter } from './composables/waiter'
 export default defineComponent({
     name: 'OsAndBrowserSpecificContent',
     mounted() {

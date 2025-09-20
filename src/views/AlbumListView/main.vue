@@ -108,4 +108,3 @@ onBeforeRouteLeave(() => {
   height: 100%;
 }
 </style>
-@/stores/pages/itemlist
