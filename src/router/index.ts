@@ -210,8 +210,9 @@ const PageView = {
 }
 
 const OnboardingView = {
-    path: '/onboarding',
+    path: '/onboarding/:step?',
     name: 'Onboarding',
+    alias: ['/manconfig/:step?'],
     component: Onboarding,
 }
 

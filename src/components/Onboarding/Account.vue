@@ -1,10 +1,7 @@
 <template>
     <div class="account">
-        <div class="avatarbox rounded-sm">
-            <!-- <Avatar :name="username"/> -->
-            <!-- <LogoSvg /> -->
-        </div>
         <form class="createadmin" @submit.prevent="createAccount">
+            <Avatar class="avatar" :name="username" :size="48"/>
             <div>
                 <div class="heading">Create admin account</div>
                 <div class="description">This account will be used to manage your server.</div>
@@ -13,7 +10,7 @@
             <div class="form">
                 <div class="names">
                     <label for="username">Username</label>
-                    <Input :placeholder="username" input-id="username" @input="input => (username = input)" />
+                    <Input :placeholder="username" input-id="username" required @input="input => (username = input)" />
                 </div>
                 <div class="passwords">
                     <div class="names">
@@ -47,8 +44,9 @@
 import { onMounted, ref } from 'vue'
 import { addNewUser } from '@/requests/auth'
 import Input from '@/components/shared/Input.vue'
+import Avatar from '@/components/shared/Avatar.vue'
 
-const username = ref('admin')
+const username = ref('')
 const password = ref('✶✶✶✶✶✶✶✶')
 const confirmPassword = ref('✶✶✶✶✶✶✶✶')
 
@@ -92,32 +90,6 @@ onMounted(() => {
 
 <style lang="scss">
 .account {
-    display: grid;
-    grid-template-columns: 1fr 1.25fr;
-    gap: 1.5rem;
-    width: 100%;
-    margin: 0 $medium 0 $medium;
-
-    .avatarbox {
-        width: 100%;
-        height: 100%;
-        // background gradient
-        background: linear-gradient(37deg, $pink, $purple);
-        display: flex;
-        // margin-left: $medium;
-        align-items: center;
-        justify-content: center;
-        padding: $small;
-
-        svg {
-            transform: scale(2);
-        }
-
-        background: url('https://images.unsplash.com/photo-1632516643720-e7f5d7d6ecc9?q=80&w=2022&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
-            no-repeat center center;
-        background-size: cover;
-    }
-
     .passwords {
         display: flex;
         flex-direction: row;
@@ -128,9 +100,18 @@ onMounted(() => {
     .createadmin {
         width: 100%;
         height: 100%;
+        // outline: solid 1px;
+        position: relative;
 
         .heading {
             margin-bottom: $smaller;
+        }
+
+        .avatar {
+            position: absolute;
+            top: 0;
+            right: 0;
+            // outline: solid 1px;
         }
     }
 

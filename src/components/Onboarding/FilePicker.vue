@@ -20,12 +20,7 @@
                 <span
                     ><button
                         class="btn-finish"
-                        @click="
-                            $emit(
-                                'submitDirs',
-                                Array.from(selectedFolders.values()).map(index => folders[index].path)
-                            )
-                        "
+                        @click="$emit('submitDirs', finalSelection.length ? finalSelection : [currentPath])"
                     >
                         Continue
                     </button></span
@@ -106,6 +101,9 @@ const renderedFolders = computed(() => {
 
 const lastSelectedIndex = ref<number>(-1)
 const selectedFolders = ref<Set<number>>(new Set())
+const finalSelection = computed(() =>
+    Array.from(selectedFolders.value.values()).map(index => folders.value[index].path)
+)
 
 function isFirstSelected(index: number): boolean {
     if (!selectedFolders.value.has(index)) return false

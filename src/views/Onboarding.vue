@@ -6,7 +6,7 @@
             v-on="steps[currentStepIndex]?.events ?? {}"
         />
 
-        <div class="progressbar">
+        <div v-if="showProgressBar" class="progressbar">
             <div
                 v-for="(step, index) in steps"
                 :key="step.name"
@@ -24,24 +24,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { onMounted, ref } from 'vue'
+import useModal from '@/stores/modal'
 import { router, Routes } from '@/router'
 import useInterface from '@/stores/interface'
-import useModal from '@/stores/modal'
-
-const UI = useInterface()
+import { Waiter } from '@/composables/waiter'
+import { addRootDirs } from '@/requests/settings/rootdirs'
 
 import ErrorSvg from '@/assets/icons/toast/error.svg'
 import Finish from '@/components/Onboarding/Finish.vue'
 import Welcome from '@/components/Onboarding/Welcome.vue'
 import Account from '@/components/Onboarding/Account.vue'
 import RootDirs from '@/components/Onboarding/RootDirs.vue'
-import { addRootDirs } from '@/requests/settings/rootdirs'
-import { storeToRefs } from 'pinia'
-import { Waiter } from '@/composables/waiter'
 
 const errorText = ref('')
 const userhome = ref('')
+const showProgressBar = ref(true)
+const UI = useInterface()
 const { onboardingStep: currentStepIndex } = storeToRefs(UI)
 
 const steps = [
@@ -104,6 +104,15 @@ async function handleFinish() {
         name: Routes.Home,
     })
 }
+
+onMounted(() => {
+    const step = router.currentRoute.value.params.step as string
+
+    if (step) {
+        currentStepIndex.value = steps.findIndex(s => s.name === step) || 0
+        showProgressBar.value = false
+    }
+})
 </script>
 
 <style lang="scss">

@@ -1,20 +1,20 @@
 <template>
     <div
+        v-auto-animate
         class="settingsmodal"
         :class="{
             isSmallPhone,
         }"
-        v-auto-animate
     >
         <Sidebar
+            v-if="!(isSmallPhone && showContent)"
             :current-group="(currentGroup as SettingGroup)"
             @set-tab="tab => (currentTab = tab)"
-            v-if="!(isSmallPhone && showContent)"
         />
-        <div class="content" v-if="showContent">
-            <div class="head" v-auto-animate>
+        <div v-if="showContent" class="content">
+            <div v-auto-animate class="head">
                 <div class="h2">
-                    <button class="back" v-if="isSmallPhone" @click="handleGoBack">
+                    <button v-if="isSmallPhone" class="back" @click="handleGoBack">
                         <ArrowSvg />
                     </button>
                     {{ currentGroup?.title }}
@@ -64,6 +64,8 @@ const currentGroup = computed(() => {
             }
         }
     }
+
+    return null
 })
 
 const showContent = computed(() => {
@@ -81,6 +83,7 @@ $modalheight: 38rem;
 .settingsmodal {
     display: grid;
     grid-template-columns: 15rem 1fr;
+    height: 100%;
 
     .content {
         display: grid;

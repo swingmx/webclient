@@ -36,7 +36,7 @@
         </div>
         <br />
         <div class="btn-container">
-            <button class="btn-continue" @click="handleContinue">Continue</button>
+            <button class="btn-continue" @click="handleContinue">{{ fromSettings ? 'Update' : 'Continue' }}</button>
         </div>
     </div>
     <div v-if="rootDirs.length > 0 && !homeDirSelected" class="selected-folders rounded-sm">
@@ -55,12 +55,18 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+
+import { paths } from '@/config'
+import { router } from '@/router'
+import useAxios from '@/requests/useAxios'
+import useSettingsStore from '@/stores/settings'
+import { getAllSettings } from '@/requests/settings'
+import { addRootDirs } from '@/requests/settings/rootdirs'
+
 import FilePicker from './FilePicker.vue'
-import CheckSvg from '@/assets/icons/check.filled.svg'
 import FolderSvg from '@/assets/icons/folder.svg'
 import SubtractSvg from '@/assets/icons/subtract.svg'
-import useAxios from '@/requests/useAxios'
-import { paths } from '@/config'
+import CheckSvg from '@/assets/icons/check.filled.svg'
 
 // SECTION: Props & Emits
 const props = defineProps<{
@@ -76,6 +82,9 @@ const emit = defineEmits<{
 // SECTION: Properties
 const showFilePicker = ref(false)
 const rootDirs = ref<string[]>([])
+const removedDirs = ref<string[]>([])
+const fromSettings = computed(() => router.currentRoute.value.params.step === 'dirconfig')
+
 const finalRootDirs = computed(() => {
     if (rootDirs.value.length <= 1) {
         return rootDirs.value
@@ -135,19 +144,37 @@ function handleSubmitDirs(dirs: string[]) {
 
 function handleRemoveFolder(folder: string) {
     rootDirs.value = rootDirs.value.filter(dir => dir !== folder)
+    removedDirs.value.push(folder)
 }
 
-function handleContinue() {
+async function handleContinue() {
     if (!rootDirs.value.length) {
         emit('error', 'Please select a root directory')
         return
     }
 
-    emit('setRootDirs', rootDirs.value)
+    if (fromSettings.value) {
+        await addRootDirs(finalRootDirs.value, removedDirs.value)
+        // INFO: Go back to previous page
+        return router.go(-1)
+    }
+
+    emit('setRootDirs', finalRootDirs.value)
 }
 
 onMounted(async () => {
-    console.log('props.userhome', props.userhome)
+    if (fromSettings.value) {
+        const settings = useSettingsStore()
+
+        // INFO: If root dirs are not loaded, fetch from server
+        // NOTE: this path is executed when you reload this page
+        if (!settings.root_dirs.length) {
+            const { settings: data } = await getAllSettings()
+            settings.mapDbSettings(data)
+        }
+
+        rootDirs.value = settings.root_dirs
+    }
 
     if (!props.userhome) {
         const res = await useAxios({
@@ -164,8 +191,6 @@ onMounted(async () => {
     } else {
         userHome.value = props.userhome
     }
-
-    console.log('userHome', userHome.value)
 })
 </script>
 

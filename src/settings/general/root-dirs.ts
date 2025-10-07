@@ -5,6 +5,7 @@ import { manageRootDirsStrings as data } from '../strings'
 
 import useModalStore from '@/stores/modal'
 import settings from '@/stores/settings'
+import { router, Routes } from '@/router'
 
 const text = data.settings
 
@@ -12,8 +13,11 @@ const change_root_dirs: Setting = {
     title: text.change,
     type: SettingType.button,
     state: null,
-    button_text: () => `\xa0 \xa0 ${settings().root_dirs.length ? 'Modify' : 'Configure'} \xa0 \xa0`,
-    action: () => useModalStore().showRootDirsPromptModal(),
+    button_text: () => `\xa0 \xa0 ${settings().root_dirs.length ? 'Update' : 'Configure'} \xa0 \xa0`,
+    action: () => {
+        useModalStore().hideModal()
+        return router.push({ path: '/manconfig/dirconfig' })
+    },
 }
 
 const list_root_dirs: Setting = {
