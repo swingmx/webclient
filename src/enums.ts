@@ -106,4 +106,5 @@ export interface DBSettings {
   lastfmApiSecret: string;
   lastfmSessionKey: string;
   showPlaylistsInFolderView: boolean;
+  artistArticleAwareSorting: boolean;
 }

@@ -18,7 +18,7 @@
             class="scroller"
             style="height: 100%"
         >
-            <template #before v-if="is_alt_layout || isMedium || isSmall">
+            <template v-if="is_alt_layout || isMedium || isSmall" #before>
                 <Folder />
             </template>
 

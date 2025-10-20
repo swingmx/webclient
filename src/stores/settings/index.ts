@@ -40,6 +40,7 @@ export default defineStore('settings', {
         show_albums_as_singles: false,
         separators: <string[]>[],
         show_playlists_in_folders: false,
+        article_aware_sorting: false,
 
         // client
         useCircularArtistImg: true,
@@ -89,6 +90,7 @@ export default defineStore('settings', {
             this.separators = settings.artistSeparators
             this.show_albums_as_singles = settings.showAlbumsAsSingles
             this.show_playlists_in_folders = settings.showPlaylistsInFolderView
+            this.article_aware_sorting = settings.artistArticleAwareSorting
 
             this.enablePeriodicScans = settings.enablePeriodicScans
             this.periodicInterval = settings.scanInterval
@@ -294,6 +296,9 @@ export default defineStore('settings', {
 
         async toggleMergeAlbums() {
             return await this.genericToggleSetting('mergeAlbums', !this.merge_albums, 'merge_albums')
+        },
+        async toggleArticleAwareSorting() {
+            return await this.genericToggleSetting('artistArticleAwareSorting', !this.article_aware_sorting, 'article_aware_sorting')
         },
 
         async toggleShowAlbumsAsSingles() {

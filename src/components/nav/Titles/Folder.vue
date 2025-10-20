@@ -50,6 +50,7 @@ interface SortItem {
 const items: SortItem[] = [
     { key: 'default', title: 'Default' },
     { key: 'title', title: 'Title' },
+    { key: 'filepath', title: 'File Name' },
     { key: 'album', title: 'Album' },
     // { key: 'albumartists', title: 'Album Artist' },
     { key: 'artists', title: 'Artist' },

@@ -12,7 +12,7 @@ import folderlistmode from './folderlistmode'
 import layout from './layout'
 import nowPlaying from './now-playing-group'
 import rootDirSettings from './root-dirs'
-import separators from './separators'
+import artistSettings from './artists'
 import sidebarSettings from './sidebar'
 import tracks from './tracks'
 // icons
@@ -50,7 +50,7 @@ export const library = {
     show_if: loggedInUserIsAdmin,
     groups: [
         {
-            title: "Folders",
+            title: 'Folders',
             icon: FolderSvg,
             desc: rootRootStrings.desc,
             settings: [...rootDirSettings],
@@ -77,14 +77,14 @@ export const library = {
             title: 'Artists',
             icon: AvatarSvg,
             desc: 'Customize artist separators',
-            settings: [separators],
+            settings: [...artistSettings],
         },
         {
-            title: "Backup",
+            title: 'Backup',
             icon: AvatarSvg,
-            desc: "Backup and restore your settings",
+            desc: 'Backup and restore your settings',
             settings: [...restore],
-        }
+        },
     ],
 } as SettingCategory
 
