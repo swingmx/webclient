@@ -4,12 +4,15 @@
         <Volume />
         <button
             class="cast"
-            :class="{ 
-                'cast-connected': cast.isConnected, 
+            v-if='cast.canCast'
+            :class="{
+                'cast-connected': cast.isConnected,
                 'cast-connecting': cast.isConnecting,
-                'cast-disabled': !cast.isSupported
             }"
-            :title="!cast.isSupported ? 'Cast SDK loading...' : cast.isConnected ? 'Disconnect from cast device' : cast.isConnecting ? 'Connecting...' : 'Cast to device'"
+            :title="cast.isConnected
+              ? 'Disconnect from cast device'
+              : cast.isConnecting ? 'Connecting...' : 'Cast to device'
+            "
             @click="cast.toggleCast"
         >
             <CastSvg />
@@ -107,7 +110,7 @@ defineEmits<{
         &.cast-connected {
             background-color: $primary !important;
             border-color: $primary !important;
-            
+
             svg {
                 color: white;
             }
@@ -129,7 +132,7 @@ defineEmits<{
             svg {
                 opacity: 0.3;
             }
-            
+
             &:hover {
                 background-color: transparent !important;
                 border-color: transparent !important;

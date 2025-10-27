@@ -28,7 +28,7 @@ export default function useCast() {
 
     function initCast() {
         console.log('initCast called, isSupported:', isSupported.value)
-        
+
         // Always set up the API availability callback first
         window['__onGCastApiAvailable'] = (isAvailable: boolean) => {
             console.log('Cast API available callback:', isAvailable)
@@ -57,17 +57,8 @@ export default function useCast() {
             return
         }
 
-        console.log('Loading Cast SDK dynamically...')
-        const script = document.createElement('script')
-        script.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1'
-        script.onload = () => {
-            console.log('Cast SDK loaded dynamically')
-        }
-        script.onerror = () => {
-            console.error('Failed to load Cast SDK dynamically')
-            toast.showNotification('Cast SDK failed to load. Check your internet connection.', NotifType.Error)
-        }
-        document.head.appendChild(script)
+        console.error('Failed to load Cast SDK dynamically')
+        toast.showNotification('Cast SDK failed to load. Check your internet connection.', NotifType.Error)
     }
 
     function initializeCastApi() {
@@ -75,7 +66,7 @@ export default function useCast() {
         try {
             const context = cast.framework.CastContext.getInstance()
             console.log('CastContext obtained:', context)
-            
+
             context.setOptions({
                 receiverApplicationId: cast.framework.CastContext.DEFAULT_MEDIA_RECEIVER_APP_ID,
                 autoJoinPolicy: cast.framework.AutoJoinPolicy.ORIGIN_SCOPED
@@ -110,7 +101,7 @@ export default function useCast() {
     async function startCasting() {
         console.log('startCasting called')
         console.log('canCast:', canCast.value, 'window.cast:', !!window.cast)
-        
+
         if (!canCast.value || !window.cast) {
             console.log('Cannot cast - either not supported or no current track')
             toast.showNotification('Cast not available', NotifType.Info)
@@ -122,7 +113,7 @@ export default function useCast() {
             const context = cast.framework.CastContext.getInstance()
             await context.requestSession()
             console.log('Cast session requested successfully')
-            
+
             // Load current track
             if (queue.currenttrack && castSession.value) {
                 console.log('Loading current track to cast device')
@@ -152,7 +143,7 @@ export default function useCast() {
         mediaInfo.metadata.title = track.title
         mediaInfo.metadata.artist = track.artists.map(a => a.name).join(', ')
         mediaInfo.metadata.albumName = track.album
-        
+
         if (track.image) {
             mediaInfo.metadata.images = [{
                 url: paths.images.thumb.medium + track.image
@@ -194,14 +185,10 @@ export default function useCast() {
     }
 
     return {
-        isSupported,
         canCast,
         isConnected,
         isConnecting,
         initCast,
-        startCasting,
-        stopCasting,
-        toggleCast,
-        loadCurrentTrack
+        toggleCast
     }
 }
