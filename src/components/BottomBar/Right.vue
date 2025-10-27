@@ -3,6 +3,21 @@
         <LyricsButton />
         <Volume />
         <button
+            class="cast"
+            v-if='cast.canCast'
+            :class="{
+                'cast-connected': cast.isConnected,
+                'cast-connecting': cast.isConnecting,
+            }"
+            :title="cast.isConnected
+              ? 'Disconnect from cast device'
+              : cast.isConnecting ? 'Connecting...' : 'Cast to device'
+            "
+            @click="cast.toggleCast"
+        >
+            <CastSvg />
+        </button>
+        <button
             class="repeat"
             :class="{ 'repeat-disabled': settings.repeat == 'none' }"
             :title="settings.repeat == 'all' ? 'Repeat all' : settings.repeat == 'one' ? 'Repeat one' : 'No repeat'"
@@ -24,18 +39,26 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import useQueue from '@/stores/queue'
 import useSettings from '@/stores/settings'
+import useCast from '@/composables/useCast'
 
 import RepeatOneSvg from '@/assets/icons/repeat-one.svg'
 import RepeatAllSvg from '@/assets/icons/repeat.svg'
 import ShuffleSvg from '@/assets/icons/shuffle.svg'
+import CastSvg from '@/assets/icons/cast.svg'
 import HeartSvg from '../shared/HeartSvg.vue'
 import LyricsButton from '../shared/LyricsButton.vue'
 import Volume from './Volume.vue'
 
 const queue = useQueue()
 const settings = useSettings()
+const cast = useCast()
+
+onMounted(() => {
+    cast.initCast()
+})
 
 defineProps<{
     hideHeart?: boolean
@@ -50,7 +73,7 @@ defineEmits<{
 .right-group {
     display: grid;
     justify-content: flex-end;
-    grid-template-columns: repeat(5, max-content);
+    grid-template-columns: repeat(6, max-content);
     align-items: center;
     height: 4rem;
 
@@ -72,13 +95,48 @@ defineEmits<{
     }
 
     .lyrics,
-    .repeat {
+    .repeat,
+    .cast {
         svg {
             transform: scale(0.75);
         }
 
         &:active > svg {
             transform: scale(0.6);
+        }
+    }
+
+    .cast {
+        &.cast-connected {
+            background-color: $primary !important;
+            border-color: $primary !important;
+
+            svg {
+                color: white;
+            }
+
+            &:hover {
+                background-color: $primary !important;
+                border-color: $primary !important;
+                opacity: 0.8;
+            }
+        }
+
+        &.cast-connecting {
+            svg {
+                opacity: 0.7;
+            }
+        }
+
+        &.cast-disabled {
+            svg {
+                opacity: 0.3;
+            }
+
+            &:hover {
+                background-color: transparent !important;
+                border-color: transparent !important;
+            }
         }
     }
 
