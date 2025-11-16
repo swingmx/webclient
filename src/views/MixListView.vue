@@ -1,5 +1,5 @@
 <template>
-    <CardGridPage page="mix" :items="items" :showNoItemsComponent="false">
+    <CardGridPage page="mix" :items="items" :show-no-items-component="false">
         <template #header>
             <GenericHeader>
                 <template #name>
@@ -9,12 +9,12 @@
                     {{ items.length + savedItems.length }} mixes • Based on artists you have been listening to
                 </template>
 
-                <template #after v-if="savedItems.length">
+                <template v-if="savedItems.length" #after>
                     <h2>Saved mixes</h2>
                     <div v-for="item in savedItemComponents" :key="item.id">
                         <component :is="item.component" :type="item.props.type" :items="item.props.items" />
                     </div>
-                    <h2 class="othertitle" v-if="items.length">Other {{ $route.params.type }} mixes</h2>
+                    <h2 v-if="items.length" class="othertitle">Other {{ $route.params.type }} mixes</h2>
                 </template>
             </GenericHeader>
         </template>

@@ -7,7 +7,7 @@
                         {{ collection.collection?.name }} <span><PencilSvg height="0.8rem" width="0.8rem" /></span
                     ></span>
                 </template>
-                <template #description v-if="collection.collection?.extra.description">
+                <template v-if="collection.collection?.extra.description" #description>
                     <span @click="updatePage"> {{ collection.collection?.extra.description }} </span>
                 </template>
                 <template #right>

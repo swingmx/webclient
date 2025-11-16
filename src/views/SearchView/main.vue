@@ -55,6 +55,7 @@ const component = computed(() => {
           page: "album",
           items: search.albums.value,
           fetch_callback: search.loadAlbums,
+          moreItems: search.albums.more
         },
       };
 
@@ -65,6 +66,7 @@ const component = computed(() => {
           page: "artist",
           items: search.artists.value,
           fetch_callback: search.loadArtists,
+          moreItems: search.artists.more
         },
       };
 
