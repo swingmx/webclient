@@ -1,6 +1,6 @@
 <template>
   <div class="root-dirs-prompt">
-    <h3 class="t-center">Where do you want to look for music?</h3>
+    <h3 class="t-center">{{ $t('RootDirsPrompt.WhereToLook') }}</h3>
     <div class="options-group">
       <div v-for="option in options" :key="option.id" v-motion-slide-bottom class="option" @click="option.action()">
         <b>{{ option.title }}</b>
@@ -16,6 +16,9 @@ import { onMounted, ref } from "vue";
 import { addRootDirs, getRootDirs } from "@/requests/settings/rootdirs";
 import useModalStore from "@/stores/modal";
 import useSettingsStore from "@/stores/settings";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const settings = useSettingsStore();
 
@@ -36,8 +39,8 @@ onMounted(() => {
       options.value = [
         {
           id: "$home",
-          title: "Home directory",
-          info: "Scan all folders in your home directory.",
+          title: t('RootDirsPrompt.HomeDir'),
+          info: t('RootDirsPrompt.HomeDirInfo'),
           delay: 0,
           action: () =>
             addRootDirs(["$home"], [])
@@ -46,8 +49,8 @@ onMounted(() => {
         },
         {
           id: "wtf",
-          title: "Specific directories",
-          info: "Select folders to scan for music.",
+          title: t('RootDirsPrompt.SpecificDir'),
+          info: t('RootDirsPrompt.SpecificDirInfo'),
           delay: 0.1,
           action: () => modal.showSetRootDirsModal(),
         },

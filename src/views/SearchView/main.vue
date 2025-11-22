@@ -32,6 +32,9 @@ import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
 import CardGridPage from "./CardGridPage.vue";
 import TopResults from "./TopResults.vue";
 import TracksPage from "./tracks.vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n(); 
 
 const settings = useSettings();
 const search = useSearchStore();
@@ -74,7 +77,7 @@ const component = computed(() => {
 });
 
 onMounted(() => {
-  updatePageTitle("Search");
+  updatePageTitle(t('Common.Search'));
   search.switchTab(route.params.page as string);
   search.query = route.query.q as string;
 });

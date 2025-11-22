@@ -2,7 +2,7 @@
     <div class="loginuser rounded-sm" :class="{ selected }">
         <Avatar :name="user.username" />
         <div class="username">
-            {{ (selected ? `Hi ` : '') + user.username }}
+            {{ (selected ? $t('Common.HiSpace') : '') + user.username }}
         </div>
     </div>
 </template>

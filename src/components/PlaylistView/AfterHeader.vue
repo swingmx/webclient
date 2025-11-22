@@ -1,9 +1,8 @@
 <template>
     <div class="p-after-header">
-        <div>All Tracks</div>
+        <div>{{ $t('PlaylistView.AllTracks') }}</div>
     </div>
 </template>
-
 <style lang="scss">
 .isSmall .p-after-header {
     padding-left: 0.5rem;

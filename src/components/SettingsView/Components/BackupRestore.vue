@@ -1,10 +1,10 @@
 <template>
     <div class="backup-restore">
-        <button class="backupnow" @click="doBackup">Backup</button>
+        <button class="backupnow" @click="doBackup">{{ $t('Settings.Backup.Title') }}</button>
         <div class="separator"></div>
-        <h4>Restore backup</h4>
+        <h4>{{ $t('Settings.Backup.RestoreBackup') }}</h4>
         <div class="helptext">
-            You have {{ backups.length }} backup{{ backups.length !== 1 ? 's' : '' }} in your backup directory.
+            {{ $t('Settings.Backup.BackupCount', { count: backups.length }) }}
         </div>
         <div></div>
         <br />
@@ -20,29 +20,29 @@
                     </div>
                     <div class="item__stats">
                         <div class="item__playlists">
-                            {{ backup.playlists }} playlist{{ backup.playlists !== 1 ? 's' : '' }}
+                            {{ $t('Settings.Backup.PlaylistCount', { count: backup.playlists }, backup.playlists) }}
                         </div>
                         •
                         <div class="item__scrobbles">
-                            {{ backup.scrobbles }} scrobble{{ backup.scrobbles !== 1 ? 's' : '' }}
+                            {{ $t('Settings.Backup.ScrobbleCount', { count: backup.scrobbles }, backup.scrobbles) }}
                         </div>
                         •
                         <div class="item__favorites">
-                            {{ backup.favorites }} favorite{{ backup.favorites !== 1 ? 's' : '' }}
+                            {{ $t('Settings.Backup.FavoriteCount', { count: backup.favorites }, backup.favorites) }}
                         </div>
                         •
                         <div class="item__collections">
-                            {{ backup.collections }} collection{{ backup.collections !== 1 ? 's' : '' }}
+                            {{ $t('Settings.Backup.CollectionCount', { count: backup.collections }, backup.collections) }}
                         </div>
                     </div>
                 </div>
                 <div class="buttons">
                     <DeleteSvg @click="() => deleteBackup(backup.name)" />
-                    <button class="restore" @click="() => restore(backup.name)">Restore</button>
+                    <button class="restore" @click="() => restore(backup.name)">{{ $t('Settings.Backup.RestoreButton') }}</button>
                 </div>
             </div>
         </div>
-        <button class="restore-all" @click="() => restore()">Restore All</button>
+        <button class="restore-all" @click="() => restore()">{{ $t('Settings.Backup.RestoreAllButton') }}</button>
     </div>
 </template>
 

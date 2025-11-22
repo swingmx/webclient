@@ -1,7 +1,7 @@
 <template>
   <div class="settingsnav">
     <button @click="resetClient">
-      &nbsp;&nbsp; Reset client &nbsp;&nbsp;
+      &nbsp;&nbsp; {{ $t('Nav.ResetClient') }} &nbsp;&nbsp;
     </button>
   </div>
 </template>

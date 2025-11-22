@@ -3,8 +3,8 @@
         <Charts />
         <br><br>
         <GenericHeader>
-            <template #name>Stats</template>
-            <template #description>Your listening stats for the past week</template>
+            <template #name>{{ $t('Views.Stats.Title')}}</template>
+            <template #description>{{$t('Views.Stats.Description')}}</template>
         </GenericHeader>
         <Stats />
     </div>

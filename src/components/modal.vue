@@ -36,7 +36,7 @@
             />
             <div v-if="modal.component == modal.options.deletePlaylist">
                 <ConfirmModal
-                    :text="'Are you sure you want to permanently delete this playlist?'"
+                    :text="$t('Modal.DeletePlaylist')"
                     :cancel-action="modal.hideModal"
                     :confirm-action="deletePlaylist"
                 />

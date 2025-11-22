@@ -1,5 +1,5 @@
 <template>
-  <div v-if="q.currenttrack?.bitrate" class="bitrate" title="file type • bitrate">
+  <div v-if="q.currenttrack?.bitrate" class="bitrate" :title="$t('LeftSidebar.FileTypeBitrate')">
     {{ q.currenttrack.filepath?.split(".").pop() }} • {{ q.currenttrack.bitrate }}
   </div>
 </template>

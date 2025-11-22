@@ -1,13 +1,13 @@
 <template>
   <div class="info">
-    <SettingsTitle v-if="$route.name == Routes.settings" :text="'Settings'" />
+    <SettingsTitle v-if="$route.name == Routes.settings" :text="$t('NavTitles.Settings')" />
     <SearchTitle v-if="$route.name == Routes.search" />
     <PlaylistsTitle v-if="$route.name == Routes.playlists" />
     <SimpleNav
       v-if="$route.name == Routes.artistTracks"
-      :text="$route.query.artist as string || 'Artist Tracks'"
+      :text="$route.query.artist as string || $t('NavTitles.ArtistTracks')"
     />
-    <SimpleNav v-if="$route.name === Routes.nowPlaying" :text="'Now Playing'" />
+    <SimpleNav v-if="$route.name === Routes.nowPlaying" :text="$t('NavTitles.NowPlaying')" />
   </div>
 </template>
 

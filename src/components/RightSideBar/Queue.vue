@@ -7,8 +7,8 @@
   >
     <NoItems
       :flag="!store.tracklist.length"
-      :title="'No songs in queue'"
-      :description="'When you start playing songs, they will appear here.'"
+      :title="$t('RightSidebar.NoQueueTitle')"
+      :description="$t('RightSidebar.NoQueueDescription')"
       :icon="QueueSvg"
     />
     <RecycleScroller

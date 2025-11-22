@@ -3,41 +3,62 @@
         <div class="profileavatar">
             <Avatar :name="username || auth.user.username" />
             <div class="name">
-                {{ adding_user ? username : `Hi ${auth.user.username}` }}
+                {{ adding_user ? username : $t('Profile.HiUser', {user: auth.user.username}) }}
             </div>
             <div class="roles" v-if="!adding_user">
                 <span class="role" v-for="role in auth.user.roles" :key="role"> {{ role }}</span>
             </div>
         </div>
+        <div class="updateprof">
+            <div class="locale-changer">
+                <label>{{ t('Languages.ChooseLang') }}</label>
+                <select class="language" v-model="$i18n.locale" @change="updateLang">
+                    <option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale">{{ $t('Languages.'+ locale) }}</option>
+                </select>
+            </div>                
+            <button v-if="setLang" @click="setCookie">
+                {{ $t('Profile.SetLanguage') }}
+            </button>
+            <label class="warning" v-if="setLang">{{ $t('Languages.WarnAppReload') }}</label>
+        </div>
         <form class="updateprof" v-auto-animate @submit.prevent="handleSubmit">
             <div class="names">
-                <label for="username">Username</label>
+                <label for="username">{{ $t('Profile.Username')}}</label>
                 <Input
-                    :placeholder="adding_user ? 'username' : auth.user.username"
+                    :placeholder="adding_user ? t('Profile.Username') : auth.user.username"
                     @input="input => (username = input)"
-                />
+                />                
             </div>
-            <label for="pswd">{{ adding_user ? 'Create' : 'Change' }} password</label>
+            <label for="pswd">{{ adding_user ? $t('Profile.PasswordAction', {action: $t('Common.Create')}) 
+                : $t('Profile.PasswordAction', {action: $t('Common.Change')}) }}</label>
             <Input type="password" placeholder="⏺⏺⏺⏺⏺⏺⏺⏺" @input="input => (password = input)" />
             <div class="confirmpassword" v-if="password.length">
-                <label for="confirmpswd">Confirm password</label>
+                <label for="confirmpswd">{{ $t('Profile.ConfirmPassword') }}</label>
                 <Input type="password" placeholder="⏺⏺⏺⏺⏺⏺⏺⏺" @input="input => (confirmPassword = input)" />
                 <label class="error" v-if="errorText">{{ errorText }}</label>
             </div>
             <button v-if="showSubmit">
-                {{ adding_user ? 'Add user' : 'Update' }}
+                {{ adding_user ? $t('Profile.AddUser') : $t('Common.Update') }}
             </button>
         </form>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ComputedGetter, onMounted, ref } from 'vue'
 
 import Avatar from '@/components/shared/Avatar.vue'
 import Input from '@/components/shared/Input.vue'
 import { User } from '@/interfaces'
 import useAuth from '@/stores/auth'
+import { useI18n } from 'vue-i18n'
+import { useCookies } from '@vueuse/integrations/useCookies'
+import { useRouter } from 'vue-router'
+
+const cookies = useCookies(['locale']);
+const router = useRouter();
+
+const { t, locale } = useI18n();
 
 const props = defineProps<{
     adding_user?: boolean
@@ -51,6 +72,7 @@ const auth = useAuth()
 
 const username = ref('')
 const password = ref('')
+const langIns = ref(false)
 const confirmPassword = ref('')
 
 const showSubmit = computed(() => {
@@ -65,6 +87,21 @@ const showSubmit = computed(() => {
         (payload.value.username || payload.value.password)
     )
 })
+const setLang = computed(()=> {
+    return (langIns.value)
+})
+
+const setCookie = function() {
+    cookies.set('locale', locale.value)
+    langIns.value = false
+    //FIXME: Feels like a hack to force reload the whole app; but parts of the UI doesn't update it properly.
+    //Adding cookies dependencies to all components might be the only alternative.
+    router.go(0);
+}
+
+const updateLang = function() {
+    langIns.value = true
+}
 
 const errorText = computed(() => {
     // if password has not changed, no error
@@ -73,7 +110,7 @@ const errorText = computed(() => {
     }
 
     if (confirmPassword.value.length && password.value !== confirmPassword.value) {
-        return 'Passwords do not match'
+        return t('Profile.PasswordMismatch')
     }
 })
 
@@ -114,6 +151,7 @@ async function updateProfile() {
         username.value = ''
         password.value = ''
         confirmPassword.value = ''
+        langIns.value = false
     }
 }
 
@@ -162,6 +200,15 @@ onMounted(async () => {
             color: $gray1;
         }
 
+        select {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: $white;
+        }
+
         input {
             width: 100%;
             padding: 0.5rem;
@@ -182,6 +229,12 @@ onMounted(async () => {
 
         .error {
             color: $red;
+        }
+
+        .warning {
+            width: 100%;
+            color: $yellow;
+            text-align: center;
         }
 
         button {

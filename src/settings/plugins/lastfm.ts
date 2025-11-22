@@ -1,10 +1,13 @@
 import useSettings from '@/stores/settings'
 import { Setting } from '@/interfaces/settings'
 import { SettingType } from '../enums'
+import { getT } from '@/i18n'
+
+const { t } = getT()
 
 const authorize = <Setting>{
-    title: 'Connect your account',
-    desc: 'Allow Swing Music to access your Last.fm account',
+    title: t("Settings.Plugins.LastFM.Authorize.Title"),
+    desc: t("Settings.Plugins.LastFM.Authorize.Description"),
     type: SettingType.button,
     action: () => {
         const settings = useSettings()
@@ -21,20 +24,20 @@ const authorize = <Setting>{
     button_text: () => {
         const settings = useSettings()
         if (settings.lastfm_integration_started) {
-            return 'Finish'
+            return t("Common.Finish")
         }
 
         if (settings.lastfm_session_key) {
-            return 'Disconnect'
+            return t("Common.Disconnect")
         }
 
-        return 'Connect'
+        return t("Common.Connect")
     },
 }
 
 // const api_key = <Setting>{
-//     title: 'Use custom API Key',
-//     desc: 'instead of the Swing Music default to authenticate with Last.fm',
+//     title: t("Settings.Plugins.LastFM.ApiKey.Title"),
+//     desc: t("Settings.Plugins.LastFM.ApiKey.Description"),
 //     type: SettingType.secretinput,
 //     state: () => useSettings().lastfm_api_key,
 //     action: (value: string) => {
@@ -46,8 +49,8 @@ const authorize = <Setting>{
 // }
 
 // const api_secret = <Setting>{
-//     title: 'Use custom API Secret',
-//     desc: 'instead of the Swing Music default to sign your scrobble submission',
+//     title: t("Settings.Plugins.LastFM.ApiSecret.Title"),
+//     desc: t("Settings.Plugins.LastFM.ApiSecret.Description")'',
 //     type: SettingType.secretinput,
 //     state: () => useSettings().lastfm_api_secret,
 //     action: (value: string) => {

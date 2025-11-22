@@ -43,7 +43,9 @@ import { isMedium, isSmall } from "@/stores/content-width";
 import Header from "@/components/NowPlaying/Header.vue";
 import SongItem from "@/components/shared/SongItem.vue";
 import updatePageTitle from "@/utils/updatePageTitle";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 
 const queue = useQueueStore();
 const store = useTracklist();
@@ -74,7 +76,7 @@ const scrollerItems = computed(() => {
   return items.concat(trackComponents);
 });
 
-onMounted(() => updatePageTitle("Now Playing"));
+onMounted(() => updatePageTitle(t('Common.NowPlaying')));
 </script>
 
 <style lang="scss">

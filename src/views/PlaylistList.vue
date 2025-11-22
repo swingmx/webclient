@@ -1,9 +1,9 @@
 <template>
     <div id="p-view" class="content-page">
         <Header>
-            <template #name>Playlists</template>
+            <template #name>{{$t('Views.PlaylistList.Title') }}</template>
             <template #description>
-                You have {{ pStore.playlists.length }} playlists in your library
+                {{ $t('Views.PlaylistList.Description', {n: pStore.playlists.length}) }}
                 <br />
                 <form spellcheck="false" @submit.prevent="() => {}">
                     <input
@@ -11,26 +11,26 @@
                         v-model="input"
                         class="rounded-sm no-border"
                         type="search"
-                        placeholder="Search playlists"
+                        :placeholder="$t('Views.PlaylistList.SearchPlaylist')"
                         name=""
                     />
                 </form>
             </template>
             <template #right>
-                <button class="playlist-button" @click="showNewPlaylistModal()"><PlusSvg /> New Playlist</button>
+                <button class="playlist-button" @click="showNewPlaylistModal()"><PlusSvg />{{ $t('NewPlaylist.Title') }}</button>
             </template>
         </Header>
-        <PlaylistCardGroup v-if="!query && pinnedPlaylists.length" :playlists="pinnedPlaylists" :title="'Pinned'" />
+        <PlaylistCardGroup v-if="!query && pinnedPlaylists.length" :playlists="pinnedPlaylists" :title="$t('Common.Pinned')" />
         <PlaylistCardGroup
             v-if="playlists.length"
             :playlists="playlists"
-            :title="query ? 'Search Results' : `${pinnedPlaylists.length ? 'Other' : 'All'} Playlists`"
+            :title="query ? $t('Common.SearchResults') : `${pinnedPlaylists.length ? $t('Views.PlaylistList.OtherPlaylists') : $t('Views.PlaylistList.AllPlaylists')}`"
         />
         <NoItems
             :flag="!(playlists.length + pinnedPlaylists.length)"
             :icon="PlaylistSvg"
-            :title="'No playlists found'"
-            :description="description"
+            :title="$t('Views.PlaylistList.NoPlaylistsFound')"
+            :description="$t('Views.PlaylistList.NoItemDescription')"
         />
     </div>
 </template>
@@ -49,15 +49,15 @@ import PlaylistCardGroup from '@/components/PlaylistsList/PlaylistCardGroup.vue'
 import Header from '@/components/shared/GenericHeader.vue'
 import NoItems from '@/components/shared/NoItems.vue'
 import useModalStore from '@/stores/modal'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const pStore = usePStore()
 const { showNewPlaylistModal } = useModalStore()
 
 const input = ref('')
 const query = debouncedRef(input, 300)
-
-const description = `You can create a playlist by right clicking on a track and selecting the
-        "Add to Playlist" option`
 
 // TODO: When you add a song to playlist when you are in this page, increase the count on the card.
 
@@ -66,7 +66,7 @@ const pinnedPlaylists = computed(() => {
 })
 
 onMounted(() => {
-    updatePageTitle('Playlists')
+    updatePageTitle(t('Common.Playlists'))
 })
 
 const playlists = computed(() => {

@@ -3,7 +3,7 @@
         <div class="disc_number">
             Disc {{ album_disc.album_page_disc_number }}
             <span @click="$emit('playDisc', album_disc.album_page_disc_number || 0)" class="play">
-                <PlaySvg /> Play Disc {{ album_disc.album_page_disc_number }}</span
+                <PlaySvg /> {{ $t('AlbumView.PlayDisc') }} {{ album_disc.album_page_disc_number }}</span
             >
         </div>
         <div class="play"></div>
@@ -13,6 +13,9 @@
 <script setup lang="ts">
 import PlaySvg from '@/assets/icons/play.svg'
 import { AlbumDisc } from '@/interfaces'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 defineProps<{
     album_disc: AlbumDisc

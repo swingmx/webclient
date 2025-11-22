@@ -8,7 +8,7 @@
         :albumartists="queue.currenttrack?.albumartists || ''"
       />
       <span v-else class="artist author">
-        <a href="https://github.com/mungai-njoroge" target="_blank">built by @mungai-njoroge ↗</a>
+        <a href="https://github.com/mungai-njoroge" target="_blank">{{ $t('Common.BuiltBy') }}</a>
       </span>
     </div>
     <div class="actions">

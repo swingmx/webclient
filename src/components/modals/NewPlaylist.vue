@@ -1,17 +1,17 @@
 <template>
   <form class="playlist-modal" @submit="create">
-    <label for="name">Playlist name</label>
+    <label for="name">{{ $t('NewPlaylist.PlaylistName') }}</label>
     <br />
     <input
       id="modal-playlist-name-input"
       type="search"
       class="rounded-sm"
       name="name"
-      placeholder="Type a name..."
+      :placeholder="$t('NewPlaylist.NamePlaceholder')"
       spellcheck="false"
     />
     <br /><br />
-    <button type="submit">Create</button>
+    <button type="submit">{{ $t('NewPlaylist.CreateButton') }}</button>
   </form>
 </template>
 
@@ -29,6 +29,9 @@ import {
 import { NotifType, Notification } from "@/stores/notification";
 import usePlaylistStore from "@/stores/pages/playlists";
 import useTracklist from "@/stores/queue/tracklist";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   trackhash?: string;
@@ -52,7 +55,7 @@ const emit = defineEmits<{
   (e: "hideModal"): void;
 }>();
 
-emit("setTitle", "New Playlist");
+emit("setTitle", t('NewPlaylist.Title'));
 
 /**
  * Create a new playlist. If this modal is called with a track,
@@ -64,7 +67,7 @@ function create(e: Event) {
   const name = (e.target as any).elements["name"].value;
 
   if (!name.trim()) {
-    new Notification("Playlist name can't be empty", NotifType.Error);
+    new Notification( t('NewPlaylist.NameNotEmpty'), NotifType.Error);
     return;
   }
 

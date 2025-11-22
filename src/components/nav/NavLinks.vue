@@ -18,7 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { topnavitems } from "../LeftSidebar/navitems";
+  import { useNavItems } from "../LeftSidebar/navitems";
+  const { topnavitems } = useNavItems();
 </script>
 
 <style lang="scss">

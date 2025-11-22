@@ -1,7 +1,7 @@
 <template>
     <span class="see-all">
         <RouterLink :to="route">
-            <b>{{ text || `SEE ALL` }}</b>
+            <b>{{ text || $t('Common.SeeAll').toUpperCase() }}</b>
         </RouterLink>
     </span>
 </template>

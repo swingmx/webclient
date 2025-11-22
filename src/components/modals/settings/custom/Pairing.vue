@@ -12,7 +12,7 @@
             <div class="spinner"></div>
         </div>
         <p class="desc">
-            Scan the QR code from the Swing Music app to pair with this server.
+            {{ $t('Pairing.ScanQRCode') }}
         </p>
 
         <div class="serverurl rounded">{{ url }}</div>
@@ -23,6 +23,12 @@
 import { Ref, onMounted, ref } from 'vue'
 import QRCodeStyling from 'qr-code-styling'
 import { sendPairRequest } from '@/requests/auth'
+import { useI18n } from 'vue-i18n';
+//Here just to force the component to rerender on locale changes
+import { useCookies } from '@vueuse/integrations/useCookies';
+const cookies = useCookies(['locale']);
+
+const { t } = useI18n();
 
 const qrLoaded = ref(false)
 // @ts-expect-error
@@ -66,7 +72,7 @@ onMounted(async () => {
     }
 
     const error = document.createElement('p')
-    error.innerHTML = 'Error fetching pairing code. Error code: ' + res.status
+    error.innerHTML = t('Pairing.ErrorPairingCode', {res: res.status})
     qrcode.value.appendChild(error)
 })
 </script>

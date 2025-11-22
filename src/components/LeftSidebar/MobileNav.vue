@@ -33,5 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import { menus } from "./navitems";
+import { useNavItems } from "../LeftSidebar/navitems";
+const { menus } = useNavItems();
 </script>

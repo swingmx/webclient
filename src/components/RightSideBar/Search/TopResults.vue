@@ -1,8 +1,8 @@
 <template>
   <div class="right-top-results">
     <NoItems
-      :title="'No results'"
-      :description="'We can\'t find any results for your search.'"
+      :title="$t('Search.NoResultsTitle')"
+      :description="$t('Search.NoResultsDescription')"
       :icon="SearchSvg"
       :flag="
         !search.top_results.top_result || !search.top_results.top_result.type
@@ -11,19 +11,19 @@
     <div
       v-if="search.top_results.top_result && search.top_results.top_result.type"
     >
-      <h3 class="h3">Top Result</h3>
+      <h3 class="h3">{{ $t('Search.TopResult') }}</h3>
       <TopItem />
     </div>
     <div v-if="search.top_results.tracks.length">
-      <h3 class="h3">Tracks</h3>
+      <h3 class="h3">{{ $t('Common.Track', 2) }}</h3>
       <TopTracks />
     </div>
     <div v-if="search.top_results.artists.length">
-      <h3 class="h3">Artists</h3>
+      <h3 class="h3">{{ $t('Common.Artist', 2) }}</h3>
       <TopArtists />
     </div>
     <div v-if="search.top_results.albums.length">
-      <h3 class="h3">Albums</h3>
+      <h3 class="h3">{{ $t('Common.Album', 2) }}</h3>
       <TopAlbums />
     </div>
   </div>

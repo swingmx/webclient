@@ -26,9 +26,9 @@
                 </div>
                 <div v-if="res_type === 'artist'" class="artists flex">
                     {{ item.albumcount }}
-                    {{ item.albumcount === 1 ? 'album' : 'albums' }} •
+                    {{ $t('Common.album', item.albumcount) }} •
                     {{ item.trackcount }}
-                    {{ item.trackcount === 1 ? 'track' : 'tracks' }}
+                    {{ $t('Common.track', item.trackcount) }}
                 </div>
                 <div v-if="res_type === 'track'" class="artists flex">
                     <ArtistName :artists="item.artists" :albumartists="item.albumartists" />

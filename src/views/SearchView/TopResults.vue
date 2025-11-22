@@ -1,24 +1,24 @@
 <template>
   <div class="search-page-top-results">
     <NoItems
-      :title="'No results'"
-      :description="'We can\'t find any results for your search.'"
+      :title="$t('Common.NoResults')"
+      :description="$t('Common.NoSearchResults')"
       :icon="SearchSvg"
       :flag="!search.top_results.top_result || !search.top_results.top_result.type"
     />
     <div v-if="search.top_results.top_result && search.top_results.top_result.type" class="header">
       <div class="top">
-        <h3>Top Result</h3>
+        <h3>{{ $t('Common.TopResult') }}</h3>
         <TopItem />
       </div>
       <div class="tracks">
-        <h3>Tracks</h3>
+        <h3>{{ $t('Common.Track', 2) }}</h3>
         <TopTracks />
       </div>
     </div>
     <RecentItems
       v-if="search.top_results.artists.length"
-      :title="'Artists'"
+      :title="$t('Common.Artist', 2)"
       :items="
         search.top_results.artists.map((i) => ({
           type: 'artist',
@@ -28,7 +28,7 @@
     />
     <RecentItems
       v-if="search.top_results.albums.length"
-      :title="'Albums'"
+      :title="$t('Common.Artist', 2)"
       :items="
         search.top_results.albums.map((i) => ({
           type: 'album',

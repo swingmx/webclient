@@ -28,7 +28,7 @@
             {{ artist.name }}
         </div>
         <div v-if="artist.help_text && artist.trackcount" class="racount t-center">
-            {{ artist.trackcount }} Track{{ artist.trackcount == 1 ? '' : 's' }}
+            {{ $t('ArtistCard.TrackCount', {count: artist.trackcount}, artist.trackcount) }}
         </div>
     </RouterLink>
 </template>

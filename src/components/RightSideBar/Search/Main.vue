@@ -1,7 +1,7 @@
 <template>
   <div class="right-search">
     <TabsWrapper :tabs="tabs" :current-tab="currentTab" :tab-content="true" @switchTab="switchTab">
-      <Tab :name="currentTab" />
+      <Tab :name=currentTab />
     </TabsWrapper>
   </div>
 </template>
@@ -13,6 +13,7 @@ import useSearchStore from "@/stores/search";
 import Tab from "./Tab.vue";
 import TabsWrapper from "./TabsWrapper.vue";
 
+
 const search = useSearchStore();
 
 const tabs = ["top", "tracks", "albums", "artists"];
@@ -23,6 +24,7 @@ function switchTab(tab: string) {
   currentTab.value = tab;
   search.switchTab(tab);
 }
+
 </script>
 
 <style lang="scss">

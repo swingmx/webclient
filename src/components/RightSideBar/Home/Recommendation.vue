@@ -1,6 +1,6 @@
 <template>
   <div class="r-tracks rounded bg-primary">
-    <div class="heading">Similar tracks</div>
+    <div class="heading">{{ $t('RightSidebar.SimilarTracks') }}</div>
     <div class="tracks">
       <div v-for="song in songs" :key="song.artist" class="song-item">
         <img src="" class="rounded" loading="lazy"/>

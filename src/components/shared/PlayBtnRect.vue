@@ -10,7 +10,7 @@
         @click="playFrom(source)"
     >
         <playBtnSvg />
-        <div class="text">Play</div>
+        <div class="text">{{ $t('Common.Play') }}</div>
     </button>
 </template>
 

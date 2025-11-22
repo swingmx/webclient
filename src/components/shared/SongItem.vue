@@ -24,7 +24,7 @@
         </div>
 
         <TrackAlbum
-            :album="track.album || 'Unknown'"
+            :album="track.album || $t('Common.Unknown')"
             :albumhash="track.albumhash || ''"
             :hide_album="hide_album || false"
         />

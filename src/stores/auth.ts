@@ -12,6 +12,10 @@ import {
     updateUserProfile,
 } from '@/requests/auth'
 import { NotifType, useToast } from '@/stores/notification'
+import { getT } from '@/i18n'
+
+const { t } = getT()
+
 
 export default defineStore('authStore', {
     state: () => ({
@@ -39,7 +43,7 @@ export default defineStore('authStore', {
             this.showToast(msg, NotifType.Error)
         },
         showGenericError() {
-            this.showError('Failed! Something went wrong!')
+            this.showError(t("Common.NotificationError"))
         },
         showResMsgOrGenericError(res: any) {
             if (res.data.msg) {
@@ -69,7 +73,7 @@ export default defineStore('authStore', {
             const res = await addNewUser(user)
 
             if (res.status === 200) {
-                this.showSuccess('User added successfully!')
+                this.showSuccess(t('Stores.Auth.UserAddedSucc'))
 
                 return res.data as User
             }
@@ -80,7 +84,7 @@ export default defineStore('authStore', {
         async addGuestUser() {
             const res = await addGuestUser()
             if (res.status === 200) {
-                this.showSuccess('Guest user added successfully!')
+                this.showSuccess(t('Stores.Auth.GuestUserAdded'))
                 return true
             }
 
@@ -97,7 +101,7 @@ export default defineStore('authStore', {
                 if (!user.id || user.id === this.user.id) {
                     this.user = res.data
                 }
-                this.showSuccess('Profile updated successfully!')
+                this.showSuccess(t('Stores.Auth.ProfileUpdated'))
                 return true
             }
 
@@ -108,7 +112,7 @@ export default defineStore('authStore', {
             const res = await deleteUser(username)
 
             if (res.status === 200) {
-                this.showSuccess(`${username} deleted successfully!`)
+                this.showSuccess(t('Stores.Auth.UserDeleted', {user: username}))
                 return true
             }
 

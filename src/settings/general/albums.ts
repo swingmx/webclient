@@ -2,20 +2,23 @@ import { Setting } from '@/interfaces/settings'
 import { SettingType } from '../enums'
 
 import useSettingsStore from '@/stores/settings'
+import { getT } from '@/i18n'
+
+const { t } = getT()
 
 const settings = useSettingsStore
 
 const clean_album_titles: Setting = {
-    title: 'Clean album titles',
-    desc: 'Remove bracketed text from titles and process it separately if possible',
+    title: t("Settings.General.Albums.CleanTitles.Title"),
+    desc: t("Settings.General.Albums.CleanTitles.Description"),
     type: SettingType.binary,
     state: () => settings().clean_titles,
     action: () => settings().toggleCleanAlbumTitle(),
 }
 
 const merge_album_versions: Setting = {
-    title: 'Merge album versions',
-    desc: 'All versions of the same album will be merged into one album',
+    title: t("Settings.General.Albums.MergeAlbum.Title"),
+    desc: t("Settings.General.Albums.MergeAlbum.Description"),
     type: SettingType.binary,
     state: () => {
         const settings = useSettingsStore()
@@ -26,8 +29,8 @@ const merge_album_versions: Setting = {
 }
 
 const show_albums_as_singles: Setting = {
-    title: 'Mark albums with one track as singles',
-    desc: 'Require an album to have at least two tracks',
+    title: t('Settings.General.Albums.AlbumAsSingles.Title'),
+    desc: t("Settings.General.Albums.AlbumAsSingles.Description"),
     type: SettingType.binary,
     state: () => settings().show_albums_as_singles,
     action: () => settings().toggleShowAlbumsAsSingles(),

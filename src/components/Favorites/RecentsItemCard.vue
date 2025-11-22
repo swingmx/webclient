@@ -20,7 +20,7 @@
       {{ fav.type === "artist" ? fav.item.name : fav.item.title }}
     </div>
     <div class="label ellip" :class="{ on_artist: fav.type === 'artist' }">
-      {{ fav.type === "album" ? fav.item.artist : "Artist" }}
+      {{ fav.type === "album" ? fav.item.artist : $t('Favorites.Album')}}
     </div>
   </RouterLink>
 </template>
@@ -29,6 +29,9 @@
 import { RecentFavResult } from "@/interfaces";
 import { Routes } from "@/router";
 import { paths } from "../../config";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 defineProps<{
   fav: RecentFavResult;

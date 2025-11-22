@@ -1,9 +1,9 @@
 <template>
   <div class="settingscontent">
     <GenericHeader>
-      <template #name>Settings</template>
+      <template #name>{{ $t('Common.Settings') }}</template>
       <template #description>
-        Customize your settings and preferences
+        {{ $t('Content.SettingsDesc') }}
       </template>
     </GenericHeader>
     <GenericTabs

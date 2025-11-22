@@ -1,0 +1,755 @@
+{
+  "Common": {
+    "Create": "Create",
+    "Change": "Change",
+    "Update": "Update",
+    "Saving": "Saving",
+    "Image": "Image",
+    "update": "update",
+    "upload": "upload",
+    "Settings": "Settings",
+    "Default": "Default",
+    "Title": "Title",
+    "Album": "Album | Albums",
+    "Artist": "Artist | Artists",
+    "ReleaseDate": "Release Date",
+    "DateAdded": "Date Added",
+    "LastPlayed": "Last Played",
+    "PlayCount": "Play Count",
+    "PlayDuration": "Play Duration",
+    "top": "top",
+    "LogOut": "Log out",
+    "BuiltBy": "built by @mungai-njoroge ↗",
+    "Playlist": "Playlist",
+    "AlbumArtist": "Album Artist",
+    "Bitrate": "Bitrate",
+    "Disc": "Disc",
+    "Duration": "Duration",
+    "album": "album | albums",
+    "track": "track | tracks",
+    "experimental": "experimental",
+    "new": "new",
+    "Rescan": "Rescan",
+    "Descending": "Descending",
+    "Ascending": "Ascending",
+    "TrackCount": "{count} track | {count} tracks",
+    "NoTracks": "No tracks",
+    "HiSpace": "Hi ",
+    "Lyrics": "Lyrics",
+    "Play": "Play",
+    "SeeAll": "See All",
+    "Unknown": "Unknown",
+    "New": "New",
+    "Track": "Track | Tracks",
+    "Periods": {
+      "Year": "Year | Years",
+      "Week": "Week | Weeks",
+      "Month": "Month | Months",
+      "AllTime": "All Time"
+    },
+    "added": "added",
+    "removed": "removed",
+    "NotificationErrorWithArg": "Failed: {error}",
+    "NotificationError": "An error occured!",
+    "NotificationFunnyError": "Something funny happened!",
+    "Appearance": "Appearance",
+    "Library": "Library",
+    "Folders": "Folders",
+    "Backup": "Backup",
+    "Modify": "Modify",
+    "Configure": "Configure",
+    "Plugins": "Plugins",
+    "Finish": "Finish",
+    "Disconnect": "Disconnect",
+    "Connect": "Connect",
+    "Discography": "Discography {artist}",
+    "Recents": "Recents",
+    "Pinned": "Pinned",
+    "Other": "Other",
+    "All": "All",
+    "SearchResults": "Search Results",
+    "Playlists": "Playlists",
+    "Appearances": "Appearances",
+    "Compilations": "Compilation | Compilations",
+    "Singles": "EP & Singles",
+    "SimilarArtists": "Similar artists",
+    "Delete": "Delete",
+    "NowPlaying": "Now Playing",
+    "artist": "artist | artists",
+    "mix": "mix | mixes",
+    "Search": "Search",
+    "NoResults": "No results",
+    "NoSearchResults": "We can't find any results for your search.",
+    "TopResult": "Top Result",
+    "NoTrackResults": "No track results",
+    "LogIn": "Login",
+    "Autodetect": "autodetect"
+  },
+  "AlbumView": {
+    "AlbumBy": "Album by ",
+    "TrackCount": "Track | Tracks",
+    "GenreBanner": {
+      "GenreExists": "Genres",
+      "GenreDoesNotExist": "No Genres"
+    },
+    "PlayDisc": "Play Disc"
+  },
+  "ArtistView": {
+    "Title": "Artist",
+    "NoTracks": "No tracks",
+    "RepeatOptions": {
+      "All": "Repeat all",
+      "One": "Repeat one",
+      "None": "No repeat"
+    },
+    "LoadMore": "Load More"
+  },
+  "BottomBar": {
+    "GoToNowPlaying": "Go to Now Playing",
+    "PlaceholderTitle": "Hello there",
+    "PlaceholderArtist": "Welcome to Swing Music",
+    "RepeatOptions": {
+      "All": "Repeat all",
+      "One": "Repeat one",
+      "None": "No repeat"
+    },
+    "Shuffle": "Shuffle",
+    "Favorite": "Favorite"
+  },
+  "Bubbles": {
+    "DropHere": "DROP TRACKS HERE"
+  },
+  "CardList": {
+    "SortBy": "Sort by",
+    "SortByOptions": {
+      "TrackCount": "No. of tracks",
+      "Duration": "Duration",
+      "CreatedDate": "Date added",
+      "LastPlayed": "Last played",
+      "PlayCount": "Plays",
+      "PlayDuration": "Play duration",
+      "Title": "Title",
+      "AlbumArtists": "Artist",
+      "Date": "Year Released",
+      "Name": "Name",
+      "NoOfAlbums": "No. of albums"
+    }
+  },
+  "FolderView": {
+    "FileCount": "File | Files"
+  },
+  "HomeView": {
+    "Title": "Home",
+    "Greetings": {
+      "midnight": "Hey there night owl",
+      "dawn": "Hey there early bird",
+      "morning": "Good morning {name}",
+      "afternoon": "Good afternoon {name}",
+      "evening": "Good evening {name}"
+    },
+    "Browse": {
+      "Title": "Browse Library",
+      "BrowseList": {
+        "Folders": "Folders",
+        "Albums": "Albums",
+        "Artists": "Artists",
+        "Playlists": "Playlists",
+        "Favorites": "Favorites",
+        "FavTracks": "Fav. tracks",
+        "FavArtists": "Fav. artists",
+        "FavAlbums": "Fav. albums",
+        "Stats": "Stats"
+      }
+    },
+    "title": "Home"
+  },
+  "LeftSidebar": {
+    "NavItems": {
+      "Folder": "Folders",
+      "Favorites": "Favorites",
+      "Playlists": "Playlists",
+      "Home": "Home",
+      "Search": "Search",
+      "Settings": "Settings"
+    },
+    "FileTypeBitrate": "file type • bitrate"
+  },
+  "NowPlaying": {
+    "GoToAlbum": "Go to album",
+    "UpNext": "Up Next",
+    "Queue": "Queue",
+    "GoToPlaySource": "Go to play source"
+  },
+  "PlaylistView": {
+    "LastUpdated": "Last Updated {date}",
+    "Edit": "Edit",
+    "AllTracks": "All Tracks"
+  },
+  "RightSidebar": {
+    "SimilarTracks": "Similar Tracks",
+    "Shuffle": "Shuffle",
+    "NowPlaying": "Now Playing",
+    "NoQueueTitle": "No songs in queue",
+    "NoQueueDescription": "When you start playing songs, they will appear here.",
+    "BackToQueue": "back to queue"
+  },
+  "Search": {
+    "NoResultsTitle": "No results",
+    "NoTracksTitle": "No tracks",
+    "NoResultsDescription": "We can't find any results for your search.",
+    "TopResult": "Top Result",
+    "BackToQueue": "Back to Queue",
+    "GoToSearch": "Go to Search",
+    "SearchPlaceholder": "Start typing to search",
+    "top": "Top"
+  },
+  "Settings": {
+    "Save": "Save",
+    "Cancel": "Cancel",
+    "Backup": {
+      "Title": "Backup",
+      "RestoreBackup": "Restore Backup",
+      "BackupCount": "You have {count} backup(s) in your backup directory.",
+      "PlaylistCount": "{count} playlist | {count} playlists",
+      "ScrobbleCount": "{count} scrobble | {count} scrobbles",
+      "FavoriteCount": "{count} favorite | {count} favorites",
+      "CollectionCount": "{count} collection",
+      "RestoreButton": "Restore",
+      "RestoreAllButton": "Restore All"
+    },
+    "List": {
+      "RootNotConfigured": "Root directories not configured. Use the \"Configure\" button above to configure"
+    },
+    "NumberInput": {
+      "InvalidNumber": "Invalid number",
+      "Updated": "Updated",
+      "UpdateFailed": "Failed to update"
+    },
+    "About": {
+      "Developer": "Swing Music is a labor of love developed by {link} on GitHub. If you like this software, a star on GitHub would be nice. Hope you enjoy using it as much as I enjoy building it. 😁🤗",
+      "LinksTitle": "Links",
+      "LinksDocs": "Docs",
+      "LinksGitHub": "Star on GitHub",
+      "LinksIssue": "Report an issue",
+      "LinksContribute": "Contribute",
+      "GetInTouchTitle": "Get in touch",
+      "GetInTouchDescription": "If you like my work, and would like to say hi, I'd like to hear from you.",
+      "SendEmail": "Send Email",
+      "Title": "About"
+    },
+    "Experimental": "experimental",
+    "NowPlaying": {
+      "Title": "Now playing",
+      "Description": "Settings relating to the current song",
+      "AlbumArt": "Show album art on the left sidebar"
+    },
+    "AppWidth": {
+      "Extend": "Full width",
+      "ExtendDesc": "Extend app to use all available screen width"
+    },
+    "Sidebar": {
+      "UseSidebar": "Show right sidebar"
+    },
+    "ContextChildren": {
+      "ShowMode": "Show right click menu dropdowns on"
+    },
+    "MasterFlag": {
+      "Show": "Master flag"
+    },
+    "ShowFolders": {
+      "As": "Show folders as"
+    },
+    "RootDirs": {
+      "Title": "Root directories",
+      "Description": "Settings relating to your root directories",
+      "Change": "Change your root directories",
+      "Current": "Current root directories"
+    },
+    "Accounts": {
+      "Title": "Accounts"
+    },
+    "Pairing": {
+      "Title": "Pair device"
+    },
+    "Profile": {
+      "Title": "Profile"
+    },
+    "Audio": {
+      "Title": "Audio",
+      "Playback": "Playback",
+      "PlaybackDesc": "Settings related to audio playback",
+      "UseSilence": {
+        "Title": "Silence padding removal",
+        "Description": "Automatically skip silence between tracks"
+      },
+      "UseCrossfade": {
+        "Title": "Enable crossfade",
+        "Description": "Fade out the current track while fading in the next track"
+      },
+      "CrossfadeDuration": {
+        "Title": "Crossfade duration",
+        "Description": "Duration of the crossfade in seconds"
+      },
+      "StreamingQuality": {
+        "96": "96kbps",
+        "128": "128kbps",
+        "320": "320kbps",
+        "Original": "Original",
+        "640Flac": "Medium (640kbps) (FLAC)",
+        "1024Flac": "High (1024kbps) (FLAC)",
+        "Title": "Streaming quality",
+        "Description": "Choose the streaming quality of the music"
+      },
+      "LegacyStreaming": {
+        "Title": "Use legacy streaming",
+        "Description": "Enable if you experience issues with playback"
+      }
+    },
+    "General": {
+      "MainSettingsDescription": "Settings for various parts of the user interface.",
+      "FolderListMode": {
+        "Title": "Display folders in list mode"
+      },
+      "CircularArtist": {
+        "Description": "Disable the default gradient layout and use a simple circular image",
+        "Title": "Simple artist page header"
+      },
+      "Backups": {
+        "AutomaticBackups": {
+          "Description": "Automatically backup your data, every 6 hours",
+          "Title": "Automatic backups"
+        },
+        "BackupNow": {
+          "Description": "Backup directory: ~/swingmusic.backups",
+          "Title": "Backup now"
+        }
+      },
+      "Albums": {
+        "AlbumAsSingles": {
+          "Description": "Require an album to have at least two tracks",
+          "Title": "Mark albums with one track as singles"
+        },
+        "CleanTitles": {
+          "Description": "Remove bracketed text from titles and process it separately if possible",
+          "Title": "Clean album titles"
+        },
+        "MergeAlbum": {
+          "Description": "All versions of the same album will be merged into one album",
+          "Title": "Merge album versions"
+        }
+      },
+      "TrackInfoSettingsDesc": "Settings relating to track information",
+      "AlbumInfoSettingsDesc": "Settings relating to album information",
+      "ArtistSeparatorDesc": "Customize artist separators",
+      "BackupMainDesc": "Backup and restore your settings",
+      "UseNoSidebarTitle": "Use no sidebar layout",
+      "NowPlaying": {
+        "DisableNPTitle": "Hide album art from the left sidebar",
+        "OnTabTitle": {
+          "Title": "Show Now Playing track on tab title",
+          "Description": "Replace current page info with Now Playing track info"
+        },
+        "FavoriteInline": {
+          "Title": "Show inline favorite icon",
+          "Description": "Show the favorite button next to the track duration"
+        },
+        "HighlightFavorite": {
+          "Title": "Highlight favorite tracks",
+          "Description": "Always show the favorite button for favorited tracks"
+        }
+      },
+      "RootDirs": {
+        "ShowPlaylistInFolders": {
+          "Title": "Show playlists in folder view",
+          "Description": "Browse playlists and favorites in folders screen (meant for mobile app)"
+        },
+        "EnablePeriodicScans": "Enable periodic scans",
+        "UseWatchdog": "Watch root dirs for new music",
+        "PeriodicScanInterval": "Periodic scan interval (minutes)"
+      },
+      "Separators": {
+        "Title": "Enter separators separated by a comma",
+        "Description": "These will be used to separate artists and album artists"
+      },
+      "Sidebar": {
+        "Title": "Toggle right sidebar",
+        "Description": "CTRL + B"
+      },
+      "Tracks": {
+        "ProcessFeatArtists": {
+          "Title": "Featured artists",
+          "Description": "Remove featured artists from titles and merge them with other artists"
+        },
+        "RemoveProd": {
+          "Title": "Hide 'prod.'",
+          "Description": "Remove 'prod.' from track titles"
+        },
+        "HideRemaster": {
+          "Title": "Hide remaster info",
+          "Description": "Remove remaster information from track titles if possible"
+        }
+      }
+    },
+    "Plugins": {
+      "LastFM": {
+        "Authorize": {
+          "Title": "Connect your account",
+          "Description": "Allow Swing Music to access your Last.fm account"
+        },
+        "Description": "Last.fm integration",
+        "Title": "Last.fm",
+        "ApiKey": {
+          "Title": "Use custom API Key",
+          "Description": "instead of the Swing Music default to authenticate with Last.fm"
+        },
+        "ApiSecret": {
+          "Title": "Use custom API Secret",
+          "Description": "instead of the Swing Music default to sign your scrobble submission"
+        }
+      },
+      "LyricsDescription": "Finds and displays lyrics from the internet.",
+      "Lyrics": {
+        "ToggleLyrics": {
+          "Title": "Enable plugin"
+        },
+        "AutoDownload": {
+          "Title": "Auto download lyrics",
+          "Description": "Automatically download missing lyrics when you are on the lyrics page"
+        },
+        "OverrideLocal": {
+          "Title": "Override unsynced lyrics",
+          "Description": "Automatically download lyrics even if unsynced lyrics are locally available"
+        }
+      }
+    }
+  },
+  "Favorites": {
+    "Album": "Album"
+  },
+  "Mixes": {
+    "track": "track | tracks",
+    "SavedMix": "Saved Mix",
+    "SaveMix": "Save Mix",
+    "Radio": "Radio"
+  },
+  "AuthLogin": {
+    "BackToSelection": "Back to selection",
+    "Back": "Back",
+    "WelcomeBack": "Welcome back",
+    "EnterUsername": "Enter username",
+    "EnterPassword": "Enter password",
+    "ContinueAsGuest": "Or continue as guest"
+  },
+  "ConfirmModal": {
+    "Cancel": "Cancel",
+    "Delete": "Delete"
+  },
+  "CrudPage": {
+    "CollectionName": "Collection name",
+    "Description": "Description",
+    "Update": "Update",
+    "Create": "Create",
+    "DeleteDescription": "Are you sure you want to delete this collection?",
+    "DeleteButton": "Yes, Delete",
+    "DeleteNotification": "Collection deleted",
+    "CreateNotification": "New collection created",
+    "UpdateNotification": "Collection updated",
+    "DeleteTitle": "Delete",
+    "UpdateTitle": "Update",
+    "NewTitle": "New",
+    "CollectionTitle": " Collection"
+  },
+  "NewPlaylist": {
+    "PlaylistName": "Playlist name",
+    "NamePlaceholder": "Type a name...",
+    "CreateButton": "Create",
+    "Title": "New Playlist",
+    "NameNotEmpty": "Playlist name can't be empty"
+  },
+  "RootDirsPrompt": {
+    "WhereToLook": "Where do you want to look for music?",
+    "HomeDir": "Home directory",
+    "HomeDirInfo": "Scan all folders in your home directory.",
+    "SpecificDir": "Specific directories",
+    "SpecificDirInfo": "Select folders to scan for music."
+  },
+  "SetRootDirs": {
+    "NoSubFolders": "No folders here. Click the \"Add this folder\" button below to select this location.",
+    "SelectThisFolder": "Add this folder",
+    "AddAllChecked": "Add all checked"
+  },
+  "Accounts": {
+    "AllUsers": "All users",
+    "NewUser": "New user",
+    "EnableGuestAccess": "Enable guest access",
+    "EnableGuestAccessDesc": "Allow users to access the site without an account",
+    "ShowUsersOnLogin": "Show users on login",
+    "ShowUsersOnLoginDesc": "Show a list of users on your server when logging in",
+    "Admin": "Admin",
+    "AdminDesc": "Can do anything",
+    "NoSelfDelete": "Sorry! You cannot delete yourself"
+  },
+  "Pairing": {
+    "ScanQRCode": "Scan the QR code from the Swing Music app to pair with this server.",
+    "ErrorPairingCode": "Error fetching pairing code. Error code: {res}"
+  },
+  "Profile": {
+    "PasswordMismatch": "Passwords do not match",
+    "HiUser": "Hi {user}",
+    "Username": "Username",
+    "PasswordAction": "{action} password",
+    "ConfirmPassword": "Confirm password",
+    "AddUser": "Add user",
+    "SelectLanguage": "Insert the preferred language",
+    "SetLanguage": "Set language",
+    "LangNotCurrentlySupported": "Language not currently supported"
+  },
+  "UpdatePlaylist": {
+    "Name": "Playlist name",
+    "CoverAction": "Click to {action} cover image",
+    "SquareCover": "Show square cover image",
+    "ImagePosition": "Adjust image position • {pos} %"
+  },
+  "NavTitles": {
+    "ArtistTracks": "Artist Tracks",
+    "NowPlaying": "Now Playing",
+    "Settings": "Settings"
+  },
+  "ProfileDropdown": {
+    "QuickScan": "Quick scan",
+    "HiUser": "Hi {user}"
+  },
+  "SearchInput": {
+    "BackToQueue": "back to queue",
+    "GoToSearch": "go to search"
+  },
+  "UpNext": {
+    "PlayNextSong": "play next song",
+    "NextUp": "Next up"
+  },
+  "Content": {
+    "SettingsDesc": "Customize your settings and preferences"
+  },
+  "Nav": {
+    "ResetClient": "Reset client"
+  },
+  "ArtistCard": {
+    "TrackCount": "{count} Track | {count} Tracks"
+  },
+  "DropDown": {
+    "SortByUppercase": "SORT BY {title} {order}"
+  },
+  "FavoritesCard": {
+    "FavoriteTracks": "Favorite Tracks",
+    "PlaylistUpper": "PLAYLIST"
+  },
+  "MasterFlag": {
+    "MasterAudioBitrate": "Master audio bitrate - "
+  },
+  "TrackItem": {
+    "AddToFavorites": "Add to favorites",
+    "RemoveFromFavorites": "Remove from favorites",
+    "RemoveFromQueue": "Remove from queue"
+  },
+  "ChartItem": {
+    "ArtistPlays": "{count} track plays"
+  },
+  "ChartItemGroup": {
+    "FetchingData": "fetching data...",
+    "NoDataFound": "No {per} data found for this period"
+  },
+  "Charts": {
+    "ChartsTitle": "Charts",
+    "ChartsDescription": "Your top artists, albums, and tracks"
+  },
+  "Modal": {
+    "DeletePlaylist": "Are you sure you want to permanently delete this playlist?"
+  },
+  "Menus": {
+    "Album": {},
+    "Artist": {
+      "PlayNext": "Play next"
+    },
+    "Common": {
+      "AddToCollection": "Add to Collection",
+      "AddToPlaylist": "Add to Playlist",
+      "AddToQueue": "Add to queue",
+      "PlayNext": "Play next",
+      "RemoveFromCollection": "Remove item",
+      "RemoveFromPlaylist": "Remove From Playlist",
+      "RemoveFromQueue": "Remove from Queue"
+    },
+    "PlayList": {
+      "RemoveFromPlaylist": "Remove from playlist"
+    },
+    "Queue": {
+      "ArtistName": "This is {hash}",
+      "PlaylistName": "{name} 2.0",
+      "SearchName": "Search results for {query}",
+      "FavoritesName": "Favorites",
+      "ClearQueue": "Clear queue",
+      "AddQueueToPlaylist": "Add queue to playlist"
+    },
+    "Track": {
+      "GoToFolder": "Go to Folder",
+      "GoToArtist": "Go to Artist",
+      "OpenInFiles": "Open in files",
+      "GoToAlbum": "Go to Album",
+      "DeleteTrack": "Delete Track"
+    },
+    "Utils": {
+      "NewPlaylist": "New playlist",
+      "NewCollection": "New Collection",
+      "SearchOn": "Search on"
+    }
+  },
+  "UsePlayFrom": {
+    "AlbumTracksNotFound": "Album tracks not found",
+    "ArtistTracksNotFound": "Artist tracks not found",
+    "FolderTracksNotFound": "Folder tracks not found"
+  },
+  "Requests": {
+    "Album": {
+      "AlbumNotCreatedYet": "Album not created yet!"
+    },
+    "Artists": {
+      "ArtistNotFound": "Artist not found"
+    },
+    "Collections": {
+      "AddOrRemCollSuccess": "{payload} {command} to page",
+      "CollectionAlreadyPresent": "{payload} already in collection"
+    },
+    "Playlists": {
+      "CreatedSuccesfully": "Playlist created successfully!",
+      "AlreadyExists": "That playlist already exists",
+      "NotFound": "Playlist not found",
+      "TrackAlreadyPresent": "Track already exists in playlist",
+      "AddedToPlaylist": "Added to {name}",
+      "ErrUnsupportedImage": "Failed: Unsupported image",
+      "Updated": "Playlist updated!",
+      "Deleted": "Playlist deleted",
+      "TrackRemoved": "Tracks removed",
+      "TrackRemovedError": "Unable to remove tracks",
+      "BannerImageRemoved": "Banner image removed",
+      "BannerImageRemovedError": "Unable to remove banner image"
+    },
+    "RootDirs": {
+      "ErrorAdding": "Error adding root dirs",
+      "Success": "Root directories configured",
+      "ErrorRemoving": "Error removing root dirs",
+      "ScanError": "Error triggering scan",
+      "ScanStarted": "Rescan started"
+    }
+  },
+  "Stores": {
+    "Tracklist": {
+      "AddTrackToQueue": "Added {n} tracks to queue"
+    },
+    "Auth": {
+      "UserAddedSucc": "User added successfully!",
+      "GuestUserAdded": "Guest user added successfully!",
+      "ProfileUpdated": "Profile updated successfully!",
+      "UserDeleted": "{user} deleted successfully!"
+    },
+    "Player": {
+      "AutoplayBlockedError": "Tap anywhere in the page and try again (autoplay blocked)",
+      "PlayerErrorWithArg": "Player Error: {msg}",
+      "LoadErrorWithArg": "Can't load: {queue}"
+    },
+    "Queue": {
+      "AddedTrack": "Added 1 track to queue"
+    }
+  },
+  "Utils": {
+    "PlayingFrom": {
+      "SearchFrom": "Search for: \"{source}\"",
+      "FavoriteTracks": "Favorite tracks",
+      "NoSource": "👻 No source"
+    }
+  },
+  "Views": {
+    "ArtistDiscography": {
+      "NoContributions": "No contributions",
+      "NoContributionsDesc": "No {type} found for {artist}",
+      "Contributions": "Contributions",
+      "AllAlbums": "All Albums"
+    },
+    "FavCardScroller": {
+      "Title": "Favorite {item}S",
+      "Desc": "You have {nelem} favorited {type} | You have {nelem} favorited {type}s"
+    },
+    "Favorites": {
+      "Title": "Favorites",
+      "CountStats": "{tra} Tracks • {alb} Albums • {art} Artists",
+      "NoFavoritesFound": "No favorites found",
+      "Description": "You can add tracks, albums and artists to your favorites by clicking the heart icon"
+    },
+    "FavoriteTracks": {
+      "Description": "You have {n_tr} favorited track | You have {n_tr} favorited tracks",
+      "Title": "Favorite Tracks"
+    },
+    "FolderView": {
+      "FolderIsEmpty": "Folder is empty",
+      "NoResultFound": "No results found",
+      "NoIndexedTracks": "The folder you are trying to access has no indexed tracks. Please add tracks to this folder and try again",
+      "NoTracksForQuery": "No tracks or folders in this immediate directory matched the query: {query}"
+    },
+    "MixLisView": {},
+    "MixListView": {
+      "mixes": "mixes",
+      "MixesBasedOnListening": "{n} mixes • Based on artists you have been listening to",
+      "SavedMixes": "Saved mixes",
+      "OtherMixes": "Other {type} mixes"
+    },
+    "MixView": {
+      "MixNotFound": "404: Mix not found"
+    },
+    "NotFound": {
+      "Error": "404! Page Not Found!"
+    },
+    "PlaylistList": {
+      "Title": "Playlists",
+      "Description": "You have {n} playlists in your library",
+      "SearchPlaylist": "Search playlists",
+      "NoPlaylistsFound": "No playlists found",
+      "OtherPlaylists": "Other playlists",
+      "AllPlaylists": "All playlists",
+      "NoItemDescription": "You can create a playlist by right clicking on a track and selecting the \"Add to Playlist\" option"
+    },
+    "Header": {
+      "TotalAlbumAndArtists": "You have {tot} {what} in your library"
+    },
+    "AlbumViews": {
+      "MoreFrom": "More from {art}",
+      "OtherVersions": "Other versions",
+      "RelatedAlbums": "Related Albums"
+    },
+    "LyricView": {
+      "Unsynced": "unsynced",
+      "NoLyricsFound": "<div>You don't have</div><div>the lyrics for this song</div>",
+      "Searching": "Searching...",
+      "SearchOnline": "Search online"
+    },
+    "PlaylistView": {
+      "NoTracks": "No tracks in this playlist",
+      "AddMoreDesc": "Add tracks to this playlist by right clicking on a track and selecting \"add to playlist\""
+    },
+    "SearchView": {
+      "NoResults": "No {page} results",
+      "TypeToSearch": "Start typing to search for {what}",
+      "ResultsForQuery": "Results for {query} should appear here",
+      "TypeToSearchTracks": "Start typing to search for tracks"
+    },
+    "Stats": {
+      "Title": "Stats",
+      "Description": "Your listening stats for the past week"
+    }
+  },
+  "Languages": {
+    "en_US": "🇺🇸 English (United States)",
+    "ko": "Korean",
+    "it_IT": "🇮🇹 Italian (Italy)",
+    "ChooseLang": "Choose your preferred language",
+    "WarnAppReload": "(setting the language triggers an app reload)"
+  }
+}

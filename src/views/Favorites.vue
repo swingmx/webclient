@@ -1,23 +1,23 @@
 <template>
     <div class="content-page favorites-page">
         <GenericHeader>
-            <template #name>Favorites</template>
+            <template #name>{{ $t('Views.Favorites.Title') }}</template>
             <template #description
-                >{{ count.tracks }} Tracks • {{ count.albums }} Albums • {{ count.artists }} Artists</template
+                >{{ $t("Views.Favorites.CountStats", {tra: count.tracks, alb: count.albums, art: count.artists}) }}</template
             >
         </GenericHeader>
         <CardScroller
             v-if="recentFavs.length"
             class="recent-favs"
             :items="recentFavs"
-            :title="'Recent'"
+            :title="$t('Common.Recents')"
             :play-source="playSources.favorite"
         />
         <div v-if="favTracks.length" class="fav-tracks">
             <TopTracks
                 :tracks="favTracks"
                 :route="'/favorites/tracks'"
-                :title="'Tracks'"
+                :title="$t('Common.Track', 2)"
                 :play-handler="handlePlay"
                 :source="dropSources.favorite"
                 :total="count.tracks"
@@ -27,18 +27,18 @@
         <CardScroller
             v-if="favAlbums.length"
             :items="favAlbums.map(i => ({ type: 'album', item: i }))"
-            :title="'Albums'"
+            :title="$t('Common.Album', 2)"
             :route="'/favorites/albums'"
         />
 
         <CardScroller
             v-if="favArtists.length"
             :items="favArtists.map(i => ({ type: 'artist', item: i }))"
-            :title="'Artists'"
+            :title="$t('Common.Artist', 2)"
             :route="'/favorites/artists'"
         />
 
-        <NoItems :flag="noFavs" :icon="HeartSvg" :title="'No favorites found'" :description="description" />
+        <NoItems :flag="noFavs" :icon="HeartSvg" :title="$t('Views.Favorites.NoFavoritesFound')" :description="$t('Views.Favorites.Description')" />
     </div>
 </template>
 
@@ -58,8 +58,9 @@ import TopTracks from '@/components/ArtistView/TopTracks.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
 import GenericHeader from '@/components/shared/GenericHeader.vue'
 import NoItems from '@/components/shared/NoItems.vue'
+import { useI18n } from 'vue-i18n'
 
-const description = `You can add tracks, albums and artists to your favorites by clicking the heart icon`
+const { t } = useI18n()
 
 const recentFavs: Ref<RecentFavResult[]> = ref([])
 const favAlbums: Ref<Album[]> = ref([])
@@ -73,7 +74,7 @@ const count = ref({
 const noFavs = ref(false)
 
 onMounted(() => {
-    updatePageTitle('Favorites')
+    updatePageTitle(t('Views.Favorites.Title'))
     const max = maxAbumCards.value
 
     getAllFavs(6, max, max)

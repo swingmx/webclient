@@ -2,17 +2,20 @@ import { Setting } from "@/interfaces/settings";
 import { SettingType } from "../enums";
 
 import useSettings from "@/stores/settings";
+import { getT } from "@/i18n";
+
+const { t } = getT();
 
 const toggle_lyrics_plugin = <Setting>{
-  title: "Enable plugin",
+  title: t("Settings.Plugins.Lyrics.ToggleLyrics.Title"),
   type: SettingType.binary,
   state: () => useSettings().use_lyrics_plugin,
   action: () => useSettings().toggleLyricsPlugin(),
 };
 
 const auto_download_lyrics = <Setting>{
-  title: "Auto download lyrics",
-  desc: "Automatically download missing lyrics when you are on the lyrics page",
+  title: t("Settings.Plugins.Lyrics.AutoDownload.Title"),
+  desc: t("Settings.Plugins.Lyrics.AutoDownload.Description"),
   type: SettingType.binary,
   state: () => useSettings().lyrics_plugin_settings.auto_download,
   action: () => useSettings().toggleLyricsAutoDownload(),
@@ -20,8 +23,8 @@ const auto_download_lyrics = <Setting>{
 };
 
 const auto_download_on_unsynced = <Setting>{
-  title: "Overide unsynced lyrics",
-  desc: "Automatically download lyrics even if unsynced lyrics are locally available",
+  title: t("Settings.Plugins.Lyrics.OverrideLocal.Title"),
+  desc: t("Settings.Plugins.Lyrics.OverrideLocal.Description"),
   type: SettingType.binary,
   state: () => useSettings().lyrics_plugin_settings.overide_unsynced,
   action: () => useSettings().toggleLyricsOverideUnsynced(),

@@ -14,6 +14,9 @@ import { getArtistTracks } from '@/requests/artists'
 import { getFavTracks } from '@/requests/favorite'
 import { getFiles } from '@/requests/folders'
 import { getPlaylist } from '@/requests/playlists'
+import { getT } from '@/i18n'
+
+const { t } = getT()
 
 export async function utilPlayFromArtist(index: number = 0) {
     const queue = useQueue()
@@ -43,7 +46,7 @@ export async function playFromAlbumCard(albumhash: string, albumname: string) {
     const tracks = await getAlbumTracks(albumhash)
 
     if (tracks.length === 0) {
-        useToast().showNotification('Album tracks not found', NotifType.Error)
+        useToast().showNotification(t('UsePlayFrom.AlbumTracksNotFound'), NotifType.Error)
         return
     }
 
@@ -57,7 +60,7 @@ export async function playFromArtistCard(artisthash: string, artistname: string)
     const tracks = await getArtistTracks(artisthash)
 
     if (tracks.length === 0) {
-        useToast().showNotification('Artist tracks not found', NotifType.Error)
+        useToast().showNotification(t('UsePlayFrom.ArtistTracksNotFound'), NotifType.Error)
         return
     }
 
@@ -73,7 +76,7 @@ export async function playFromFolderCard(folderpath: string) {
     const tracks = data.tracks
 
     if (tracks.length === 0) {
-        useToast().showNotification('Folder tracks not found', NotifType.Error)
+        useToast().showNotification(t('UsePlayFrom.FolderTracksNotFound'), NotifType.Error)
         return
     }
 

@@ -1,6 +1,11 @@
 /**
  * Settings data strings
  */
+
+import { getT } from "@/i18n";
+
+const { t } = getT();
+
 interface S {
   title?: string;
   desc?: string;
@@ -10,46 +15,47 @@ interface S {
 }
 
 export const nowPlayingStrings = {
-  title: "Now playing",
-  desc: "Settings relating to the current song",
+  title: t('Settings.NowPlaying.Title'),
+  desc: t("Settings.NowPlaying.Description"),
   settings: {
-    album_art: "Show album art on the left sidebar",
+    album_art: t('Settings.NowPlaying.AlbumArt'),
   },
 } as S;
 
 export const appWidthStrings = {
   settings: {
-    extend: "Full width",
+    extend: t("Settings.AppWidth.Extend"),
+    extend_desc: t("Settings.AppWidth.ExtendDesc")
   },
 } as S;
 
 export const sidebarStrings = <S>{
   settings: {
-    use_sidebar: "Show right sidebar",
+    use_sidebar: t("Settings.Sidebar.UseSidebar"),
   },
 };
 
 export const contextChildrenShowModeStrings = <S>{
   settings: {
-    show_mode: "Show right click menu dropdowns on",
+    show_mode: t('Settings.ContextChildren.ShowMode'),
   },
 };
 
 export const showMasterFlag = <S>{
   settings: {
-    show_flag: "Master flag",
+    show_flag: t('Settings.MasterFlag.Show'),
   },
 };
 
 export const showFoldersAsStrings = <S>{
-  settings: { show_folders_as: "Show folders as" },
+  settings: { show_folders_as: t("Settings.ShowFolders.As")},
 };
 
 export const manageRootDirsStrings = <S>{
-  title: "Root directories",
-  desc: "Settings relating to your root directories",
+  title: t("Settings.RootDirs.Title"),
+  desc: t("Settings.RootDirs.Description"),
   settings: {
-    change: "Change your root directories",
-    list_root_dirs: "Current root directories",
+    change: t("Settings.RootDirs.Change"),
+    list_root_dirs: t("Settings.RootDirs.Current"),
   },
 };

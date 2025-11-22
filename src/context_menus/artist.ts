@@ -10,10 +10,13 @@ import { addArtistToPlaylist } from '@/requests/playlists'
 import { AddToQueueIcon, DeleteIcon, PlayNextIcon, PlusIcon } from '@/icons'
 import { Artist, Collection, Option, Playlist } from '@/interfaces'
 import { getAddToCollectionOptions, getAddToPlaylistOptions, get_find_on_social } from './utils'
+import { getT } from '@/i18n'
+
+const { t } = getT()
 
 export default async (artisthash: string, artistname: string) => {
     const play_next = <Option>{
-        label: 'Play next',
+        label: t('Menus.Common.PlayNext'),
         action: () => {
             getArtistTracks(artisthash).then(tracks => {
                 const store = useTracklist()
@@ -24,7 +27,7 @@ export default async (artisthash: string, artistname: string) => {
     }
 
     const add_to_queue = <Option>{
-        label: 'Add to queue',
+        label: t('Menus.Common.AddToQueue'),
         action: () => {
             getArtistTracks(artisthash).then(tracks => {
                 const store = useTracklist()
@@ -40,7 +43,7 @@ export default async (artisthash: string, artistname: string) => {
     }
 
     const add_to_playlist: Option = {
-        label: 'Add to Playlist',
+        label: t('Menus.Common.AddToPlaylist'),
         children: () =>
             getAddToPlaylistOptions(AddToPlaylistAction, {
                 artisthash,
@@ -61,7 +64,7 @@ export default async (artisthash: string, artistname: string) => {
     }
 
     const add_to_page: Option = {
-        label: 'Add to Collection',
+        label: t('Menus.Common.AddToCollection'),
         children: () =>
             getAddToCollectionOptions(addToCollectionAction, {
                 collection: null,
@@ -73,7 +76,7 @@ export default async (artisthash: string, artistname: string) => {
     }
 
     const remove_from_collection: Option = {
-        label: 'Remove item',
+        label: t('Menus.Common.RemoveFromCollection'),
         action: async () => {
             const success = await addOrRemoveItemFromCollection(
                 parseInt(router.currentRoute.value.params.collection as string),

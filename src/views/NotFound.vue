@@ -1,6 +1,6 @@
 <template>
   <div class="fof">
-    404! Page Not Found!
+    {{ $t('Views.NotFound.Error') }}
   </div>
 </template>
 

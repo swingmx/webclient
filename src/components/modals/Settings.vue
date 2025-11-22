@@ -19,7 +19,7 @@
                     </button>
                     {{ currentGroup?.title }}
                     <span v-if="currentGroup?.experimental" class="badge experimental circular">
-                        {{ currentGroup?.experimental ? 'experimental' : '' }}
+                        {{ currentGroup?.experimental ? $t('Settings.Experimental') : '' }}
                     </span>
                 </div>
             </div>

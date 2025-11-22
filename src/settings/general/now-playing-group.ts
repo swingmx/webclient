@@ -1,12 +1,15 @@
+import { getT } from '@/i18n'
 import { SettingType } from '../enums'
 import { Setting } from '@/interfaces/settings'
 
 import useSettingsStore from '@/stores/settings'
 
+const { t } = getT()
+
 const settings = useSettingsStore
 
 const disable_np_img: Setting = {
-    title: 'Hide album art from the left sidebar',
+    title: t("Settings.General.NowPlaying.DisableNPTitle"),
     type: SettingType.binary,
     state: () => !settings().use_np_img,
     action: () => settings().toggleUseNPImg(),
@@ -14,24 +17,24 @@ const disable_np_img: Setting = {
 }
 
 const showNowPlayingOnTabTitle: Setting = {
-    title: 'Show Now Playing track on tab title',
-    desc: 'Replace current page info with Now Playing track info',
+    title: t("Settings.General.NowPlaying.OnTabTitle.Title"),
+    desc: t("Settings.General.NowPlaying.OnTabTitle.Description"),
     type: SettingType.binary,
     state: () => settings().nowPlayingTrackOnTabTitle,
     action: () => settings().toggleNowPlayingTrackOnTabTitle(),
 }
 
 const showInlineFavIcon: Setting = {
-    title: 'Show inline favorite icon',
-    desc: 'Show the favorite button next to the track duration',
+    title: t("Settings.General.NowPlaying.FavoriteInline.Title"),
+    desc: t('Settings.General.NowPlaying.FavoriteInline.Description'),
     type: SettingType.binary,
     state: () => settings().showInlineFavIcon,
     action: () => settings().toggleShowInlineFavIcon(),
 }
 
 const highlightFavoriteTracks: Setting = {
-    title: 'Highlight favorite tracks',
-    desc: 'Always show the favorite button for favorited tracks',
+    title: t("Settings.General.NowPlaying.HighlightFavorite.Title"),
+    desc: t("Settings.General.NowPlaying.HighlightFavorite.Description"),
     type: SettingType.binary,
     state: () => settings()._highlightFavoriteTracks,
     action: () => settings().toggleHighlightFavoriteTracks(),

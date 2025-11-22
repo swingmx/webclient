@@ -2,13 +2,12 @@
     <CardGridPage :page="itemtype" :items="items" :fetch_callback="() => loadMore()">
         <template #header>
             <GenericHeader>
-                <template #name
-                    >Favorite <span style="text-transform: capitalize">{{ itemtype }}s</span></template
-                >
-                <template #description
-                    >You have {{ itemtype == 'album' ? albumCount : artistCount }} favorited
-                    {{ itemtype + (items.length == 1 ? '' : 's') }}</template
-                >
+                <template #name>
+                    {{ $t("Views.FavCardScroller.Title", {item: itemtype.toUpperCase()}) }}
+                </template>
+                <template #description>
+                    {{ $t('Views.FavCardScroller.Desc', {nelem: itemtype == 'album' ? albumCount : artistCount, type: itemtype}, items.length) }}
+                </template>
             </GenericHeader>
         </template>
     </CardGridPage>

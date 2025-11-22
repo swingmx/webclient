@@ -2,6 +2,9 @@ import { paths } from '@/config'
 import { Album, Artist, Collection, Mix, Playlist } from '@/interfaces'
 import { Notification, NotifType } from '@/stores/notification'
 import useAxios from './useAxios'
+import { getT } from '@/i18n'
+
+const { t } = getT();
 
 const { base: baseCollectionUrl } = paths.api.collections
 
@@ -107,20 +110,23 @@ export async function addOrRemoveItemFromCollection(
 
     if (status == 200) {
         new Notification(
-            `${payload.type[0].toUpperCase() + payload.type.slice(1)} ${
-                command == 'add' ? 'added' : 'removed'
-            } to page`,
+            t('Requests.Collections.AddOrRemCollSuccess', 
+                {   
+                    payload: payload.type[0].toUpperCase() + payload.type.slice(1), 
+                    command: command == 'add' ? t('Common.added') : t('Common.removed')
+                }
+            ),
             NotifType.Success
         )
         return true
     }
 
     if (status == 400) {
-        new Notification(`${payload.type[0].toUpperCase() + payload.type.slice(1)} already in collection`, NotifType.Error)
+        new Notification(t('Requests.Collections.CollectionAlreadyPresent', {payload: payload.type[0].toUpperCase() + payload.type.slice(1)}), NotifType.Error)
         return false
     }
 
-    new Notification('Failed: ' + data.error, NotifType.Error)
+    new Notification(t('Common.NotificationErrorWithArg', {error: data.error}), NotifType.Error)
     return false
 }
 

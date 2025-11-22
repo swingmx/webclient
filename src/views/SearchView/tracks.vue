@@ -1,7 +1,7 @@
 <template>
     <div class="search-tracks-view">
         <NoItems
-            :title="'No track results'"
+            :title="$t('Common.NoTrackResults')"
             :description="desc"
             :icon="SearchSvg"
             :flag="!search.tracks.value.length"
@@ -35,13 +35,16 @@ import SearchSvg from '@/assets/icons/search.svg'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 import NoItems from '@/components/shared/NoItems.vue'
 import SongItem from '@/components/shared/SongItem.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const queue = useQueue()
 const search = useSearch()
 const tracklist = useTracklist()
 
 const desc = computed(() =>
-    search.query === '' ? 'Start typing to search for tracks' : `Track results for '${search.query}' should appear here`
+    search.query === '' ? t('Views.SearchView.TypeToSearchTracks') : t('Views.SearchView.ResultsForQuery', {query: search.query})
 )
 
 interface scrollerItem {

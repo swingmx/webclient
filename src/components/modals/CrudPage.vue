@@ -1,20 +1,20 @@
 <template>
     <form action="" v-if="delete">
         <br>
-        <div>Are you sure you want to delete this collection?</div>
+        <div>{{ $t('CrudPage.DeleteDescription')}}</div>
         <br />
-        <button @click.prevent="submit" class="critical">Yes, Delete</button>
+        <button @click.prevent="submit" class="critical">{{ $t('CrudPage.DeleteButton') }}</button>
     </form>
     <form class="playlist-modal" @submit.prevent="submit" v-else>
-        <label for="name">Collection name</label>
+        <label for="name">{{ $t('CrudPage.CollectionName') }}</label>
         <br />
         <input type="search" class="rounded-sm" id="name" :value="collection?.name" />
         <br />
-        <label for="description">Description</label>
+        <label for="description">{{ $t('CrudPage.Description') }}</label>
         <br />
         <input type="search" class="rounded-sm" id="description" :value="collection?.extra.description" />
         <br /><br />
-        <button type="submit">{{ collection ? 'Update' : 'Create' }}</button>
+        <button type="submit">{{ collection ? $t('CrudPage.Update') : $t('CrudPage.Create') }}</button>
     </form>
 </template>
 
@@ -23,6 +23,9 @@ import { Collection } from '@/interfaces'
 import { createNewCollection, deleteCollection, updateCollection } from '@/requests/collections'
 import { router } from '@/router'
 import { NotifType, Notification } from '@/stores/notification'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n();
 
 const props = defineProps<{
     collection?: Collection
@@ -37,13 +40,13 @@ const emit = defineEmits<{
     (e: 'setTitle', title: string): void
 }>()
 
-emit('setTitle', (props.collection ? (props.delete ? 'Delete' : 'Update') : 'New') + ' Collection')
+emit('setTitle', (props.collection ? (props.delete ? t('CrudPage.DeleteTitle') : t('CrudPage.UpdateTitle')) : t('CrudPage.NewTitle')) + t('CrudPage.CollectionTitle'))
 
 async function submit(e: Event) {
     if (props.delete && props.collection) {
         const deleted = await deleteCollection(props.collection.id)
         if (deleted) {
-            new Notification('Collection deleted', NotifType.Success)
+            new Notification(t('CrudPage.DeleteNotification'), NotifType.Success)
             emit('hideModal')
             router.push('/')
         }
@@ -65,7 +68,7 @@ async function submit(e: Event) {
         ])
 
         if (created) {
-            new Notification('New collection created', NotifType.Success)
+            new Notification(t('CrudPage.CreateNotification'), NotifType.Success)
             emit('hideModal')
         }
     } else {
@@ -74,7 +77,7 @@ async function submit(e: Event) {
         if (updatedPage) {
             props.collection.name = updatedPage.name
             props.collection.extra.description = updatedPage.extra.description
-            new Notification('Collection updated', NotifType.Success)
+            new Notification(t('CrudPage.UpdateNotification'), NotifType.Success)
             emit('hideModal')
         }
     }

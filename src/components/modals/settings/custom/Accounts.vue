@@ -12,10 +12,10 @@
             />
         </div>
         <div class="ahead">
-            <div class="h2">All users</div>
+            <div class="h2">{{ $t('Accounts.AllUsers') }}</div>
             <button class="adduser" @click="showAddUser = true">
                 <PlusSvg />
-                New user
+                {{ $t('Accounts.NewUser') }}
             </button>
         </div>
         <TransitionGroup name="list">
@@ -83,6 +83,10 @@ import Avatar from '@/components/shared/Avatar.vue'
 import Profile from '../Profile.vue'
 import ToggleSetting from './ToggleSetting.vue'
 
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 const auth = useAuth()
 const toast = useToast()
 
@@ -97,8 +101,8 @@ const settingsMap = {
 
 const account_settings = [
     {
-        title: 'Enable guest access',
-        desc: 'Allow users to access the site without an account',
+        title: t('Accounts.EnableGuestAccess'),
+        desc: t('Accounts.EnableGuestAccessDesc'),
         type: SettingType.binary,
         value: settingsMap.enableGuest,
         action: async () => {
@@ -115,8 +119,8 @@ const account_settings = [
         },
     },
     {
-        title: 'Show users on login',
-        desc: 'Show a list of users on your server when logging in',
+        title: t('Accounts.ShowUsersOnLogin'),
+        desc: t('Accounts.ShowUsersOnLoginDesc'),
         type: SettingType.binary,
         value: settingsMap.usersOnLogin,
         action: async () => {
@@ -138,8 +142,8 @@ const account_settings = [
 
 const usettings = [
     {
-        title: 'Admin',
-        desc: 'Can do anything',
+        title: t('Accounts.Admin'),
+        desc: t('Accounts.AdminDesc'),
         value: (roles: string[]) => {
             return roles.includes('admin')
         },
@@ -169,7 +173,7 @@ const usettings = [
 
 async function deleteUser(user: User) {
     if (user.username === auth.user.username) {
-        return toast.showError('Sorry! You cannot delete yourself')
+        return toast.showError(t('Accounts.NoSelfDelete'))
     }
 
     const success = await auth.deleteUser(user.username)

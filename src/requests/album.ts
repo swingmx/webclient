@@ -2,6 +2,9 @@ import { paths } from '@/config'
 import { Album, StatItem, Track } from '@/interfaces'
 import { NotifType, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
+import { getT } from '@/i18n'
+
+const { t } = getT();
 
 const {
     album: albumUrl,
@@ -36,7 +39,7 @@ const getAlbumData = async (albumhash: string, albumlimit: number) => {
     })
 
     if (status == 204) {
-        useToast().showNotification('Album not created yet!', NotifType.Error)
+        useToast().showNotification(t('Requests.Album.AlbumNotCreatedYet'), NotifType.Error)
     }
 
     return data as AlbumData

@@ -7,21 +7,24 @@ import { Option, Playlist } from "@/interfaces";
 import { getAddToPlaylistOptions } from "./utils";
 import { addTracksToPlaylist } from "@/requests/playlists";
 import { DeleteIcon, PlaylistIcon, PlusIcon } from "@/icons";
+import { getT } from "@/i18n";
+
+const { t } = getT();
 
 function getQueueName(from: From) {
   switch (from.type) {
     case FromOptions.album:
       return from.name;
     case FromOptions.artist:
-      return `This is ${from.artisthash}`;
+      return t('Menus.Queue.ArtistName', {hash: from.artisthash});
     case FromOptions.folder:
       return from.name;
     case FromOptions.playlist:
-      return `${from.name} 2.0`;
+      return t('Menus.Queue.PlaylistName', {name: from.name});
     case FromOptions.search:
-      return `Search results for ${from.query}`;
+      return t('Menus.Queue.SearchName', {query: from.query});
     case FromOptions.favorite:
-      return `Favorites`;
+      return t('Menus.Queue.FavoritesName');
     default:
       return "";
   }
@@ -31,7 +34,7 @@ export default async () => {
   const store = useTracklist();
 
   const clearQueue: Option = {
-    label: "Clear queue",
+    label: t('Menus.Queue.ClearQueue'),
     action: () => {
       useQueue().clearQueue();
     },
@@ -44,7 +47,7 @@ export default async () => {
   };
 
   const addToPlaylist: Option = {
-    label: "Add queue to playlist",
+    label: t('Menus.Queue.AddQueueToPlaylist'),
     children: () => getAddToPlaylistOptions(AddToPlaylistAction, {
       trackhash: store.tracklist.map((t) => t.trackhash).join(","),
       playlist_name: getQueueName(store.from),

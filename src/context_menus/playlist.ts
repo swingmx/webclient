@@ -1,8 +1,11 @@
+import { getT } from "@/i18n";
 import { Option } from "../interfaces";
+
+const { t } = getT();
 
 export default async () => {
   const deletePlaylist: Option = {
-    label: "Delete playlist",
+    label: t('Menus.PlayList.RemoveFromPlaylist'),
     critical: true,
     action: () => {
       console.log("delete playlist");
@@ -10,14 +13,14 @@ export default async () => {
   };
 
   const playNext: Option = {
-    label: "Play next",
+    label: t('Menus.Common.PlayNext'),
     action: () => {
       console.log("play next");
     },
   };
 
   const addToQueue: Option = {
-    label: "Add to queue",
+    label: t('Menus.Common.AddToQueue'),
     action: () => {
       console.log("add to queue");
     },

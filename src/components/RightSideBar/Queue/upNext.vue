@@ -1,13 +1,13 @@
 <template>
   <div class="bottom-left">
-    <div class="upNext rounded-sm border" title="play next song">
+    <div class="upNext rounded-sm border" title="{{ $t('UpNext.PlayNextSong') }}">
       <img
         :src="paths.images.thumb.small + queue.next?.image"
         class="rounded-sm"
       />
       <div class="text">
         <div class="title"><b>Stiff necked fools</b></div>
-        <div class="from">Next up</div>
+        <div class="from">{{ $t('UpNext.NextUp') }}</div>
       </div>
     </div>
   </div>
@@ -18,6 +18,7 @@ import { paths } from "@/config";
 import useQueueStore from "@/stores/queue";
 
 import { ref } from "vue";
+
 
 const context_on = ref(false);
 const queue = useQueueStore();

@@ -7,7 +7,7 @@
                 @click.prevent="handleOpener"
                 :title="
                     reverse !== 'hide'
-                        ? `sort by: ${current.title} ${reverse ? 'Descending' : 'Ascending'}`.toUpperCase()
+                        ? $t('DropDown.SortByUppercase', {title: current.title.toUpperCase(), order: reverse ? $t('Common.Descending').toUpperCase() : $t('Common.Ascending').toUpperCase()})
                         : undefined
                 "
             >

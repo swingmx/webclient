@@ -2,12 +2,13 @@
     <div class="folder-view v-scroll-page" style="height: 100%" :class="{ isSmall, isMedium, is_alt_layout }">
         <NoItems
             :flag="folder.tracks.length === 0 && folder.dirs.length === 0"
-            :title="folder.query === '' ? 'Folder is empty' : 'No results found'"
+            :title="folder.query === '' ? 
+                $t('Views.FolderView.FolderIsEmpty') : 
+                $t('Views.FolderView.NoResultFound')"
             :description="
                 folder.query === ''
-                    ? 'The folder you are trying to access has no indexed tracks. Please add tracks to this folder and try again'
-                    : `
-      No tracks or folders in this immediate directory matched the query: '${folder.query}'`
+                    ? $t('Views.FolderView.NoIndexedTracks')
+                    : $t('Views.FolderView.NoTracksForQuery', {query: folder.query})
             "
             :icon="FolderSvg"
         />
@@ -64,7 +65,9 @@ import SongItem from '@/components/shared/SongItem.vue'
 import { xl } from '@/composables/useBreakpoints'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 import { getFiles } from '@/requests/folders'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const queue = useQueue()
 const folder = useFolder()
 const settings = useSettings()
@@ -157,7 +160,7 @@ onBeforeRouteLeave(() => {
 })
 
 onMounted(() => {
-    updatePageTitle('Folders')
+    updatePageTitle(t('Common.Folders'))
 })
 </script>
 

@@ -3,18 +3,18 @@
         <template #header>
             <GenericHeader>
                 <template #name>
-                    <span class="headtext">{{ $route.params.type }}</span> mixes
+                    <span class="headtext">{{ $route.params.type }} </span> {{ $t('Views.MixListView.mixes') }}
                 </template>
                 <template #description>
-                    {{ items.length + savedItems.length }} mixes • Based on artists you have been listening to
+                    {{ $t('Views.MixListView.MixesBasedOnListening', {n: items.length + savedItems.length}) }}
                 </template>
 
                 <template #after v-if="savedItems.length">
-                    <h2>Saved mixes</h2>
+                    <h2>{{ $t('Views.MixListView.SavedMixes') }}</h2>
                     <div v-for="item in savedItemComponents" :key="item.id">
                         <component :is="item.component" :type="item.props.type" :items="item.props.items" />
                     </div>
-                    <h2 class="othertitle" v-if="items.length">Other {{ $route.params.type }} mixes</h2>
+                    <h2 class="othertitle" v-if="items.length">{{ $t('Views.MixListView.OtherMixes', {type: $route.params.type}) }}</h2>
                 </template>
             </GenericHeader>
         </template>

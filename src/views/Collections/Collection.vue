@@ -11,7 +11,7 @@
                     <span @click="updatePage"> {{ collection.collection?.extra.description }} </span>
                 </template>
                 <template #right>
-                    <button @click="deletePage"><DeleteSvg height="1.2rem" width="1.2rem" /> Delete</button>
+                    <button @click="deletePage"><DeleteSvg height="1.2rem" width="1.2rem" /> {{ $t('Common.Delete') }}</button>
                 </template>
             </GenericHeader>
         </template>

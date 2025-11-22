@@ -12,7 +12,7 @@
             </div>
         </div>
         <div v-if="!items.length" class="option-list-item" style="opacity: 0.5">
-            Root directories not configured. Use the "Configure" button above to configure
+            {{ $t('Settings.List.RootNotConfigured') }}
         </div>
     </div>
 </template>

@@ -9,8 +9,7 @@
     </div>
     <div class="set-root-dirs-browser">
       <h4 v-if="no_more_dirs">
-        <span class="folder_icon">📂</span> No folders here. Click the "Add this folder" button below to select this
-        location.
+        <span class="folder_icon">📂</span> {{ $t('SetRootDirs.NoSubFolders') }}
       </h4>
       <div class="scrollable">
         <div class="content">
@@ -25,8 +24,8 @@
         </div>
       </div>
       <div class="buttons">
-        <button class="btn-active select-here" @click="selectHere">Add this folder</button>
-        <button class="btn-active finish" @click="submitFolders">Add all checked ({{ getNewDirs().length }})</button>
+        <button class="btn-active select-here" @click="selectHere"> {{ $t('SetRootDirs.SelectThisFolder') }} </button>
+        <button class="btn-active finish" @click="submitFolders"> {{ $t('SetRootDirs.AddAllChecked') }} ({{ getNewDirs().length }})</button>
       </div>
     </div>
   </div>

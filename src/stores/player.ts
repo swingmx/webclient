@@ -13,6 +13,9 @@ import useTracker from './tracker'
 import { getBaseUrl, paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
+import { getT } from '@/i18n'
+
+const { t } = getT();
 
 class AudioSource {
     private sources: HTMLAudioElement[] = []
@@ -233,16 +236,16 @@ export const usePlayer = defineStore('player', () => {
             if (e.name === 'NotAllowedError') {
                 queue.playPause()
                 return toast.showNotification(
-                    'Tap anywhere in the page and try again (autoplay blocked)',
+                    t('Stores.Player.AutoplayBlockedError'),
                     NotifType.Error
                 )
             }
 
-            return toast.showNotification('Player Error: ' + e.message, NotifType.Error)
+            return toast.showNotification(t("Stores.Player.PlayerErrorWithArg", {msg: e.message}), NotifType.Error)
         }
 
         queue.playNext() // skip unplayable track
-        toast.showNotification("Can't load: " + queue.currenttrack.title, NotifType.Error)
+        toast.showNotification(t("Stores.Player.LoadErrorWithArg", {queue: queue.currenttrack.title}), NotifType.Error)
     }
 
     const runActionsOnPlay = () => {

@@ -9,7 +9,7 @@
                         albumhash: queue.currenttrack?.albumhash || ' ',
                     },
                 }"
-                title="Go to Album"
+                :title="$t('NowPlaying.GoToAlbum')"
                 class="np-image"
             >
                 <img v-motion-fade class="rounded" :src="paths.images.thumb.large + queue.currenttrack?.image" />
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <h3 class="nowplaying_title" v-if="queue.next">Up Next</h3>
+        <h3 class="nowplaying_title" v-if="queue.next">{{ $t('NowPlaying.UpNext') }}</h3>
         <SongItem
             v-if="queue.next"
             :track="queue.next"
@@ -34,7 +34,7 @@
             :source="dropSources.folder"
             @play-this="queue.playNext"
         />
-        <h3 class="nowplaying_title">Queue</h3>
+        <h3 class="nowplaying_title">{{ $t('NowPlaying.Queue') }}</h3>
     </div>
 </template>
 

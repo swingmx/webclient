@@ -5,9 +5,9 @@
         <div class="noitems rounded-sm" v-if="items.length === 0">
             <div v-if="loading" class="loading">
                 <div class="spinner"></div>
-                <span>fetching data...</span>
+                <span>{{ $t('ChartItemGroup.FetchingData')}}</span>
             </div>
-            <div v-if="!loading && loaded">No {{ settings.statsgroup.slice(0, -1) }} data found for this period</div>
+            <div v-if="!loading && loaded">{{ $t('ChartItemGroup.NoDataFound', {per: settings.statsgroup.slice(0, -1)}) }}</div>
         </div>
         <ChartItem
             v-for="(item, index) in items"

@@ -1,14 +1,17 @@
 <template>
   <div style="height: 1px">
-    <button v-if="show_text" @click="fetch_callback">Load More</button>
+    <button v-if="show_text" @click="fetch_callback">{{ $t('ArtistView.LoadMore') }}</button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { nextTick, onMounted } from "vue";
 import { onBeforeRouteUpdate } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 import { updateCardWidth } from "@/stores/content-width";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   show_text?: boolean;

@@ -25,7 +25,7 @@
         </DynamicScroller>
     </div>
     <div v-if="!loading && !mix.title" class="content-page">
-        <h1>404: Mix not found</h1>
+        <h1>{{ $t('Views.MixView.MixNotFound') }}</h1>
     </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
     <NoItems
-        :title="`No ${page} results`"
+        :title="$t('Views.SearchView.NoResults', {page: page})"
         :description="desc"
         :icon="SearchSvg"
         :flag="!items.length"
@@ -35,6 +35,9 @@ import SearchSvg from '@/assets/icons/search.svg'
 import NoItems from '@/components/shared/NoItems.vue'
 import CardRow from '@/components/shared/CardRow.vue'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
     page?: 'album' | 'artist' | 'mix'
@@ -46,10 +49,23 @@ const props = defineProps<{
 
 const search = useSearchStore()
 
+function resolvePage(what: string | undefined): string {
+    switch (what){
+        case 'album':
+            return t('Common.album', 2);
+        case 'artist':
+            return t('Common.artist', 2);
+        case 'mix':
+            return t('Common.mix', 2);
+        default:
+            return "";
+    }
+}
+
 const desc = computed(() =>
     search.query === ''
-        ? `Start typing to search for ${props.page}s`
-        : `Results for '${search.query}' should appear here`
+        ? t('Views.SearchView.TypeToSearch', {what: resolvePage(props.page)})
+        : t('Views.SearchView.ResultsForQuery', {query: search.query})
 )
 
 const scrollerItems = computed(() => {

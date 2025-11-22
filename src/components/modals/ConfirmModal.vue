@@ -2,13 +2,14 @@
     <div class="confirm-modal">
         <div class="t-center" style="padding: 0 4rem">{{ text }}</div>
         <div class="buttons">
-            <button class="cancel" @click="cancelAction">Cancel</button>
-            <button class="confirm" @click="confirmAction">Delete</button>
+            <button class="cancel" @click="cancelAction">{{ $t('ConfirmModal.Cancel') }}</button>
+            <button class="confirm" @click="confirmAction">{{ $t('ConfirmModal.Delete') }}</button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+
 defineProps<{
     text: string
     confirmAction: () => void

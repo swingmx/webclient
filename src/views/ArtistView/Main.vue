@@ -42,6 +42,9 @@ import Header from '@/components/ArtistView/Header.vue'
 import TopTracks from '@/components/ArtistView/TopTracks.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
 import Stats from '@/components/Stats/Stats.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const route = useRoute()
 
@@ -92,6 +95,21 @@ enum AlbumType {
     COMPILATIONS = 'Compilations',
 }
 
+function resolveTitleFromEnum(type: AlbumType): string {
+    switch (type) {
+        case AlbumType.ALBUMS:
+            return t('Common.Album', 2);
+        case AlbumType.APPEARANCES:
+            return t('Common.Appearances');
+        case AlbumType.COMPILATIONS:
+            return t('Common.Compilations', 2);
+        case AlbumType.SINGLES:
+            return t('Common.Singles');
+        default:
+            return '';
+    }
+}
+
 function createAbumComponent(title: AlbumType, albums: Album[], show_date = true) {
     let albumType = null
 
@@ -116,7 +134,7 @@ function createAbumComponent(title: AlbumType, albums: Album[], show_date = true
         id: title,
         component: CardScroller,
         props: {
-            title,
+            title: resolveTitleFromEnum(title),
             items: albums.map(album => ({
                 type: 'album',
                 item: album,
@@ -137,7 +155,7 @@ function getTopTracksComponent(): ScrollerItem {
         component: TopTracks,
         props: {
             tracks: store.tracks,
-            title: 'Tracks',
+            title: t('Common.Track', 2),
             route: `/artists/${store.info.artisthash}/tracks?artist=${store.info.name}`,
             playHandler: handlePlay,
             source: dropSources.artist,
@@ -209,7 +227,7 @@ const scrollerItems = computed(() => {
                     type: 'artist',
                     item: artist,
                 })),
-                title: 'Similar Artists',
+                title: t('Common.SimilarArtists'),
             },
         }
         components.push(SimilarArtistsComponent)

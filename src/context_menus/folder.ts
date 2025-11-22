@@ -8,12 +8,15 @@ import useTracklist from "@/stores/queue/tracklist";
 
 import { addFolderToPlaylist } from "@/requests/playlists";
 import { getAddToPlaylistOptions } from "./utils";
+import { getT } from "@/i18n";
+
+const { t } = getT();
 
 export default async (path: string) => {
   const modal = useModal();
 
   const play_next = <Option>{
-    label: "Play next",
+    label: t('Menus.Common.PlayNext'),
     action: () => {
       getTracksInPath(path).then((tracks) => {
         const store = useTracklist();
@@ -24,7 +27,7 @@ export default async (path: string) => {
   };
 
   const add_to_queue = <Option>{
-    label: "Add to Queue",
+    label: t('Menus.Common.AddToQueue'),
     action: () => {
       getTracksInPath(path).then((tracks) => {
         const store = useTracklist();
@@ -40,7 +43,7 @@ export default async (path: string) => {
   };
 
   const add_to_playlist = <Option>{
-    label: "Add to Playlist",
+    label: t('Menus.Common.AddToPlaylist'),
     children: () =>
       getAddToPlaylistOptions(AddToPlaylistAction, {
         path,

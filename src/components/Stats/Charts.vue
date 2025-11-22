@@ -1,8 +1,8 @@
 <template>
     <div class="stats-charts">
         <GenericHeader>
-            <template #name>Charts</template>
-            <template #description>Your top artists, albums, and tracks</template>
+            <template #name>{{ $t('Charts.ChartsTitle') }}</template>
+            <template #description>{{ $t('Charts.ChartsDescription') }}</template>
         </GenericHeader>
         <br>
         <div class="chartitemgroupsgrid">

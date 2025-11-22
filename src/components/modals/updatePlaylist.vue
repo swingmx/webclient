@@ -6,7 +6,7 @@
         autocomplete="off"
         @submit.prevent="update_playlist"
     >
-        <label for="name">Playlist name</label>
+        <label for="name">{{ $t('UpdatePlaylist.Name') }}</label>
         <input
             id="modal-playlist-name-input"
             v-model="pname"
@@ -17,7 +17,7 @@
             @keypress.enter.prevent="update_playlist"
         />
 
-        <label for="image">Image</label>
+        <label for="image">{{ $t('Common.Image') }}</label>
         <input
             id="update-pl-image-upload"
             ref="dropZoneRef"
@@ -30,7 +30,7 @@
         <div id="upload" class="boxed rounded-sm">
             <div class="clickable" tabindex="0" @click="selectFiles" @keydown.space.enter.stop="selectFiles">
                 <ImageIcon />
-                Click to {{ playlist.has_image ? 'update' : 'upload' }} cover image
+                {{ $t('UpdatePlaylist.CoverAction', {action: playlist.has_image ? $t('Common.update') : $t('Common.upload')}) }}
             </div>
             <div
                 id="update-pl-img-preview"
@@ -45,13 +45,13 @@
                 </div>
             </div>
         </div>
-        <label v-if="playlist.has_image && !playlist.settings.square_img">Settings</label>
+        <label v-if="playlist.has_image && !playlist.settings.square_img">{{ $t('Common.Settings') }}</label>
         <div v-if="image || playlist.has_image" class="banner-settings rounded-sm">
-            <div>Show square cover image</div>
+            <div>{{ $t('UpdatePlaylist.SquareCover') }}</div>
             <Switch :state="playlist.settings.square_img || false" @click="pStore.toggleSquareImage" />
         </div>
         <div v-if="playlist.has_image && !playlist.settings.square_img" class="boxed banner-position-adjust rounded-sm">
-            <div class="t-center">Adjust image position • {{ pStore.info.settings.banner_pos }}%</div>
+            <div class="t-center">{{ $t('UpdatePlaylist.ImagePosition', {pos: pStore.info.settings.banner_pos }) }}</div>
             <div class="buttons">
                 <button @click.stop.prevent="pStore.minusBannerPos">
                     <ExpandSvg />
@@ -63,7 +63,7 @@
         </div>
 
         <button type="submit">
-            {{ clicked ? 'Saving' : 'Update' }}
+            {{ clicked ? $t('Common.Saving') : $t('Common.Update') }}
         </button>
     </form>
 </template>

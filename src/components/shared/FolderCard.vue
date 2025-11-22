@@ -26,7 +26,7 @@
       {{ name(folder.path) }}
     </div>
     <div class="rtcount">
-      <b>{{ folder.count }} Track{{ folder.count == 1 ? "" : "s" }}</b>
+      <b>{{ $t('Common.TrackCount', {count: folder.count}, folder.count) }}</b>
     </div>
   </RouterLink>
 </template>

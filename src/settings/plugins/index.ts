@@ -7,22 +7,25 @@ import LastfmSvg from '@/assets/icons/lastfm.svg?raw'
 
 import { loggedInUserIsAdmin } from '../utils'
 import lastfm from './lastfm'
+import { getT } from '@/i18n'
+
+const { t } = getT()
 
 export default <SettingCategory>{
-    title: 'Plugins',
+    title: t("Common.Plugins"),
     show_if: loggedInUserIsAdmin,
     groups: [
         {
-            title: 'Lyrics',
+            title: t("Common.Lyrics"),
             icon: LyricsSvg,
-            desc: 'Finds and displays lyrics from the internet.',
+            desc: t("Settings.Plugins.LyricsDescription"),
             settings: lyrics,
             experimental: true,
         },
         {
-            title: 'Last.fm',
+            title: t("Settings.Plugins.LastFM.Title"),
             icon: LastfmSvg,
-            desc: 'Last.fm integration',
+            desc: t("Settings.Plugins.LastFM.Description"),
             settings: lastfm,
         },
     ],

@@ -35,6 +35,10 @@ import DropDown from '@/components/shared/DropDown.vue'
 import useFolder from '@/stores/pages/folder'
 import { computed } from 'vue'
 
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n();
+
 const router = useRouter()
 const folder = useFolder()
 
@@ -48,19 +52,19 @@ interface SortItem {
 }
 
 const items: SortItem[] = [
-    { key: 'default', title: 'Default' },
-    { key: 'title', title: 'Title' },
-    { key: 'album', title: 'Album' },
-    // { key: 'albumartists', title: 'Album Artist' },
-    { key: 'artists', title: 'Artist' },
-    // { key: 'bitrate', title: 'Bitrate' },
-    { key: 'date', title: 'Release Date' },
-    // { key: 'disc', title: 'Disc' },
-    // { key: 'duration', title: 'Duration' },
-    { key: 'last_mod', title: 'Date Added' },
-    { key: 'lastplayed', title: 'Last Played' },
-    { key: 'playcount', title: 'Play Count' },
-    { key: 'playduration', title: 'Play Duration' },
+    { key: 'default', title: t('Common.Default') },
+    { key: 'title', title: t('Common.Title') },
+    { key: 'album', title: t('Common.Album') },
+    // { key: 'albumartists', title: t('Common.AlbumArtist')},
+    { key: 'artists', title: t('Common.Artist') },
+    // { key: 'bitrate', title: t('Common.Bitrate') },
+    { key: 'date', title: t('Common.ReleaseDate') },
+    // { key: 'disc', title: t('Common.Disc') },
+    // { key: 'duration', title: t('Common.Duration') },
+    { key: 'last_mod', title: t('Common.DateAdded') },
+    { key: 'lastplayed', title: t('Common.LastPlayed') },
+    { key: 'playcount', title: t('Common.PlayCount') },
+    { key: 'playduration', title: t('Common.PlayDuration') },
 ]
 
 const handleSortKeySet = (item: SortItem) => {

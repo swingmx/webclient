@@ -11,6 +11,9 @@ import usePlaylistStore from '@/stores/pages/playlist'
 import useQueueStore from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
 import { getAddToPlaylistOptions, get_find_on_social } from './utils'
+import { getT } from '@/i18n'
+
+const { t } = getT();
 
 /**
  * Returns a list of context menu items for a track.
@@ -60,7 +63,7 @@ export default async (track: Track): Promise<Option[]> => {
     }
 
     const add_to_playlist: Option = {
-        label: 'Add to Playlist',
+        label: t('Menus.Common.AddToPlaylist'),
         children: () =>
             getAddToPlaylistOptions(AddToPlaylistAction, {
                 trackhash: track.trackhash,
@@ -70,7 +73,7 @@ export default async (track: Track): Promise<Option[]> => {
     }
 
     const add_to_q: Option = {
-        label: 'Add to Queue',
+        label: t('Menus.Common.AddToQueue'),
         action: () => {
             useTracklist().addTrack(track)
         },
@@ -78,7 +81,7 @@ export default async (track: Track): Promise<Option[]> => {
     }
 
     const play_next: Option = {
-        label: 'Play next',
+        label: t('Menus.Common.PlayNext'),
         action: () => {
             useQueueStore().playTrackNext(track)
         },
@@ -86,7 +89,7 @@ export default async (track: Track): Promise<Option[]> => {
     }
 
     const go_to_folder: Option = {
-        label: 'Go to Folder',
+        label: t('Menus.Track.GoToFolder'),
         action: () => {
             Router.push({
                 name: Routes.folder,
@@ -97,7 +100,7 @@ export default async (track: Track): Promise<Option[]> => {
     }
 
     const go_to_artist: Option = {
-        label: `Go to Artist`,
+        label: t('Menus.Track.GoToArtist'),
         icon: ArtistIcon,
         action: () => {
             track_artists.length == 1
@@ -114,7 +117,7 @@ export default async (track: Track): Promise<Option[]> => {
     }
 
     const open_in_explorer: Option = {
-        label: 'Open in files',
+        label: t('Menus.Track.OpenInFiles'),
         action: () => {
             openInFiles(track.filepath || track.folder || '')
         },
@@ -122,7 +125,7 @@ export default async (track: Track): Promise<Option[]> => {
     }
 
     const go_to_album: Option = {
-        label: 'Go to Album',
+        label: t('Menus.Track.GoToAlbum'),
         action: () => {
             Router.push({
                 name: Routes.album,
@@ -133,7 +136,7 @@ export default async (track: Track): Promise<Option[]> => {
     }
 
     // const del_track: Option = {
-    //   label: "Delete Track",
+    //   label: t('Menus.Track.DeleteTrack'),
     //   action: () => console.log("Delete Track"),
     //   icon: DeleteIcon,
     //   critical: true,
@@ -141,7 +144,7 @@ export default async (track: Track): Promise<Option[]> => {
 
     const getRemoveFromPlaylistOption = () =>
         <Option>{
-            label: 'Remove From Playlist',
+            label: t('Menus.Common.RemoveFromPlaylist'),
             action: () => {
                 removeTracks(parseInt(route.params.pid as string), [
                     { trackhash: track.trackhash, index: track.index },
@@ -173,7 +176,7 @@ export default async (track: Track): Promise<Option[]> => {
 
     if (route.name === Routes.nowPlaying) {
         options.splice(0, 0, <Option>{
-            label: 'Remove from Queue',
+            label: t('Menus.Common.RemoveFromQueue'),
             action: () => {
                 useTracklist().removeByIndex(track.index)
             },

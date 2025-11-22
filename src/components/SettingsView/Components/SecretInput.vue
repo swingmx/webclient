@@ -8,7 +8,7 @@
             </button>
         </div>
         <div class="right">
-            <button>Save</button>
+            <button>{{ $t('Settings.Save') }}</button>
         </div>
     </form>
 </template>

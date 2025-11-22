@@ -1,7 +1,7 @@
 <template>
   <div v-if="isSmall" class="playlists-nav">
     <div class="buttons">
-      <button @click="showNewPlaylistModal()"><PlusSvg /> New Playlist</button>
+      <button @click="showNewPlaylistModal()"><PlusSvg /> {{ $t('NewPlaylist.Title') }}</button>
     </div>
   </div>
 </template>
@@ -11,6 +11,7 @@ import PlusSvg from "@/assets/icons/plus.svg";
 import { isSmall } from "@/stores/content-width";
 
 import useModalStore from "@/stores/modal";
+
 const { showNewPlaylistModal } = useModalStore();
 </script>
 

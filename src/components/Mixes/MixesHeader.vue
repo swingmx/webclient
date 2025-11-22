@@ -8,11 +8,11 @@
                 {{ mix.description }}
             </div>
             <div class="bunchofstuff">
-                {{ mix.trackcount }} track{{ mix.trackcount === 1 ? '' : 's' }} ▸ {{ mix.duration }}
+                {{ mix.trackcount }} {{ $t('Mixes.track', mix.trackcount) }} ▸ {{ mix.duration }}
             </div>
             <div class="buttons">
                 <PlayBtnRect :source="playSources.mix" :bg_color="'#fff'" @click.prevent="$emit('playThis')" />
-                <button class="savebtn" :title="mix.saved ? 'Saved Mix' : 'Save Mix'" @click="saveMix">
+                <button class="savebtn" :title="mix.saved ? $t('Mixes.SavedMix') : $t('Mixes.SaveMix')" @click="saveMix">
                     <SaveFilledSvg v-if="mix.saved" />
                     <SaveSvg v-else />
                 </button>

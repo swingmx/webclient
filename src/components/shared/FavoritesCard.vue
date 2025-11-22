@@ -21,12 +21,12 @@
         </div>
         <div class="info">
             <div class="rhelp playlist">
-                <span class="help">PLAYLIST</span>
+                <span class="help">{{ $t('FavoritesCard.PlaylistUpper') }}</span>
                 <span class="time">{{ item.time }}</span>
             </div>
-            <div class="title">Favorite Tracks</div>
+            <div class="title">{{ $t('FavoritesCard.FavoriteTracks') }}</div>
             <div class="fcount">
-                <b>{{ item.count + ` Track${item.count == 1 ? '' : 's'}` }}</b>
+                <b>{{ $t('Common.TrackCount', {count: item.count}, item.count) }}</b>
             </div>
         </div>
     </RouterLink>

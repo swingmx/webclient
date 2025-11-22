@@ -5,8 +5,8 @@
     @click="!plugin.error ? plugin.searchLyrics() : null"
   >
     <span v-if="plugin.error">{{ plugin.error }}</span>
-    <span v-else-if="plugin.loading"> Searching... </span>
-    <span v-else>Search online</span>
+    <span v-else-if="plugin.loading"> {{ $t('Views.LyricView.Searching') }}</span>
+    <span v-else>{{ $t('Views.LyricView.SearchOnline') }}</span>
     <span v-if="plugin.loading" class="spinner"></span>
   </button>
 </template>

@@ -9,7 +9,7 @@
       <PlayBtnRect :source="playSources.playlist" :bg_color="btn_color" />
     </div>
     <div class="duration">
-      {{ playlist.info.count.toLocaleString() + ` ${playlist.info.count == 1 ? "Track" : "Tracks"}` }}
+      {{ playlist.info.count.toLocaleString() + $t('Common.Track', playlist.info.count) }}
       •
       {{ formatSeconds(playlist.info.duration, true) }}
     </div>
@@ -20,7 +20,7 @@
         <br />
       </span>
     </div>
-    <div class="type">Playlist</div>
+    <div class="type">{{ $t('Common.Playlist') }}</div>
   </div>
 </template>
 <script setup lang="ts">

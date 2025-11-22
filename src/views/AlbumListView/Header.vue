@@ -1,14 +1,16 @@
 <template>
   <div class="albumlistviewhead">
     <GenericHeader>
-      <template #name>{{
-        (is_albumlist ? "Album" : "Artist") + (is_not_one ? "s" : "")
+      <template #name>{{ $t('Common.Album', props.total)
       }}</template>
       <template #description>
-        You have {{ total.toLocaleString() }}
-        {{ (is_albumlist ? "album" : "artist") + (is_not_one ? "s" : "") }} in
-        your library</template
-      >
+        {{ $t('Views.Header.TotalAlbumAndArtists',
+          {
+            tot: total.toLocaleString(), 
+            what: is_albumlist ? $t('Common.Album', props.total) : $t('Common.Artist', props.total)
+          })
+        }}
+        </template>
     </GenericHeader>
   </div>
 </template>
@@ -26,5 +28,4 @@ const props = defineProps<{
 const route = useRoute();
 
 const is_albumlist = computed(() => route.name == Routes.AlbumList);
-const is_not_one = computed(() => props.total !== 1);
 </script>

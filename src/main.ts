@@ -21,14 +21,17 @@ import vTooltip from "./directives/vTooltip";
 import "./assets/scss/index.scss";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 
-const app = createApp(App);
+import i18n from "./i18n";
+
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
+const app = createApp(App);
 
 app.use(pinia);
 app.use(router);
 app.use(autoAnimatePlugin);
-app.use(VWave);
+app.use(VWave, {});
+app.use(i18n);
 app.use(MotionPlugin);
 
 app.directive("tooltip", vTooltip);

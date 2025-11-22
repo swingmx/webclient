@@ -14,7 +14,7 @@
         <div id="ginner" ref="inputRef" tabindex="0">
             <button
                 v-auto-animate
-                :title="tabs.current === tabs.tabs.search ? 'back to queue' : 'go to search'"
+                :title="tabs.current === tabs.tabs.search ? $t('SearchInput.BackToQueue') : $t('SearchInput.GoToSearch')"
                 :class="{ no_bg: on_nav }"
                 @click.prevent="handleButton"
             >
@@ -24,7 +24,7 @@
             <input
                 id="globalsearch"
                 v-model.trim="search.query"
-                placeholder="Start typing to search"
+                :placeholder="$t('Search.SearchPlaceholder')"
                 type="search"
                 autocomplete="off"
                 spellcheck="false"

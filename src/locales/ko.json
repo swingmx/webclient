@@ -1,0 +1,143 @@
+{
+  "Common": {},
+  "AlbumView": {
+    "AlbumBy": "",
+    "TrackCount": "트랙",
+    "GenreBanner": {
+      "GenreExists": "장르",
+      "GenreDoesNotExist": "장르 없음"
+    }
+  },
+  "ArtistView": {
+    "Title": "아티스트",
+    "NoTracks": "트랙 없음",
+    "RepeatOptions": {
+      "All": "전체 반복",
+      "One": "한 곡 반복",
+      "None": "반복 안 함"
+    }
+  },
+  "BottomBar": {
+    "GoToNowPlaying": "현재 재생으로 이동",
+    "PlaceholderTitle": "반가워요",
+    "PlaceholderArtist": "Swing Music에 오신 것을 환영합니다"
+  },
+  "Bubbles": {
+    "DropHere": "여기에 트랙을 내려놓으세요"
+  },
+  "CardList": {
+    "SortBy": "정렬 기준",
+    "SortByOptions": {
+      "TrackCount": "트랙 수",
+      "Duration": "재생 시간",
+      "CreatedDate": "추가된 날짜",
+      "LastPlayed": "마지막 재생",
+      "PlayCount": "재생 수",
+      "PlayDuration": "재생 시간",
+      "Title": "제목",
+      "AlbumArtists": "아티스트",
+      "Date": "발매 연도",
+      "Name": "이름",
+      "NoOfAlbums": "앨범 수"
+    }
+  },
+  "FolderView": {
+    "FileCount": "파일"
+  },
+  "HomeView": {
+    "Title": "홈",
+    "Greetings": {
+      "midnight": "저녁형 인간이시군요",
+      "dawn": "아침형 인간이시군요",
+      "morning": "{name}님, 좋은 아침이에요",
+      "afternoon": "{name}님, 좋은 오후에요",
+      "evening": "{name}님, 좋은 저녁이에요"
+    },
+    "Browse": {
+      "Title": "라이브러리 탐색",
+      "BrowseList": {
+        "Folders": "폴더",
+        "Albums": "앨범",
+        "Artists": "아티스트",
+        "Playlists": "재생 목록",
+        "Favorites": "즐겨찾기",
+        "FavTracks": "즐겨찾는 트랙",
+        "FavArtists": "즐겨찾는 아티스트",
+        "FavAlbums": "즐겨찾는 앨범",
+        "Stats": "통계"
+      }
+    }
+  },
+  "LeftSidebar": {
+    "NavItems": {
+      "Folder": "폴더",
+      "Favorites": "즐겨찾기",
+      "Playlists": "재생 목록",
+      "Home": "홈",
+      "Search": "검색",
+      "Settings": "설정"
+    }
+  },
+  "NowPlaying": {
+    "GoToAlbum": "앨범으로 이동",
+    "UpNext": "다음 곡",
+    "Queue": "대기열",
+    "GoToPlaySource": "재생 소스로 이동"
+  },
+  "PlaylistsList": {},
+  "PlaylistView": {
+    "LastUpdated": "{date}에 마지막으로 업데이트됨",
+    "Edit": "편집",
+    "AllTracks": "모든 트랙"
+  },
+  "RightSidebar": {
+    "SimilarTracks": "유사한 트랙",
+    "Shuffle": "셔플",
+    "NowPlaying": "현재 재생",
+    "NoQueueTitle": "대기열에 곡이 없습니다",
+    "NoQueueDescription": "곡 재생을 시작하면 여기에 나타납니다."
+  },
+  "Search": {
+    "NoResultsTitle": "결과 없음",
+    "NoTracksTitle": "트랙 없음",
+    "NoResultsDescription": "검색 결과를 찾을 수 없습니다.",
+    "TopResult": "최고 결과",
+    "BackToQueue": "대기열로 돌아가기",
+    "GoToSearch": "검색으로 이동",
+    "SearchPlaceholder": "검색어를 입력하세요"
+  },
+  "Settings": {
+    "Save": "저장",
+    "Cancel": "취소",
+    "Backup": {
+      "Title": "백업",
+      "RestoreBackup": "백업 복원",
+      "BackupCount": "백업 디렉토리에 {count} 개의 백업이 있습니다.",
+      "PlaylistCount": "{count} 개의 재생 목록",
+      "ScrobbleCount": "{count} 개의 스크로블",
+      "FavoriteCount": "{count} 개의 즐겨찾기",
+      "CollectionCount": "{count} 개의 컬렉션",
+      "RestoreButton": "복원",
+      "RestoreAllButton": "모두 복원"
+    },
+    "List": {
+      "RootNotConfigured": "루트 디렉토리가 구성되지 않았습니다. 위의 \"구성\" 버튼을 사용하여 구성하세요."
+    },
+    "NumberInput": {
+      "InvalidNumber": "유효하지 않은 숫자",
+      "Updated": "업데이트됨",
+      "UpdateFailed": "업데이트 실패"
+    },
+    "About": {
+      "Developer": "Swing Music은 GitHub의 {link}가 사랑을 담아 제작했습니다. 이 소프트웨어가 마음에 드신다면, GitHub에서 Star를 남겨 주세요. 저도 개발하는 것을 즐기는 만큼 여러분도 즐겨주시면 좋겠어요. 😁🤗",
+      "LinksTitle": "링크",
+      "LinksDocs": "문서",
+      "LinksGitHub": "GitHub에서 Star 남기기",
+      "LinksIssue": "문제 보고",
+      "LinksContribute": "기여하기",
+      "GetInTouchTitle": "연락하기",
+      "GetInTouchDescription": "제 작업이 마음에 드시고 인사하고 싶으시다면, 연락을 기다리겠습니다.",
+      "SendEmail": "이메일 보내기"
+    }
+  }
+}

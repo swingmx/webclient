@@ -8,7 +8,7 @@
                 :class="{ activetab: tab === currentTab }"
                 @click="$emit('switchTab', tab)"
             >
-                {{ tab }}
+                {{ resolveButtonTabName(tab) }}
             </button>
         </div>
 
@@ -19,6 +19,25 @@
 </template>
 
 <script setup lang="ts">
+
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
+function resolveButtonTabName(id: string): string {
+    switch (id){
+        case 'top':
+            return t('Search.top');
+        case 'tracks':
+            return t('Common.Track', 2);
+        case 'albums':
+            return t('Common.Album', 2);
+        case 'artists':
+            return t('Common.Artist', 2);
+        default:
+            return id;
+    }
+}
 defineProps<{
     tabs: string[]
     currentTab: string

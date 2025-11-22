@@ -3,6 +3,9 @@ import { Artist, Playlist, Track } from '@/interfaces'
 import { NotifType, Notification, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
 import useFolder from '@/stores/pages/folder'
+import { getT } from '@/i18n'
+
+const { t } = getT();
 
 const { new: newPlaylistUrl, base: basePlaylistUrl, artists: playlistArtistsUrl } = paths.api.playlist
 
@@ -19,14 +22,14 @@ export async function createNewPlaylist(playlist_name: string) {
     })
 
     if (status == 201) {
-        new Notification('Playlist created successfullly!', NotifType.Success)
+        new Notification(t('Requests.Playlists.CreatedSuccesfully'), NotifType.Success)
         return data.playlist as Playlist
     }
 
-    let message = 'Something went wrong'
+    let message = t('Common.NotificationError')
 
     if (status == 409) {
-        message = 'That playlist already exists'
+        message = t('Requests.Playlists.AlreadyExists')
     }
 
     new Notification(message, NotifType.Error)
@@ -67,7 +70,7 @@ export async function getPlaylist(pid: number | string, no_tracks = false, start
     })
 
     if (status == 404) {
-        new Notification('Playlist not found', NotifType.Error)
+        new Notification(t('Requests.Playlists.NotFound'), NotifType.Error)
     }
 
     if (data) {
@@ -87,11 +90,11 @@ export async function addItemToPlaylist(playlist: Playlist, props: {}) {
     })
 
     if (status == 409) {
-        new Notification('Track already exists in playlist', NotifType.Error)
+        new Notification(t('Requests.Playlists.TrackAlreadyPresent'), NotifType.Error)
         return false
     }
 
-    new Notification('Added to ' + playlist.name)
+    new Notification(t('Requests.Playlists.AddedToPlaylist', {name: playlist.name}))
     return true
 }
 
@@ -139,16 +142,16 @@ export async function saveItemAsPlaylist(itemtype: string, props: {}) {
     const store = useToast()
 
     if (status === 201) {
-        store.showNotification('Playlist created successfully!', NotifType.Success)
+        store.showNotification(t('Requests.Playlists.CreatedSuccesfully'), NotifType.Success)
         return data.playlist as Playlist
     }
 
     if (status === 409) {
-        store.showNotification('Playlist already exists!', NotifType.Error)
+        store.showNotification(t('Requests.Playlists.AlreadyExists'), NotifType.Error)
         return false
     }
 
-    store.showNotification('Something went wrong!', NotifType.Error)
+    store.showNotification(t('Common.NotificationError'), NotifType.Error)
     return false
 }
 
@@ -200,13 +203,13 @@ export async function updatePlaylist(pid: number, playlist: FormData, pStore: an
     })
 
     if (status == 400) {
-        new Notification('Failed: Unsupported image', NotifType.Error)
+        new Notification(t('Requests.Playlists.ErrUnsupportedImage'), NotifType.Error)
         return
     }
 
     if (data) {
         pStore.updatePInfo(data.data)
-        new Notification('Playlist updated!')
+        new Notification(t('Requests.Playlists.Updated'))
     }
 }
 
@@ -224,7 +227,7 @@ export async function getPlaylistArtists(pid: number): Promise<Artist[]> {
     })
 
     if (error) {
-        new Notification('Something funny happened!', NotifType.Error)
+        new Notification(t('Common.NotificationFunnyError'), NotifType.Error)
     }
 
     if (data) {
@@ -241,7 +244,7 @@ export async function deletePlaylist(pid: number) {
     })
 
     if (status == 200) {
-        new Notification('Playlist deleted', NotifType.Success)
+        new Notification(t('Requests.Playlists.Deleted'), NotifType.Success)
     }
 }
 
@@ -254,11 +257,11 @@ export async function removeTracks(pid: number, tracks: { trackhash: string; ind
     })
 
     if (status === 200) {
-        new Notification('Tracks removed')
+        new Notification(t('Requests.Playlists.TrackRemoved'))
         return
     }
 
-    new Notification('Unable to remove tracks', NotifType.Error)
+    new Notification(t('Requests.Playlists.TrackRemovedError'), NotifType.Error)
 }
 
 export async function removeBannerImage(playlistid: number) {
@@ -268,11 +271,11 @@ export async function removeBannerImage(playlistid: number) {
     })
 
     if (status === 200) {
-        new Notification('Banner image removed')
+        new Notification(t('Requests.Playlists.BannerImageRemoved'))
         return data.playlist as Playlist
     }
 
-    new Notification('Unable to remove banner image', NotifType.Error)
+    new Notification(t('Requests.Playlists.BannerImageRemovedError'), NotifType.Error)
 }
 
 export async function pinUnpinPlaylist(pid: number) {

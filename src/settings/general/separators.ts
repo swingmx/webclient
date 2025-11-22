@@ -3,10 +3,13 @@ import { SettingType } from '../enums'
 
 import useSettingsStore from '@/stores/settings'
 import { updateConfig } from '@/requests/settings'
+import { getT } from '@/i18n'
+
+const { t } = getT()
 
 export default <Setting>{
-    title: 'Enter separators separated by a comma',
-    desc: `These will be used to separate artists and album artists`,
+    title: t("Settings.General.Separators.Title"),
+    desc: t("Settings.General.Separators.Description"),
     state: () => {
         const store = useSettingsStore()
 

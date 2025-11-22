@@ -16,7 +16,7 @@
       <ArtistName :artists="queue.currenttrack.artists" :albumartists="queue.currenttrack.albumartists" />
     </div>
     <div class="right">
-      <div v-if="lyrics.lyrics.length && !lyrics.synced" class="lyricstype">unsynced</div>
+      <div v-if="lyrics.lyrics.length && !lyrics.synced" class="lyricstype">{{ $t('Views.LyricView.Unsynced') }}</div>
     </div>
   </div>
 </template>

@@ -37,8 +37,7 @@
         {{ lyrics.copyright }}
       </div>
       <div v-if="!lyrics.lyrics || lyrics.lyrics.length == 0" class="nolyrics">
-        <div>You don't have</div>
-        <div>the lyrics for this song</div>
+        {{ $t('Views.LyricView.NoLyricsFound') }}
         <PluginFind v-if="settings.use_lyrics_plugin" />
       </div>
     </div>

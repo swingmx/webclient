@@ -4,11 +4,11 @@
         <div class="index">{{ index }}</div>
         <img :src="getItemImage(item)" class="chartimage" :class="name" />
         <div class="iteminfo">
-            <div class="title" :title="item.name" v-if="isArtist">
-                {{ item.name }} <MasterFlag v-if="item.trend?.is_new" :text="item.trend?.is_new ? 'New' : ''" :bitrate="1900"/>
+            <div class="title" :title="$t(mapToText(item.name))" v-if="isArtist">
+                {{ $t(mapToText(item.name)) }} <MasterFlag v-if="item.trend?.is_new" :text="item.trend?.is_new ? $t('Common.New') : ''" :bitrate="1900"/>
             </div>
             <div class="title" :title="item.title" v-if="isAlbumOrTrack">
-                {{ item.title }} <MasterFlag v-if="item.trend?.is_new" :text="item.trend?.is_new ? 'New' : ''" :bitrate="1900"/>
+                {{ item.title }} <MasterFlag v-if="item.trend?.is_new" :text="item.trend?.is_new ? $t('Common.New') : ''" :bitrate="1900"/>
             </div>
             <div class="artist" v-if="isAlbumOrTrack">
                 <ArtistName
@@ -17,7 +17,7 @@
                 />
             </div>
             <div class="artist" v-if="isArtist">
-                {{ item.extra['playcount'] }} track plays
+                {{ $t('ChartItem.ArtistPlays', { count: item.extra['playcount'] }) }}
             </div>
         </div>
         <div class="helptext">
@@ -47,6 +47,19 @@ const props = defineProps<{
 
 const isArtist = computed(() => props.name === 'artist')
 const isAlbumOrTrack = computed(() => props.name === 'album' || props.name === 'track')
+
+function mapToText(item: ChartItem): string {
+    switch (props.name) {
+        case 'artist':
+            return 'Common.Artist';
+        case 'album':
+            return 'Common.Album';
+        case 'track':
+            return 'Common.Track';
+        default:
+            return 'Common.Unknown';
+    }
+}
 
 function getItemImage(item: ChartItem) {
     switch (props.name) {

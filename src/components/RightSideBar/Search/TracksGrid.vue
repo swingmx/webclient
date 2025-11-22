@@ -1,7 +1,7 @@
 <template>
   <div id="tracks-results">
     <div v-if="!search.tracks.value.length" class="t-center">
-      <h5>No tracks</h5>
+      <h5>{{ $t('Search.NoTracksTitle') }}</h5>
     </div>
 
     <RecycleScroller

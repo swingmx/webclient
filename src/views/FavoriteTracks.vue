@@ -1,16 +1,16 @@
 <template>
     <GenericTrackPagination
         :tracks="tracks"
-        :desc="`You have ${trackCount} favorited track${trackCount == 1 ? '' : 's'}`"
+        :desc="$t('Views.FavoriteTracks.Description', {n_tr: trackCount}, trackCount)"
         :noitemsicon="HeartSvg"
         :more-items-loader="loadMore"
         @playThis="handlePlay"
     >
         <template #header>
             <GenericHeader>
-                <template #name>Favorite Tracks</template>
+                <template #name>{{ $t('Views.FavoriteTracks.Title') }}</template>
                 <template #description
-                    >You have {{ trackCount }} favorited track{{ trackCount == 1 ? '' : 's' }}</template
+                    >{{ $t('Views.FavoriteTracks.Description', {n_tr: trackCount}, trackCount) }}</template
                 >
             </GenericHeader>
         </template>

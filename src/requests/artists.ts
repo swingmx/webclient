@@ -2,6 +2,9 @@ import { paths } from '@/config'
 import { Album, Artist, Genre, StatItem, Track } from '@/interfaces'
 import { NotifType, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
+import { getT } from '@/i18n'
+
+const { t } = getT();
 
 export const getArtistData = async (hash: string, limit: number = 15, albumlimit: number = 7) => {
     interface ArtistData {
@@ -23,7 +26,7 @@ export const getArtistData = async (hash: string, limit: number = 15, albumlimit
     })
 
     if (status == 404) {
-        useToast().showNotification('Artist not found', NotifType.Error)
+        useToast().showNotification(t('Requests.Artists.ArtistNotFound'), NotifType.Error)
     }
 
     if (error) {

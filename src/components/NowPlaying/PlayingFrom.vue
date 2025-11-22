@@ -1,6 +1,6 @@
 <template>
     <div class="now-playing-top">
-        <router-link class="now-playling-from-link" :to="(data.location as RouteLocationRaw)" title="Go to Play Source">
+        <router-link class="now-playling-from-link" :to="(data.location as RouteLocationRaw)" :title="$t('NowPlaying.GoToPlaySource')">
             <div class="from">
                 <img
                     v-if="

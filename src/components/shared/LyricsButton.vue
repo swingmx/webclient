@@ -1,11 +1,11 @@
 <template>
   <button
-    title="Lyrics"
+    :title="$t('Common.Lyrics')"
     class="lyrics"
     :class="{ showStatus: lyrics.exists }"
     @click="handleClick"
   >
-    <LyricsSvg /> {{ showText ? "Lyrics" : "" }}
+    <LyricsSvg /> {{ showText ? $t('Common.Lyrics') : "" }}
   </button>
 </template>
 

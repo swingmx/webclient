@@ -45,6 +45,9 @@ import SongItem from '@/components/shared/SongItem.vue'
 import AfterHeader from '@/components/PlaylistView/AfterHeader.vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const queue = useQueue()
 const tracklist = useTracklist()
@@ -65,8 +68,8 @@ const getNoItemsComponent = () =>
         props: {
             icon: playlistSvg,
             flag: playlist.tracks.length === 0,
-            title: 'No tracks in this playlist',
-            description: 'Add tracks to this playlist by right clicking on a track and selecting "add to playlist"',
+            title: t('Views.PlaylistView.NoTracks'),
+            description: t('Views.PlaylistView.AddMoreDesc'),
         },
     }
 

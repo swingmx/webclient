@@ -8,6 +8,10 @@ import useSettings from '@/stores/settings'
 
 import { FromOptions } from '@/enums'
 import { fromAlbum, fromArtist, fromFav, fromFolder, fromMix, fromPlaylist, fromSearch, Track } from '@/interfaces'
+import track from '@/context_menus/track'
+import { getT } from '@/i18n'
+
+const { t } = getT();
 
 export type From = fromFolder | fromAlbum | fromPlaylist | fromSearch | fromArtist | fromFav | fromMix
 
@@ -121,7 +125,7 @@ export default defineStore('tracklist', {
             this.insertAt(tracks, this.tracklist.length)
 
             const Toast = useToast()
-            Toast.showNotification(`Added ${tracks.length} tracks to queue`, NotifType.Success)
+            Toast.showNotification(t("Stores.Tracklist.AddTrackToQueue", {n: tracks.length}), NotifType.Success)
         },
         insertAt(tracks: Track[], index: number) {
             this.tracklist.splice(index, 0, ...tracks)
@@ -181,7 +185,7 @@ export default defineStore('tracklist', {
             this.tracklist.splice(currentindex + 1, 0, ...tracks)
 
             const Toast = useToast()
-            Toast.showNotification(`Added ${tracks.length} tracks to queue`, NotifType.Success)
+            Toast.showNotification(t("Stores.Tracklist.AddTrackToQueue", {n: tracks.length}), NotifType.Success)
         },
     },
     getters: {

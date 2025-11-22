@@ -9,7 +9,7 @@
                 :class="g === name ? 'active' : ''"
                 @click="$emit('changeGroup', g)"
             >
-                {{ g }}
+                {{ mapToText(g) }}
             </div>
         </div>
         <div class="period">
@@ -20,13 +20,18 @@
                 :class="p === period ? 'active' : ''"
                 @click="$emit('changePeriod', p)"
             >
-                {{ p }}
+                {{ mapToText(p) }}
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps<{
     name: string
     period: string
@@ -39,6 +44,25 @@ defineEmits<{
 
 const groups = ['artists', 'albums', 'tracks']
 const periods = ['week', 'month', 'year', 'alltime']
+
+function mapToText(name: string){
+    switch (name){
+        case 'artists':
+            return t('Common.Artist', 2).toLowerCase();
+        case 'albums':
+            return t('Common.Album', 2).toLowerCase();
+        case 'tracks':
+            return t('Common.Track', 2).toLowerCase();
+        case 'week':
+            return t('Common.Periods.Week', 1).toLowerCase();
+        case 'month':
+            return t('Common.Periods.Month', 1).toLowerCase();
+        case 'year':
+            return t('Common.Periods.Year', 1).toLowerCase();
+        case 'alltime':
+            return t('Common.Periods.AllTime').toLowerCase();
+    }
+}
 </script>
 
 <style lang="scss">

@@ -9,7 +9,7 @@
           </b></span
         >
       </div>
-      <button>Save</button>
+      <button>{{ $t('Settings.Save') }}</button>
     </form>
   </div>
 </template>

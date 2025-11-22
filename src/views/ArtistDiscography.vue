@@ -45,10 +45,10 @@
     </div>
     <NoItems
       v-else
-      :title="'No contributions'"
+      :title="$t('Views.ArtistDiscography.NoContributions')"
       :flag="!artist.toShow.length"
       :icon="AlbumSvg"
-      :description="`No ${getTypeName($route.params.type)} found for ${route.query.artist}`"
+      :description="$t('Views.ArtistDiscography.NoContributionsDesc', {type: getTypeName($route.params.type), artist: route.query.artist})"
     />
   </div>
 </template>
@@ -67,23 +67,25 @@ import AlbumCard from "@/components/shared/AlbumCard.vue";
 import GenericHeader from "@/components/shared/GenericHeader.vue";
 import GenericTabs from "@/components/shared/GenericTabs.vue";
 import NoItems from "@/components/shared/NoItems.vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const route = useRoute();
 const artist = useArtistDiscography();
 
 function getTypeString(type: string) {
-  if (type === "all") return "Contributions";
+  if (type === "all") return t('Views.ArtistDiscography.Contributions');
   return getTypeName(type);
 }
 
 function getTypeName(type: string | string[]) {
   // @ts-ignore
-  if (type == "all") return "All Albums";
+  if (type == "all") return t('Views.ArtistDiscography.AllAlbums');
   return type;
 }
 
 onMounted(() => {
-  updatePageTitle("Discography" + (route.params.artist || ""));
+  updatePageTitle(t("Common.Discography", {artist: route.params.artist || ""}));
   artist.fetchAlbums(route.params.hash as string);
 });
 

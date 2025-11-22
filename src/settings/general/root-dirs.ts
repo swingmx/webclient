@@ -5,6 +5,9 @@ import { manageRootDirsStrings as data } from '../strings'
 
 import useModalStore from '@/stores/modal'
 import settings from '@/stores/settings'
+import { getT } from '@/i18n'
+
+const { t } = getT()
 
 const text = data.settings
 
@@ -12,7 +15,7 @@ const change_root_dirs: Setting = {
     title: text.change,
     type: SettingType.button,
     state: null,
-    button_text: () => `\xa0 \xa0 ${settings().root_dirs.length ? 'Modify' : 'Configure'} \xa0 \xa0`,
+    button_text: () => `\xa0 \xa0 ${settings().root_dirs.length ? t("Common.Modify") : t("Common.Configure")} \xa0 \xa0`,
     action: () => useModalStore().showRootDirsPromptModal(),
 }
 
@@ -33,22 +36,22 @@ const list_root_dirs: Setting = {
 }
 
 const show_playlists_in_folders: Setting = {
-    title: 'Show playlists in folder view',
-    desc: 'Browse playlists and favorites in folders screen (meant for mobile app)',
+    title: t("Settings.General.RootDirs.ShowPlaylistInFolders.Title"),
+    desc: t("Settings.General.RootDirs.ShowPlaylistInFolders.Description"),
     type: SettingType.binary,
     state: () => settings().show_playlists_in_folders,
     action: () => settings().toggleShowPlaylistsInFolders(),
 }
 
 // const enable_scans: Setting = {
-//   title: "Enable periodic scans",
+//   title: t("Settings.General.RootDirs.EnablePeriodicScans"),
 //   type: SettingType.binary,
 //   state: () => useSettingsStore().enablePeriodicScans,
 //   action: () => useSettingsStore().togglePeriodicScans(),
 // };
 
 // const useWatchdog: Setting = {
-//   title: "Watch root dirs for new music",
+//   title: t("Settings.General.RootDirs.UseWatchdog"),
 //   experimental: true,
 //   type: SettingType.binary,
 //   state: () => useSettingsStore().enableWatchDog,
@@ -56,7 +59,7 @@ const show_playlists_in_folders: Setting = {
 // };
 
 // const periodicScanInterval: Setting = {
-//   title: "Periodic scan interval (minutes)",
+//   title: t("Settings.General.RootDirs.PeriodicScanInterval"),
 //   type: SettingType.free_number_input,
 //   state: () => useSettingsStore().periodicInterval,
 //   action: (newValue: number) => useSettingsStore().updatePeriodicInterval(newValue),
