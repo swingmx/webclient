@@ -1,5 +1,6 @@
 <template>
-  <QueueActions />
+  <!-- <QueueActions /> -->
+   <PlayingFrom />
   <div
     class="queue-virtual-scroller"
     @mouseover="mouseover = true"
@@ -43,6 +44,7 @@ import NoItems from "../shared/NoItems.vue";
 import QueueActions from "./Queue/QueueActions.vue";
 import TrackItem from "@/components/shared/TrackItem.vue";
 import QueueSvg from "@/assets/icons/queue.svg";
+import PlayingFrom from "../NowPlaying/PlayingFrom.vue";
 
 const itemHeight = 64;
 const queue = useQStore();

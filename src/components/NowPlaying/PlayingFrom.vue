@@ -9,7 +9,7 @@
                         tracklist.from.type === FromOptions.mix
                     "
                     :src="data.image"
-                    :class="`${tracklist.from.type === FromOptions.artist ? 'circular' : 'rounded-sm'}`"
+                    :class="`${tracklist.from.type === FromOptions.artist ? 'circular' : 'rounded-xsm'}`"
                 />
                 <div v-else class="from-icon border rounded-sm">
                     <component :is="data.icon"></component>
@@ -39,7 +39,6 @@ import MoreSvg from '@/assets/icons/more.svg'
 import { showQueueContextMenu } from '@/helpers/contextMenuHandler'
 
 const tracklist = useTracklist()
-
 const context_showing = ref(false)
 
 const data = computed(() => {
@@ -59,13 +58,15 @@ function showContextMenu(e: MouseEvent) {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin: 0 2rem 0 $small;
 
     .options {
-        transform: rotate(90deg);
+        width: 2rem;
+        height: 2.5rem;
+        padding: 0;
 
         svg {
-            transform: scale(1.25);
+            transform: rotate(90deg) scale(1.25);
         }
     }
 }
@@ -80,7 +81,7 @@ function showContextMenu(e: MouseEvent) {
     align-items: center;
 
     img {
-        width: 2.5rem;
+        width: 3rem;
         aspect-ratio: 1;
         object-fit: cover;
     }

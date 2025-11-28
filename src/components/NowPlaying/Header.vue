@@ -1,7 +1,7 @@
 <template>
     <div class="now-playing-header">
         <div class="centered">
-            <PlayingFrom />
+            <!-- <PlayingFrom /> -->
             <RouterLink
                 :to="{
                     name: Routes.album,
@@ -26,7 +26,8 @@
                 </div>
             </div>
         </div>
-        <h3 class="nowplaying_title" v-if="queue.next">Up Next</h3>
+        <!-- <TrackContext /> -->
+        <!-- <h3 v-if="queue.next" class="nowplaying_title">Up Next</h3>
         <SongItem
             v-if="queue.next"
             :track="queue.next"
@@ -34,7 +35,7 @@
             :source="dropSources.folder"
             @play-this="queue.playNext"
         />
-        <h3 class="nowplaying_title">Queue</h3>
+        <h3 class="nowplaying_title">Queue</h3> -->
     </div>
 </template>
 
@@ -52,6 +53,7 @@ import Buttons from '../BottomBar/Right.vue'
 import SongItem from '../shared/SongItem.vue'
 import NowPlayingInfo from './NowPlayingInfo.vue'
 import PlayingFrom from './PlayingFrom.vue'
+import TrackContext from './TrackContext.vue'
 
 const queue = useQueueStore()
 
@@ -74,6 +76,9 @@ function handleFav() {
 .now-playing-header {
     padding-bottom: $smaller;
     position: relative;
+
+    display: grid;
+    place-items: center;
 
     .nowplaying_title {
         padding-left: 1rem;
@@ -149,8 +154,9 @@ function handleFav() {
 
     .centered {
         margin: 0 auto;
-        width: 26rem;
-        max-width: 100%;
+        width: 100%;
+        max-width: 32rem;
+        // border: solid 1px;
     }
 
     .np-image {
@@ -160,8 +166,7 @@ function handleFav() {
         img {
             width: 100%;
             height: 100%;
-            max-width: 30rem;
-            // aspect-ratio: 1;
+            aspect-ratio: 1;
             object-fit: cover;
         }
     }

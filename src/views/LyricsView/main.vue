@@ -68,7 +68,7 @@ const onScroll = (e: Event) => {
 };
 
 const bgColor = computed(() => {
-  return getShift(colors.theme2, [-20, -20]);
+  return getShift(colors.darkVibrant, [-20, -20]);
 });
 
 function fetchLyrics() {

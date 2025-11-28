@@ -14,7 +14,7 @@
     @contextmenu.prevent="showMenu"
   >
     <div class="album-art">
-      <img :src="paths.images.thumb.small + track.image" class="rounded-sm" />
+      <img :src="paths.images.thumb.small + track.image" />
       <div v-if="isCurrent" class="now-playing-track-indicator image" :class="{ last_played: !isCurrentPlaying }"></div>
     </div>
     <div class="tags">
@@ -107,7 +107,7 @@ onBeforeUnmount(() => {
 
 <style lang="scss">
 .track-item.currentInQueue {
-  background-color: $gray4;
+  background-color: $gray3;
 }
 
 .contexton {
@@ -119,8 +119,9 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-columns: min-content 1fr max-content;
   align-items: center;
-  padding: $small 1rem;
+  padding: $small;
   transition: background-color 0.2s ease-out;
+  border-radius: 8px;
 
   .tags {
     .title {
@@ -174,8 +175,6 @@ onBeforeUnmount(() => {
     .remove-track {
       transform: translateY(0) rotate(45deg);
     }
-
-    background-color: $gray5;
   }
 
   hr {
@@ -190,6 +189,11 @@ onBeforeUnmount(() => {
 
     margin-right: $medium;
     position: relative;
+
+
+    img {
+      border-radius: 4px;
+    }
 
     .now-playing-track-indicator {
       position: absolute;

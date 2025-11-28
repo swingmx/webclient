@@ -25,7 +25,7 @@
         <div
             class="track-info"
             :style="{
-                color: getShift(colors.theme1, [0, -170]),
+                color: getShift(colors.lightVibrant, [0, -170]),
             }"
         >
             <div v-tooltip class="title">

@@ -1,275 +1,279 @@
-input[type="search"]::-webkit-search-cancel-button {
-  display: none;
+input[type='search']::-webkit-search-cancel-button {
+    display: none;
 }
 
 // TEXT
 .t-center {
-  text-align: center;
+    text-align: center;
 }
 
 .ellip {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-all;
-  width: fit-content;
-  max-width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    width: fit-content;
+    max-width: 100%;
 }
 
 .ellip2 {
-  word-wrap: anywhere;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    word-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .heading {
-  font-size: 1.5rem;
-  font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
 a {
-  text-decoration: none;
-  color: #fff;
+    text-decoration: none;
+    color: #fff;
 }
 
 .image {
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  transition: transform 0.3s ease-in-out;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition: transform 0.3s ease-in-out;
 }
 
 // BORDERS
 .rounded {
-  border-radius: 1rem;
+    border-radius: 1rem;
 }
 
 .rounded-sm {
-  border-radius: $small;
+    border-radius: $small;
+}
+
+.rounded-xsm {
+    border-radius: 4px;
 }
 
 .rounded-md {
-  border-radius: $medium;
+    border-radius: $medium;
 }
 
 .rounded-lg {
-  border-radius: 1.25rem;
+    border-radius: 1.25rem;
 }
 
 .circular {
-  border-radius: 10rem;
+    border-radius: 10rem;
 }
 
 .bg-primary {
-  background-color: $gray4;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.425);
+    background-color: $gray4;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.425);
 }
 
 // BUTTONS
 button {
-  font-family: "SF Compact Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 0.9rem !important;
-  font-weight: 500;
-  line-height: 1.2;
-  color: inherit;
-  border-radius: $small;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2rem;
-  transition: background-color 0.2s ease-out, color 0.2s ease-out, border 0.2s ease-out;
-  padding: $small 1rem;
+    font-family: 'SF Compact Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-size: 0.9rem !important;
+    font-weight: 500;
+    line-height: 1.2;
+    color: inherit;
+    border-radius: $small;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2rem;
+    transition: background-color 0.2s ease-out, color 0.2s ease-out, border 0.2s ease-out;
+    padding: $small 1rem;
 
-  background-color: $gray4;
-  cursor: pointer;
+    background-color: $gray4;
+    cursor: pointer;
 
-  svg {
-    transition: all 0.2s;
-  }
-
-  &:active {
     svg {
-      transform: scale(0.75);
+        transition: all 0.2s;
     }
-  }
 
-  &:focus {
-    outline: none;
-  }
+    &:active {
+        svg {
+            transform: scale(0.75);
+        }
+    }
 
-  &:hover {
-    background-color: $darkestblue;
-  }
+    &:focus {
+        outline: none;
+    }
+
+    &:hover {
+        background-color: $darkestblue;
+    }
 }
 
 .btn-active {
-  background-color: $darkestblue;
+    background-color: $darkestblue;
 }
 
 .btn-disabled {
-  pointer-events: none;
-  opacity: 0.5;
+    pointer-events: none;
+    opacity: 0.5;
 }
 
 .btn-more {
-  width: 2.5rem;
+    width: 2.5rem;
 }
 
 // POSITION
 
 .abs {
-  position: absolute;
+    position: absolute;
 }
 
 // OTHERS
 .grid {
-  display: grid;
+    display: grid;
 }
 
 .flex {
-  display: flex;
+    display: flex;
 }
 
 .separator {
-  border-top: 1px $separator solid;
-  color: transparent;
-  margin: $small 0 $small 0;
-  opacity: 0.5;
+    border-top: 1px $separator solid;
+    color: transparent;
+    margin: $small 0 $small 0;
+    opacity: 0.5;
 }
 
 .no-border {
-  border: none;
+    border: none;
 }
 
 .no-scroll {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 .no-select {
-  user-select: none;
+    user-select: none;
 }
 
 .load_disabled {
-  pointer-events: all;
-  background: $gray5 !important;
-  border-color: $gray5 !important;
-  opacity: 1;
+    pointer-events: all;
+    background: $gray5 !important;
+    border-color: $gray5 !important;
+    opacity: 1;
 }
 
 #drag-img {
-  width: max-content;
-  max-width: 15rem;
-  background-color: $darkblue;
-  padding: $smaller $small;
-  border-radius: $smaller;
-  opacity: 1;
-  position: absolute;
-  left: -20rem;
+    width: max-content;
+    max-width: 15rem;
+    background-color: $darkblue;
+    padding: $smaller $small;
+    border-radius: $smaller;
+    opacity: 1;
+    position: absolute;
+    left: -20rem;
 }
 
 .spinner {
-  border: solid 3px rgb(221, 217, 217);
-  border-top: solid 3px transparent;
-  border-left: solid 3px transparent;
-  border-radius: 50%;
-  width: 1.25rem;
-  height: 1.25rem;
-  animation: spin 0.45s linear infinite;
+    border: solid 3px rgb(221, 217, 217);
+    border-top: solid 3px transparent;
+    border-left: solid 3px transparent;
+    border-radius: 50%;
+    width: 1.25rem;
+    height: 1.25rem;
+    animation: spin 0.45s linear infinite;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .card-list-scroll-x {
-  overflow: hidden;
+    overflow: hidden;
 
-  h3 {
-    display: grid;
-    grid-template-columns: 1fr max-content;
-    align-items: baseline;
-    padding: 0 $medium;
-    margin-bottom: $medium;
-  }
-
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    flex-direction: row;
-    padding-bottom: 2rem;
-
-    @include hideScrollbars;
-  }
-
-  .album-card {
-    &:hover {
-      background-color: $gray;
+    h3 {
+        display: grid;
+        grid-template-columns: 1fr max-content;
+        align-items: baseline;
+        padding: 0 $medium;
+        margin-bottom: $medium;
     }
-  }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        flex-direction: row;
+        padding-bottom: 2rem;
+
+        @include hideScrollbars;
+    }
+
+    .album-card {
+        &:hover {
+            background-color: $gray;
+        }
+    }
 }
 
 .rhelp {
-  text-transform: uppercase;
-  font-size: 11px;
-  color: $purple;
-  font-weight: 700;
-  margin: $smaller 0;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: $purple;
+    font-weight: 700;
+    margin: $smaller 0;
 
-  &.album {
-    color: $orange;
-  }
+    &.album {
+        color: $orange;
+    }
 
-  &.track {
-    color: $pink;
-  }
+    &.track {
+        color: $pink;
+    }
 
-  &.folder {
-    color: $teal;
-  }
+    &.folder {
+        color: $teal;
+    }
 
-  &.playlist {
-    color: $green;
-  }
+    &.playlist {
+        color: $green;
+    }
 
-  &.mix {
-    color: $lightbrown;
-  }
+    &.mix {
+        color: $lightbrown;
+    }
 }
 
 // Badges used in settings
 .badge {
-  margin-left: $small;
-  opacity: 0.75;
-  padding: 0 $smaller;
-  border-radius: $smaller;
-  font-size: 12px !important;
+    margin-left: $small;
+    opacity: 0.75;
+    padding: 0 $smaller;
+    border-radius: $smaller;
+    font-size: 12px !important;
 }
 
 .experimental {
-  border: solid 1px $yellow;
-  color: $yellow;
+    border: solid 1px $yellow;
+    color: $yellow;
 }
 
 .badge.new {
-  background-color: $blue;
-  opacity: 1;
+    background-color: $blue;
+    opacity: 1;
 }
 
 .explicit-icon {
-  width: 0.9rem;
-  margin-left: $smaller;
+    width: 0.9rem;
+    margin-left: $smaller;
 }
