@@ -11,17 +11,30 @@
             <div
                 class="npbggradient"
                 :style="{
-                    background: `linear-gradient(16deg, #000a 2%, transparent 70%, ${rgba(
-                        colors.darkVibrant,
-                        0.25
-                    )}), linear-gradient(-35deg, ${rgba(colors.darkVibrant, 0.85)} 10%, ${
-                        colors.darkMuted || '#000000'
-                    } 60%, ${rgba(colors.darkVibrant, 0.25)})`,
+                    background: `linear-gradient(16deg, #000a 2%, transparent 70%, ${
+                        // top right
+                        rgba(colors.darkVibrant, 0.25)
+                    }), linear-gradient(-35deg, ${
+                        // bottom right
+                        // rgba(colors.darkVibrant, 0.85)
+                        '#000'
+                    } 10%, 
+                    ${
+                        // center to top right
+                        rgba(colors.darkMuted, 0.75) || '#000000'
+                    } 60%, ${
+                        //  top left
+                        rgba(colors.darkVibrant, 0.25)
+                    })`,
                 }"
             ></div>
-            <Header />
+            <Header :source="store.from" />
             <div class="queuetracks">
-                <Queue />
+                <div></div>
+                <div class="queue-content">
+                    <Queue />
+                </div>
+                <div></div>
             </div>
         </div>
         <!-- <div class="tracklist">
@@ -118,7 +131,9 @@ onMounted(() => updatePageTitle('Now Playing'))
         // umm ... I think there's a padding 4rem on parent
         height: calc(100% + 2rem);
         display: grid;
-        grid-template-columns: 0.55fr 0.45fr;
+        grid-template-columns: 32rem 32rem;
+        gap: 4rem;
+        justify-content: center;
         overflow: hidden;
         position: relative;
         // border: solid 1px $gray;
@@ -159,12 +174,14 @@ onMounted(() => updatePageTitle('Now Playing'))
     }
 
     .queuetracks {
-        overflow: hidden;
         display: grid;
-        grid-template-rows: max-content 1fr;
-        gap: 1rem;
-        padding-top: 2rem;
+        grid-template-rows: 1fr 32rem 1fr;
         z-index: 1;
+
+        .queue-content {
+            display: grid;
+            grid-template-rows: max-content 1fr;
+        }
 
         // force show remove from queue button
         .track-item {
@@ -189,7 +206,7 @@ onMounted(() => updatePageTitle('Now Playing'))
     }
 
     #queue-scrollable {
-        padding: 0 1.5rem 4rem 0 !important;
+        padding: 1rem 1.5rem 0rem 0 !important;
     }
 }
 </style>

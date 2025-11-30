@@ -1,8 +1,9 @@
 <template>
     <div class="now-playing-header">
-        <div class="top"></div>
+        <RouterLink :to="sourceData.location" class="top">
+            {{ sourceData.name }}
+        </RouterLink>
         <div class="centered">
-            <!-- <PlayingFrom /> -->
             <RouterLink
                 :to="{
                     name: Routes.album,
@@ -57,8 +58,19 @@ import SongItem from '../shared/SongItem.vue'
 import NowPlayingInfo from './NowPlayingInfo.vue'
 import PlayingFrom from './PlayingFrom.vue'
 import TrackContext from './TrackContext.vue'
+import { From } from '@/stores/queue/tracklist'
+import playingFrom from '@/utils/playingFrom'
+import { computed } from 'vue'
+
+const props = defineProps<{
+    source: From
+}>()
 
 const queue = useQueueStore()
+const sourceData = computed(() => {
+    const { name, location } = playingFrom(props.source)
+    return { name, location }
+})
 
 function handleFav() {
     favoriteHandler(
@@ -163,11 +175,18 @@ function handleFav() {
         max-width: 32rem;
     }
 
-    .below{
+    .below {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         width: min(100%, 32rem);
+    }
+
+    .top {
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 1rem;
+        opacity: 0.75;
     }
 
     .np-image {
