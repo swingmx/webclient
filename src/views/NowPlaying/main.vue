@@ -11,9 +11,9 @@
             <div
                 class="npbggradient"
                 :style="{
-                    background: `linear-gradient(16deg, #000a 2%, transparent 70%, ${
+                    background: `linear-gradient(16deg, #000a 2%, #000 60%, ${
                         // top right
-                        rgba(colors.darkVibrant, 0.25)
+                        rgba(darkVibrant, 0.25)
                     }), linear-gradient(-35deg, ${
                         // bottom right
                         // rgba(colors.darkVibrant, 0.85)
@@ -24,7 +24,7 @@
                         rgba(colors.darkMuted, 0.75) || '#000000'
                     } 60%, ${
                         //  top left
-                        rgba(colors.darkVibrant, 0.25)
+                        rgba(darkVibrant, 0.25)
                     })`,
                 }"
             ></div>
@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { ScrollerItem } from '@/interfaces'
 
 import { paths } from '@/config'
@@ -75,10 +75,29 @@ import Header from '@/components/NowPlaying/Header.vue'
 import SongItem from '@/components/shared/SongItem.vue'
 import updatePageTitle from '@/utils/updatePageTitle'
 import Queue from '@/components/RightSideBar/Queue.vue'
+import { transitionColor } from '@/utils/colortools'
 
 const queue = useQueueStore()
 const store = useTracklist()
 const colors = useColor()
+
+const darkVibrant = ref<string>('rgb(0, 0, 0)')
+const darkMuted = ref<string>('rgb(0, 0, 0)')
+// watch for changes to the colors.darkVibrant using pinia watcher and transition the currentColor to the new color
+colors.$subscribe((mutation, state) => {
+    console.log('colors changed', mutation, state.darkVibrant, state.darkMuted)
+    if (darkVibrant.value !== state.darkVibrant) {
+        transitionColor(darkVibrant.value, state.darkVibrant, 1000, color => {
+            darkVibrant.value = color
+        })
+
+        if (darkMuted.value !== state.darkMuted) {
+            transitionColor(darkMuted.value, state.darkMuted, 1000, color => {
+                darkMuted.value = color
+            })
+        }
+    }
+})
 
 /**
  * Converts a color string to an rgba string
