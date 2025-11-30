@@ -1,5 +1,6 @@
 <template>
     <div class="now-playing-header">
+        <div class="top"></div>
         <div class="centered">
             <!-- <PlayingFrom /> -->
             <RouterLink
@@ -14,6 +15,8 @@
             >
                 <img v-motion-fade class="rounded" :src="paths.images.thumb.large + queue.currenttrack?.image" />
             </RouterLink>
+        </div>
+        <div class="below">
             <NowPlayingInfo @handle-fav="handleFav" />
             <Progress v-if="isMobile" />
             <div class="below-progress">
@@ -78,7 +81,9 @@ function handleFav() {
     position: relative;
 
     display: grid;
-    place-items: center;
+    place-items: stretch;
+    justify-items: center;
+    grid-template-rows: 1fr max-content 1fr;
 
     .nowplaying_title {
         padding-left: 1rem;
@@ -156,7 +161,13 @@ function handleFav() {
         margin: 0 auto;
         width: 100%;
         max-width: 32rem;
-        // border: solid 1px;
+    }
+
+    .below{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: min(100%, 32rem);
     }
 
     .np-image {
