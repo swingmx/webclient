@@ -104,6 +104,7 @@ function handleFav() {
     place-items: stretch;
     justify-items: center;
     grid-template-rows: 1fr max-content 1fr;
+    margin-left: 1.5rem; // to balance queue padding right (scrollbar offset)
 
     .nowplaying_title {
         padding-left: 1rem;

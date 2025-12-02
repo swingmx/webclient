@@ -1,5 +1,5 @@
 <template>
-    <div v-if="$route.params.tab == 'home'" class="now-playing-view content-page" :class="{ isSmall, isMedium }">
+    <div class="now-playing-view content-page" :class="{ isSmall, isMedium }" style="height: 100%">
         <div class="now-playing-content rounded">
             <div
                 class="npbgimage"
@@ -28,14 +28,7 @@
                     })`,
                 }"
             ></div>
-            <Header :source="store.from" />
-            <div class="queuetracks">
-                <div></div>
-                <div class="queue-content">
-                    <Queue />
-                </div>
-                <div></div>
-            </div>
+            <component :is="routeMap[$route.params.tab as keyof typeof routeMap]" class="np-route-view"> </component>
         </div>
         <!-- <div class="tracklist">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut repudiandae accusamus dolorum impedit sapiente deleniti deserunt magni repellendus, aperiam ducimus accusantium esse quas. Repellendus id enim atque quaerat minus distinctio?
@@ -62,30 +55,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { ScrollerItem } from '@/interfaces'
+import { defineAsyncComponent, ref } from 'vue'
 
 import { paths } from '@/config'
-import useQueueStore from '@/stores/queue'
-import useTracklist from '@/stores/queue/tracklist'
 import useColor from '@/stores/colors'
+import useQueueStore from '@/stores/queue'
+import { transitionColor } from '@/utils/colortools'
 import { isMedium, isSmall } from '@/stores/content-width'
 
-import Header from '@/components/NowPlaying/Header.vue'
-import SongItem from '@/components/shared/SongItem.vue'
-import updatePageTitle from '@/utils/updatePageTitle'
-import Queue from '@/components/RightSideBar/Queue.vue'
-import { transitionColor } from '@/utils/colortools'
-
-const queue = useQueueStore()
-const store = useTracklist()
 const colors = useColor()
+const queue = useQueueStore()
 
-const darkVibrant = ref<string>('rgb(0, 0, 0)')
 const darkMuted = ref<string>('rgb(0, 0, 0)')
+const darkVibrant = ref<string>('rgb(0, 0, 0)')
+
+const routeMap = {
+    home: defineAsyncComponent(() => import('@/components/NowPlaying/HomeScreen.vue')),
+}
 
 // watch for changes to the colors.darkVibrant using pinia watcher and transition the currentColor to the new color
-colors.$subscribe((mutation, state) => {
+colors.$subscribe((_mutation, state) => {
     if (darkVibrant.value !== state.darkVibrant) {
         transitionColor(darkVibrant.value, state.darkVibrant, 5000, color => {
             darkVibrant.value = color
@@ -110,125 +99,72 @@ function rgba(color: string, transparency: number) {
     return color.replace('rgb', 'rgba').replace(')', `, ${transparency})`)
 }
 
-function playFromQueue(index: number) {
-    queue.play(index)
-}
+// function playFromQueue(index: number) {
+//     queue.play(index)
+// }
 
-const scrollerItems = computed(() => {
-    const items: ScrollerItem[] = []
+// const scrollerItems = computed(() => {
+//     const items: ScrollerItem[] = []
 
-    const trackComponents = store.tracklist.map((track, index) => {
-        track.index = index // used in context menu to remove from queue
-        return {
-            id: index,
-            component: SongItem,
-            props: {
-                track,
-                index: index + 1,
-                isCurrent: index === queue.currentindex,
-                isCurrentPlaying: index === queue.currentindex && queue.playing,
-                isQueueTrack: true,
-                source: store.from.type,
-            },
-        }
-    })
+//     const trackComponents = store.tracklist.map((track, index) => {
+//         track.index = index // used in context menu to remove from queue
+//         return {
+//             id: index,
+//             component: SongItem,
+//             props: {
+//                 track,
+//                 index: index + 1,
+//                 isCurrent: index === queue.currentindex,
+//                 isCurrentPlaying: index === queue.currentindex && queue.playing,
+//                 isQueueTrack: true,
+//                 source: store.from.type,
+//             },
+//         }
+//     })
 
-    return items.concat(trackComponents)
-})
-
-onMounted(() => updatePageTitle('Now Playing'))
+//     return items.concat(trackComponents)
+// })
 </script>
 
 <style lang="scss">
-.now-playing-view {
-    height: 100%;
-    // background-color: red;
+.now-playing-view .now-playing-content {
+    // umm ... I think there's a padding 4rem on parent
+    height: calc(100% + 2rem);
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
 
-    // gap: 2rem;
+    display: grid;
+    place-content: center;
 
-    .now-playing-content {
-        // umm ... I think there's a padding 4rem on parent
-        height: calc(100% + 2rem);
-        display: grid;
-        grid-template-columns: 32rem 32rem;
-        gap: 4rem;
-        justify-content: center;
-        overflow: hidden;
-        position: relative;
-        // border: solid 1px $gray;
-        // border: solid;
-
-        .npbgimage,
-        .npbggradient {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .npbgimage {
-            background-size: 800px;
-            background-position: -10px -10px;
-
-            $brightness: 1;
-            $blur-amount: 100px;
-            filter: blur($blur-amount) brightness($brightness);
-            -webkit-filter: blur($blur-amount) brightness($brightness);
-            -moz-filter: blur($blur-amount) brightness($brightness);
-            -ms-filter: blur($blur-amount) brightness($brightness);
-            -o-filter: blur($blur-amount) brightness($brightness);
-        }
-
-        .npbggradient {
-            background-color: transparent;
-            // background: linear-gradient(-35deg, rgb(#3a4458, 1) 20%, rgb(#3a4458, 1) 60%, rgb(transparent, 0));
-            // linear-gradient(-37deg, $gray, $gray5, $gray);
-        }
+    .np-route-view {
+        z-index: 10;
     }
 
-    .queuetracks {
-        display: grid;
-        grid-template-rows: 1fr 32.5rem 1fr;
-        z-index: 1;
-
-        .queue-content {
-            display: grid;
-            grid-template-rows: max-content 1fr;
-        }
-
-        // force show remove from queue button
-        .track-item {
-            .float-buttons {
-                opacity: 1;
-
-                .heart-button {
-                    opacity: 0;
-                }
-
-                .remove-track {
-                    opacity: 0.5;
-
-                    svg {
-                        color: #fff;
-                    }
-                }
-
-                .favorited {
-                    opacity: 1 !important;
-                }
-            }
-
-            &:hover {
-                .heart-button {
-                    opacity: 1 !important;
-                }
-            }
-        }
+    .npbgimage,
+    .npbggradient {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }
 
-    #queue-scrollable {
-        padding: 1rem 1.5rem 0rem 0 !important;
+    .npbgimage {
+        background-size: 800px;
+        background-position: -10px -10px;
+
+        $brightness: 1;
+        $blur-amount: 100px;
+        filter: blur($blur-amount) brightness($brightness);
+        -webkit-filter: blur($blur-amount) brightness($brightness);
+        -moz-filter: blur($blur-amount) brightness($brightness);
+        -ms-filter: blur($blur-amount) brightness($brightness);
+        -o-filter: blur($blur-amount) brightness($brightness);
+    }
+
+    .npbggradient {
+        background-color: transparent;
     }
 }
 </style>
