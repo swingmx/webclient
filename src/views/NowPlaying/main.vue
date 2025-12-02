@@ -83,16 +83,16 @@ const colors = useColor()
 
 const darkVibrant = ref<string>('rgb(0, 0, 0)')
 const darkMuted = ref<string>('rgb(0, 0, 0)')
+
 // watch for changes to the colors.darkVibrant using pinia watcher and transition the currentColor to the new color
 colors.$subscribe((mutation, state) => {
-    console.log('colors changed', mutation, state.darkVibrant, state.darkMuted)
     if (darkVibrant.value !== state.darkVibrant) {
-        transitionColor(darkVibrant.value, state.darkVibrant, 1000, color => {
+        transitionColor(darkVibrant.value, state.darkVibrant, 5000, color => {
             darkVibrant.value = color
         })
 
         if (darkMuted.value !== state.darkMuted) {
-            transitionColor(darkMuted.value, state.darkMuted, 1000, color => {
+            transitionColor(darkMuted.value, state.darkMuted, 5000, color => {
                 darkMuted.value = color
             })
         }
@@ -185,16 +185,11 @@ onMounted(() => updatePageTitle('Now Playing'))
             // background: linear-gradient(-35deg, rgb(#3a4458, 1) 20%, rgb(#3a4458, 1) 60%, rgb(transparent, 0));
             // linear-gradient(-37deg, $gray, $gray5, $gray);
         }
-
-        // TODO: Use two divs to create the gradient/blur effect
-        // Lower div to background image, then blur it
-        // Upper div to render gradient of grayish with one corner being transparent to expose the background image
-        // Achieve a combo of only a small area being blurred, while the rest of the area has the gradient
     }
 
     .queuetracks {
         display: grid;
-        grid-template-rows: 1fr 32rem 1fr;
+        grid-template-rows: 1fr 32.5rem 1fr;
         z-index: 1;
 
         .queue-content {
@@ -209,6 +204,14 @@ onMounted(() => updatePageTitle('Now Playing'))
 
                 .heart-button {
                     opacity: 0;
+                }
+
+                .remove-track {
+                    opacity: 0.5;
+
+                    svg {
+                        color: #fff;
+                    }
                 }
 
                 .favorited {

@@ -19,10 +19,11 @@ const baseImgUrl = base_url + '/img'
 
 const imageRoutes = {
     thumb: {
+        original: '/thumbnail/original/',
         large: '/thumbnail/',
-        small: '/thumbnail/xsmall/',
-        smallish: '/thumbnail/small/',
         medium: '/thumbnail/medium/',
+        smallish: '/thumbnail/small/',
+        small: '/thumbnail/xsmall/',
     },
     artist: {
         large: '/artist/',
@@ -223,6 +224,7 @@ export const paths = {
             smallish: baseImgUrl + imageRoutes.thumb.smallish,
             large: baseImgUrl + imageRoutes.thumb.large,
             medium: baseImgUrl + imageRoutes.thumb.medium,
+            original: baseImgUrl + imageRoutes.thumb.original,
         },
         artist: {
             small: baseImgUrl + imageRoutes.artist.small,

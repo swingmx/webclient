@@ -10,7 +10,6 @@
             },
             { contexton: context_on },
         ]"
-        :style="{ color: isCurrent ? colors.darkVibrant : 'inherit' }"
         @click="playThis(track)"
         @contextmenu.prevent="showMenu"
     >
@@ -29,7 +28,7 @@
                 </span>
             </div>
             <hr />
-            <div class="artist" :style="{ color: isCurrent ? getBackgroundColor(colors.darkVibrant) : 'inherit' }">
+            <div class="artist">
                 <ArtistName :artists="track.artists" :albumartists="track.albumartists" :smaller="true" />
             </div>
         </div>
@@ -119,8 +118,8 @@ onBeforeUnmount(() => {
 
 <style lang="scss">
 .track-item.currentInQueue {
-    background-color: #fff;
-    color: #5d666d;
+    background-color: $gray5;
+    color: rgb(229, 229, 229);
 }
 
 .contexton {
@@ -151,21 +150,17 @@ onBeforeUnmount(() => {
         }
 
         .heart-button {
-            width: 2rem;
-            height: 2rem;
+            width: 1.75rem;
+            height: 1.75rem;
             padding: 0;
             border: none;
             background-color: transparent;
-
-            svg {
-                color: white;
-            }
         }
 
         .remove-track {
             transform: rotate(45deg);
-            height: 2rem;
-            width: 2rem;
+            height: 1.75rem;
+            width: 1.75rem;
 
             display: grid;
             place-items: center;
@@ -181,8 +176,8 @@ onBeforeUnmount(() => {
     }
 
     &:hover {
-        background-color: #fff;
-        color: #5d666d;
+        background-color: $gray4;
+        color: $white !important;
 
         .float-buttons {
             opacity: 1;

@@ -1,8 +1,10 @@
 <template>
     <div class="now-playing-header">
-        <RouterLink :to="sourceData.location" class="top">
-            {{ sourceData.name }}
-        </RouterLink>
+        <div class="top">
+            <RouterLink :to="sourceData.location">
+                {{ sourceData.name }}
+            </RouterLink>
+        </div>
         <div class="centered">
             <RouterLink
                 :to="{
@@ -14,7 +16,12 @@
                 title="Go to Album"
                 class="np-image"
             >
-                <img v-motion-fade class="rounded" :src="paths.images.thumb.large + queue.currenttrack?.image" />
+                <ImageLoader
+                    v-motion-fade
+                    :image="paths.images.thumb.original + queue.currenttrack?.image"
+                    :duration="1000"
+                    :preload-image="paths.images.thumb.original + queue.currenttrack?.image"
+                />
             </RouterLink>
         </div>
         <div class="below">
@@ -61,6 +68,7 @@ import TrackContext from './TrackContext.vue'
 import { From } from '@/stores/queue/tracklist'
 import playingFrom from '@/utils/playingFrom'
 import { computed } from 'vue'
+import ImageLoader from '../shared/ImageLoader.vue'
 
 const props = defineProps<{
     source: From
@@ -169,17 +177,27 @@ function handleFav() {
         }
     }
 
+    $image-size: 32rem;
+
     .centered {
         margin: 0 auto;
         width: 100%;
-        max-width: 32rem;
+        max-width: $image-size;
+    }
+
+    .image-loader {
+        height: $image-size;
+
+        img {
+            border-radius: $small;
+        }
     }
 
     .below {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        width: min(100%, 32rem);
+        width: min(100%, $image-size);
     }
 
     .top {
