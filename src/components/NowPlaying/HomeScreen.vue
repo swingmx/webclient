@@ -28,12 +28,22 @@ onMounted(() => updatePageTitle('Now Playing'))
 .np-home {
     position: relative;
     display: grid;
-    grid-template-columns: 32rem 32rem;
+    grid-template-columns: min(32rem, 45%) min(32rem, 45%);
     gap: 4rem;
     height: 100%;
     place-content: center;
-
     $gap: $smaller;
+
+    @include allPhones {
+        gap: 2rem;
+    }
+
+    @include largePhones {
+        display: block;
+        overflow: auto;
+        padding-bottom: 2rem;
+        @include hideScrollbars;
+    }
 
     .queuetracks {
         display: grid;
@@ -77,6 +87,11 @@ onMounted(() => updatePageTitle('Now Playing'))
 
     #queue-scrollable {
         padding: 1rem 1.5rem 0rem 0 !important;
+
+        @include largePhones {
+            padding: 1rem 1rem 0 1rem !important;
+            @include hideScrollbars;
+        }
     }
 }
 </style>

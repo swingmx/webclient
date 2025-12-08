@@ -104,7 +104,10 @@ function handleFav() {
     place-items: stretch;
     justify-items: center;
     grid-template-rows: 1fr max-content 1fr;
-    margin-left: 1.5rem; // to balance queue padding right (scrollbar offset)
+
+    @include largePhones {
+        padding: 1.5rem !important;
+    }
 
     .nowplaying_title {
         padding-left: 1rem;
@@ -178,16 +181,16 @@ function handleFav() {
         }
     }
 
-    $image-size: 32rem;
+    $image-size: auto;
 
     .centered {
         margin: 0 auto;
         width: 100%;
-        max-width: $image-size;
+        // max-width: $image-size;
     }
 
     .image-loader {
-        height: $image-size;
+        // height: $image-size;
 
         img {
             border-radius: $small;
@@ -198,7 +201,7 @@ function handleFav() {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        width: min(100%, $image-size);
+        // width: min(100%, $image-size);
     }
 
     .top {
@@ -235,6 +238,25 @@ function handleFav() {
 
         &::-ms-thumb {
             height: 0.8rem;
+        }
+    }
+
+    @include allPhones {
+        margin-left: 0;
+        padding: 0 1rem;
+        display: block;
+        padding: 2rem !important;
+
+        .top {
+            opacity: 0;
+        }
+    }
+
+    @include largePhones {
+        .np-image {
+            display: block;
+            width: 90% !important;
+            margin: 0 auto;
         }
     }
 }

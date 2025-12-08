@@ -23,12 +23,14 @@
                 <div v-if="lyrics.copyright && lyrics.lyrics" class="copyright">
                     {{ lyrics.copyright }}
                 </div>
+                <div class="spacer"></div>
             </div>
             <div v-if="!lyrics.synced" class="unsynced">
                 <div id="lyricsline--1"></div>
                 <div v-for="(line, index) in lyrics.lyrics" :key="index" class="line">
                     {{ line }}
                 </div>
+                <div class="spacer"></div>
             </div>
         </div>
     </div>
@@ -185,6 +187,10 @@ onMounted(() => {
         font-size: 12px;
         opacity: 0.65;
         text-transform: uppercase;
+    }
+
+    .spacer {
+        height: 8rem;
     }
 }
 

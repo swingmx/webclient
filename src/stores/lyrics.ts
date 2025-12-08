@@ -140,7 +140,6 @@ export default defineStore('lyrics', {
             const { y } = elem.getBoundingClientRect()
 
             if (!forceScroll && this.user_scrolled && (y < third || y > two_thirds)) {
-                console.log("not scrolling because user scrolled")
                 return
             }
 

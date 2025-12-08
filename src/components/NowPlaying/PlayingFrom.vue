@@ -60,6 +60,10 @@ function showContextMenu(e: MouseEvent) {
     align-items: center;
     margin: 0 2rem 0 $small;
 
+    @include largePhones {
+        margin: 0 1.5rem;
+    }
+
     .options {
         width: 2rem;
         height: 2.5rem;
