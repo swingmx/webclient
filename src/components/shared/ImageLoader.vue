@@ -4,9 +4,8 @@
             v-for="(img, index) in images"
             :key="img.key"
             :src="img.src"
-            :class="{ active: index === activeIndex }"
+            :class="`${ index === activeIndex ? 'active' : '' } il-image ${ imgClass || '' }`"
             :style="{ transitionDuration: `${duration}ms` }"
-            class="image"
             @load="onImageLoad"
         />
     </div>
@@ -19,6 +18,7 @@ const props = defineProps<{
     image: string
     duration: number
     preloadImage?: string
+    imgClass?: string
 }>()
 
 const images = ref<Array<{ src: string; key: number }>>([])
@@ -94,7 +94,7 @@ function onImageLoad() {
     width: 100%;
     height: 100%;
 
-    .image {
+    .il-image {
         position: absolute;
         top: 0;
         left: 0;

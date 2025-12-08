@@ -11,7 +11,7 @@
             <RepeatOneSvg v-if="settings.repeat == 'one'" />
             <RepeatAllSvg v-else />
         </button>
-        <button title="Shuffle" @click="queue.shuffleQueue">
+        <button class="shuffle" title="Shuffle" @click="queue.shuffleQueue">
             <ShuffleSvg />
         </button>
         <HeartSvg
@@ -71,17 +71,26 @@ defineEmits<{
         }
     }
 
+    .shuffle {
+        padding: $small $smallest !important;
+    }
+
     .lyrics,
-    .repeat {
+    .repeat,
+    .shuffle {
         svg {
-            // transform: scale(0.75);
-            // height: 3rem !important;
-            // width: 3rem !important;
+            height: 1.5rem;
+            width: 1.5rem;
         }
 
         &:active > svg {
             transform: scale(0.6);
         }
+    }
+
+    .speaker svg {
+        height: 1.35rem;
+        width: 1.35rem;
     }
 
     button.repeat.repeat-disabled {

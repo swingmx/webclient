@@ -26,17 +26,23 @@ onMounted(() => updatePageTitle('Now Playing'))
 
 <style lang="scss">
 .np-home {
+    position: relative;
     display: grid;
     grid-template-columns: 32rem 32rem;
     gap: 4rem;
+    height: 100%;
+    place-content: center;
+
+    $gap: $smaller;
 
     .queuetracks {
         display: grid;
-        grid-template-rows: 1fr 32rem 1fr;
+        grid-template-rows: 1fr calc(32rem - $gap) 1fr;
 
         .queue-content {
             display: grid;
             grid-template-rows: max-content 1fr;
+            gap: $smaller;
         }
 
         // force show remove from queue button

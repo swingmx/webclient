@@ -28,7 +28,7 @@
                     })`,
                 }"
             ></div>
-            <component :is="routeMap[$route.params.tab as keyof typeof routeMap]" class="np-route-view"> </component>
+            <component :is="routeMap[$route.params.tab as keyof typeof routeMap].component"> </component>
         </div>
         <!-- <div class="tracklist">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut repudiandae accusamus dolorum impedit sapiente deleniti deserunt magni repellendus, aperiam ducimus accusantium esse quas. Repellendus id enim atque quaerat minus distinctio?
@@ -70,7 +70,11 @@ const darkMuted = ref<string>('rgb(0, 0, 0)')
 const darkVibrant = ref<string>('rgb(0, 0, 0)')
 
 const routeMap = {
-    home: defineAsyncComponent(() => import('@/components/NowPlaying/HomeScreen.vue')),
+    home: {
+        component: defineAsyncComponent(() => import('@/components/NowPlaying/HomeScreen.vue')),
+        class: 'np-route-view',
+    },
+    lyrics: { component: defineAsyncComponent(() => import('@/views/LyricsView/main.vue')) },
 }
 
 // watch for changes to the colors.darkVibrant using pinia watcher and transition the currentColor to the new color
@@ -134,11 +138,14 @@ function rgba(color: string, transparency: number) {
     overflow: hidden;
     position: relative;
 
-    display: grid;
-    place-content: center;
+    @include allPhones {
+        height: calc(100% + 3rem);
+    }
 
     .np-route-view {
         z-index: 10;
+        width: 100%;
+        height: 100%;
     }
 
     .npbgimage,

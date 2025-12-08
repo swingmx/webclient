@@ -206,6 +206,7 @@ function handleFav() {
         align-items: flex-end;
         padding-bottom: 1rem;
         opacity: 0.75;
+        font-size: 14px;
     }
 
     .np-image {

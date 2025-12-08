@@ -89,7 +89,7 @@ button {
     justify-content: center;
     height: 2rem;
     transition: background-color 0.2s ease-out, color 0.2s ease-out, border 0.2s ease-out;
-    padding: $small 1rem;
+    padding: $small 0.85rem;
 
     background-color: $gray4;
     cursor: pointer;

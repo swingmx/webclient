@@ -70,10 +70,6 @@ const handleMouseWheel = (event: WheelEvent) => {
         place-items: center;
     }
 
-    // svg {
-    //     transform: scale(0.75);
-    // }
-
     .dialog {
         position: absolute;
         cursor: default;
