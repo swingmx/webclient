@@ -80,6 +80,10 @@ onMounted(() => {
   height: 100%;
   display: grid;
   grid-template-rows: 1fr max-content;
+
+  .scroller {
+    padding-bottom: 0rem !important;
+  }
 }
 
 #tracks-results .morexx {

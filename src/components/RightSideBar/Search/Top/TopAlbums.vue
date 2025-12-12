@@ -21,6 +21,6 @@ const search = useSearchstore();
   grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
   padding: $small $smaller;
   gap: $small 0;
-  margin-bottom: 2rem;
+  padding: 0 $small 2rem $smaller;
 }
 </style>

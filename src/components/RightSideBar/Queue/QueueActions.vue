@@ -50,7 +50,6 @@ defineProps<{
   gap: $small;
   margin: 2rem 2rem 1rem 0;
   margin-bottom: 0;
-  outline: solid 1px;
 
   // margin-right: 2rem;
 
