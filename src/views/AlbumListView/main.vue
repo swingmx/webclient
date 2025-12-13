@@ -62,6 +62,8 @@ const scrollerItems = computed(() => {
     ]
   );
 
+  console.log(maxAbumCards.value)
+
   const groups = Math.ceil(storeitems.value.length / maxAbumCards.value);
   for (let i = 0; i < groups; i++) {
     items.push({
