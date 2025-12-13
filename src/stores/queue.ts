@@ -23,6 +23,7 @@ export default defineStore('Queue', {
         playing: false,
         /** Whether track has been triggered manually */
         manual: true,
+        direction: <'up' | 'down'>('up'),
     }),
     actions: {
         setPlaying(val: boolean) {
@@ -43,6 +44,8 @@ export default defineStore('Queue', {
         play(index: number = 0, manual = true) {
             const { tracklist } = useTracklist()
             if (tracklist.length === 0) return
+
+            this.direction = index > this.currentindex ? 'up' : 'down'
 
             this.playing = true
             this.currentindex = index
