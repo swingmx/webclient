@@ -64,15 +64,12 @@ export const isLargerMobile = computed(
 export const isSmallestPhone = computed(() => win_width.value <= SMALL_MOBILE_WIDTH)
 
 const updateCardWidth = () => {
-    console.log('updateCardWidth')
     // if (album_card_with.value !== 161.6) return;
     const elems = document.getElementsByClassName(elemclass)
 
     if (elems.length) {
         album_card_with.value = elems[0].clientWidth
     }
-
-    console.log("maxAbumCards", maxAbumCards.value)
 }
 
 export {

@@ -61,7 +61,7 @@
             :to="{
                 name: Routes.album,
                 params: {
-                    albumhash: props.image?.replace('.webp', ''),
+                    albumhash: props.image.split('?pathhash=')[0]?.replace('.webp', ''),
                 },
             }"
         >
