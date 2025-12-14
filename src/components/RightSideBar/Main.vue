@@ -33,6 +33,7 @@ const tabs = useTabStore()
 <style lang="scss">
 .r-sidebar {
     width: 100%;
+    height: 100%;
     display: grid;
     grid-template-rows: max-content 1fr;
     background-color: rgb(22, 22, 22);
