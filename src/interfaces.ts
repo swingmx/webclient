@@ -42,6 +42,9 @@ export interface Track extends AlbumDisc {
         trend: 'rising' | 'falling' | 'stable'
         is_new: boolean
     }
+
+    color?: string
+    blurhash?: string
 }
 
 export interface Folder {
@@ -68,6 +71,7 @@ export interface Album {
     type?: string
 
     color?: string
+    blurhash?: string
     copyright?: string
     help_text?: string
     time?: string
@@ -129,7 +133,8 @@ export interface Artist {
     trackcount: number
     albumcount: number
     duration: number
-    color: string
+    color?: string
+    blurhash?: string
     is_favorite?: boolean
     help_text?: string
     time?: string

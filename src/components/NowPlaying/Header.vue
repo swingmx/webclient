@@ -21,6 +21,7 @@
                     :image="paths.images.thumb.original + queue.currenttrack?.image"
                     :duration="1000"
                     :preload-image="paths.images.thumb.original + queue.currenttrack?.image"
+                    :blurhash="queue.currenttrack?.blurhash"
                 />
             </RouterLink>
         </div>

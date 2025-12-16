@@ -2,8 +2,18 @@
     <div
         ref="imageLoader"
         class="image-loader"
-        :style="{ height: imageHeights[images[0].key] ? `${imageHeights[images[0].key]}px` : 'auto' }"
+        :style="{ height: imageHeights[images[0].key] ? `${imageHeights[images[0].key]}px` : `${containerWidth}px` }"
     >
+        <canvas
+            v-if="props.blurhash"
+            ref="blurhashCanvas"
+            class="blurhash-placeholder rounded-sm"
+            :class="{ 'fade-out': imageLoaded }"
+            :style="{
+                transitionDuration: `${duration}ms`,
+                height: `${imageHeights[images[0].key] ? `${imageHeights[images[0].key]}px` : `${containerWidth}px`}`,
+            }"
+        ></canvas>
         <img
             v-for="(img, index) in images"
             :key="img.key"
@@ -19,15 +29,18 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { decode } from 'blurhash'
 
 const props = defineProps<{
     image: string
+    blurhash?: string
+    imgClass?: string
     duration: number
     preloadImage?: string
-    imgClass?: string
 }>()
 
 const imageLoader = ref<HTMLDivElement | null>(null)
+const blurhashCanvas = ref<HTMLCanvasElement | null>(null)
 const images = ref<Array<{ src: string; key: number }>>([])
 const activeIndex = ref(0)
 const imageKey = ref(0)
@@ -36,6 +49,7 @@ const preloadImageElement = ref<HTMLImageElement | null>(null)
 const imageHeights = ref<Record<number, number>>({})
 const imageNaturalHeights = ref<Record<number, number>>({})
 const containerWidth = ref(0)
+const imageLoaded = ref(false)
 let resizeObserver: ResizeObserver | null = null
 
 function updateContainerWidth() {
@@ -43,6 +57,9 @@ function updateContainerWidth() {
         containerWidth.value = imageLoader.value.clientWidth
         if (containerWidth.value) {
             recalculateHeights(containerWidth.value)
+            if (props.blurhash) {
+                renderBlurhash()
+            }
         }
     }
 }
@@ -94,6 +111,8 @@ watch(
     newImage => {
         if (!newImage) return
 
+        imageLoaded.value = false
+
         if (preloadedImageUrl.value === newImage && preloadImageElement.value?.complete) {
             preloadedImageUrl.value = null
             preloadImageElement.value = null
@@ -120,9 +139,44 @@ watch(
     { immediate: true }
 )
 
+watch(
+    () => [props.blurhash, containerWidth.value, imageHeights.value],
+    () => {
+        if (props.blurhash && containerWidth.value && blurhashCanvas.value) {
+            renderBlurhash()
+        }
+    },
+    { immediate: true, deep: true }
+)
+
+function renderBlurhash() {
+    if (!props.blurhash || !blurhashCanvas.value || !containerWidth.value) return
+
+    const canvas = blurhashCanvas.value
+    const width = containerWidth.value
+    const height = imageHeights.value[images.value[0]?.key] || width
+
+    canvas.width = width
+    canvas.height = height
+
+    try {
+        const pixels = decode(props.blurhash, width, height)
+        const ctx = canvas.getContext('2d')
+        if (!ctx) return
+
+        const imageData = ctx.createImageData(width, height)
+        imageData.data.set(pixels)
+        ctx.putImageData(imageData, 0, 0)
+    } catch (error) {
+        console.error('Failed to decode blurhash:', error)
+    }
+}
+
 function onImageLoad(imageKeyValue: number, event: Event) {
     const target = event.target as HTMLImageElement | null
     if (!target || !imageLoader.value) return
+
+    imageLoaded.value = true
 
     imageNaturalHeights.value = {
         ...imageNaturalHeights.value,
@@ -147,6 +201,22 @@ function onImageLoad(imageKeyValue: number, event: Event) {
     width: 100%;
     height: 100%;
 
+    .blurhash-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 1;
+        transition: opacity ease-in-out;
+        z-index: 0;
+
+        &.fade-out {
+            opacity: 0;
+        }
+    }
+
     .il-image {
         position: absolute;
         top: 0;
@@ -156,6 +226,7 @@ function onImageLoad(imageKeyValue: number, event: Event) {
         object-fit: cover;
         opacity: 0;
         transition: opacity ease-in-out;
+        z-index: 1;
 
         &.active {
             opacity: 1;
