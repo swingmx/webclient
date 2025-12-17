@@ -8,11 +8,10 @@
                 },
             }"
         >
-            <!-- <img :src="paths.images.thumb.small + queue.currenttrack.image" class="shadow-sm" /> -->
             <ImageLoader
                 :image="paths.images.thumb.small + queue.currenttrack.image"
+                :blurhash="queue.currenttrack.blurhash"
                 :duration="1000"
-                :preload-image="paths.images.thumb.small + queue.currenttrack.image"
                 img-class="rounded-xsm shadow-sm"
             />
         </RouterLink>

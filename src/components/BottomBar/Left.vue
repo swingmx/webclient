@@ -20,8 +20,8 @@
             <!-- <img :src="paths.images.thumb.small + queue.currenttrack?.image" alt="" /> -->
             <ImageLoader
                 :image="paths.images.thumb.small + queue.currenttrack?.image"
+                :blurhash="queue.currenttrack.blurhash"
                 :duration="1000"
-                :preload-image="paths.images.thumb.small + queue.currenttrack?.image"
                 img-class="rounded-sm"
                 style="width: 48px; aspect-ratio: 1;"
             />

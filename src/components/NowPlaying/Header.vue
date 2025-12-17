@@ -17,11 +17,9 @@
                 class="np-image"
             >
                 <ImageLoader
-                    v-motion-fade
                     :image="paths.images.thumb.original + queue.currenttrack?.image"
-                    :duration="1000"
-                    :preload-image="paths.images.thumb.original + queue.currenttrack?.image"
                     :blurhash="queue.currenttrack?.blurhash"
+                    :duration="1000"
                 />
             </RouterLink>
         </div>
