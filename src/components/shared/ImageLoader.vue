@@ -2,7 +2,9 @@
     <div
         ref="imageLoader"
         class="image-loader"
-        :style="{ height: imageHeights[images[0].key] ? `${imageHeights[images[0].key]}px` : `${containerWidth}px` }"
+        :style="{
+            height: `${Math.max(imageHeights[images[0]?.key] || 0, containerWidth || 0)}px`,
+        }"
     >
         <canvas
             v-if="props.blurhash"
@@ -11,7 +13,7 @@
             :class="{ 'fade-out': imageLoaded }"
             :style="{
                 transitionDuration: `${duration}ms`,
-                height: `${imageHeights[images[0].key] ? `${imageHeights[images[0].key]}px` : `${containerWidth}px`}`,
+                height: `${Math.max(imageHeights[images[0]?.key] || 0, containerWidth || 0)}px`,
             }"
         ></canvas>
         <img
