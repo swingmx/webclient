@@ -9,7 +9,7 @@
         <div></div>
         <br />
         <div class="itemlist">
-            <div class="item rounded-sm" v-for="backup in backups" :key="backup.name">
+            <div v-for="backup in backups" :key="backup.name" class="item rounded-sm">
                 <div class="texts">
                     <div class="item__info">
                         <div class="item__date">
@@ -18,23 +18,7 @@
                             <!-- <span class="item__name">{{ backup.name }}</span> -->
                         </div>
                     </div>
-                    <div class="item__stats">
-                        <div class="item__playlists">
-                            {{ backup.playlists }} playlist{{ backup.playlists !== 1 ? 's' : '' }}
-                        </div>
-                        •
-                        <div class="item__scrobbles">
-                            {{ backup.scrobbles }} scrobble{{ backup.scrobbles !== 1 ? 's' : '' }}
-                        </div>
-                        •
-                        <div class="item__favorites">
-                            {{ backup.favorites }} favorite{{ backup.favorites !== 1 ? 's' : '' }}
-                        </div>
-                        •
-                        <div class="item__collections">
-                            {{ backup.collections }} collection{{ backup.collections !== 1 ? 's' : '' }}
-                        </div>
-                    </div>
+                    <div class="item__stats">{{ getBackupStatsString(backup) }}</div>
                 </div>
                 <div class="buttons">
                     <DeleteSvg @click="() => deleteBackup(backup.name)" />
@@ -51,6 +35,7 @@ import { backupNow, getBackups, restoreBackup, deleteBackup as deleteBackupReq }
 import { onMounted, ref } from 'vue'
 import { useToast } from '@/stores/notification'
 import DeleteSvg from '@/assets/icons/delete.svg'
+import { pruralize } from '@/utils'
 
 const toast = useToast()
 
@@ -99,6 +84,39 @@ async function deleteBackup(backup_dir: string) {
         toast.showError(res.data.msg)
     }
 }
+
+function getBackupStatsString(backup: Backup): string {
+    const parts: string[] = []
+    const separator = '\u00A0•\u00A0'
+
+    if (backup.playlists > 0) {
+        parts.push(`${backup.playlists} ${pruralize('playlist', backup.playlists)}`)
+    }
+
+    if (backup.playlists > 0 && backup.scrobbles > 0) {
+        parts.push(separator)
+    }
+
+    parts.push(`${backup.scrobbles} ${pruralize('scrobble', backup.scrobbles)}`)
+
+    if (backup.scrobbles + backup.playlists > 0 && backup.favorites > 0) {
+        parts.push(separator)
+    }
+
+    if (backup.favorites > 0) {
+        parts.push(`${backup.favorites} ${pruralize('favorite', backup.favorites)}`)
+    }
+
+    if (backup.scrobbles + backup.playlists + backup.favorites > 0 && backup.collections > 0) {
+        parts.push(separator)
+    }
+
+    if (backup.collections > 0) {
+        parts.push(`${backup.collections} ${pruralize('collection', backup.collections)}`)
+    }
+
+    return parts.join(' ')
+}
 </script>
 <style lang="scss">
 .backup-restore {
@@ -110,7 +128,7 @@ async function deleteBackup(backup_dir: string) {
 
         .item {
             display: grid;
-            grid-template-columns: 1fr 100px;
+            grid-template-columns: 1fr max-content;
             gap: 1rem;
 
             padding: 1rem;
@@ -138,7 +156,7 @@ async function deleteBackup(backup_dir: string) {
         .item__stats {
             display: flex;
             gap: $small;
-            font-size: 0.8rem;
+            font-size: 12px;
             color: $gray1;
         }
     }

@@ -39,3 +39,15 @@
 - ADD QR CODE SOMEWHERE ON THE WEB
 - Add a "Rescan folders" item to the "Browse Library" section
 - Paginate playlist page
+
+###################################
+
+FIX:
+
+fetching next pages on playlist folder 
+
+bug: malformed payload
+
+>>> "$playlist/Anime Essentials" instead of "$playlist/4"
+
+###################################
