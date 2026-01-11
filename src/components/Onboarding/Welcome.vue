@@ -4,10 +4,10 @@
         <div class="heading">Welcome to</div>
         <div class="appname">Swing Music</div>
         <p class="tagline">
-            You will need to configure your account login details <br />
-            and root directories to get started.
+            Click the button below to let's create your account <br />
+            <!-- and configure your music folders to get started. -->
         </p>
-        <button class="btn-continue" @click="emit('continue')">Get Started</button>
+        <button class="btn-continue" tabindex="0" @click="emit('continue')">Get Started</button>
     </div>
 </template>
 

@@ -3,7 +3,7 @@
         <form class="createadmin" @submit.prevent="createAccount">
             <Avatar class="avatar" :name="username" :size="48"/>
             <div>
-                <div class="heading">Create admin account</div>
+                <div class="heading">Create account</div>
                 <div class="description">This account will be used to manage your server.</div>
             </div>
             <br />

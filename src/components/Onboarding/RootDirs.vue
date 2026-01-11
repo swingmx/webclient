@@ -1,11 +1,11 @@
 <template>
     <FilePicker v-if="showFilePicker" :userhome="userHome" @submitDirs="handleSubmitDirs" @cancel="toggleFilePicker" />
     <div v-else class="rootdirconfig">
-        <div class="heading">Configure root directories</div>
-        <div class="description">Where do you want to look for music?</div>
+        <div class="heading">Configure music folders</div>
+        <div class="description">Where do you want Swing Music to look for music?</div>
         <br />
         <div class="options">
-            <div class="option" @click="toggleHomeDir">
+            <div class="option" tabindex="0" @click="toggleHomeDir" @keydown="handleKeyDown($event, toggleHomeDir)">
                 <div>
                     <div class="option-title">Home directory</div>
                     <div class="option-description">
@@ -17,7 +17,12 @@
                 </div>
             </div>
             <br />
-            <div class="option" @click="toggleFilePicker">
+            <div
+                class="option"
+                tabindex="0"
+                @click="toggleFilePicker"
+                @keydown="handleKeyDown($event, toggleFilePicker)"
+            >
                 <div>
                     <div class="option-title">Specific directory</div>
                     <div class="option-description">
@@ -40,12 +45,17 @@
         </div>
     </div>
     <div v-if="rootDirs.length > 0 && !homeDirSelected" class="selected-folders rounded-sm">
-        <div class="heading">{{ finalRootDirs.length }} Selected Folders</div>
+        <div class="heading">{{ finalRootDirs.length }} selected folders</div>
         <div class="folders">
             <div v-for="folder in finalRootDirs" :key="folder" class="folder">
                 <FolderSvg />
                 {{ folder.startsWith(userHome) ? folder.replace(userHome, '~') : folder }}
-                <div class="action" @click="handleRemoveFolder(folder)">
+                <div
+                    class="action"
+                    tabindex="0"
+                    @click="handleRemoveFolder(folder)"
+                    @keydown="handleKeyDown($event, () => handleRemoveFolder(folder))"
+                >
                     <SubtractSvg />
                 </div>
             </div>
@@ -119,6 +129,13 @@ const homeDirSelected = computed(() => {
 const specificDirsSelected = computed(() => finalRootDirs.value.length && !homeDirSelected.value)
 
 // SECTION: Handlers
+function handleKeyDown(event: KeyboardEvent, action: () => void) {
+    if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        action()
+    }
+}
+
 function toggleFilePicker() {
     // INFO: Reset root dirs if home dir is selected
     if (homeDirSelected.value) {
@@ -217,6 +234,11 @@ onMounted(async () => {
 
     &:hover {
         background-color: $gray3;
+    }
+
+    &:focus {
+        outline: 2px solid $highlight-blue;
+        outline-offset: 2px;
     }
 
     .option-selected {

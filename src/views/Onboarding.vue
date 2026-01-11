@@ -143,6 +143,11 @@ onMounted(() => {
         background-color: $blue;
         border-radius: 4rem;
         padding: 1.25rem 2rem;
+
+        &:focus {
+            outline: 2px solid $highlight-blue;
+            outline-offset: 2px;
+        }
     }
 
     .progressbar {
