@@ -1,7 +1,9 @@
 <template>
     <div class="now-playing-header">
         <div class="centered">
-            <PlayingFrom />
+            <div class="header-row">
+                <PlayingFrom />
+            </div>
             <RouterLink
                 :to="{
                     name: Routes.album,
@@ -15,15 +17,18 @@
                 <img v-motion-fade class="rounded" :src="paths.images.thumb.large + queue.currenttrack?.image" />
             </RouterLink>
             <NowPlayingInfo @handle-fav="handleFav" />
-            <Progress v-if="isMobile" />
+            
             <div class="below-progress">
-                <div v-if="isMobile" class="time">
-                    {{ formatSeconds(queue.duration.current) }}
-                </div>
-                <Buttons v-if="isSmallPhone" :hide-heart="true" @handleFav="() => {}" />
-                <div v-if="isMobile" class="time">
-                    {{ formatSeconds(queue.duration.full) }}
-                </div>
+             <!-- Desktop progress/time usually handled in bottom bar, 
+                  but NowPlaying view might show it. 
+                  Checking original file: header included PlayingFrom, Image, Info, Progress (if Mobile), 
+                  and .below-progress (if Mobile). 
+                  
+                  Since we are fixing DESKTOP view, and desktop has BottomBar always visible,
+                  we probably don't need progress/controls here at all? 
+                  The original file had `Progress v-if="isMobile"`.
+                  So for desktop, it was just Image + Info + Up Next.
+             -->
             </div>
         </div>
         <h3 class="nowplaying_title" v-if="queue.next">Up Next</h3>
@@ -43,12 +48,8 @@ import { paths } from '@/config'
 import { dropSources, favType } from '@/enums'
 import favoriteHandler from '@/helpers/favoriteHandler'
 import { Routes } from '@/router'
-import { isMobile, isSmallPhone } from '@/stores/content-width'
 import useQueueStore from '@/stores/queue'
-import { formatSeconds } from '@/utils'
 
-import Progress from '@/components/LeftSidebar/NP/Progress.vue'
-import Buttons from '../BottomBar/Right.vue'
 import SongItem from '../shared/SongItem.vue'
 import NowPlayingInfo from './NowPlayingInfo.vue'
 import PlayingFrom from './PlayingFrom.vue'
@@ -75,6 +76,13 @@ function handleFav() {
     padding-bottom: $smaller;
     position: relative;
 
+    .header-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
     .nowplaying_title {
         padding-left: 1rem;
         margin: 1.25rem 0;
@@ -87,99 +95,27 @@ function handleFav() {
         @media only screen and (max-width: 724px) {
             padding-left: 0.5rem;
         }
-
-        /* Somehow has to be replaced by above now
-        @include largePhones {
-            padding-left: 0.5rem;
-        }
-        */
-    }
-
-    .below-progress {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 1rem;
-
-        .time {
-            font-size: $medium;
-            font-weight: 500;
-            background-color: $gray3;
-            padding: 1px $smaller;
-            min-width: 2.5rem;
-            text-align: center;
-            border-radius: $smaller;
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* Responsive */
-        @include allPhones {
-            .right-group button.speaker {
-                border-top: 1px solid transparent !important;
-                border-top-left-radius: 0 !important;
-                border-top-right-radius: 0 !important;
-            }
-        }
-
-        @include smallestPhones {
-            position: relative;
-            flex-direction: column;
-            align-items: unset;
-            gap: $small;
-
-            .time:first-child {
-                align-self: baseline;
-                margin-left: 4px;
-            }
-
-            .time:last-child {
-                align-self: end;
-                position: absolute;
-                top: 0;
-                right: 4px;
-            }
-
-            .right-group {
-                width: 100% !important;
-                display: flex;
-                justify-content: space-between;
-            }
-        }
     }
 
     .centered {
         margin: 0 auto;
         width: 26rem;
         max-width: 100%;
+        padding: 0 1rem;
     }
 
     .np-image {
         position: relative;
         margin-bottom: 1rem;
+        display: block;
 
         img {
             width: 100%;
-            height: 100%;
-            max-width: 30rem;
-            // aspect-ratio: 1;
+            height: auto;
+            aspect-ratio: 1;
             object-fit: cover;
-        }
-    }
-
-    #progress {
-        margin-top: 1rem;
-        margin-right: 0;
-
-        &::-moz-range-thumb {
-            height: 0.8rem;
-        }
-
-        &::-webkit-slider-thumb {
-            height: 0.8rem;
-        }
-
-        &::-ms-thumb {
-            height: 0.8rem;
+            border-radius: $medium;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
     }
 }

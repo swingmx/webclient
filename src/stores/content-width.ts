@@ -85,4 +85,7 @@ export {
     updateCardWidth,
     win_width,
     track_limit,
+    isMobilePlayerOpen
 }
+
+const isMobilePlayerOpen = ref(false)
