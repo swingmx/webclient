@@ -12,6 +12,7 @@
       </span>
     </div>
     <div class="actions">
+      <LyricsButton />
       <HeartSvg :state="queue.currenttrack?.is_favorite" @handle-fav="$emit('handleFav', queue.currenttrackhash)" />
       <OptionSvg class="optionsvg" :class="{ context_menu_showing }" @click="showMenu" />
     </div>
@@ -23,6 +24,7 @@ import { ref } from "vue";
 
 import ArtistName from "../shared/ArtistName.vue";
 import HeartSvg from "../shared/HeartSvg.vue";
+import LyricsButton from "../shared/LyricsButton.vue";
 
 import OptionSvg from "@/assets/icons/more.svg";
 import { showTrackContextMenu } from "@/helpers/contextMenuHandler";
@@ -59,10 +61,33 @@ function showMenu(e: MouseEvent) {
   .actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.25rem;
+
+    button {
+      background: transparent;
+      border: none;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+
+    .lyrics {
+      opacity: 0.25;
+      color: $white;
+
+      &.showStatus {
+        opacity: 1;
+      }
+    }
 
     .optionsvg {
-      transform: scale(1.5) rotate(90deg);
+      transform: rotate(90deg);
       border-radius: $small;
       transition: background-color 0.2s ease-out;
 

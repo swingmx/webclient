@@ -20,13 +20,19 @@
         <div id="acontent" v-element-size="updateContentElemSize">
             <div id="contentresizer" ref="appcontent"></div>
             <BalancerProvider>
-                <RouterView />
+                <RouterView v-slot="{ Component }">
+                    <Transition name="slide" mode="out-in">
+                        <component :is="Component" />
+                    </Transition>
+                </RouterView>
             </BalancerProvider>
         </div>
         <RightSideBar v-if="settings.use_sidebar && xl" />
+<RightSideBar v-if="settings.use_sidebar && xl" />
         <BottomBar />
         <!-- <BubbleManager /> -->
     </section>
+    <MobilePlayer v-if="isMobile" />
 </template>
 
 <script setup lang="ts">
@@ -54,6 +60,7 @@ import { xl, xxl } from "./composables/useBreakpoints";
 import ContextMenu from "@/components/ContextMenu.vue";
 import Modal from "@/components/modal.vue";
 import Notification from "@/components/Notification.vue";
+import MobilePlayer from "@/components/MobilePlayer.vue";
 
 // @app-grid-components
 import BottomBar from "@/components/BottomBar/BottomBar.vue";
@@ -175,5 +182,24 @@ export default defineComponent({
     &::-webkit-scrollbar {
         display: none;
     }
+}
+
+.slide-enter-active,
+.slide-leave-active {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+#app-grid {
+    overflow-x: hidden;
 }
 </style>
