@@ -107,4 +107,7 @@ export interface DBSettings {
   lastfmSessionKey: string;
   showPlaylistsInFolderView: boolean;
   artistArticleAwareSorting: boolean;
+
+  deviceName: string;
+  deviceId: string;
 }

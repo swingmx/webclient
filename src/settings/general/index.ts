@@ -11,6 +11,7 @@ import extendWidth from './extend-width'
 import folderlistmode from './folderlistmode'
 import layout from './layout'
 import nowPlaying from './now-playing-group'
+import { SettingType } from '../enums'
 import rootDirSettings from './root-dirs'
 import artistSettings from './artists'
 import sidebarSettings from './sidebar'
@@ -21,6 +22,8 @@ import AvatarSvg from '@/assets/icons/artist.svg?raw'
 import FolderSvg from '@/assets/icons/folder.svg?raw'
 import TrackSvg from '@/assets/icons/mic.svg?raw'
 import AppearanceSvg from '@/assets/icons/paintbrush.svg?raw'
+import KeySvg from '@/assets/icons/key.svg?raw'
+import CloudUploadSvg from '@/assets/icons/cloud-upload.svg?raw'
 
 const npStrings = strings.nowPlayingStrings
 const rootRootStrings = strings.manageRootDirsStrings
@@ -42,6 +45,17 @@ export const general = {
                 ...nowPlaying,
             ],
         },
+        {
+            title: "License",
+            desc: "Manage your subscription, license keys and authorized devices",
+            displayName: "License Settings",
+            icon: KeySvg,
+            settings: [
+                {
+                    type: SettingType.license,
+                },
+            ],
+        }
     ],
 } as SettingCategory
 
@@ -81,7 +95,7 @@ export const library = {
         },
         {
             title: 'Backup',
-            icon: AvatarSvg,
+            icon: CloudUploadSvg,
             desc: 'Backup and restore your settings',
             settings: [...restore],
         },

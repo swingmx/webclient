@@ -77,6 +77,9 @@ export default defineStore('settings', {
         statsperiod: 'week',
         showInlineFavIcon: false,
         _highlightFavoriteTracks: false,
+
+        device_name: '',
+        device_id: '',
     }),
     actions: {
         mapDbSettings(settings: DBSettings) {
@@ -104,6 +107,9 @@ export default defineStore('settings', {
             if (this.use_lyrics_plugin) {
                 this.lyrics_plugin_settings = settings.plugins.find(p => p.name === 'lyrics_finder')?.settings
             }
+
+            this.device_name = settings.deviceName
+            this.device_id = settings.deviceId
         },
         setArtistSeparators(separators: string[]) {
             this.separators = separators
@@ -378,6 +384,9 @@ export default defineStore('settings', {
         },
         setStatsPeriod(period: string) {
             this.statsperiod = period
+        },
+        setLicenseKey(key: string) {
+            this.licenseKey = key
         },
     },
     getters: {

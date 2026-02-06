@@ -1,14 +1,14 @@
 <template>
     <form class="secretinput" @submit.prevent="$emit('submit', input)">
         <div class="left rounded-sm no-scroll">
-            <input v-model="input" :type="showText ? 'text' : 'password'" @input="() => (showTextManual = true)" />
-            <button @click.prevent="showTextManual = !showTextManual">
+            <input v-model="input" :type="showText ? 'text' : 'password'" :placeholder="placeholder" @input="() => (showTextManual = true)" />
+            <button v-if="showHideButton" @click.prevent="showTextManual = !showTextManual">
                 <EyeSvg v-if="showText" />
                 <EyeSlashSvg v-else />
             </button>
         </div>
         <div class="right">
-            <button>Save</button>
+            <button>{{ buttonText ?? 'Save' }}</button>
         </div>
     </form>
 </template>
@@ -20,7 +20,10 @@ import EyeSvg from '@/assets/icons/eye.svg'
 import EyeSlashSvg from '@/assets/icons/eye.slash.svg'
 
 const props = defineProps<{
-    text: string
+    text?: string
+    placeholder?: string
+    buttonText?: string
+    showHideButton?: boolean
 }>()
 
 const input = ref('')
@@ -29,6 +32,11 @@ const showText = computed(() => {
     if (showTextManual.value) return true
 
     return input.value.length == 0
+})
+
+const showHideButton = computed(() => {
+    if (props.showHideButton === undefined) return true
+    return props.showHideButton
 })
 
 defineEmits<{
@@ -64,7 +72,7 @@ onMounted(() => {
             background: none;
             padding: $small;
             font-size: 12px;
-            font-family: 'SF Mono';
+            font-family: 'SF Mono', monospace;
             color: #ffffff00;
         }
 
@@ -74,6 +82,12 @@ onMounted(() => {
 
         button {
             background: none;
+        }
+    }
+
+    .right {
+        button {
+            height: 100% !important;
         }
     }
 }

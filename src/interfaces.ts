@@ -180,11 +180,10 @@ export interface Playlist {
     pinned: boolean
     help_text?: string
     time?: string
-    images:
-        | {
-              image: string
-              color: string
-          }[]
+    images: {
+        image: string
+        color: string
+    }[]
 }
 
 export interface Collection {
@@ -333,4 +332,43 @@ export interface StatItem {
     value: string
     text: string
     image?: string
+}
+
+// License
+
+interface Device {
+    current: boolean
+    device_id: string
+    device_name: string
+    last_seen: string | null
+}
+
+interface Customer {
+    email: string
+    id: string
+    name: string | null
+}
+
+interface Devices {
+    active: number
+    limit: number
+    list: Device[]
+}
+
+interface License {
+    created_at: string
+    device_id: string
+    device_name: string
+    expires_at: string | null
+    license_type: string
+    public_key: string
+    status: string
+}
+
+export interface LicenseInfo {
+    customer: Customer
+    devices: Devices
+    license: License
+    msg: string
+    license_key: string
 }

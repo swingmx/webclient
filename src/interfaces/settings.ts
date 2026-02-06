@@ -23,6 +23,7 @@ export interface Setting {
 export interface SettingGroup {
   title?: string;
   desc?: string;
+  displayName?: string;
   settings: Setting[];
   show_if?: () => boolean;
   experimental?: boolean;

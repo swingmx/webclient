@@ -17,10 +17,13 @@
                     <button v-if="isSmallPhone" class="back" @click="handleGoBack">
                         <ArrowSvg />
                     </button>
-                    {{ currentGroup?.title }}
+                    {{ currentGroup?.displayName || currentGroup?.title }}
                     <span v-if="currentGroup?.experimental" class="badge experimental circular">
                         {{ currentGroup?.experimental ? 'experimental' : '' }}
                     </span>
+                </div>
+                <div v-if="currentGroup?.desc" class="desc">
+                    {{ currentGroup?.desc }}
                 </div>
             </div>
             <Content :settings="(currentGroup as SettingGroup)" />
@@ -59,7 +62,7 @@ const currentGroup = computed(() => {
     // select default tab
     for (const group of settingGroups) {
         for (const settings of group.groups) {
-            if (settings.title === 'Appearance') {
+            if (settings.title === 'License') {
                 return settings
             }
         }

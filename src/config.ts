@@ -149,6 +149,18 @@ export const paths = {
             get updateConfig() {
                 return this.base + '/update'
             },
+            get licenseInfo(){
+                return this.base + '/license/status'
+            },
+            get licenseRegister() {
+                return this.base + '/license/register'
+            },
+            get licenseDeactivate() {
+                return this.base + '/license/deactivate'
+            },
+            get licenseDevice() {
+                return this.base + '/license/device'
+            }
         },
         files: '/file',
         home: {
