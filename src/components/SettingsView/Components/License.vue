@@ -58,7 +58,7 @@
                     class="license-device rounded-sm"
                 >
                     <div class="icon">
-                        <ServerSvg />
+                        <component :is="getDeviceIcon(device.device_type)" />
                     </div>
 
                     <div>
@@ -89,10 +89,13 @@
 <script setup lang="ts">
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-import { computed, onMounted, ref } from 'vue'
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
 
 import Input from '@/components/shared/Input.vue'
-import ServerSvg from '@/assets/icons/server.svg'
+const ServerSvg = defineAsyncComponent(() => import('@/assets/icons/server.svg'))
+const LaptopSvg = defineAsyncComponent(() => import('@/assets/icons/laptop.svg'))
+const DesktopSvg = defineAsyncComponent(() => import('@/assets/icons/desktop.svg'))
+const HandheldSvg = defineAsyncComponent(() => import('@/assets/icons/phone.svg'))
 import Spinner from '@/components/shared/Spinner.vue'
 
 import { paths } from '@/config'
@@ -125,6 +128,21 @@ const submitEnabled = computed(() => {
     if (loading.value) return false
     return false
 })
+
+function getDeviceIcon(deviceType: string) {
+    switch (deviceType) {
+        case 'server':
+            return ServerSvg
+        case 'laptop':
+            return LaptopSvg
+        case 'desktop':
+            return DesktopSvg
+        case 'handheld':
+            return HandheldSvg
+        default:
+            return ServerSvg
+    }
+}
 
 const isExpired = computed(() => {
     if (!licenseInfo.value?.license?.expires_at) return false
@@ -326,9 +344,6 @@ onMounted(async () => {
         .dname {
             font-weight: 600;
         }
-
-        button {
-        }
     }
 
     .license-device:first-child {
@@ -349,7 +364,7 @@ onMounted(async () => {
         }
 
         .dname::after {
-            content: 'THIS SERVER';
+            content: 'THIS HOST';
             background-color: $textbgcolor;
             font-size: 10px;
             font-weight: 500;

@@ -341,6 +341,7 @@ interface Device {
     device_id: string
     device_name: string
     last_seen: string | null
+    device_type: "server" | "laptop" | "desktop" | "handheld"
 }
 
 interface Customer {
