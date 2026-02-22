@@ -19,6 +19,7 @@
                 input-id="license-key"
                 :text="licenseInfo?.license_key || ''"
                 placeholder="SMX-XXXX-XXXX-XXXX-XXXX-XXXXXXX"
+                :show-hide-button="!!licenseInfo?.license_key"
                 @input="handleLicenseKeyInput"
             />
 
@@ -150,10 +151,10 @@ const isExpired = computed(() => {
 })
 
 function getLastSeen(date: string | null) {
-    if (!date) return 'Never used'
+    if (!date) return 'No activity'
 
     const timeAgo = new TimeAgo('en').format(new Date(date))
-    return `Last used ${timeAgo}`
+    return `Last activity: ${timeAgo}`
 }
 
 function handleLicenseKeyInput(value: string) {
@@ -238,7 +239,7 @@ onMounted(async () => {
     .btnred {
         border-radius: $small;
         background-color: transparent;
-        border: solid 0.5px $red;
+        // border: solid 0.5px $red;
         color: $red;
         padding: 1.15rem 1rem;
 
@@ -384,8 +385,8 @@ onMounted(async () => {
         padding: 0 $medium;
 
         button {
-            border: solid 0.5px $gray1;
-            color: $gray1;
+            border: solid 0.5px $red;
+            color: $red;
         }
 
         button:hover {

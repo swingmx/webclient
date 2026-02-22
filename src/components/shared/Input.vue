@@ -11,7 +11,7 @@
             @input="$emit('input', ($event.target as HTMLInputElement).value)"
         />
         <div
-            v-if="props.type === 'password'"
+            v-if="props.type === 'password' || props.showHideButton"
             class="showpass rounded-sm"
             :class="{ show: value.length }"
             @click="toggleShowPassword"
@@ -35,6 +35,7 @@ const props = defineProps<{
     required?: boolean
     disabled?: boolean
     text?: string
+    showHideButton?: boolean
 }>()
 
 const value = ref(props.text || '')
@@ -54,6 +55,13 @@ defineEmits<{
 
 const showingPassword = ref(false)
 const type = ref(props.type || 'text')
+
+// watch props.showHideButton
+watch(() => props.showHideButton, newShowHideButton => {
+    if (newShowHideButton) {
+        type.value = 'password'
+    }
+})
 
 function toggleShowPassword() {
     type.value = showingPassword.value ? 'password' : 'text'
