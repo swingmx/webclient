@@ -1,25 +1,23 @@
 <template>
     <div class="license">
-        <form class="rounded" @submit.prevent="registerLicenseKey">
-            <!-- <SecretInput placeholder="Paste license key here" button-text="load" @submit="handleLicenseKeyInput"/> -->
-            <div class="labelarea">
-                <label for="license-key">{{ licenseInfo ? 'Update' : 'Paste' }} license key:</label>
-                <div v-if="licenseInfo && licenseInfo.license" class="labels">
-                    <div class="label">
-                        {{ licenseInfo.license.license_type === 'lifetime' ? 'lifetime license' : 'subscription' }}
-                    </div>
-                    <div v-if="licenseInfo.license.expires_at" class="label">
-                        Expires: {{ new Date(licenseInfo.license.expires_at).toUTCString() }}
-                    </div>
-                    <div v-if="isExpired" class="label expired">expired</div>
-                </div>
+        <div v-if="!licenseInfo?.license" class="infocard rounded">
+            <div class="header"><span>No Active Subscription</span><CrownSvg /></div>
+            <div class="content">
+                Get a subscription to unlock all premium features. Use the link below to browse the available plans and
+                benefits.
             </div>
+            <div class="footer">
+                <a href="https://swingmx.com/pricing" target="_blank" class="cta rounded-sm">View Pricing</a>
+            </div>
+        </div>
 
+        <form class="rounded" @submit.prevent="registerLicenseKey">
+            <label for="license-key">Paste your license key here:</label>
             <Input
                 input-id="license-key"
                 :text="licenseInfo?.license_key || ''"
                 placeholder="SMX-XXXX-XXXX-XXXX-XXXX-XXXXXXX"
-                :show-hide-button="!!licenseInfo?.license_key"
+                :show-hide-button="true"
                 @input="handleLicenseKeyInput"
             />
 
@@ -29,10 +27,10 @@
                     input-id="device-name"
                     :text="licenseInfo?.devices.list.find(d => d.current)?.device_name || ''"
                     :placeholder="settings.device_name || ''"
-                    @input="(value: string) => deviceName = value"
+                    @input="(value: string) => (deviceName = value)"
                 />
 
-                <div class="btngroup">
+                <div v-if="submitEnabled" class="btngroup">
                     <button type="submit" class="btn-active" :disabled="!submitEnabled">
                         <!-- {{ licenseInfo && licenseInfo.license_key !== licenseKey ? 'Update' : 'Activate' }} License -->
                         Save Changes
@@ -41,6 +39,57 @@
                 </div>
             </div>
         </form>
+
+        <div v-if="error" class="errors rounded-sm">
+            <div class="error-icon">
+                <ErrorSvg />
+            </div>
+            <div class="error-text">
+                {{ error }}
+            </div>
+        </div>
+
+        <div v-if="licenseInfo?.license.subscription" class="licenseMeta rounded">
+            <h3 class="h2">Subscription Details</h3>
+            <div class="content">
+                <div class="info">
+                    <div class="label">Amount</div>
+                    <span class="primary">
+                        ${{
+                            licenseInfo?.license.subscription.amount != null
+                                ? (licenseInfo.license.subscription.amount / 100).toFixed(2)
+                                : ''
+                        }} </span
+                    ><span class="period"
+                        >/{{ getRecurringInterval(licenseInfo?.license.subscription.recurring_interval || '') }}</span
+                    >
+                </div>
+                <div class="info">
+                    <div class="label">Status</div>
+                    <span class="primary">
+                        {{ licenseInfo?.license.subscription.status }}
+                    </span>
+                    <span v-if="licenseInfo?.license.subscription.canceled_at" class="red">
+                        <br />
+                        {{
+                            licenseInfo?.license.subscription.canceled_at
+                                ? 'CANCELLED ' + getTimeAgo(licenseInfo.license.subscription.canceled_at).toUpperCase()
+                                : ''
+                        }}
+                    </span>
+                </div>
+                <div class="info">
+                    <div class="label">Renewal</div>
+                    <span class="primary renewal">
+                        {{
+                            licenseInfo?.license.subscription.cancel_at_period_end
+                                ? 'Auto-renew off'
+                                : getDate(licenseInfo?.license.subscription.current_period_end || '')
+                        }}
+                    </span>
+                </div>
+            </div>
+        </div>
 
         <div v-if="licenseInfo?.license_key" class="licenseinfo">
             <h3 class="h2">Authorized Devices</h3>
@@ -69,20 +118,21 @@
                         <div class="lastseen">{{ getLastSeen(device.last_seen) }}</div>
                     </div>
 
-                    <button class="btnred" @click="logOutDevice(device.device_id)">Revoke</button>
+                    <button class="btnred" @click="() => logOutDevice(device.device_id)">Revoke</button>
                 </div>
             </div>
         </div>
 
         <div v-if="licenseInfo?.license_key" class="redzone">
-            <button class="btnred" @click="logOutDevice(settings.device_id)">Log Out</button>
-            <button
+            <a
                 v-if="licenseInfo?.license.license_type === 'subscription'"
-                class="btnred"
-                @click="cancelSubscription"
+                class="submanage"
+                href="https://polar.sh/swingmx/portal/overview"
+                target="_blank"
             >
-                Cancel Subscription
-            </button>
+                Manage Subscription ↗
+            </a>
+            <button class="btnred" @click="() => logOutDevice(settings.device_id)">Log Out</button>
         </div>
     </div>
 </template>
@@ -93,11 +143,14 @@ import en from 'javascript-time-ago/locale/en'
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
 
 import Input from '@/components/shared/Input.vue'
+import Spinner from '@/components/shared/Spinner.vue'
+import ErrorSvg from '@/assets/icons/toast/error.svg'
+
+const CrownSvg = defineAsyncComponent(() => import('@/assets/icons/crown.svg'))
 const ServerSvg = defineAsyncComponent(() => import('@/assets/icons/server.svg'))
 const LaptopSvg = defineAsyncComponent(() => import('@/assets/icons/laptop.svg'))
 const DesktopSvg = defineAsyncComponent(() => import('@/assets/icons/desktop.svg'))
 const HandheldSvg = defineAsyncComponent(() => import('@/assets/icons/phone.svg'))
-import Spinner from '@/components/shared/Spinner.vue'
 
 import { paths } from '@/config'
 import useAxios from '@/requests/useAxios'
@@ -106,6 +159,7 @@ import useSettingsStore from '@/stores/settings'
 
 TimeAgo.addLocale(en)
 
+const error = ref<string | null>(null)
 const loading = ref(false)
 const settings = useSettingsStore()
 const licenseKey = ref<string | null>(null)
@@ -130,6 +184,28 @@ const submitEnabled = computed(() => {
     return false
 })
 
+function getRecurringInterval(interval: string) {
+    switch (interval) {
+        case 'month':
+            return 'mo'
+        case 'year':
+            return 'yr'
+    }
+
+    return interval
+}
+
+function getDate(date: string) {
+    const s = new Date(date).toLocaleDateString('en-GB', {
+        timeZone: 'UTC',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+    })
+    const [day, month, year] = s.split(' ')
+    return `${day} ${month}, ${year}`
+}
+
 function getDeviceIcon(deviceType: string) {
     switch (deviceType) {
         case 'server':
@@ -145,10 +221,9 @@ function getDeviceIcon(deviceType: string) {
     }
 }
 
-const isExpired = computed(() => {
-    if (!licenseInfo.value?.license?.expires_at) return false
-    return new Date(licenseInfo.value.license.expires_at) < new Date()
-})
+function getTimeAgo(date: string) {
+    return new TimeAgo('en').format(new Date(date))
+}
 
 function getLastSeen(date: string | null) {
     if (!date) return 'No activity'
@@ -175,6 +250,7 @@ async function getLicenseInfo() {
 }
 
 async function registerLicenseKey() {
+    error.value = null
     const key = licenseKey.value || licenseInfo.value?.license_key || ''
     const serverName = deviceName.value || settings.device_name || ''
 
@@ -190,6 +266,10 @@ async function registerLicenseKey() {
     if (response.status === 200) {
         licenseInfo.value = response.data
         licenseInfo.value!.license_key = key
+    }
+
+    if (response.status !== 200) {
+        error.value = response.data?.error || 'An unknown error occurred'
     }
 
     loading.value = false
@@ -215,10 +295,8 @@ async function logOutDevice(deviceId: string) {
         licenseInfo.value!.devices.active = response.data.devices.active
         licenseInfo.value!.devices.limit = response.data.devices.limit
     }
-}
 
-async function cancelSubscription() {
-    window.open('https://polar.sh/swingmx/portal/overview', '_blank')
+    return
 }
 
 onMounted(async () => {
@@ -234,6 +312,7 @@ onMounted(async () => {
         font-size: 14px;
         margin-top: $small;
         background-color: $gray;
+        border: solid 0.5px #3a3a3c;
     }
 
     .btnred {
@@ -257,7 +336,8 @@ onMounted(async () => {
     }
 
     form {
-        background-color: $gray5;
+        background-color: #25272c;
+        // background: linear-gradient(35deg, rgba(30, 35, 45, 0.429), rgba(54, 62, 80, 0.288), rgba(36, 47, 73, 0.144));
         padding: 1rem;
         margin-bottom: 1.25rem;
 
@@ -379,6 +459,7 @@ onMounted(async () => {
     .redzone {
         display: flex;
         justify-content: flex-end;
+        align-items: center;
         gap: 1rem;
         margin-top: $small;
         margin-top: 2rem;
@@ -392,6 +473,150 @@ onMounted(async () => {
         button:hover {
             border-color: $red;
         }
+    }
+
+    .errors {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border: solid 1px $red;
+        color: $red;
+        gap: $small;
+        font-size: 14px;
+
+        svg {
+            height: 1.5rem;
+        }
+    }
+
+    .licenseMeta {
+        background-color: #242424;
+        padding: 1rem;
+        margin-bottom: 1.25rem;
+
+        .info {
+            margin: 0;
+        }
+
+        .h2 {
+            margin-top: 0;
+            text-transform: uppercase;
+            font-size: 14px;
+            color: $gray1;
+            margin-bottom: 1rem;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .label {
+            font-size: 12px;
+            font-weight: 500;
+            color: $gray1;
+            margin-bottom: $smallest;
+        }
+
+        .primary {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+            text-transform: capitalize;
+        }
+
+        .period {
+            font-size: 12px;
+            font-weight: 500;
+            color: $gray1;
+        }
+
+        .red {
+            color: $red;
+            font-size: 11px;
+            font-weight: 500;
+            margin-top: $smallest;
+        }
+
+        .renewal {
+            display: flex;
+            align-items: center;
+            gap: $small;
+            text-transform: none;
+        }
+
+        svg {
+            width: 1rem;
+            height: 1rem;
+            color: $red;
+        }
+    }
+
+    .submanage {
+        color: $white;
+        font-size: 14px;
+        font-weight: 500;
+        color: $blue;
+        margin-top: $smallest;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .infocard {
+        background: linear-gradient(
+            35deg,
+            rgba(41, 49, 69, 0.429),
+            rgba(33, 42, 50, 0.367),
+            rgba(25, 30, 35, 0.369)
+        );
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+
+        .header {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: $white;
+
+            display: flex;
+            align-items: center;
+            gap: $small;
+
+            svg {
+                width: 1.25rem;
+            }
+        }
+
+        .content {
+            display: block;
+            font-size: 14px !important;
+            font-size: 1.05rem;
+            color: $white;
+            margin-top: $small;
+            margin-bottom: 1.5rem !important;
+            max-width: 90%;
+        }
+
+        .footer {
+            margin-top: $small;
+        }
+
+        .cta {
+            border: solid 1px $white;
+            color: $white;
+            padding: $small $medium;
+            font-weight: 500;
+            padding: $small 1.5rem;
+            font-size: 14px;
+        }
+
+        // .icon {
+        //     width: 2rem;
+        //     // position: absolute;
+        //     top: 1.75rem;
+        //     right: 1.75rem;
+        // }
     }
 }
 </style>

@@ -54,14 +54,7 @@ defineEmits<{
 }>()
 
 const showingPassword = ref(false)
-const type = ref(props.type || 'text')
-
-// watch props.showHideButton
-watch(() => props.showHideButton, newShowHideButton => {
-    if (newShowHideButton) {
-        type.value = 'password'
-    }
-})
+const type = ref(props.showHideButton ? 'password' : props.type || 'text')
 
 function toggleShowPassword() {
     type.value = showingPassword.value ? 'password' : 'text'

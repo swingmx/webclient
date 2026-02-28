@@ -341,7 +341,7 @@ interface Device {
     device_id: string
     device_name: string
     last_seen: string | null
-    device_type: "server" | "laptop" | "desktop" | "handheld"
+    device_type: 'server' | 'laptop' | 'desktop' | 'handheld'
 }
 
 interface Customer {
@@ -364,6 +364,29 @@ interface License {
     license_type: string
     public_key: string
     status: string
+    subscription: {
+        amount: number
+        cancel_at_period_end: boolean
+        canceled_at: string | null
+        created_at: string
+        currency: string
+        current_period_end: string
+        current_period_start: string
+        custom_field_data: { [key: string]: any }
+        discount_id: string | null
+        ends_at: string
+        id: string
+        metadata: { [key: string]: any }
+        meters: any[]
+        modified_at: string
+        price_id: string
+        product_id: string
+        recurring_interval: string
+        started_at: string
+        status: string
+        trial_end: string | null
+        trial_start: string | null
+    }
 }
 
 export interface LicenseInfo {
