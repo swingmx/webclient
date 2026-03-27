@@ -10,7 +10,8 @@ import { content_width } from '../content-width'
 import { getLastFmApiSig } from '@/context_menus/hashing'
 import useAxios from '@/requests/useAxios'
 import { paths } from '@/config'
-import { router, Routes } from '@/router'
+import { router } from '@/router'
+import { LicenseInfo } from '@/interfaces'
 
 export default defineStore('settings', {
     state: () => ({
@@ -81,6 +82,7 @@ export default defineStore('settings', {
 
         device_name: '',
         device_id: '',
+        licenseInfo: <LicenseInfo | null>null,
     }),
     actions: {
         mapDbSettings(settings: DBSettings) {
@@ -387,8 +389,8 @@ export default defineStore('settings', {
         setStatsPeriod(period: string) {
             this.statsperiod = period
         },
-        setLicenseKey(key: string) {
-            this.licenseKey = key
+        updateLicenseInfo(info: LicenseInfo | null) {
+            this.licenseInfo = info
         },
     },
     getters: {

@@ -1,17 +1,7 @@
 <template>
     <div class="license">
-        <div v-if="!licenseInfo?.license" class="infocard rounded">
-            <div class="header"><span>No Active Subscription</span><CrownSvg /></div>
-            <div class="content">
-                Get a subscription to unlock all premium features. Use the link below to browse the available plans and
-                benefits.
-            </div>
-            <div class="footer">
-                <a href="https://swingmx.com/pricing" target="_blank" class="cta rounded-sm">View Pricing</a>
-            </div>
-        </div>
-
         <div
+            v-if="!licenseInfo || licenseInfo?.license.license_type === 'gh_sponsor'"
             class="github rounded"
             :class="{ success: licenseInfo && licenseInfo.license.license_type === 'gh_sponsor' }"
         >
@@ -48,15 +38,26 @@
             <GHSponsorSvg class="sponsor_icon" />
         </div>
 
-        <br />
+        <div v-if="!licenseInfo?.license" class="infocard rounded">
+            <div class="header"><span>No Active Subscription</span><CrownSvg /></div>
+            <div class="content">
+                Get a subscription to unlock all premium features. Use the link below to browse the available plans and
+                benefits.
+            </div>
+            <div class="footer">
+                <a href="https://swingmx.com/pricing" target="_blank" class="cta rounded-sm">View Pricing</a>
+            </div>
+        </div>
 
         <form
             v-if="licenseInfo?.license.license_type !== 'gh_sponsor'"
             class="rounded"
             @submit.prevent="registerLicenseKey"
         >
-            <div class="header">Already got a license key?</div>
-            <label for="license-key">Paste your license key here:</label>
+            <div class="header">{{ licenseInfo?.license_key ? 'License key info' : 'Already got a license key?' }}</div>
+            <label for="license-key">{{
+                licenseInfo?.license_key ? 'Update your license key:' : 'Paste your license key here:'
+            }}</label>
             <Input
                 input-id="license-key"
                 :text="licenseInfo?.license_key || ''"
@@ -172,14 +173,18 @@
             </div>
         </div>
 
-        <div v-if="licenseInfo?.license_key" class="redzone">
+        <div v-if="licenseInfo?.license.device_id" class="redzone">
             <a
-                v-if="licenseInfo?.license.license_type === 'subscription'"
+                v-if="licenseInfo?.license.license_type !== 'lifetime'"
                 class="submanage"
-                href="https://polar.sh/swingmx/portal/overview"
+                :href="
+                    licenseInfo?.license.license_type === 'gh_sponsor'
+                        ? 'https://github.com/sponsors/swingmx'
+                        : 'https://polar.sh/swingmx/portal/overview'
+                "
                 target="_blank"
             >
-                Manage Subscription ↗
+                Manage {{ licenseInfo?.license.license_type === 'gh_sponsor' ? 'Sponsorship' : 'Subscription' }} ↗
             </a>
             <button class="btnred" @click="() => logOutDevice(settings.device_id)">Log Out</button>
         </div>
@@ -206,6 +211,7 @@ import { paths } from '@/config'
 import useAxios from '@/requests/useAxios'
 import { LicenseInfo } from '@/interfaces'
 import useSettingsStore from '@/stores/settings'
+import { storeToRefs } from 'pinia'
 
 TimeAgo.addLocale(en)
 
@@ -214,7 +220,7 @@ const loading = ref(false)
 const settings = useSettingsStore()
 const licenseKey = ref<string | null>(null)
 const deviceName = ref<string | null>(null)
-const licenseInfo = ref<LicenseInfo | null>(null)
+const licenseInfo = storeToRefs(useSettingsStore()).licenseInfo
 const loginWithGitHubText = ref<string>('Log in with GitHub')
 
 const submitEnabled = computed(() => {
@@ -295,7 +301,7 @@ async function getLicenseInfo(checkSponsor: boolean = false) {
     })
 
     if (response.status === 200) {
-        licenseInfo.value = response.data
+        settings.updateLicenseInfo(response.data)
     }
 }
 
@@ -314,8 +320,9 @@ async function registerLicenseKey() {
     })
 
     if (response.status === 200) {
-        licenseInfo.value = response.data
-        licenseInfo.value!.license_key = key
+        const info = response.data as LicenseInfo
+        info.license_key = key
+        settings.updateLicenseInfo(info)
     }
 
     if (response.status !== 200) {
@@ -336,14 +343,16 @@ async function logOutDevice(deviceId: string) {
 
         // INFO: If we revoked this server, reset license info
         if (removedId === settings.device_id) {
-            licenseInfo.value = null
+            settings.updateLicenseInfo(null)
             return
         }
 
         // INFO: If we revoked another server, update the license info
-        licenseInfo.value!.devices.list = licenseInfo.value!.devices.list.filter(d => d.device_id !== removedId)
-        licenseInfo.value!.devices.active = response.data.devices.active
-        licenseInfo.value!.devices.limit = response.data.devices.limit
+        const info = licenseInfo.value as LicenseInfo
+        info.devices.list = info.devices.list.filter(d => d.device_id !== removedId)
+        info.devices.active = response.data.devices.active
+        info.devices.limit = response.data.devices.limit
+        settings.updateLicenseInfo(info)
     }
 
     return
@@ -659,7 +668,7 @@ onMounted(async () => {
     .infocard {
         background: linear-gradient(35deg, rgba(41, 49, 69, 0.429), rgba(33, 42, 50, 0.367), rgba(25, 30, 35, 0.369));
         padding: 2rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
 
         .content {
             display: block;
@@ -701,6 +710,7 @@ onMounted(async () => {
         border: solid 0.5px rgba(255, 255, 255, 0.1);
         position: relative;
         padding: 1rem;
+        margin-bottom: 1.25rem;
 
         &.success {
             padding: 1rem;

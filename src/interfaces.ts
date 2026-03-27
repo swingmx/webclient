@@ -361,7 +361,7 @@ interface License {
     device_id: string
     device_name: string
     expires_at: string | null
-    license_type: string
+    license_type: 'lifetime' | 'subscription' | 'gh_sponsor'
     public_key: string
     status: string
     subscription: {
