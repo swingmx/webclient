@@ -421,6 +421,7 @@ export default defineStore('settings', {
             // reset plugin settings
             store.use_lyrics_plugin = false
             store.lyrics_plugin_settings = {}
+            store.licenseInfo = null
         },
     },
 })
