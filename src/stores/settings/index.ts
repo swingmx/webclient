@@ -15,6 +15,7 @@ import { router, Routes } from '@/router'
 export default defineStore('settings', {
     state: () => ({
         version: '',
+        public_key: '',
         extend_width: false,
         contextChildrenShowMode: contextChildrenShowMode.hover,
         artist_top_tracks_count: 5,
@@ -84,6 +85,7 @@ export default defineStore('settings', {
     actions: {
         mapDbSettings(settings: DBSettings) {
             this.version = settings.version
+            this.public_key = settings.serverId
             this.root_dirs = settings.rootDirs
             this.feat = settings.extractFeaturedArtists
             this.prodby = settings.removeProdBy

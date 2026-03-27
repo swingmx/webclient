@@ -11,12 +11,56 @@
             </div>
         </div>
 
-        <form class="rounded" @submit.prevent="registerLicenseKey">
+        <div
+            class="github rounded"
+            :class="{ success: licenseInfo && licenseInfo.license.license_type === 'gh_sponsor' }"
+        >
+            <div class="info">
+                <div class="header">
+                    <b
+                        ><span v-if="!licenseInfo">GitHub Sponsor Benefits</span
+                        ><span v-else>Thank you for sponsoring Swing Music!</span></b
+                    >
+                </div>
+                <div class="desc">
+                    <span v-if="!licenseInfo">
+                        Swing Music Premium is available to all our GitHub Sponsors. Log in with GitHub to get access.
+                    </span>
+                    <span v-else>
+                        Hello @{{ licenseInfo.customer.name }}! You have access to Swing Music Premium. <br />
+                        Thank you for your support. ❤️❤️</span
+                    >
+
+                    <!-- <br /><br /> -->
+                </div>
+                <br v-if="!licenseInfo" />
+                <div v-if="!licenseInfo" class="btns">
+                    <button @click="loginWithGitHub">{{ loginWithGitHubText }}</button>
+                    <a
+                        v-if="loginWithGitHubText === 'Log in with GitHub'"
+                        href="https://github.com/sponsors/swingmx"
+                        target="_blank"
+                    >
+                        <button>Sponsor on GitHub ❤️</button>
+                    </a>
+                </div>
+            </div>
+            <GHSponsorSvg class="sponsor_icon" />
+        </div>
+
+        <br />
+
+        <form
+            v-if="licenseInfo?.license.license_type !== 'gh_sponsor'"
+            class="rounded"
+            @submit.prevent="registerLicenseKey"
+        >
+            <div class="header">Already got a license key?</div>
             <label for="license-key">Paste your license key here:</label>
             <Input
                 input-id="license-key"
                 :text="licenseInfo?.license_key || ''"
-                placeholder="SMX-XXXX-XXXX-XXXX-XXXX-XXXXXXX"
+                placeholder="..."
                 :show-hide-button="true"
                 @input="handleLicenseKeyInput"
             />
@@ -50,10 +94,15 @@
         </div>
 
         <div v-if="licenseInfo?.license.subscription" class="licenseMeta rounded">
-            <h3 class="h2">Subscription Details</h3>
+            <h3 class="h2">
+                {{ `${licenseInfo.license.license_type === 'gh_sponsor' ? 'GitHub Sponsors' : 'Subscription'}` }}
+                Details
+            </h3>
             <div class="content">
                 <div class="info">
-                    <div class="label">Amount</div>
+                    <div class="label">
+                        {{ `${licenseInfo.license.license_type === 'gh_sponsor' ? 'Tier' : `Amount`}` }}
+                    </div>
                     <span class="primary">
                         ${{
                             licenseInfo?.license.subscription.amount != null
@@ -91,7 +140,7 @@
             </div>
         </div>
 
-        <div v-if="licenseInfo?.license_key" class="licenseinfo">
+        <div v-if="licenseInfo?.license.device_id" class="licenseinfo">
             <h3 class="h2">Authorized Devices</h3>
             <div class="desc">
                 Instances currently using your license key ({{ licenseInfo?.devices.active }}/{{
@@ -151,6 +200,7 @@ const ServerSvg = defineAsyncComponent(() => import('@/assets/icons/server.svg')
 const LaptopSvg = defineAsyncComponent(() => import('@/assets/icons/laptop.svg'))
 const DesktopSvg = defineAsyncComponent(() => import('@/assets/icons/desktop.svg'))
 const HandheldSvg = defineAsyncComponent(() => import('@/assets/icons/phone.svg'))
+const GHSponsorSvg = defineAsyncComponent(() => import('@/assets/icons/gh_sponsors.svg'))
 
 import { paths } from '@/config'
 import useAxios from '@/requests/useAxios'
@@ -165,6 +215,7 @@ const settings = useSettingsStore()
 const licenseKey = ref<string | null>(null)
 const deviceName = ref<string | null>(null)
 const licenseInfo = ref<LicenseInfo | null>(null)
+const loginWithGitHubText = ref<string>('Log in with GitHub')
 
 const submitEnabled = computed(() => {
     // If license has changed
@@ -197,7 +248,6 @@ function getRecurringInterval(interval: string) {
 
 function getDate(date: string) {
     const s = new Date(date).toLocaleDateString('en-GB', {
-        timeZone: 'UTC',
         day: 'numeric',
         month: 'short',
         year: 'numeric',
@@ -238,9 +288,9 @@ function handleLicenseKeyInput(value: string) {
     }
 }
 
-async function getLicenseInfo() {
+async function getLicenseInfo(checkSponsor: boolean = false) {
     const response = await useAxios({
-        url: paths.api.settings.licenseInfo,
+        url: paths.api.settings.licenseInfo + '?github_sponsors=' + checkSponsor,
         method: 'GET',
     })
 
@@ -299,6 +349,30 @@ async function logOutDevice(deviceId: string) {
     return
 }
 
+async function loginWithGitHub() {
+    if (loginWithGitHubText.value === 'Refresh Status') {
+        return await getLicenseInfo(true).then(() => {
+            loginWithGitHubText.value = 'Log in with GitHub'
+        })
+    }
+
+    const clientId = 'Ov23li5bsrEqMmqdT10i'
+    const publicKey = settings.public_key
+    const redirectUri = 'http://127.0.0.1:1957/auth/github/callback'
+    const githubUrl = `https://github.com/login/oauth/authorize`
+
+    const queryParams = new URLSearchParams({
+        client_id: clientId,
+        redirect_uri: redirectUri,
+        state: `${publicKey}:${settings.device_id}:${settings.device_name}`,
+    })
+
+    const url = `${githubUrl}?${queryParams.toString()}`
+    window.open(url, '_blank')
+
+    loginWithGitHubText.value = 'Refresh Status'
+}
+
 onMounted(async () => {
     await getLicenseInfo()
 })
@@ -311,8 +385,8 @@ onMounted(async () => {
         font-family: 'SF Mono', monospace !important;
         font-size: 14px;
         margin-top: $small;
-        background-color: $gray;
-        border: solid 0.5px #3a3a3c;
+        background-color: transparent;
+        border: solid 1px $gray2;
     }
 
     .btnred {
@@ -336,7 +410,7 @@ onMounted(async () => {
     }
 
     form {
-        background-color: #25272c;
+        background-color: #222427;
         // background: linear-gradient(35deg, rgba(30, 35, 45, 0.429), rgba(54, 62, 80, 0.288), rgba(36, 47, 73, 0.144));
         padding: 1rem;
         margin-bottom: 1.25rem;
@@ -490,7 +564,8 @@ onMounted(async () => {
     }
 
     .licenseMeta {
-        background-color: #242424;
+        background-color: #2323299c;
+        // border: solid 0.5px rgba(240, 246, 252, 0.261);
         padding: 1rem;
         margin-bottom: 1.25rem;
 
@@ -509,6 +584,8 @@ onMounted(async () => {
         .content {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: unset;
+            padding-bottom: $small;
         }
 
         .label {
@@ -564,36 +641,31 @@ onMounted(async () => {
         }
     }
 
+    .header {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: $white;
+        margin-bottom: 2px;
+
+        display: flex;
+        align-items: center;
+        gap: $small;
+
+        svg {
+            width: 1.25rem;
+        }
+    }
+
     .infocard {
-        background: linear-gradient(
-            35deg,
-            rgba(41, 49, 69, 0.429),
-            rgba(33, 42, 50, 0.367),
-            rgba(25, 30, 35, 0.369)
-        );
+        background: linear-gradient(35deg, rgba(41, 49, 69, 0.429), rgba(33, 42, 50, 0.367), rgba(25, 30, 35, 0.369));
         padding: 2rem;
         margin-bottom: 1.5rem;
-
-        .header {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: $white;
-
-            display: flex;
-            align-items: center;
-            gap: $small;
-
-            svg {
-                width: 1.25rem;
-            }
-        }
 
         .content {
             display: block;
             font-size: 14px !important;
             font-size: 1.05rem;
             color: $white;
-            margin-top: $small;
             margin-bottom: 1.5rem !important;
             max-width: 90%;
         }
@@ -617,6 +689,53 @@ onMounted(async () => {
         //     top: 1.75rem;
         //     right: 1.75rem;
         // }
+    }
+
+    .github {
+        display: grid;
+        grid-template-columns: 1fr max-content max-content;
+        gap: 1rem;
+        align-items: center;
+
+        background-color: #0d74e7;
+        border: solid 0.5px rgba(255, 255, 255, 0.1);
+        position: relative;
+        padding: 1rem;
+
+        &.success {
+            padding: 1rem;
+
+            .sponsor_icon {
+                width: 4rem;
+            }
+        }
+
+        .info {
+            .desc {
+                color: white;
+                opacity: 0.75;
+                margin-bottom: 0;
+                font-size: 14px;
+            }
+
+            margin-bottom: 0;
+        }
+
+        .sponsor_icon {
+            width: 6rem;
+        }
+
+        .btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: $small;
+            justify-content: space-between;
+        }
+
+        button {
+            background-color: $white;
+            color: $black;
+        }
     }
 }
 </style>
