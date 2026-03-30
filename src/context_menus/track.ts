@@ -1,16 +1,18 @@
 import { router } from '@/router'
-import { Artist, Playlist, Track } from '@/interfaces'
+import { Artist, Collection, Playlist, Track } from '@/interfaces'
 import { router as Router, Routes } from '@/router'
 
 import { Option } from '@/interfaces'
 import { openInFiles } from '@/requests/folders'
 import { addTracksToPlaylist, removeTracks } from '@/requests/playlists'
+import { addOrRemoveItemFromCollection } from '@/requests/collections'
 
 import { AddToQueueIcon, AlbumIcon, ArtistIcon, DeleteIcon, FolderIcon, PlayNextIcon, PlusIcon } from '@/icons'
 import usePlaylistStore from '@/stores/pages/playlist'
+import useCollection from '@/stores/pages/collections'
 import useQueueStore from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
-import { getAddToPlaylistOptions, get_find_on_social } from './utils'
+import { getAddToCollectionOptions, getAddToPlaylistOptions, get_find_on_social } from './utils'
 
 /**
  * Returns a list of context menu items for a track.
@@ -67,6 +69,40 @@ export default async (track: Track): Promise<Option[]> => {
                 playlist_name: track.title + ' Radio',
             }),
         icon: PlusIcon,
+    }
+
+    const addToCollectionAction = (collection: Collection) => {
+        addOrRemoveItemFromCollection(collection.id, track, 'track', 'add')
+    }
+
+    const add_to_collection: Option = {
+        label: 'Add to Collection',
+        children: () =>
+            getAddToCollectionOptions(addToCollectionAction, {
+                collection: null,
+                hash: track.trackhash,
+                type: 'track',
+                extra: {},
+            }),
+        icon: PlusIcon,
+    }
+
+    const remove_from_collection: Option = {
+        label: 'Remove item',
+        action: async () => {
+            const success = await addOrRemoveItemFromCollection(
+                parseInt(route.params.collection as string),
+                track,
+                'track',
+                'remove'
+            )
+
+            if (success) {
+                useCollection().removeLocalItem(track as any, 'track' as any)
+            }
+        },
+        icon: DeleteIcon,
+        critical: true,
     }
 
     const add_to_q: Option = {
@@ -159,6 +195,7 @@ export default async (track: Track): Promise<Option[]> => {
         play_next,
         add_to_q,
         add_to_playlist,
+        ...[route.name === Routes.Page ? remove_from_collection : add_to_collection],
         go_to_album,
         go_to_folder,
         go_to_artist,

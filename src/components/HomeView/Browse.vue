@@ -8,8 +8,8 @@
         class="browseitem rounded-sm"
         :to="{ name: i.route || '', params: i.params }"
         :style="{ width: `${album_card_with - 24}px` }"
-        @click="i.action && i.action()"
         :class="i.class"
+        @click="i.action && i.action()"
       >
         <div class="icon" v-html="i.icon"></div>
         <div style="width: 100%">
@@ -25,17 +25,23 @@ import {
   AlbumIcon,
   ArtistIcon,
   FolderIcon,
+  GridIcon,
   HeartIcon,
-  PlaylistIcon,
-  SettingsIcon,
-  ReloadIcon
+  PlaylistIcon
 } from "@/icons";
-import { triggerScan } from "@/requests/settings/rootdirs";
 import { Routes } from "@/router";
 import { album_card_with } from "@/stores/content-width";
-import useDialog from "@/stores/modal";
 
-const browselist = [
+type BrowseItem = {
+  title: string;
+  route: string | null;
+  icon: string;
+  params?: Record<string, string>;
+  action?: () => void;
+  class?: string;
+};
+
+const browselist: BrowseItem[] = [
   {
     title: "Folders",
     route: Routes.folder,
@@ -58,6 +64,11 @@ const browselist = [
     title: "Playlists",
     route: Routes.playlists,
     icon: PlaylistIcon,
+  },
+  {
+    title: "Collections",
+    route: Routes.CollectionList,
+    icon: GridIcon,
   },
   {
     title: "Favorites",

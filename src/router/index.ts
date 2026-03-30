@@ -28,6 +28,7 @@ const StatsView = () => import('@/views/Stats/main.vue')
 const MixView = () => import('@/views/MixView.vue')
 const MixListView = () => import('@/views/MixListView.vue')
 const Collection = () => import('@/views/Collections/Collection.vue')
+const CollectionListView = () => import('@/views/Collections/List.vue')
 
 const folder = {
     path: '/folder/:path',
@@ -202,10 +203,16 @@ const MixList = {
     component: MixListView,
 }
 
-const PageView = {
+const SpecificCollection = {
     path: '/collections/:collection',
     name: 'Collection',
     component: Collection,
+}
+
+const CollectionList = {
+    path: '/collections',
+    name: 'CollectionList',
+    component: CollectionListView,
 }
 
 const routes = [
@@ -231,7 +238,8 @@ const routes = [
     Stats,
     Mix,
     MixList,
-    PageView,
+    CollectionList,
+    SpecificCollection,
 ]
 
 const Routes = {
@@ -257,7 +265,10 @@ const Routes = {
     Stats: Stats.name,
     Mix: Mix.name,
     MixList: MixList.name,
-    Page: PageView.name,
+    // Backward-compatible alias used by existing context-menu logic.
+    Page: SpecificCollection.name,
+    Collection: SpecificCollection.name,
+    CollectionList: CollectionList.name,
 }
 
 const router = createRouter({

@@ -1,18 +1,21 @@
 <template>
     <div class="cardlistrow">
-        <component v-for="item in items" :key="item.key" :is="item.component" v-bind="item.props" />
+        <component v-for="item in items" :is="item.component" :key="item.key" v-bind="item.props" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { Album, Artist, Mix } from '@/interfaces'
+import { Album, Artist, Mix, Playlist, Track } from '@/interfaces'
 import AlbumCard from './AlbumCard.vue'
 import ArtistCard from './ArtistCard.vue'
 import MixCard from '../Mixes/MixCard.vue'
+import PlaylistCard from '../PlaylistsList/PlaylistCard.vue'
+import TrackCard from './TrackCard.vue'
+import { playSources } from '@/enums'
 import { computed } from 'vue'
 
 const props = defineProps<{
-    items: Album[] | Artist[] | Mix[]
+    items: Album[] | Artist[] | Mix[] | Playlist[] | Track[]
 }>()
 
 const items = computed(() => {
@@ -43,6 +46,21 @@ const items = computed(() => {
                 i.key = item.sourcehash
                 i.props = {
                     mix: item,
+                }
+                break
+            case 'playlist':
+                i.component = PlaylistCard
+                i.key = item.id
+                i.props = {
+                    playlist: item,
+                }
+                break
+            case 'track':
+                i.component = TrackCard
+                i.key = item.trackhash
+                i.props = {
+                    track: item,
+                    playSource: playSources.track,
                 }
                 break
         }

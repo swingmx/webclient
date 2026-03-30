@@ -56,13 +56,18 @@ async function submit(e: Event) {
 
     // If the page is null, we are creating a new page
     if (props.collection == null) {
-        const created = await createNewCollection(name, description, [
-            {
-                hash: props.hash as string,
-                type: props.type as string,
-                extra: props.extra,
-            },
-        ])
+        const items =
+            props.hash && props.type
+                ? [
+                      {
+                          hash: props.hash,
+                          type: props.type,
+                          extra: props.extra,
+                      },
+                  ]
+                : []
+
+        const created = await createNewCollection(name, description, items)
 
         if (created) {
             new Notification('New collection created', NotifType.Success)
