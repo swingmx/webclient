@@ -1,11 +1,21 @@
 <template>
-  <router-link :to="{ name: 'PlaylistView', params: { pid: playlist.id } }" class="p-card rounded no-scroll">
+  <router-link
+    :to="{ name: 'PlaylistView', params: { pid: playlist.id } }"
+    class="p-card rounded no-scroll"
+    :class="{ 'context-menu-open': contextMenuFlag }"
+    @contextmenu.prevent="showMenu"
+  >
     <div v-if="!playlist.has_image && playlist.images.length" class="image-grid rounded-sm no-scroll">
-      <img v-for="(img, index) in playlist.images" :key="index" :src="paths.images.thumb.smallish + (img['image'] || img)" />
+      <img
+        v-for="(img, index) in playlist.images"
+        :key="index"
+        :src="paths.images.thumb.smallish + (img['image'] || img)"
+        alt="playlist image"
+      />
       <PlayBtn :source="playSources.playlist" :playlist="playlist.id.toString()"/>
     </div>
     <div v-else class="image">
-      <img :src="imguri + playlist.thumb" class="rounded-sm" :class="{ border: !playlist.thumb }" />
+      <img :src="imguri + playlist.thumb" class="rounded-sm" :class="{ border: !playlist.thumb }" alt="playlist image" />
       <PlayBtn :source="playSources.playlist" :playlist="playlist.id.toString()"/>
     </div>
     <div class="overlay rounded">
@@ -22,15 +32,23 @@
 </template>
 
 <script setup lang="ts">
-import { paths } from "../../config";
-import { Playlist } from "../../interfaces";
+import { paths } from '@/config'
+import { Playlist } from '@/interfaces'
 import { playSources } from '@/enums'
 import PlayBtn from '../shared/PlayBtn.vue'
+import { ref } from 'vue'
+import { showPlaylistContextMenu } from '@/helpers/contextMenuHandler'
 
-const imguri = paths.images.playlist;
-defineProps<{
-  playlist: Playlist;
-}>();
+const imguri = paths.images.playlist
+const props = defineProps<{
+  playlist: Playlist
+}>()
+
+const contextMenuFlag = ref(false)
+
+function showMenu(e: MouseEvent) {
+  showPlaylistContextMenu(e, contextMenuFlag, props.playlist)
+}
 </script>
 
 <style lang="scss">
@@ -43,6 +61,10 @@ defineProps<{
   user-select: none;
   height: max-content;
   transition: background-color 0.2s ease-out;
+
+  &.context-menu-open {
+    background-color: $gray5;
+  }
 
   .image {
     position: relative;

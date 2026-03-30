@@ -34,6 +34,12 @@ const home = {
   icon: HomeSvg,
 };
 
+const collections = {
+  name: "Collections",
+  route_name: Routes.CollectionList,
+  icon: HomeSvg,
+};
+
 export const menus = [
   home,
   folder,
@@ -60,6 +66,7 @@ export const menus = [
       useDialog().showSettingsModal()
     }
   },
+  collections,
 ];
 
-export const topnavitems = [home, folder, favorites, playlists];
+export const topnavitems = [home, folder, favorites, playlists, collections];

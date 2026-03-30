@@ -1,28 +1,44 @@
-import { Option } from "../interfaces";
+import { Option, Playlist, Collection } from '@/interfaces'
+import { addOrRemoveItemFromCollection } from '@/requests/collections'
+import { Routes, router } from '@/router'
+import useCollection from '@/stores/pages/collections'
+import { DeleteIcon, PlusIcon } from '@/icons'
+import { getAddToCollectionOptions } from './utils'
 
-export default async () => {
-  const deletePlaylist: Option = {
-    label: "Delete playlist",
-    critical: true,
-    action: () => {
-      console.log("delete playlist");
-    },
-  };
+export default async (playlist: Playlist): Promise<Option[]> => {
+    const addToCollectionAction = (collection: Collection) => {
+        addOrRemoveItemFromCollection(collection.id, playlist, 'playlist', 'add')
+    }
 
-  const playNext: Option = {
-    label: "Play next",
-    action: () => {
-      console.log("play next");
-    },
-  };
+    const add_to_collection: Option = {
+        label: 'Add to Collection',
+        children: () =>
+            getAddToCollectionOptions(addToCollectionAction, {
+                collection: null,
+                hash: playlist.id.toString(),
+                type: 'playlist',
+                extra: {},
+            }),
+        icon: PlusIcon,
+    }
 
-  const addToQueue: Option = {
-    label: "Add to queue",
-    action: () => {
-      console.log("add to queue");
-    },
-  };
+    const remove_from_collection: Option = {
+        label: 'Remove item',
+        action: async () => {
+            const success = await addOrRemoveItemFromCollection(
+                parseInt(router.currentRoute.value.params.collection as string),
+                playlist,
+                'playlist',
+                'remove'
+            )
 
+            if (success) {
+                useCollection().removeLocalItem(playlist as any, 'playlist' as any)
+            }
+        },
+        icon: DeleteIcon,
+        critical: true,
+    }
 
-  return [playNext, addToQueue, deletePlaylist];
-};
+    return [...[router.currentRoute.value.name === Routes.Page ? remove_from_collection : add_to_collection]]
+}

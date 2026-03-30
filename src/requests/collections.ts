@@ -1,5 +1,5 @@
 import { paths } from '@/config'
-import { Album, Artist, Collection, Mix, Playlist } from '@/interfaces'
+import { Album, Artist, Collection, Mix, Playlist, Track } from '@/interfaces'
 import { Notification, NotifType } from '@/stores/notification'
 import useAxios from './useAxios'
 
@@ -32,12 +32,14 @@ export async function createNewCollection(
     description: string,
     items?: { hash: string; type: string; extra: any }[]
 ) {
+    const payload_items = items ?? []
+
     const { data, status } = await useAxios({
         url: baseCollectionUrl,
         props: {
             name,
             description,
-            items,
+            items: payload_items,
         },
         method: 'POST',
     })
@@ -68,7 +70,7 @@ export async function updateCollection(collection: Collection, name: string, des
 
 export async function addOrRemoveItemFromCollection(
     collection_id: number,
-    item: Album | Artist | Mix | Playlist,
+    item: Album | Artist | Mix | Playlist | Track,
     type: string,
     command: 'add' | 'remove'
 ) {
@@ -90,6 +92,9 @@ export async function addOrRemoveItemFromCollection(
             break
         case 'playlist':
             payload.hash = (item as Playlist).id.toString()
+            break
+        case 'track':
+            payload.hash = (item as Track).trackhash
             break
     }
 
