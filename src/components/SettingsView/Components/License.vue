@@ -367,7 +367,7 @@ async function loginWithGitHub() {
 
     const clientId = 'Ov23li5bsrEqMmqdT10i'
     const publicKey = settings.public_key
-    const redirectUri = 'http://127.0.0.1:1957/auth/github/callback'
+    const redirectUri = 'https://cloud.swingmx.com/auth/github/callback'
     const githubUrl = `https://github.com/login/oauth/authorize`
 
     const queryParams = new URLSearchParams({
