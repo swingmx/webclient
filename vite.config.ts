@@ -16,6 +16,7 @@ export default defineConfig({
     svgLoader(),
     VitePWA({
       registerType: "autoUpdate",
+      manifestFilename: "manifest.json",
       devOptions: {
         enabled: true,
       },
