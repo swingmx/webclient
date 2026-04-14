@@ -7,9 +7,9 @@ import InfoSvg from '@/assets/icons/info.svg?raw'
 export default <SettingCategory>{
     groups: [
         {
-            title: 'Subscription',
-            desc: 'Manage your subscription, license keys and authorized devices',
-            displayName: 'Subscription and License Settings',
+            title: 'License',
+            desc: 'Manage your license key, subscription and authorized devices',
+            displayName: 'License and Subscription',
             icon: KeySvg,
             settings: [
                 {
