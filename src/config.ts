@@ -19,10 +19,11 @@ const baseImgUrl = base_url + '/img'
 
 const imageRoutes = {
     thumb: {
+        original: '/thumbnail/original/',
         large: '/thumbnail/',
-        small: '/thumbnail/xsmall/',
-        smallish: '/thumbnail/small/',
         medium: '/thumbnail/medium/',
+        smallish: '/thumbnail/small/',
+        small: '/thumbnail/xsmall/',
     },
     artist: {
         large: '/artist/',
@@ -34,6 +35,7 @@ const imageRoutes = {
 
 export const paths = {
     api: {
+        onboardingData: '/onboarding-data',
         favorites: '/favorites',
         get favAlbums() {
             return this.favorites + '/albums'
@@ -147,6 +149,18 @@ export const paths = {
             get updateConfig() {
                 return this.base + '/update'
             },
+            get licenseInfo(){
+                return this.base + '/license/status'
+            },
+            get licenseRegister() {
+                return this.base + '/license/register'
+            },
+            get licenseDeactivate() {
+                return this.base + '/license/deactivate'
+            },
+            get licenseDevice() {
+                return this.base + '/license/device'
+            }
         },
         files: '/file',
         home: {
@@ -222,6 +236,7 @@ export const paths = {
             smallish: baseImgUrl + imageRoutes.thumb.smallish,
             large: baseImgUrl + imageRoutes.thumb.large,
             medium: baseImgUrl + imageRoutes.thumb.medium,
+            original: baseImgUrl + imageRoutes.thumb.original,
         },
         artist: {
             small: baseImgUrl + imageRoutes.artist.small,

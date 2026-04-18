@@ -1,7 +1,11 @@
 <template>
     <div class="now-playing-header">
+        <div class="top">
+            <RouterLink :to="sourceData.location">
+                {{ sourceData.name }}
+            </RouterLink>
+        </div>
         <div class="centered">
-            <PlayingFrom />
             <RouterLink
                 :to="{
                     name: Routes.album,
@@ -12,8 +16,14 @@
                 title="Go to Album"
                 class="np-image"
             >
-                <img v-motion-fade class="rounded" :src="paths.images.thumb.large + queue.currenttrack?.image" />
+                <ImageLoader
+                    :image="paths.images.thumb.original + queue.currenttrack?.image"
+                    :blurhash="queue.currenttrack?.blurhash"
+                    :duration="1000"
+                />
             </RouterLink>
+        </div>
+        <div class="below">
             <NowPlayingInfo @handle-fav="handleFav" />
             <Progress v-if="isMobile" />
             <div class="below-progress">
@@ -26,7 +36,8 @@
                 </div>
             </div>
         </div>
-        <h3 class="nowplaying_title" v-if="queue.next">Up Next</h3>
+        <!-- <TrackContext /> -->
+        <!-- <h3 v-if="queue.next" class="nowplaying_title">Up Next</h3>
         <SongItem
             v-if="queue.next"
             :track="queue.next"
@@ -34,7 +45,7 @@
             :source="dropSources.folder"
             @play-this="queue.playNext"
         />
-        <h3 class="nowplaying_title">Queue</h3>
+        <h3 class="nowplaying_title">Queue</h3> -->
     </div>
 </template>
 
@@ -52,8 +63,21 @@ import Buttons from '../BottomBar/Right.vue'
 import SongItem from '../shared/SongItem.vue'
 import NowPlayingInfo from './NowPlayingInfo.vue'
 import PlayingFrom from './PlayingFrom.vue'
+import TrackContext from './TrackContext.vue'
+import { From } from '@/stores/queue/tracklist'
+import playingFrom from '@/utils/playingFrom'
+import { computed } from 'vue'
+import ImageLoader from '../shared/ImageLoader.vue'
+
+const props = defineProps<{
+    source: From
+}>()
 
 const queue = useQueueStore()
+const sourceData = computed(() => {
+    const { name, location } = playingFrom(props.source)
+    return { name, location }
+})
 
 function handleFav() {
     favoriteHandler(
@@ -74,6 +98,15 @@ function handleFav() {
 .now-playing-header {
     padding-bottom: $smaller;
     position: relative;
+
+    display: grid;
+    place-items: stretch;
+    justify-items: center;
+    grid-template-rows: 1fr max-content 1fr;
+
+    @include largePhones {
+        padding: 1.5rem !important;
+    }
 
     .nowplaying_title {
         padding-left: 1rem;
@@ -147,10 +180,35 @@ function handleFav() {
         }
     }
 
+    $image-size: auto;
+
     .centered {
         margin: 0 auto;
-        width: 26rem;
-        max-width: 100%;
+        width: 100%;
+        // max-width: $image-size;
+    }
+
+    .image-loader {
+        // height: $image-size;
+
+        img {
+            border-radius: $small;
+        }
+    }
+
+    .below {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        // width: min(100%, $image-size);
+    }
+
+    .top {
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 1rem;
+        opacity: 0.75;
+        font-size: 14px;
     }
 
     .np-image {
@@ -160,8 +218,7 @@ function handleFav() {
         img {
             width: 100%;
             height: 100%;
-            max-width: 30rem;
-            // aspect-ratio: 1;
+            aspect-ratio: 1;
             object-fit: cover;
         }
     }
@@ -180,6 +237,25 @@ function handleFav() {
 
         &::-ms-thumb {
             height: 0.8rem;
+        }
+    }
+
+    @include allPhones {
+        margin-left: 0;
+        padding: 0 1rem;
+        display: block;
+        padding: 2rem !important;
+
+        .top {
+            opacity: 0;
+        }
+    }
+
+    @include largePhones {
+        .np-image {
+            display: block;
+            width: 90% !important;
+            margin: 0 auto;
         }
     }
 }

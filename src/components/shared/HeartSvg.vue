@@ -2,6 +2,7 @@
     <button
         v-wave
         class="heart-button circular"
+        :class="{ favorited: state }"
         :style="{
             color: color ? getTextColor(color) : '',
         }"

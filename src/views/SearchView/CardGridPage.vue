@@ -1,10 +1,10 @@
 <template>
     <NoItems
+        v-if="showNoItemsComponent"
         :title="`No ${page} results`"
-        :description="desc"
+        :description="'Results should appear here'"
         :icon="SearchSvg"
         :flag="!items.length"
-        v-if="showNoItemsComponent"
     />
     <div class="v-scroll-page" style="height: 100%">
         <DynamicScroller style="height: 100%" class="scroller" :min-item-size="64" :items="scrollerItems">
@@ -13,6 +13,7 @@
             </template>
             <template #default="{ item, index, active }">
                 <DynamicScrollerItem
+                    :key="item.id"
                     :item="item"
                     :active="active"
                     :size-dependencies="[item.props]"
@@ -28,7 +29,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import useSearchStore from '@/stores/search'
 import { maxAbumCards } from '@/stores/content-width'
 
 import SearchSvg from '@/assets/icons/search.svg'
@@ -42,15 +42,8 @@ const props = defineProps<{
     items: any[]
     outside_route?: boolean
     showNoItemsComponent?: boolean
+    moreItems?: boolean
 }>()
-
-const search = useSearchStore()
-
-const desc = computed(() =>
-    search.query === ''
-        ? `Start typing to search for ${props.page}s`
-        : `Results for '${search.query}' should appear here`
-)
 
 const scrollerItems = computed(() => {
     let maxCards = maxAbumCards.value
@@ -73,9 +66,7 @@ const scrollerItems = computed(() => {
         })
     }
 
-    const moreItems = props.page === 'album' ? search.albums.more : search.artists.more
-
-    if (props.fetch_callback && moreItems) {
+    if (props.fetch_callback && props.moreItems) {
         items.push({
             id: Math.random(),
             component: AlbumsFetcher,

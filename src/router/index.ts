@@ -28,6 +28,7 @@ const StatsView = () => import('@/views/Stats/main.vue')
 const MixView = () => import('@/views/MixView.vue')
 const MixListView = () => import('@/views/MixListView.vue')
 const Collection = () => import('@/views/Collections/Collection.vue')
+const Onboarding = () => import('@/views/Onboarding.vue')
 
 const folder = {
     path: '/folder/:path',
@@ -208,6 +209,13 @@ const PageView = {
     component: Collection,
 }
 
+const OnboardingView = {
+    path: '/onboarding/:step?',
+    name: 'Onboarding',
+    alias: ['/manconfig/:step?'],
+    component: Onboarding,
+}
+
 const routes = [
     folder,
     playlists,
@@ -232,6 +240,7 @@ const routes = [
     Mix,
     MixList,
     PageView,
+    OnboardingView,
 ]
 
 const Routes = {
@@ -258,6 +267,7 @@ const Routes = {
     Mix: Mix.name,
     MixList: MixList.name,
     Page: PageView.name,
+    Onboarding: OnboardingView.name,
 }
 
 const router = createRouter({

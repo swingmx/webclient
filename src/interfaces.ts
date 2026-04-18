@@ -42,6 +42,9 @@ export interface Track extends AlbumDisc {
         trend: 'rising' | 'falling' | 'stable'
         is_new: boolean
     }
+
+    color?: string
+    blurhash?: string
 }
 
 export interface Folder {
@@ -68,6 +71,7 @@ export interface Album {
     type?: string
 
     color?: string
+    blurhash?: string
     copyright?: string
     help_text?: string
     time?: string
@@ -129,7 +133,8 @@ export interface Artist {
     trackcount: number
     albumcount: number
     duration: number
-    color: string
+    color?: string
+    blurhash?: string
     is_favorite?: boolean
     help_text?: string
     time?: string
@@ -175,11 +180,10 @@ export interface Playlist {
     pinned: boolean
     help_text?: string
     time?: string
-    images:
-        | {
-              image: string
-              color: string
-          }[]
+    images: {
+        image: string
+        color: string
+    }[]
 }
 
 export interface Collection {
@@ -328,4 +332,67 @@ export interface StatItem {
     value: string
     text: string
     image?: string
+}
+
+// License
+
+interface Device {
+    current: boolean
+    device_id: string
+    device_name: string
+    last_seen: string | null
+    device_type: 'server' | 'laptop' | 'desktop' | 'handheld'
+}
+
+interface Customer {
+    email: string
+    id: string
+    name: string | null
+}
+
+interface Devices {
+    active: number
+    limit: number
+    list: Device[]
+}
+
+interface License {
+    created_at: string
+    device_id: string
+    device_name: string
+    expires_at: string | null
+    license_type: 'lifetime' | 'subscription' | 'gh_sponsor'
+    public_key: string
+    status: string
+    subscription: {
+        amount: number
+        cancel_at_period_end: boolean
+        canceled_at: string | null
+        created_at: string
+        currency: string
+        current_period_end: string
+        current_period_start: string
+        custom_field_data: { [key: string]: any }
+        discount_id: string | null
+        ends_at: string
+        id: string
+        metadata: { [key: string]: any }
+        meters: any[]
+        modified_at: string
+        price_id: string
+        product_id: string
+        recurring_interval: string
+        started_at: string
+        status: string
+        trial_end: string | null
+        trial_start: string | null
+    }
+}
+
+export interface LicenseInfo {
+    customer: Customer
+    devices: Devices
+    license: License
+    msg: string
+    license_key: string
 }

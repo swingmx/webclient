@@ -2,15 +2,17 @@
     <div class="passinput">
         <input
             :id="props.inputId"
+            v-model="value"
             class="passinput"
             :type="type"
             :placeholder="placeholder"
+            :required="required"
+            :disabled="disabled"
             @input="$emit('input', ($event.target as HTMLInputElement).value)"
-            v-model="value"
         />
         <div
+            v-if="props.type === 'password' || props.showHideButton"
             class="showpass rounded-sm"
-            v-if="props.type === 'password'"
             :class="{ show: value.length }"
             @click="toggleShowPassword"
         >
@@ -21,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 import EyeSvg from '@/assets/icons/eye.svg'
 import EyeSlashSvg from '@/assets/icons/eye.slash.svg'
@@ -30,16 +32,29 @@ const props = defineProps<{
     type?: string
     placeholder?: string
     inputId?: string
+    required?: boolean
+    disabled?: boolean
+    text?: string
+    showHideButton?: boolean
 }>()
 
-const value = ref('')
+const value = ref(props.text || '')
+
+watch(
+    () => props.text,
+    newText => {
+        if (newText !== undefined) {
+            value.value = newText
+        }
+    }
+)
 
 defineEmits<{
     (e: 'input', value: string): void
 }>()
 
-const type = ref(props.type || 'text')
 const showingPassword = ref(false)
+const type = ref(props.showHideButton ? 'password' : props.type || 'text')
 
 function toggleShowPassword() {
     type.value = showingPassword.value ? 'password' : 'text'

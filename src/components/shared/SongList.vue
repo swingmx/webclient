@@ -32,9 +32,9 @@
 </template>
 
 <script setup lang="ts">
-import SongItem from '@/components/shared/SongItem.vue'
-import { dropSources } from '@/enums'
 import { Track } from '@/interfaces'
+import { dropSources } from '@/enums'
+import SongItem from '@/components/shared/SongItem.vue'
 import { isMedium, isSmall } from '@/stores/content-width'
 
 defineProps<{

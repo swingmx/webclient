@@ -1,17 +1,18 @@
 <template>
   <div class="queue-actions">
-    <div class="left">
-      <button v-if="!onNowPlaying" v-wave class="shuffle-queue action" @click="queue.shuffleQueue">
+    <!-- <div class="left"> -->
+      <!-- <button v-if="!onNowPlaying" v-wave class="shuffle-queue action" @click="queue.shuffleQueue">
         <ShuffleSvg />
         <span>Shuffle</span>
       </button>
-      <h2 v-else style="margin: 0">Now Playing</h2>
-    </div>
+      <h2 v-else style="margin: 0">Now Playing</h2> -->
+      <PlayingFrom />
+    <!-- </div>
     <div class="right">
       <button class="menu" :class="{ 'btn-active': context_showing }" @click="showContextMenu">
         <OptionsSvg />
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -24,6 +25,7 @@ import { showQueueContextMenu } from "@/helpers/contextMenuHandler";
 
 import OptionsSvg from "@/assets/icons/more.svg";
 import ShuffleSvg from "@/assets/icons/shuffle.svg";
+import PlayingFrom from "@/components/NowPlaying/PlayingFrom.vue";
 
 const queue = useQueue();
 const { tracklist } = useTracklist();
@@ -43,11 +45,13 @@ defineProps<{
 
 <style lang="scss">
 .queue-actions {
-  display: flex;
-  justify-content: space-between;
+  // display: flex;
+  // justify-content: space-between;
   gap: $small;
-  margin: 1rem;
+  margin: 2rem 2rem 1rem 0;
   margin-bottom: 0;
+
+  // margin-right: 2rem;
 
   .lyricsversion {
     display: flex;

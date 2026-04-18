@@ -149,12 +149,6 @@ $g-border: solid 1px $gray5;
         padding-bottom: 2rem;
     }
 
-    #lyricscontent {
-        padding-top: 0;
-        padding-left: 2rem;
-        padding-right: 2rem;
-    }
-
     @media only screen and (min-width: 1980px) {
         // NOTE: Styles for 1680px and below
         $alt_layout_pad: max(2rem, calc((100% - 1680px) / 2));
