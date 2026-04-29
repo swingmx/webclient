@@ -306,7 +306,7 @@ async function getLicenseInfo(checkSponsor: boolean = false) {
         return
     }
 
-    if (response.error) {
+    if (checkSponsor && response.error) {
         error.value = response.error
         loading.value = false
         return
@@ -375,8 +375,8 @@ async function loginWithGitHub() {
 
     const clientId = 'Ov23li5bsrEqMmqdT10i'
     const publicKey = settings.public_key
-    const redirectUri = 'http://localhost:1957/auth/github/callback'
-    // const redirectUri = 'https://cloud.swingmx.com/auth/github/callback'
+    // const redirectUri = 'http://localhost:1957/auth/github/callback'
+    const redirectUri = 'https://cloud.swingmx.com/auth/github/callback'
     const githubUrl = `https://github.com/login/oauth/authorize`
 
     const queryParams = new URLSearchParams({
