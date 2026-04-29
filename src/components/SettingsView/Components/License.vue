@@ -70,7 +70,7 @@
                 <label for="device-name">{{ licenseInfo ? 'Update' : 'New' }} server name:</label>
                 <Input
                     input-id="device-name"
-                    :text="licenseInfo?.devices.list.find(d => d.current)?.device_name || ''"
+                    :text="licenseInfo?.devices.list?.find(d => d.current)?.device_name || ''"
                     :placeholder="settings.device_name || ''"
                     @input="(value: string) => (deviceName = value)"
                 />
@@ -232,7 +232,7 @@ const submitEnabled = computed(() => {
     // If device name has changed
     if (
         deviceName.value &&
-        deviceName.value !== (licenseInfo.value?.devices.list.find(d => d.current)?.device_name || settings.device_name)
+        deviceName.value !== (licenseInfo.value?.devices.list?.find(d => d.current)?.device_name || settings.device_name)
     ) {
         return true
     }
@@ -367,7 +367,8 @@ async function loginWithGitHub() {
 
     const clientId = 'Ov23li5bsrEqMmqdT10i'
     const publicKey = settings.public_key
-    const redirectUri = 'https://cloud.swingmx.com/auth/github/callback'
+    const redirectUri = 'http://localhost:1957/auth/github/callback'
+    // const redirectUri = 'https://cloud.swingmx.com/auth/github/callback'
     const githubUrl = `https://github.com/login/oauth/authorize`
 
     const queryParams = new URLSearchParams({
