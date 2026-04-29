@@ -232,7 +232,8 @@ const submitEnabled = computed(() => {
     // If device name has changed
     if (
         deviceName.value &&
-        deviceName.value !== (licenseInfo.value?.devices.list?.find(d => d.current)?.device_name || settings.device_name)
+        deviceName.value !==
+            (licenseInfo.value?.devices.list?.find(d => d.current)?.device_name || settings.device_name)
     ) {
         return true
     }
@@ -302,6 +303,13 @@ async function getLicenseInfo(checkSponsor: boolean = false) {
 
     if (response.status === 200) {
         settings.updateLicenseInfo(response.data)
+        return
+    }
+
+    if (response.error) {
+        error.value = response.error
+        loading.value = false
+        return
     }
 }
 
