@@ -71,6 +71,7 @@ onClickOutside(dropOptionsRef, e => {
 
 <style lang="scss">
 .smdropdown {
+    position: relative;
     z-index: 1000;
 
     .dropdown-arrow {
@@ -118,6 +119,9 @@ onClickOutside(dropOptionsRef, e => {
             padding: $small;
             display: grid;
             width: 100%;
+            z-index: 1002;
+            opacity: 1;
+            isolation: isolate;
         }
 
         .option {

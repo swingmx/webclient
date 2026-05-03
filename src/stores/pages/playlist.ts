@@ -17,6 +17,8 @@ export default defineStore('playlist-tracks', {
         query: '',
         initialBannerPos: 0,
         allTracks: <Track[]>[],
+        trackSortBy: 'default',
+        trackSortReverse: false,
         colors: {
             bg: '',
             btn: '',
@@ -29,10 +31,27 @@ export default defineStore('playlist-tracks', {
          * @param id The id of the playlist to fetch
          */
         async fetchAll(id: number, no_tracks = false, fetchAll = false) {
+            const isNewPlaylist = this.info.id !== id
+
+            if (isNewPlaylist) {
+                this.allTracks = []
+                this.query = ''
+                this.resetColors()
+            }
+
             this.resetBannerPos()
             // if fetchAll, use -1 to fetch all tracks
-            const playlist = await getPlaylist(id, no_tracks, this.allTracks.length, fetchAll ? -1 : track_limit.value)
-            if (this.allTracks.length !== 0) {
+            const playlist = await getPlaylist(
+                id,
+                no_tracks,
+                this.allTracks.length,
+                fetchAll ? -1 : track_limit.value,
+                {
+                    sorttracksby: this.trackSortBy,
+                    tracksort_reverse: this.trackSortReverse,
+                }
+            )
+            if (!isNewPlaylist && this.allTracks.length !== 0) {
                 this.allTracks.push(...(playlist?.tracks || []))
                 return
             }
@@ -41,7 +60,6 @@ export default defineStore('playlist-tracks', {
             this.initialBannerPos = this.info.settings.banner_pos
             this.createImageLink()
 
-            this.resetColors()
             this.extractColors()
 
             if (no_tracks) return
@@ -120,6 +138,17 @@ export default defineStore('playlist-tracks', {
         addTrack(track: Track) {
             this.allTracks.push(track)
         },
+        async setPlaylistTrackSortKey(key: string) {
+            if (key === this.trackSortBy) {
+                this.trackSortReverse = !this.trackSortReverse
+            } else {
+                this.trackSortBy = key
+                this.trackSortReverse = false
+            }
+
+            this.allTracks = []
+            await this.fetchAll(this.info.id)
+        },
         resetBannerPos() {
             try {
                 this.info.settings.banner_pos = 50
@@ -154,5 +183,9 @@ export default defineStore('playlist-tracks', {
         bannerPosUpdated(): boolean {
             return this.info.settings.banner_pos - this.initialBannerPos !== 0
         },
+    },
+    persist: {
+        paths: ['trackSortBy', 'trackSortReverse'],
+        storage: localStorage,
     },
 })
