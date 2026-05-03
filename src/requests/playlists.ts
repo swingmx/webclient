@@ -53,8 +53,24 @@ export async function getAllPlaylists(no_images = false): Promise<Playlist[]> {
     return []
 }
 
-export async function getPlaylist(pid: number | string, no_tracks = false, start: number = 0, limit: number = 50) {
-    const uri = `${basePlaylistUrl}/${pid}?no_tracks=${no_tracks}&start=${start}&limit=${limit}`
+export async function getPlaylist(
+    pid: number | string,
+    no_tracks = false,
+    start: number = 0,
+    limit: number = 50,
+    options: {
+        sorttracksby?: string
+        tracksort_reverse?: boolean
+    } = {}
+) {
+    const params = new URLSearchParams({
+        no_tracks: String(no_tracks),
+        start: String(start),
+        limit: String(limit),
+        sorttracksby: options.sorttracksby || 'default',
+        tracksort_reverse: String(options.tracksort_reverse || false),
+    })
+    const uri = `${basePlaylistUrl}/${pid}?${params.toString()}`
 
     interface PlaylistData {
         info: Playlist
@@ -285,4 +301,55 @@ export async function pinUnpinPlaylist(pid: number) {
     }
 
     return false
+}
+
+export async function exportPlaylist(pid: number, playlistName: string) {
+    const { data, status } = await useAxios({
+        url: `${basePlaylistUrl}/${pid}/export`,
+        method: 'GET',
+        responseType: 'blob',
+    })
+
+    if (status !== 200 || !data) {
+        new Notification('Unable to export playlist', NotifType.Error)
+        return false
+    }
+
+    const safeName = playlistName.trim().replace(/[\\/:*?"<>|]+/g, '_') || 'playlist'
+    const url = window.URL.createObjectURL(data as Blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${safeName}.csv`
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.URL.revokeObjectURL(url)
+    new Notification('Playlist exported', NotifType.Success)
+    return true
+}
+
+export async function importSpotifyCsv(pid: number, file: File) {
+    const form = new FormData()
+    form.append('csv_file', file)
+
+    const { data, status } = await useAxios({
+        url: `${basePlaylistUrl}/${pid}/import-spotify`,
+        props: form,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    })
+
+    if (status === 200) {
+        const added = data.added ?? 0
+        const unmatched = data.unmatched?.length ?? 0
+        new Notification(
+            `Imported ${added} tracks${unmatched ? `, ${unmatched} unmatched` : ''}`,
+            NotifType.Success
+        )
+        return data
+    }
+
+    new Notification(data?.error || 'Unable to import Spotify CSV', NotifType.Error)
+    return null
 }

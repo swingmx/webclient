@@ -17,7 +17,17 @@
                 </form>
             </template>
             <template #right>
-                <button class="playlist-button" @click="showNewPlaylistModal()"><PlusSvg /> New Playlist</button>
+                <div class="playlist-actions">
+                    <button class="playlist-button import-button" @click="openSpotifyImport">Import Spotify CSV</button>
+                    <button class="playlist-button" @click="showNewPlaylistModal()"><PlusSvg /> New Playlist</button>
+                    <input
+                        ref="fileInput"
+                        type="file"
+                        accept=".csv,text/csv"
+                        class="hidden-input"
+                        @change="handleFileSelected"
+                    />
+                </div>
             </template>
         </Header>
         <PlaylistCardGroup v-if="!query && pinnedPlaylists.length" :playlists="pinnedPlaylists" :title="'Pinned'" />
@@ -42,6 +52,7 @@ import { computed, onMounted, ref } from 'vue'
 import usePStore from '@/stores/pages/playlists'
 import { useFuse } from '@/utils'
 import updatePageTitle from '@/utils/updatePageTitle'
+import { createNewPlaylist, importSpotifyCsv } from '@/requests/playlists'
 
 import PlaylistSvg from '@/assets/icons/playlist-1.svg'
 import PlusSvg from '@/assets/icons/plus.svg'
@@ -52,6 +63,7 @@ import useModalStore from '@/stores/modal'
 
 const pStore = usePStore()
 const { showNewPlaylistModal } = useModalStore()
+const fileInput = ref<HTMLInputElement | null>(null)
 
 const input = ref('')
 const query = debouncedRef(input, 300)
@@ -68,6 +80,31 @@ const pinnedPlaylists = computed(() => {
 onMounted(() => {
     updatePageTitle('Playlists')
 })
+
+function openSpotifyImport() {
+    fileInput.value?.click()
+}
+
+function makePlaylistNameFromFile(filename: string) {
+    return filename.replace(/\.csv$/i, '').replace(/[_-]+/g, ' ').trim() || 'Imported Playlist'
+}
+
+async function handleFileSelected(event: Event) {
+    const inputElem = event.target as HTMLInputElement
+    const file = inputElem.files?.[0]
+
+    if (!file) return
+
+    const playlistName = makePlaylistNameFromFile(file.name)
+    const playlist = await createNewPlaylist(playlistName)
+
+    if (playlist) {
+        await importSpotifyCsv(playlist.id, file)
+        await pStore.fetchAll()
+    }
+
+    inputElem.value = ''
+}
 
 const playlists = computed(() => {
     if (!query.value) {
@@ -88,10 +125,26 @@ const playlists = computed(() => {
     height: 100%;
     overflow: auto;
 
+    .hidden-input {
+        display: none;
+    }
+
+    .playlist-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
     .playlist-button {
         svg {
             height: 1.5rem;
         }
+    }
+
+    .import-button {
+        padding-right: $medium;
     }
 
     .grid {

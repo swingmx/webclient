@@ -7,6 +7,11 @@
             class="scroller"
             style="height: 100%"
         >
+            <template #before>
+                <Header />
+                <AfterHeader />
+            </template>
+
             <template #default="{ item, index, active }">
                 <DynamicScrollerItem
                     :item="item"
@@ -27,10 +32,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, nextTick } from 'vue'
 import { onMounted, onUpdated } from 'vue'
 
-import { isMedium, isSmall, isSmallPhone, track_limit } from '@/stores/content-width'
+import { isMedium, isSmall, track_limit } from '@/stores/content-width'
 import { dropSources } from '@/enums'
 import useQueue from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
@@ -43,7 +48,7 @@ import Header from '@/components/PlaylistView/Header.vue'
 import NoItems from '@/components/shared/NoItems.vue'
 import SongItem from '@/components/shared/SongItem.vue'
 import AfterHeader from '@/components/PlaylistView/AfterHeader.vue'
-import { onBeforeRouteLeave } from 'vue-router'
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 
 const queue = useQueue()
@@ -52,7 +57,7 @@ const playlist = usePlaylistStore()
 
 interface ScrollerItem {
     id: string | number
-    component: typeof Header | typeof SongItem | typeof NoItems | typeof AlbumsFetcher
+    component: typeof SongItem | typeof NoItems | typeof AlbumsFetcher
     size: number
     props?: {}
 }
@@ -71,18 +76,6 @@ const getNoItemsComponent = () =>
     }
 
 const scrollerItems = computed(() => {
-    const header: ScrollerItem = {
-        id: 'header',
-        component: Header,
-        size: isSmallPhone.value ? 24 * 16 : 18 * 16,
-    }
-
-    const afterHeader: ScrollerItem = {
-        id: 'afterHeader',
-        component: AfterHeader,
-        size: 4 * 16,
-    }
-
     const tracks = playlist.tracks.map(track => {
         return {
             id: track.filepath,
@@ -111,7 +104,7 @@ const scrollerItems = computed(() => {
         })
     }
 
-    return [header, afterHeader, ...body]
+    return body
 })
 
 async function playFromPlaylistPage(index: number) {
@@ -119,7 +112,7 @@ async function playFromPlaylistPage(index: number) {
 
     if (playlist.tracks.length !== playlist.info.count) {
         // fetch all the tracks
-        playlist.fetchAll(id, false, true)
+        await playlist.fetchAll(id, false, true)
     }
 
     tracklist.setFromPlaylist(name, id, playlist.allTracks)
@@ -130,13 +123,29 @@ async function playFromPlaylistPage(index: number) {
     updatePageTitle(playlist.info.name)
 })
 
+onBeforeRouteUpdate(async to => {
+    await playlist.fetchAll(Number(to.params.pid), false)
+    await nextTick()
+
+    document.getElementById('contentscroller')?.scrollTo({
+        top: 0,
+    })
+})
+
 onBeforeRouteLeave(() => playlist.resetAll())
 </script>
 
 <style lang="scss">
-.playlist-virtual-scroller {
-    .nothing {
-        height: 25rem;
+.folder-view {
+    .scroller > div.vue-recycle-scroller__slot:first-child {
+        position: relative;
+        z-index: 30;
+        background-color: $body;
+        padding-bottom: 0.75rem;
     }
+}
+
+.nothing {
+    height: 25rem;
 }
 </style>

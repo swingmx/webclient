@@ -27,6 +27,7 @@ export default async (args: FetchProps, withCredentials: boolean = true) => {
             data: args.props,
             // INFO: Most requests use POST
             method: args.method || 'POST',
+            responseType: args.responseType || 'json',
             // INFO: Add ngrok header and provided headers
             headers: { ...args.headers, ...(on_ngrok ? ngrok_config : {}) },
             withCredentials: withCredentials,
