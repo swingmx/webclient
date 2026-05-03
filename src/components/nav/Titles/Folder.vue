@@ -14,13 +14,18 @@
             </div>
             <BreadCrumbNav @navigate="navigate" />
         </div>
-        <DropDown
-            :items="items"
-            :current="current"
-            component_key="sortbar"
-            :reverse="folder.trackSortReverse"
-            @item-clicked="handleSortKeySet"
-        />
+        <div class="controls">
+            <button class="randomize-btn" @click="handleRandomize" title="Randomize">
+                <ShuffleSvg />
+            </button>
+            <DropDown
+                :items="items"
+                :current="current"
+                component_key="sortbar"
+                :reverse="folder.trackSortReverse"
+                @item-clicked="handleSortKeySet"
+            />
+        </div>
     </div>
 </template>
 
@@ -30,6 +35,7 @@ import { useRouter } from 'vue-router'
 import { Routes } from '@/router'
 
 import FolderSvg from '@/assets/icons/folder.svg'
+import ShuffleSvg from '@/assets/icons/shuffle.svg'
 import BreadCrumbNav from '@/components/FolderView/BreadCrumbNav.vue'
 import DropDown from '@/components/shared/DropDown.vue'
 import useFolder from '@/stores/pages/folder'
@@ -68,6 +74,11 @@ const handleSortKeySet = (item: SortItem) => {
     folder.setFolderTrackSortKey(item.key)
 }
 
+const handleRandomize = () => {
+    folder.trackSortBy = 'random'
+    folder.fetchAll(folder.path, true)
+}
+
 const current = computed(() => {
     return items.find(item => item.key === folder.trackSortBy) || items[0]
 })
@@ -87,10 +98,7 @@ const current = computed(() => {
     // overflow: hidden;
     display: grid;
     grid-template-columns: 1fr;
-    // gap: 1rem;
-    justify-content: space-between;
-    // width: 100%;
-    margin-right: 10rem; // sortbar width
+    // gap: 1rem;3rem; // controls width
 
     @include allPhones {
         display: grid;
@@ -98,16 +106,40 @@ const current = computed(() => {
         padding-bottom: 1rem;
 
         // INFO: Folder page sort bar overrides
-        .sortbar {
+        .controls {
             top: $medium !important;
             right: 1rem !important;
         }
     }
 
-    .sortbar {
+    .controls {
         position: absolute;
         top: 1rem;
         right: 0;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: $small;
+    }
+
+    .randomize-btn {
+        width: 3rem;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        outline: solid 1px $gray5;
+        border-radius: $small;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background-color: $gray5;
+        }
+    }
+
+    .sortbar {
         width: 9rem;
     }
 
