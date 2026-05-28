@@ -215,6 +215,9 @@ import { storeToRefs } from 'pinia'
 
 TimeAgo.addLocale(en)
 
+let clientId = 'Ov23li5bsrEqMmqdT10i'
+let redirectUri = 'https://cloud.swingmx.com/auth/github/callback'
+
 const error = ref<string | null>(null)
 const loading = ref(false)
 const settings = useSettingsStore()
@@ -301,6 +304,14 @@ async function getLicenseInfo(checkSponsor: boolean = false) {
         method: 'GET',
     })
 
+    if (response.data.redirect_url) {
+        redirectUri = response.data.redirect_url
+    }
+
+    if (response.data.client_id) {
+        clientId = response.data.client_id
+    }
+
     if (response.status === 200) {
         settings.updateLicenseInfo(response.data)
         return
@@ -373,10 +384,7 @@ async function loginWithGitHub() {
         })
     }
 
-    const clientId = 'Ov23li5bsrEqMmqdT10i'
     const publicKey = settings.public_key
-    // const redirectUri = 'http://localhost:1957/auth/github/callback'
-    const redirectUri = 'https://cloud.swingmx.com/auth/github/callback'
     const githubUrl = `https://github.com/login/oauth/authorize`
 
     const queryParams = new URLSearchParams({
