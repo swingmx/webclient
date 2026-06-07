@@ -59,12 +59,7 @@ export default defineStore('lyrics', {
                     }
                 })
                 .then(async () => {
-                    const line = this.calculateCurrentLine()
-
-                    if (line == -1) {
-                        return this.scrollToContainerTop()
-                    }
-
+                    this.scrollToContainerTop()
                     this.scrollToCurrentLine()
                 })
                 .catch(e => {
@@ -87,7 +82,7 @@ export default defineStore('lyrics', {
                 })
         },
         scrollToContainerTop() {
-            const container = document.getElementById('scrollbale')
+            const container = document.getElementById('np-lyrics-synced')
 
             if (container) {
                 container.scroll({

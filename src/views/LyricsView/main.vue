@@ -127,7 +127,8 @@ onMounted(() => {
     display: grid;
     grid-template-rows: max-content 1fr;
 
-    #np-lyrics-synced {
+    #np-lyrics-synced,
+    .unsynced {
         height: 100%;
         max-width: 54rem;
         padding-bottom: 6rem;
@@ -143,6 +144,10 @@ onMounted(() => {
         width: 100%;
         height: 6rem;
         background: linear-gradient(to top, #000, transparent);
+    }
+
+    .lyricsline--1 {
+        height: 1.5rem;
     }
 
     .line {
