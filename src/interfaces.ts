@@ -381,7 +381,7 @@ interface License {
         modified_at: string
         price_id: string
         product_id: string
-        recurring_interval: string
+        recurring_interval: "month" | "year" | "one_time"
         started_at: string
         status: string
         trial_end: string | null

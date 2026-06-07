@@ -105,10 +105,11 @@
                         {{ `${licenseInfo.license.license_type === 'gh_sponsor' ? 'Tier' : `Amount`}` }}
                     </div>
                     <span class="primary">
-                        ${{
-                            licenseInfo?.license.subscription.amount != null
-                                ? (licenseInfo.license.subscription.amount / 100).toFixed(2)
-                                : ''
+                        {{
+                            Intl.NumberFormat(userLocale(), {
+                                style: 'currency',
+                                currency: licenseInfo.license.subscription.currency,
+                            }).format(licenseInfo.license.subscription.amount / 100)
                         }} </span
                     ><span class="period"
                         >/{{ getRecurringInterval(licenseInfo?.license.subscription.recurring_interval || '') }}</span
@@ -128,7 +129,7 @@
                         }}
                     </span>
                 </div>
-                <div class="info">
+                <div v-if="licenseInfo?.license.subscription.recurring_interval !== 'one_time'" class="info">
                     <div class="label">Renewal</div>
                     <span class="primary renewal">
                         {{
@@ -136,6 +137,12 @@
                                 ? 'Auto-renew off'
                                 : getDate(licenseInfo?.license.subscription.current_period_end || '')
                         }}
+                    </span>
+                </div>
+                <div v-if="licenseInfo?.license.subscription.recurring_interval == 'one_time'" class="info">
+                    <div class="label">Expires</div>
+                    <span class="primary renewal">
+                        {{ getDate(licenseInfo?.license.subscription.ends_at || '') }}
                     </span>
                 </div>
             </div>
@@ -200,6 +207,7 @@ import Input from '@/components/shared/Input.vue'
 import Spinner from '@/components/shared/Spinner.vue'
 import ErrorSvg from '@/assets/icons/toast/error.svg'
 
+const userLocale = () => navigator.language
 const CrownSvg = defineAsyncComponent(() => import('@/assets/icons/crown.svg'))
 const ServerSvg = defineAsyncComponent(() => import('@/assets/icons/server.svg'))
 const LaptopSvg = defineAsyncComponent(() => import('@/assets/icons/laptop.svg'))
@@ -251,6 +259,8 @@ function getRecurringInterval(interval: string) {
             return 'mo'
         case 'year':
             return 'yr'
+        case 'one_time':
+            return 'once'
     }
 
     return interval
@@ -282,13 +292,13 @@ function getDeviceIcon(deviceType: string) {
 }
 
 function getTimeAgo(date: string) {
-    return new TimeAgo('en').format(new Date(date))
+    return new TimeAgo(userLocale()).format(new Date(date))
 }
 
 function getLastSeen(date: string | null) {
     if (!date) return 'No activity'
 
-    const timeAgo = new TimeAgo('en').format(new Date(date))
+    const timeAgo = new TimeAgo(userLocale()).format(new Date(date))
     return `Last activity: ${timeAgo}`
 }
 
