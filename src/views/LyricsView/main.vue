@@ -146,8 +146,8 @@ onMounted(() => {
         background: linear-gradient(to top, #000, transparent);
     }
 
-    .lyricsline--1 {
-        height: 1.5rem;
+    #lyricsline--1 {
+        height: 1rem;
     }
 
     .line {
