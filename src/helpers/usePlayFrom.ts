@@ -33,6 +33,7 @@ export async function utilPlayFromArtist(index: number = 0) {
     const tracks = await getArtistTracks(artist.info.artisthash)
 
     tracklist.setFromArtist(artist.info.artisthash, artist.info.name, tracks)
+    tracklist.shuffleListIfAutoShuffle()
     queue.play(index)
 }
 
@@ -48,6 +49,7 @@ export async function playFromAlbumCard(albumhash: string, albumname: string) {
     }
 
     tracklist.setFromAlbum(albumname, albumhash, tracks)
+    tracklist.shuffleListIfAutoShuffle()
     queue.play()
 }
 
@@ -62,6 +64,7 @@ export async function playFromArtistCard(artisthash: string, artistname: string)
     }
 
     tracklist.setFromArtist(artisthash, artistname, tracks)
+    tracklist.shuffleListIfAutoShuffle()
     queue.play()
 }
 
@@ -78,6 +81,7 @@ export async function playFromFolderCard(folderpath: string) {
     }
 
     tracklist.setFromFolder(folderpath, tracks)
+    tracklist.shuffleListIfAutoShuffle()
     queue.play()
 }
 
@@ -95,6 +99,9 @@ export async function playFromFavorites(track: Track | undefined) {
 
     if (track) {
         index = tracklist.tracklist.findIndex(t => t.trackhash === track?.trackhash)
+    }
+    else {
+        tracklist.shuffleListIfAutoShuffle()
     }
 
     queue.play(index)
@@ -115,6 +122,7 @@ export async function playFromPlaylist(id: string, track?: Track) {
         const index = tracks.findIndex(t => t.trackhash === track.trackhash)
         queue.play(index)
     } else {
+        tracklist.shuffleListIfAutoShuffle()
         queue.play()
     }
 }
@@ -128,6 +136,7 @@ export const playFrom = async (source: playSources) => {
             const album = useAlbum()
 
             tracklist.setFromAlbum(album.info.title, album.info.albumhash, album.srcTracks)
+            tracklist.shuffleListIfAutoShuffle()
             queue.play()
             break
         }
@@ -141,6 +150,7 @@ export const playFrom = async (source: playSources) => {
                 await playlist.fetchAll(playlist.info.id, false, true)
             }
             tracklist.setFromPlaylist(playlist.info.name, playlist.info.id, playlist.tracks)
+            tracklist.shuffleListIfAutoShuffle()
             queue.play()
 
             break
