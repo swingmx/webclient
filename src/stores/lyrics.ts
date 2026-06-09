@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { currentAudioTimeMs, usePlayer } from './player'
 
 import useLyricsPlugin from './plugins/lyrics'
 import useQueue from './queue'
@@ -7,6 +8,7 @@ import useSettings from './settings'
 import { LyricsLine } from '@/interfaces'
 import { checkExists, getLyrics } from '@/requests/lyrics'
 import { Routes, router } from '@/router'
+import { nextTick } from 'vue'
 
 // a custom error class called HasNoSyncedLyricsError
 class HasUnSyncedLyricsError extends Error {
@@ -59,6 +61,7 @@ export default defineStore('lyrics', {
                     }
                 })
                 .then(async () => {
+                    await nextTick()
                     this.scrollToContainerTop()
                     this.scrollToCurrentLine()
                 })
@@ -148,18 +151,18 @@ export default defineStore('lyrics', {
         calculateCurrentLine() {
             if (!this.lyrics.length) return -1
 
-            const queue = useQueue()
-            const duration = queue.duration.current
+            const duration = currentAudioTimeMs.value
 
             if (!this.synced || !this.lyrics) return -1
 
-            const millis = duration * 1000
             const closest = this.lyrics.reduce((prev, curr) => {
-                return Math.abs(curr.time - millis) < Math.abs(prev.time - millis) ? curr : prev
+                return Math.abs(curr.time - duration) < Math.abs(prev.time - duration) ? curr : prev
             })
 
-            return this.lyrics.indexOf(closest) - 1
+            const res = this.lyrics.indexOf(closest) - 1
+            return res
         },
+
         sync() {
             const line = this.calculateCurrentLine()
             this.setCurrentLine(line)

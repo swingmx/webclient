@@ -1,6 +1,6 @@
 import { router, Routes } from '@/router'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import useColors from './colors'
 import useLyrics from './lyrics'
@@ -139,6 +139,8 @@ let audio = audioSource.playingSource
 const buffering = ref(true)
 const maxSeekPercent = ref(0)
 
+export const currentAudioTimeMs = computed(() => Math.round(audio.currentTime * 1000))
+
 export const usePlayer = defineStore('player', () => {
     const queue = useQueue()
     const colors = useColors()
@@ -241,7 +243,7 @@ export const usePlayer = defineStore('player', () => {
             return toast.showNotification('Player Error: ' + e.message, NotifType.Error)
         }
 
-        queue.playNext() // skip unplayable track
+        // queue.playNext() // skip unplayable track
         toast.showNotification("Can't load: " + queue.currenttrack.title, NotifType.Error)
     }
 
@@ -309,7 +311,7 @@ export const usePlayer = defineStore('player', () => {
             return
         }
 
-        const millis = Math.round(audio.currentTime * 1000)
+        const millis = currentAudioTimeMs.value
         const diff = lyrics.nextLineTime - millis
 
         if (diff < 0) {
