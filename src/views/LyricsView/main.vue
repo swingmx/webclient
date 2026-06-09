@@ -147,7 +147,7 @@ onMounted(() => {
     }
 
     #lyricsline--1 {
-        height: 1rem;
+        height: 10rem;
     }
 
     .line {
@@ -195,7 +195,7 @@ onMounted(() => {
     }
 
     .spacer {
-        height: 8rem;
+        height: 40%;
     }
 }
 
