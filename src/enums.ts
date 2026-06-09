@@ -102,8 +102,13 @@ export interface DBSettings {
   scanInterval: number
   plugins: Plugin[];
   version: string;
+  serverId: string;
   lastfmApiKey: string;
   lastfmApiSecret: string;
   lastfmSessionKey: string;
   showPlaylistsInFolderView: boolean;
+  artistArticleAwareSorting: boolean;
+
+  deviceName: string;
+  deviceId: string;
 }

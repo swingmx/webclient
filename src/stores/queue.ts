@@ -23,6 +23,7 @@ export default defineStore('Queue', {
         playing: false,
         /** Whether track has been triggered manually */
         manual: true,
+        direction: <'up' | 'down'>('up'),
     }),
     actions: {
         setPlaying(val: boolean) {
@@ -43,6 +44,8 @@ export default defineStore('Queue', {
         play(index: number = 0, manual = true) {
             const { tracklist } = useTracklist()
             if (tracklist.length === 0) return
+
+            this.direction = index > this.currentindex ? 'up' : 'down'
 
             this.playing = true
             this.currentindex = index
@@ -88,7 +91,11 @@ export default defineStore('Queue', {
 
             const resetQueue = () => {
                 this.currentindex = 0
-                audioSource.playingSource.src = getUrl(this.next.filepath, this.next.trackhash, settings.use_legacy_streaming_endpoint)
+                audioSource.playingSource.src = getUrl(
+                    this.next.filepath,
+                    this.next.trackhash,
+                    settings.use_legacy_streaming_endpoint
+                )
                 audioSource.pausePlayingSource()
                 this.playing = false
 
@@ -128,9 +135,9 @@ export default defineStore('Queue', {
                 }
             }
 
-            if (router.currentRoute.value.name == Routes.Lyrics) {
+            if (lyrics.onLyricsPage) {
                 const line = lyrics.calculateCurrentLine()
-                lyrics.setCurrentLine(line)
+                lyrics.setCurrentLine(line, true, 0)
             }
 
             const player = usePlayer()

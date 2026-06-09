@@ -10,11 +10,13 @@ import { content_width } from '../content-width'
 import { getLastFmApiSig } from '@/context_menus/hashing'
 import useAxios from '@/requests/useAxios'
 import { paths } from '@/config'
-import { router, Routes } from '@/router'
+import { router } from '@/router'
+import { LicenseInfo } from '@/interfaces'
 
 export default defineStore('settings', {
     state: () => ({
         version: '',
+        public_key: '',
         extend_width: false,
         contextChildrenShowMode: contextChildrenShowMode.hover,
         artist_top_tracks_count: 5,
@@ -40,6 +42,7 @@ export default defineStore('settings', {
         show_albums_as_singles: false,
         separators: <string[]>[],
         show_playlists_in_folders: false,
+        article_aware_sorting: false,
 
         // client
         useCircularArtistImg: true,
@@ -76,10 +79,15 @@ export default defineStore('settings', {
         statsperiod: 'week',
         showInlineFavIcon: false,
         _highlightFavoriteTracks: false,
+
+        device_name: '',
+        device_id: '',
+        licenseInfo: <LicenseInfo | null>null,
     }),
     actions: {
         mapDbSettings(settings: DBSettings) {
             this.version = settings.version
+            this.public_key = settings.serverId
             this.root_dirs = settings.rootDirs
             this.feat = settings.extractFeaturedArtists
             this.prodby = settings.removeProdBy
@@ -89,6 +97,7 @@ export default defineStore('settings', {
             this.separators = settings.artistSeparators
             this.show_albums_as_singles = settings.showAlbumsAsSingles
             this.show_playlists_in_folders = settings.showPlaylistsInFolderView
+            this.article_aware_sorting = settings.artistArticleAwareSorting
 
             this.enablePeriodicScans = settings.enablePeriodicScans
             this.periodicInterval = settings.scanInterval
@@ -102,6 +111,9 @@ export default defineStore('settings', {
             if (this.use_lyrics_plugin) {
                 this.lyrics_plugin_settings = settings.plugins.find(p => p.name === 'lyrics_finder')?.settings
             }
+
+            this.device_name = settings.deviceName
+            this.device_id = settings.deviceId
         },
         setArtistSeparators(separators: string[]) {
             this.separators = separators
@@ -295,6 +307,9 @@ export default defineStore('settings', {
         async toggleMergeAlbums() {
             return await this.genericToggleSetting('mergeAlbums', !this.merge_albums, 'merge_albums')
         },
+        async toggleArticleAwareSorting() {
+            return await this.genericToggleSetting('artistArticleAwareSorting', !this.article_aware_sorting, 'article_aware_sorting')
+        },
 
         async toggleShowAlbumsAsSingles() {
             return await this.genericToggleSetting(
@@ -374,6 +389,9 @@ export default defineStore('settings', {
         setStatsPeriod(period: string) {
             this.statsperiod = period
         },
+        updateLicenseInfo(info: LicenseInfo | null) {
+            this.licenseInfo = info
+        },
     },
     getters: {
         can_extend_width(): boolean {
@@ -403,6 +421,7 @@ export default defineStore('settings', {
             // reset plugin settings
             store.use_lyrics_plugin = false
             store.lyrics_plugin_settings = {}
+            store.licenseInfo = null
         },
     },
 })

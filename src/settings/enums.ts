@@ -7,6 +7,7 @@ export enum SettingType {
   root_dirs,
   free_number_input,
   locked_number_input,
+  license,
 
   // custom components 👇
   quick_actions,

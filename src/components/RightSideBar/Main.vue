@@ -36,16 +36,14 @@ const tabs = useTabStore()
     display: grid;
     grid-template-rows: max-content 1fr;
     background-color: rgb(22, 22, 22);
-    padding-bottom: 1rem;
     border-top: none;
     border-bottom: none;
-    margin-bottom: -1rem;
 
     .rtopbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-right: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-right: 1rem;
     }
 
     .gsearch-input {
@@ -75,7 +73,7 @@ const tabs = useTabStore()
     .r-content {
         width: 100%;
         height: 100%;
-        background-color: $gray;
+        // background-color: $gray;
 
         .r-search {
             height: 100%;
@@ -92,6 +90,18 @@ const tabs = useTabStore()
             gap: $small;
             grid-template-rows: max-content 1fr;
         }
+
+        #queue-scrollable {
+            padding: 0 1rem 2rem $small;
+        }
+
+        .now-playing-top {
+            margin: 0 1rem;
+        }
+    }
+
+    .top-result-item {
+        background-color: $gray5;
     }
 }
 

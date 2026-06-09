@@ -1,10 +1,10 @@
 <template>
-    <CardGridPage :page="itemtype" :items="items" :fetch_callback="() => loadMore()">
+    <CardGridPage :page="itemtype" :items="items" :fetch_callback="() => loadMore()" :more-items="waitingForMore">
         <template #header>
             <GenericHeader>
                 <template #name
-                    >Favorite <span style="text-transform: capitalize">{{ itemtype }}s</span></template
-                >
+                    >Favorite <span style="text-transform: capitalize">{{ itemtype }}s</span>
+                </template>
                 <template #description
                     >You have {{ itemtype == 'album' ? albumCount : artistCount }} favorited
                     {{ itemtype + (items.length == 1 ? '' : 's') }}</template
@@ -25,11 +25,20 @@ import { getFavAlbums, getFavArtists } from '@/requests/favorite'
 import CardGridPage from './SearchView/CardGridPage.vue'
 import GenericHeader from '@/components/shared/GenericHeader.vue'
 
-let albumCount = 0
-let artistCount = 0
-let waitingForMore = false
-
 const route = useRoute()
+
+const albumCount = ref(0)
+const artistCount = ref(0)
+
+const waitingForMore = computed(() => {
+    // return true if the count is less than the length of the items
+    if (route.name == Routes.favoriteAlbums) {
+        return albumCount.value > 0 && albums.value.length < albumCount.value
+    }
+
+    return artistCount.value > 0 && artists.value.length < artistCount.value
+})
+
 const albums: Ref<Album[]> = ref([])
 const artists: Ref<Artist[]> = ref([])
 
@@ -49,39 +58,39 @@ const items = computed(() => {
     return artists.value
 })
 
-async function loadMore() {
+async function loadMore(initialize?: boolean) {
     let counter: number
 
     if (itemtype.value == 'artist') {
-        counter = artistCount
+        counter = artistCount.value
     } else {
-        counter = albumCount
+        counter = albumCount.value
     }
 
-    if (waitingForMore || (counter && counter <= items.value.length)) return
+    // if (waitingForMore || (counter && counter <= items.value.length)) return
+    if (!initialize && !waitingForMore.value) return
 
-    waitingForMore = true
-    const start = items.value.length ? 50 + items.value.length : 0
-    const data = await (itemtype.value == 'artist' ? getFavArtists(start, 50) : getFavAlbums(start, 50))
+    // start at the end of the current items
+    const limit = 50
+    const start = items.value.length
+    const data = await (itemtype.value == 'artist' ? getFavArtists(start, limit) : getFavAlbums(start, limit))
 
     if (data.total !== -1) {
         if (itemtype.value == 'artist') {
-            artistCount = data.total
+            artistCount.value = data.total
         } else {
-            albumCount = data.total
+            albumCount.value = data.total
         }
     }
 
     if (itemtype.value == 'artist') {
-        artists.value.push(...(data.artists as Artist[]))
+        artists.value.push(...(data as any).artists)
     } else {
-        albums.value.push(...(data.albums as Album[]))
+        albums.value.push(...(data as any).albums)
     }
-
-    waitingForMore = false
 }
 
 onMounted(async () => {
-    await loadMore()
+    await loadMore(true)
 })
 </script>

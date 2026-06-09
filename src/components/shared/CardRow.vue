@@ -1,6 +1,6 @@
 <template>
     <div class="cardlistrow">
-        <component v-for="item in items" :key="item.key" :is="item.component" v-bind="item.props" />
+        <component :is="item.component" v-for="item in items" :key="item.key" v-bind="item.props" class="hlistitem" />
     </div>
 </template>
 

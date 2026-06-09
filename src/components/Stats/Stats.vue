@@ -1,5 +1,5 @@
 <template>
-    <div class="statshead" v-if="statItems.length">
+    <div v-if="statItems.length" class="statshead">
         <div class="left">
             <StatItem
                 v-for="item in statItems.slice(0, statItems.length - 1)"
@@ -19,7 +19,7 @@
             />
         </div>
     </div>
-    <div class="statsdates" v-if="date">
+    <div v-if="date" class="statsdates">
         <CalendarSvg />
         {{ date }}
     </div>
@@ -31,7 +31,7 @@ import { onMounted, ref } from 'vue'
 import StatItem from './StatItem.vue'
 import CalendarSvg from '@/assets/icons/calendar.svg'
 
-interface StatItem {
+interface StatsItem {
     cssclass: string
     value: string
     text: string
@@ -39,10 +39,10 @@ interface StatItem {
 }
 
 const props = defineProps<{
-    items?: StatItem[]
+    items?: StatsItem[]
 }>()
 
-const statItems = ref<StatItem[]>([])
+const statItems = ref<StatsItem[]>([])
 const date = ref<string | null>(null)
 
 onMounted(async () => {

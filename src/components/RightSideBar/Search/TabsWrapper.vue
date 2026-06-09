@@ -55,6 +55,7 @@ defineEmits<{
 
     .cardlistrow {
         grid-template-columns: repeat(auto-fill, minmax(8.1rem, 1fr));
+        padding-bottom: 0;
     }
 }
 
@@ -63,6 +64,10 @@ defineEmits<{
     overflow: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+
+    .scroller {
+        padding: 0 1rem 2rem $small !important;
+    }
 }
 
 .designatedOS #tab-content::-webkit-scrollbar-track {

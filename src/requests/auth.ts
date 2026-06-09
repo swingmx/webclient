@@ -103,3 +103,21 @@ export async function sendPairRequest() {
         method: 'GET',
     })
 }
+
+export async function getOnboardingData() {
+    const res = await useAxios({
+        url: paths.api.onboardingData,
+        method: 'GET',
+    })
+
+    return res.data as {
+        adminExists: boolean
+        rootDirsSet: boolean
+        onboardingComplete: boolean
+        userHome?: string
+        /**
+         * format: "scan_batch_cleared: {current}/{total}"
+         */
+        scanMessage?: `scan_batch_cleared: ${number}/${number}`
+    }
+}

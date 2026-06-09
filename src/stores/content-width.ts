@@ -13,7 +13,11 @@ const heightLarge = computed(() => content_height.value > 1080)
 // which is at the bottom of the page will reliably be remounted
 // causing more tracks to be loaded again
 // 2.75x is ~50 tracks on a 2560x1440 screen.
-const track_limit = computed(() => Math.round((content_height.value / 64) * 2.75))
+const track_limit = computed(() =>
+    // If content_height is 0, approximate the window height
+    // minus top and bottom bar heights (~150px)
+    Math.round(((content_height.value || useWindowSize().height.value - 150) / 64) * 2.75)
+)
 
 const resizer_width = ref(0)
 

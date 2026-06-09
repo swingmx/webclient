@@ -4,7 +4,7 @@ import { SettingType } from '../enums'
 import useSettingsStore from '@/stores/settings'
 import { updateConfig } from '@/requests/settings'
 
-export default <Setting>{
+const separators = <Setting>{
     title: 'Enter separators separated by a comma',
     desc: `These will be used to separate artists and album artists`,
     state: () => {
@@ -21,7 +21,7 @@ export default <Setting>{
     action: async (payload: string) => {
         if (!payload) return
 
-        const { status } = await updateConfig("artistSeparators", payload)
+        const { status } = await updateConfig('artistSeparators', payload)
 
         if (status == 200) {
             useSettingsStore().setArtistSeparators(payload.split(','))
@@ -31,3 +31,13 @@ export default <Setting>{
     },
     type: SettingType.separators_input,
 }
+
+const articleAwareSorting = <Setting>{
+    title: 'Article aware sorting',
+    desc: "Ignore articles (e.g. The, A, An) when sorting artist names",
+    type: SettingType.binary,
+    state: () => useSettingsStore().article_aware_sorting,
+    action: () => useSettingsStore().toggleArticleAwareSorting(),
+}
+
+export default [articleAwareSorting, separators]

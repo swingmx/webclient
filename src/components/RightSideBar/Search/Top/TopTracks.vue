@@ -34,10 +34,6 @@ function handlePlay(track: Track) {
 
 <style lang="scss">
 .right-search-top-tracks {
-    margin-bottom: 2rem;
-
-    .track-item {
-        padding: $small 1rem;
-    }
+    margin: 0 1rem 2rem $small;
 }
 </style>

@@ -2,29 +2,29 @@
     <div class="settingssidebar">
         <div class="groups">
             <div
-                class="group"
                 v-for="group in settingGroups.filter(g => {
                     // return true
                     return g.show_if ? g.show_if() : true
                 })"
                 :key="group.title"
+                class="group"
             >
-                <div class="gtitle" v-if="group.title">
+                <div v-if="group.title" class="gtitle">
                     {{ group.title }}
                 </div>
                 <div class="gitems">
                     <div
-                        class="gitem rounded-sm"
                         v-for="item in group.groups"
                         :key="item.title"
+                        class="gitem rounded-sm"
                         :class="{
                             active: currentGroup && item.title === currentGroup.title,
-                            about: item.title === 'About',
+                            subscription: item.title === 'Subscription',
                         }"
                         @click="() => $emit('setTab', item.title || '')"
                     >
-                        <Avatar :size="18" :name="auth.user.username || ''" v-if="item.title === 'Profile'" />
-                        <span class="icon" v-html="item.icon" v-else></span>
+                        <Avatar v-if="item.title === 'Profile'" :size="18" :name="auth.user.username || ''" />
+                        <span v-else class="icon" v-html="item.icon"></span>
                         <span>
                             {{ item.title }}
                         </span>
@@ -149,11 +149,11 @@ defineEmits<{
             }
         }
 
-        &.about {
+        &.subscription {
             margin-top: 14px;
         }
 
-        &.about::before {
+        &.subscription::before {
             content: '';
             height: 1px;
             position: absolute;

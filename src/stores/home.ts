@@ -29,7 +29,7 @@ export default defineStore('homepage', () => {
     }
 
     async function fetchAll() {
-        const data: { [key: string]: HomePageItem }[] = await getHomePageData(maxAbumCards.value)
+        const data: { [key: string]: HomePageItem }[] = await getHomePageData(maxAbumCards.value + 2)
         let keys = []
 
         for (const [index, item] of data.entries()) {

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import useUI from '@/stores/interface'
 
 export enum ModalOptions {
     newPlaylist,
@@ -74,6 +75,12 @@ export default defineStore('newModal', {
             this.showModal(ModalOptions.setRootDirs)
         },
         showLoginModal() {
+            if (useUI().hideUI) {
+                console.log('🙊 showLoginModal but hideUI is true')
+                return
+            }
+
+            console.log('🙉 showLoginModal')
             this.showModal(ModalOptions.login)
         },
         showSettingsModal() {
@@ -85,6 +92,12 @@ export default defineStore('newModal', {
         },
         setTitle(new_title: string) {
             this.title = new_title
+        },
+        resetModal() {
+            this.visible = false
+            this.title = ''
+            this.props = {}
+            this.component = null
         },
     },
 })

@@ -18,7 +18,7 @@ defineProps<{
     width: 100%;
     padding: 0 1rem;
     height: 100%;
-    max-height: calc(100vh - 6.85rem);
+    // max-height: calc(100vh - 6.85rem);
     overflow: auto;
     overflow-x: hidden;
     scrollbar-gutter: stable;

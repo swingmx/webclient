@@ -93,7 +93,7 @@ export default (source: From): PlayingFrom => {
 
         case FromOptions.favorite:
             return {
-                name: 'Favorite tracks',
+                name: 'Favorite Tracks',
                 icon: HeartSvg,
                 location: {
                     name: Routes.favoriteTracks,

@@ -5,14 +5,13 @@ import { defineStore } from 'pinia'
 import { Routes, router } from '@/router'
 import { useDebounce } from '@vueuse/core'
 
-import { searchAlbums, searchArtists, searchTopResults, searchTracks } from '@/requests/searchMusic'
 
 import useTabs from './tabs'
 import useLoader from './loader'
 import useSettings from './settings'
 import { maxAbumCards } from './content-width'
-
 import { Album, Artist, Playlist, Track } from '../interfaces'
+import { searchAlbums, searchArtists, searchTopResults, searchTracks } from '@/requests/searchMusic'
 
 export default defineStore('search', () => {
     const query = ref('')

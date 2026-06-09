@@ -24,9 +24,9 @@
             />
             <CrudPage
                 v-if="modal.component == modal.options.page"
+                v-bind="modal.props"
                 @hideModal="hideModal"
                 @setTitle="setTitle"
-                v-bind="modal.props"
             />
             <UpdatePlaylist
                 v-if="modal.component == modal.options.updatePlaylist"
@@ -43,7 +43,7 @@
             </div>
             <SetRootDirs v-if="modal.component == modal.options.setRootDirs" @hideModal="hideModal" />
             <RootDirsPrompt v-if="modal.component == modal.options.rootDirsPrompt" @hideModal="hideModal" />
-            <Settings @set-title="setTitle" v-if="modal.component == modal.options.settings" />
+            <Settings v-if="modal.component == modal.options.settings" @set-title="setTitle" />
         </div>
     </div>
 </template>

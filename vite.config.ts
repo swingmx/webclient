@@ -10,6 +10,9 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 const path = require("path");
 
 export default defineConfig({
+  define: {
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false'
+  },
   base: "./",
   plugins: [
     vue(),
@@ -97,6 +100,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      util: "util/",
+      stream: "stream-browserify",
       "@": path.resolve(__dirname, "src"),
     },
   },

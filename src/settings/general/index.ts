@@ -11,8 +11,9 @@ import extendWidth from './extend-width'
 import folderlistmode from './folderlistmode'
 import layout from './layout'
 import nowPlaying from './now-playing-group'
+import { SettingType } from '../enums'
 import rootDirSettings from './root-dirs'
-import separators from './separators'
+import artistSettings from './artists'
 import sidebarSettings from './sidebar'
 import tracks from './tracks'
 // icons
@@ -21,6 +22,7 @@ import AvatarSvg from '@/assets/icons/artist.svg?raw'
 import FolderSvg from '@/assets/icons/folder.svg?raw'
 import TrackSvg from '@/assets/icons/mic.svg?raw'
 import AppearanceSvg from '@/assets/icons/paintbrush.svg?raw'
+import CloudUploadSvg from '@/assets/icons/cloud-upload.svg?raw'
 
 const npStrings = strings.nowPlayingStrings
 const rootRootStrings = strings.manageRootDirsStrings
@@ -42,6 +44,7 @@ export const general = {
                 ...nowPlaying,
             ],
         },
+        
     ],
 } as SettingCategory
 
@@ -50,7 +53,7 @@ export const library = {
     show_if: loggedInUserIsAdmin,
     groups: [
         {
-            title: "Folders",
+            title: 'Folders',
             icon: FolderSvg,
             desc: rootRootStrings.desc,
             settings: [...rootDirSettings],
@@ -76,15 +79,15 @@ export const library = {
             show_if: () => useSettings().feat !== null,
             title: 'Artists',
             icon: AvatarSvg,
-            desc: 'Customize artist separators',
-            settings: [separators],
+            desc: 'Customize artist settings',
+            settings: [...artistSettings],
         },
         {
-            title: "Backup",
-            icon: AvatarSvg,
-            desc: "Backup and restore your settings",
+            title: 'Backup',
+            icon: CloudUploadSvg,
+            desc: 'Backup and restore your library data',
             settings: [...restore],
-        }
+        },
     ],
 } as SettingCategory
 

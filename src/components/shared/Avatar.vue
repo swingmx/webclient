@@ -3,6 +3,8 @@
         :size="size || 80"
         :name="name"
         :square="false"
+        :variant="'beam'"
+        :colors="['#3a3a3c']"
     />
 </template>
 

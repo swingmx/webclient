@@ -1,6 +1,6 @@
 import { router, Routes } from '@/router'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import useColors from './colors'
 import useLyrics from './lyrics'
@@ -167,6 +167,8 @@ let audio = audioSource.playingSource
 const buffering = ref(true)
 const maxSeekPercent = ref(0)
 
+export const currentAudioTimeMs = computed(() => Math.round(audio.currentTime * 1000))
+
 export const usePlayer = defineStore('player', () => {
     const queue = useQueue()
     const colors = useColors()
@@ -269,7 +271,7 @@ export const usePlayer = defineStore('player', () => {
             return toast.showNotification('Player Error: ' + e.message, NotifType.Error)
         }
 
-        queue.playNext() // skip unplayable track
+        // queue.playNext() // skip unplayable track
         toast.showNotification("Can't load: " + queue.currenttrack.title, NotifType.Error)
     }
 
@@ -289,9 +291,9 @@ export const usePlayer = defineStore('player', () => {
         updateMediaNotif()
         colors.setTheme1Color(paths.images.thumb.small + queue.currenttrack.image)
 
-        if (router.currentRoute.value.name == Routes.Lyrics) {
-            return lyrics.getLyrics()
-        }
+        // if (router.currentRoute.value.name == Routes.nowPlaying) {
+        return lyrics.getLyrics()
+        // }
 
         // if (!settings.use_lyrics_plugin) {
         //     lyrics.checkExists(queue.currenttrack.filepath, queue.currenttrack.trackhash)
@@ -333,9 +335,11 @@ export const usePlayer = defineStore('player', () => {
     }
 
     const updateLyricsPosition = () => {
-        if (!lyrics.exists || router.currentRoute.value.name !== Routes.Lyrics) return
+        if (!lyrics.exists || !lyrics.onLyricsPage) {
+            return
+        }
 
-        const millis = Math.round(audio.currentTime * 1000)
+        const millis = currentAudioTimeMs.value
         const diff = lyrics.nextLineTime - millis
 
         if (diff < 0) {
@@ -378,7 +382,7 @@ export const usePlayer = defineStore('player', () => {
 
             const silence = e.data
 
-            if (!silence.ending_file){
+            if (!silence.ending_file) {
                 return
             }
 
