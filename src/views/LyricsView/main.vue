@@ -20,10 +20,12 @@
                         opacity_25: index <= lyrics.currentLine - 3,
                         opacity_5: index == lyrics.currentLine - 2,
                         opacity_75: index == lyrics.currentLine - 1,
+                        'line-spacer': line.text.trim() === '',
+                        'line-space-large': line.text.trim() === '' && (lyrics.lyrics[index + 1]?.time || line.time) - line.time > 10_000,
                     }"
                     @click="queue.seek(line.time / 1000)"
                 >
-                    {{ line.text }}
+                   {{ line.text }}
                 </div>
                 <div v-if="lyrics.copyright && lyrics.lyrics" class="copyright">
                     {{ lyrics.copyright }}
@@ -159,7 +161,7 @@ onMounted(() => {
     }
 
     .line {
-        margin-top: 1.5rem;
+        margin-top: .75rem;
         color: rgba(255, 255, 255, 0.314);
         cursor: pointer;
         text-align: center;
@@ -201,15 +203,23 @@ onMounted(() => {
     }
 
     .opacity_75 {
-        opacity: 0.9;
+        opacity: 0.45;
     }
 
     .opacity_5 {
-        opacity: 0.8;
+        opacity: 0.35;
     }
 
     .opacity_25 {
-        opacity: 0.7;
+        opacity: 0.25;
+    }
+
+    .line-spacer {
+        height: $small;
+    }
+
+    .line-space-large {
+        height: 2rem !important;
     }
 
     .copyright {
