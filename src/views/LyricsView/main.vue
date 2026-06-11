@@ -1,5 +1,10 @@
 <template>
-    <div v-if="queue.currenttrack && lyrics.lyrics.length" id="lyricscontent" @wheel.passive="onScroll">
+    <div
+        v-if="queue.currenttrack && lyrics.lyrics.length"
+        id="lyricscontent"
+        @wheel.passive="onScroll"
+        @touchmove.passive="onScroll"
+    >
         <LyricsHead />
         <div id="scrollbale">
             <div v-if="lyrics.lyrics.length && lyrics.synced" id="np-lyrics-synced">
@@ -56,6 +61,7 @@ import useColor from '@/stores/colors'
 import LyricsHead from './Head.vue'
 import PluginFind from './Plugins/Find.vue'
 import { getBackgroundColor, getShift } from '@/utils/colortools/shift'
+import { cancelLineAnimation } from '@/utils/lyrics/flipScroll'
 
 const queue = useQueue()
 const colors = useColor()
@@ -75,6 +81,8 @@ const nextLineColor = computed(() => {
 })
 
 const onScroll = (e: Event) => {
+    // hand scrolling back to the user with no transforms in flight
+    cancelLineAnimation()
     lyrics.setUserScrolled(true)
 }
 
@@ -162,6 +170,14 @@ onMounted(() => {
         &:hover {
             color: white;
         }
+    }
+
+    .line.flip-animating {
+        // duration must match DURATION_MS in utils/lyrics/flipScroll.ts
+        transition:
+            opacity 2s ease-in-out,
+            transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+        transition-delay: 0s, var(--flip-delay, 0s);
     }
 
     .currentLine {

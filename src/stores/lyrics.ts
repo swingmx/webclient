@@ -8,6 +8,7 @@ import useSettings from './settings'
 import { LyricsLine } from '@/interfaces'
 import { checkExists, getLyrics } from '@/requests/lyrics'
 import { Routes, router } from '@/router'
+import { animateLineChange } from '@/utils/lyrics/flipScroll'
 import { nextTick } from 'vue'
 
 // a custom error class called HasNoSyncedLyricsError
@@ -142,6 +143,13 @@ export default defineStore('lyrics', {
             }
 
             this.setUserScrolled(false)
+
+            const container = document.getElementById('scrollbale')
+            if (container && animateLineChange(container, elem, lineToScroll)) {
+                return
+            }
+
+            // big jumps (seek, track change) fall back to plain scrolling
             elem.scrollIntoView({
                 behavior: 'smooth',
                 block: 'center',
