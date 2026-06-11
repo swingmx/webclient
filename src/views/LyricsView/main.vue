@@ -165,10 +165,17 @@ onMounted(() => {
         text-align: center;
         width: fit-content;
         opacity: 1;
-        transition: opacity 2s ease-in-out;
+        transition:
+            opacity 2s ease-in-out,
+            color 750ms cubic-bezier(0.3, 0, 0.15, 1);
 
         &:hover {
             color: white;
+        }
+
+        // fast hover fade; scoped so it can't clobber the transform leg mid-animation
+        &:not(.flip-animating):hover {
+            transition-duration: 2s, 200ms;
         }
     }
 
@@ -176,8 +183,9 @@ onMounted(() => {
         // duration must match DURATION_MS in utils/lyrics/flipScroll.ts
         transition:
             opacity 2s ease-in-out,
-            transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
-        transition-delay: 0s, var(--flip-delay, 0s);
+            color 750ms cubic-bezier(0.3, 0, 0.15, 1),
+            transform 750ms cubic-bezier(0.3, 0, 0.15, 1);
+        transition-delay: 0s, 0s, var(--flip-delay, 0s);
     }
 
     .currentLine {

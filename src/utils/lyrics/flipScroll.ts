@@ -1,6 +1,6 @@
 const FLIP_CLASS = 'flip-animating'
 // keep in sync with the .flip-animating transition in LyricsView/main.vue
-const DURATION_MS = 600
+const DURATION_MS = 750
 const STAGGER_MS = 35
 const MAX_STAGGERED_LINES = 6
 
