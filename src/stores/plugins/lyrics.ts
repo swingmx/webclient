@@ -34,7 +34,7 @@ export default defineStore('lyricsplugin', {
                         throw new TrackChangedError()
                     }
                     if (data && data.lyrics) {
-                        return lyrics.setLyrics(data.lyrics)
+                        return lyrics.setLyrics(data.lyrics, data.source === 'cloud')
                     }
 
                     throw new Error('No lyrics found!')

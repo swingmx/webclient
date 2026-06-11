@@ -29,6 +29,7 @@ export default defineStore('lyrics', {
         synced: true,
         copyright: '',
         user_scrolled: false,
+        verified: false,
     }),
     actions: {
         async getLyrics(force = false) {
@@ -43,6 +44,7 @@ export default defineStore('lyrics', {
             this.currentLine = -1
             this.copyright = ''
             this.synced = true
+            this.verified = false
 
             getLyrics(track.filepath, track.trackhash)
                 .then(data => {
@@ -175,8 +177,9 @@ export default defineStore('lyrics', {
             const line = this.calculateCurrentLine()
             this.setCurrentLine(line)
         },
-        setLyrics(lyrics: LyricsLine[]) {
+        setLyrics(lyrics: LyricsLine[], verified: boolean) {
             this.lyrics = lyrics
+            this.verified = verified
             this.synced = true
             this.exists = true
             this.currentTrack = useQueue().currenttrackhash
