@@ -147,7 +147,7 @@ onMounted(() => {
     }
 
     #lyricsline--1 {
-        height: 10rem;
+        height: 2rem;
     }
 
     .line {

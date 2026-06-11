@@ -1,3 +1,5 @@
+import { LicenseInfo } from "./interfaces";
+
 export enum playSources {
   playlist,
   album,
@@ -108,7 +110,9 @@ export interface DBSettings {
   lastfmSessionKey: string;
   showPlaylistsInFolderView: boolean;
   artistArticleAwareSorting: boolean;
+  trustCloudLyrics: boolean;
 
   deviceName: string;
   deviceId: string;
+  licenseInfo: LicenseInfo | null;
 }

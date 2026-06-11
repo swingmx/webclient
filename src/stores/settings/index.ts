@@ -56,6 +56,7 @@ export default defineStore('settings', {
             auto_download: false,
             overide_unsynced: false,
         },
+        trust_cloud_lyrics: false,
         lasftfm_token: '',
         lastfm_api_key: '',
         lastfm_api_secret: '',
@@ -112,8 +113,10 @@ export default defineStore('settings', {
                 this.lyrics_plugin_settings = settings.plugins.find(p => p.name === 'lyrics_finder')?.settings
             }
 
+            this.trust_cloud_lyrics = settings.trustCloudLyrics
             this.device_name = settings.deviceName
             this.device_id = settings.deviceId
+            this.licenseInfo = settings.licenseInfo
         },
         setArtistSeparators(separators: string[]) {
             this.separators = separators
@@ -308,7 +311,11 @@ export default defineStore('settings', {
             return await this.genericToggleSetting('mergeAlbums', !this.merge_albums, 'merge_albums')
         },
         async toggleArticleAwareSorting() {
-            return await this.genericToggleSetting('artistArticleAwareSorting', !this.article_aware_sorting, 'article_aware_sorting')
+            return await this.genericToggleSetting(
+                'artistArticleAwareSorting',
+                !this.article_aware_sorting,
+                'article_aware_sorting'
+            )
         },
 
         async toggleShowAlbumsAsSingles() {
@@ -318,8 +325,14 @@ export default defineStore('settings', {
                 'show_albums_as_singles'
             )
         },
+        async toggleTrustCloudLyrics() {
+            return await this.genericToggleSetting('trustCloudLyrics', !this.trust_cloud_lyrics, 'trust_cloud_lyrics')
+        },
         async toggleShowPlaylistsInFolders() {
-            return await this.genericToggleSetting('showPlaylistsInFolderView', !this.show_playlists_in_folders, 'show_playlists_in_folders'
+            return await this.genericToggleSetting(
+                'showPlaylistsInFolderView',
+                !this.show_playlists_in_folders,
+                'show_playlists_in_folders'
             )
         },
         async setLastfmApiKey(key: string) {
