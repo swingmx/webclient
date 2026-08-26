@@ -2,9 +2,8 @@
     <button class="speaker" @wheel.passive="handleMouseWheel">
         <div class="icon" @click="settings.toggleMute">
             <VolumeMuteSvg v-if="settings.mute || settings.volume == 0.0" />
-            <VolumeFullSvg v-else-if="settings.volume > 0.8" />
-            <VolumeMidSvg v-else-if="settings.volume > 0.4" />
-            <VolumeLowSvg v-else />
+            <VolumeMidSvg v-else-if="settings.volume > 0.75" />
+            <VolumeLowSvg v-else-if="settings.volume > 0" />
         </div>
         <div class="dialog rounded-sm pad-sm">
             <input
@@ -30,7 +29,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import VolumeFullSvg from '@/assets/icons/volume-full.svg'
 import VolumeLowSvg from '@/assets/icons/volume-low.svg'
 import VolumeMidSvg from '@/assets/icons/volume-mid.svg'
 import VolumeMuteSvg from '@/assets/icons/volume-mute.svg'
