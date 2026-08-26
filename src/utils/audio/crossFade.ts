@@ -1,72 +1,63 @@
-import useSettings from "../../stores/settings";
+import useSettings from '../../stores/settings'
+import { volumeRampGain } from './volume'
 
-/**
- * Cross-fades the volume of an HTMLAudioElement over a specified duration.
- * @param audio - The HTMLAudioElement to cross-fade.
- * @param duration - The duration of the cross-fade in milliseconds. Default is 1000ms.
- * @param start_volume - The starting volume of the audio. Default is 0.
- * @param then_destroy - Specifies whether to destroy the audio element after the cross-fade ends. Default is false.
- */
+// how often the ramp updates the gain, in milliseconds
+const STEP_MS = 25
+
+// fades already running, keyed by element, so a new fade can cancel the old one
+const running = new WeakMap<HTMLAudioElement, number>()
+
+// fades an audio element in or out over the given duration, interpolated over slider
+// positions rather than raw amplitude so that the ramp is even to the ear
 export function crossFade({
-  audio,
-  duration = 1000,
-  start_volume = 0,
-  then_destroy = false,
+    audio,
+    duration = 1000,
+    fade_out = false,
+    then_destroy = false,
 }: {
-  audio: HTMLAudioElement;
-  duration?: number;
-  start_volume?: number;
-  then_destroy?: boolean;
+    audio: HTMLAudioElement
+    duration?: number
+    fade_out?: boolean
+    then_destroy?: boolean
 }) {
-  let interval: any = null;
-  const { volume, use_crossfade } = useSettings();
+    const settings = useSettings()
 
-  if (audio.muted || duration < 1000 || !use_crossfade) {
-    audio.volume = volume;
-    endCrossfade();
-    return;
-  }
+    cancel(audio)
 
-  audio.volume = start_volume;
-  const fadeStepTime = 100;
-  const fadeSteps = duration / fadeStepTime;
-  const volumeStep = volume / fadeSteps;
-  const is_up = start_volume == 0;
-
-  function incrementOrDecrement() {
-    const v = audio.volume;
-    const newVolume = is_up ? v + volumeStep : v - volumeStep;
-
-    if (newVolume > 1) {
-      audio.volume = 1;
-      return;
+    if (audio.muted || duration < 1000 || !settings.use_crossfade) {
+        audio.volume = settings.volume_gain
+        return endCrossfade()
     }
 
-    if (newVolume < 0) {
-      audio.volume = 0;
-      return;
+    const started_at = performance.now()
+
+    const interval = setInterval(() => {
+        const progress = (performance.now() - started_at) / duration
+
+        // read the position live so grabbing the slider mid-fade still works
+        const [from, to] = fade_out ? [settings.volume, 0] : [0, settings.volume]
+        audio.volume = volumeRampGain(from, to, progress)
+
+        if (progress >= 1) endCrossfade()
+    }, STEP_MS) as unknown as number
+
+    running.set(audio, interval)
+
+    function endCrossfade() {
+        cancel(audio)
+
+        if (then_destroy) {
+            audio.pause()
+            audio.src = ''
+        }
     }
+}
 
-    audio.volume = newVolume;
-  }
+function cancel(audio: HTMLAudioElement) {
+    const interval = running.get(audio)
 
-  let counter = 0;
-
-  interval = setInterval(() => {
-    if (counter == fadeSteps) {
-      return endCrossfade();
+    if (interval !== undefined) {
+        clearInterval(interval)
+        running.delete(audio)
     }
-
-    incrementOrDecrement();
-    counter++;
-  }, fadeStepTime);
-
-  function endCrossfade() {
-    clearInterval(interval);
-
-    if (then_destroy) {
-      audio.pause();
-      audio.src = "";
-    }
-  }
 }

@@ -2,8 +2,9 @@
     <button class="speaker" @wheel.passive="handleMouseWheel">
         <div class="icon" @click="settings.toggleMute">
             <VolumeMuteSvg v-if="settings.mute || settings.volume == 0.0" />
-            <VolumeMidSvg v-else-if="settings.volume > 0.75" />
-            <VolumeLowSvg v-else-if="settings.volume > 0" />
+            <VolumeFullSvg v-else-if="settings.volume > 0.8" />
+            <VolumeMidSvg v-else-if="settings.volume > 0.4" />
+            <VolumeLowSvg v-else />
         </div>
         <div class="dialog rounded-sm pad-sm">
             <input
@@ -14,23 +15,41 @@
                 min="0"
                 step="0.01"
                 :value="settings.volume"
+                :aria-label="`Volume ${volume_percent} percent`"
+                :aria-valuetext="`${volume_percent}%`"
                 :style="{
-                    backgroundSize: `${(settings.volume / 1) * 100}% 100%`,
+                    backgroundSize: `${volume_percent}% 100%`,
                 }"
                 @input="changeVolume"
             />
-            <div className="volume_indicator">{{ ((settings.volume / 1) * 100).toFixed(0) }}</div>
+            <div className="volume_indicator">{{ volume_percent }}</div>
         </div>
     </button>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
+import VolumeFullSvg from '@/assets/icons/volume-full.svg'
 import VolumeLowSvg from '@/assets/icons/volume-low.svg'
 import VolumeMidSvg from '@/assets/icons/volume-mid.svg'
 import VolumeMuteSvg from '@/assets/icons/volume-mute.svg'
 import useSettingsStore from '@/stores/settings'
+import { clamp } from '@/utils/audio/volume'
 
 const settings = useSettingsStore()
+
+// a slider position, not an amplitude — the taper is applied in `settings.volume_gain`
+const volume_percent = computed(() => Math.round(settings.volume * 100))
+
+// how much of the slider a single wheel notch covers
+const WHEEL_STEP = 0.02
+
+// wheel deltas per notch, by `WheelEvent.deltaMode` (pixels, lines, pages)
+const DELTA_PER_NOTCH = [100, 3, 1]
+
+// wheel movement too small to be worth a step yet, carried into the next event
+let wheel_remainder = 0
 
 const changeVolume = (event: Event) => {
     const target = event.target as HTMLInputElement
@@ -38,18 +57,16 @@ const changeVolume = (event: Event) => {
 }
 
 const handleMouseWheel = (event: WheelEvent) => {
-    const delta = event.deltaY / 1000
-    let newVolume = settings.volume - delta / 3
+    // deltaY is device- and browser-dependent, so normalise it to notches and cap it
+    const notches = clamp(event.deltaY / (DELTA_PER_NOTCH[event.deltaMode] ?? 100), -3, 3)
+    wheel_remainder -= notches * WHEEL_STEP
 
-    if (newVolume > 1) {
-        newVolume = 1
-    }
+    // move in whole steps, carrying the rest over so tiny trackpad deltas still count
+    const change = Math.trunc(wheel_remainder * 100) / 100
+    if (change === 0) return
 
-    if (newVolume < 0) {
-        newVolume = 0
-    }
-
-    settings.setVolume(newVolume)
+    wheel_remainder -= change
+    settings.setVolume(Math.round((settings.volume + change) * 100) / 100)
 }
 </script>
 

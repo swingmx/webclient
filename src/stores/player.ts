@@ -45,7 +45,7 @@ class AudioSource {
         if (!this.settings) return audio
         audio.src = uri
         audio.muted = this.settings.mute
-        audio.volume = this.settings.volume
+        audio.volume = this.settings.volume_gain
         audio.load()
         return audio
     }
@@ -55,7 +55,7 @@ class AudioSource {
         crossFade({
             audio: this.playingSource,
             duration: this.settings.crossfade_duration,
-            start_volume: this.settings.volume,
+            fade_out: true,
             then_destroy: true,
         })
 
@@ -66,7 +66,7 @@ class AudioSource {
         this.settings = settings
         this.sources.forEach(audio => {
             audio.muted = settings.mute
-            audio.volume = settings.volume
+            audio.volume = settings.volume_gain
         })
     }
 
@@ -195,8 +195,9 @@ export const usePlayer = defineStore('player', () => {
     // let sourceTime = 0
     // let lastTime = 0
 
-    function setVolume(new_value: number) {
-        audio.volume = new_value
+    // takes an amplitude, not a slider position. see `settings.volume_gain`
+    function setVolume(gain: number) {
+        audio.volume = gain
     }
 
     function setMute(new_value: boolean) {
@@ -256,7 +257,6 @@ export const usePlayer = defineStore('player', () => {
             crossFade({
                 audio,
                 duration: settings.crossfade_duration,
-                start_volume: 0,
             })
         }
 

@@ -12,6 +12,7 @@ import useAxios from '@/requests/useAxios'
 import { paths } from '@/config'
 import { router } from '@/router'
 import { LicenseInfo } from '@/interfaces'
+import { clamp, volumeToGain } from '@/utils/audio/volume'
 
 export default defineStore('settings', {
     state: () => ({
@@ -31,6 +32,7 @@ export default defineStore('settings', {
         enableWatchDog: false,
 
         folder_list_mode: false,
+        // slider position, NOT an amplitude. see the `volume_gain` getter.
         volume: 1.0,
         mute: false,
 
@@ -187,11 +189,12 @@ export default defineStore('settings', {
             this.show_albums_as_singles = !this.show_albums_as_singles
         },
         // volume 👇
+        // takes a slider position, 0 to 1
         setVolume(new_value: number) {
             const { setVolume } = usePlayer()
 
-            setVolume(new_value)
-            this.volume = new_value
+            this.volume = clamp(new_value)
+            setVolume(this.volume_gain)
         },
         toggleMute() {
             this.mute = !this.mute
@@ -200,7 +203,7 @@ export default defineStore('settings', {
         },
         initializeVolume() {
             const { setVolume, setMute } = usePlayer()
-            setVolume(this.volume)
+            setVolume(this.volume_gain)
             setMute(this.mute)
         },
         toggleUseCircularArtistImg() {
@@ -422,6 +425,10 @@ export default defineStore('settings', {
         },
         crossfade_on(): boolean {
             return this.use_crossfade && this.crossfade_duration > 0
+        },
+        // the amplitude to feed the audio elements. never assign `volume` directly
+        volume_gain(): number {
+            return volumeToGain(this.volume)
         },
         is_default_layout: state => state.layout === '',
         is_alt_layout: state => state.layout === 'alternate' && content_width.value > 900,
