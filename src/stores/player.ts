@@ -13,6 +13,7 @@ import useTracker from './tracker'
 import { getBaseUrl, paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
 import { crossFade } from '@/utils/audio/crossFade'
+import { equalizerEngine } from '@/utils/equalizer/equalizer'
 
 class AudioSource {
     private sources: HTMLAudioElement[] = []
@@ -20,6 +21,7 @@ class AudioSource {
     private handlers: { [key: string]: (err: Event | string) => void } = {}
     private requiredAPBlockBypass: boolean = false
     settings: ReturnType<typeof useSettings> | null = null
+    private audioContextInitialized: boolean = false
 
     constructor() {
         this.sources = [new Audio(), new Audio()]
@@ -31,6 +33,27 @@ class AudioSource {
         })
 
         this.requiredAPBlockBypass = true
+        this.initializeWebAudio()
+    }
+
+    /**
+     * Initialize Web Audio API for equalizer
+     */
+    private initializeWebAudio() {
+        try {
+            const audioContext = new AudioContext()
+            equalizerEngine.initialize(audioContext)
+            
+            // Connect both audio sources to the EQ chain
+            this.sources.forEach(audio => {
+                equalizerEngine.connectAudioElement(audio)
+            })
+            
+            this.audioContextInitialized = true
+        } catch (error) {
+            console.warn('Failed to initialize Web Audio API:', error)
+            this.audioContextInitialized = false
+        }
     }
 
     get standbySource() {
@@ -117,6 +140,11 @@ class AudioSource {
             .catch(() => {})
 
         this.requiredAPBlockBypass = false
+        
+        // Resume audio context for iOS/Safari
+        if (this.audioContextInitialized) {
+            equalizerEngine.resumeContext()
+        }
     }
 }
 

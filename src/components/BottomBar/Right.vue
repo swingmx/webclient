@@ -1,6 +1,7 @@
 <template>
     <div class="right-group">
         <LyricsButton />
+        <Equalizer />
         <Volume />
         <button
             class="repeat"
@@ -32,6 +33,7 @@ import RepeatAllSvg from '@/assets/icons/repeat.svg'
 import ShuffleSvg from '@/assets/icons/shuffle.svg'
 import HeartSvg from '../shared/HeartSvg.vue'
 import LyricsButton from '../shared/LyricsButton.vue'
+import Equalizer from './Equalizer.vue'
 import Volume from './Volume.vue'
 
 const queue = useQueue()
@@ -50,7 +52,7 @@ defineEmits<{
 .right-group {
     display: grid;
     justify-content: flex-end;
-    grid-template-columns: repeat(5, max-content);
+    grid-template-columns: repeat(6, max-content);
     align-items: center;
     height: 4rem;
 
