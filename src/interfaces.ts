@@ -288,6 +288,7 @@ export interface FetchProps {
     props?: {}
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
     headers?: {}
+    responseType?: 'json' | 'blob'
 }
 
 export interface FuseResult {
