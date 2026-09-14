@@ -38,6 +38,7 @@ export default defineStore('lyrics', {
 
             if (!force && this.currentTrack === track.trackhash) {
                 this.sync()
+                this.searchWithPluginIfNeeded()
                 return
             }
 
@@ -69,23 +70,26 @@ export default defineStore('lyrics', {
                     this.scrollToCurrentLine()
                 })
                 .catch(e => {
-                    const settings = useSettings()
-                    const plugin = useLyricsPlugin()
-
-                    // catch HasUnSyncedLyricsError instance
-                    if (e instanceof HasUnSyncedLyricsError) {
-                        if (!settings.lyrics_plugin_settings.overide_unsynced) return
-                        plugin.searchLyrics()
+                    if (!(e instanceof HasUnSyncedLyricsError)) {
+                        this.exists = false
+                        this.lyrics = <LyricsLine[]>[]
+                        this.copyright = ''
                     }
 
-                    this.exists = false
-                    this.lyrics = <LyricsLine[]>[]
-                    this.copyright = ''
-
-                    if (settings.lyrics_plugin_settings.auto_download) {
-                        plugin.searchLyrics()
-                    }
+                    this.searchWithPluginIfNeeded()
                 })
+        },
+        // Only search online while the user is actually looking at the lyrics tab.
+        searchWithPluginIfNeeded() {
+            if (!this.onLyricsPage) return
+
+            const { auto_download, overide_unsynced } = useSettings().lyrics_plugin_settings
+            const missing = !this.exists || !this.lyrics.length
+            const unsynced = !missing && !this.synced
+
+            if ((missing && auto_download) || (unsynced && overide_unsynced)) {
+                useLyricsPlugin().searchLyrics()
+            }
         },
         scrollToContainerTop() {
             const container = document.getElementById('np-lyrics-synced')

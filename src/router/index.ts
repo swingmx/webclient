@@ -8,7 +8,6 @@ import usePlaylistListPageStore from '@/stores/pages/playlists'
 import useArtistPageStore from '@/stores/pages/artist'
 
 import HomeView from '@/views/HomeView'
-const Lyrics = () => import('@/views/LyricsView')
 const ArtistView = () => import('@/views/ArtistView')
 const NotFound = () => import('@/views/NotFound.vue')
 const NowPlaying = () => import('@/views/NowPlaying')
@@ -105,12 +104,6 @@ const NowPlayingView = {
     path: '/nowplaying/:tab',
     name: 'NowPlaying',
     component: NowPlaying,
-}
-
-const LyricsView = {
-    path: '/lyrics',
-    name: 'LyricsView',
-    component: Lyrics,
 }
 
 const ArtistTracks = {
@@ -235,7 +228,6 @@ const routes = [
     Home,
     AlbumListView,
     ArtistListView,
-    LyricsView,
     Stats,
     Mix,
     MixList,
@@ -262,7 +254,6 @@ const Routes = {
     Home: Home.name,
     AlbumList: AlbumListView.name,
     ArtistList: ArtistListView.name,
-    Lyrics: LyricsView.name,
     Stats: Stats.name,
     Mix: Mix.name,
     MixList: MixList.name,

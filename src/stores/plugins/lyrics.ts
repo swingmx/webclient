@@ -20,6 +20,7 @@ export default defineStore('lyricsplugin', {
     }),
     actions: {
         searchLyrics() {
+            if (this.loading) return
             this.loading = true
 
             const queue = useQueue()

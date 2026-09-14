@@ -4,19 +4,19 @@
         <div class="index">{{ index }}</div>
         <img :src="getItemImage(item)" class="chartimage" :class="name" />
         <div class="iteminfo">
-            <div class="title" :title="$t(mapToText(item.name))" v-if="isArtist">
-                {{ $t(mapToText(item.name)) }} <MasterFlag v-if="item.trend?.is_new" :text="item.trend?.is_new ? $t('Common.New') : ''" :bitrate="1900"/>
+            <div v-if="isArtist" class="title" :title="item.name">
+                {{ item.name }} <MasterFlag v-if="item.trend?.is_new" :text="item.trend?.is_new ? $t('Common.New') : ''" :bitrate="1900"/>
             </div>
-            <div class="title" :title="item.title" v-if="isAlbumOrTrack">
+            <div v-if="isAlbumOrTrack" class="title" :title="item.title">
                 {{ item.title }} <MasterFlag v-if="item.trend?.is_new" :text="item.trend?.is_new ? $t('Common.New') : ''" :bitrate="1900"/>
             </div>
-            <div class="artist" v-if="isAlbumOrTrack">
+            <div v-if="isAlbumOrTrack" class="artist">
                 <ArtistName
                     :artists="item.artists ? item.artists : item.albumartists"
                     :albumartists="item.albumartists"
                 />
             </div>
-            <div class="artist" v-if="isArtist">
+            <div v-if="isArtist" class="artist">
                 {{ $t('ChartItem.ArtistPlays', { count: item.extra['playcount'] }) }}
             </div>
         </div>
@@ -47,19 +47,6 @@ const props = defineProps<{
 
 const isArtist = computed(() => props.name === 'artist')
 const isAlbumOrTrack = computed(() => props.name === 'album' || props.name === 'track')
-
-function mapToText(item: ChartItem): string {
-    switch (props.name) {
-        case 'artist':
-            return 'Common.Artist';
-        case 'album':
-            return 'Common.Album';
-        case 'track':
-            return 'Common.Track';
-        default:
-            return 'Common.Unknown';
-    }
-}
 
 function getItemImage(item: ChartItem) {
     switch (props.name) {
