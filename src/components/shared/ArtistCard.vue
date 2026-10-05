@@ -27,7 +27,7 @@
         <div class="artist-name t-center">
             {{ artist.name }}
         </div>
-        <div v-if="artist.help_text && artist.trackcount" class="racount t-center">
+        <div v-if="showTrackcount && artist.trackcount" class="racount t-center">
             {{ $t('ArtistCard.TrackCount', {count: artist.trackcount}, artist.trackcount) }}
         </div>
     </RouterLink>
@@ -48,6 +48,8 @@ const contextMenuFlag = ref(false)
 
 const props = defineProps<{
     artist: Artist
+    // Artist cards from the server always carry a trackcount; show it only where a view asks for it.
+    showTrackcount?: boolean
 }>()
 
 const showContextMenu = (e: MouseEvent) => {
