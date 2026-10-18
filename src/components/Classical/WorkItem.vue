@@ -1,11 +1,18 @@
 <template>
     <div class="classicalwork">
-        <WorkHeader :work="work" :playable="true" @playWork="$emit('playWork', work.workhash)" />
+        <WorkHeader
+            v-if="!hideHeader"
+            :work="work"
+            :albumhash="albumhash"
+            :playable="true"
+            @playWork="$emit('playWork', work.workhash)"
+        />
 
-        <div class="workmovements">
+        <div class="workmovements" :class="{ numbered }">
             <div v-for="movement in work.movements" :key="movement.movement_title" class="workmovement">
                 <TrackItem
-                    :track="{ ...movement, title: movement.movement_title }"
+                    :track="{ ...movement, title: numbered ? movement.movement_name ?? movement.movement_title : movement.movement_title }"
+                    :numbered="numbered"
                     :is-queue-track="$route.name === Routes.nowPlaying"
                     :is-classical-track="true"
                     :is-current="queue.currenttrack?.trackhash === movement.trackhash"
@@ -28,6 +35,9 @@ const queue = useQueueStore()
 
 defineProps<{
     work: ClassicalWork
+    albumhash?: string
+    hideHeader?: boolean
+    numbered?: boolean
 }>()
 
 defineEmits<{
@@ -44,11 +54,15 @@ defineEmits<{
     flex-direction: column;
 }
 
+.workmovements.numbered {
+    gap: 0;
+}
+
 .workmovements {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    padding-top: $smaller;
+    padding: 0.25rem 1rem 0 0.5rem;
 }
 
 .workmovement {

@@ -76,6 +76,7 @@ export const paths = {
         get albumVersions() {
             return this.album + '/other-versions'
         },
+        classicalWork: '/classical/work',
         folder: {
             base: '/folder',
             showInFiles: '/folder/show-in-files',

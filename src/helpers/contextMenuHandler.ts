@@ -11,6 +11,7 @@ import artistContextItems from '@/context_menus/artist'
 import folderContextItems from '@/context_menus/folder'
 import trackContextItems from '@/context_menus/track'
 import queueContextItems from '@/context_menus/queue'
+import workContextItems from '@/context_menus/work'
 
 let stop_prev_watcher = () => {}
 
@@ -42,6 +43,15 @@ export const showAlbumContextMenu = (e: MouseEvent, flag: Ref<boolean>, album?: 
 
     const options = () => albumContextItems(album)
     menu.showContextMenu(e, options, ContextSrc.AlbumHeader)
+
+    flagWatcher(menu, flag)
+}
+
+export const showWorkContextMenu = (e: MouseEvent, flag: Ref<boolean>) => {
+    const menu = useContextStore()
+
+    const options = () => workContextItems()
+    menu.showContextMenu(e, options, ContextSrc.WorkHeader)
 
     flagWatcher(menu, flag)
 }

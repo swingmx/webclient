@@ -2,11 +2,20 @@
     <div class="now-playing-info">
         <div class="text">
             <div class="title">
-                {{
-                    (queue.currenttrack as ClassicalMovement)?.movement_title ??
-                    (queue.currenttrack as Track)?.title ??
-                    $t('Common.AppTitle')
-                }}
+                <RouterLink
+                    v-if="(queue.currenttrack as ClassicalMovement)?.workhash"
+                    class="worklink"
+                    :to="{
+                        name: Routes.work,
+                        params: { token: (queue.currenttrack as ClassicalMovement).workhash },
+                        query: { albumhash: queue.currenttrack?.albumhash },
+                    }"
+                >
+                    {{ (queue.currenttrack as ClassicalMovement).movement_title }}
+                </RouterLink>
+                <template v-else>
+                    {{ (queue.currenttrack as Track)?.title ?? $t('Common.AppTitle') }}
+                </template>
             </div>
             <div class="artist">
                 <ArtistName
@@ -28,6 +37,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Routes } from '@/router'
 import useQueueStore from '@/stores/queue'
 import ArtistName from '../shared/ArtistName.vue'
 import { ClassicalMovement, Track } from '@/interfaces'
@@ -64,6 +74,14 @@ function showMenu(e: MouseEvent) {
     .title {
         font-weight: 600;
         font-size: 1.5rem;
+
+        .worklink {
+            color: inherit;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 
     .artist {

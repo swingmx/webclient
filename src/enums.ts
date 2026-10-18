@@ -31,6 +31,7 @@ export enum FromOptions {
   artistMix = "artist mix",
   albumCard = "albumCard",
   favorite = "favorite",
+  work = "work",
 }
 
 export enum ContextSrc {
@@ -40,6 +41,7 @@ export enum ContextSrc {
   FolderCard = "FolderCard",
   FolderNav = "FolderNav",
   ArtistHeader = "ArtistHeader",
+  WorkHeader = "WorkHeader",
   Queue = "Queue",
 }
 

@@ -99,6 +99,7 @@ class workItem {
         this.id = `work-${index}-${work.workhash}`
         this.props = {
             work,
+            albumhash: album.info.albumhash,
         }
         this.component = WorkItem
     }

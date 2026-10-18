@@ -806,6 +806,17 @@
     }
   },
   "Views": {
+    "WorkView": {
+      "OtherRecordings": "Other recordings",
+      "Movements": "{n} of {total} movements",
+      "MovementCount": "{n} movement | {n} movements",
+      "Performers": "Performers",
+      "DedicatedTo": "Dedicated to {name}",
+      "Composed": "Composed",
+      "Published": "Published",
+      "Key": "Key",
+      "Instrumentation": "Instrumentation"
+    },
     "AlbumViews": {
       "MoreFrom": "More from {art}",
       "OtherVersions": "Other versions",

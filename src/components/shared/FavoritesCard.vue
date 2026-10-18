@@ -25,7 +25,7 @@
                 <span class="time">{{ item.time }}</span>
             </div>
             <div class="title">{{ $t('FavoritesCard.FavoriteTracks') }}</div>
-            <div class="fcount">
+            <div v-if="showCount" class="fcount">
                 <b>{{ $t('Common.TrackCount', {count: item.count}, item.count) }}</b>
             </div>
         </div>
@@ -44,6 +44,8 @@ defineProps<{
         count: number
         image: string
     }
+    // The track count is shown only where a view asks for it, as with ArtistCard's showTrackcount.
+    showCount?: boolean
 }>()
 </script>
 

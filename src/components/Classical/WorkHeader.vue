@@ -5,7 +5,14 @@
             <span v-if="playable" class="play" @click.stop="$emit('playWork')"> <PlaySvg /> {{ $t('Common.Play') }}</span>
         </div>
         <div class="worktitle">
-            {{ title }}
+            <RouterLink
+                v-if="work.workhash"
+                :to="{ name: Routes.work, params: { token: work.workhash }, query: albumhash ? { albumhash } : {} }"
+                class="worktitlelink"
+            >
+                {{ title }}
+            </RouterLink>
+            <template v-else>{{ title }}</template>
         </div>
     </div>
 </template>
@@ -13,10 +20,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { QueueWork } from '@/interfaces'
+import { Routes } from '@/router'
 import PlaySvg from '@/assets/icons/play.svg'
 
 const props = defineProps<{
     work: QueueWork
+    albumhash?: string
     playable?: boolean
 }>()
 
@@ -54,6 +63,14 @@ const title = computed(() => {
 .worktitle {
     font-size: 1rem;
     font-weight: 600;
+
+    .worktitlelink {
+        color: inherit;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 }
 
 .workcomposer {

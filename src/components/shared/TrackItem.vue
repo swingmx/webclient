@@ -7,12 +7,16 @@
             },
             { contexton: context_on },
             { 'is-classical-track': isClassicalTrack },
+            { numbered },
         ]"
         @click.prevent.stop="playThis"
         @dblclick.prevent.stop="() => emit('playThis')"
         @contextmenu.prevent="showMenu"
     >
-        <div class="album-art">
+        <div v-if="numbered" class="movement-number" :class="{ current: isCurrent }">
+            {{ movementNumber }}
+        </div>
+        <div v-else class="album-art">
             <img :src="paths.images.thumb.small + track.image" />
             <div
                 v-if="isCurrent"
@@ -25,8 +29,8 @@
             <div v-tooltip class="title" @click.prevent.stop="() => emit('playThis')">
                 <span class="ellip"> {{ track.title }} </span>
             </div>
-            <hr />
-            <div class="artist">
+            <hr v-if="!numbered" />
+            <div v-if="!numbered" class="artist">
                 <ArtistName :artists="track.artists" :albumartists="track.albumartists" :smaller="true" />
             </div>
         </div>
@@ -61,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 
 import useTracklist from '@/stores/queue/tracklist'
 
@@ -83,7 +87,10 @@ const props = defineProps<{
     isQueueTrack?: boolean
     index?: number
     isClassicalTrack?: boolean
+    numbered?: boolean
 }>()
+
+const movementNumber = computed(() => ('movement_number' in props.track ? props.track.movement_number : null) ?? '')
 
 const player = useTracklist()
 const context_on = ref(false)
@@ -136,6 +143,31 @@ onBeforeUnmount(() => {
 .contexton {
     background-color: $gray4;
     color: $white !important;
+}
+
+.track-item.numbered {
+    padding: 1.25rem $small;
+    border-radius: 0;
+    border-top: solid 1px $gray5;
+
+    .movement-number {
+        width: 3rem;
+        margin-right: $medium;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 1.35rem;
+        color: $gray1;
+
+        &.current {
+            color: $white;
+        }
+    }
+
+    .tags .title {
+        font-size: 1.1rem;
+    }
 }
 
 .track-item {

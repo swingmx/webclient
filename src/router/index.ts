@@ -6,6 +6,7 @@ import useFolderPageStore from '@/stores/pages/folder'
 import usePlaylistPageStore from '@/stores/pages/playlist'
 import usePlaylistListPageStore from '@/stores/pages/playlists'
 import useArtistPageStore from '@/stores/pages/artist'
+import useWorkPageStore from '@/stores/pages/work'
 
 import HomeView from '@/views/HomeView'
 const ArtistView = () => import('@/views/ArtistView')
@@ -17,6 +18,7 @@ const FolderView = () => import('@/views/FolderView.vue')
 const FavoritesView = () => import('@/views/Favorites.vue')
 const SettingsView = () => import('@/views/SettingsView.vue')
 const AlbumView = () => import('@/views/AlbumView/index.vue')
+const WorkView = () => import('@/views/WorkView/index.vue')
 const ArtistTracksView = () => import('@/views/ArtistTracks.vue')
 const PlaylistListView = () => import('@/views/PlaylistList.vue')
 const FavoriteTracks = () => import('@/views/FavoriteTracks.vue')
@@ -82,6 +84,21 @@ const albumView = {
         await store.fetchTracksAndArtists(to.params.albumhash).then(() => {
             state.loading.value = false
         })
+    },
+}
+
+const workView = {
+    path: '/works/:token',
+    name: 'WorkView',
+    component: WorkView,
+    beforeEnter: async (to: any) => {
+        state.loading.value = true
+
+        await useWorkPageStore()
+            .fetchWork(to.params.token, to.query.albumhash)
+            .then(() => {
+                state.loading.value = false
+            })
     },
 }
 
@@ -214,6 +231,7 @@ const routes = [
     playlists,
     playlistView,
     albumView,
+    workView,
     artistView,
     artistDiscography,
     settings,
@@ -240,6 +258,7 @@ const Routes = {
     playlists: playlists.name,
     playlist: playlistView.name,
     album: albumView.name,
+    work: workView.name,
     artist: artistView.name,
     artistDiscography: artistDiscography.name,
     settings: settings.name,

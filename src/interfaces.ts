@@ -93,6 +93,8 @@ export interface CatalogueId {
 
 export interface ClassicalMovement extends Track {
     movement_title: string
+    movement_number?: string | null
+    movement_name?: string
     // added when the movement is added to the queue,
     // links back to tracklist.worklist
     workhash?: string
@@ -104,9 +106,38 @@ export interface ClassicalWork {
     composer_hash: string
     key: string | null
     name: string
+    nickname: string | null
     subtitle: string | null
     workhash: string
+    year_composed?: number
     movements: ClassicalMovement[]
+}
+
+export interface WorkPerformer {
+    name: string
+    performer_id: string | null
+    roles: string[]
+}
+
+export interface WorkRecording {
+    albumhash: string
+    album: Album | null
+    movements: ClassicalMovement[]
+    performers: WorkPerformer[]
+}
+
+export interface WorkRecordingCard extends Album {
+    movement_count: number
+    duration: number
+}
+
+export interface ClassicalWorkPage extends Omit<ClassicalWork, 'movements'> {
+    year_published?: number
+    dedication?: string
+    instrumentation?: string
+    instruments?: string[]
+    recording: WorkRecording
+    other_recordings: WorkRecordingCard[]
 }
 
 export type QueueItem = Track | ClassicalMovement
@@ -275,6 +306,13 @@ export interface fromMix {
 
 export interface fromFav {
     type: FromOptions.favorite
+}
+
+export interface fromWork {
+    type: FromOptions.work
+    name: string
+    workhash: string
+    albumhash: string
 }
 
 export interface subPath {

@@ -123,6 +123,22 @@ export default (source: From): PlayingFrom => {
                         : paths.images.thumb.small + source.image.image,
             }
 
+        case FromOptions.work:
+            return {
+                name: source.name,
+                icon: AlbumSvg,
+                location: {
+                    name: Routes.work,
+                    params: {
+                        token: source.workhash,
+                    },
+                    query: {
+                        albumhash: source.albumhash,
+                    },
+                },
+                image: paths.images.thumb.small + source.albumhash + '.webp',
+            }
+
         default:
             return { name: t('Utils.PlayingFrom.NoSource'), location: {}, icon: '' }
     }
