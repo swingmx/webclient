@@ -32,7 +32,6 @@ export enum FromOptions {
   albumCard = "albumCard",
   favorite = "favorite",
   work = "work",
-  composer = "composer",
 }
 
 export enum ContextSrc {
@@ -63,8 +62,11 @@ export enum contextChildrenShowMode {
 // rewrite the above as an object
 export const discographyAlbumTypes = {
   all: "all",
+  classical: "classical",
   albums: "albums",
   EPs_and_singles: "EP & singles",
+  live: "live",
+  soundtracks: "soundtracks",
   appearances: "appearances",
   compilations: "compilations",
 };
@@ -73,6 +75,8 @@ export enum favType {
   artist = "artist",
   album = "album",
   track = "track",
+  work = "work",
+  composer = "composer",
 }
 
 export enum dropSources {

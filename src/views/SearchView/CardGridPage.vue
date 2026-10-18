@@ -37,7 +37,7 @@ import CardRow from '@/components/shared/CardRow.vue'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 
 const props = defineProps<{
-    page?: 'album' | 'artist' | 'mix'
+    page?: 'album' | 'artist' | 'mix' | 'work'
     fetch_callback?: () => Promise<void>
     items: any[]
     outside_route?: boolean

@@ -12,7 +12,7 @@
             <div v-if="work.composer || work.year_composed" class="composer">
                 <RouterLink
                     v-if="work.composer && work.composer_hash"
-                    :to="{ name: Routes.composer, params: { hash: work.composer_hash } }"
+                    :to="{ name: Routes.artist, params: { hash: work.composer_hash } }"
                     class="name composerlink"
                 >
                     {{ work.composer }}
@@ -60,6 +60,7 @@
                 <button v-wave class="queuebtn circular" @click="addToQueue">
                     {{ $t('Menus.Common.AddToQueue') }}
                 </button>
+                <HeartSvg :state="work.is_favorite ?? false" @handleFav="toggleFavorite" />
                 <button
                     class="optionsbtn circular"
                     :class="{ context_menu_showing }"
@@ -90,6 +91,9 @@ import { balanceText } from '@/utils/balanceText'
 
 import MoreSvg from '@/assets/icons/more.svg'
 import PlaySvg from '@/assets/icons/play.svg'
+import HeartSvg from '@/components/shared/HeartSvg.vue'
+import favoriteHandler from '@/helpers/favoriteHandler'
+import { favType } from '@/enums'
 import ImageLoader from '@/components/shared/ImageLoader.vue'
 
 const props = defineProps<{
@@ -109,6 +113,23 @@ const context_menu_showing = ref(false)
 
 function showContextMenu(e: MouseEvent) {
     showWorkContextMenu(e, context_menu_showing)
+}
+
+/**
+ * Favorite the work, remembering the recording on screen so a favorites
+ * entry opens it.
+ */
+function toggleFavorite() {
+    const store = useWorkStore()
+    if (!store.work) return
+    favoriteHandler(
+        store.work.is_favorite,
+        favType.work,
+        store.work.workhash,
+        () => store.work && (store.work.is_favorite = true),
+        () => store.work && (store.work.is_favorite = false),
+        store.work.recording.albumhash
+    )
 }
 
 function addToQueue() {

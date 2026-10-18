@@ -1,28 +1,48 @@
 import { paths } from '@/config'
-import { Album, Artist, Genre, StatItem, Track } from '@/interfaces'
+import {
+    Album,
+    Artist,
+    ClassicalPersonPage,
+    ClassicalPersonWorks,
+    ClassicalWork,
+    Genre,
+    StatItem,
+    Track,
+} from '@/interfaces'
 import { NotifType, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
 import { useT } from '@/i18n'
 
 const { t } = useT();
 
-export const getArtistData = async (hash: string, limit: number = 15, albumlimit: number = 7) => {
-    interface ArtistData {
-        artist: Artist
-        tracks: Track[]
-        albums: {
-            albums: Album[]
-            singles_and_eps: Album[]
-            appearances: Album[]
-            compilations: Album[]
-        }
-        genres: Genre[]
-        stats: StatItem[]
+export interface ArtistData {
+    type: 'artist'
+    artist: Artist
+    tracks: Track[]
+    albums: {
+        albums: Album[]
+        singles_and_eps: Album[]
+        appearances: Album[]
+        compilations: Album[]
     }
+    genres: Genre[]
+    stats: StatItem[]
+}
 
+/**
+ * An artist page, or a composer or performer page, told apart by `type`.
+ * `query` carries the work filter (`category` or `composer`).
+ */
+export const getArtistData = async (
+    hash: string,
+    limit: number = 15,
+    albumlimit: number = 7,
+    query: Record<string, string> = {}
+) => {
+    const params = new URLSearchParams({ tracklimit: String(limit), albumlimit: String(albumlimit), ...query })
     const { data, error, status } = await useAxios({
         method: 'GET',
-        url: paths.api.artist + `/${hash}?tracklimit=${limit}&albumlimit=${albumlimit}`,
+        url: paths.api.artist + `/${hash}?${params.toString()}`,
     })
 
     if (status == 404) {
@@ -33,7 +53,27 @@ export const getArtistData = async (hash: string, limit: number = 15, albumlimit
         console.error(error)
     }
 
-    return data as ArtistData
+    return data as ArtistData | ClassicalPersonPage
+}
+
+export const getArtistWorks = async (hash: string, query: Record<string, string> = {}) => {
+    const params = new URLSearchParams(query).toString()
+    const { data, status } = await useAxios({
+        method: 'GET',
+        url: paths.api.artist + `/${hash}/works${params ? `?${params}` : ''}`,
+    })
+    return status === 200 ? (data as ClassicalPersonWorks) : null
+}
+
+/**
+ * A composer's or performer's repertoire as works with movements, for queueing.
+ */
+export const getArtistRepertoire = async (hash: string) => {
+    const { data, status } = await useAxios({
+        method: 'GET',
+        url: paths.api.artist + `/${hash}/tracks`,
+    })
+    return status === 200 ? (data as { works: (ClassicalWork & { albumhash: string })[] }) : null
 }
 
 export const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
@@ -43,6 +83,9 @@ export const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
         singles_and_eps: Album[]
         appearances: Album[]
         compilations: Album[]
+        classical?: Album[]
+        live?: Album[]
+        soundtracks?: Album[]
     }
 
     const { data, error } = await useAxios({

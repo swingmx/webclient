@@ -16,6 +16,10 @@ export default defineStore("artistDiscography", {
     singles: <Album[]>[],
     appearances: <Album[]>[],
     compilations: <Album[]>[],
+    // composer and performer pages only
+    classical: <Album[]>[],
+    live: <Album[]>[],
+    soundtracks: <Album[]>[],
   }),
   actions: {
     setAlbums(page?: string) {
@@ -38,13 +42,40 @@ export default defineStore("artistDiscography", {
         case discographyAlbumTypes.compilations:
           this.toShow = this.compilations;
           break;
+        case discographyAlbumTypes.classical:
+          this.toShow = this.classical;
+          break;
+        case discographyAlbumTypes.live:
+          this.toShow = this.live;
+          break;
+        case discographyAlbumTypes.soundtracks:
+          this.toShow = this.soundtracks;
+          break;
         default:
-          this.toShow = this.albums.concat(
+          this.toShow = this.classical.concat(
+            this.albums,
             this.singles,
+            this.live,
+            this.soundtracks,
             this.appearances,
             this.compilations
           );
           break;
+      }
+    },
+    /**
+     * Whether a tab has albums; "all" always shows.
+     */
+    hasType(type: string) {
+      switch (type) {
+        case discographyAlbumTypes.classical:
+          return this.classical.length > 0;
+        case discographyAlbumTypes.live:
+          return this.live.length > 0;
+        case discographyAlbumTypes.soundtracks:
+          return this.soundtracks.length > 0;
+        default:
+          return true;
       }
     },
     setPage(page: string | undefined) {
@@ -60,6 +91,9 @@ export default defineStore("artistDiscography", {
           this.appearances = data.appearances;
           this.artistname = data.artistname;
           this.compilations = data.compilations;
+          this.classical = data.classical ?? [];
+          this.live = data.live ?? [];
+          this.soundtracks = data.soundtracks ?? [];
         })
         .then(() => this.setAlbums());
     },
@@ -67,6 +101,9 @@ export default defineStore("artistDiscography", {
       this.albums = [];
       this.singles = [];
       this.appearances = [];
+      this.classical = [];
+      this.live = [];
+      this.soundtracks = [];
 
       this.toShow = [];
       this.artistname = "";

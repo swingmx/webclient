@@ -36,7 +36,8 @@ import useTracklist from '@/stores/queue/tracklist'
 
 import WorkItem from '@/components/Classical/WorkItem.vue'
 import WorkPageHeader from '@/components/Classical/WorkPageHeader.vue'
-import WorkPerformers from '@/components/Classical/WorkPerformers.vue'
+import PeopleGrid from '@/components/Classical/PeopleGrid.vue'
+import performerGrid from '@/utils/performerGrid'
 import WorkDetails from '@/components/Classical/WorkDetails.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
 
@@ -51,7 +52,7 @@ const tracklist = useTracklist()
 
 interface ScrollerItem {
     id: string
-    component: typeof WorkPageHeader | typeof WorkItem | typeof WorkDetails | typeof WorkPerformers | typeof CardScroller
+    component: typeof WorkPageHeader | typeof WorkItem | typeof WorkDetails | typeof PeopleGrid | typeof CardScroller
     props?: any
 }
 
@@ -76,8 +77,8 @@ const scrollerItems = computed((): ScrollerItem[] => {
     if (page.recording.performers?.length) {
         items.push({
             id: 'performers',
-            component: WorkPerformers,
-            props: { performers: page.recording.performers },
+            component: PeopleGrid,
+            props: { title: t('Views.WorkView.Performers'), people: performerGrid(page.recording.performers) },
         })
     }
 

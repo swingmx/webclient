@@ -7,7 +7,6 @@ import usePlaylistPageStore from '@/stores/pages/playlist'
 import usePlaylistListPageStore from '@/stores/pages/playlists'
 import useArtistPageStore from '@/stores/pages/artist'
 import useWorkPageStore from '@/stores/pages/work'
-import useComposerPageStore from '@/stores/pages/composer'
 
 import HomeView from '@/views/HomeView'
 const ArtistView = () => import('@/views/ArtistView')
@@ -20,14 +19,15 @@ const FavoritesView = () => import('@/views/Favorites.vue')
 const SettingsView = () => import('@/views/SettingsView.vue')
 const AlbumView = () => import('@/views/AlbumView/index.vue')
 const WorkView = () => import('@/views/WorkView/index.vue')
-const ComposerView = () => import('@/views/ComposerView/index.vue')
 const ArtistTracksView = () => import('@/views/ArtistTracks.vue')
 const PlaylistListView = () => import('@/views/PlaylistList.vue')
 const FavoriteTracks = () => import('@/views/FavoriteTracks.vue')
 const PlaylistView = () => import('@/views/PlaylistView/index.vue')
 const ArtistDiscographyView = () => import('@/views/ArtistDiscography.vue')
-const ComposerWorksView = () => import('@/views/ComposerWorks.vue')
-const ComposerAlbumsView = () => import('@/views/ComposerAlbums.vue')
+const ArtistWorksView = () => import('@/views/ArtistWorks.vue')
+const ClassicalHomeView = () => import('@/views/ClassicalHome.vue')
+const ClassicalWorksView = () => import('@/views/ClassicalWorks.vue')
+const ClassicalComposersView = () => import('@/views/ClassicalComposers.vue')
 const FavoriteCardScroller = () => import('@/views/FavoriteCardScroller.vue')
 const StatsView = () => import('@/views/Stats/main.vue')
 const MixView = () => import('@/views/MixView.vue')
@@ -106,31 +106,10 @@ const workView = {
     },
 }
 
-const composerView = {
-    path: '/composers/:hash',
-    name: 'ComposerView',
-    component: ComposerView,
-    beforeEnter: async (to: any) => {
-        state.loading.value = true
-
-        await useComposerPageStore()
-            .fetchComposer(to.params.hash, to.query.category)
-            .then(() => {
-                state.loading.value = false
-            })
-    },
-}
-
-const composerWorks = {
-    path: '/composers/:hash/works',
-    name: 'ComposerWorksView',
-    component: ComposerWorksView,
-}
-
-const composerAlbums = {
-    path: '/composers/:hash/albums',
-    name: 'ComposerAlbumsView',
-    component: ComposerAlbumsView,
+const artistWorks = {
+    path: '/artists/:hash/works',
+    name: 'ArtistWorksView',
+    component: ArtistWorksView,
 }
 
 const artistView = {
@@ -141,7 +120,7 @@ const artistView = {
         state.loading.value = true
 
         await useArtistPageStore()
-            .getData(to.params.hash)
+            .getData(to.params.hash, to.query)
             .then(() => {
                 state.loading.value = false
             })
@@ -194,6 +173,42 @@ const favoriteArtists = {
     path: '/favorites/artists',
     name: 'FavoriteArtists',
     component: FavoriteCardScroller,
+}
+
+const favoriteWorks = {
+    path: '/favorites/works',
+    name: 'FavoriteWorks',
+    component: FavoriteCardScroller,
+}
+
+const favoriteComposers = {
+    path: '/favorites/composers',
+    name: 'FavoriteComposers',
+    component: FavoriteCardScroller,
+}
+
+const classicalHome = {
+    path: '/classical',
+    name: 'ClassicalHome',
+    component: ClassicalHomeView,
+}
+
+const classicalWorks = {
+    path: '/classical/works',
+    name: 'ClassicalWorks',
+    component: ClassicalWorksView,
+}
+
+const classicalAlbums = {
+    path: '/classical/albums',
+    name: 'ClassicalAlbums',
+    component: ClassicalComposersView,
+}
+
+const classicalComposers = {
+    path: '/classical/composers',
+    name: 'ClassicalComposers',
+    component: ClassicalComposersView,
 }
 
 const favoriteTracks = {
@@ -263,9 +278,7 @@ const routes = [
     playlistView,
     albumView,
     workView,
-    composerView,
-    composerWorks,
-    composerAlbums,
+    artistWorks,
     artistView,
     artistDiscography,
     settings,
@@ -274,6 +287,12 @@ const routes = [
     ArtistTracks,
     favorites,
     favoriteAlbums,
+    favoriteWorks,
+    favoriteComposers,
+    classicalHome,
+    classicalWorks,
+    classicalAlbums,
+    classicalComposers,
     favoriteTracks,
     favoriteArtists,
     NowPlayingView,
@@ -293,9 +312,7 @@ const Routes = {
     playlist: playlistView.name,
     album: albumView.name,
     work: workView.name,
-    composer: composerView.name,
-    composerWorks: composerWorks.name,
-    composerAlbums: composerAlbums.name,
+    artistWorks: artistWorks.name,
     artist: artistView.name,
     artistDiscography: artistDiscography.name,
     settings: settings.name,
@@ -306,6 +323,12 @@ const Routes = {
     favoriteAlbums: favoriteAlbums.name,
     favoriteTracks: favoriteTracks.name,
     favoriteArtists: favoriteArtists.name,
+    favoriteWorks: favoriteWorks.name,
+    favoriteComposers: favoriteComposers.name,
+    classicalHome: classicalHome.name,
+    classicalWorks: classicalWorks.name,
+    classicalAlbums: classicalAlbums.name,
+    classicalComposers: classicalComposers.name,
     nowPlaying: NowPlayingView.name,
     Home: Home.name,
     AlbumList: AlbumListView.name,

@@ -1,5 +1,6 @@
 <template>
-    <div class="artist-page v-scroll-page" style="height: 100%">
+    <ClassicalPerson v-if="store.type !== 'artist' && store.person" :page="store.person" />
+    <div v-else class="artist-page v-scroll-page" style="height: 100%">
         <DynamicScroller
             id="artist-scroller"
             :items="scrollerItems"
@@ -39,6 +40,7 @@ import { getArtistTracks } from '@/requests/artists'
 import GenreBanner from '@/components/AlbumView/GenreBanner.vue'
 import ArtistAlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 import Header from '@/components/ArtistView/Header.vue'
+import ClassicalPerson from './ClassicalPerson.vue'
 import TopTracks from '@/components/ArtistView/TopTracks.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
 import Stats from '@/components/Stats/Stats.vue'
@@ -242,14 +244,15 @@ async function handlePlay(index: number) {
     queue.play(index)
 }
 
-onBeforeRouteUpdate(async to => {
-    // fetch data and scroll to top
-    await store.getData(to.params.hash as string).then(async () => {
+onBeforeRouteUpdate(async (to, from) => {
+    // fetch data, and scroll to top when the person changes (not on filter changes)
+    await store.getData(to.params.hash as string, to.query as Record<string, string>).then(async () => {
+        if (to.params.hash === from.params.hash) return
         await nextTick()
 
-        document.getElementById('artist-scroller')?.scrollTo({
-            top: 0,
-        })
+        for (const id of ['artist-scroller', 'classical-person-scroller']) {
+            document.getElementById(id)?.scrollTo({ top: 0 })
+        }
     })
 })
 

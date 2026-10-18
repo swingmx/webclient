@@ -1,45 +1,40 @@
 <template>
-    <div class="composer-header">
+    <div class="person-header">
         <div class="portrait circular shadow-lg">
-            <img v-if="composer.image" class="circular" :src="paths.images.artist.large + composer.image" />
+            <img v-if="page.image" class="circular" :src="paths.images.artist.large + page.image" />
         </div>
         <div class="info">
             <div class="kicker">
-                <span class="kind">{{ $t('Views.ComposerView.Composer') }}</span>
+                <span class="kind">{{ page.type === 'composer' ? $t('Views.ComposerView.Composer') : $t('Views.ComposerView.Performer') }}</span>
                 <template v-for="part in kicker" :key="part">
                     <span class="dot">·</span>
                     <span>{{ part }}</span>
                 </template>
             </div>
-            <div class="name">{{ composer.name }}</div>
-            <div v-if="composer.nickname || years" class="names">
-                <span v-if="composer.nickname">{{ capitalize(composer.nickname) }}</span>
-                <span v-if="composer.nickname && years"> · </span>
+            <div class="name">{{ page.name }}</div>
+            <div v-if="page.nickname || years" class="names">
+                <span v-if="page.nickname">{{ capitalize(page.nickname) }}</span>
+                <span v-if="page.nickname && years"> · </span>
                 <span v-if="years">{{ years }}</span>
             </div>
             <div class="chips">
-                <span v-for="occupation in composer.occupations ?? []" :key="occupation" class="chip">
-                    {{ capitalize(occupation) }}
+                <span v-for="chip in chips" :key="chip" class="chip">{{ capitalize(chip) }}</span>
+                <span class="chip">
+                    {{ $t('Views.ComposerView.WorksInLibrary', { n: page.work_count }, page.work_count) }}
                 </span>
                 <span class="chip">
-                    {{ $t('Views.ComposerView.WorksInLibrary', { n: composer.work_count }, composer.work_count) }}
-                </span>
-                <span class="chip">
-                    {{ $t('Views.ComposerView.AlbumCount', { n: composer.album_count }, composer.album_count) }}
+                    {{ $t('Views.ComposerView.AlbumCount', { n: page.album_count }, page.album_count) }}
                 </span>
             </div>
             <div class="buttons">
-                <button v-wave class="playbtn circular btn-active" @click="store.play(composer.composerhash, composer.name)">
+                <button v-wave class="playbtn circular btn-active" @click="$emit('play', false)">
                     <PlaySvg />
                     <div class="text">{{ $t('Views.ComposerView.PlayAll') }}</div>
                 </button>
-                <button
-                    v-wave
-                    class="shufflebtn circular"
-                    @click="store.play(composer.composerhash, composer.name, true)"
-                >
-                    {{ $t('Views.ComposerView.ShuffleWorks') }}
+                <button v-wave class="shufflebtn circular" @click="$emit('play', true)">
+                    {{ page.type === 'composer' ? $t('Views.ComposerView.ShuffleWorks') : $t('Views.ComposerView.Shuffle') }}
                 </button>
+                <HeartSvg v-if="page.type === 'composer'" :state="page.is_favorite ?? false" @handleFav="toggleFavorite" />
             </div>
         </div>
     </div>
@@ -49,33 +44,61 @@
 import { computed } from 'vue'
 
 import { paths } from '@/config'
-import { ComposerPage } from '@/interfaces'
-import useComposerStore from '@/stores/pages/composer'
+import { favType } from '@/enums'
+import favoriteHandler from '@/helpers/favoriteHandler'
+import { ClassicalPersonPage } from '@/interfaces'
+import useArtistStore from '@/stores/pages/artist'
+
+import HeartSvg from '@/components/shared/HeartSvg.vue'
 
 import PlaySvg from '@/assets/icons/play.svg'
 
 const props = defineProps<{
-    composer: ComposerPage
+    page: ClassicalPersonPage
 }>()
 
-const store = useComposerStore()
+defineEmits<{
+    // eslint-disable-next-line no-unused-vars
+    (event: 'play', shuffle: boolean): void
+}>()
+
+function toggleFavorite() {
+    const store = useArtistStore()
+    const person = store.person
+    if (!person) return
+    favoriteHandler(
+        person.is_favorite,
+        favType.composer,
+        person.artisthash,
+        () => (person.is_favorite = true),
+        () => (person.is_favorite = false)
+    )
+}
 
 function capitalize(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
-const kicker = computed(() => [props.composer.epoch, props.composer.birthplace].filter(Boolean) as string[])
+const kicker = computed(() =>
+    (props.page.type === 'composer'
+        ? [props.page.epoch, props.page.birthplace]
+        : [props.page.roles?.[0]]
+    ).filter(Boolean) as string[]
+)
+
+// composers: occupations; performers: their roles from the credits
+const chips = computed(() => (props.page.type === 'composer' ? props.page.occupations : props.page.roles) ?? [])
 
 const years = computed(() => {
-    const born = props.composer.birth?.slice(0, 4)
-    const died = props.composer.death?.slice(0, 4)
+    const born = props.page.birth?.slice(0, 4)
+    const died = props.page.death?.slice(0, 4)
     if (!born && !died) return ''
     return `${born ?? '?'} – ${died ?? ''}`.trim()
 })
 </script>
 
 <style lang="scss">
-.composer-header {
+.person-header {
     display: grid;
     grid-template-columns: max-content 1fr;
     gap: 4rem;

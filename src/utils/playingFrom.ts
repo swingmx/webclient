@@ -123,16 +123,6 @@ export default (source: From): PlayingFrom => {
                         : paths.images.thumb.small + source.image.image,
             }
 
-        case FromOptions.composer:
-            return {
-                name: source.name,
-                icon: ArtistSvg,
-                location: {
-                    name: Routes.composer,
-                    params: { hash: source.composerhash },
-                },
-            }
-
         case FromOptions.work:
             return {
                 name: source.name,

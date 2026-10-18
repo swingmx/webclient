@@ -37,7 +37,8 @@ import useQueueStore from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
 
 import AlbumWork from '@/components/Classical/AlbumWork.vue'
-import WorkPerformers from '@/components/Classical/WorkPerformers.vue'
+import PeopleGrid from '@/components/Classical/PeopleGrid.vue'
+import performerGrid from '@/utils/performerGrid'
 import AlbumFooter from '@/components/AlbumView/AlbumFooter.vue'
 import AlbumDiscBar from '@/components/AlbumView/AlbumDiscBar.vue'
 import GenreBanner from '@/components/AlbumView/GenreBanner.vue'
@@ -71,7 +72,7 @@ interface ScrollerItem {
         | typeof Stats
         | typeof AlbumDiscBar
         | typeof AlbumWork
-        | typeof WorkPerformers
+        | typeof PeopleGrid
         | typeof AlbumFooter
     props?: any
 }
@@ -237,8 +238,8 @@ const scrollerItems = computed(() => {
     if (classical && album.sharedPerformers && album.performers.length) {
         pageItems.push({
             id: 'album-performers',
-            component: WorkPerformers,
-            props: { performers: album.performers },
+            component: PeopleGrid,
+            props: { title: t('Views.WorkView.Performers'), people: performerGrid(album.performers) },
         })
     }
 

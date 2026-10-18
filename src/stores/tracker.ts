@@ -41,8 +41,6 @@ function getSource(source: From) {
       return `mix:${source.mixid}.${source.sourcehash}`;
     case FromOptions.work:
       return `wk:${source.workhash}`;
-    case FromOptions.composer:
-      return `cp:${source.composerhash}`;
     default:
       return "";
   }

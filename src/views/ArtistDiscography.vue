@@ -18,7 +18,7 @@
     </GenericHeader>
     <GenericTabs
       :items="
-        Object.values(discographyAlbumTypes).map((type) => ({
+        Object.values(discographyAlbumTypes).filter((type) => artist.hasType(type)).map((type) => ({
           title: type,
           params: {
             hash: route.params.hash,
@@ -88,6 +88,12 @@ function getTypeName(type: string | string[]) {
       return t('Common.Singles');
     case discographyAlbumTypes.appearances:
       return t('Common.Appearances');
+    case discographyAlbumTypes.classical:
+      return t('Views.ComposerView.ClassicalAlbums');
+    case discographyAlbumTypes.live:
+      return t('Views.ComposerView.LiveAlbums');
+    case discographyAlbumTypes.soundtracks:
+      return t('Views.ComposerView.Soundtracks');
     case discographyAlbumTypes.compilations:
       return t('Common.Compilations', 2);
     default:

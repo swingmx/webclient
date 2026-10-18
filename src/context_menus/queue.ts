@@ -26,7 +26,6 @@ function getQueueName(from: From) {
     case FromOptions.favorite:
       return t('Menus.Queue.FavoritesName');
     case FromOptions.work:
-    case FromOptions.composer:
       return from.name;
     default:
       return "";

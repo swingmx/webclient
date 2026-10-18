@@ -258,6 +258,7 @@
   "LeftSidebar": {
     "FileTypeBitrate": "file type • bitrate",
     "NavItems": {
+        "Classical": "Classical",
       "Favorites": "Favorites",
       "Folder": "Folders",
       "Home": "Home",
@@ -833,7 +834,35 @@
       "SourceLabel": "Source:",
       "Wikipedia": "Wikipedia",
       "Interpreters": "Frequent interpreters",
-      "WorkCount": "{n} work | {n} works"
+      "WorkCount": "{n} work | {n} works",
+      "Performer": "Performer",
+      "Shuffle": "Shuffle",
+      "Repertoire": "Repertoire",
+      "With": "with {names}",
+      "ClassicalAlbums": "Classical albums",
+      "LiveAlbums": "Live albums",
+      "Soundtracks": "Soundtracks",
+      "Composers": "Composers",
+      "PerformsWith": "Performs with"
+    },
+    "ClassicalHome": {
+      "Library": "Library",
+      "Title": "Classical",
+      "Albums": "{n} album | {n} albums",
+      "Tracks": "{n} track | {n} tracks",
+      "Listened": "{time} listened",
+      "ContinueListening": "Continue listening",
+      "AlbumsTitle": "Albums",
+      "RecentlyAdded": "Recently added",
+      "FavoriteWorks": "Favorite works",
+      "Composers": "Composers",
+      "BrowseByEra": "Browse by era",
+      "BrowseByInstrument": "Browse by instrument",
+      "BrowseByType": "Browse by work type",
+      "ReturnTo": "Works you return to",
+      "Performers": "Performers",
+      "Plays": "{n} play | {n} plays",
+      "Today": "today"
     },
     "AlbumViews": {
       "MoreFrom": "More from {art}",
@@ -856,6 +885,10 @@
       "Title": "Favorite Tracks"
     },
     "Favorites": {
+      "Works": "Works",
+      "Work": "work | works",
+      "Composers": "Composers",
+      "Composer": "composer | composers",
       "CountStats": "{tra} Tracks • {alb} Albums • {art} Artists",
       "Description": "You can add tracks, albums and artists to your favorites by clicking the heart icon",
       "NoFavoritesFound": "No favorites found",

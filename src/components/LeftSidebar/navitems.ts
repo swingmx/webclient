@@ -1,4 +1,7 @@
+import { computed } from "vue";
+
 import { Routes } from "@/router";
+import useSettings from "@/stores/settings";
 import useDialog from "@/stores/modal";
 import useSearch from "@/stores/search";
 
@@ -8,6 +11,7 @@ import PlaylistSvg from "@/assets/icons/playlist-1.svg";
 import SearchSvg from "@/assets/icons/search.svg";
 import SettingsSvg from "@/assets/icons/settings.svg";
 import HomeSvg from "@/assets/icons/home.svg";
+import AlbumSvg from "@/assets/icons/album.svg";
 import { useT } from "@/i18n";
 
 export const useNavItems = () => {
@@ -38,8 +42,19 @@ export const useNavItems = () => {
     icon: HomeSvg,
   };
 
-  const menus = [
+  const settings = useSettings();
+
+  const classical = {
+    name: t('LeftSidebar.NavItems.Classical'),
+    route_name: Routes.classicalHome,
+    icon: AlbumSvg,
+  };
+  // only listed when classical support is on
+  const classicalItems = () => (settings.classical_enabled ? [classical] : []);
+
+  const menus = computed(() => [
     home,
+    ...classicalItems(),
     folder,
     {
       name: t('LeftSidebar.NavItems.Search'),
@@ -64,9 +79,9 @@ export const useNavItems = () => {
         useDialog().showSettingsModal()
       }
     },
-  ];
+  ]);
 
-  const topnavitems = [home, folder, favorites, playlists];
+  const topnavitems = computed(() => [home, ...classicalItems(), folder, favorites, playlists]);
   
   return { menus, topnavitems };
 };

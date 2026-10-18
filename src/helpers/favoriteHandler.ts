@@ -9,13 +9,15 @@ import tracklist from "@/stores/queue/tracklist";
  * @param setter The ref to track the is_favorite state
  * @param type The type of item
  * @param itemhash The hash of the item
+ * @param albumhash Works only: the album of the recording favorited
  */
 export default async function favoriteHandler(
   flag: boolean | undefined,
   type: favType,
   itemhash: string,
   setter: (x?: unknown) => void,
-  remover: (x?: unknown) => void
+  remover: (x?: unknown) => void,
+  albumhash?: string
 ) {
   if (itemhash == "") return;
 
@@ -28,7 +30,7 @@ export default async function favoriteHandler(
     const removed = await removeFavorite(type, itemhash);
     if (removed) remover();
   } else {
-    const added = await addFavorite(type, itemhash);
+    const added = await addFavorite(type, itemhash, albumhash);
     if (added) setter();
   }
 

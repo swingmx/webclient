@@ -119,6 +119,7 @@ export interface ClassicalWork {
 export interface WorkPerformer {
     name: string
     performer_id: string | null
+    artisthash?: string
     roles: string[]
 }
 
@@ -135,6 +136,7 @@ export interface WorkRecordingCard extends Album {
 }
 
 export interface ClassicalWorkPage extends Omit<ClassicalWork, 'movements'> {
+    is_favorite?: boolean
     year_published?: number
     dedication?: string
     instrumentation?: string
@@ -143,62 +145,127 @@ export interface ClassicalWorkPage extends Omit<ClassicalWork, 'movements'> {
     other_recordings: WorkRecordingCard[]
 }
 
-export interface ComposerCategory {
+export interface WorkCardItem extends Omit<ClassicalWork, 'movements'> {
+    type: 'work'
+    albumhash: string | null
+    album: string | null
+    image: string | null
+    recording_count: number
+    // work card tile label and the line under the title
+    label?: string | null
+    byline?: string | null
+    duration?: number
+    help_text?: string
+    time?: string
+    // classical home rows
+    added?: number
+    plays?: number
+    trackhash?: string
+    movement?: string
+}
+
+export interface ClassicalHomeTile {
+    slug: string
+    name: string
+    count: number
+    // eras
+    start?: number | null
+    end?: number | null
+    composers?: string[]
+    // work types
+    subtitle?: string
+}
+
+export interface ClassicalHomePage {
+    album_count: number
+    track_count: number
+    seconds_listened: number
+    continue_listening: WorkCardItem[]
+    albums: Album[]
+    recently_added: WorkCardItem[]
+    favorite_works: WorkCardItem[]
+    composers: Artist[]
+    eras: ClassicalHomeTile[]
+    instruments: ClassicalHomeTile[]
+    work_types: ClassicalHomeTile[]
+    returned_to: WorkCardItem[]
+    performers: { name: string; artisthash: string; role: string | null }[]
+}
+
+export interface PersonFilter {
     name: string
     slug: string
     count: number
 }
 
-export interface ComposerWorkRow extends Omit<ClassicalWork, 'movements'> {
+export interface PersonWorkRow extends Omit<ClassicalWork, 'movements'> {
     albumhash: string
-    recording_count: number
     duration: number
     form?: string
     category?: string
+    // composer pages
+    recording_count?: number
+    // performer pages
+    year?: number | null
+    with?: string[]
 }
 
-export interface ComposerInterpreter {
+export interface PersonEntry {
     name: string
-    performer_id: string | null
-    roles: string[]
-    works: number
+    artisthash: string
+    roles?: string[]
+    works?: number
+    albums?: number
 }
 
-export interface ComposerPage {
-    composerhash: string
+export interface PersonAlbumSections {
+    classical: Album[]
+    albums: Album[]
+    singles_and_eps: Album[]
+    live: Album[]
+    soundtracks: Album[]
+    compilations: Album[]
+    appearances: Album[]
+}
+
+export interface ClassicalPersonPage {
+    type: 'composer' | 'performer'
+    artisthash: string
+    is_favorite?: boolean
     name: string
     image: string | null
+    work_count: number
+    album_count: number
+    filter_key: 'category' | 'composer'
+    filters: PersonFilter[]
+    filter: string | null
+    works: PersonWorkRow[]
+    works_total: number
+    albums: PersonAlbumSections
+    // composers
     epoch?: string
     birth?: string
     death?: string
-    nationality?: string
     nickname?: string
     occupations?: string[]
     birthplace?: string
     bio?: string
     wikipedia_url?: string
-    work_count: number
-    album_count: number
-    categories: ComposerCategory[]
-    category: string | null
-    works: ComposerWorkRow[]
-    works_total: number
-    albums: Album[]
-    interpreters: ComposerInterpreter[]
+    interpreters?: PersonEntry[]
+    // performers
+    roles?: string[]
+    composers?: PersonEntry[]
+    performs_with?: PersonEntry[]
 }
 
-export interface ComposerWorksPage {
-    composerhash: string
+export interface ClassicalPersonWorks {
+    type: 'composer' | 'performer'
+    artisthash: string
     name: string
-    categories: ComposerCategory[]
-    category: string | null
-    works: ComposerWorkRow[]
-}
-
-export interface ComposerAlbumsPage {
-    composerhash: string
-    name: string
-    albums: Album[]
+    filter_key: 'category' | 'composer'
+    filters: PersonFilter[]
+    filter: string | null
+    works: PersonWorkRow[]
 }
 
 export type QueueItem = Track | ClassicalMovement
@@ -374,12 +441,6 @@ export interface fromWork {
     name: string
     workhash: string
     albumhash: string
-}
-
-export interface fromComposer {
-    type: FromOptions.composer
-    name: string
-    composerhash: string
 }
 
 export interface subPath {

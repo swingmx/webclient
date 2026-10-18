@@ -2,18 +2,22 @@ import { paths } from '@/config'
 import { favType, NotifType } from '@/enums'
 import useAxios from './useAxios'
 
-import { Album, Artist, Track } from '@/interfaces'
+import { Album, Artist, Track, WorkCardItem } from '@/interfaces'
 import { useToast as notif } from '@/stores/notification'
 import { useT } from '@/i18n'
 
 const { t } = useT();
 
-export async function addFavorite(favtype: favType, itemhash: string) {
+/**
+ * Add a favorite. Works also take the album of the recording favorited.
+ */
+export async function addFavorite(favtype: favType, itemhash: string, albumhash?: string) {
     const { error } = await useAxios({
         url: paths.api.addFavorite,
         props: {
             type: favtype,
             hash: itemhash,
+            ...(albumhash ? { albumhash } : {}),
         },
     })
 
@@ -42,10 +46,11 @@ export async function removeFavorite(favtype: favType, itemhash: string) {
     return true
 }
 
-export async function getAllFavs(track_limit = 6, album_limit = 6, artist_limit = 6) {
+export async function getAllFavs(track_limit = 6, album_limit = 6, artist_limit = 6, work_limit = 12) {
     const { data } = await useAxios({
         url:
-            paths.api.favorites + `?track_limit=${track_limit}&album_limit=${album_limit}&artist_limit=${artist_limit}`,
+            paths.api.favorites +
+            `?track_limit=${track_limit}&album_limit=${album_limit}&artist_limit=${artist_limit}&work_limit=${work_limit}`,
         method: 'GET',
     })
 
@@ -77,6 +82,24 @@ export async function getFavArtists(start = 0, limit = 6) {
     })
 
     return data as { artists: Artist[]; total: number }
+}
+
+export async function getFavWorks(start = 0, limit = 6) {
+    const { data } = await useAxios({
+        url: paths.api.favorites + `/works?start=${start}&limit=${limit}`,
+        method: 'GET',
+    })
+
+    return data as { works: WorkCardItem[]; total: number }
+}
+
+export async function getFavComposers(start = 0, limit = 6) {
+    const { data } = await useAxios({
+        url: paths.api.favorites + `/composers?start=${start}&limit=${limit}`,
+        method: 'GET',
+    })
+
+    return data as { composers: Artist[]; total: number }
 }
 
 export async function isFavorite(itemhash: string, type: favType) {

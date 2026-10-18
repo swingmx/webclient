@@ -1,11 +1,5 @@
 import { paths } from '@/config'
-import {
-    ClassicalWork,
-    ClassicalWorkPage,
-    ComposerAlbumsPage,
-    ComposerPage,
-    ComposerWorksPage,
-} from '@/interfaces'
+import { Album, Artist, ClassicalHomePage, ClassicalWorkPage, WorkCardItem } from '@/interfaces'
 import useAxios from './useAxios'
 
 export async function getWork(token: string, albumhash?: string) {
@@ -21,30 +15,28 @@ export async function getWork(token: string, albumhash?: string) {
     return data as ClassicalWorkPage
 }
 
-function categoryQuery(category?: string) {
-    return category ? `?category=${encodeURIComponent(category)}` : ''
+async function getClassical<T>(path: string) {
+    const { data, status } = await useAxios({ url: `/classical${path}`, method: 'GET' })
+    return status === 200 ? (data as T) : null
 }
 
-async function get<T>(url: string) {
-    const { data, status } = await useAxios({ url, method: 'GET' })
-    if (status !== 200) return null
-    return data as T
+export function getClassicalHome() {
+    return getClassical<ClassicalHomePage>('/home')
 }
 
-export function getComposer(composerhash: string, category?: string) {
-    return get<ComposerPage>(`${paths.api.classicalComposers}/${composerhash}${categoryQuery(category)}`)
+/**
+ * Works by era, instrument, or work type, or sorted by date added,
+ * favorites, or plays; `query` holds one of those keys.
+ */
+export function getClassicalWorks(query: Record<string, string>) {
+    const params = new URLSearchParams(query).toString()
+    return getClassical<{ title: string | null; works: WorkCardItem[] }>(`/works${params ? `?${params}` : ''}`)
 }
 
-export function getComposerWorks(composerhash: string, category?: string) {
-    return get<ComposerWorksPage>(`${paths.api.classicalComposers}/${composerhash}/works${categoryQuery(category)}`)
+export function getClassicalAlbums() {
+    return getClassical<Album[]>('/albums')
 }
 
-export function getComposerAlbums(composerhash: string) {
-    return get<ComposerAlbumsPage>(`${paths.api.classicalComposers}/${composerhash}/albums`)
-}
-
-export function getComposerTracks(composerhash: string) {
-    return get<{ composerhash: string; works: (ClassicalWork & { albumhash: string })[] }>(
-        `${paths.api.classicalComposers}/${composerhash}/tracks`
-    )
+export function getClassicalComposers() {
+    return getClassical<Artist[]>('/composers')
 }

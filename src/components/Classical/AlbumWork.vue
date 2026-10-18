@@ -11,7 +11,7 @@
                 <div v-if="work.composer" class="composer">
                     <RouterLink
                         v-if="work.composer_hash"
-                        :to="{ name: Routes.composer, params: { hash: work.composer_hash } }"
+                        :to="{ name: Routes.artist, params: { hash: work.composer_hash } }"
                         @click.stop
                     >
                         {{ work.composer }}

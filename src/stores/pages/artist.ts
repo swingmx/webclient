@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { getArtistAlbums, getArtistData, getSimilarArtists } from '@/requests/artists'
 
 import { paths } from '@/config'
-import { Album, Artist, Genre, StatItem, Track } from '@/interfaces'
+import { Album, Artist, ClassicalPersonPage, Genre, StatItem, Track } from '@/interfaces'
 import { Routes, router } from '@/router'
 import { maxAbumCards } from '@/stores/content-width'
 import useSettingsStore from '@/stores/settings'
@@ -11,6 +11,9 @@ import setColorsToStore from '@/utils/colortools/setColorsToStore'
 
 export default defineStore('artistPage', {
     state: () => ({
+        // which page the hash is; composers and performers fill `person`
+        type: <'artist' | 'composer' | 'performer'>'artist',
+        person: <ClassicalPersonPage | null>null,
         info: <Artist>{},
         tracks: <Track[]>[],
         albums: <Album[]>[],
@@ -27,14 +30,19 @@ export default defineStore('artistPage', {
         stats: <StatItem[]>[],
     }),
     actions: {
-        async getData(hash: string) {
+        async getData(hash: string, query: Record<string, string> = {}) {
             const settings = useSettingsStore()
-            const { artist, tracks, stats, albums } = await getArtistData(
-                hash,
-                settings.artist_top_tracks_count,
-                maxAbumCards.value
-            )
+            const data = await getArtistData(hash, settings.artist_top_tracks_count, maxAbumCards.value, query)
 
+            if (data && data.type !== 'artist') {
+                this.type = data.type
+                this.person = data
+                return
+            }
+
+            this.type = 'artist'
+            this.person = null
+            const { artist, tracks, stats, albums } = data
             this.info = artist
             this.tracks = tracks
 

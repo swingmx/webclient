@@ -38,6 +38,27 @@
             :route="'/favorites/artists'"
         />
 
+        <WorkList
+            v-if="favWorks.length"
+            artisthash=""
+            :title="$t('Views.Favorites.Works')"
+            :works="favWorks"
+            :filters="[]"
+            filter-key=""
+            :filter="null"
+            :show-composer="true"
+            :compact="true"
+            :max-rows="2"
+            :more-to="{ name: Routes.favoriteWorks }"
+        />
+
+        <CardScroller
+            v-if="favComposers.length"
+            :items="favComposers.map(i => ({ type: 'artist', item: i }))"
+            :title="$t('Views.Favorites.Composers')"
+            :route="'/favorites/composers'"
+        />
+
         <NoItems :flag="noFavs" :icon="HeartSvg" :title="$t('Views.Favorites.NoFavoritesFound')" :description="$t('Views.Favorites.Description')" />
     </div>
 </template>
@@ -49,12 +70,14 @@ import { maxAbumCards, updateCardWidth } from '@/stores/content-width'
 
 import { dropSources, playSources } from '@/enums'
 import { playFromFavorites } from '@/helpers/usePlayFrom'
-import { Album, Artist, RecentFavResult, Track } from '@/interfaces'
+import { Album, Artist, RecentFavResult, Track, WorkCardItem } from '@/interfaces'
 import { getAllFavs } from '@/requests/favorite'
+import { Routes } from '@/router'
 import updatePageTitle from '@/utils/updatePageTitle'
 
 import HeartSvg from '@/assets/icons/heart-no-color.svg'
 import TopTracks from '@/components/ArtistView/TopTracks.vue'
+import WorkList from '@/components/Classical/WorkList.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
 import GenericHeader from '@/components/shared/GenericHeader.vue'
 import NoItems from '@/components/shared/NoItems.vue'
@@ -66,6 +89,8 @@ const recentFavs: Ref<RecentFavResult[]> = ref([])
 const favAlbums: Ref<Album[]> = ref([])
 const favTracks: Ref<Track[]> = ref([])
 const favArtists: Ref<Artist[]> = ref([])
+const favWorks: Ref<WorkCardItem[]> = ref([])
+const favComposers: Ref<Artist[]> = ref([])
 const count = ref({
     albums: 0,
     tracks: 0,
@@ -77,16 +102,23 @@ onMounted(() => {
     updatePageTitle(t('Views.Favorites.Title'))
     const max = maxAbumCards.value
 
-    getAllFavs(6, max, max)
+    getAllFavs(6, max, max, max * 2)
         .then(favs => {
             recentFavs.value = favs.recents
             favAlbums.value = favs.albums
             favTracks.value = favs.tracks
             favArtists.value = favs.artists
+            favWorks.value = favs.works ?? []
+            favComposers.value = favs.composers ?? []
             count.value = favs.count
         })
         .then(() => {
-            noFavs.value = !favAlbums.value.length && !favTracks.value.length && !favArtists.value.length
+            noFavs.value =
+                !favAlbums.value.length &&
+                !favTracks.value.length &&
+                !favArtists.value.length &&
+                !favWorks.value.length &&
+                !favComposers.value.length
         })
         .then(async () => {
             await nextTick()
