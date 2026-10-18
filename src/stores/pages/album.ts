@@ -5,7 +5,7 @@ import { getAlbum, getAlbumsFromArtist, getAlbumVersions, getSimilarAlbums } fro
 
 import { paths } from '@/config'
 import { FuseTrackOptions } from '@/enums'
-import { Album, AlbumDisc, ClassicalWork, FuseResult, StatItem, Track } from '@/interfaces'
+import { Album, AlbumDisc, ClassicalWork, FuseResult, StatItem, Track, WorkPerformer } from '@/interfaces'
 import { router, Routes } from '@/router'
 import { maxAbumCards } from '@/stores/content-width'
 import { useFuse } from '@/utils'
@@ -55,6 +55,8 @@ export default defineStore('album', {
         >{},
         srcTracks: <Track[]>[],
         works: <ClassicalWork[]>[],
+        sharedPerformers: false,
+        performers: <WorkPerformer[]>[],
         artistAlbums: <
             {
                 [key: string]: Album[]
@@ -92,6 +94,8 @@ export default defineStore('album', {
             this.extractColors()
 
             this.works = album.works || []
+            this.sharedPerformers = album.shared_performers ?? false
+            this.performers = album.performers ?? []
             if (!this.srcTracks.length && this.works.length) {
                 this.srcTracks = this.works.flatMap(work => work.movements)
             }

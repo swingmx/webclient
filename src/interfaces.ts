@@ -95,6 +95,7 @@ export interface ClassicalMovement extends Track {
     movement_title: string
     movement_number?: string | null
     movement_name?: string
+    arrangement?: string | null
     // added when the movement is added to the queue,
     // links back to tracklist.worklist
     workhash?: string
@@ -111,6 +112,8 @@ export interface ClassicalWork {
     workhash: string
     year_composed?: number
     movements: ClassicalMovement[]
+    // performer names, on album pages
+    performers?: string[]
 }
 
 export interface WorkPerformer {

@@ -838,7 +838,8 @@
     "AlbumViews": {
       "MoreFrom": "More from {art}",
       "OtherVersions": "Other versions",
-      "RelatedAlbums": "Related Albums"
+      "RelatedAlbums": "Related Albums",
+      "Released": "Released {date}"
     },
     "ArtistDiscography": {
       "AllAlbums": "All Albums",

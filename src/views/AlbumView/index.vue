@@ -36,7 +36,9 @@ import useAlbumStore from '@/stores/pages/album'
 import useQueueStore from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
 
-import WorkItem from '@/components/Classical/WorkItem.vue'
+import AlbumWork from '@/components/Classical/AlbumWork.vue'
+import WorkPerformers from '@/components/Classical/WorkPerformers.vue'
+import AlbumFooter from '@/components/AlbumView/AlbumFooter.vue'
 import AlbumDiscBar from '@/components/AlbumView/AlbumDiscBar.vue'
 import GenreBanner from '@/components/AlbumView/GenreBanner.vue'
 import Header from '@/components/AlbumView/main.vue'
@@ -67,7 +69,10 @@ interface ScrollerItem {
         | typeof CardScroller
         | typeof AlbumsFetcher
         | typeof Stats
-        | typeof WorkItem
+        | typeof AlbumDiscBar
+        | typeof AlbumWork
+        | typeof WorkPerformers
+        | typeof AlbumFooter
     props?: any
 }
 
@@ -93,15 +98,16 @@ class songItem {
 class workItem {
     id: string | number
     props = {}
-    component: typeof WorkItem
+    component: typeof AlbumWork
 
     constructor(work: ClassicalWork, index: number) {
         this.id = `work-${index}-${work.workhash}`
         this.props = {
             work,
             albumhash: album.info.albumhash,
+            first: index === 0,
         }
-        this.component = WorkItem
+        this.component = AlbumWork
     }
 }
 
@@ -217,10 +223,24 @@ const scrollerItems = computed(() => {
     moreFrom = moreFrom.filter(item => item.id !== undefined)
     const otherVersionsComponent = getAlbumVersionsComponent()
 
-    const pageItems =
-        settings.classical_enabled && album.info.is_classical && album.works.length > 0
-            ? getWorkItems()
-            : getSongItems()
+    const classical = settings.classical_enabled && album.info.is_classical && album.works.length > 0
+    const pageItems = (classical ? getWorkItems() : getSongItems()) as ScrollerItem[]
+
+    if (album.info.date || album.copyright) {
+        pageItems.push({
+            id: 'album-footer',
+            component: AlbumFooter,
+            props: { date: album.info.date, copyright: album.copyright },
+        })
+    }
+
+    if (classical && album.sharedPerformers && album.performers.length) {
+        pageItems.push({
+            id: 'album-performers',
+            component: WorkPerformers,
+            props: { performers: album.performers },
+        })
+    }
 
     let components = [header, ...pageItems, genreBanner]
 
@@ -266,7 +286,7 @@ function playFromAlbum(index: number, tracks = album.srcTracks) {
 function listenersFor(item: { component: any }) {
     const listeners: Record<string, (...args: any[]) => void> = {}
 
-    if ([SongItem, WorkItem, Header].includes(item.component)) {
+    if ([SongItem, AlbumWork, Header].includes(item.component)) {
         listeners.playThis = (trackhash?: string) => onPlayThis(item as ScrollerItem, trackhash)
     }
 
@@ -274,21 +294,7 @@ function listenersFor(item: { component: any }) {
         listeners.playDisc = playDisc
     }
 
-    if (item.component === WorkItem) {
-        listeners.playWork = playWork
-    }
-
     return listeners
-}
-
-function playWork(workhash: string) {
-    const work = album.works.find(w => w.workhash === workhash)
-    if (!work) return
-
-    const movementHashes = new Set(work.movements.map(m => m.trackhash))
-    const tracks = album.srcTracks.filter(t => movementHashes.has(t.trackhash))
-
-    if (tracks.length) playFromAlbum(0, tracks)
 }
 
 function onPlayThis(item: ScrollerItem, trackhash?: string) {

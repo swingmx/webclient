@@ -1,5 +1,5 @@
 import { paths } from '@/config'
-import { Album, ClassicalWork, StatItem, Track } from '@/interfaces'
+import { Album, ClassicalWork, StatItem, Track, WorkPerformer } from '@/interfaces'
 import { NotifType, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
 import { useT } from '@/i18n'
@@ -21,6 +21,8 @@ const getAlbumData = async (albumhash: string, albumlimit: number) => {
         info: Album
         tracks: Track[]
         works: ClassicalWork[]
+        shared_performers?: boolean
+        performers?: WorkPerformer[]
         copyright: string
         extra: {
             track_total: number
