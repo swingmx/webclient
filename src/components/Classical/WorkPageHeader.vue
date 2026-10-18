@@ -10,11 +10,20 @@
         </div>
         <div class="work-info">
             <div v-if="work.composer || work.year_composed" class="composer">
-                <span v-if="work.composer" class="name">{{ work.composer }}</span>
+                <RouterLink
+                    v-if="work.composer && work.composer_hash"
+                    :to="{ name: Routes.composer, params: { hash: work.composer_hash } }"
+                    class="name composerlink"
+                >
+                    {{ work.composer }}
+                </RouterLink>
+                <span v-else-if="work.composer" class="name">{{ work.composer }}</span>
                 <span v-if="work.composer && work.year_composed" class="dot">·</span>
                 <span v-if="work.year_composed" class="year">{{ work.year_composed }}</span>
             </div>
-            <div class="title">{{ work.name }}</div>
+            <div ref="titleEl" class="title">
+                <span v-for="line in titleLines" :key="line">{{ line }}<br /></span>
+            </div>
             <div v-if="work.nickname || work.subtitle" class="names">
                 <span v-if="work.nickname">“{{ work.nickname }}”</span>
                 <span v-if="work.nickname && work.subtitle"> · </span>
@@ -64,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 
 import { paths } from '@/config'
 import { useT } from '@/i18n'
@@ -77,6 +86,7 @@ import { getShift } from '@/utils/colortools/shift'
 import setColorsToStore from '@/utils/colortools/setColorsToStore'
 import formatSeconds from '@/utils/useFormatSeconds'
 import updatePageTitle from '@/utils/updatePageTitle'
+import { balanceText } from '@/utils/balanceText'
 
 import MoreSvg from '@/assets/icons/more.svg'
 import PlaySvg from '@/assets/icons/play.svg'
@@ -117,8 +127,17 @@ const bubbles = computed(() => {
     ].filter(Boolean)
 })
 
+const titleEl = ref<HTMLElement>()
+const titleLines = ref([props.work.name])
+
 function setTitle() {
     updatePageTitle(props.work.composer ? `${props.work.name} - ${props.work.composer}` : props.work.name)
+    titleLines.value = [props.work.name]
+    nextTick(() => {
+        if (!titleEl.value) return
+        const fontSize = getComputedStyle(titleEl.value).fontSize
+        titleLines.value = balanceText(props.work.name, titleEl.value.offsetWidth, fontSize)
+    })
 }
 
 function setColors() {
@@ -132,7 +151,7 @@ onMounted(() => {
     setTitle()
     setColors()
 })
-watch(() => props.work.workhash, setTitle)
+watch(() => [props.work.workhash, props.work.name], setTitle)
 watch(() => album.value?.albumhash, setColors)
 </script>
 
@@ -164,6 +183,14 @@ watch(() => album.value?.albumhash, setColors)
 
         .name {
             font-weight: 700;
+        }
+
+        .composerlink {
+            color: inherit;
+
+            &:hover {
+                text-decoration: underline;
+            }
         }
 
         .dot,

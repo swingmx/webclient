@@ -7,6 +7,7 @@ import usePlaylistPageStore from '@/stores/pages/playlist'
 import usePlaylistListPageStore from '@/stores/pages/playlists'
 import useArtistPageStore from '@/stores/pages/artist'
 import useWorkPageStore from '@/stores/pages/work'
+import useComposerPageStore from '@/stores/pages/composer'
 
 import HomeView from '@/views/HomeView'
 const ArtistView = () => import('@/views/ArtistView')
@@ -19,11 +20,14 @@ const FavoritesView = () => import('@/views/Favorites.vue')
 const SettingsView = () => import('@/views/SettingsView.vue')
 const AlbumView = () => import('@/views/AlbumView/index.vue')
 const WorkView = () => import('@/views/WorkView/index.vue')
+const ComposerView = () => import('@/views/ComposerView/index.vue')
 const ArtistTracksView = () => import('@/views/ArtistTracks.vue')
 const PlaylistListView = () => import('@/views/PlaylistList.vue')
 const FavoriteTracks = () => import('@/views/FavoriteTracks.vue')
 const PlaylistView = () => import('@/views/PlaylistView/index.vue')
 const ArtistDiscographyView = () => import('@/views/ArtistDiscography.vue')
+const ComposerWorksView = () => import('@/views/ComposerWorks.vue')
+const ComposerAlbumsView = () => import('@/views/ComposerAlbums.vue')
 const FavoriteCardScroller = () => import('@/views/FavoriteCardScroller.vue')
 const StatsView = () => import('@/views/Stats/main.vue')
 const MixView = () => import('@/views/MixView.vue')
@@ -100,6 +104,33 @@ const workView = {
                 state.loading.value = false
             })
     },
+}
+
+const composerView = {
+    path: '/composers/:hash',
+    name: 'ComposerView',
+    component: ComposerView,
+    beforeEnter: async (to: any) => {
+        state.loading.value = true
+
+        await useComposerPageStore()
+            .fetchComposer(to.params.hash, to.query.category)
+            .then(() => {
+                state.loading.value = false
+            })
+    },
+}
+
+const composerWorks = {
+    path: '/composers/:hash/works',
+    name: 'ComposerWorksView',
+    component: ComposerWorksView,
+}
+
+const composerAlbums = {
+    path: '/composers/:hash/albums',
+    name: 'ComposerAlbumsView',
+    component: ComposerAlbumsView,
 }
 
 const artistView = {
@@ -232,6 +263,9 @@ const routes = [
     playlistView,
     albumView,
     workView,
+    composerView,
+    composerWorks,
+    composerAlbums,
     artistView,
     artistDiscography,
     settings,
@@ -259,6 +293,9 @@ const Routes = {
     playlist: playlistView.name,
     album: albumView.name,
     work: workView.name,
+    composer: composerView.name,
+    composerWorks: composerWorks.name,
+    composerAlbums: composerAlbums.name,
     artist: artistView.name,
     artistDiscography: artistDiscography.name,
     settings: settings.name,

@@ -817,6 +817,24 @@
       "Key": "Key",
       "Instrumentation": "Instrumentation"
     },
+    "ComposerView": {
+      "Composer": "Composer",
+      "WorksInLibrary": "{n} work in library | {n} works in library",
+      "AlbumCount": "{n} album | {n} albums",
+      "PlayAll": "Play all",
+      "ShuffleWorks": "Shuffle works",
+      "Works": "Works",
+      "All": "All",
+      "Recordings": "{n} recording | {n} recordings",
+      "Albums": "Albums",
+      "About": "About",
+      "ReadMore": "Read more",
+      "ShowLess": "Show less",
+      "SourceLabel": "Source:",
+      "Wikipedia": "Wikipedia",
+      "Interpreters": "Frequent interpreters",
+      "WorkCount": "{n} work | {n} works"
+    },
     "AlbumViews": {
       "MoreFrom": "More from {art}",
       "OtherVersions": "Other versions",

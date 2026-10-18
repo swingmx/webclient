@@ -32,6 +32,7 @@ export enum FromOptions {
   albumCard = "albumCard",
   favorite = "favorite",
   work = "work",
+  composer = "composer",
 }
 
 export enum ContextSrc {

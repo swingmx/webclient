@@ -140,6 +140,64 @@ export interface ClassicalWorkPage extends Omit<ClassicalWork, 'movements'> {
     other_recordings: WorkRecordingCard[]
 }
 
+export interface ComposerCategory {
+    name: string
+    slug: string
+    count: number
+}
+
+export interface ComposerWorkRow extends Omit<ClassicalWork, 'movements'> {
+    albumhash: string
+    recording_count: number
+    duration: number
+    form?: string
+    category?: string
+}
+
+export interface ComposerInterpreter {
+    name: string
+    performer_id: string | null
+    roles: string[]
+    works: number
+}
+
+export interface ComposerPage {
+    composerhash: string
+    name: string
+    image: string | null
+    epoch?: string
+    birth?: string
+    death?: string
+    nationality?: string
+    nickname?: string
+    occupations?: string[]
+    birthplace?: string
+    bio?: string
+    wikipedia_url?: string
+    work_count: number
+    album_count: number
+    categories: ComposerCategory[]
+    category: string | null
+    works: ComposerWorkRow[]
+    works_total: number
+    albums: Album[]
+    interpreters: ComposerInterpreter[]
+}
+
+export interface ComposerWorksPage {
+    composerhash: string
+    name: string
+    categories: ComposerCategory[]
+    category: string | null
+    works: ComposerWorkRow[]
+}
+
+export interface ComposerAlbumsPage {
+    composerhash: string
+    name: string
+    albums: Album[]
+}
+
 export type QueueItem = Track | ClassicalMovement
 export type QueueWork = Omit<ClassicalWork, 'movements'>
 
@@ -313,6 +371,12 @@ export interface fromWork {
     name: string
     workhash: string
     albumhash: string
+}
+
+export interface fromComposer {
+    type: FromOptions.composer
+    name: string
+    composerhash: string
 }
 
 export interface subPath {

@@ -1,7 +1,15 @@
 <template>
     <div class="workheader">
         <div class="workcomposer">
-            <span v-if="work.composer" class="composername">{{ work.composer }}</span>
+            <RouterLink
+                v-if="work.composer && work.composer_hash"
+                :to="{ name: Routes.composer, params: { hash: work.composer_hash } }"
+                class="composername composerlink"
+                @click.stop
+            >
+                {{ work.composer }}
+            </RouterLink>
+            <span v-else-if="work.composer" class="composername">{{ work.composer }}</span>
             <span v-if="playable" class="play" @click.stop="$emit('playWork')"> <PlaySvg /> {{ $t('Common.Play') }}</span>
         </div>
         <div class="worktitle">
@@ -58,6 +66,14 @@ const title = computed(() => {
     // separates this work from whatever sits above it (previous work or tracks)
     padding-top: 1.25rem;
     padding-bottom: $smaller;
+}
+
+.composerlink {
+    color: inherit;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 .worktitle {

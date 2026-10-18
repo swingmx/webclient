@@ -18,6 +18,7 @@ import {
     fromPlaylist,
     fromSearch,
     fromWork,
+    fromComposer,
     QueueItem,
     QueueWork,
     Track,
@@ -27,7 +28,16 @@ import { useT } from '@/i18n'
 
 const { t } = useT();
 
-export type From = fromFolder | fromAlbum | fromPlaylist | fromSearch | fromArtist | fromFav | fromMix | fromWork
+export type From =
+    | fromFolder
+    | fromAlbum
+    | fromPlaylist
+    | fromSearch
+    | fromArtist
+    | fromFav
+    | fromMix
+    | fromWork
+    | fromComposer
 
 function shuffle(tracks: QueueItem[]) {
     const shuffled = tracks.slice()
@@ -126,6 +136,16 @@ export default defineStore('tracklist', {
                 name: name,
                 workhash: workhash,
                 albumhash: albumhash,
+            }
+
+            this.setNewList(tracks)
+            this.indexWorks(works, tracks)
+        },
+        setFromComposer(name: string, composerhash: string, tracks: Track[], works: ClassicalWork[]) {
+            this.from = <fromComposer>{
+                type: FromOptions.composer,
+                name: name,
+                composerhash: composerhash,
             }
 
             this.setNewList(tracks)
