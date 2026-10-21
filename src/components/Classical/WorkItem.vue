@@ -13,6 +13,7 @@
                 <TrackItem
                     :track="{ ...movement, title: numbered ? movement.movement_name ?? movement.movement_title : movement.movement_title }"
                     :numbered="numbered"
+                    :note="movement.arrangement"
                     :is-queue-track="$route.name === Routes.nowPlaying"
                     :is-classical-track="true"
                     :is-current="queue.currenttrack?.trackhash === movement.trackhash"

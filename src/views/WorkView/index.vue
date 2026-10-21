@@ -30,6 +30,7 @@
 import { computed, nextTick } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 
+import { pageRestoring } from '@/composables/pageCache'
 import useWorkStore from '@/stores/pages/work'
 import useQueueStore from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
@@ -43,7 +44,6 @@ import CardScroller from '@/components/shared/CardScroller.vue'
 
 import { useT } from '@/i18n'
 import { isSmall } from '@/stores/content-width'
-import formatSeconds from '@/utils/useFormatSeconds'
 
 const { t } = useT()
 const store = useWorkStore()
@@ -83,19 +83,19 @@ const scrollerItems = computed((): ScrollerItem[] => {
     }
 
     if (page.other_recordings.length) {
-        const total = page.recording.movements.length
-
         items.push({
             id: 'other-recordings',
             component: CardScroller,
             props: {
                 title: t('Views.WorkView.OtherRecordings'),
-                items: page.other_recordings.map(album => ({
-                    type: 'album',
+                items: page.other_recordings.map(recording => ({
+                    type: 'recording',
                     item: {
-                        ...album,
-                        help_text: t('Views.WorkView.Movements', { n: album.movement_count, total }),
-                        time: formatSeconds(album.duration, true),
+                        ...recording,
+                        help_text: t('Views.WorkView.Movements', {
+                            n: recording.movement_count,
+                            total: page.recording.movements.length,
+                        }),
                     },
                 })),
             },
@@ -131,6 +131,7 @@ function listenersFor(item: ScrollerItem) {
 }
 
 onBeforeRouteUpdate(async to => {
+    if (pageRestoring()) return
     await store.fetchWork(to.params.token.toString(), to.query.albumhash?.toString())
     await nextTick()
 

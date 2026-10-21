@@ -4,9 +4,12 @@ import { computed, ref } from 'vue'
 import { paths } from '@/config'
 import { Album } from '@/interfaces'
 import useAxios from '@/requests/useAxios'
-import { Routes, router } from '@/router'
+import { router } from '@/router'
 
-const state = () => {
+/**
+ * A paged library list loaded from `endpoint`.
+ */
+const listState = (endpoint: () => string) => () => {
     const total = ref(0)
 
     const items = ref(<Album[]>[])
@@ -44,15 +47,14 @@ const state = () => {
     }
 
     async function getAlbums(start: number) {
-        if (!canFetch.value) return
+        // stop once the whole list is in
+        if (!canFetch.value || (total.value && items.value.length >= total.value)) return
 
         canFetch.value = false
 
         const res = await useAxios({
             url:
-                (router.currentRoute.value.name == Routes.AlbumList
-                    ? paths.api.getall.albums
-                    : paths.api.getall.artists) +
+                endpoint() +
                 `?start=${start}&limit=${pageSize}&sortby=${sortby.value}&reverse=${reverse_string.value}`,
             method: 'GET',
         })
@@ -106,13 +108,13 @@ const afterRestore = (context: any) => {
     context.store.$state.canFetch = true
 }
 
-export const useAlbumList = defineStore('albumlistpage', state, {
+export const useAlbumList = defineStore('albumlistpage', listState(() => paths.api.getall.albums), {
     persist: {
         afterRestore: afterRestore,
     },
 })
 
-export const useArtistList = defineStore('artistlistpage', state, {
+export const useArtistList = defineStore('artistlistpage', listState(() => paths.api.getall.artists), {
     persist: {
         afterRestore: afterRestore,
     },

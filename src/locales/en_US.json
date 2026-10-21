@@ -808,8 +808,8 @@
   },
   "Views": {
     "WorkView": {
-      "OtherRecordings": "Other recordings",
       "Movements": "{n} of {total} movements",
+      "OtherRecordings": "Other recordings",
       "MovementCount": "{n} movement | {n} movements",
       "Performers": "Performers",
       "DedicatedTo": "Dedicated to {name}",
@@ -867,7 +867,7 @@
       "PerformsWith": "Performs with"
     },
     "ClassicalHome": {
-      "Library": "Library",
+      "Description": "Welcome to your classical music library",
       "Title": "Classical",
       "Albums": "{n} album | {n} albums",
       "Tracks": "{n} track | {n} tracks",
@@ -880,7 +880,7 @@
       "BrowseByEra": "Browse by era",
       "BrowseByInstrument": "Browse by instrument",
       "BrowseByType": "Browse by work type",
-      "ReturnTo": "Works you return to",
+      "ReturnTo": "Works to return to",
       "Performers": "Performers",
       "Plays": "{n} play | {n} plays",
       "Today": "today"

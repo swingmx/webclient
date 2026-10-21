@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref, watch } from 'vue'
+import { computed, onMounted, Ref, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useT } from '@/i18n'
@@ -50,5 +50,4 @@ async function load() {
 }
 
 onMounted(load)
-watch(() => route.name, load)
 </script>

@@ -28,10 +28,11 @@
 
 <script setup lang="ts">
 import { computed, nextTick } from 'vue'
-import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router'
+import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 
 import { ClassicalWork, Track } from '@/interfaces'
 
+import { pageRestoring } from '@/composables/pageCache'
 import useAlbumStore from '@/stores/pages/album'
 import useQueueStore from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
@@ -334,6 +335,7 @@ function playDisc(disc_number: number) {
 }
 
 onBeforeRouteUpdate(async to => {
+    if (pageRestoring()) return
     await album.fetchTracksAndArtists(to.params.albumhash.toString()).then(async () => {
         album.resetAlbumArtists()
         // album.fetchArtistAlbums()
@@ -346,9 +348,6 @@ onBeforeRouteUpdate(async to => {
     })
 })
 
-onBeforeRouteLeave(() => {
-    album.resetAll()
-})
 </script>
 
 <style lang="scss">

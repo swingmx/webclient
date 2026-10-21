@@ -20,8 +20,8 @@ async function getClassical<T>(path: string) {
     return status === 200 ? (data as T) : null
 }
 
-export function getClassicalHome() {
-    return getClassical<ClassicalHomePage>('/home')
+export function getClassicalHome(cardLimit: number) {
+    return getClassical<ClassicalHomePage>(`/home?card_limit=${cardLimit}`)
 }
 
 /**

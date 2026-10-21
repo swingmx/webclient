@@ -133,8 +133,11 @@ export interface WorkRecording {
 }
 
 export interface WorkRecordingCard extends Album {
+    workhash: string
+    album: string | null
     movement_count: number
-    duration: number
+    // who the recording is by: performer, track artist, or album artist
+    byline: string | null
 }
 
 export interface ClassicalWorkPage extends Omit<ClassicalWork, 'movements'> {

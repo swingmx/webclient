@@ -44,9 +44,10 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from 'vue'
-import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router'
+import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 
 import { isMedium, isSmall, track_limit } from '@/stores/content-width'
+import { pageRestoring } from '@/composables/pageCache'
 import useFolder from '@/stores/pages/folder'
 import useQueue from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
@@ -140,6 +141,7 @@ async function playFromPage(index: number) {
 }
 
 onBeforeRouteUpdate((to, from) => {
+    if (pageRestoring()) return
     folder
         .fetchAll(to.params.path as string, true)
 
@@ -155,9 +157,6 @@ onBeforeRouteUpdate((to, from) => {
         })
 })
 
-onBeforeRouteLeave(() => {
-    folder.resetAll()
-})
 
 onMounted(() => {
     updatePageTitle(t('Common.Folders'))

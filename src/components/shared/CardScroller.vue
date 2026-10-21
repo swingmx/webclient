@@ -103,6 +103,7 @@ function getComponent(type: string) {
         case 'mix':
             return MixCard
         case 'work':
+        case 'recording':
             return WorkCard
     }
 }
@@ -149,6 +150,11 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
             return {
                 work: item.item,
             }
+        case 'recording':
+            return {
+                work: item.item,
+                cover: true,
+            }
     }
 }
 </script>
@@ -157,10 +163,14 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
 .cardscroller {
     padding: 1.5rem 0;
 
+    // one row; cards past the columns that fit are cropped, not wrapped
     .recentitems {
-        gap: 1.5rem 0;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax($cardwidth, 1fr));
+        grid-template-rows: auto;
+        grid-auto-rows: 0;
+        gap: 0;
+        overflow: hidden;
 
         @include mediumPhones {
             grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));

@@ -27,7 +27,9 @@
         </div>
         <div class="tags">
             <div v-tooltip class="title" @click.prevent.stop="() => emit('playThis')">
-                <span class="ellip"> {{ track.title }} </span>
+                <span class="ellip">
+                    {{ track.title }}<span v-if="note" class="note"> {{ note }}</span>
+                </span>
             </div>
             <hr v-if="!numbered" />
             <div v-if="!numbered" class="artist">
@@ -88,6 +90,8 @@ const props = defineProps<{
     index?: number
     isClassicalTrack?: boolean
     numbered?: boolean
+    // gray text after the title, such as a movement's arrangement
+    note?: string | null
 }>()
 
 const movementNumber = computed(() => ('movement_number' in props.track ? props.track.movement_number : null) ?? '')
@@ -187,6 +191,15 @@ onBeforeUnmount(() => {
             width: fit-content;
             font-weight: 600;
             cursor: pointer;
+
+            .note {
+                font-family: Georgia, "Times New Roman", serif;
+                font-style: italic;
+                font-size: 0.9em;
+                font-weight: 400;
+                color: $gray1;
+                margin-left: 0.5rem;
+            }
         }
     }
 

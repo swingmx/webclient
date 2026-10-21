@@ -43,7 +43,6 @@ import Header from '@/components/PlaylistView/Header.vue'
 import NoItems from '@/components/shared/NoItems.vue'
 import SongItem from '@/components/shared/SongItem.vue'
 import AfterHeader from '@/components/PlaylistView/AfterHeader.vue'
-import { onBeforeRouteLeave } from 'vue-router'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 import { useT } from '@/i18n'
 
@@ -133,7 +132,6 @@ async function playFromPlaylistPage(index: number) {
     updatePageTitle(playlist.info.name)
 })
 
-onBeforeRouteLeave(() => playlist.resetAll())
 </script>
 
 <style lang="scss">

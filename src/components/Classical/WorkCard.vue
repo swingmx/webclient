@@ -3,9 +3,12 @@
         :to="{ name: Routes.work, params: { token: work.workhash }, query: work.albumhash ? { albumhash: work.albumhash } : {} }"
         class="album-card work-card"
     >
-        <div class="tile rounded-sm" :style="composerTint(work.composer_hash)">
+        <div v-if="cover" class="with-img rounded-sm no-scroll">
+            <img class="shadow-lg" :src="paths.images.thumb.medium + work.image" alt="" />
+        </div>
+        <div v-else class="tile rounded-sm" :style="composerTint(tile.composer_hash)">
             <div class="face">
-                <div class="label ellip">{{ work.label ?? '' }}</div>
+                <div class="label ellip">{{ tile.label ?? '' }}</div>
                 <div class="mark">{{ mark }}</div>
             </div>
         </div>
@@ -14,9 +17,12 @@
                 <span class="help" :class="{ keep: !work.time }">{{ work.help_text }}</span>
                 <span class="time">{{ work.time }}</span>
             </div>
-            <h4 class="title">
-                {{ work.name }}<template v-if="work.nickname"> “{{ work.nickname }}”</template>
-            </h4>
+            <h4 v-if="cover" class="title">{{ (work as WorkRecordingCard).album }}</h4>
+            <template v-else>
+                <h4 class="title">
+                    {{ tile.name }}<template v-if="tile.nickname"> “{{ tile.nickname }}”</template>
+                </h4>
+            </template>
             <div class="artist ellip">{{ work.byline }}</div>
         </div>
     </RouterLink>
@@ -25,21 +31,26 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { WorkCardItem } from '@/interfaces'
+import { paths } from '@/config'
+import { WorkCardItem, WorkRecordingCard } from '@/interfaces'
 import { Routes } from '@/router'
 import composerTint from '@/utils/composerTint'
 
 const props = defineProps<{
-    work: WorkCardItem
+    work: WorkCardItem | WorkRecordingCard
+    // a recording of the work: its album cover, album title, and performer
+    cover?: boolean
 }>()
+
+const tile = computed(() => props.work as WorkCardItem)
 
 /**
  * The first catalogue number, else the initials of the composer or byline.
  */
 const mark = computed(() => {
-    const id = props.work.catalogue_ids[0]?.name
+    const id = tile.value.catalogue_ids[0]?.name
     if (id) return id
-    const name = props.work.composer ?? props.work.byline ?? ''
+    const name = tile.value.composer ?? tile.value.byline ?? ''
     return name
         .split(/\s+/)
         .filter(word => /^\p{Lu}/u.test(word))

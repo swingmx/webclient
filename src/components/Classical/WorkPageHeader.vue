@@ -84,7 +84,8 @@ import { showWorkContextMenu } from '@/helpers/contextMenuHandler'
 import useWorkStore from '@/stores/pages/work'
 import useTracklist from '@/stores/queue/tracklist'
 import { getShift } from '@/utils/colortools/shift'
-import setColorsToStore from '@/utils/colortools/setColorsToStore'
+import listToRgbString from '@/utils/colortools/listToRgbString'
+import Vibrant from 'node-vibrant'
 import formatSeconds from '@/utils/useFormatSeconds'
 import updatePageTitle from '@/utils/updatePageTitle'
 import { balanceText } from '@/utils/balanceText'
@@ -161,10 +162,24 @@ function setTitle() {
     })
 }
 
-function setColors() {
-    palette.colors.btn = ''
-    if (album.value?.image) {
-        setColorsToStore(palette, imguri.thumb.small + album.value.image, true)
+// the latest recoloring; results from earlier covers are dropped
+let colorRun = 0
+
+/**
+ * Recolor the play button from the cover, keeping the previous color until
+ * the new one is ready so it can fade across.
+ */
+async function setColors() {
+    const run = ++colorRun
+    if (!album.value?.image) {
+        palette.colors.btn = ''
+        return
+    }
+    try {
+        const swatches = await new Vibrant(imguri.thumb.small + album.value.image).getPalette()
+        if (run === colorRun) palette.colors.btn = listToRgbString(swatches.LightVibrant?.getRgb()) || ''
+    } catch {
+        if (run === colorRun) palette.colors.btn = ''
     }
 }
 
@@ -296,6 +311,10 @@ watch(() => album.value?.albumhash, setColors)
 
     .workplaybtn {
         width: 6rem;
+        transition:
+            background-color 0.4s ease,
+            border-color 0.4s ease,
+            color 0.4s ease;
         display: flex;
         align-items: center;
         justify-content: center;

@@ -23,6 +23,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { onBeforeRouteUpdate, RouteLocationNormalized, useRoute } from 'vue-router'
 
+import { pageSwitching } from '@/composables/pageCache'
 import { useT } from '@/i18n'
 import { WorkCardItem } from '@/interfaces'
 import { getClassicalWorks } from '@/requests/classical'
@@ -52,7 +53,9 @@ async function load(to: RouteLocationNormalized) {
 }
 
 onMounted(() => load(route))
-onBeforeRouteUpdate(to => load(to))
+onBeforeRouteUpdate(to => {
+    if (!pageSwitching()) load(to)
+})
 </script>
 
 <style lang="scss">

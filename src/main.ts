@@ -16,6 +16,7 @@ import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 
 import App from "./App.vue";
 import { router } from "./router";
+import { setupPageCache } from "./composables/pageCache";
 import vTooltip from "./directives/vTooltip";
 
 import "./assets/scss/index.scss";
@@ -29,6 +30,7 @@ const app = createApp(App);
 
 app.use(pinia);
 app.use(router);
+setupPageCache(router);
 app.use(autoAnimatePlugin);
 app.use(VWave, {});
 app.use(i18n);

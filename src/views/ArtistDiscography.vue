@@ -56,9 +56,10 @@
 <script setup lang="ts">
 import { Routes } from "@/router";
 import { onMounted } from "vue";
-import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
+import { onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import { discographyAlbumTypes } from "@/enums";
+import { pageRestoring } from "@/composables/pageCache";
 import useArtistDiscography from "@/stores/pages/artistDiscog";
 import updatePageTitle from "@/utils/updatePageTitle";
 
@@ -107,11 +108,11 @@ onMounted(() => {
 });
 
 onBeforeRouteUpdate((to, from, next) => {
+  if (pageRestoring()) return next();
   artist.setAlbums(to.params.type as string);
   next();
 });
 
-onBeforeRouteLeave(() => artist.resetStore());
 </script>
 
 <style lang="scss">

@@ -1,24 +1,24 @@
 <template>
     <div v-if="page" class="content-page classical-home">
-        <div class="home-head">
-            <div>
-                <div class="kicker">{{ $t('Views.ClassicalHome.Library') }}</div>
-                <h1 class="title">{{ $t('Views.ClassicalHome.Title') }}</h1>
-            </div>
-            <div class="stats">
-                <span class="chip">{{ $t('Views.ClassicalHome.Albums', { n: page.album_count }, page.album_count) }}</span>
-                <span class="chip">{{ $t('Views.ClassicalHome.Tracks', { n: page.track_count }, page.track_count) }}</span>
-                <span v-if="page.seconds_listened" class="chip">
-                    {{ $t('Views.ClassicalHome.Listened', { time: formatSeconds(page.seconds_listened, true) }) }}
-                </span>
-            </div>
-        </div>
+        <GenericHeader>
+            <template #name>{{ $t('Views.ClassicalHome.Title') }}</template>
+            <template #description>{{ $t('Views.ClassicalHome.Description') }}</template>
+            <template #right>
+                <div class="stats">
+                    <span class="chip">{{ $t('Views.ClassicalHome.Albums', { n: page.album_count }, page.album_count) }}</span>
+                    <span class="chip">{{ $t('Views.ClassicalHome.Tracks', { n: page.track_count }, page.track_count) }}</span>
+                    <span v-if="page.seconds_listened" class="chip">
+                        {{ $t('Views.ClassicalHome.Listened', { time: formatSeconds(page.seconds_listened, true) }) }}
+                    </span>
+                </div>
+            </template>
+        </GenericHeader>
 
         <section v-if="page.continue_listening.length">
             <div class="heading">{{ $t('Views.ClassicalHome.ContinueListening') }}</div>
             <div class="continue">
                 <div v-for="item in page.continue_listening" :key="item.workhash" class="resume rounded-sm">
-                    <img v-if="item.image" class="rounded-sm" :src="paths.images.thumb.small + item.image" />
+                    <img v-if="item.image" :src="paths.images.thumb.medium + item.image" />
                     <div class="text">
                         <div class="composer ellip">{{ item.composer }}</div>
                         <RouterLink
@@ -146,6 +146,7 @@ import { paths } from '@/config'
 import { useT } from '@/i18n'
 import { ClassicalHomePage, ClassicalHomeTile, WorkCardItem } from '@/interfaces'
 import { getClassicalHome, getWork } from '@/requests/classical'
+import { maxAbumCards, updateCardWidth } from '@/stores/content-width'
 import { Routes } from '@/router'
 import useQueue from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
@@ -156,6 +157,7 @@ import PlaySvg from '@/assets/icons/play.svg'
 import PeopleGrid from '@/components/Classical/PeopleGrid.vue'
 import WorkList from '@/components/Classical/WorkList.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
+import GenericHeader from '@/components/shared/GenericHeader.vue'
 
 // favorite works show beside recently added only when they fill the column
 const FAVORITES_MIN = 5
@@ -164,6 +166,7 @@ const SIDE_BY_SIDE_ROWS = 5
 const { t } = useT()
 const page = ref<ClassicalHomePage | null>(null)
 const showFavorites = computed(() => (page.value?.favorite_works.length ?? 0) >= FAVORITES_MIN)
+
 
 function capitalize(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1)
@@ -192,7 +195,8 @@ async function resume(item: WorkCardItem) {
 
 onMounted(async () => {
     updatePageTitle(t('Views.ClassicalHome.Title'))
-    page.value = await getClassicalHome()
+    updateCardWidth()
+    page.value = await getClassicalHome(maxAbumCards.value + 2)
 })
 </script>
 
@@ -201,25 +205,6 @@ onMounted(async () => {
     height: 100%;
     overflow: auto;
     padding-bottom: 4rem;
-
-    .home-head {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        padding: 2rem 1rem 1rem;
-
-        .kicker {
-            font-size: 12px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: $gray1;
-        }
-
-        .title {
-            font-size: 3.5rem;
-            margin: 0;
-        }
-    }
 
     .stats,
     .chips {
@@ -242,17 +227,25 @@ onMounted(async () => {
     }
 
     section {
-        padding: 2rem 1rem 0;
+        padding: 2rem 0 1rem 0.75rem;
     }
 
     .heading {
-        font-size: 1.5rem;
+        font-size: 1.15rem;
         font-weight: 700;
         margin-bottom: 1rem;
     }
 
     .cardscroller {
-        padding: 2rem 1rem 0;
+        padding: 2rem 0 1rem 0;
+    }
+
+    .work-list .row.no-year {
+        margin-left: -0.75rem;
+    }
+
+    .work-list .title {
+        font-size: 1.15rem;
     }
 
     .serif {
@@ -260,24 +253,32 @@ onMounted(async () => {
         font-style: italic;
     }
 
+    // one full row: at least 3 cards, more as the width allows, the rest hidden
     .continue {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(min(22rem, calc((100% - 2rem) / 3)), 1fr));
+        grid-template-rows: auto;
+        grid-auto-rows: 0;
+        column-gap: 1rem;
+        row-gap: 0;
+        overflow: hidden;
     }
 
     .resume {
         display: grid;
-        grid-template-columns: 4rem 1fr max-content;
+        grid-template-columns: 5rem 1fr max-content;
         align-items: center;
         gap: 0.75rem;
-        padding: 0.75rem;
-        background-color: $gray5;
+        padding: 0.85rem;
+        background-color: rgb(18, 18, 18);
+        border-radius: 0.85rem;
+        border: solid 0.5px #252525;
 
         img {
-            width: 4rem;
-            height: 4rem;
+            width: 5rem;
+            height: 5rem;
             object-fit: cover;
+            border-radius: 0.55rem;
         }
 
         .text {
@@ -295,6 +296,11 @@ onMounted(async () => {
             display: block;
             font-weight: 600;
             color: inherit;
+            margin: 2px 0 2px 0;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
         }
 
         .album {
@@ -329,19 +335,21 @@ onMounted(async () => {
         display: grid;
         gap: 1rem;
 
+        // as many as fit, stretched to fill the row; extras wrap
         &.eras {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
         }
 
         &.types {
-            grid-template-columns: repeat(5, minmax(0, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
         }
     }
 
     .tile {
         padding: 1rem;
-        background-color: $gray5;
+        background-color: #0c0c0c;
         color: inherit;
+        border: solid 0.5px #181818;
 
         .range {
             font-size: 0.8rem;
@@ -366,14 +374,18 @@ onMounted(async () => {
     }
 
     @include for-desktop-down {
-        .continue,
         .two-columns {
             grid-template-columns: 1fr;
         }
 
-        .tiles.eras,
-        .tiles.types {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+        .continue {
+            grid-template-columns: 1fr;
+            grid-auto-rows: auto;
+            row-gap: 1rem;
+
+            .resume:nth-child(n + 4) {
+                display: none;
+            }
         }
     }
 }

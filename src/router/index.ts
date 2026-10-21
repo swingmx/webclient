@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouterOptions } from 'vue-router'
 
 import state from '@/composables/state'
+import { pageRestoring } from '@/composables/pageCache'
 import useAlbumPageStore from '@/stores/pages/album'
 import useFolderPageStore from '@/stores/pages/folder'
 import usePlaylistPageStore from '@/stores/pages/playlist'
@@ -38,8 +39,10 @@ const Onboarding = () => import('@/views/Onboarding.vue')
 const folder = {
     path: '/folder/:path',
     name: 'FolderView',
+    meta: { keepAlive: true, stores: ['FolderDirs&Tracks'] },
     component: FolderView,
     beforeEnter: async (to: any) => {
+        if (pageRestoring()) return
         state.loading.value = true
         await useFolderPageStore()
             .fetchAll(to.params.path, true)
@@ -52,8 +55,10 @@ const folder = {
 const playlists = {
     path: '/playlists',
     name: 'PlaylistList',
+    meta: { keepAlive: true, stores: ['playlists'] },
     component: PlaylistListView,
     beforeEnter: async () => {
+        if (pageRestoring()) return
         state.loading.value = true
         await usePlaylistListPageStore()
             .fetchAll()
@@ -66,8 +71,10 @@ const playlists = {
 const playlistView = {
     path: '/playlist/:pid',
     name: 'PlaylistView',
+    meta: { keepAlive: true, stores: ['playlist-tracks'] },
     component: PlaylistView,
     beforeEnter: async (to: any) => {
+        if (pageRestoring()) return
         state.loading.value = true
         await usePlaylistPageStore()
             .fetchAll(to.params.pid)
@@ -80,8 +87,10 @@ const playlistView = {
 const albumView = {
     path: '/albums/:albumhash',
     name: 'AlbumView',
+    meta: { keepAlive: true, stores: ['album'] },
     component: AlbumView,
     beforeEnter: async (to: any) => {
+        if (pageRestoring()) return
         state.loading.value = true
         const store = useAlbumPageStore()
 
@@ -94,8 +103,10 @@ const albumView = {
 const workView = {
     path: '/works/:token',
     name: 'WorkView',
+    meta: { keepAlive: true, stores: ['workpage'] },
     component: WorkView,
     beforeEnter: async (to: any) => {
+        if (pageRestoring()) return
         state.loading.value = true
 
         await useWorkPageStore()
@@ -109,14 +120,17 @@ const workView = {
 const artistWorks = {
     path: '/artists/:hash/works',
     name: 'ArtistWorksView',
+    meta: { keepAlive: true, stores: [] },
     component: ArtistWorksView,
 }
 
 const artistView = {
     path: '/artists/:hash',
     name: 'ArtistView',
+    meta: { keepAlive: true, stores: ['artistPage'] },
     component: ArtistView,
     beforeEnter: async (to: any) => {
+        if (pageRestoring()) return
         state.loading.value = true
 
         await useArtistPageStore()
@@ -136,12 +150,14 @@ const NowPlayingView = {
 const ArtistTracks = {
     path: '/artists/:hash/tracks',
     name: 'ArtistTracks',
+    meta: { keepAlive: true, stores: [] },
     component: ArtistTracksView,
 }
 
 const artistDiscography = {
     path: '/artists/:hash/discography/:type',
     name: 'ArtistDiscographyView',
+    meta: { keepAlive: true, stores: ['artistDiscography'] },
     component: ArtistDiscographyView,
 }
 
@@ -154,66 +170,77 @@ const settings = {
 const search = {
     path: '/search/:page',
     name: 'SearchView',
+    meta: { keepAlive: true, stores: ['search'] },
     component: SearchView,
 }
 
 const favorites = {
     path: '/favorites',
     name: 'FavoritesView',
+    meta: { keepAlive: true, stores: [] },
     component: FavoritesView,
 }
 
 const favoriteAlbums = {
     path: '/favorites/albums',
     name: 'FavoriteAlbums',
+    meta: { keepAlive: true, stores: [] },
     component: FavoriteCardScroller,
 }
 
 const favoriteArtists = {
     path: '/favorites/artists',
     name: 'FavoriteArtists',
+    meta: { keepAlive: true, stores: [] },
     component: FavoriteCardScroller,
 }
 
 const favoriteWorks = {
     path: '/favorites/works',
     name: 'FavoriteWorks',
+    meta: { keepAlive: true, stores: [] },
     component: FavoriteCardScroller,
 }
 
 const favoriteComposers = {
     path: '/favorites/composers',
     name: 'FavoriteComposers',
+    meta: { keepAlive: true, stores: [] },
     component: FavoriteCardScroller,
 }
 
 const classicalHome = {
     path: '/classical',
     name: 'ClassicalHome',
+    meta: { keepAlive: true, stores: [] },
     component: ClassicalHomeView,
 }
 
 const classicalWorks = {
     path: '/classical/works',
     name: 'ClassicalWorks',
+    meta: { keepAlive: true, stores: [] },
     component: ClassicalWorksView,
 }
 
 const classicalAlbums = {
     path: '/classical/albums',
     name: 'ClassicalAlbums',
+    meta: { keepAlive: true, stores: [] },
     component: ClassicalComposersView,
 }
 
 const classicalComposers = {
     path: '/classical/composers',
     name: 'ClassicalComposers',
+    meta: { keepAlive: true, stores: [] },
     component: ClassicalComposersView,
 }
 
 const favoriteTracks = {
     path: '/favorites/tracks',
     name: 'FavoriteTracks',
+    meta: { keepAlive: true, stores: [] },
     component: FavoriteTracks,
 }
 
@@ -226,12 +253,14 @@ const notFound = {
 const Home = {
     path: '/',
     name: 'Home',
+    meta: { keepAlive: true, stores: ['homepage'] },
     component: HomeView,
 }
 
 const AlbumListView = {
     path: '/albums',
     name: 'AlbumListView',
+    meta: { keepAlive: true, stores: ['albumlistpage'] },
     component: AlbumList,
 }
 
@@ -245,23 +274,27 @@ const ArtistListView = {
     ...AlbumListView,
     path: '/artists',
     name: 'ArtistListView',
+    meta: { keepAlive: true, stores: ['artistlistpage'] },
 }
 
 const Mix = {
     path: '/mix/:mixid',
     name: 'MixView',
+    meta: { keepAlive: true, stores: [] },
     component: MixView,
 }
 
 const MixList = {
     path: '/mixes/:type',
     name: 'MixListView',
+    meta: { keepAlive: true, stores: [] },
     component: MixListView,
 }
 
 const PageView = {
     path: '/collections/:collection',
     name: 'Collection',
+    meta: { keepAlive: true, stores: ['collections'] },
     component: Collection,
 }
 

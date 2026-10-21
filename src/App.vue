@@ -21,7 +21,12 @@
         <div id="acontent" v-element-size="updateContentElemSize">
             <div id="contentresizer" ref="appcontent"></div>
             <BalancerProvider>
-                <RouterView />
+                <RouterView v-slot="{ Component, route: current }">
+                    <KeepAlive :max="15">
+                        <component :is="Component" v-if="current.meta.keepAlive" :key="pageKey" />
+                    </KeepAlive>
+                    <component :is="Component" v-if="!current.meta.keepAlive" />
+                </RouterView>
             </BalancerProvider>
         </div>
         <RightSideBar v-if="settings.use_sidebar && xl" />
@@ -55,6 +60,7 @@ import useInterface from '@/stores/interface'
 
 // @utils
 import handleShortcuts from '@/helpers/useKeyboard'
+import { pageKey } from '@/composables/pageCache'
 import { xl, xxl } from './composables/useBreakpoints'
 
 // @small-components

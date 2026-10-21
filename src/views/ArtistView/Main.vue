@@ -27,8 +27,9 @@
 
 <script setup lang="ts">
 import { computed, nextTick } from 'vue'
-import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router'
+import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 
+import { pageRestoring } from '@/composables/pageCache'
 import useArtist from '@/stores/pages/artist'
 import useQueue from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
@@ -239,6 +240,7 @@ async function handlePlay(index: number) {
 }
 
 onBeforeRouteUpdate(async (to, from) => {
+    if (pageRestoring()) return
     // fetch data, and scroll to top when the person changes (not on filter changes)
     await store.getData(to.params.hash as string, to.query as Record<string, string>).then(async () => {
         if (to.params.hash === from.params.hash) return
@@ -250,7 +252,6 @@ onBeforeRouteUpdate(async (to, from) => {
     })
 })
 
-onBeforeRouteLeave(() => store.resetAll())
 </script>
 
 <style lang="scss">

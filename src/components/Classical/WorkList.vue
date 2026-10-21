@@ -138,7 +138,7 @@ function meta(work: any) {
 
 <style lang="scss">
 .work-list {
-    padding: 1rem;
+    padding: 2rem 1rem 1rem 1rem;
 
     .heading {
         display: flex;

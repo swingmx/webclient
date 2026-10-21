@@ -28,6 +28,7 @@
 import { onMounted, ref } from 'vue'
 import { onBeforeRouteUpdate, RouteLocationNormalized, useRoute } from 'vue-router'
 
+import { pageSwitching } from '@/composables/pageCache'
 import { useT } from '@/i18n'
 import { ClassicalPersonWorks } from '@/interfaces'
 import { getArtistWorks } from '@/requests/artists'
@@ -47,7 +48,9 @@ async function load(to: RouteLocationNormalized) {
 }
 
 onMounted(() => load(route))
-onBeforeRouteUpdate(to => load(to))
+onBeforeRouteUpdate(to => {
+    if (!pageSwitching()) load(to)
+})
 </script>
 
 <style lang="scss">

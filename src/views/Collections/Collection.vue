@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import DeleteSvg from '@/assets/icons/delete.svg'
@@ -52,9 +52,6 @@ function deletePage() {
     })
 }
 
-onBeforeUnmount(() => {
-    collection.clearStore()
-})
 </script>
 
 <style scoped lang="scss">
