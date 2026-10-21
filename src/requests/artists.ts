@@ -1,14 +1,5 @@
 import { paths } from '@/config'
-import {
-    Album,
-    Artist,
-    ClassicalPersonPage,
-    ClassicalPersonWorks,
-    ClassicalWork,
-    Genre,
-    StatItem,
-    Track,
-} from '@/interfaces'
+import { Album, Artist, ClassicalPersonPage, ClassicalPersonWorks, ClassicalWork, Genre, Listening, StatItem, Track } from '@/interfaces'
 import { NotifType, useToast } from '@/stores/notification'
 import useAxios from './useAxios'
 import { useT } from '@/i18n'
@@ -26,6 +17,7 @@ export interface ArtistData {
         compilations: Album[]
     }
     genres: Genre[]
+    listening: Listening | null
     stats: StatItem[]
 }
 

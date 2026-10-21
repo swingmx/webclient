@@ -20,6 +20,7 @@
             :route="`/artists/${page.artisthash}/discography/${section.type}?artist=${page.name}`"
         />
         <ComposerAbout v-if="page.bio" :bio="page.bio" :url="page.wikipedia_url" />
+        <ListeningStats v-if="page.listening" :listening="page.listening" variant="programme" />
         <PeopleGrid
             v-if="page.interpreters?.length"
             :title="$t('Views.ComposerView.Interpreters')"
@@ -57,6 +58,7 @@ import PeopleGrid, { GridPerson } from '@/components/Classical/PeopleGrid.vue'
 import PersonHeader from '@/components/Classical/PersonHeader.vue'
 import WorkList from '@/components/Classical/WorkList.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
+import ListeningStats from '@/components/shared/ListeningStats.vue'
 
 const props = defineProps<{
     page: ClassicalPersonPage

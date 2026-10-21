@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { getArtistAlbums, getArtistData, getSimilarArtists } from '@/requests/artists'
 
 import { paths } from '@/config'
-import { Album, Artist, ClassicalPersonPage, Genre, StatItem, Track } from '@/interfaces'
+import { Album, Artist, ClassicalPersonPage, Genre, Listening, StatItem, Track } from '@/interfaces'
 import { Routes, router } from '@/router'
 import { maxAbumCards } from '@/stores/content-width'
 import useSettingsStore from '@/stores/settings'
@@ -28,6 +28,7 @@ export default defineStore('artistPage', {
         },
         fetched_similar_hash: '',
         stats: <StatItem[]>[],
+        listening: <Listening | null>null,
     }),
     actions: {
         async getData(hash: string, query: Record<string, string> = {}) {
@@ -42,7 +43,8 @@ export default defineStore('artistPage', {
 
             this.type = 'artist'
             this.person = null
-            const { artist, tracks, stats, albums } = data
+            const { artist, tracks, stats, albums, listening } = data
+            this.listening = listening ?? null
             this.info = artist
             this.tracks = tracks
 

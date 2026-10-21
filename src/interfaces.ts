@@ -102,6 +102,8 @@ export interface ClassicalMovement extends Track {
 }
 
 export interface ClassicalWork {
+    // album works and the work page
+    is_favorite?: boolean
     catalogue_ids: CatalogueId[]
     composer: string
     composer_hash: string
@@ -228,10 +230,37 @@ export interface PersonAlbumSections {
     appearances: Album[]
 }
 
+export interface ListeningRank {
+    position: number
+    total: number
+    of: 'artists' | 'composers'
+}
+
+export interface Listening {
+    playduration: number
+    playcount: number
+    lastplayed: number
+    lastplayed_ago: string | null
+    rank: ListeningRank | null
+    top_album: { albumhash: string; title: string; image: string; artist: string | null; playduration: number } | null
+    // artist pages
+    top_track?: { trackhash: string; title: string; image: string; playduration: number } | null
+    // composer and performer pages
+    top_work?: {
+        workhash: string
+        albumhash: string
+        name: string
+        nickname: string | null
+        catalogue: string | null
+        playduration: number
+    } | null
+}
+
 export interface ClassicalPersonPage {
     type: 'composer' | 'performer'
     artisthash: string
     is_favorite?: boolean
+    listening?: Listening | null
     name: string
     image: string | null
     work_count: number

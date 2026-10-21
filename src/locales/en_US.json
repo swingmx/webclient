@@ -818,6 +818,27 @@
       "Key": "Key",
       "Instrumentation": "Instrumentation"
     },
+    "Listening": {
+      "MostPlayedArtists": "Your most played artists",
+      "MostPlayedComposers": "Your most played composers",
+      "ArtistRank": "Artist rank",
+      "ComposerRank": "Composer rank",
+      "OfArtists": "of {n} artist | of {n} artists",
+      "OfComposers": "of {n} composer | of {n} composers",
+      "TimeListened": "Time listened",
+      "AllTime": "all time",
+      "ListenedAllTime": "listened all time",
+      "PlayCount": "Play count",
+      "Plays": "{n} play | {n} plays",
+      "LastPlayed": "last played {ago}",
+      "NotPlayed": "not played yet",
+      "MostPlayedAlbum": "Most played album",
+      "MostPlayedWork": "Most played work",
+      "TopAlbum": "top album ({time})",
+      "TopTrack": "top track ({time})",
+      "ShortTime": "{h} h {m} min",
+      "ShortMinutes": "{m} min"
+    },
     "ComposerView": {
       "Composer": "Composer",
       "WorksInLibrary": "{n} work in library | {n} works in library",

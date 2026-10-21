@@ -6,7 +6,15 @@
             @click="single && $emit('playThis', movements[0].trackhash)"
             @contextmenu.prevent="single && showMenu($event, movements[0])"
         >
-            <div class="number">{{ single ? movements[0].track : '' }}</div>
+            <TrackIndex
+                v-if="work.workhash"
+                :index="single ? movements[0].track : ''"
+                :is_fav="work.is_favorite"
+                :show-inline-fav-icon="false"
+                @click.stop
+                @add-to-fav="toggleFavorite"
+            />
+            <div v-else class="number">{{ single ? movements[0].track : '' }}</div>
             <div class="info">
                 <div v-if="work.composer" class="composer">
                     <RouterLink
@@ -28,6 +36,9 @@
                     </RouterLink>
                     <template v-else>{{ work.name }}</template>
                     <span v-if="nickname" class="nickname">“{{ nickname }}”</span>
+                    <span v-if="!single" class="play" @click.stop="$emit('playWork', work.workhash)">
+                        <PlaySvg /> {{ $t('Common.Play') }}
+                    </span>
                 </div>
                 <div v-if="single ? excerpt || notes : notes" class="meta">
                     <span v-if="single && excerpt" class="excerpt">{{ excerpt }}</span>
@@ -52,12 +63,28 @@
                 @click="$emit('playThis', movement.trackhash)"
                 @contextmenu.prevent="showMenu($event, movement)"
             >
-                <div class="number">{{ movement.track }}</div>
+                <TrackIndex
+                    :index="movement.track"
+                    :is_fav="movement.is_favorite"
+                    :show-inline-fav-icon="settings.showInlineFavIcon"
+                    @click.stop
+                    @add-to-fav="toggleTrackFavorite(movement)"
+                />
                 <div class="name ellip">
                     {{ movement.movement_title }}
                     <span v-if="movement.arrangement && !sharedArrangement" class="notes">{{ movement.arrangement }}</span>
                 </div>
-                <div class="duration">{{ formatSeconds(movement.duration ?? 0) }}</div>
+                <div class="duration">
+                    <div
+                        v-if="settings.showInlineFavIcon"
+                        class="inline-fav"
+                        :class="{ is_fav: movement.is_favorite && settings.highlightFavoriteTracks }"
+                        @click.stop="toggleTrackFavorite(movement)"
+                    >
+                        <HeartSvg :state="movement.is_favorite" :no_emit="true" />
+                    </div>
+                    {{ formatSeconds(movement.duration ?? 0) }}
+                </div>
                 <button class="menu" @click.stop="showMenu($event, movement)">
                     <MoreSvg />
                 </button>
@@ -69,14 +96,20 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
+import { favType } from '@/enums'
 import { showTrackContextMenu } from '@/helpers/contextMenuHandler'
+import favoriteHandler from '@/helpers/favoriteHandler'
 import { useT } from '@/i18n'
 import { ClassicalMovement, ClassicalWork } from '@/interfaces'
 import { Routes } from '@/router'
 import useQueueStore from '@/stores/queue'
+import useSettings from '@/stores/settings'
 import formatSeconds from '@/utils/useFormatSeconds'
 
 import MoreSvg from '@/assets/icons/more.svg'
+import PlaySvg from '@/assets/icons/play.svg'
+import HeartSvg from '@/components/shared/HeartSvg.vue'
+import TrackIndex from '@/components/shared/SongItem/TrackIndex.vue'
 
 const props = defineProps<{
     work: ClassicalWork
@@ -87,10 +120,13 @@ const props = defineProps<{
 defineEmits<{
     // eslint-disable-next-line no-unused-vars
     (event: 'playThis', trackhash: string): void
+    // eslint-disable-next-line no-unused-vars
+    (event: 'playWork', workhash: string): void
 }>()
 
 const { t } = useT()
 const queue = useQueueStore()
+const settings = useSettings()
 const menuOn = ref(false)
 
 const movements = computed(() => props.work.movements)
@@ -127,6 +163,32 @@ function isCurrent(movement: ClassicalMovement) {
     return queue.currenttrack?.trackhash === movement.trackhash
 }
 
+/**
+ * Favorite the work, remembering this album's recording so a favorites
+ * entry opens it.
+ */
+function toggleFavorite() {
+    const work = props.work
+    favoriteHandler(
+        work.is_favorite,
+        favType.work,
+        work.workhash,
+        () => (work.is_favorite = true),
+        () => (work.is_favorite = false),
+        props.albumhash
+    )
+}
+
+function toggleTrackFavorite(movement: ClassicalMovement) {
+    favoriteHandler(
+        movement.is_favorite,
+        favType.track,
+        movement.trackhash,
+        () => (movement.is_favorite = true),
+        () => (movement.is_favorite = false)
+    )
+}
+
 function showMenu(e: MouseEvent, movement: ClassicalMovement) {
     showTrackContextMenu(e, movement, menuOn)
 }
@@ -152,6 +214,17 @@ function showMenu(e: MouseEvent, movement: ClassicalMovement) {
         border-radius: $small;
     }
 
+    .work-head,
+    .movement {
+        @include fav-index;
+
+        // as tall as the row's content, not the song row's 3rem
+        > .index {
+            height: auto;
+            align-self: stretch;
+        }
+    }
+
     .work-head.playable,
     .movement {
         cursor: pointer;
@@ -166,6 +239,10 @@ function showMenu(e: MouseEvent, movement: ClassicalMovement) {
         font-size: 0.85rem;
         color: $gray1;
         font-variant-numeric: tabular-nums;
+    }
+
+    .work-head:hover .title .play {
+        opacity: 1;
     }
 
     .work-head.current,
@@ -198,6 +275,23 @@ function showMenu(e: MouseEvent, movement: ClassicalMovement) {
     .title {
         font-size: 1.1rem;
         font-weight: 600;
+
+        .play {
+            display: inline-flex;
+            align-items: center;
+            gap: $smaller;
+            margin-left: $small;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: $gray1;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease-out;
+
+            svg {
+                height: 12px;
+            }
+        }
 
         a {
             color: inherit;
@@ -240,12 +334,38 @@ function showMenu(e: MouseEvent, movement: ClassicalMovement) {
     }
 
     .duration {
+        display: flex;
+        align-items: center;
+        gap: $small;
         font-size: 0.9rem;
         font-variant-numeric: tabular-nums;
 
         &.total {
             color: $gray1;
         }
+    }
+
+    .inline-fav {
+        display: none;
+        width: 28px;
+        height: 28px;
+        transform: scale(0.8);
+
+        svg {
+            color: $red;
+        }
+
+        > .heart-button {
+            all: unset !important;
+        }
+
+        &.is_fav {
+            display: block;
+        }
+    }
+
+    .movement:hover .inline-fav {
+        display: block;
     }
 
     .menu {

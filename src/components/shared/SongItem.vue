@@ -142,24 +142,10 @@ const isFavoritesPage = route.path.startsWith('/favorites')
     position: relative;
     transition: background-color 0.2s ease-out;
 
+    @include fav-index;
+
     &:hover {
         background-color: $gray;
-
-        .index.ready {
-            .text {
-                transition-delay: 400ms;
-
-                transform: translateX(0);
-                opacity: 0;
-            }
-
-            .heart-icon {
-                transition-delay: 400ms;
-                transform: translateX(0);
-                opacity: 1;
-                visibility: visible;
-            }
-        }
 
         .song-duration.has_help_text {
             opacity: 0;
@@ -172,15 +158,6 @@ const isFavoritesPage = route.path.startsWith('/favorites')
 
         .options-and-duration .heart-icon.showInlineFavIcon {
             display: block;
-        }
-    }
-
-    .index {
-        overflow: unset !important;
-
-        .heart-icon {
-            opacity: 0;
-            visibility: hidden;
         }
     }
 

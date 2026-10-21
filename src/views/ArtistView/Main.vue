@@ -34,7 +34,7 @@ import useQueue from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
 
 import { discographyAlbumTypes, dropSources } from '@/enums'
-import { Album, ScrollerItem, StatItem } from '@/interfaces'
+import { Album, ScrollerItem } from '@/interfaces'
 import { getArtistTracks } from '@/requests/artists'
 
 import GenreBanner from '@/components/AlbumView/GenreBanner.vue'
@@ -43,7 +43,7 @@ import Header from '@/components/ArtistView/Header.vue'
 import ClassicalPerson from './ClassicalPerson.vue'
 import TopTracks from '@/components/ArtistView/TopTracks.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
-import Stats from '@/components/Stats/Stats.vue'
+import ListeningStats from '@/components/shared/ListeningStats.vue'
 import { useT } from '@/i18n'
 
 const { t } = useT()
@@ -165,16 +165,6 @@ function getTopTracksComponent(): ScrollerItem {
     }
 }
 
-function getStatsComponent(stats: StatItem[]): ScrollerItem {
-    return {
-        id: Math.random(),
-        component: Stats,
-        props: {
-            items: stats,
-        },
-    }
-}
-
 const scrollerItems = computed(() => {
     const genreBanner = <ScrollerItem>{
         id: 'artist-genres',
@@ -216,8 +206,12 @@ const scrollerItems = computed(() => {
         components.push(similar_artists_fetcher)
     }
 
-    if (store.stats.length > 0) {
-        components.push(getStatsComponent(store.stats))
+    if (store.listening) {
+        components.push({
+            id: 'listening',
+            component: ListeningStats,
+            props: { listening: store.listening, variant: 'hero' },
+        })
     }
 
     if (store.fetched_similar_hash === route.params.hash && store.similar_artists.length > 0) {

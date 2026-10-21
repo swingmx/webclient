@@ -34,7 +34,7 @@
                 <button v-wave class="shufflebtn circular" @click="$emit('play', true)">
                     {{ page.type === 'composer' ? $t('Views.ComposerView.ShuffleWorks') : $t('Views.ComposerView.Shuffle') }}
                 </button>
-                <HeartSvg v-if="page.type === 'composer'" :state="page.is_favorite ?? false" @handleFav="toggleFavorite" />
+                <HeartSvg :state="page.is_favorite ?? false" @handleFav="toggleFavorite" />
             </div>
         </div>
     </div>
@@ -68,7 +68,7 @@ function toggleFavorite() {
     if (!person) return
     favoriteHandler(
         person.is_favorite,
-        favType.composer,
+        person.type === 'composer' ? favType.composer : favType.artist,
         person.artisthash,
         () => (person.is_favorite = true),
         () => (person.is_favorite = false)

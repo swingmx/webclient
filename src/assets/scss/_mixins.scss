@@ -59,3 +59,72 @@
     display: none !important;
   }
 }
+
+// a row's track number that gives way to a sliding heart on row hover
+@mixin fav-index {
+    > .index {
+        font-size: 0.8rem;
+        width: 100%;
+        position: relative;
+        height: 3rem;
+        display: flex;
+        justify-content: center;
+
+        .text {
+            opacity: 0.5;
+            margin: auto 0;
+            transform: translateX($smaller);
+
+            transition: all 0.25s;
+            width: 100%;
+        }
+
+        // centered where .text puts the number
+        .heart-icon {
+            position: absolute;
+            left: $smaller;
+            width: 100%;
+            display: grid;
+            height: 100%;
+            align-content: center;
+            justify-items: center;
+            transition: all 0.2s;
+            transform: translateX(-1.5rem);
+
+            button {
+                display: grid;
+                place-items: center;
+                border: none;
+                width: 2rem;
+                height: 2rem;
+                padding: 0;
+                background-color: transparent;
+            }
+        }
+    }
+
+    &:hover .index.ready {
+        .text {
+            transition-delay: 400ms;
+
+            transform: translateX(0);
+            opacity: 0;
+        }
+
+        .heart-icon {
+            transition-delay: 400ms;
+            transform: translateX(0);
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    .index {
+        overflow: unset !important;
+
+        .heart-icon {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+}

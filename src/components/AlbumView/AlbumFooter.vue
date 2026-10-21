@@ -1,5 +1,5 @@
 <template>
-    <div class="album-footer">
+    <div class="album-footer" :class="{ ruled }">
         <div v-if="released">{{ $t('Views.AlbumViews.Released', { date: released }) }}</div>
         <div v-if="copyright">{{ copyright.startsWith('©') ? copyright : `© ${copyright}` }}</div>
     </div>
@@ -11,6 +11,8 @@ import { computed } from 'vue'
 const props = defineProps<{
     date?: number
     copyright?: string
+    // a rule above, closing a classical works list
+    ruled?: boolean
 }>()
 
 /**
@@ -28,9 +30,12 @@ const released = computed(() => {
 <style lang="scss">
 .album-footer {
     padding: 1.5rem 1rem 1rem;
-    border-top: solid 1px $gray5;
     font-size: 0.85rem;
     color: $gray1;
     line-height: 1.6;
+
+    &.ruled {
+        border-top: solid 1px $gray5;
+    }
 }
 </style>

@@ -231,7 +231,7 @@ const scrollerItems = computed(() => {
         pageItems.push({
             id: 'album-footer',
             component: AlbumFooter,
-            props: { date: album.info.date, copyright: album.copyright },
+            props: { date: album.info.date, copyright: album.copyright, ruled: classical },
         })
     }
 
@@ -291,11 +291,25 @@ function listenersFor(item: { component: any }) {
         listeners.playThis = (trackhash?: string) => onPlayThis(item as ScrollerItem, trackhash)
     }
 
+    if (item.component === AlbumWork) {
+        listeners.playWork = playWork
+    }
+
     if (item.component === AlbumDiscBar) {
         listeners.playDisc = playDisc
     }
 
     return listeners
+}
+
+function playWork(workhash: string) {
+    const work = album.works.find(w => w.workhash === workhash)
+    if (!work) return
+
+    const movementHashes = new Set(work.movements.map(m => m.trackhash))
+    const tracks = album.srcTracks.filter(t => movementHashes.has(t.trackhash))
+
+    if (tracks.length) playFromAlbum(0, tracks)
 }
 
 function onPlayThis(item: ScrollerItem, trackhash?: string) {
