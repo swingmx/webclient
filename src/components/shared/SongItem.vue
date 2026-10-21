@@ -1,12 +1,12 @@
 <template>
     <div
         class="songlist-item rounded-sm"
-        :class="[{ current: isCurrent() }, { contexton: context_menu_showing }]"
+        :class="[{ current: isCurrent() }, { contexton: context_menu_showing }, { 'no-index': hide_index }]"
         @dblclick="emitUpdate"
         @contextmenu.prevent="showMenu"
     >
         <TrackIndex
-            v-if="!isSmall"
+            v-if="!isSmall && !hide_index"
             :index="index"
             :is_fav="is_fav"
             :show-inline-fav-icon="settings.showInlineFavIcon"
@@ -33,7 +33,7 @@
             :help_text="track.help_text"
             :is_fav="is_fav"
             :show-fav-icon="!isFavoritesPage"
-            :show-inline-fav-icon="settings.showInlineFavIcon"
+            :show-inline-fav-icon="settings.showInlineFavIcon || hide_index"
             :highlight-favorite-tracks="settings.highlightFavoriteTracks"
             @showMenu="showMenu"
             @toggleFav="addToFav(track.trackhash)"
@@ -68,6 +68,8 @@ const props = defineProps<{
     track: Track
     index: number | string
     hide_album?: boolean
+    // drops the number column and shows the heart next to the duration
+    hide_index?: boolean
     is_queue_track?: boolean
     droppable?: boolean
     is_last?: boolean
@@ -157,7 +159,7 @@ const isFavoritesPage = route.path.startsWith('/favorites')
         }
 
         .options-and-duration .heart-icon.showInlineFavIcon {
-            display: block;
+            @include fav-revealed;
         }
     }
 
@@ -165,6 +167,10 @@ const isFavoritesPage = route.path.startsWith('/favorites')
         width: fit-content;
         max-width: calc(100% - 10px);
     }
+}
+
+.songlist-item.no-index {
+    grid-template-columns: 1.25fr 1fr 1fr 7.5rem;
 }
 
 .songlist-item.current {

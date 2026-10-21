@@ -70,7 +70,7 @@ import { maxAbumCards, updateCardWidth } from '@/stores/content-width'
 
 import { dropSources, playSources } from '@/enums'
 import { playFromFavorites } from '@/helpers/usePlayFrom'
-import { Album, Artist, RecentFavResult, Track, WorkCardItem } from '@/interfaces'
+import { Album, Artist, RecentFavResult, Track, WorkRow } from '@/interfaces'
 import { getAllFavs } from '@/requests/favorite'
 import { Routes } from '@/router'
 import updatePageTitle from '@/utils/updatePageTitle'
@@ -89,7 +89,7 @@ const recentFavs: Ref<RecentFavResult[]> = ref([])
 const favAlbums: Ref<Album[]> = ref([])
 const favTracks: Ref<Track[]> = ref([])
 const favArtists: Ref<Artist[]> = ref([])
-const favWorks: Ref<WorkCardItem[]> = ref([])
+const favWorks: Ref<WorkRow[]> = ref([])
 const favComposers: Ref<Artist[]> = ref([])
 const count = ref({
     albums: 0,

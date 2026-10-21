@@ -1,5 +1,5 @@
 import { paths } from '@/config'
-import { Album, Artist, ClassicalHomePage, ClassicalWorkPage, WorkCardItem } from '@/interfaces'
+import { Album, Artist, ClassicalHomePage, ClassicalWorkPage, WorkRow } from '@/interfaces'
 import useAxios from './useAxios'
 
 export async function getWork(token: string, albumhash?: string) {
@@ -30,7 +30,7 @@ export function getClassicalHome(cardLimit: number) {
  */
 export function getClassicalWorks(query: Record<string, string>) {
     const params = new URLSearchParams(query).toString()
-    return getClassical<{ title: string | null; works: WorkCardItem[] }>(`/works${params ? `?${params}` : ''}`)
+    return getClassical<{ title: string | null; works: WorkRow[] }>(`/works${params ? `?${params}` : ''}`)
 }
 
 export function getClassicalAlbums() {

@@ -30,6 +30,7 @@ import useTracklist from "@/stores/queue/tracklist";
 
 import TrackItem from "@/components/shared/TrackItem.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
+import SearchWorkRow from "@/components/Classical/SearchWorkRow.vue";
 
 const queue = useQueue();
 const search = useSearch();
@@ -42,6 +43,13 @@ function updateQueue(index: number) {
 
 const scrollerItems = computed(() => {
   const items: any[] = search.tracks.value.map((track, index) => {
+    if (track.classical) {
+      return {
+        id: index,
+        component: SearchWorkRow,
+        props: { track, isCurrent: queue.currenttrackhash === track.trackhash },
+      };
+    }
     return {
       track,
       id: index,

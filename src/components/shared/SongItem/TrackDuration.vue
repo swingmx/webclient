@@ -54,13 +54,12 @@ defineEmits<{
     }
 
     .heart-icon {
-        display: none;
+        display: block;
         width: 28px;
         height: 28px;
         user-select: none;
-        transition: opacity 0.2s ease-out;
-        transform: scale(0.8);
         margin-right: $small;
+        @include fav-hidden;
 
         svg {
             color: $red;
@@ -76,7 +75,9 @@ defineEmits<{
     }
 
     .heart-icon.is_fav {
-        display: block;
+        visibility: visible;
+        opacity: 1;
+        transform: scale(0.8);
     }
 
     .song-duration {

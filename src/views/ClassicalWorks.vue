@@ -25,7 +25,7 @@ import { onBeforeRouteUpdate, RouteLocationNormalized, useRoute } from 'vue-rout
 
 import { pageSwitching } from '@/composables/pageCache'
 import { useT } from '@/i18n'
-import { WorkCardItem } from '@/interfaces'
+import { WorkRow } from '@/interfaces'
 import { getClassicalWorks } from '@/requests/classical'
 import updatePageTitle from '@/utils/updatePageTitle'
 
@@ -34,7 +34,7 @@ import GenericHeader from '@/components/shared/GenericHeader.vue'
 
 const { t } = useT()
 const route = useRoute()
-const page = ref<{ title: string | null; works: WorkCardItem[] } | null>(null)
+const page = ref<{ title: string | null; works: WorkRow[] } | null>(null)
 
 // titles for the sorted lists, which name no era, instrument, or type
 const SORT_TITLES: Record<string, () => string> = {

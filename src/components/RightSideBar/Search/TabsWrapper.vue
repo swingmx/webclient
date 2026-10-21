@@ -27,9 +27,11 @@ const { t } = useT();
 function resolveButtonTabName(id: string): string {
     switch (id){
         case 'top':
-            return t('Search.top');
+            return t('Common.All');
         case 'tracks':
             return t('Common.Track', 2);
+        case 'works':
+            return t('Views.ComposerView.Works');
         case 'albums':
             return t('Common.Album', 2);
         case 'artists':

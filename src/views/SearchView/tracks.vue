@@ -35,6 +35,7 @@ import SearchSvg from '@/assets/icons/search.svg'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 import NoItems from '@/components/shared/NoItems.vue'
 import SongItem from '@/components/shared/SongItem.vue'
+import SearchWorkRow from '@/components/Classical/SearchWorkRow.vue'
 import { useT } from '@/i18n'
 
 const { t } = useT()
@@ -49,20 +50,30 @@ const desc = computed(() =>
 
 interface scrollerItem {
     id: string | number | undefined
-    component: typeof SongItem | typeof AlbumsFetcher
+    component: typeof SongItem | typeof SearchWorkRow | typeof AlbumsFetcher
     props: Record<string, any>
 }
 
 const scrollerItems = computed(() => {
-    const items: scrollerItem[] = search.tracks.value.map((track, index) => ({
-        id: index,
-        component: SongItem,
-        props: {
-            track,
-            index: index + 1,
-            source: dropSources.search,
-        },
-    }))
+    const mixed = search.tracks.value.some(track => track.classical)
+    const items: scrollerItem[] = search.tracks.value.map((track, index) =>
+        track.classical
+            ? {
+                  id: index,
+                  component: SearchWorkRow,
+                  props: { track, isCurrent: queue.currenttrackhash === track.trackhash },
+              }
+            : {
+                  id: index,
+                  component: SongItem,
+                  props: {
+                      track,
+                      index: index + 1,
+                      hide_index: mixed,
+                      source: dropSources.search,
+                  },
+              }
+    )
 
     if (search.tracks.more) {
         items.push({

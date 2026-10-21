@@ -61,6 +61,25 @@
 }
 
 // a row's track number that gives way to a sliding heart on row hover
+// a row's heart, hidden until the row is hovered
+@mixin fav-hidden($scale: 0.8) {
+    visibility: hidden;
+    opacity: 0;
+    transform: scale($scale) translateX(0.5rem);
+    transition: none;
+}
+
+// a hovered row's heart, revealed after $fav-reveal-delay
+@mixin fav-revealed($scale: 0.8) {
+    visibility: visible;
+    opacity: 1;
+    transform: scale($scale);
+    transition:
+        opacity 0.2s ease-out $fav-reveal-delay,
+        transform 0.2s ease-out $fav-reveal-delay,
+        visibility 0s $fav-reveal-delay;
+}
+
 @mixin fav-index {
     > .index {
         font-size: 0.8rem;
@@ -74,8 +93,6 @@
             opacity: 0.5;
             margin: auto 0;
             transform: translateX($smaller);
-
-            transition: all 0.25s;
             width: 100%;
         }
 
@@ -88,7 +105,6 @@
             height: 100%;
             align-content: center;
             justify-items: center;
-            transition: all 0.2s;
             transform: translateX(-1.5rem);
 
             button {
@@ -105,14 +121,14 @@
 
     &:hover .index.ready {
         .text {
-            transition-delay: 400ms;
+            transition: all 0.25s $fav-reveal-delay;
 
             transform: translateX(0);
             opacity: 0;
         }
 
         .heart-icon {
-            transition-delay: 400ms;
+            transition: all 0.2s $fav-reveal-delay;
             transform: translateX(0);
             opacity: 1;
             visibility: visible;

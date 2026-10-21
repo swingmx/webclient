@@ -32,6 +32,7 @@ import Tabs from "@/components/RightSideBar/Search/TabsWrapper.vue";
 import CardGridPage from "./CardGridPage.vue";
 import TopResults from "./TopResults.vue";
 import TracksPage from "./tracks.vue";
+import WorksPage from "./works.vue";
 import { useT } from "@/i18n";
 
 const { t } = useT(); 
@@ -41,17 +42,21 @@ const search = useSearchStore();
 
 const is_alt_layout = computed(() => settings.is_alt_layout || content_width.value < 1100);
 
-const pages = ["top", "tracks", "albums", "artists"];
+const pages = computed(() =>
+  settings.classical_enabled ? ["top", "tracks", "works", "albums", "artists"] : ["top", "tracks", "albums", "artists"]
+);
 
 const route = useRoute();
 
 const component = computed(() => {
   switch (route.params.page) {
-    case pages[0]:
+    case "top":
       return { component: TopResults };
-    case pages[1]:
+    case "tracks":
       return { component: TracksPage };
-    case pages[2]:
+    case "works":
+      return { component: WorksPage };
+    case "albums":
       return {
         component: CardGridPage,
         props: {
@@ -62,7 +67,7 @@ const component = computed(() => {
         },
       };
 
-    case pages[3]:
+    case "artists":
       return {
         component: CardGridPage,
         props: {
@@ -74,7 +79,7 @@ const component = computed(() => {
       };
 
     default:
-      return TracksPage;
+      return { component: TracksPage };
   }
 });
 
@@ -114,7 +119,7 @@ onMounted(() => {
   }
 
   &.is_alt_layout {
-    grid-template-rows: 2rem 1fr;
+    grid-template-rows: 2.25rem 1fr;
     gap: 1rem;
     padding-top: 1rem;
 

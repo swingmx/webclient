@@ -25,7 +25,7 @@
                             :to="{ name: Routes.work, params: { token: item.workhash }, query: { albumhash: item.albumhash } }"
                             class="name ellip"
                         >
-                            {{ item.name }}<template v-if="item.movement"> · {{ item.movement }}</template>
+                            {{ item.title }}
                         </RouterLink>
                         <div class="album ellip">{{ item.album }}</div>
                     </div>
@@ -85,7 +85,7 @@
                 >
                     <div class="range">{{ eraRange(era) }}</div>
                     <div class="serif name">{{ era.name }}</div>
-                    <div class="detail">{{ (era.composers ?? []).join(', ') }}</div>
+                    <div class="detail">{{ era.composers }}</div>
                 </RouterLink>
             </div>
         </section>
@@ -100,7 +100,7 @@
                     class="chip"
                 >
                     <span class="serif">{{ instrument.name }}</span>
-                    <span class="count">{{ $t('Views.ComposerView.WorkCount', { n: instrument.count }, instrument.count) }}</span>
+                    <span class="count">{{ $t('Views.ComposerView.WorkCount', { n: instrument.count }, instrument.count ?? 0) }}</span>
                 </RouterLink>
             </div>
         </section>
@@ -134,7 +134,7 @@
         <PeopleGrid
             v-if="page.performers.length"
             :title="$t('Views.ClassicalHome.Performers')"
-            :people="page.performers.map(p => ({ name: p.name, artisthash: p.artisthash, detail: capitalize(p.role ?? '') }))"
+            :people="page.performers.map(p => ({ name: p.name, artisthash: p.artisthash, detail: p.roles }))"
         />
     </div>
 </template>
@@ -144,7 +144,7 @@ import { computed, onMounted, ref } from 'vue'
 
 import { paths } from '@/config'
 import { useT } from '@/i18n'
-import { ClassicalHomePage, ClassicalHomeTile, WorkCardItem } from '@/interfaces'
+import { ClassicalHomePage, ClassicalHomeTile, ContinueItem } from '@/interfaces'
 import { getClassicalHome, getWork } from '@/requests/classical'
 import { maxAbumCards, updateCardWidth } from '@/stores/content-width'
 import { Routes } from '@/router'
@@ -168,10 +168,6 @@ const page = ref<ClassicalHomePage | null>(null)
 const showFavorites = computed(() => (page.value?.favorite_works.length ?? 0) >= FAVORITES_MIN)
 
 
-function capitalize(text: string) {
-    return text.charAt(0).toUpperCase() + text.slice(1)
-}
-
 function eraRange(era: ClassicalHomeTile) {
     const start = era.start ?? ''
     const end = era.end ?? t('Views.ClassicalHome.Today')
@@ -181,7 +177,7 @@ function eraRange(era: ClassicalHomeTile) {
 /**
  * Play the work's recording from the movement last heard.
  */
-async function resume(item: WorkCardItem) {
+async function resume(item: ContinueItem) {
     const work = await getWork(item.workhash, item.albumhash ?? undefined)
     if (!work) return
     const tracks = work.recording.movements

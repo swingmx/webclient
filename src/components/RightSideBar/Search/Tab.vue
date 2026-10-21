@@ -7,6 +7,7 @@ import useSearch from "@/stores/search";
 
 import TracksGrid from "./TracksGrid.vue";
 import TopResults from "./TopResults.vue";
+import WorksGrid from "./WorksGrid.vue";
 import CardPage from "@/views/SearchView/CardGridPage.vue";
 
 const search = useSearch();
@@ -24,6 +25,10 @@ function getComponent() {
     case "tracks":
       return {
         component: TracksGrid,
+      };
+    case "works":
+      return {
+        component: WorksGrid,
       };
     case "albums":
       return {

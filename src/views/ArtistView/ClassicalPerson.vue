@@ -30,7 +30,7 @@
         <PeopleGrid
             v-if="page.composers?.length"
             :title="$t('Views.ComposerView.Composers')"
-            :people="people(page.composers, p => $t('Views.ComposerView.WorkCount', { n: p.works }, p.works ?? 0), false)"
+            :people="people(page.composers, p => $t('Views.ComposerView.WorkCount', { n: p.works }, p.works ?? 0))"
             :limit="10"
         />
         <PeopleGrid
@@ -89,12 +89,12 @@ const albumSections = computed(() => {
     return sections
 })
 
-function people(entries: PersonEntry[], count: (entry: PersonEntry) => string, withRoles = true): GridPerson[] {
-    return entries.map(entry => {
-        const roles = withRoles && entry.roles?.length ? entry.roles.join(', ') : ''
-        const detail = [roles && roles.charAt(0).toUpperCase() + roles.slice(1), count(entry)].filter(Boolean)
-        return { name: entry.name, artisthash: entry.artisthash, detail: detail.join(' · ') }
-    })
+function people(entries: PersonEntry[], count: (entry: PersonEntry) => string): GridPerson[] {
+    return entries.map(entry => ({
+        name: entry.name,
+        artisthash: entry.artisthash,
+        detail: [entry.roles, count(entry)].filter(Boolean).join(' · '),
+    }))
 }
 
 /**

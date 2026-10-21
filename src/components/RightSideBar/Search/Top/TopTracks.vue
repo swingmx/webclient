@@ -1,14 +1,21 @@
 <template>
     <div class="right-search-top-tracks">
-        <TrackItem
-            v-for="(track, index) in search.top_results.tracks"
-            :key="track.id"
-            :track="track"
-            :index="index"
-            :is-current="false"
-            :is-current-playing="false"
-            @play-this="handlePlay(track)"
-        />
+        <template v-for="(track, index) in search.top_results.tracks" :key="track.id">
+            <SearchWorkRow
+                v-if="track.classical"
+                :track="track"
+                :is-current="queue.currenttrackhash === track.trackhash"
+                @play-this="handlePlay(track)"
+            />
+            <TrackItem
+                v-else
+                :track="track"
+                :index="index"
+                :is-current="false"
+                :is-current-playing="false"
+                @play-this="handlePlay(track)"
+            />
+        </template>
     </div>
 </template>
 
@@ -20,6 +27,7 @@ import useTracklist from '@/stores/queue/tracklist'
 import useSearchStore from '@/stores/search'
 
 import TrackItem from '@/components/shared/TrackItem.vue'
+import SearchWorkRow from '@/components/Classical/SearchWorkRow.vue'
 
 const search = useSearchStore()
 const queue = useQueueStore()

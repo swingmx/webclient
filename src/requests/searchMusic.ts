@@ -1,7 +1,7 @@
 import { paths } from '@/config'
 import axios from 'axios'
 import useAxios from './useAxios'
-import { Track, Album, Artist } from '@/interfaces'
+import { Album, Artist, Track, WorkTile } from '@/interfaces'
 
 const {
     top: searchTopResultsUrl,
@@ -23,13 +23,13 @@ async function fetchData(url: string) {
 }
 
 async function searchTopResults(query: string, limit: number) {
-    const url = searchTopResultsUrl + encodeURIComponent(query.trim()) + `&limit=${limit}`
+    const url = searchTopResultsUrl + encodeURIComponent(query.trim()) + `&limit=${limit}&classical=true`
     return await fetchData(url)
 }
 
-async function searchItems(type: 'tracks' | 'albums' | 'artists', index: number, query: string) {
+async function searchItems(type: 'tracks' | 'works' | 'albums' | 'artists', index: number, query: string) {
     const { data } = await useAxios({
-        url: base + `/?itemtype=${type}&start=${index}&q=${query}&limit=30`,
+        url: base + `/?itemtype=${type}&start=${index}&q=${encodeURIComponent(query)}&limit=30&classical=true`,
         method: 'GET',
     })
 
@@ -40,6 +40,10 @@ async function searchTracks(query: string, start: number = 0): Promise<{ results
     return searchItems('tracks', start, query)
 }
 
+async function searchWorks(query: string, start: number = 0): Promise<{ results: WorkTile[]; more: boolean }> {
+    return searchItems('works', start, query)
+}
+
 async function searchAlbums(query: string, start: number = 0): Promise<{ results: Album[]; more: boolean }> {
     return searchItems('albums', start, query)
 }
@@ -48,6 +52,6 @@ async function searchArtists(query: string, start: number = 0): Promise<{ result
     return searchItems('artists', start, query)
 }
 
-export { searchAlbums, searchArtists, searchTracks, searchTopResults }
+export { searchAlbums, searchArtists, searchTracks, searchTopResults, searchWorks }
 
 // TODO: Rewrite this module using `useAxios` hook

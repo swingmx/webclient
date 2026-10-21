@@ -9,9 +9,14 @@
     <div v-if="search.top_results.top_result && search.top_results.top_result.type" class="header">
       <div class="top">
         <h3>{{ $t('Common.TopResult') }}</h3>
-        <TopItem />
+        <ClassicalTopItem v-if="classicalTop" />
+        <TopItem v-else />
       </div>
-      <div class="tracks">
+      <div v-if="showWorks" class="tracks">
+        <h3>{{ $t('Views.ComposerView.Works') }}</h3>
+        <SearchWorkRow v-for="work in search.top_results.works" :key="work.workhash" :work="work" />
+      </div>
+      <div v-else class="tracks">
         <h3>{{ $t('Common.Track', 2) }}</h3>
         <TopTracks />
       </div>
@@ -28,7 +33,7 @@
     />
     <RecentItems
       v-if="search.top_results.albums.length"
-      :title="$t('Common.Artist', 2)"
+      :title="$t('Common.Album', 2)"
       :items="
         search.top_results.albums.map((i) => ({
           type: 'album',
@@ -40,15 +45,22 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+
 import useSearchStore from "@/stores/search";
+import { isClassicalTop, showTopWorks } from "@/utils/searchTop";
 
 import SearchSvg from "@/assets/icons/search.svg";
+import SearchWorkRow from "@/components/Classical/SearchWorkRow.vue";
+import ClassicalTopItem from "@/components/RightSideBar/Search/Top/ClassicalTopItem.vue";
 import TopItem from "@/components/RightSideBar/Search/Top/TopItem.vue";
 import TopTracks from "@/components/RightSideBar/Search/Top/TopTracks.vue";
 import RecentItems from "@/components/shared/CardScroller.vue";
 import NoItems from "@/components/shared/NoItems.vue";
 
 const search = useSearchStore();
+const classicalTop = computed(() => isClassicalTop(search.top_results.top_result));
+const showWorks = computed(() => showTopWorks(search.top_results));
 </script>
 
 <style lang="scss">

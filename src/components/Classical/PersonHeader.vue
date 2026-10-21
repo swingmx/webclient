@@ -6,19 +6,19 @@
         <div class="info">
             <div class="kicker">
                 <span class="kind">{{ page.type === 'composer' ? $t('Views.ComposerView.Composer') : $t('Views.ComposerView.Performer') }}</span>
-                <template v-for="part in kicker" :key="part">
+                <template v-for="part in page.kicker" :key="part">
                     <span class="dot">·</span>
                     <span>{{ part }}</span>
                 </template>
             </div>
             <div class="name">{{ page.name }}</div>
-            <div v-if="page.nickname || years" class="names">
+            <div v-if="page.nickname || page.years" class="names">
                 <span v-if="page.nickname">{{ capitalize(page.nickname) }}</span>
-                <span v-if="page.nickname && years"> · </span>
-                <span v-if="years">{{ years }}</span>
+                <span v-if="page.nickname && page.years"> · </span>
+                <span v-if="page.years">{{ page.years }}</span>
             </div>
             <div class="chips">
-                <span v-for="chip in chips" :key="chip" class="chip">{{ capitalize(chip) }}</span>
+                <span v-for="chip in page.chips" :key="chip" class="chip">{{ chip }}</span>
                 <span class="chip">
                     {{ $t('Views.ComposerView.WorksInLibrary', { n: page.work_count }, page.work_count) }}
                 </span>
@@ -41,8 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
 import { paths } from '@/config'
 import { favType } from '@/enums'
 import favoriteHandler from '@/helpers/favoriteHandler'
@@ -79,22 +77,6 @@ function capitalize(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
-const kicker = computed(() =>
-    (props.page.type === 'composer'
-        ? [props.page.epoch, props.page.birthplace]
-        : [props.page.roles?.[0]]
-    ).filter(Boolean) as string[]
-)
-
-// composers: occupations; performers: their roles from the credits
-const chips = computed(() => (props.page.type === 'composer' ? props.page.occupations : props.page.roles) ?? [])
-
-const years = computed(() => {
-    const born = props.page.birth?.slice(0, 4)
-    const died = props.page.death?.slice(0, 4)
-    if (!born && !died) return ''
-    return `${born ?? '?'} – ${died ?? ''}`.trim()
-})
 </script>
 
 <style lang="scss">

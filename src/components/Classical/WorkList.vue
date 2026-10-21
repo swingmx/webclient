@@ -61,7 +61,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import { useT } from '@/i18n'
-import { PersonFilter, PersonWorkRow, WorkCardItem } from '@/interfaces'
+import { PersonFilter, WorkRow } from '@/interfaces'
 import { Routes } from '@/router'
 import { RouteLocationRaw } from 'vue-router'
 import formatSeconds from '@/utils/useFormatSeconds'
@@ -69,7 +69,7 @@ import formatSeconds from '@/utils/useFormatSeconds'
 const props = defineProps<{
     artisthash: string
     title: string
-    works: (PersonWorkRow | WorkCardItem)[]
+    works: WorkRow[]
     filters: PersonFilter[]
     filterKey: string
     filter: string | null
@@ -114,7 +114,7 @@ onBeforeUnmount(() => observer?.disconnect())
  * The column before the duration: the date added, the recording count, or
  * the recording year, whichever the row carries.
  */
-function rightLabel(work: any) {
+function rightLabel(work: WorkRow) {
     if (work.added) {
         return new Date(work.added * 1000).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
     }
@@ -128,11 +128,12 @@ function filterQuery(slug: string | null) {
     return slug ? { [props.filterKey]: slug } : {}
 }
 
-function meta(work: any) {
-    const parts: string[] = work.catalogue_ids.map((id: { name: string }) => id.name)
-    if (work.with?.length) parts.push(t('Views.ComposerView.With', { names: work.with.join(', ') }))
-    else if (work.form) parts.push(work.form)
-    return parts.join(' · ')
+/**
+ * The row's catalogue ids and form, then who else is on the recording.
+ */
+function meta(work: WorkRow) {
+    const others = work.with?.length ? t('Views.ComposerView.With', { names: work.with.join(', ') }) : ''
+    return [work.meta, others].filter(Boolean).join(' · ')
 }
 </script>
 

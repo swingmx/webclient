@@ -64,7 +64,7 @@
                 :to="work ? { name: Routes.work, params: { token: work.workhash }, query: { albumhash: work.albumhash } } : undefined"
             >
                 <div class="label">{{ $t('Views.Listening.MostPlayedWork') }}</div>
-                <div class="value title ellip">{{ work ? (work.nickname ? `“${work.nickname}”` : work.name) : '—' }}</div>
+                <div class="value title ellip">{{ work?.title ?? '—' }}</div>
                 <div v-if="work" class="sub plain">{{ workLine }}</div>
             </component>
             <div v-else class="card">
@@ -109,13 +109,11 @@ const rankTotal = computed(() => {
 })
 
 /**
- * The work's name and catalogue number when the nickname is the title,
- * else the catalogue number, then the time listened.
+ * The work's ids, then the time listened.
  */
 const workLine = computed(() => {
     if (!work.value) return ''
-    const id = work.value.nickname ? [work.value.name, work.value.catalogue].filter(Boolean).join(', ') : work.value.catalogue
-    return [id, short(work.value.playduration)].filter(Boolean).join(' · ')
+    return [work.value.ids, short(work.value.playduration)].filter(Boolean).join(' · ')
 })
 
 const Thumb = defineComponent({

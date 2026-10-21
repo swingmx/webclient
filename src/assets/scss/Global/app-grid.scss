@@ -264,6 +264,10 @@ $g-border: solid 1px $gray5;
     // hide album column
     .songlist-item {
         grid-template-columns: 1.75rem 1.5fr 1fr 7.5rem;
+
+        &.no-index {
+            grid-template-columns: 1.5fr 1fr 7.5rem;
+        }
     }
 
     .song-album {

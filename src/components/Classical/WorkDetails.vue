@@ -12,10 +12,10 @@
         <div v-if="work.instruments?.length" class="instrumentation">
             <div class="label">
                 {{ $t('Views.WorkView.Instrumentation') }}
-                <template v-if="work.instrumentation"> · {{ capitalize(work.instrumentation) }}</template>
+                <template v-if="work.instrumentation"> · {{ work.instrumentation }}</template>
             </div>
             <div class="chips">
-                <span v-for="chip in work.instruments" :key="chip" class="chip">{{ capitalize(chip) }}</span>
+                <span v-for="chip in work.instruments" :key="chip" class="chip">{{ chip }}</span>
             </div>
         </div>
     </div>
@@ -33,18 +33,6 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
-const SIGNS: Record<string, string> = { flat: '♭', hash: '♯', sharp: '♯' }
-
-function capitalize(text: string) {
-    return text.charAt(0).toUpperCase() + text.slice(1)
-}
-
-function keyText(slug: string) {
-    const [letter, ...rest] = slug.split('-')
-    const sign = rest.length > 1 ? SIGNS[rest[0]] ?? '' : ''
-    return `${letter.toUpperCase()}${sign} ${rest[rest.length - 1]}`
-}
-
 const facts = computed(() => {
     const out: { label: string; value: string }[] = []
     if (props.work.year_composed) {
@@ -54,7 +42,7 @@ const facts = computed(() => {
         out.push({ label: t('Views.WorkView.Published'), value: String(props.work.year_published) })
     }
     if (props.work.key) {
-        out.push({ label: t('Views.WorkView.Key'), value: keyText(props.work.key) })
+        out.push({ label: t('Views.WorkView.Key'), value: props.work.key })
     }
     return out
 })

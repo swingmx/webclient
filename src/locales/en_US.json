@@ -460,7 +460,13 @@
     "NoTracksTitle": "No tracks",
     "SearchPlaceholder": "Start typing to search",
     "TopResult": "Top Result",
-    "top": "Top"
+    "top": "Top",
+    "Era": "{era} era",
+    "From": "from",
+    "composer": "Composer",
+    "performer": "Performer",
+    "work": "Work",
+    "movement": "Movement"
   },
   "SearchInput": {
     "BackToQueue": "back to queue",

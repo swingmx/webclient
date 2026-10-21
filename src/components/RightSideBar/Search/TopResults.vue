@@ -12,9 +12,16 @@
       v-if="search.top_results.top_result && search.top_results.top_result.type"
     >
       <h3 class="h3">{{ $t('Search.TopResult') }}</h3>
-      <TopItem />
+      <ClassicalTopItem v-if="classicalTop" />
+      <TopItem v-else />
     </div>
-    <div v-if="search.top_results.tracks.length">
+    <div v-if="showWorks">
+      <h3 class="h3">{{ $t('Views.ComposerView.Works') }}</h3>
+      <div class="right-search-top-works">
+        <SearchWorkRow v-for="work in search.top_results.works" :key="work.workhash" :work="work" />
+      </div>
+    </div>
+    <div v-else-if="search.top_results.tracks.length">
       <h3 class="h3">{{ $t('Common.Track', 2) }}</h3>
       <TopTracks />
     </div>
@@ -30,7 +37,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+
 import TopItem from "./Top/TopItem.vue";
+import ClassicalTopItem from "./Top/ClassicalTopItem.vue";
+import SearchWorkRow from "@/components/Classical/SearchWorkRow.vue";
+import { isClassicalTop, showTopWorks } from "@/utils/searchTop";
 import TopAlbums from "./Top/TopAlbums.vue";
 import TopTracks from "./Top/TopTracks.vue";
 
@@ -40,6 +52,8 @@ import NoItems from "@/components/shared/NoItems.vue";
 import SearchSvg from "@/assets/icons/search.svg";
 
 const search = useSearchStore();
+const classicalTop = computed(() => isClassicalTop(search.top_results.top_result));
+const showWorks = computed(() => showTopWorks(search.top_results));
 </script>
 
 <style lang="scss">
@@ -51,6 +65,10 @@ const search = useSearchStore();
     padding: 0 1rem;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+  }
+
+  .right-search-top-works {
+    margin: 0 1rem 2rem $small;
   }
 }
 </style>

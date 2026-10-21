@@ -7,16 +7,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import useSearchStore from "@/stores/search";
+import useSettings from "@/stores/settings";
 import Tab from "./Tab.vue";
 import TabsWrapper from "./TabsWrapper.vue";
 
 
 const search = useSearchStore();
+const settings = useSettings();
 
-const tabs = ["top", "tracks", "albums", "artists"];
+const tabs = computed(() =>
+  settings.classical_enabled ? ["top", "tracks", "works", "albums", "artists"] : ["top", "tracks", "albums", "artists"]
+);
 
 const currentTab = ref("top");
 

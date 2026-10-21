@@ -2,7 +2,7 @@ import { paths } from '@/config'
 import { favType, NotifType } from '@/enums'
 import useAxios from './useAxios'
 
-import { Album, Artist, Track, WorkCardItem } from '@/interfaces'
+import { Album, Artist, Track, WorkRow } from '@/interfaces'
 import { useToast as notif } from '@/stores/notification'
 import { useT } from '@/i18n'
 
@@ -90,7 +90,7 @@ export async function getFavWorks(start = 0, limit = 6) {
         method: 'GET',
     })
 
-    return data as { works: WorkCardItem[]; total: number }
+    return data as { works: WorkRow[]; total: number }
 }
 
 export async function getFavComposers(start = 0, limit = 6) {

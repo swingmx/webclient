@@ -84,7 +84,6 @@ export default defineStore('tracklist', {
                     catalogue_ids: work.catalogue_ids,
                     composer: work.composer,
                     composer_hash: work.composer_hash,
-                    key: work.key,
                     name: work.name,
                     subtitle: work.subtitle,
                     workhash: work.workhash,

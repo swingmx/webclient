@@ -40,15 +40,15 @@
                         <PlaySvg /> {{ $t('Common.Play') }}
                     </span>
                 </div>
-                <div v-if="single ? excerpt || notes : notes" class="meta">
-                    <span v-if="single && excerpt" class="excerpt">{{ excerpt }}</span>
+                <div v-if="single ? work.excerpt || notes : notes" class="meta">
+                    <span v-if="single && work.excerpt" class="excerpt">{{ work.excerpt }}</span>
                     <span v-if="notes" class="notes">{{ notes }}</span>
                 </div>
-                <div v-if="work.performers?.length" class="performers">
-                    {{ work.performers.join(', ') }}
+                <div v-if="work.performers" class="performers">
+                    {{ work.performers }}
                 </div>
             </div>
-            <div class="duration" :class="{ total: !single }">{{ formatSeconds(totalDuration) }}</div>
+            <div class="duration" :class="{ total: !single }">{{ formatSeconds(work.duration ?? 0) }}</div>
             <button v-if="single" class="menu" :class="{ on: menuOn }" @click.stop="showMenu($event, movements[0])">
                 <MoreSvg />
             </button>
@@ -72,7 +72,7 @@
                 />
                 <div class="name ellip">
                     {{ movement.movement_title }}
-                    <span v-if="movement.arrangement && !sharedArrangement" class="notes">{{ movement.arrangement }}</span>
+                    <span v-if="movement.arrangement" class="notes">{{ movement.arrangement }}</span>
                 </div>
                 <div class="duration">
                     <div
@@ -132,28 +132,10 @@ const menuOn = ref(false)
 const movements = computed(() => props.work.movements)
 const single = computed(() => movements.value.length === 1)
 const nickname = computed(() => props.work.nickname || props.work.subtitle)
-const totalDuration = computed(() => movements.value.reduce((sum, m) => sum + (m.duration || 0), 0))
-
-/**
- * The movement a single track holds when it is an excerpt of a larger work.
- */
-const excerpt = computed(() => {
-    const title = movements.value[0]?.movement_title?.trim()
-    if (!title || title.toLowerCase() === props.work.name.trim().toLowerCase()) return ''
-    return title
-})
-
-/**
- * The arrangement every movement shares, shown once in the work's notes.
- */
-const sharedArrangement = computed(() => {
-    const notes = movements.value.map(m => m.arrangement || '')
-    return notes.every(n => n && n === notes[0]) ? notes[0] : ''
-})
 
 const notes = computed(() => {
     const parts: string[] = []
-    if (sharedArrangement.value) parts.push(sharedArrangement.value)
+    if (props.work.arrangement) parts.push(props.work.arrangement)
     parts.push(...props.work.catalogue_ids.map(id => id.name))
     if (!single.value) parts.push(t('Views.WorkView.MovementCount', { n: movements.value.length }, movements.value.length))
     return parts.join(' · ')

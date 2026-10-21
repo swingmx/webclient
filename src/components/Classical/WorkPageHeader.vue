@@ -33,14 +33,14 @@
                 <span v-for="bubble in bubbles" :key="bubble" class="bubble">{{ bubble }}</span>
             </div>
             <div v-if="album" class="recording">
-                <span>{{ album.albumartists.map(a => a.name).join(', ') }}</span>
+                <span>{{ album.artists }}</span>
                 <span class="dot">·</span>
-                <RouterLink :to="{ name: Routes.album, params: { albumhash: album.albumhash } }" class="album">
+                <RouterLink :to="{ name: Routes.album, params: { albumhash: work.recording.albumhash } }" class="album">
                     {{ album.title }}
                 </RouterLink>
-                <template v-if="album.date">
+                <template v-if="album.year">
                     <span class="dot">·</span>
-                    <span>{{ new Date(album.date * 1000).getFullYear() }}</span>
+                    <span>{{ album.year }}</span>
                 </template>
             </div>
             <div class="buttons">
@@ -139,13 +139,11 @@ function addToQueue() {
 }
 
 const bubbles = computed(() => {
-    const movements = props.work.recording.movements
-    const duration = movements.reduce((total, m) => total + (m.duration || 0), 0)
-
+    const count = props.work.recording.movements.length
     return [
         ...props.work.catalogue_ids.map(id => id.name),
-        t('Views.WorkView.MovementCount', { n: movements.length }, movements.length),
-        duration ? formatSeconds(duration, true) : '',
+        t('Views.WorkView.MovementCount', { n: count }, count),
+        props.work.duration ? formatSeconds(props.work.duration, true) : '',
     ].filter(Boolean)
 })
 
@@ -188,7 +186,7 @@ onMounted(() => {
     setColors()
 })
 watch(() => [props.work.workhash, props.work.name], setTitle)
-watch(() => album.value?.albumhash, setColors)
+watch(() => props.work.recording.albumhash, setColors)
 </script>
 
 <style lang="scss">

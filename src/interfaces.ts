@@ -12,6 +12,8 @@ export interface AlbumDisc {
 
 export interface Track extends AlbumDisc {
     id: string
+    // classical search results: the work this track is a movement of
+    classical?: MovementInfo
     title: string
     album: string
     artists: Artist[]
@@ -88,11 +90,11 @@ export interface Album {
 
 export interface CatalogueId {
     name: string
-    hash: string
 }
 
 export interface ClassicalMovement extends Track {
     movement_title: string
+    // the work page
     movement_number?: string | null
     movement_name?: string
     arrangement?: string | null
@@ -101,82 +103,170 @@ export interface ClassicalMovement extends Track {
     workhash?: string
 }
 
+// a work with its movements, as the queue and the album page list it
 export interface ClassicalWork {
-    // album works and the work page
-    is_favorite?: boolean
-    catalogue_ids: CatalogueId[]
-    composer: string
-    composer_hash: string
-    key: string | null
+    workhash: string
     name: string
     nickname: string | null
     subtitle: string | null
-    workhash: string
-    year_composed?: number
+    composer: string | null
+    composer_hash: string | null
+    catalogue_ids: CatalogueId[]
     movements: ClassicalMovement[]
-    // performer names, on album pages
-    performers?: string[]
+    // album pages
+    is_favorite?: boolean
+    performers?: string
+    // the arrangement every movement shares
+    arrangement?: string | null
+    // the movement a single track holds when it is part of a larger work
+    excerpt?: string | null
+    duration?: number
+}
+
+// the work a classical track in search results belongs to, as a movement row
+export interface MovementInfo {
+    mark: string | null
+    tint: number | null
+    composer: string | null
+    title: string
+    sub: string
+}
+
+// a classical top search result: a person, a work, or a movement
+export interface ClassicalTopResult {
+    type: 'composer' | 'performer' | 'work' | 'movement'
+    // people
+    artisthash?: string
+    image?: string
+    years?: string | null
+    era?: string | null
+    work_count?: number
+    track_count?: number
+    album_count?: number
+    // works and movements
+    workhash?: string
+    albumhash?: string | null
+    tint?: number | null
+    mark?: string | null
+    composer?: string | null
+    name?: string
+    nickname?: string | null
+    catalogue?: string | null
+    movement_count?: number
+    recording_count?: number
+    duration?: number
+    performers?: string
+    // movements
+    title?: string
+    work?: string
+    track?: Track
 }
 
 export interface WorkPerformer {
     name: string
-    performer_id: string | null
-    artisthash?: string
-    roles: string[]
+    artisthash: string
+    roles: string
 }
 
 export interface WorkRecording {
     albumhash: string
-    album: Album | null
+    album: { title: string; image: string; blurhash: string; year: number | null; artists: string } | null
     movements: ClassicalMovement[]
     performers: WorkPerformer[]
 }
 
-export interface WorkRecordingCard extends Album {
+export interface WorkRecordingCard {
     workhash: string
+    albumhash: string
+    image: string | null
     album: string | null
     movement_count: number
     // who the recording is by: performer, track artist, or album artist
     byline: string | null
+    help_text?: string
+    time?: string
 }
 
 export interface ClassicalWorkPage extends Omit<ClassicalWork, 'movements'> {
-    is_favorite?: boolean
+    year_composed?: number
     year_published?: number
     dedication?: string
     instrumentation?: string
     instruments?: string[]
+    key?: string | null
     recording: WorkRecording
     other_recordings: WorkRecordingCard[]
 }
 
-export interface WorkCardItem extends Omit<ClassicalWork, 'movements'> {
+// a work card with a tile
+export interface WorkCardItem {
     type: 'work'
+    workhash: string
     albumhash: string | null
-    album: string | null
-    image: string | null
-    recording_count: number
-    // work card tile label and the line under the title
-    label?: string | null
-    byline?: string | null
-    duration?: number
+    tint: number | null
+    mark: string
+    label: string | null
+    name: string
+    nickname: string | null
+    byline: string | null
     help_text?: string
     time?: string
-    // classical home rows
+}
+
+// a work as a search row with a tile
+export interface WorkTile {
+    workhash: string
+    albumhash: string | null
+    tint: number | null
+    mark: string
+    composer: string | null
+    name: string
+    nickname: string | null
+    catalogue: string | null
+    movement_count: number
+    duration: number
+    is_favorite?: boolean
+}
+
+// a work as a list row
+export interface WorkRow {
+    workhash: string
+    albumhash: string | null
+    name: string
+    nickname: string | null
+    composer?: string | null
+    // catalogue ids, then the form when nobody else is credited
+    meta: string
+    duration?: number
+    // composer pages
+    year_composed?: number
+    // one of these for the column before the duration
     added?: number
-    plays?: number
-    trackhash?: string
-    movement?: string
+    recording_count?: number
+    year?: number | null
+    // performer pages: others credited on the recording
+    with?: string[]
+}
+
+export interface ContinueItem {
+    workhash: string
+    albumhash: string | null
+    trackhash: string
+    image: string | null
+    composer: string | null
+    title: string
+    album: string | null
 }
 
 export interface ClassicalHomeTile {
     slug: string
     name: string
-    count: number
+    // instruments
+    count?: number
     // eras
     start?: number | null
     end?: number | null
-    composers?: string[]
+    composers?: string
     // work types
     subtitle?: string
 }
@@ -185,40 +275,29 @@ export interface ClassicalHomePage {
     album_count: number
     track_count: number
     seconds_listened: number
-    continue_listening: WorkCardItem[]
+    continue_listening: ContinueItem[]
     albums: Album[]
-    recently_added: WorkCardItem[]
-    favorite_works: WorkCardItem[]
+    recently_added: WorkRow[]
+    favorite_works: WorkRow[]
     composers: Artist[]
     eras: ClassicalHomeTile[]
     instruments: ClassicalHomeTile[]
     work_types: ClassicalHomeTile[]
-    returned_to: WorkCardItem[]
-    performers: { name: string; artisthash: string; role: string | null }[]
+    returned_to: WorkRow[]
+    performers: { name: string; artisthash: string; roles: string }[]
 }
 
 export interface PersonFilter {
     name: string
     slug: string
-    count: number
 }
 
-export interface PersonWorkRow extends Omit<ClassicalWork, 'movements'> {
-    albumhash: string
-    duration: number
-    form?: string
-    category?: string
-    // composer pages
-    recording_count?: number
-    // performer pages
-    year?: number | null
-    with?: string[]
-}
+export type PersonWorkRow = WorkRow
 
 export interface PersonEntry {
     name: string
     artisthash: string
-    roles?: string[]
+    roles?: string
     works?: number
     albums?: number
 }
@@ -252,9 +331,8 @@ export interface Listening {
     top_work?: {
         workhash: string
         albumhash: string
-        name: string
-        nickname: string | null
-        catalogue: string | null
+        title: string
+        ids: string | null
         playduration: number
     } | null
 }
@@ -266,6 +344,10 @@ export interface ClassicalPersonPage {
     listening?: Listening | null
     name: string
     image: string | null
+    // the parts after the person's kind, the chips before the counts, and the life years
+    kicker: string[]
+    chips: string[]
+    years: string | null
     work_count: number
     album_count: number
     filter_key: 'category' | 'composer'
@@ -275,17 +357,11 @@ export interface ClassicalPersonPage {
     works_total: number
     albums: PersonAlbumSections
     // composers
-    epoch?: string
-    birth?: string
-    death?: string
     nickname?: string
-    occupations?: string[]
-    birthplace?: string
     bio?: string
     wikipedia_url?: string
     interpreters?: PersonEntry[]
     // performers
-    roles?: string[]
     composers?: PersonEntry[]
     performs_with?: PersonEntry[]
 }
@@ -301,7 +377,7 @@ export interface ClassicalPersonWorks {
 }
 
 export type QueueItem = Track | ClassicalMovement
-export type QueueWork = Omit<ClassicalWork, 'movements'>
+export type QueueWork = Pick<ClassicalWork, 'workhash' | 'name' | 'subtitle' | 'composer' | 'composer_hash' | 'catalogue_ids'>
 
 export interface Mix {
     id: string

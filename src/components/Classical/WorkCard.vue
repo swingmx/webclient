@@ -4,12 +4,12 @@
         class="album-card work-card"
     >
         <div v-if="cover" class="with-img rounded-sm no-scroll">
-            <img class="shadow-lg" :src="paths.images.thumb.medium + work.image" alt="" />
+            <img class="shadow-lg" :src="paths.images.thumb.medium + (work as WorkRecordingCard).image" alt="" />
         </div>
-        <div v-else class="tile rounded-sm" :style="composerTint(tile.composer_hash)">
+        <div v-else class="tile rounded-sm" :style="composerTint(tile.tint)">
             <div class="face">
                 <div class="label ellip">{{ tile.label ?? '' }}</div>
-                <div class="mark">{{ mark }}</div>
+                <div class="mark">{{ tile.mark }}</div>
             </div>
         </div>
         <div>
@@ -43,21 +43,6 @@ const props = defineProps<{
 }>()
 
 const tile = computed(() => props.work as WorkCardItem)
-
-/**
- * The first catalogue number, else the initials of the composer or byline.
- */
-const mark = computed(() => {
-    const id = tile.value.catalogue_ids[0]?.name
-    if (id) return id
-    const name = tile.value.composer ?? tile.value.byline ?? ''
-    return name
-        .split(/\s+/)
-        .filter(word => /^\p{Lu}/u.test(word))
-        .map(word => word[0])
-        .join('')
-        .slice(0, 3)
-})
 </script>
 
 <style lang="scss">

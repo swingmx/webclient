@@ -10,8 +10,8 @@ import useTabs from './tabs'
 import useLoader from './loader'
 import useSettings from './settings'
 import { maxAbumCards } from './content-width'
-import { Album, Artist, Playlist, Track } from '../interfaces'
-import { searchAlbums, searchArtists, searchTopResults, searchTracks } from '@/requests/searchMusic'
+import { Album, Artist, ClassicalTopResult, Playlist, Track, WorkTile } from '../interfaces'
+import { searchAlbums, searchArtists, searchTopResults, searchTracks, searchWorks } from '@/requests/searchMusic'
 
 export default defineStore('search', () => {
     const query = ref('')
@@ -23,8 +23,9 @@ export default defineStore('search', () => {
     const currentTab = ref('top')
     const top_results = reactive({
         query: '',
-        top_result: <Track | Album | Artist>{},
+        top_result: <Track | Album | Artist | ClassicalTopResult>{},
         tracks: <Track[]>[],
+        works: <WorkTile[]>[],
         albums: <Album[]>[],
         artists: <Artist[]>[],
     })
@@ -32,6 +33,12 @@ export default defineStore('search', () => {
     const tracks = reactive({
         query: '',
         value: <Track[]>[],
+        more: false,
+    })
+
+    const works = reactive({
+        query: '',
+        value: <WorkTile[]>[],
         more: false,
     })
 
@@ -64,6 +71,7 @@ export default defineStore('search', () => {
         searchTopResults(query, limit).then(res => {
             top_results.top_result = res.top_result
             top_results.tracks = res.tracks
+            top_results.works = res.works ?? []
             top_results.albums = res.albums
             top_results.artists = res.artists
         })
@@ -84,6 +92,16 @@ export default defineStore('search', () => {
             tracks.value = data.results
             tracks.more = data.more
             tracks.query = query
+        })
+    }
+
+    function fetchWorks(query: string) {
+        if (!query) return
+
+        searchWorks(query).then(res => {
+            works.value = res.results
+            works.more = res.more
+            works.query = query
         })
     }
 
@@ -112,6 +130,14 @@ export default defineStore('search', () => {
         const { results: moretracks, more } = await searchTracks(query.value, tracks.value.length)
         tracks.value = [...tracks.value, ...moretracks]
         tracks.more = more
+        return stopLoading()
+    }
+
+    async function loadWorks() {
+        startLoading()
+        const { results: moreworks, more } = await searchWorks(query.value, works.value.length)
+        works.value = [...works.value, ...moreworks]
+        works.more = more
         return stopLoading()
     }
 
@@ -169,6 +195,9 @@ export default defineStore('search', () => {
                 case 'tracks':
                     fetchTracks(newQuery)
                     break
+                case 'works':
+                    fetchWorks(newQuery)
+                    break
                 case 'albums':
                     fetchAlbums(newQuery)
                     break
@@ -197,6 +226,11 @@ export default defineStore('search', () => {
                     fetchTracks(current_query)
                     break
 
+                case 'works':
+                    if (works.query == current_query) break
+                    fetchWorks(current_query)
+                    break
+
                 case 'albums':
                     if (albums.query == current_query) break
                     fetchAlbums(current_query)
@@ -220,12 +254,14 @@ export default defineStore('search', () => {
     return {
         top_results,
         tracks,
+        works,
         albums,
         artists,
         playlists,
         query,
         currentTab,
         loadTracks,
+        loadWorks,
         loadAlbums,
         loadArtists,
         switchTab,
