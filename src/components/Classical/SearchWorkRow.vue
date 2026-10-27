@@ -3,11 +3,20 @@
         :is="work ? RouterLink : 'div'"
         v-bind="work ? { to: link } : {}"
         class="search-work-row rounded-sm"
-        :class="{ current: isCurrent, menu: menuOn }"
+        :class="{ current: isCurrent, menu: menuOn, indexed }"
         @click="!work && $emit('playThis')"
         @contextmenu.prevent="showMenu"
     >
-        <div class="tile" :class="{ numeral: !work }" :style="composerTint(row.tint)">
+        <TrackIndex
+            v-if="indexed"
+            :index="index!"
+            :is_fav="is_fav"
+            :show-inline-fav-icon="settings.showInlineFavIcon"
+            @click.stop
+            @add-to-fav="toggleFav"
+        />
+        <img v-if="track" class="thumb" :src="paths.images.thumb.small + track.image" />
+        <div v-else class="tile" :style="composerTint(row.tint)">
             <span>{{ row.mark }}</span>
         </div>
         <div class="text">
@@ -18,11 +27,19 @@
             <div class="sub ellip">{{ row.sub }}</div>
         </div>
         <div class="end">
-            <div class="fav" :class="{ shown: is_fav && settings.highlightFavoriteTracks }" @click.stop.prevent="toggleFav">
+            <div
+                v-if="!indexed || settings.showInlineFavIcon"
+                class="fav"
+                :class="{ shown: is_fav && settings.highlightFavoriteTracks }"
+                @click.stop.prevent="toggleFav"
+            >
                 <HeartSvg :state="is_fav" :no_emit="true" />
             </div>
             <div class="duration">{{ formatSeconds(row.duration ?? 0) }}</div>
-            <div class="menu-space"></div>
+            <div v-if="track" class="options circular" @click.stop.prevent="showMenu" @dblclick.stop>
+                <MoreSvg />
+            </div>
+            <div v-else class="menu-space"></div>
         </div>
     </component>
 </template>
@@ -31,6 +48,7 @@
 import { computed, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 
+import { paths } from '@/config'
 import { favType } from '@/enums'
 import { showTrackContextMenu } from '@/helpers/contextMenuHandler'
 import favoriteHandler from '@/helpers/favoriteHandler'
@@ -38,10 +56,13 @@ import { useT } from '@/i18n'
 import { Track, WorkTile } from '@/interfaces'
 import { Routes } from '@/router'
 import { formatSeconds } from '@/utils'
+import { isSmall } from '@/stores/content-width'
 import useSettings from '@/stores/settings'
 import composerTint from '@/utils/composerTint'
 
+import MoreSvg from '@/assets/icons/more.svg'
 import HeartSvg from '@/components/shared/HeartSvg.vue'
+import TrackIndex from '@/components/shared/SongItem/TrackIndex.vue'
 
 const props = defineProps<{
     // a work row opens the work on its recording
@@ -49,6 +70,8 @@ const props = defineProps<{
     // a movement row plays the track
     track?: Track
     isCurrent?: boolean
+    // the row's number in a numbered list, as on the favorites page
+    index?: number | string
 }>()
 
 defineEmits<{
@@ -58,6 +81,7 @@ defineEmits<{
 const { t } = useT()
 const settings = useSettings()
 const menuOn = ref(false)
+const indexed = computed(() => props.index !== undefined && !isSmall.value)
 
 const is_fav = ref(false)
 watch(
@@ -91,8 +115,8 @@ const row = computed(() => {
     }
     const info = props.track!.classical!
     return {
-        mark: info.mark ?? '',
-        tint: info.tint,
+        mark: '',
+        tint: null,
         composer: info.composer,
         title: info.title,
         nickname: null,
@@ -141,6 +165,12 @@ function showMenu(e: MouseEvent) {
         }
     }
 
+    // a number column before the tile, as SongItem's
+    &.indexed {
+        grid-template-columns: 1.75rem 3rem minmax(0, 1fr) max-content;
+        @include fav-index;
+    }
+
     .tile {
         width: 3rem;
         height: 3rem;
@@ -164,11 +194,13 @@ function showMenu(e: MouseEvent) {
             line-height: 1.05;
         }
 
-        &.numeral {
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
+    }
+
+    .thumb {
+        width: 3rem;
+        height: 3rem;
+        object-fit: cover;
+        border-radius: 4px;
     }
 
     .text {
@@ -186,13 +218,16 @@ function showMenu(e: MouseEvent) {
         font-weight: 600;
         margin: 1px 0;
 
+        // as the work header's names line
         .nickname {
-            font-weight: 600;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: 400;
         }
     }
 
     &.current .title {
-        color: $highlight-blue;
+        color: $blue;
     }
 
     .sub {
@@ -200,7 +235,7 @@ function showMenu(e: MouseEvent) {
         color: $gray1;
     }
 
-    // laid out like SongItem's TrackDuration, with an empty space where its menu button sits
+    // laid out like SongItem's TrackDuration, with an empty space for work rows where its menu button sits
     .end {
         display: flex;
         align-items: center;
@@ -244,9 +279,26 @@ function showMenu(e: MouseEvent) {
         }
     }
 
-    .menu-space {
+    .menu-space,
+    .options {
         width: 2rem;
         flex-shrink: 0;
+    }
+
+    .options {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 1;
+        transition: background-color 0.2s ease-out;
+
+        svg {
+            stroke: $gray1;
+        }
+
+        &:hover {
+            background-color: $gray3;
+        }
     }
 }
 </style>

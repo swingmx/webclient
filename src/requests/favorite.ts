@@ -2,7 +2,7 @@ import { paths } from '@/config'
 import { favType, NotifType } from '@/enums'
 import useAxios from './useAxios'
 
-import { Album, Artist, Track, WorkRow } from '@/interfaces'
+import { Album, Artist, FavTrackKind, Track, WorkRow } from '@/interfaces'
 import { useToast as notif } from '@/stores/notification'
 import { useT } from '@/i18n'
 
@@ -66,9 +66,9 @@ export async function getFavAlbums(start=0, limit = 6) {
     return data as { albums: Album[]; total: number }
 }
 
-export async function getFavTracks(start = 0, limit = 5) {
+export async function getFavTracks(start = 0, limit = 5, kind: FavTrackKind = 'all') {
     const { data } = await useAxios({
-        url: paths.api.favTracks + `?start=${start}&limit=${limit}`,
+        url: paths.api.favTracks + `?start=${start}&limit=${limit}&kind=${kind}`,
         method: 'GET',
     })
 

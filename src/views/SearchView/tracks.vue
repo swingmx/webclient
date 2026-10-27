@@ -4,7 +4,7 @@
             :title="$t('Common.NoTrackResults')"
             :description="desc"
             :icon="SearchSvg"
-            :flag="!search.tracks.value.length"
+            :flag="!results.value.length"
         />
         <div :class="{ isSmall, isMedium }" style="height: 100%">
             <RecycleScroller
@@ -40,9 +40,16 @@ import { useT } from '@/i18n'
 
 const { t } = useT()
 
+const props = defineProps<{
+    // list the classical movements instead of the other tracks
+    movements?: boolean
+}>()
+
 const queue = useQueue()
 const search = useSearch()
 const tracklist = useTracklist()
+
+const results = computed(() => (props.movements ? search.movements : search.tracks))
 
 const desc = computed(() =>
     search.query === '' ? t('Views.SearchView.TypeToSearchTracks') : t('Views.SearchView.ResultsForQuery', {query: search.query})
@@ -55,8 +62,8 @@ interface scrollerItem {
 }
 
 const scrollerItems = computed(() => {
-    const mixed = search.tracks.value.some(track => track.classical)
-    const items: scrollerItem[] = search.tracks.value.map((track, index) =>
+    const mixed = results.value.value.some(track => track.classical)
+    const items: scrollerItem[] = results.value.value.map((track, index) =>
         track.classical
             ? {
                   id: index,
@@ -75,13 +82,13 @@ const scrollerItems = computed(() => {
               }
     )
 
-    if (search.tracks.more) {
+    if (results.value.more) {
         items.push({
             // set to random to force re-render
             id: Math.random(),
             component: AlbumsFetcher,
             props: {
-                fetch_callback: search.loadTracks,
+                fetch_callback: props.movements ? search.loadMovements : search.loadTracks,
             },
         })
     }
@@ -90,7 +97,7 @@ const scrollerItems = computed(() => {
 })
 
 function playFromSearch(index: number) {
-    tracklist.setFromSearch(search.query, search.tracks.value)
+    tracklist.setFromSearch(search.query, results.value.value)
     queue.play(index)
 }
 </script>

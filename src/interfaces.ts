@@ -94,9 +94,10 @@ export interface CatalogueId {
 
 export interface ClassicalMovement extends Track {
     movement_title: string
+    // the name after the movement's number
+    movement_name?: string
     // the work page
     movement_number?: string | null
-    movement_name?: string
     arrangement?: string | null
     // added when the movement is added to the queue,
     // links back to tracklist.worklist
@@ -115,7 +116,6 @@ export interface ClassicalWork {
     movements: ClassicalMovement[]
     // album pages
     is_favorite?: boolean
-    performers?: string
     // the arrangement every movement shares
     arrangement?: string | null
     // the movement a single track holds when it is part of a larger work
@@ -344,6 +344,7 @@ export interface ClassicalPersonPage {
     listening?: Listening | null
     name: string
     image: string | null
+    tint?: number | null
     // the parts after the person's kind, the chips before the counts, and the life years
     kicker: string[]
     chips: string[]
@@ -377,7 +378,10 @@ export interface ClassicalPersonWorks {
 }
 
 export type QueueItem = Track | ClassicalMovement
-export type QueueWork = Pick<ClassicalWork, 'workhash' | 'name' | 'subtitle' | 'composer' | 'composer_hash' | 'catalogue_ids'>
+export type QueueWork = Pick<
+    ClassicalWork,
+    'workhash' | 'name' | 'nickname' | 'subtitle' | 'composer' | 'composer_hash' | 'catalogue_ids'
+>
 
 export interface Mix {
     id: string
@@ -435,6 +439,8 @@ export interface Artist {
     time?: string
     genres: Genre[]
     type?: string
+    // a composer's palette entry, for the initials tile when there is no image
+    tint?: number | null
 
     // available in charts
     trend?: {
@@ -588,6 +594,7 @@ export interface RecentFavArtist {
     artisthash: string
     image: string
     name: string
+    tint?: number | null
 }
 
 // export interface RecentFavResultItem {
@@ -698,3 +705,6 @@ export interface LicenseInfo {
     msg: string
     license_key: string
 }
+
+// favorite tracks: every one, those that are not classical movements, or the movements
+export type FavTrackKind = 'all' | 'tracks' | 'classical'

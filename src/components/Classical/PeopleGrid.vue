@@ -39,10 +39,10 @@ const shown = computed(() => (props.limit ? props.people.slice(0, props.limit) :
 
 <style lang="scss">
 .people-grid {
-    padding: 2rem 1rem 1rem;
+    padding: 2rem 0.75rem 1rem 0.75rem;
 
     .heading {
-        font-size: 1.5rem;
+        font-size: 1.15rem;
         font-weight: 700;
         margin-bottom: 1.25rem;
     }

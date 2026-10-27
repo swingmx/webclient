@@ -66,7 +66,7 @@ const scrollerItems = computed((): ScrollerItem[] => {
         {
             id: `work-${page.workhash}-${page.recording.albumhash}`,
             component: WorkItem,
-            props: { work, hideHeader: true, numbered: true },
+            props: { work, numbered: true },
         },
     ]
 
@@ -126,7 +126,6 @@ function listenersFor(item: ScrollerItem) {
             const index = store.tracks.findIndex(t => t.trackhash === trackhash)
             if (index >= 0) playFromWork(index)
         },
-        playWork: () => playFromWork(0),
     }
 }
 

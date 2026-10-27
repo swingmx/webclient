@@ -139,7 +139,7 @@ function meta(work: WorkRow) {
 
 <style lang="scss">
 .work-list {
-    padding: 2rem 1rem 1rem 1rem;
+    padding: 2rem 0.75rem 1rem 0.75rem;
 
     .heading {
         display: flex;
@@ -150,7 +150,7 @@ function meta(work: WorkRow) {
     }
 
     .title {
-        font-size: 1.5rem;
+        font-size: 1.15rem;
         font-weight: 700;
         color: inherit;
 
@@ -176,6 +176,7 @@ function meta(work: WorkRow) {
             grid-template-columns: minmax(0, 1fr);
             border-top: none;
             background-color: $gray5;
+            margin: 0;
 
             &:hover {
                 background-color: $gray4;
@@ -211,6 +212,8 @@ function meta(work: WorkRow) {
         padding: 1rem 0.75rem;
         border-top: solid 1px $gray5;
         color: inherit;
+
+        margin: 0 -0.75rem 0 -0.75rem;
 
         &:hover {
             background-color: $gray5;

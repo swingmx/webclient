@@ -177,6 +177,7 @@
     "experimental": "sperimentale",
     "mix": "mix | mixes",
     "new": "nuovo",
+    "premium": "richiede premium",
     "removed": "rimosso",
     "selected": "selezionato",
     "top": "migliori",
@@ -263,7 +264,8 @@
       "Home": "Home",
       "Playlists": "Playlist",
       "Search": "Cerca",
-      "Settings": "Impostazioni"
+      "Settings": "Impostazioni",
+      "Classical": "Classica"
     }
   },
   "MasterFlag": {
@@ -457,7 +459,13 @@
     "NoTracksTitle": "nessuna traccia",
     "SearchPlaceholder": "Scrivi per cercare",
     "TopResult": "Miglior risultato",
-    "top": "Top"
+    "top": "Top",
+    "Era": "Epoca {era}",
+    "From": "da",
+    "composer": "Compositore",
+    "performer": "Interprete",
+    "work": "Opera",
+    "movement": "Movimento"
   },
   "SearchInput": {
     "BackToQueue": "torna alla coda",
@@ -548,7 +556,7 @@
       },
       "Albums": {
         "Classical": {
-          "Desc": "Abilita il supporto per la musica classica negli album (richiede premium)",
+          "Desc": "Abilita il supporto per la musica classica negli album",
           "Title": "Abilita il supporto per la musica classica"
         },
         "AlbumAsSingles": {
@@ -567,7 +575,9 @@
       "ArtistSeparatorDesc": "Personalizza i separatori degli artisti",
       "Artists": {
         "ArticleAwareDesc": "Ignora articoli (p.e. The, A, An) nell'ordinamento del nome degli artisti",
-        "ArticleAwareTitle": "Ordinamento intelligente articoli"
+        "ArticleAwareTitle": "Ordinamento intelligente articoli",
+        "JumpToArtistDesc": "Cercando un artista si apre la sua pagina",
+        "JumpToArtistTitle": "Vai all'artista"
       },
       "ArtistsDesc": "Personalizza le impostazioni degli artisti",
       "BackupMainDesc": "Esegui e ripristina il backup delle tue librerie",
@@ -728,7 +738,7 @@
           "Title": "Abilita plugin"
         },
         "TrustCloud": {
-          "Desc": "Non mostrare testi non verificati (licenza premium richiesta)",
+          "Desc": "Non mostrare testi non verificati",
           "Title": "Mostra solo testi verificati"
         }
       },
@@ -807,7 +817,8 @@
     "AlbumViews": {
       "MoreFrom": "Altro da {art}",
       "OtherVersions": "Altre edizioni",
-      "RelatedAlbums": "Albums correlati"
+      "RelatedAlbums": "Albums correlati",
+      "Released": "Pubblicato il {date}"
     },
     "ArtistDiscography": {
       "AllAlbums": "Tutti gli albums",
@@ -821,13 +832,24 @@
     },
     "FavoriteTracks": {
       "Description": "Hai {n_tr} canzone preferita | Hai {n_tr} canzoni preferite",
-      "Title": "Tracce preferite"
+      "ClassicalDescription": "Hai {n_tr} movimento preferito | Hai {n_tr} movimenti preferiti",
+      "Title": "Tracce preferite",
+      "ClassicalTitle": "Classica preferita"
     },
     "Favorites": {
       "CountStats": "{tra} Tracce • {alb} Albums • {art} Artisti",
       "Description": "Puoi aggiungere tracce, albums e artisti ai tuoi preferiti cliccando sull'icona a forma di cuoricino",
       "NoFavoritesFound": "Nessun preferito trovato",
-      "Title": "Preferiti"
+      "Title": "Preferiti",
+      "AllTracks": "Tutto",
+      "Tracks": "Brani",
+      "Classical": "Classica",
+      "NoClassical": "Ancora nessun preferito di classica",
+      "NoClassicalDescription": "I movimenti che aggiungi ai preferiti appaiono qui",
+      "Works": "Opere",
+      "Work": "opera | opere",
+      "Composers": "Compositori",
+      "Composer": "compositore | compositori"
     },
     "FolderView": {
       "FolderIsEmpty": "Cartella vuota",
@@ -882,6 +904,85 @@
     "Stats": {
       "Description": "Le tue statistiche d'ascolto nell'ultima settimana",
       "Title": "Statistiche"
+    },
+    "WorkView": {
+      "Movements": "{n} di {total} movimenti",
+      "OtherRecordings": "Altre registrazioni",
+      "MovementCount": "{n} movimento | {n} movimenti",
+      "Performers": "Interpreti",
+      "DedicatedTo": "Dedicato a {name}",
+      "Composed": "Composto",
+      "Published": "Pubblicato",
+      "Key": "Tonalità",
+      "Instrumentation": "Organico"
+    },
+    "Listening": {
+      "MostPlayedArtists": "I tuoi artisti più ascoltati",
+      "MostPlayedComposers": "I tuoi compositori più ascoltati",
+      "ArtistRank": "Posizione tra gli artisti",
+      "ComposerRank": "Posizione tra i compositori",
+      "OfArtists": "su {n} artista | su {n} artisti",
+      "OfComposers": "su {n} compositore | su {n} compositori",
+      "TimeListened": "Tempo di ascolto",
+      "AllTime": "da sempre",
+      "ListenedAllTime": "ascoltato in totale",
+      "PlayCount": "Riproduzioni",
+      "Plays": "{n} riproduzione | {n} riproduzioni",
+      "LastPlayed": "ultimo ascolto {ago}",
+      "NotPlayed": "non ancora ascoltato",
+      "MostPlayedAlbum": "Album più ascoltato",
+      "MostPlayedWork": "Opera più ascoltata",
+      "TopAlbum": "album più ascoltato ({time})",
+      "TopTrack": "brano più ascoltato ({time})",
+      "ShortTime": "{h} h {m} min",
+      "ShortMinutes": "{m} min"
+    },
+    "ComposerView": {
+      "Composer": "Compositore",
+      "WorksInLibrary": "{n} opera nella libreria | {n} opere nella libreria",
+      "AlbumCount": "{n} album | {n} album",
+      "PlayAll": "Riproduci tutto",
+      "ShuffleWorks": "Opere in ordine casuale",
+      "Works": "Opere",
+      "Movements": "Movimenti",
+      "All": "Tutto",
+      "Recordings": "{n} registrazione | {n} registrazioni",
+      "Albums": "Album",
+      "About": "Informazioni",
+      "ReadMore": "Leggi di più",
+      "ShowLess": "Mostra meno",
+      "SourceLabel": "Fonte:",
+      "Wikipedia": "Wikipedia",
+      "Interpreters": "Interpreti frequenti",
+      "WorkCount": "{n} opera | {n} opere",
+      "Performer": "Interprete",
+      "Shuffle": "Casuale",
+      "Repertoire": "Repertorio",
+      "With": "con {names}",
+      "ClassicalAlbums": "Album di musica classica",
+      "LiveAlbums": "Album dal vivo",
+      "Soundtracks": "Colonne sonore",
+      "Composers": "Compositori",
+      "PerformsWith": "Suona con"
+    },
+    "ClassicalHome": {
+      "Description": "Benvenuto nella tua libreria di musica classica",
+      "Title": "Classica",
+      "Albums": "{n} album | {n} album",
+      "Tracks": "{n} brano | {n} brani",
+      "Listened": "{time} di ascolto",
+      "ContinueListening": "Continua ad ascoltare",
+      "AlbumsTitle": "Album",
+      "RecentlyAdded": "Aggiunti di recente",
+      "FavoriteWorks": "Opere preferite",
+      "Composers": "Compositori",
+      "BrowseByEra": "Sfoglia per epoca",
+      "BrowseByInstrument": "Sfoglia per strumento",
+      "BrowseByType": "Sfoglia per tipo di opera",
+      "ReturnTo": "Opere da riprendere",
+      "Performers": "Interpreti",
+      "Plays": "{n} riproduzione | {n} riproduzioni",
+      "Today": "oggi"
     }
   }
 }

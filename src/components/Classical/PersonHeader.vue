@@ -1,7 +1,7 @@
 <template>
     <div class="person-header">
         <div class="portrait circular shadow-lg">
-            <img v-if="page.image" class="circular" :src="paths.images.artist.large + page.image" />
+            <PersonImage class="circular" size="large" :image="page.image" :name="page.name" :tint="page.tint" />
         </div>
         <div class="info">
             <div class="kicker">
@@ -41,13 +41,13 @@
 </template>
 
 <script setup lang="ts">
-import { paths } from '@/config'
 import { favType } from '@/enums'
 import favoriteHandler from '@/helpers/favoriteHandler'
 import { ClassicalPersonPage } from '@/interfaces'
 import useArtistStore from '@/stores/pages/artist'
 
 import HeartSvg from '@/components/shared/HeartSvg.vue'
+import PersonImage from '@/components/shared/PersonImage.vue'
 
 import PlaySvg from '@/assets/icons/play.svg'
 

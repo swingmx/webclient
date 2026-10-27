@@ -19,7 +19,9 @@ const search = useSearchStore();
 const settings = useSettings();
 
 const tabs = computed(() =>
-  settings.classical_enabled ? ["top", "tracks", "works", "albums", "artists"] : ["top", "tracks", "albums", "artists"]
+  settings.classical_on
+    ? ["top", "tracks", "movements", "works", "albums", "artists"]
+    : ["top", "tracks", "albums", "artists"]
 );
 
 const currentTab = ref("top");

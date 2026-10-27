@@ -1,11 +1,6 @@
 <template>
     <RouterLink :to="link" class="top-result-item classical-top-item rounded">
-        <img
-            v-if="isPerson"
-            :src="paths.images.artist.medium + top.image"
-            alt=""
-            class="portrait circular"
-        />
+        <PersonImage v-if="isPerson" class="portrait circular" :image="top.image" :name="top.name ?? ''" :tint="top.tint" />
         <div v-else class="tile rounded-sm" :class="{ numeral: isMovement }" :style="composerTint(top.tint)">
             <span>{{ top.mark }}</span>
         </div>
@@ -53,7 +48,6 @@
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 
-import { paths } from '@/config'
 import { playSources } from '@/enums'
 import { showTrackContextMenu } from '@/helpers/contextMenuHandler'
 import { useT } from '@/i18n'
@@ -68,6 +62,7 @@ import composerTint from '@/utils/composerTint'
 
 import Moresvg from '@/assets/icons/more.svg'
 import PlaySvg from '@/assets/icons/play.svg'
+import PersonImage from '@/components/shared/PersonImage.vue'
 import PlayBtn from '@/components/shared/PlayBtn.vue'
 
 const { t } = useT()

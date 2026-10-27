@@ -130,11 +130,16 @@ function deletePlaylist() {
         }
     }
 
+    // one height for every settings tab; long tabs scroll inside it
     .m-content.settings {
         max-width: 50rem !important;
+        height: min(45rem, calc(100% - 4rem));
         padding: 0;
         overflow: hidden;
-        // min-height: 39rem;
+
+        @include allPhones {
+            height: calc(100% - 2rem);
+        }
     }
 
     .m-content.authlogin {

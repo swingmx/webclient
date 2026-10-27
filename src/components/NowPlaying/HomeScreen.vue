@@ -59,6 +59,11 @@ onMounted(() => updatePageTitle(t('Common.NowPlaying')))
         }
 
         // force show remove from queue button
+        .queue-work-head .remove,
+        .queue-movement .remove {
+            opacity: 0.6;
+        }
+
         .track-item {
             .float-buttons {
                 opacity: 1;

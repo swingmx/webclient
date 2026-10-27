@@ -3,28 +3,42 @@
         <div class="text">
             <div class="title">
                 <RouterLink
-                    v-if="(queue.currenttrack as ClassicalMovement)?.workhash"
+                    v-if="playing"
                     class="worklink"
                     :to="{
                         name: Routes.work,
-                        params: { token: (queue.currenttrack as ClassicalMovement).workhash },
-                        query: { albumhash: queue.currenttrack?.albumhash },
+                        params: { token: playing.workhash },
+                        query: { albumhash: playing.albumhash },
                     }"
                 >
-                    {{ (queue.currenttrack as ClassicalMovement).movement_title }}
+                    {{ playing.title }}
                 </RouterLink>
                 <template v-else>
                     {{ (queue.currenttrack as Track)?.title ?? $t('Common.AppTitle') }}
                 </template>
             </div>
-            <div class="artist">
+            <div v-if="playing" class="artist work-line">
+                <RouterLink
+                    v-if="playing.composer && playing.composer_hash"
+                    :to="{ name: Routes.artist, params: { hash: playing.composer_hash } }"
+                    class="composer"
+                >
+                    {{ playing.composer }}
+                </RouterLink>
+                <span v-else-if="playing.composer" class="composer">{{ playing.composer }}</span>
+                <template v-if="playing.work">
+                    <span v-if="playing.composer"> · </span>
+                    <span class="work">{{ playing.work }}</span>
+                </template>
+            </div>
+            <div v-else class="artist">
                 <ArtistName
                     v-if="queue.currenttrack"
                     :artists="queue.currenttrack?.artists || null"
                     :albumartists="queue.currenttrack?.albumartists || ''"
                 />
                 <span v-else class="artist author">
-                    <a href="https://github.com/cwilvx" target="_blank">{{ $t('Common.BuiltBy')}}</a>
+                    <a href="https://github.com/cwilvx" target="_blank">{{ $t('Common.BuiltBy') }}</a>
                 </span>
             </div>
         </div>
@@ -40,12 +54,14 @@ import { ref } from 'vue'
 import { Routes } from '@/router'
 import useQueueStore from '@/stores/queue'
 import ArtistName from '../shared/ArtistName.vue'
-import { ClassicalMovement, Track } from '@/interfaces'
+import useNowPlayingWork from '@/composables/useNowPlayingWork'
+import { Track } from '@/interfaces'
 import { showTrackContextMenu } from '@/helpers/contextMenuHandler'
 
 const context_menu_showing = ref(false)
 
 const queue = useQueueStore()
+const playing = useNowPlayingWork()
 
 defineEmits<{
     (e: 'handleFav', trackhash: string): void
@@ -87,6 +103,14 @@ function showMenu(e: MouseEvent) {
     .artist {
         font-size: 1rem;
         color: $gray1;
+    }
+
+    .work-line .composer {
+        color: $white;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 
     .actions {

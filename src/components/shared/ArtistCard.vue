@@ -11,7 +11,7 @@
         :class="{ 'context-menu-open': contextMenuFlag }"
     >
         <div class="image circular">
-            <img class="artist-image circular" :src="imguri + artist.image" />
+            <PersonImage class="artist-image circular" :image="artist.image" :name="artist.name" :tint="artist.tint" />
             <div
                 class="overlay circular"
                 :style="{
@@ -34,16 +34,15 @@
 </template>
 
 <script setup lang="ts">
-import { paths } from '@/config'
 import { Artist } from '@/interfaces'
 import { Routes } from '@/router'
 
 import { playSources } from '@/enums'
+import PersonImage from './PersonImage.vue'
 import PlayBtn from './PlayBtn.vue'
 import { ref } from 'vue'
 import { showArtistContextMenu } from '@/helpers/contextMenuHandler'
 
-const imguri = paths.images.artist.medium
 const contextMenuFlag = ref(false)
 
 const props = defineProps<{

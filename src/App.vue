@@ -45,6 +45,8 @@
 import { vElementSize } from '@vueuse/components'
 import { onStartTyping } from '@vueuse/core'
 import { onBeforeMount, onMounted, Ref, ref } from 'vue'
+
+import trackScrolling from './utils/trackScrolling'
 import { useRoute, useRouter } from 'vue-router'
 import { BalancerProvider } from 'vue-wrap-balancer'
 
@@ -54,6 +56,7 @@ import { content_height, content_width, isMobile, resizer_width, updateCardWidth
 import useLyrics from '@/stores/lyrics'
 import useModal from '@/stores/modal'
 import useQueue from '@/stores/queue'
+import useTracklist from '@/stores/queue/tracklist'
 import useSettings from '@/stores/settings'
 import useTracker from '@/stores/tracker'
 import useInterface from '@/stores/interface'
@@ -139,6 +142,7 @@ function handleRootDirsPrompt() {
 const getCookieValue = (name: string) => document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
 
 onMounted(async () => {
+    trackScrolling()
     if (import.meta.env.DEV) {
         const onBoardingData = await useAxios({
             url: paths.api.onboardingData,
@@ -209,6 +213,10 @@ onMounted(async () => {
             if (queue.currenttrack && !settings.use_lyrics_plugin) {
                 lyrics.checkExists(queue.currenttrack.filepath, queue.currenttrack.trackhash)
             }
+
+            // a saved queue's classical tracks from before works were looked up
+            const tracklist = useTracklist()
+            tracklist.indexMissingWorks(tracklist.tracklist)
         })
 })
 
@@ -273,10 +281,8 @@ export default defineComponent({
 
 <style lang="scss">
 @import './assets/scss/mixins.scss';
-.designatedOS .r-sidebar {
-    &::-webkit-scrollbar {
-        display: none;
-    }
+.r-sidebar {
+    @include hideScrollbars;
 }
 
 #noui {

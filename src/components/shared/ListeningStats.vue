@@ -153,7 +153,7 @@ function time(seconds: number) {
     display: flex;
     justify-content: space-between;
     gap: 3rem;
-    padding: 2rem 1rem 1rem;
+    padding: 2rem 0.75rem 1rem 0.75rem;
     overflow-x: auto;
 
     .group {

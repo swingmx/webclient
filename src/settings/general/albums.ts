@@ -36,13 +36,14 @@ const show_albums_as_singles: Setting = {
     action: () => settings().toggleShowAlbumsAsSingles(),
 }
 
-const classical_enabled: Setting = {
+export const classical_enabled: Setting = {
     title: t('Settings.General.Albums.Classical.Title'),
     desc: t('Settings.General.Albums.Classical.Desc'),
     type: SettingType.binary,
-    state: () => settings().classical_enabled,
+    state: () => settings().classical_on,
     action: () => settings().toggleClassicalEnabled(),
-    inactive: () => settings().licenseInfo?.license.status !== 'active',
+    inactive: () => !settings().has_premium,
+    premium: true,
 }
 
-export default [clean_album_titles, merge_album_versions, show_albums_as_singles, classical_enabled]
+export default [clean_album_titles, merge_album_versions, show_albums_as_singles]

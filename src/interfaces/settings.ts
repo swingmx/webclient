@@ -18,6 +18,7 @@ export interface Setting {
   show_if?: () => boolean;
   experimental?: boolean;
   new?: boolean;
+  premium?: boolean;
 }
 
 export interface SettingGroup {

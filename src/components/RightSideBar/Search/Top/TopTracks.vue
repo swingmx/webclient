@@ -1,6 +1,6 @@
 <template>
     <div class="right-search-top-tracks">
-        <template v-for="(track, index) in search.top_results.tracks" :key="track.id">
+        <template v-for="(track, index) in search.top_results.tracks" :key="track.trackhash">
             <SearchWorkRow
                 v-if="track.classical"
                 :track="track"

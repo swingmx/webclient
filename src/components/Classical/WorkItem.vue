@@ -1,17 +1,12 @@
 <template>
     <div class="classicalwork">
-        <WorkHeader
-            v-if="!hideHeader"
-            :work="work"
-            :albumhash="albumhash"
-            :playable="true"
-            @playWork="$emit('playWork', work.workhash)"
-        />
-
         <div class="workmovements" :class="{ numbered }">
             <div v-for="movement in work.movements" :key="movement.movement_title" class="workmovement">
                 <TrackItem
-                    :track="{ ...movement, title: numbered ? movement.movement_name ?? movement.movement_title : movement.movement_title }"
+                    :track="{
+                        ...movement,
+                        title: numbered ? (movement.movement_name ?? movement.movement_title) : movement.movement_title,
+                    }"
                     :numbered="numbered"
                     :note="movement.arrangement"
                     :is-queue-track="$route.name === Routes.nowPlaying"
@@ -27,7 +22,6 @@
 
 <script setup lang="ts">
 import { Routes } from '@/router'
-import WorkHeader from './WorkHeader.vue'
 import { ClassicalWork } from '@/interfaces'
 import TrackItem from '../shared/TrackItem.vue'
 import useQueueStore from '@/stores/queue'
@@ -36,16 +30,12 @@ const queue = useQueueStore()
 
 defineProps<{
     work: ClassicalWork
-    albumhash?: string
-    hideHeader?: boolean
     numbered?: boolean
 }>()
 
 defineEmits<{
     // eslint-disable-next-line no-unused-vars
     (event: 'playThis', trackhash: string): void
-    // eslint-disable-next-line no-unused-vars
-    (event: 'playWork', workhash: string): void
 }>()
 </script>
 

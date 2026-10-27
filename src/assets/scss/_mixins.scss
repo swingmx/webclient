@@ -144,3 +144,35 @@
         }
     }
 }
+
+// the space and line above a work in the now playing queue, and below the
+// queue's last work, inside the row's measured height
+@mixin queue-work-lines {
+    position: relative;
+
+    &.above {
+        padding-top: 1.25rem;
+    }
+
+    &.below {
+        padding-bottom: 1.25rem;
+    }
+
+    &.above::before,
+    &.below::after {
+        content: '';
+        position: absolute;
+        left: 0.75rem;
+        right: 0.5rem;
+        height: 1px;
+        background-color: $gray5;
+    }
+
+    &.above::before {
+        top: calc(0.625rem - 0.5px);
+    }
+
+    &.below::after {
+        bottom: calc(0.625rem - 0.5px);
+    }
+}

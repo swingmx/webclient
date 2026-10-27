@@ -23,6 +23,7 @@ import {
     Track,
 } from '@/interfaces'
 import track from '@/context_menus/track'
+import { getQueueWorks } from '@/requests/classical'
 import { useT } from '@/i18n'
 
 const { t } = useT();
@@ -69,10 +70,30 @@ export default defineStore('tracklist', {
             }
 
             this.worklist = {}
+            this.indexMissingWorks(tracklist)
 
             const { focusCurrentInSidebar } = useInterface()
             focusCurrentInSidebar(1000)
             usePlayer().clearNextAudio()
+        },
+        /**
+         * Look up the works of classical tracks added without them, such as
+         * from search, favorites, or playlists, so the queue lists them
+         * under their works. Runs after the adding action, which may index
+         * works itself.
+         */
+        async indexMissingWorks(tracks: Track[]) {
+            if (!useSettings().classical_on) return
+            await Promise.resolve()
+
+            const added = new Set(tracks.filter(track => track.is_classical).map(track => track.trackhash))
+            // the queue's own items, so stamping them re-renders the queue
+            const unindexed = () =>
+                this.tracklist.filter(track => added.has(track.trackhash) && !(track as ClassicalMovement).workhash)
+            if (!unindexed().length) return
+
+            const works = await getQueueWorks([...added])
+            if (works.length) this.indexWorks(works, unindexed())
         },
         indexWorks(works: ClassicalWork[], tracks: Track[]) {
             // maps each work's movements by trackhash so the flat tracks
@@ -85,6 +106,7 @@ export default defineStore('tracklist', {
                     composer: work.composer,
                     composer_hash: work.composer_hash,
                     name: work.name,
+                    nickname: work.nickname,
                     subtitle: work.subtitle,
                     workhash: work.workhash,
                 }
@@ -101,6 +123,7 @@ export default defineStore('tracklist', {
                 const queueMovement = track as ClassicalMovement
                 queueMovement.workhash = movement.workhash
                 queueMovement.movement_title = movement.movement_title
+                queueMovement.movement_name = movement.movement_name
             }
         },
         setFromFolder(path: string, tracks: Track[]) {
@@ -172,7 +195,7 @@ export default defineStore('tracklist', {
 
             this.setNewList(tracks)
         },
-        setFromArtist(artisthash: string, name: string, tracks: Track[]) {
+        setFromArtist(artisthash: string, name: string, tracks: Track[], works?: ClassicalWork[]) {
             this.from = <fromArtist>{
                 type: FromOptions.artist,
                 artisthash: artisthash,
@@ -180,6 +203,10 @@ export default defineStore('tracklist', {
             }
 
             this.setNewList(tracks)
+
+            if (works?.length) {
+                this.indexWorks(works, tracks)
+            }
         },
         setFromFav(tracks: Track[]) {
             this.from = <fromFav>{
@@ -203,6 +230,7 @@ export default defineStore('tracklist', {
         },
         insertAt(tracks: Track[], index: number) {
             this.tracklist.splice(index, 0, ...tracks)
+            this.indexMissingWorks(tracks)
 
             const player = usePlayer()
             const queue = useQueue()
@@ -258,6 +286,7 @@ export default defineStore('tracklist', {
             const { currentindex } = useQueue()
 
             this.tracklist.splice(currentindex + 1, 0, ...tracks)
+            this.indexMissingWorks(tracks)
 
             if (works?.length) {
                 this.indexWorks(works, tracks)

@@ -234,8 +234,8 @@ const scrollerItems = computed(() => {
 })
 
 async function handlePlay(index: number) {
-    const tracks = await getArtistTracks(store.info.artisthash)
-    tracklist.setFromArtist(store.info.artisthash, store.info.name, tracks)
+    const { tracks, works } = await getArtistTracks(store.info.artisthash)
+    tracklist.setFromArtist(store.info.artisthash, store.info.name, tracks, works)
     queue.play(index)
 }
 

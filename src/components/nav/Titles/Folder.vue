@@ -3,6 +3,7 @@
         <div class="fname">
             <div
                 class="icon"
+                :title="$t('LeftSidebar.NavItems.Home')"
                 @click="
                     $router.push({
                         name: Routes.folder,
@@ -10,7 +11,7 @@
                     })
                 "
             >
-                <FolderSvg />
+                <HomeSvg />
             </div>
             <BreadCrumbNav @navigate="navigate" />
         </div>
@@ -29,7 +30,7 @@ import { useRouter } from 'vue-router'
 
 import { Routes } from '@/router'
 
-import FolderSvg from '@/assets/icons/folder.svg'
+import HomeSvg from '@/assets/icons/home.svg'
 import BreadCrumbNav from '@/components/FolderView/BreadCrumbNav.vue'
 import DropDown from '@/components/shared/DropDown.vue'
 import useFolder from '@/stores/pages/folder'
@@ -126,13 +127,22 @@ const current = computed(() => {
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
 
+        // hovers like the breadcrumb pieces
         .icon {
             aspect-ratio: 1;
-            margin: 0 $small;
+            margin: 0 $smaller;
+            padding: $smaller;
             display: flex;
+            border-radius: $smaller;
+            cursor: pointer;
+            transition: background-color 0.2s ease-out;
+
+            &:hover {
+                background-color: $gray;
+            }
 
             svg {
-                height: 1.5rem;
+                height: 1.25rem;
             }
         }
     }

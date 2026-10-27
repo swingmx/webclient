@@ -86,11 +86,12 @@ $modalheight: 38rem;
 .settingsmodal {
     display: grid;
     grid-template-columns: 15rem 1fr;
+    grid-template-rows: minmax(0, 1fr);
     height: 100%;
 
     .content {
         display: grid;
-        grid-template-rows: 4rem 1fr;
+        grid-template-rows: 4rem minmax(0, 1fr);
 
         .head {
             border-bottom: solid 1px $gray4;

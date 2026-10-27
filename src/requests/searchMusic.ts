@@ -27,7 +27,7 @@ async function searchTopResults(query: string, limit: number) {
     return await fetchData(url)
 }
 
-async function searchItems(type: 'tracks' | 'works' | 'albums' | 'artists', index: number, query: string) {
+async function searchItems(type: 'tracks' | 'movements' | 'works' | 'albums' | 'artists', index: number, query: string) {
     const { data } = await useAxios({
         url: base + `/?itemtype=${type}&start=${index}&q=${encodeURIComponent(query)}&limit=30&classical=true`,
         method: 'GET',
@@ -38,6 +38,10 @@ async function searchItems(type: 'tracks' | 'works' | 'albums' | 'artists', inde
 
 async function searchTracks(query: string, start: number = 0): Promise<{ results: Track[]; more: boolean }> {
     return searchItems('tracks', start, query)
+}
+
+async function searchMovements(query: string, start: number = 0): Promise<{ results: Track[]; more: boolean }> {
+    return searchItems('movements', start, query)
 }
 
 async function searchWorks(query: string, start: number = 0): Promise<{ results: WorkTile[]; more: boolean }> {
@@ -52,6 +56,6 @@ async function searchArtists(query: string, start: number = 0): Promise<{ result
     return searchItems('artists', start, query)
 }
 
-export { searchAlbums, searchArtists, searchTracks, searchTopResults, searchWorks }
+export { searchAlbums, searchArtists, searchMovements, searchTracks, searchTopResults, searchWorks }
 
 // TODO: Rewrite this module using `useAxios` hook

@@ -17,20 +17,20 @@
         <section v-if="page.continue_listening.length">
             <div class="heading">{{ $t('Views.ClassicalHome.ContinueListening') }}</div>
             <div class="continue">
-                <div v-for="item in page.continue_listening" :key="item.workhash" class="resume rounded-sm">
+                <RouterLink
+                    v-for="item in page.continue_listening"
+                    :key="item.workhash"
+                    :to="{ name: Routes.work, params: { token: item.workhash }, query: { albumhash: item.albumhash } }"
+                    class="resume rounded-sm"
+                >
                     <img v-if="item.image" :src="paths.images.thumb.medium + item.image" />
                     <div class="text">
                         <div class="composer ellip">{{ item.composer }}</div>
-                        <RouterLink
-                            :to="{ name: Routes.work, params: { token: item.workhash }, query: { albumhash: item.albumhash } }"
-                            class="name ellip"
-                        >
-                            {{ item.title }}
-                        </RouterLink>
+                        <div class="name ellip">{{ item.title }}</div>
                         <div class="album ellip">{{ item.album }}</div>
                     </div>
-                    <button class="resumebtn circular" @click="resume(item)"><PlaySvg /></button>
-                </div>
+                    <button class="resumebtn circular" @click.prevent.stop="resume(item)"><PlaySvg /></button>
+                </RouterLink>
             </div>
         </section>
 
@@ -236,10 +236,6 @@ onMounted(async () => {
         padding: 2rem 0 1rem 0;
     }
 
-    .work-list .row.no-year {
-        margin-left: -0.75rem;
-    }
-
     .work-list .title {
         font-size: 1.15rem;
     }
@@ -269,6 +265,12 @@ onMounted(async () => {
         background-color: rgb(18, 18, 18);
         border-radius: 0.85rem;
         border: solid 0.5px #252525;
+        color: inherit;
+        transition: background-color 0.2s ease-out;
+
+        &:hover {
+            background-color: $gray5;
+        }
 
         img {
             width: 5rem;

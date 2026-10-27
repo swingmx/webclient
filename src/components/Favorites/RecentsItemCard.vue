@@ -8,13 +8,15 @@
     }"
   >
     <div class="imagegroup">
-      <img
-        :src="
-          fav.type === 'album' ? paths.images.thumb.large + fav.item.image : paths.images.artist.large + fav.item.image
-        "
-        alt=""
+      <PersonImage
+        v-if="fav.type === 'artist'"
         class="rounded-sm"
+        size="large"
+        :image="fav.item.image"
+        :name="fav.item.name"
+        :tint="fav.item.tint"
       />
+      <img v-else :src="paths.images.thumb.large + fav.item.image" alt="" class="rounded-sm" />
     </div>
     <div class="name ellip" :title="fav.type === 'artist' ? fav.item.name : fav.item.title">
       {{ fav.type === "artist" ? fav.item.name : fav.item.title }}
@@ -29,6 +31,7 @@
 import { RecentFavResult } from "@/interfaces";
 import { Routes } from "@/router";
 import { paths } from "../../config";
+import PersonImage from "../shared/PersonImage.vue";
 
 defineProps<{
   fav: RecentFavResult;
@@ -78,7 +81,8 @@ defineProps<{
   }
 
   &.artist {
-    img {
+    img,
+    .person-initials {
       border-radius: 50%;
     }
 

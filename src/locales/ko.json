@@ -177,6 +177,7 @@
     "experimental": "실험적",
     "mix": "믹스",
     "new": "신규",
+    "premium": "프리미엄 필요",
     "removed": "제거됨",
     "selected": "선택됨",
     "top": "상위",
@@ -263,7 +264,8 @@
       "Home": "홈",
       "Playlists": "재생 목록",
       "Search": "검색",
-      "Settings": "설정"
+      "Settings": "설정",
+      "Classical": "클래식"
     }
   },
   "MasterFlag": {
@@ -457,7 +459,13 @@
     "NoTracksTitle": "트랙 없음",
     "SearchPlaceholder": "검색어를 입력하세요",
     "TopResult": "최고 결과",
-    "top": "상위"
+    "top": "상위",
+    "Era": "{era} 시대",
+    "From": "수록 작품",
+    "composer": "작곡가",
+    "performer": "연주자",
+    "work": "작품",
+    "movement": "악장"
   },
   "SearchInput": {
     "BackToQueue": "대기열로 돌아가기",
@@ -549,7 +557,7 @@
           "Title": "트랙이 하나인 앨범을 싱글로 표시"
         },
         "Classical": {
-          "Desc": "앨범에 클래식 음악 지원을 활성화해요 (프리미엄 필요)",
+          "Desc": "앨범에 클래식 음악 지원을 활성화해요",
           "Title": "클래식 음악 지원 사용"
         },
         "CleanTitles": {
@@ -564,7 +572,9 @@
       "ArtistSeparatorDesc": "아티스트 구분자 맞춤 설정",
       "Artists": {
         "ArticleAwareDesc": "아티스트 이름을 정렬할 때 관사(The, A, An 등)를 무시해요",
-        "ArticleAwareTitle": "관사를 고려한 정렬"
+        "ArticleAwareTitle": "관사를 고려한 정렬",
+        "JumpToArtistDesc": "아티스트를 검색하면 아티스트 페이지가 열려요",
+        "JumpToArtistTitle": "아티스트로 이동"
       },
       "ArtistsDesc": "아티스트 설정 맞춤 구성",
       "BackupMainDesc": "라이브러리 데이터를 백업하고 복원하세요",
@@ -728,7 +738,7 @@
           "Title": "플러그인 사용"
         },
         "TrustCloud": {
-          "Desc": "검증되지 않은 가사는 표시하지 않아요 (프리미엄 필요)",
+          "Desc": "검증되지 않은 가사는 표시하지 않아요",
           "Title": "검증된 가사만 표시"
         }
       },
@@ -807,7 +817,8 @@
     "AlbumViews": {
       "MoreFrom": "{art}의 다른 앨범",
       "OtherVersions": "다른 버전",
-      "RelatedAlbums": "관련 앨범"
+      "RelatedAlbums": "관련 앨범",
+      "Released": "{date} 발매"
     },
     "ArtistDiscography": {
       "AllAlbums": "모든 앨범",
@@ -821,13 +832,24 @@
     },
     "FavoriteTracks": {
       "Description": "즐겨찾는 트랙이 {n_tr}개 있어요",
-      "Title": "즐겨찾는 트랙"
+      "ClassicalDescription": "즐겨찾는 악장이 {n_tr}개 있어요",
+      "Title": "즐겨찾는 트랙",
+      "ClassicalTitle": "즐겨찾는 클래식"
     },
     "Favorites": {
       "CountStats": "트랙 {tra}개 • 앨범 {alb}개 • 아티스트 {art}명",
       "Description": "하트 아이콘을 눌러 트랙, 앨범, 아티스트를 즐겨찾기에 추가할 수 있어요",
       "NoFavoritesFound": "즐겨찾기가 없어요",
-      "Title": "즐겨찾기"
+      "Title": "즐겨찾기",
+      "AllTracks": "전체",
+      "Tracks": "트랙",
+      "Classical": "클래식",
+      "NoClassical": "아직 즐겨찾는 클래식이 없어요",
+      "NoClassicalDescription": "즐겨찾기에 추가한 악장이 여기에 표시돼요",
+      "Works": "작품",
+      "Work": "작품",
+      "Composers": "작곡가",
+      "Composer": "작곡가"
     },
     "FolderView": {
       "FolderIsEmpty": "폴더가 비어 있어요",
@@ -880,6 +902,85 @@
     "Stats": {
       "Description": "지난 한 주의 청취 통계",
       "Title": "통계"
+    },
+    "WorkView": {
+      "Movements": "{total}개 악장 중 {n}개",
+      "OtherRecordings": "다른 녹음",
+      "MovementCount": "{n}개 악장",
+      "Performers": "연주자",
+      "DedicatedTo": "{name}에게 헌정",
+      "Composed": "작곡",
+      "Published": "출판",
+      "Key": "조성",
+      "Instrumentation": "편성"
+    },
+    "Listening": {
+      "MostPlayedArtists": "가장 많이 들은 아티스트",
+      "MostPlayedComposers": "가장 많이 들은 작곡가",
+      "ArtistRank": "아티스트 순위",
+      "ComposerRank": "작곡가 순위",
+      "OfArtists": "아티스트 {n}명 중",
+      "OfComposers": "작곡가 {n}명 중",
+      "TimeListened": "감상 시간",
+      "AllTime": "전체 기간",
+      "ListenedAllTime": "전체 감상 시간",
+      "PlayCount": "재생 횟수",
+      "Plays": "{n}회 재생",
+      "LastPlayed": "마지막 재생 {ago}",
+      "NotPlayed": "아직 재생하지 않았어요",
+      "MostPlayedAlbum": "가장 많이 들은 앨범",
+      "MostPlayedWork": "가장 많이 들은 작품",
+      "TopAlbum": "최다 재생 앨범 ({time})",
+      "TopTrack": "최다 재생 트랙 ({time})",
+      "ShortTime": "{h}시간 {m}분",
+      "ShortMinutes": "{m}분"
+    },
+    "ComposerView": {
+      "Composer": "작곡가",
+      "WorksInLibrary": "라이브러리에 작품 {n}개",
+      "AlbumCount": "앨범 {n}개",
+      "PlayAll": "모두 재생",
+      "ShuffleWorks": "작품 셔플",
+      "Works": "작품",
+      "Movements": "악장",
+      "All": "전체",
+      "Recordings": "녹음 {n}개",
+      "Albums": "앨범",
+      "About": "소개",
+      "ReadMore": "더 보기",
+      "ShowLess": "접기",
+      "SourceLabel": "출처:",
+      "Wikipedia": "위키백과",
+      "Interpreters": "자주 연주한 연주자",
+      "WorkCount": "작품 {n}개",
+      "Performer": "연주자",
+      "Shuffle": "셔플",
+      "Repertoire": "레퍼토리",
+      "With": "{names}와(과) 함께",
+      "ClassicalAlbums": "클래식 앨범",
+      "LiveAlbums": "라이브 앨범",
+      "Soundtracks": "사운드트랙",
+      "Composers": "작곡가",
+      "PerformsWith": "함께 연주한 연주자"
+    },
+    "ClassicalHome": {
+      "Description": "클래식 음악 라이브러리에 오신 걸 환영해요",
+      "Title": "클래식",
+      "Albums": "앨범 {n}개",
+      "Tracks": "트랙 {n}개",
+      "Listened": "{time} 감상",
+      "ContinueListening": "이어서 듣기",
+      "AlbumsTitle": "앨범",
+      "RecentlyAdded": "최근 추가됨",
+      "FavoriteWorks": "즐겨찾는 작품",
+      "Composers": "작곡가",
+      "BrowseByEra": "시대별 둘러보기",
+      "BrowseByInstrument": "악기별 둘러보기",
+      "BrowseByType": "작품 유형별 둘러보기",
+      "ReturnTo": "다시 들을 작품",
+      "Performers": "연주자",
+      "Plays": "{n}회 재생",
+      "Today": "현재"
     }
   }
 }

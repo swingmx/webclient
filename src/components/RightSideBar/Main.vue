@@ -104,12 +104,4 @@ const tabs = useTabStore()
         background-color: $gray5;
     }
 }
-
-.designatedOS .r-sidebar > .r-content > .r-queue > .queue-virtual-scroller > .scroller::-webkit-scrollbar-track {
-    background-color: $gray;
-}
-
-.designatedOS .r-sidebar > .r-content > .r-queue > .queue-virtual-scroller > .scroller::-webkit-scrollbar-thumb {
-    border-color: $gray;
-}
 </style>

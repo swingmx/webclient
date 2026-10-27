@@ -48,7 +48,7 @@ import { computed, onMounted, watch } from 'vue'
 import { discographyAlbumTypes } from '@/enums'
 import { useT } from '@/i18n'
 import { Album, ClassicalPersonPage, PersonAlbumSections, PersonEntry } from '@/interfaces'
-import { getArtistRepertoire } from '@/requests/artists'
+import { getArtistTracks } from '@/requests/artists'
 import useQueue from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
 import updatePageTitle from '@/utils/updatePageTitle'
@@ -101,8 +101,8 @@ function people(entries: PersonEntry[], count: (entry: PersonEntry) => string): 
  * Queue the whole repertoire in page order, or with the works shuffled.
  */
 async function play(shuffle: boolean) {
-    const data = await getArtistRepertoire(props.page.artisthash)
-    if (!data || !data.works.length) return
+    const data = await getArtistTracks(props.page.artisthash)
+    if (!data.works?.length) return
 
     const works = [...data.works]
     if (shuffle) {
@@ -134,7 +134,7 @@ watch(() => props.page.artisthash, setTitle)
     padding-bottom: 4rem;
 
     .cardscroller {
-        padding: 2rem 1rem 0;
+        padding: 2rem 0 0 0;
     }
 }
 </style>

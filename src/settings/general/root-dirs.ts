@@ -7,6 +7,7 @@ import useModalStore from '@/stores/modal'
 import settings from '@/stores/settings'
 import { router, Routes } from '@/router'
 import { useT } from '@/i18n'
+import { classical_enabled } from './albums'
 
 const { t } = useT()
 
@@ -16,7 +17,7 @@ const change_root_dirs: Setting = {
     title: text.change,
     type: SettingType.button,
     state: null,
-    button_text: () => `\xa0 \xa0 ${settings().root_dirs.length ? t("Common.Modify") : t("Common.Configure")}} \xa0 \xa0`,
+    button_text: () => `\xa0 \xa0 ${settings().root_dirs.length ? t("Common.Modify") : t("Common.Configure")} \xa0 \xa0`,
     action: () => {
         useModalStore().hideModal()
         return router.push({ path: '/manconfig/dirconfig' })
@@ -72,6 +73,7 @@ const show_playlists_in_folders: Setting = {
 export default [
     change_root_dirs,
     list_root_dirs,
+    classical_enabled,
     show_playlists_in_folders,
     // useWatchdog, enable_scans, periodicScanInterval
 ]

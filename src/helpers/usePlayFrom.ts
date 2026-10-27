@@ -8,7 +8,7 @@ import useQueue from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
 import useSettingsStore from '@/stores/settings'
 
-import { Track } from '@/interfaces'
+import { FavTrackKind, Track } from '@/interfaces'
 import { getAlbumTracks, normalizeAlbumTracks } from '@/requests/album'
 import { getArtistTracks } from '@/requests/artists'
 import { getFavTracks } from '@/requests/favorite'
@@ -33,9 +33,9 @@ export async function utilPlayFromArtist(index: number = 0) {
         return
     }
 
-    const tracks = await getArtistTracks(artist.info.artisthash)
+    const { tracks, works } = await getArtistTracks(artist.info.artisthash)
 
-    tracklist.setFromArtist(artist.info.artisthash, artist.info.name, tracks)
+    tracklist.setFromArtist(artist.info.artisthash, artist.info.name, tracks, works)
     queue.play(index)
 }
 
@@ -57,14 +57,14 @@ export async function playFromAlbumCard(albumhash: string, albumname: string) {
 export async function playFromArtistCard(artisthash: string, artistname: string) {
     const queue = useQueue()
     const tracklist = useTracklist()
-    const tracks = await getArtistTracks(artisthash)
+    const { tracks, works } = await getArtistTracks(artisthash)
 
     if (tracks.length === 0) {
         useToast().showNotification(t('UsePlayFrom.ArtistTracksNotFound'), NotifType.Error)
         return
     }
 
-    tracklist.setFromArtist(artisthash, artistname, tracks)
+    tracklist.setFromArtist(artisthash, artistname, tracks, works)
     queue.play()
 }
 
@@ -84,14 +84,18 @@ export async function playFromFolderCard(folderpath: string) {
     queue.play()
 }
 
-export async function playFromFavorites(track: Track | undefined) {
+// the kind of favorite tracks the queue was last filled with
+let favoritesKind: FavTrackKind = 'all'
+
+export async function playFromFavorites(track: Track | undefined, kind: FavTrackKind = 'all') {
     const queue = useQueue()
     const tracklist = useTracklist()
 
-    // if our tracklist is not from favorites, we need to fetch the favorites
-    if (tracklist.from.type !== FromOptions.favorite) {
-        const res = await getFavTracks(0, -1)
+    // fetch the favorites when the queue does not hold this kind of them
+    if (tracklist.from.type !== FromOptions.favorite || favoritesKind !== kind) {
+        const res = await getFavTracks(0, -1, kind)
         tracklist.setFromFav(res.tracks)
+        favoritesKind = kind
     }
 
     let index = 0

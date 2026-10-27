@@ -18,9 +18,9 @@ export default async (artisthash: string, artistname: string) => {
     const play_next = <Option>{
         label: t('Menus.Common.PlayNext'),
         action: () => {
-            getArtistTracks(artisthash).then(tracks => {
+            getArtistTracks(artisthash).then(({ tracks, works }) => {
                 const store = useTracklist()
-                store.insertAfterCurrent(tracks)
+                store.insertAfterCurrent(tracks, works)
             })
         },
         icon: PlayNextIcon,
@@ -29,9 +29,9 @@ export default async (artisthash: string, artistname: string) => {
     const add_to_queue = <Option>{
         label: t('Menus.Common.AddToQueue'),
         action: () => {
-            getArtistTracks(artisthash).then(tracks => {
+            getArtistTracks(artisthash).then(({ tracks, works }) => {
                 const store = useTracklist()
-                store.addTracks(tracks)
+                store.addTracks(tracks, works)
             })
         },
         icon: AddToQueueIcon,

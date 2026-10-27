@@ -57,17 +57,6 @@ export const getArtistWorks = async (hash: string, query: Record<string, string>
     return status === 200 ? (data as ClassicalPersonWorks) : null
 }
 
-/**
- * A composer's or performer's repertoire as works with movements, for queueing.
- */
-export const getArtistRepertoire = async (hash: string) => {
-    const { data, status } = await useAxios({
-        method: 'GET',
-        url: paths.api.artist + `/${hash}/tracks`,
-    })
-    return status === 200 ? (data as { works: (ClassicalWork & { albumhash: string })[] }) : null
-}
-
 export const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
     interface ArtistAlbums {
         artistname: string
@@ -92,7 +81,12 @@ export const getArtistAlbums = async (hash: string, limit = 6, all = false) => {
     return data as ArtistAlbums
 }
 
-export const getArtistTracks = async (hash: string) => {
+/**
+ * An artist's tracks for queueing. A composer or performer answers with
+ * their repertoire as works, most listened first: their movements in order,
+ * and the works to label them with.
+ */
+export const getArtistTracks = async (hash: string): Promise<{ tracks: Track[]; works?: ClassicalWork[] }> => {
     const { data, error } = await useAxios({
         method: 'GET',
         url: paths.api.artist + `/${hash}/tracks`,
@@ -102,7 +96,12 @@ export const getArtistTracks = async (hash: string) => {
         console.error(error)
     }
 
-    return data as Track[]
+    if (data && !Array.isArray(data) && Array.isArray(data.works)) {
+        const works = data.works as ClassicalWork[]
+        return { tracks: works.flatMap(work => work.movements), works }
+    }
+
+    return { tracks: (data as Track[]) ?? [] }
 }
 
 export const getSimilarArtists = async (hash: string, limit = 6) => {

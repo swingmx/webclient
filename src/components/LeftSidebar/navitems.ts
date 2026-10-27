@@ -50,7 +50,7 @@ export const useNavItems = () => {
     icon: AlbumSvg,
   };
   // only listed when classical support is on
-  const classicalItems = () => (settings.classical_enabled ? [classical] : []);
+  const classicalItems = () => (settings.classical_on ? [classical] : []);
 
   const menus = computed(() => [
     home,

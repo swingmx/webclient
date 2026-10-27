@@ -43,8 +43,9 @@ const trust_cloud_lyrics = <Setting>{
     inactive: () => {
         const settings = useSettings()
 
-        return !(settings.use_lyrics_plugin && settings.licenseInfo?.license.status === 'active')
+        return !(settings.use_lyrics_plugin && settings.has_premium)
     },
+    premium: true,
 }
 
 export default [toggle_lyrics_plugin, auto_download_lyrics, auto_download_on_unsynced, trust_cloud_lyrics]

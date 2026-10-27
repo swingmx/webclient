@@ -30,6 +30,8 @@ function resolveButtonTabName(id: string): string {
             return t('Common.All');
         case 'tracks':
             return t('Common.Track', 2);
+        case 'movements':
+            return t('Views.ComposerView.Movements');
         case 'works':
             return t('Views.ComposerView.Works');
         case 'albums':
@@ -89,22 +91,6 @@ defineEmits<{
     .scroller {
         padding: 0 1rem 2rem $small !important;
     }
-}
-
-.designatedOS #tab-content::-webkit-scrollbar-track {
-    background-color: $gray;
-}
-
-.designatedOS #tab-content::-webkit-scrollbar-thumb {
-    border-color: $gray;
-}
-
-.designatedOS #tab-content .vue-recycle-scroller::-webkit-scrollbar-track {
-    background-color: $gray;
-}
-
-.designatedOS #tab-content .vue-recycle-scroller::-webkit-scrollbar-thumb {
-    border-color: $gray;
 }
 
 #right-tabs.tabContent {

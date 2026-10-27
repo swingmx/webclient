@@ -35,18 +35,6 @@ const settings = useSettingsStore();
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     padding: 1rem 0;
-
-    &::-webkit-scrollbar-thumb {
-      background-color: transparent;
-    }
-  }
-
-  &:hover .scrollable::-webkit-scrollbar-thumb {
-    background-color: $gray2;
-  }
-
-  &:hover .scrollable::-webkit-scrollbar-thumb:hover {
-    background-color: $gray1;
   }
 }
 </style>

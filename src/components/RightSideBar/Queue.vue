@@ -23,7 +23,13 @@
                     :size-dependencies="[item.props]"
                     :data-index="index"
                 >
-                    <WorkHeader v-if="item.isHeader" :work="item.props.work" :class="{ 'first-item': index === 0 }" />
+                    <component
+                        :is="item.component"
+                        v-if="item.isHeader"
+                        v-bind="item.props"
+                        :is-current="item.trackIndex !== undefined && item.trackIndex === queue.currentindex"
+                        @playThis="playFromQueue(item.playIndex)"
+                    />
                     <div v-else :class="{ 'gap-above': item.gapAbove }">
                         <component
                             :is="item.component"
@@ -50,17 +56,20 @@ import useTracklist from '@/stores/queue/tracklist'
 import NoItems from '../shared/NoItems.vue'
 import QueueActions from './Queue/QueueActions.vue'
 import TrackItem from '@/components/shared/TrackItem.vue'
-import WorkHeader from '@/components/Classical/WorkHeader.vue'
+import QueueMovement from '@/components/Classical/QueueMovement.vue'
+import QueueWorkHead from '@/components/Classical/QueueWorkHead.vue'
 import QueueSvg from '@/assets/icons/queue.svg'
 import PlayingFrom from '../NowPlaying/PlayingFrom.vue'
 
-
 interface QueueScrollerItem {
     id: string | number
-    component: typeof TrackItem | typeof WorkHeader
+    component: typeof TrackItem | typeof QueueWorkHead | typeof QueueMovement
     props: any
-    // tracklist index for track/movement rows, undefined for work headers
+    // tracklist index for track/movement rows and single-movement heads,
+    // undefined for other work headers
     trackIndex?: number
+    // where a work header's play link starts
+    playIndex?: number
     workhash?: string
     isHeader?: boolean
     gapAbove?: boolean
@@ -75,10 +84,12 @@ const scroller = ref<any>(null)
 
 const { focusCurrentInSidebar, setScrollFunction } = useInterface()
 
-// { id, component, props } items: movements are grouped under a WorkHeader for
-// their work (looked up via the workhash stamped at queue-insertion time).
-// ids are queue positions: the same track can appear in the queue more than
-// once, so filepath/trackhash are not valid keys here.
+// { id, component, props } items: each run of a work's movements is drawn
+// under a QueueWorkHead, as numberless QueueMovement rows, or as the head
+// alone when the run is one movement. Works are found by the workhash
+// stamped at queue-insertion time. ids are queue positions: the same track
+// can appear in the queue more than once, so filepath/trackhash are not
+// valid keys here.
 const scrollerItems = computed(() => {
     const items: QueueScrollerItem[] = []
     let prevWorkhash: string | null = null
@@ -102,33 +113,56 @@ const scrollerItems = computed(() => {
         }
 
         if (prevWorkhash !== work.workhash) {
+            const run = workRun(index, work.workhash)
+            const single = run.length === 1
             items.push({
                 id: `work-${index}`,
-                component: WorkHeader,
+                component: QueueWorkHead,
                 isHeader: true,
                 workhash: work.workhash,
-                props: { work },
+                trackIndex: single ? index : undefined,
+                playIndex: index,
+                props: {
+                    work,
+                    albumhash: track.albumhash,
+                    count: run.length,
+                    movement: single ? movement : undefined,
+                    trackIndex: index,
+                },
             })
+            prevWorkhash = work.workhash
+            if (single) return
         }
 
         items.push({
             id: index,
-            component: TrackItem,
+            component: QueueMovement,
             trackIndex: index,
             workhash: work.workhash,
-            props: {
-                track: movement.movement_title ? { ...movement, title: movement.movement_title } : movement,
-                index,
-                isQueueTrack: true,
-                isClassicalTrack: true,
-            },
+            props: { movement, index },
         })
-
-        prevWorkhash = work.workhash
     })
+
+    const last = items[items.length - 1]
+    if (last && last.component !== TrackItem) {
+        last.props = { ...last.props, last: true }
+    }
 
     return items
 })
+
+/**
+ * The queued tracks from `start` that belong to one work, in a row.
+ */
+function workRun(start: number, workhash: string) {
+    const run = []
+    for (let i = start; i < store.tracklist.length; i++) {
+        const track = store.tracklist[i] as ClassicalMovement
+        if (!track.is_classical || track.workhash !== workhash) break
+        run.push(track)
+    }
+    return run
+}
 
 function playFromQueue(index?: number) {
     if (index === undefined) return
@@ -221,10 +255,6 @@ onBeforeUnmount(() => {
 .queue-virtual-scroller {
     height: 100%;
     overflow: hidden;
-
-    .workheader.first-item {
-        padding-top: $smaller;
-    }
 
     .gap-above {
         padding-top: 1.5rem;

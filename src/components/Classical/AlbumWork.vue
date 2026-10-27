@@ -44,9 +44,6 @@
                     <span v-if="single && work.excerpt" class="excerpt">{{ work.excerpt }}</span>
                     <span v-if="notes" class="notes">{{ notes }}</span>
                 </div>
-                <div v-if="work.performers" class="performers">
-                    {{ work.performers }}
-                </div>
             </div>
             <div class="duration" :class="{ total: !single }">{{ formatSeconds(work.duration ?? 0) }}</div>
             <button v-if="single" class="menu" :class="{ on: menuOn }" @click.stop="showMenu($event, movements[0])">
@@ -306,13 +303,6 @@ function showMenu(e: MouseEvent, movement: ClassicalMovement) {
     .movement .notes {
         margin-left: 0.75rem;
         font-size: 0.9rem;
-    }
-
-    .performers {
-        font-family: Georgia, 'Times New Roman', serif;
-        font-style: italic;
-        font-size: 0.9rem;
-        color: $gray1;
     }
 
     .duration {

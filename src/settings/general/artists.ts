@@ -35,6 +35,14 @@ const separators = <Setting>{
     type: SettingType.separators_input,
 }
 
+const jumpToArtist = <Setting>{
+    title: t('Settings.General.Artists.JumpToArtistTitle'),
+    desc: t('Settings.General.Artists.JumpToArtistDesc'),
+    type: SettingType.binary,
+    state: () => useSettingsStore().jump_to_artist,
+    action: () => useSettingsStore().toggleJumpToArtist(),
+}
+
 const articleAwareSorting = <Setting>{
     title: t('Settings.General.Artists.ArticleAwareTitle'),
     desc: t('Settings.General.Artists.ArticleAwareDesc'),
@@ -43,4 +51,4 @@ const articleAwareSorting = <Setting>{
     action: () => useSettingsStore().toggleArticleAwareSorting(),
 }
 
-export default [articleAwareSorting, separators]
+export default [jumpToArtist, articleAwareSorting, separators]

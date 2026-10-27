@@ -48,7 +48,7 @@ onMounted(() => {
   const hash = route.params.hash as string;
 
   getArtistTracks(hash).then((t) => {
-    tracks.value = t;
+    tracks.value = t.tracks;
   });
 });
 

@@ -1,6 +1,11 @@
 <template>
     <div class="v-scroll-page" :class="{ isSmall }" style="height: 100%">
-        <NoItems :flag="!tracks.length" :title="$t('Common.NoTracks')" :description="desc" :icon="noitemsicon" />
+        <NoItems
+            :flag="!tracks.length"
+            :title="emptyTitle ?? $t('Common.NoTracks')"
+            :description="desc"
+            :icon="noitemsicon"
+        />
         <DynamicScroller
             id="album-scroller"
             style="height: 100%"
@@ -38,6 +43,8 @@ import { isSmall } from '@/stores/content-width'
 
 import NoItems from '@/components/shared/NoItems.vue'
 import SongItem from '@/components/shared/SongItem.vue'
+import SearchWorkRow from '@/components/Classical/SearchWorkRow.vue'
+import useQueue from '@/stores/queue'
 import AlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 import { dropSources } from '@/enums'
 
@@ -46,6 +53,9 @@ const props = defineProps<{
     desc: string
     noitemsicon: any
     moreItemsLoader: () => Promise<void>
+    // movements drawn with the classical row
+    classical?: boolean
+    emptyTitle?: string
 }>()
 
 defineEmits<{
@@ -54,20 +64,30 @@ defineEmits<{
 
 interface scrollerItem {
     id: string | number | undefined
-    component: typeof SongItem | typeof AlbumsFetcher
+    component: typeof SongItem | typeof SearchWorkRow | typeof AlbumsFetcher
     props: Record<string, any>
 }
 
+const queue = useQueue()
+
 const scrollerItems = computed(() => {
-    const items: scrollerItem[] = props.tracks.map((track, index) => ({
-        id: index,
-        component: SongItem,
-        props: {
-            track,
-            index: track.index,
-            source: dropSources.favorite,
-        },
-    }))
+    const items: scrollerItem[] = props.tracks.map((track, index) =>
+        props.classical && track.classical
+            ? {
+                  id: index,
+                  component: SearchWorkRow,
+                  props: { track, index: track.index, isCurrent: queue.currenttrackhash === track.trackhash },
+              }
+            : {
+                  id: index,
+                  component: SongItem,
+                  props: {
+                      track,
+                      index: track.index,
+                      source: dropSources.favorite,
+                  },
+              }
+    )
 
     items.push({
         // set to random to force re-render

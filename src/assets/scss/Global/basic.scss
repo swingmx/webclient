@@ -278,6 +278,11 @@ button {
     opacity: 1;
 }
 
+.badge.premium {
+    border: solid 1px $pink;
+    color: $pink;
+}
+
 .explicit-icon {
     width: 0.9rem;
     margin-left: $smaller;

@@ -225,7 +225,7 @@ const scrollerItems = computed(() => {
     moreFrom = moreFrom.filter(item => item.id !== undefined)
     const otherVersionsComponent = getAlbumVersionsComponent()
 
-    const classical = settings.classical_enabled && album.info.is_classical && album.works.length > 0
+    const classical = settings.classical_on && album.info.is_classical && album.works.length > 0
     const pageItems = (classical ? getWorkItems() : getSongItems()) as ScrollerItem[]
 
     if (album.info.date || album.copyright) {

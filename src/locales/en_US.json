@@ -177,6 +177,7 @@
     "experimental": "experimental",
     "mix": "mix | mixes",
     "new": "new",
+    "premium": "requires premium",
     "removed": "removed",
     "selected": "selected",
     "top": "top",
@@ -557,7 +558,7 @@
       },
       "Albums": {
         "Classical": {
-          "Desc": "Enable classical music support for albums (premium required)",
+          "Desc": "Enable classical music support for albums",
           "Title": "Enable classical music support"
         },
         "AlbumAsSingles": {
@@ -576,7 +577,9 @@
       "ArtistSeparatorDesc": "Customize artist separators",
       "Artists": {
         "ArticleAwareDesc": "Ignore articles (e.g. The, A, An) when sorting artist names",
-        "ArticleAwareTitle": "Article aware sorting"
+        "ArticleAwareTitle": "Article aware sorting",
+        "JumpToArtistDesc": "Searching for an artist opens their artist page",
+        "JumpToArtistTitle": "Jump to artist"
       },
       "ArtistsDesc": "Customize artist settings",
       "BackupMainDesc": "Backup and restore your library data",
@@ -737,7 +740,7 @@
           "Title": "Enable plugin"
         },
         "TrustCloud": {
-          "Desc": "Do not show lyrics unverified lyrics (premium required)",
+          "Desc": "Do not show lyrics unverified lyrics",
           "Title": "Only display verified lyrics"
         }
       },
@@ -852,6 +855,7 @@
       "PlayAll": "Play all",
       "ShuffleWorks": "Shuffle works",
       "Works": "Works",
+      "Movements": "Movements",
       "All": "All",
       "Recordings": "{n} recording | {n} recordings",
       "Albums": "Albums",
@@ -909,9 +913,16 @@
     },
     "FavoriteTracks": {
       "Description": "You have {n_tr} favorited track | You have {n_tr} favorited tracks",
-      "Title": "Favorite Tracks"
+      "ClassicalDescription": "You have {n_tr} favorited movement | You have {n_tr} favorited movements",
+      "Title": "Favorite Tracks",
+      "ClassicalTitle": "Favorite Classical"
     },
     "Favorites": {
+      "AllTracks": "All",
+      "Tracks": "Tracks",
+      "Classical": "Classical",
+      "NoClassical": "No classical favorites yet",
+      "NoClassicalDescription": "Movements you favorite show up here",
       "Works": "Works",
       "Work": "work | works",
       "Composers": "Composers",

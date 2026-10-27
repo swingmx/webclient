@@ -127,15 +127,12 @@ class AudioSource {
 }
 
 export function getUrl(filepath: string, trackhash: string, use_legacy: boolean) {
-    // INFO: Force using legacy streaming endpoint until
-    // we change the playback engine to properly support
-    // the chunked streaming endpoint.
-    use_legacy = true
-    const { streaming_container, streaming_quality } = useSettings()
+    const { streaming_quality, has_premium } = useSettings()
+    const quality = has_premium ? streaming_quality : 'original'
 
     const url = `${paths.api.files}/${trackhash + (use_legacy ? '/legacy' : '')}?filepath=${encodeURIComponent(
         filepath
-    )}&container=${streaming_container}&quality=${streaming_quality}`
+    )}&quality=${quality}`
 
     return getBaseUrl() + url
 }

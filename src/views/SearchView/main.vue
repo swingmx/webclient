@@ -43,7 +43,9 @@ const search = useSearchStore();
 const is_alt_layout = computed(() => settings.is_alt_layout || content_width.value < 1100);
 
 const pages = computed(() =>
-  settings.classical_enabled ? ["top", "tracks", "works", "albums", "artists"] : ["top", "tracks", "albums", "artists"]
+  settings.classical_on
+    ? ["top", "tracks", "movements", "works", "albums", "artists"]
+    : ["top", "tracks", "albums", "artists"]
 );
 
 const route = useRoute();
@@ -54,6 +56,8 @@ const component = computed(() => {
       return { component: TopResults };
     case "tracks":
       return { component: TracksPage };
+    case "movements":
+      return { component: TracksPage, props: { movements: true } };
     case "works":
       return { component: WorksPage };
     case "albums":
@@ -129,7 +133,7 @@ onMounted(() => {
   }
 }
 
-.designatedOS .tabheaders::-webkit-scrollbar {
-  display: none;
+.tabheaders {
+  @include hideScrollbars;
 }
 </style>

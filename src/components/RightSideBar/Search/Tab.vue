@@ -26,6 +26,11 @@ function getComponent() {
       return {
         component: TracksGrid,
       };
+    case "movements":
+      return {
+        component: TracksGrid,
+        props: { movements: true },
+      };
     case "works":
       return {
         component: WorksGrid,

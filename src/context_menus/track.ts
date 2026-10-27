@@ -1,5 +1,5 @@
 import { router } from '@/router'
-import { Artist, ClassicalWork, Playlist, Track } from '@/interfaces'
+import { Artist, ClassicalMovement, ClassicalWork, Playlist, Track } from '@/interfaces'
 import { router as Router, Routes } from '@/router'
 
 import { Option } from '@/interfaces'
@@ -9,6 +9,7 @@ import { addTracksToPlaylist, removeTracks } from '@/requests/playlists'
 import { AddToQueueIcon, AlbumIcon, ArtistIcon, DeleteIcon, FolderIcon, PlayNextIcon, PlusIcon } from '@/icons'
 import useAlbumStore from '@/stores/pages/album'
 import usePlaylistStore from '@/stores/pages/playlist'
+import useWorkStore from '@/stores/pages/work'
 import useQueueStore from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
 import { getAddToPlaylistOptions, get_find_on_social } from './utils'
@@ -73,11 +74,20 @@ export default async (track: Track): Promise<Option[]> => {
         icon: PlusIcon,
     }
 
+    /**
+     * The work a classical track belongs to: from the open album page, the
+     * open work page, or the queue when the track is queued under a work.
+     */
     const findWork = (): ClassicalWork[] | undefined => {
         if (!track.is_classical) return undefined
 
-        const work = useAlbumStore().works.find(w => w.movements.some(m => m.trackhash === track.trackhash))
-        return work ? [work] : undefined
+        const has = (work: ClassicalWork) => work.movements.some(m => m.trackhash === track.trackhash)
+        const work = useAlbumStore().works.find(has) ?? [useWorkStore().asWork].find(w => w && has(w))
+        if (work) return [work]
+
+        const workhash = (track as ClassicalMovement).workhash
+        const queued = workhash ? useTracklist().worklist[workhash] : undefined
+        return queued ? [{ ...queued, movements: [track as ClassicalMovement] }] : undefined
     }
 
     const add_to_q: Option = {

@@ -6,8 +6,9 @@ const toSegments = (p: string) => (p ?? '').replace(/\\/g, '/').split('/').filte
  * Breaks a path into sub-paths.
  * @param {string} newpath the new path to break into sub-paths.
  * @param {string} oldpath the old path to compare with the new path.
+ * @param {string} home the home directory; the parts up to and including it are left out.
  */
-export default function createSubPaths(newpath: string, oldpath: string): [string, subPath[]] {
+export default function createSubPaths(newpath: string, oldpath: string, home = ''): [string, subPath[]] {
     const prefix = (newpath ?? '').startsWith('/') || (newpath ?? '').startsWith('\\') ? '/' : ''
     const suffix = (newpath ?? '').endsWith('/') || (newpath ?? '').endsWith('\\') ? '/' : ''
     const wrapPath = (segments: string[]) => prefix + segments.join('/') + suffix
@@ -36,6 +37,11 @@ export default function createSubPaths(newpath: string, oldpath: string): [strin
         }
         if (lastActiveIndex !== -1) paths[lastActiveIndex].active = true
 
-        return paths
+        const homeSegments = toSegments(home)
+        const underHome =
+            homeSegments.length > 0 && homeSegments.every((name, index) => list[index] === name)
+        if (!underHome) return paths
+
+        return paths.slice(homeSegments.length)
     }
 }

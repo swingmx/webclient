@@ -42,45 +42,38 @@ const crossfade: Setting = {
     show_if: () => settings().use_crossfade,
 }
 
-// const streaming_quality_options = [
-//     {
-//         title: t("Settings.Audio.StreamingQuality.Original"),
-//         key: 'original',
-//     },
-//     // {
-//     //     title: t("Settings.Audio.StreamingQuality.1024Flac"),
-//     //     key: '1024',
-//     // },
-//     // {
-//     //     title: t("Settings.Audio.StreamingQuality.640Flac"),
-//     //     key: '640',
-//     // },
-//     {
-//         title: t('Settings.Audio.StreamingQuality.320'),
-//         key: '320',
-//     },
-//     {
-//         title: t("Settings.Audio.StreamingQuality.128"),
-//         key: '128',
-//     },
-//     {
-//         title: t("Settings.Audio.StreamingQuality.96"),
-//         key: '96',
-//     },
-// ]
+const streaming_quality_options = [
+    {
+        title: t('Settings.Audio.StreamingQuality.Original'),
+        key: 'original',
+    },
+    {
+        title: t('Settings.Audio.StreamingQuality.320'),
+        key: '320',
+    },
+    {
+        title: t('Settings.Audio.StreamingQuality.128'),
+        key: '128',
+    },
+    {
+        title: t('Settings.Audio.StreamingQuality.96'),
+        key: '96',
+    },
+]
 
-// const transcoding: Setting = {
-//     title: t("Settings.Audio.StreamingQuality.Title"),
-//     desc: t("Settings.Audio.StreamingQuality.Description"),
-//     type: SettingType.streaming_quality,
-//     state: () => streaming_quality_options.find(option => option.key === settings().streaming_quality),
-//     action: (quality: {
-//         key: string
-//         title: string
-//     }) => settings().setStreamingQuality(quality.key),
-//     defaultAction: () => {},
-//     show_if: () => !settings().use_legacy_streaming_endpoint,
-//     options: streaming_quality_options as any,
-// }
+const transcoding: Setting = {
+    title: t('Settings.Audio.StreamingQuality.Title'),
+    desc: t('Settings.Audio.StreamingQuality.Description'),
+    type: SettingType.streaming_quality,
+    state: () => {
+        const key = settings().has_premium ? settings().streaming_quality : 'original'
+        return streaming_quality_options.find(option => option.key === key)
+    },
+    action: (quality: { key: string; title: string }) => settings().setStreamingQuality(quality.key),
+    defaultAction: () => {},
+    options: streaming_quality_options as any,
+    inactive: () => !settings().has_premium,
+    premium: true,
+}
 
-export default [use_silence, use_crossfade, crossfade]
+export default [use_silence, use_crossfade, crossfade, transcoding]

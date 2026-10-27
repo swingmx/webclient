@@ -13,6 +13,8 @@ export default defineStore('FolderDirs&Tracks', {
     state: () => ({
         query: '',
         path: <string>{},
+        // the server's home directory, where the breadcrumb starts
+        home: '',
         allDirs: <Folder[]>[],
         allTracks: <Track[]>[],
         trackTotal: 0,
@@ -23,7 +25,7 @@ export default defineStore('FolderDirs&Tracks', {
     }),
     actions: {
         async fetchAll(fpath: string, restart?: boolean) {
-            const { tracks, folders, path, total } = await getFiles(
+            const { tracks, folders, path, total, home } = await getFiles(
                 fpath,
                 restart ? 0 : this.allTracks.length,
                 track_limit.value,
@@ -42,6 +44,7 @@ export default defineStore('FolderDirs&Tracks', {
                 this.trackTotal = 0
             }
 
+            if (home) this.home = home
             this.path = fpath
 
             // If the requested path was redirected, update store path

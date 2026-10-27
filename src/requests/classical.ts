@@ -1,5 +1,5 @@
 import { paths } from '@/config'
-import { Album, Artist, ClassicalHomePage, ClassicalWorkPage, WorkRow } from '@/interfaces'
+import { Album, Artist, ClassicalHomePage, ClassicalWork, ClassicalWorkPage, WorkRow } from '@/interfaces'
 import useAxios from './useAxios'
 
 export async function getWork(token: string, albumhash?: string) {
@@ -39,4 +39,13 @@ export function getClassicalAlbums() {
 
 export function getClassicalComposers() {
     return getClassical<Artist[]>('/composers')
+}
+
+/**
+ * The works queued classical tracks belong to, each with those tracks and
+ * their movement titles.
+ */
+export async function getQueueWorks(trackhashes: string[]) {
+    const { data, status } = await useAxios({ url: '/classical/queue-works', method: 'POST', props: { trackhashes } })
+    return status === 200 ? (data.works as ClassicalWork[]) : []
 }

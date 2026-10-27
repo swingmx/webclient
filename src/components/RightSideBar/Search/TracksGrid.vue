@@ -1,6 +1,6 @@
 <template>
   <div id="tracks-results">
-    <div v-if="!search.tracks.value.length" class="t-center">
+    <div v-if="!results.value.length" class="t-center">
       <h5>{{ $t('Search.NoTracksTitle') }}</h5>
     </div>
 
@@ -32,17 +32,24 @@ import TrackItem from "@/components/shared/TrackItem.vue";
 import AlbumsFetcher from "@/components/ArtistView/AlbumsFetcher.vue";
 import SearchWorkRow from "@/components/Classical/SearchWorkRow.vue";
 
+const props = defineProps<{
+  // list the classical movements instead of the other tracks
+  movements?: boolean;
+}>();
+
 const queue = useQueue();
 const search = useSearch();
 const tracklist = useTracklist();
 
+const results = computed(() => (props.movements ? search.movements : search.tracks));
+
 function updateQueue(index: number) {
-  tracklist.setFromSearch(search.query, search.tracks.value);
+  tracklist.setFromSearch(search.query, results.value.value);
   queue.play(index);
 }
 
 const scrollerItems = computed(() => {
-  const items: any[] = search.tracks.value.map((track, index) => {
+  const items: any[] = results.value.value.map((track, index) => {
     if (track.classical) {
       return {
         id: index,
@@ -69,8 +76,8 @@ const scrollerItems = computed(() => {
     id: Math.random(),
     component: AlbumsFetcher,
     props: {
-      fetch_callback: search.loadTracks,
-      showtext: search.tracks.more,
+      fetch_callback: props.movements ? search.loadMovements : search.loadTracks,
+      showtext: results.value.more,
       outside_route: true,
     },
   });
@@ -79,7 +86,7 @@ const scrollerItems = computed(() => {
 });
 
 onMounted(() => {
-  search.switchTab("tracks");
+  search.switchTab(props.movements ? "movements" : "tracks");
 });
 </script>
 

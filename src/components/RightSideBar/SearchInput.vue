@@ -1,21 +1,10 @@
 <template>
-    <div
-        class="gsearch-input"
-        @click="
-            !settings.use_sidebar &&
-                $route.name !== Routes.search &&
-                $router.push({
-                    name: Routes.search,
-                    params: { page: 'top' },
-                    query: { q: search.query },
-                })
-        "
-    >
+    <div class="gsearch-input">
         <div id="ginner" ref="inputRef" tabindex="0">
             <button
                 v-auto-animate
                 :title="tabs.current === tabs.tabs.search ? $t('SearchInput.BackToQueue') : $t('SearchInput.GoToSearch')"
-                :class="{ no_bg: on_nav }"
+                :class="{ no_bg: on_nav && (settings.use_sidebar || $route.name === Routes.search) }"
                 @click.prevent="handleButton"
             >
                 <SearchSvg v-if="on_nav || tabs.current === tabs.tabs.queue" />
@@ -30,8 +19,13 @@
                 spellcheck="false"
                 @blur.prevent="removeFocusedClass"
                 @focus.prevent="addFocusedClass"
+                @keydown.enter="submitNow"
             />
+            <div v-if="showSpinner" class="search-spinner">
+                <Spinner />
+            </div>
             <div
+                v-else
                 class="clear_input circular noSelect"
                 :class="{ active: search.query.length > 0 }"
                 @click.stop="clearInput"
@@ -46,11 +40,13 @@
 import useSearch from '@/stores/search'
 import useSettings from '@/stores/settings'
 import useTabStore from '@/stores/tabs'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 import CancelSvg from '@/assets/icons/a.svg'
 import BackSvg from '@/assets/icons/arrow.svg'
 import SearchSvg from '@/assets/icons/search.svg'
+import Spinner from '@/components/shared/Spinner.vue'
 import { Routes } from '@/router'
 
 const props = defineProps<{
@@ -60,6 +56,27 @@ const props = defineProps<{
 const tabs = useTabStore()
 const search = useSearch()
 const settings = useSettings()
+const route = useRoute()
+
+// the spinner shows only for a search running longer than half a second
+const showSpinner = ref(false)
+let spinnerTimer: number | undefined
+watch(
+    () => search.searching,
+    running => {
+        clearTimeout(spinnerTimer)
+        if (running) spinnerTimer = window.setTimeout(() => (showSpinner.value = true), 500)
+        else showSpinner.value = false
+    }
+)
+
+/**
+ * Open the search page for the typed query, from Enter or the search icon.
+ */
+function submitNow() {
+    if (settings.use_sidebar || route.name === Routes.search) return
+    search.openResults(search.query)
+}
 
 // HANDLE FOCUS
 const inputRef = ref<HTMLInputElement | null>(null)
@@ -88,7 +105,7 @@ function clearInput() {
 // @end
 
 function handleButton() {
-    if (props.on_nav) return
+    if (props.on_nav) return submitNow()
 
     if (tabs.current === tabs.tabs.search) {
         tabs.switchToQueue()
@@ -199,6 +216,20 @@ function handleButton() {
                 width: $larger;
                 border-radius: 4px;
                 margin-right: $small;
+            }
+        }
+
+        .search-spinner {
+            width: 1.75rem;
+            margin-right: $smaller;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+
+            .player-spinner {
+                height: 1rem;
+                border-width: 2px;
+                color: $gray1;
             }
         }
 

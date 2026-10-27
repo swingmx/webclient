@@ -24,6 +24,8 @@ export async function getFiles(
         folders: Folder[]
         path: string
         total: number
+        // the server's home directory
+        home?: string
     }
 
     const { data, error } = await useAxios({

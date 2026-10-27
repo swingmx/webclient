@@ -23,7 +23,7 @@
                 :blurhash="queue.currenttrack.blurhash"
                 :duration="1000"
                 img-class="rounded-sm"
-                style="width: 48px; aspect-ratio: 1;"
+                style="width: 48px; aspect-ratio: 1"
             />
             <div class="expandicon">
                 <ExpandSvg />
@@ -37,7 +37,7 @@
         >
             <div v-tooltip class="title">
                 <TextLoader
-                    :text="queue.currenttrack?.title || $t('BottomBar.PlaceholderTitle') "
+                    :text="playing?.title || queue.currenttrack?.title || $t('BottomBar.PlaceholderTitle')"
                     :duration="1000"
                     :fade-duration="1000"
                     :direction="queue.direction"
@@ -49,7 +49,31 @@
                 />
                 <MasterFlag :key="queue.currenttrack?.trackhash" :bitrate="queue.currenttrack?.bitrate || 0" />
             </div>
+            <div v-if="playing" class="work-line">
+                <RouterLink
+                    v-if="playing.composer && playing.composer_hash"
+                    :to="{ name: Routes.artist, params: { hash: playing.composer_hash } }"
+                    class="composer"
+                >
+                    {{ playing.composer }}
+                </RouterLink>
+                <span v-else-if="playing.composer" class="composer">{{ playing.composer }}</span>
+                <template v-if="playing.work">
+                    <span v-if="playing.composer" class="dot">·</span>
+                    <RouterLink
+                        :to="{
+                            name: Routes.work,
+                            params: { token: playing.workhash },
+                            query: { albumhash: playing.albumhash },
+                        }"
+                        class="work ellip"
+                    >
+                        {{ playing.work }}
+                    </RouterLink>
+                </template>
+            </div>
             <ArtistName
+                v-else
                 :artists="queue.currenttrack?.artists || []"
                 :albumartists="queue.currenttrack?.albumartists || $t('BottomBar.PlaceholderArtist')"
                 class="artist"
@@ -79,10 +103,12 @@ import HotKeys from '../LeftSidebar/NP/HotKeys.vue'
 import ExplicitIcon from '@/assets/icons/explicit.svg'
 import ImageLoader from '@/components/shared/ImageLoader.vue'
 import ArtistName from '@/components/shared/ArtistName.vue'
+import useNowPlayingWork from '@/composables/useNowPlayingWork'
 
 const queue = useQStore()
 const colors = useColorStore()
 const settings = useSettingsStore()
+const playing = useNowPlayingWork()
 
 defineEmits<{
     (e: 'handleFav'): void
@@ -124,7 +150,10 @@ defineEmits<{
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: opacity 0.2s ease-out, height 0.2s ease-out, transform 0.2s ease-out,
+            transition:
+                opacity 0.2s ease-out,
+                height 0.2s ease-out,
+                transform 0.2s ease-out,
                 background-color 0.2s ease-out;
 
             svg {
@@ -175,6 +204,35 @@ defineEmits<{
 
             a {
                 font-size: 0.8rem;
+            }
+        }
+
+        // the composer and the work, which shortens on its own
+        .work-line {
+            display: flex;
+            align-items: baseline;
+            gap: $smaller;
+            min-width: 0;
+            font-size: 0.8rem;
+
+            .composer {
+                flex-shrink: 0;
+                color: inherit;
+                opacity: 0.75;
+            }
+
+            .dot,
+            .work {
+                color: $gray1;
+                font-weight: 500;
+            }
+
+            .work {
+                min-width: 0;
+            }
+
+            a:hover {
+                text-decoration: underline;
             }
         }
 

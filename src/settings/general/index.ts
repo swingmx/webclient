@@ -58,7 +58,7 @@ export const library = {
     show_if: loggedInUserIsAdmin,
     groups: [
         {
-            title: t("Common.Folders"),
+            title: t("Common.Library"),
             icon: FolderSvg,
             desc: rootRootStrings.desc,
             settings: [...rootDirSettings],

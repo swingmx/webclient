@@ -40,7 +40,7 @@ const getAlbumData = async (albumhash: string, albumlimit: number) => {
         props: {
             albumhash,
             albumlimit,
-            classical_view: settings.classical_enabled,
+            classical_view: settings.classical_on,
         },
     })
 
@@ -119,7 +119,7 @@ export const getAlbumVersions = async (og_album_title: string, albumhash: string
 export async function getAlbumTracks(albumhash: string): Promise<Track[] | ClassicalWork[]> {
     const settings = useSettingsStore()
     const { data } = await useAxios({
-        url: albumUrl + `/${albumhash}/` + 'tracks' + `?classical_view=${settings.classical_enabled}`,
+        url: albumUrl + `/${albumhash}/` + 'tracks' + `?classical_view=${settings.classical_on}`,
         method: 'GET',
     })
 

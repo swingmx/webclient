@@ -34,14 +34,14 @@ const subPaths: Ref<subPath[]> = ref([])
 let oldpath = ''
 
 const getSubPaths = (newPath: string) => {
-    ;[oldpath, subPaths.value] = createSubPaths(newPath, oldpath)
+    ;[oldpath, subPaths.value] = createSubPaths(newPath, oldpath, folder.home)
 }
 
 // INFO: if there are no subPaths, watch the folder path
 if (!(props.subPaths && props.subPaths.length)) {
     watch(
-        () => folder.path,
-        newPath => {
+        () => [folder.path, folder.home] as const,
+        ([newPath]) => {
             newPath = newPath as string
             if (newPath == undefined) return
 
@@ -70,10 +70,8 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.designatedOS .breadcrumb-nav {
-    &::-webkit-scrollbar {
-        display: none;
-    }
+.breadcrumb-nav {
+    @include hideScrollbars;
 }
 
 .breadcrumb-nav {

@@ -83,6 +83,8 @@ export default defineStore('settings', {
         statsperiod: 'week',
         showInlineFavIcon: false,
         _highlightFavoriteTracks: false,
+        // an exact artist name typed outside the search page opens the artist
+        jump_to_artist: true,
 
         device_name: '',
         device_id: '',
@@ -90,6 +92,8 @@ export default defineStore('settings', {
 
         // classical support
         classical_enabled: false,
+        // last known classical_on, kept across reloads
+        classical_available: false,
     }),
     actions: {
         mapDbSettings(settings: DBSettings) {
@@ -124,6 +128,7 @@ export default defineStore('settings', {
             this.device_id = settings.deviceId
             this.licenseInfo = settings.licenseInfo
             this.classical_enabled = settings.classicalEnabled
+            this.syncClassicalAvailable()
         },
         setArtistSeparators(separators: string[]) {
             this.separators = separators
@@ -131,6 +136,9 @@ export default defineStore('settings', {
         // now playing 👇
         toggleUseNPImg() {
             this.use_np_img = !this.use_np_img
+        },
+        toggleJumpToArtist() {
+            this.jump_to_artist = !this.jump_to_artist
         },
         toggleShowInlineFavIcon() {
             this.showInlineFavIcon = !this.showInlineFavIcon
@@ -279,7 +287,8 @@ export default defineStore('settings', {
             const res = await updateConfig(key, value)
 
             if (res.status !== 200) {
-                prop = oldValue
+                // @ts-expect-error
+                this[prop] = oldValue
                 return false
             }
 
@@ -415,12 +424,28 @@ export default defineStore('settings', {
         },
         updateLicenseInfo(info: LicenseInfo | null) {
             this.licenseInfo = info
+            this.syncClassicalAvailable()
         },
         async toggleClassicalEnabled() {
-            return await this.genericToggleSetting('classicalEnabled', !this.classical_enabled, 'classical_enabled')
+            const ok = await this.genericToggleSetting('classicalEnabled', !this.classical_enabled, 'classical_enabled')
+            this.syncClassicalAvailable()
+            return ok
+        },
+        // updates classical_available when classical support is turned on and the license is active
+        syncClassicalAvailable() {
+            const available = this.classical_enabled && this.has_premium
+            if (this.classical_available !== available) {
+                this.classical_available = available
+            }
         },
     },
     getters: {
+        has_premium(): boolean {
+            return this.licenseInfo?.license.status === 'active'
+        },
+        classical_on(): boolean {
+            return this.classical_available
+        },
         can_extend_width(): boolean {
             return this.is_default_layout && xxl.value
         },

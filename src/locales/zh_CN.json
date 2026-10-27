@@ -177,6 +177,7 @@
     "experimental": "实验性",
     "mix": "混音集",
     "new": "新",
+    "premium": "需要高级版",
     "removed": "已移除",
     "selected": "已选择",
     "top": "热门",
@@ -263,7 +264,8 @@
       "Home": "主页",
       "Playlists": "播放列表",
       "Search": "搜索",
-      "Settings": "设置"
+      "Settings": "设置",
+      "Classical": "古典"
     }
   },
   "MasterFlag": {
@@ -457,7 +459,13 @@
     "NoTracksTitle": "没有曲目",
     "SearchPlaceholder": "输入以搜索",
     "TopResult": "最佳结果",
-    "top": "热门"
+    "top": "热门",
+    "Era": "{era}时期",
+    "From": "出自",
+    "composer": "作曲家",
+    "performer": "演奏者",
+    "work": "作品",
+    "movement": "乐章"
   },
   "SearchInput": {
     "BackToQueue": "返回队列",
@@ -549,7 +557,7 @@
           "Title": "将只有一首曲目的专辑标记为单曲"
         },
         "Classical": {
-          "Desc": "为专辑启用古典音乐支持（需要高级版）",
+          "Desc": "为专辑启用古典音乐支持",
           "Title": "启用古典音乐支持"
         },
         "CleanTitles": {
@@ -564,7 +572,9 @@
       "ArtistSeparatorDesc": "自定义艺术家分隔符",
       "Artists": {
         "ArticleAwareDesc": "排序艺术家名称时忽略冠词（如 The、A、An）",
-        "ArticleAwareTitle": "忽略冠词排序"
+        "ArticleAwareTitle": "忽略冠词排序",
+        "JumpToArtistDesc": "搜索艺术家时直接打开其艺术家页面",
+        "JumpToArtistTitle": "跳转到艺术家"
       },
       "ArtistsDesc": "自定义艺术家设置",
       "BackupMainDesc": "备份和恢复你的媒体库数据",
@@ -728,7 +738,7 @@
           "Title": "启用插件"
         },
         "TrustCloud": {
-          "Desc": "不显示未经验证的歌词（需要高级版）",
+          "Desc": "不显示未经验证的歌词",
           "Title": "仅显示已验证的歌词"
         }
       },
@@ -807,7 +817,8 @@
     "AlbumViews": {
       "MoreFrom": "更多来自 {art}",
       "OtherVersions": "其他版本",
-      "RelatedAlbums": "相关专辑"
+      "RelatedAlbums": "相关专辑",
+      "Released": "发行于 {date}"
     },
     "ArtistDiscography": {
       "AllAlbums": "所有专辑",
@@ -821,13 +832,24 @@
     },
     "FavoriteTracks": {
       "Description": "你收藏了 {n_tr} 首曲目",
-      "Title": "收藏的曲目"
+      "ClassicalDescription": "你收藏了 {n_tr} 个乐章",
+      "Title": "收藏的曲目",
+      "ClassicalTitle": "收藏的古典音乐"
     },
     "Favorites": {
       "CountStats": "{tra} 首曲目 • {alb} 张专辑 • {art} 位艺术家",
       "Description": "点击心形图标即可将曲目、专辑和艺术家添加到收藏",
       "NoFavoritesFound": "没有收藏",
-      "Title": "收藏"
+      "Title": "收藏",
+      "AllTracks": "全部",
+      "Tracks": "曲目",
+      "Classical": "古典",
+      "NoClassical": "还没有收藏的古典音乐",
+      "NoClassicalDescription": "你收藏的乐章会显示在这里",
+      "Works": "作品",
+      "Work": "部作品",
+      "Composers": "作曲家",
+      "Composer": "位作曲家"
     },
     "FolderView": {
       "FolderIsEmpty": "文件夹为空",
@@ -880,6 +902,85 @@
     "Stats": {
       "Description": "你过去一周的收听统计",
       "Title": "统计"
+    },
+    "WorkView": {
+      "Movements": "{n}/{total} 个乐章",
+      "OtherRecordings": "其他录音",
+      "MovementCount": "{n} 个乐章",
+      "Performers": "演奏者",
+      "DedicatedTo": "献给{name}",
+      "Composed": "创作",
+      "Published": "出版",
+      "Key": "调性",
+      "Instrumentation": "编制"
+    },
+    "Listening": {
+      "MostPlayedArtists": "你最常听的艺术家",
+      "MostPlayedComposers": "你最常听的作曲家",
+      "ArtistRank": "艺术家排名",
+      "ComposerRank": "作曲家排名",
+      "OfArtists": "共 {n} 位艺术家",
+      "OfComposers": "共 {n} 位作曲家",
+      "TimeListened": "收听时长",
+      "AllTime": "全部时间",
+      "ListenedAllTime": "累计收听",
+      "PlayCount": "播放次数",
+      "Plays": "播放 {n} 次",
+      "LastPlayed": "上次播放于{ago}",
+      "NotPlayed": "尚未播放",
+      "MostPlayedAlbum": "最常听的专辑",
+      "MostPlayedWork": "最常听的作品",
+      "TopAlbum": "最常听的专辑（{time}）",
+      "TopTrack": "最常听的曲目（{time}）",
+      "ShortTime": "{h} 小时 {m} 分钟",
+      "ShortMinutes": "{m} 分钟"
+    },
+    "ComposerView": {
+      "Composer": "作曲家",
+      "WorksInLibrary": "资料库中有 {n} 部作品",
+      "AlbumCount": "{n} 张专辑",
+      "PlayAll": "全部播放",
+      "ShuffleWorks": "随机播放作品",
+      "Works": "作品",
+      "Movements": "乐章",
+      "All": "全部",
+      "Recordings": "{n} 个录音",
+      "Albums": "专辑",
+      "About": "简介",
+      "ReadMore": "阅读更多",
+      "ShowLess": "收起",
+      "SourceLabel": "来源：",
+      "Wikipedia": "维基百科",
+      "Interpreters": "常见演奏者",
+      "WorkCount": "{n} 部作品",
+      "Performer": "演奏者",
+      "Shuffle": "随机播放",
+      "Repertoire": "曲目",
+      "With": "与 {names} 合作",
+      "ClassicalAlbums": "古典专辑",
+      "LiveAlbums": "现场专辑",
+      "Soundtracks": "原声带",
+      "Composers": "作曲家",
+      "PerformsWith": "合作演奏者"
+    },
+    "ClassicalHome": {
+      "Description": "欢迎来到你的古典音乐资料库",
+      "Title": "古典",
+      "Albums": "{n} 张专辑",
+      "Tracks": "{n} 首曲目",
+      "Listened": "已收听 {time}",
+      "ContinueListening": "继续收听",
+      "AlbumsTitle": "专辑",
+      "RecentlyAdded": "最近添加",
+      "FavoriteWorks": "收藏的作品",
+      "Composers": "作曲家",
+      "BrowseByEra": "按时期浏览",
+      "BrowseByInstrument": "按乐器浏览",
+      "BrowseByType": "按作品类型浏览",
+      "ReturnTo": "待继续的作品",
+      "Performers": "演奏者",
+      "Plays": "播放 {n} 次",
+      "Today": "至今"
     }
   }
 }

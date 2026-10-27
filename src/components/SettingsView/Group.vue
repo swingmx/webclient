@@ -20,6 +20,9 @@
                             <span v-if="setting.new" class="badge new circular">
                                 {{ setting.new ? $t('Common.new') : '' }}
                             </span>
+                            <span v-if="setting.premium && !settings.has_premium" class="badge premium circular">
+                                {{ $t('Common.premium') }}
+                            </span>
                         </span>
                         <button v-if="setting.type == SettingType.root_dirs" @click="setting.action">
                             <ReloadSvg height="1.5rem" /> <span>{{ $t('Common.FullScan') }}</span>
@@ -116,6 +119,7 @@
 import { ref } from 'vue'
 import { SettingGroup } from '@/interfaces/settings'
 import { SettingType } from '@/settings/enums'
+import useSettings from '@/stores/settings'
 
 import ReloadSvg from '@/assets/icons/reload.svg'
 import List from './Components/List.vue'
@@ -137,6 +141,8 @@ import License from './Components/License.vue'
 defineProps<{
     group: SettingGroup
 }>()
+
+const settings = useSettings()
 
 type SeparatorsInputRef = { save: () => void } | null
 
