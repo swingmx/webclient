@@ -58,14 +58,14 @@ const search = useSearch()
 const settings = useSettings()
 const route = useRoute()
 
-// the spinner shows only for a search running longer than half a second
+// the spinner shows only for a search running longer than 200ms
 const showSpinner = ref(false)
 let spinnerTimer: number | undefined
 watch(
     () => search.searching,
     running => {
         clearTimeout(spinnerTimer)
-        if (running) spinnerTimer = window.setTimeout(() => (showSpinner.value = true), 500)
+        if (running) spinnerTimer = window.setTimeout(() => (showSpinner.value = true), 200)
         else showSpinner.value = false
     }
 )
