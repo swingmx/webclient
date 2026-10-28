@@ -140,14 +140,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 
 import { paths } from '@/config'
 import { useT } from '@/i18n'
-import { ClassicalHomePage, ClassicalHomeTile, ContinueItem } from '@/interfaces'
-import { getClassicalHome, getWork } from '@/requests/classical'
+import { ClassicalHomeTile, ContinueItem } from '@/interfaces'
+import { getWork } from '@/requests/classical'
 import { maxAbumCards, updateCardWidth } from '@/stores/content-width'
 import { Routes } from '@/router'
+import useClassicalHome from '@/stores/classicalHome'
 import useQueue from '@/stores/queue'
 import useTracklist from '@/stores/queue/tracklist'
 import formatSeconds from '@/utils/useFormatSeconds'
@@ -164,7 +166,8 @@ const FAVORITES_MIN = 5
 const SIDE_BY_SIDE_ROWS = 5
 
 const { t } = useT()
-const page = ref<ClassicalHomePage | null>(null)
+const home = useClassicalHome()
+const { page } = storeToRefs(home)
 const showFavorites = computed(() => (page.value?.favorite_works.length ?? 0) >= FAVORITES_MIN)
 
 
@@ -192,7 +195,7 @@ async function resume(item: ContinueItem) {
 onMounted(async () => {
     updatePageTitle(t('Views.ClassicalHome.Title'))
     updateCardWidth()
-    page.value = await getClassicalHome(maxAbumCards.value + 2)
+    await home.fetch(maxAbumCards.value + 2)
 })
 </script>
 

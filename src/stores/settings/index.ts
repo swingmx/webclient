@@ -10,6 +10,7 @@ import { content_width } from '../content-width'
 import { getLastFmApiSig } from '@/context_menus/hashing'
 import useAxios from '@/requests/useAxios'
 import { paths } from '@/config'
+import useClassicalHome from '@/stores/classicalHome'
 import { router } from '@/router'
 import { LicenseInfo } from '@/interfaces'
 import { clamp, volumeToGain } from '@/utils/audio/volume'
@@ -437,6 +438,7 @@ export default defineStore('settings', {
             if (this.classical_available !== available) {
                 this.classical_available = available
             }
+            if (!available) useClassicalHome().clear()
         },
     },
     getters: {
