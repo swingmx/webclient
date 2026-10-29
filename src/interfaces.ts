@@ -208,6 +208,7 @@ export interface WorkCardItem {
     label: string | null
     name: string
     nickname: string | null
+    subtitle?: string | null
     byline: string | null
     help_text?: string
     time?: string

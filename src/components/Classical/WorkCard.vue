@@ -9,7 +9,8 @@
         <div v-else class="tile rounded-sm" :style="composerTint(tile.tint)">
             <div class="face">
                 <div class="label ellip">{{ tile.label ?? '' }}</div>
-                <div class="mark">{{ tile.mark }}</div>
+                <div v-if="alias" class="mark alias">{{ alias }}</div>
+                <div v-else class="mark">{{ tile.mark }}</div>
             </div>
         </div>
         <div>
@@ -20,7 +21,7 @@
             <h4 v-if="cover" class="title">{{ (work as WorkRecordingCard).album }}</h4>
             <template v-else>
                 <h4 class="title">
-                    {{ tile.name }}<template v-if="tile.nickname"> “{{ tile.nickname }}”</template>
+                    {{ tile.name }}
                 </h4>
             </template>
             <div class="artist ellip">{{ work.byline }}</div>
@@ -43,6 +44,8 @@ const props = defineProps<{
 }>()
 
 const tile = computed(() => props.work as WorkCardItem)
+// the nickname or subtitle, shown on the tile in place of the mark
+const alias = computed(() => tile.value.nickname || tile.value.subtitle)
 </script>
 
 <style lang="scss">
@@ -77,6 +80,14 @@ const tile = computed(() => props.work as WorkCardItem)
         font-size: 22cqi;
         line-height: 1.05;
         color: #f2ece4;
+
+        &.alias {
+            font-size: 13cqi;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     }
 
     .title {
