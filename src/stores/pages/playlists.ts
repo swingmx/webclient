@@ -24,5 +24,11 @@ export default defineStore("playlists", {
         this.playlists.unshift(playlist);
       }, 250);
     },
+    /**
+     * Removes a deleted playlist from the store
+     */
+    removePlaylist(id: number) {
+      this.playlists = this.playlists.filter((p) => p.id !== id);
+    },
   },
 });

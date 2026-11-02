@@ -36,13 +36,15 @@ const STORE_LOADERS: [() => any, string[]][] = [
     [useAlbumList, ['restart', 'clearStore']],
     [useArtistList, ['restart', 'clearStore']],
     [usePlaylistStore, ['fetchAll']],
-    [usePlaylistListStore, ['fetchAll']],
+    [usePlaylistListStore, ['fetchAll', 'removePlaylist']],
     [useWorkStore, ['fetchWork']],
     [useHomeStore, ['fetchAll']],
 ]
 
 const loads: Record<string, number> = {}
 const visits = new Map<number, Visit>()
+// paths whose content no longer exists, never restored from cache
+const dropped = new Set<string>()
 
 // the key the routed page is cached under
 export const pageKey = ref('page-0')
@@ -68,6 +70,13 @@ export function pageRestoring() {
  */
 export function pageSwitching() {
     return mode !== 'replace'
+}
+
+/**
+ * Stops back and forward from restoring the cached page at `path`.
+ */
+export function dropPage(path: string) {
+    dropped.add(path)
 }
 
 function historyPosition(): number {
@@ -154,7 +163,7 @@ export function setupPageCache(router: Router) {
         if (mode === 'pop' && to.meta.keepAlive) {
             const visit = visits.get(historyPosition())
             const unchanged = visit?.stores.every((id, i) => (loads[id] ?? 0) === visit.loads[i])
-            if (visit && visit.path === to.fullPath && unchanged) restoring = visit
+            if (visit && visit.path === to.fullPath && unchanged && !dropped.has(to.fullPath)) restoring = visit
         }
     })
 

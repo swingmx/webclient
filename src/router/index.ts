@@ -76,11 +76,10 @@ const playlistView = {
     beforeEnter: async (to: any) => {
         if (pageRestoring()) return
         state.loading.value = true
-        await usePlaylistPageStore()
-            .open(to.params.pid)
-            .then(() => {
-                state.loading.value = false
-            })
+        const found = await usePlaylistPageStore().open(to.params.pid)
+        state.loading.value = false
+
+        if (!found) return { name: 'PlaylistList' }
     },
 }
 

@@ -9,7 +9,7 @@
       <PlayBtnRect :source="playSources.playlist" :bg_color="btn_color" />
     </div>
     <div class="duration">
-      {{ playlist.info.count.toLocaleString() + $t('Common.Track', playlist.info.count) }}
+      {{ playlist.info.count.toLocaleString() }} {{ $t('Common.Track', playlist.info.count) }}
       •
       {{ formatSeconds(playlist.info.duration, true) }}
     </div>

@@ -49,8 +49,10 @@
 </template>
 
 <script setup lang="ts">
+import { dropPage } from '@/composables/pageCache'
 import { deletePlaylist as delPlaylist } from '@/requests/playlists'
 import useModalStore, { ModalOptions } from '@/stores/modal'
+import usePlaylistListStore from '@/stores/pages/playlists'
 import { useRouter } from 'vue-router'
 
 import AuthLogin from './modals/AuthLogin.vue'
@@ -73,10 +75,19 @@ function hideModal() {
     modal.hideModal()
 }
 
-function deletePlaylist() {
-    delPlaylist(modal.props.pid)
-        .then(() => modal.hideModal())
-        .then(() => router.back())
+async function deletePlaylist() {
+    const pid = modal.props.pid
+    const deleted = await delPlaylist(pid)
+    modal.hideModal()
+    if (!deleted) return
+
+    usePlaylistListStore().removePlaylist(pid)
+
+    const route = router.currentRoute.value
+    if (route.name !== 'PlaylistView' || String(route.params.pid) !== String(pid)) return
+
+    dropPage(route.fullPath)
+    router.back()
 }
 </script>
 

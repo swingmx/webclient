@@ -245,7 +245,10 @@ export async function deletePlaylist(pid: number) {
 
     if (status == 200) {
         new Notification(t('Requests.Playlists.Deleted'), NotifType.Success)
+        return true
     }
+
+    return false
 }
 
 export async function removeTracks(pid: number, tracks: { trackhash: string; index: number }[]) {

@@ -24,35 +24,39 @@ export default defineStore('playlist-tracks', {
     }),
     actions: {
         /**
-         * Fetches a single playlist information, and its tracks from the server
-         * @param id The id of the playlist to fetch
-         */
-        /**
          * Loads a playlist from its first page, dropping any tracks from the last one opened.
+         * Returns false if the playlist does not exist.
          */
         async open(id: number) {
             this.allTracks = []
             return this.fetchAll(id)
         },
+        /**
+         * Fetches a single playlist information, and its tracks from the server
+         * @param id The id of the playlist to fetch
+         */
         async fetchAll(id: number, no_tracks = false, fetchAll = false) {
             this.resetBannerPos()
             // if fetchAll, use -1 to fetch all tracks
             const playlist = await getPlaylist(id, no_tracks, this.allTracks.length, fetchAll ? -1 : track_limit.value)
+            if (!playlist) return false
+
             if (this.allTracks.length !== 0) {
-                this.allTracks.push(...(playlist?.tracks || []))
-                return
+                this.allTracks.push(...playlist.tracks)
+                return true
             }
 
-            this.info = playlist?.info || ({} as Playlist)
+            this.info = playlist.info
             this.initialBannerPos = this.info.settings.banner_pos
             this.createImageLink()
 
             this.resetColors()
             this.extractColors()
 
-            if (no_tracks) return
+            if (no_tracks) return true
 
-            this.allTracks = playlist?.tracks || []
+            this.allTracks = playlist.tracks
+            return true
         },
         createImageLink() {
             this.info.image = paths.images.playlist + this.info.image
