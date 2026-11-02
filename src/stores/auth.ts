@@ -9,12 +9,15 @@ import {
     getLoggedInUser,
     loginUser,
     logoutUser,
+    removeUserImage,
+    updateUserImage,
     updateUserProfile,
 } from '@/requests/auth'
 import { NotifType, useToast } from '@/stores/notification'
 import { useT } from '@/i18n'
 
 const { t } = useT()
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 
 
 export default defineStore('authStore', {
@@ -46,7 +49,7 @@ export default defineStore('authStore', {
             this.showError(t("Common.NotificationError"))
         },
         showResMsgOrGenericError(res: any) {
-            if (res.data.msg) {
+            if (res.data?.msg) {
                 this.showError(res.data.msg)
             } else {
                 this.showGenericError()
@@ -102,6 +105,33 @@ export default defineStore('authStore', {
                     this.user = res.data
                 }
                 this.showSuccess(t('Stores.Auth.ProfileUpdated'))
+                return true
+            }
+
+            this.showResMsgOrGenericError(res)
+            return false
+        },
+        async updateImage(image: File) {
+            if (image.size > MAX_IMAGE_BYTES) {
+                this.showError(t('Profile.ImageTooLarge'))
+                return false
+            }
+
+            const res = await updateUserImage(image)
+
+            if (res.status === 200) {
+                this.user = res.data
+                return true
+            }
+
+            this.showResMsgOrGenericError(res)
+            return false
+        },
+        async removeImage() {
+            const res = await removeUserImage()
+
+            if (res.status === 200) {
+                this.user = res.data
                 return true
             }
 

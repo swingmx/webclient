@@ -199,6 +199,9 @@ export const paths = {
             get deleteUser() {
                 return this.base + '/profile/delete'
             },
+            get userImage() {
+                return this.base + '/profile/image'
+            },
             get pair() {
                 return this.base + '/getpaircode'
             },
@@ -245,6 +248,7 @@ export const paths = {
             medium: baseImgUrl + imageRoutes.artist.medium,
         },
         playlist: baseImgUrl + imageRoutes.playlist,
+        user: baseImgUrl + '/user/',
         mix: {
             medium: baseImgUrl + '/mix/medium/',
             small: baseImgUrl + '/mix/small/',

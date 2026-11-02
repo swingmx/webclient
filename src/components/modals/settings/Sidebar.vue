@@ -23,7 +23,7 @@
                         }"
                         @click="() => $emit('setTab', item.title || '')"
                     >
-                        <Avatar v-if="item.id === 'profile'" :size="18" :name="auth.user.username || ''" />
+                        <Avatar v-if="item.id === 'profile'" :size="18" :name="auth.user.username || ''" :image="auth.user.image" />
                         <span v-else class="icon" v-html="item.icon"></span>
                         <span>
                             {{ item.title }}

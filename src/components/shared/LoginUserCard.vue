@@ -1,6 +1,6 @@
 <template>
     <div class="loginuser rounded-sm" :class="{ selected }">
-        <Avatar :name="user.username" />
+        <Avatar :name="user.username" :image="user.image" />
         <div class="username">
             {{ (selected ? $t('Common.HiSpace') : '') + user.username }}
         </div>

@@ -1,7 +1,29 @@
 <template>
     <div class="profilesettings">
         <div class="profileavatar">
-            <Avatar :name="username || auth.user.username" />
+            <div class="avatarwrapper">
+                <Avatar :name="username || auth.user.username" :image="adding_user ? null : auth.user.image" />
+                <div v-if="canEditImage" class="avataractions">
+                    <button
+                        type="button"
+                        class="avataraction"
+                        :title="$t('Profile.ChangeImage')"
+                        @click="fileInput?.click()"
+                    >
+                        <PencilSvg />
+                    </button>
+                    <button
+                        v-if="auth.user.image"
+                        type="button"
+                        class="avataraction"
+                        :title="$t('Profile.RemoveImage')"
+                        @click="auth.removeImage()"
+                    >
+                        <DeleteSvg />
+                    </button>
+                </div>
+                <input ref="fileInput" type="file" accept="image/*" hidden @change="handleImage" />
+            </div>
             <div class="name">
                 {{ adding_user ? username : $t('Profile.HiUser', {user: auth.user.username}) }}
             </div>
@@ -36,6 +58,8 @@
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import DeleteSvg from '@/assets/icons/delete.svg'
+import PencilSvg from '@/assets/icons/pencil.svg'
 import Avatar from '@/components/shared/Avatar.vue'
 import Input from '@/components/shared/Input.vue'
 import { User } from '@/interfaces'
@@ -52,6 +76,9 @@ const emit = defineEmits<{
 }>()
 
 const auth = useAuth()
+
+const fileInput = ref<HTMLInputElement>()
+const canEditImage = computed(() => !props.adding_user && auth.user.roles && !auth.user.roles.includes('guest'))
 
 const username = ref('')
 const password = ref('')
@@ -112,6 +139,16 @@ async function handleSubmit() {
     await updateProfile()
 }
 
+async function handleImage(e: Event) {
+    const input = e.target as HTMLInputElement
+    const file = input.files?.[0]
+    input.value = ''
+
+    if (file) {
+        await auth.updateImage(file)
+    }
+}
+
 async function updateProfile() {
     const success = await auth.updateProfile(payload.value)
     if (success) {
@@ -136,6 +173,37 @@ onMounted(async () => {
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        .avatarwrapper {
+            position: relative;
+        }
+
+        .avataractions {
+            position: absolute;
+            top: -0.25rem;
+            right: -0.75rem;
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .avataraction {
+            display: grid;
+            place-items: center;
+            width: 1.75rem;
+            height: 1.75rem;
+            padding: 0;
+            border-radius: 50%;
+            background-color: $gray3;
+
+            svg {
+                width: 0.85rem;
+                height: 0.85rem;
+            }
+
+            &:hover {
+                background-color: $gray2;
+            }
+        }
 
         .name {
             font-weight: 500;

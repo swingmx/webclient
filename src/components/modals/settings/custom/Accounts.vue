@@ -30,7 +30,7 @@
                 }"
             >
                 <div class="userinfo" @click="() => selectUser(user.id)">
-                    <Avatar :name="user.username" :size="47" />
+                    <Avatar :name="user.username" :image="user.image" :size="47" />
                     <div class="details">
                         <div class="name">
                             {{ user.firstname || user.username }}

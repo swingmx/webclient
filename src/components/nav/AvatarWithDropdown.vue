@@ -1,7 +1,7 @@
 <template>
     <div class="avatar">
         <div class="img circular">
-            <Avatar :name="auth.user.username || ''" :size="36" />
+            <Avatar :name="auth.user.username || ''" :image="auth.user.image" :size="36" />
         </div>
         <ProfileDropdown />
     </div>

@@ -630,10 +630,10 @@ export interface LyricsLine {
 export interface UserSimplified {
     id: number
     username: string
+    image?: string | null
 }
 
 export interface User extends UserSimplified {
-    image: string
     roles: string[]
 }
 

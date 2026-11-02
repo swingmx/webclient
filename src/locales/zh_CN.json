@@ -390,11 +390,14 @@
   },
   "Profile": {
     "AddUser": "添加用户",
+    "ChangeImage": "更换头像",
     "ConfirmPassword": "确认密码",
     "HiUser": "你好，{user}",
+    "ImageTooLarge": "图片不能超过 5MB",
     "LangNotCurrentlySupported": "暂不支持该语言",
     "PasswordAction": "{action}密码",
     "PasswordMismatch": "两次输入的密码不一致",
+    "RemoveImage": "移除头像",
     "SelectLanguage": "输入首选语言",
     "Username": "用户名"
   },

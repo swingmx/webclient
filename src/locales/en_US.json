@@ -392,11 +392,14 @@
   },
   "Profile": {
     "AddUser": "Add user",
+    "ChangeImage": "Change photo",
     "ConfirmPassword": "Confirm password",
     "HiUser": "Hi {user}",
+    "ImageTooLarge": "Images must be 5MB or smaller",
     "LangNotCurrentlySupported": "Language not currently supported",
     "PasswordAction": "{action} password",
     "PasswordMismatch": "Passwords do not match",
+    "RemoveImage": "Remove photo",
     "SelectLanguage": "Insert the preferred language",
     "Username": "Username"
   },

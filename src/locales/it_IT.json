@@ -390,11 +390,14 @@
   },
   "Profile": {
     "AddUser": "Aggiungi utente",
+    "ChangeImage": "Cambia foto",
     "ConfirmPassword": "Conferma password",
     "HiUser": "Ciao {user}",
+    "ImageTooLarge": "Le immagini devono essere di 5MB o meno",
     "LangNotCurrentlySupported": "Lingua non supportata attualmente",
     "PasswordAction": "{action} password",
     "PasswordMismatch": "Le password sono diverse",
+    "RemoveImage": "Rimuovi foto",
     "SelectLanguage": "Inserisci la lingua desiderata",
     "Username": "Nome utente"
   },

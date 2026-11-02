@@ -97,6 +97,27 @@ export async function deleteUser(username: string) {
     })
 }
 
+export async function updateUserImage(image: File) {
+    const form = new FormData()
+    form.append('image', image)
+
+    return await useAxios({
+        url: paths.api.auth.userImage,
+        method: 'PUT',
+        props: form,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    })
+}
+
+export async function removeUserImage() {
+    return await useAxios({
+        url: paths.api.auth.userImage,
+        method: 'DELETE',
+    })
+}
+
 export async function sendPairRequest() {
     return await useAxios({
         url: paths.api.auth.pair,

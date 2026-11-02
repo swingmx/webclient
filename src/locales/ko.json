@@ -390,11 +390,14 @@
   },
   "Profile": {
     "AddUser": "사용자 추가",
+    "ChangeImage": "사진 변경",
     "ConfirmPassword": "비밀번호 확인",
     "HiUser": "안녕하세요, {user}님",
+    "ImageTooLarge": "이미지는 5MB 이하여야 해요",
     "LangNotCurrentlySupported": "현재 지원하지 않는 언어예요",
     "PasswordAction": "비밀번호 {action}",
     "PasswordMismatch": "비밀번호가 일치하지 않아요",
+    "RemoveImage": "사진 삭제",
     "SelectLanguage": "선호하는 언어를 입력하세요",
     "Username": "사용자 이름"
   },
