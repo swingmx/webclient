@@ -885,9 +885,13 @@
     "PlaylistList": {
       "AllPlaylists": "所有播放列表",
       "Description": "你的媒体库中有 {n} 个播放列表",
+      "MixesDescription": "你保存了 {n} 个混音",
       "NoItemDescription": "右键点击曲目并选择“添加到播放列表”即可创建播放列表",
+      "NoMixesFound": "未找到混音",
       "NoPlaylistsFound": "没有找到播放列表",
       "OtherPlaylists": "其他播放列表",
+      "SavedMixes": "已保存的混音",
+      "SearchMixes": "搜索混音",
       "SearchPlaylist": "搜索播放列表",
       "Title": "播放列表"
     },

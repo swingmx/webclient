@@ -968,9 +968,13 @@
     "PlaylistList": {
       "AllPlaylists": "All playlists",
       "Description": "You have {n} playlists in your library",
+      "MixesDescription": "You have {n} saved mixes",
       "NoItemDescription": "You can create a playlist by right clicking on a track and selecting the \"Add to Playlist\" option",
+      "NoMixesFound": "No mixes found",
       "NoPlaylistsFound": "No playlists found",
       "OtherPlaylists": "Other playlists",
+      "SavedMixes": "Saved mixes",
+      "SearchMixes": "Search mixes",
       "SearchPlaylist": "Search playlists",
       "Title": "Playlists"
     },

@@ -41,7 +41,7 @@ export async function createNewPlaylist(playlist_name: string) {
  * Fetches all playlists from the server.
  * @returns {Promise<Playlist[]>} A promise that resolves to an array of playlists.
  */
-export async function getAllPlaylists(no_images = false): Promise<Playlist[]> {
+export async function getAllPlaylists(no_images = false): Promise<{ playlists: Playlist[]; savedMixes: number }> {
     const { data, error } = await useAxios({
         url: basePlaylistUrl + (no_images ? '?no_images=true' : ''),
         method: 'GET',
@@ -49,11 +49,10 @@ export async function getAllPlaylists(no_images = false): Promise<Playlist[]> {
 
     if (error) console.error(error)
 
-    if (data) {
-        return data.data
+    return {
+        playlists: data?.data ?? [],
+        savedMixes: data?.saved_mixes ?? 0,
     }
-
-    return []
 }
 
 export async function getPlaylist(pid: number | string, no_tracks = false, start: number = 0, limit: number = 50) {

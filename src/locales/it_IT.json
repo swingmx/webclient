@@ -887,9 +887,13 @@
     "PlaylistList": {
       "AllPlaylists": "Tutte le playlists",
       "Description": "Hai {n} playlists nella tua libreria",
+      "MixesDescription": "Hai {n} mix salvati",
       "NoItemDescription": "Puoi creare una playlist facendo click con il tasto destro su una traccia e selezionando l'opzione \"aggiungi a playlist\"",
+      "NoMixesFound": "Nessun mix trovato",
       "NoPlaylistsFound": "Nessuna playlist trovata",
       "OtherPlaylists": "Altre playlists",
+      "SavedMixes": "Mix salvati",
+      "SearchMixes": "Cerca mix",
       "SearchPlaylist": "Cerca playlists",
       "Title": "Playlists"
     },

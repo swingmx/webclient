@@ -41,7 +41,7 @@ type action = (playlist: Playlist) => void
  */
 export async function getAddToPlaylistOptions(addToPlaylist: action, new_playlist_modal_props: any = {}) {
     const new_playlist = get_new_playlist_option(new_playlist_modal_props)
-    const p = await getAllPlaylists(true)
+    const { playlists: p } = await getAllPlaylists(true)
 
     let items = [new_playlist]
 

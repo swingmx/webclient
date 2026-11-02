@@ -885,9 +885,13 @@
     "PlaylistList": {
       "AllPlaylists": "모든 재생 목록",
       "Description": "라이브러리에 재생 목록이 {n}개 있어요",
+      "MixesDescription": "저장한 믹스가 {n}개 있어요",
       "NoItemDescription": "트랙을 우클릭하고 \"재생 목록에 추가\"를 선택해 재생 목록을 만들 수 있어요",
+      "NoMixesFound": "믹스를 찾을 수 없어요",
       "NoPlaylistsFound": "재생 목록이 없어요",
       "OtherPlaylists": "다른 재생 목록",
+      "SavedMixes": "저장한 믹스",
+      "SearchMixes": "믹스 검색",
       "SearchPlaylist": "재생 목록 검색",
       "Title": "재생 목록"
     },

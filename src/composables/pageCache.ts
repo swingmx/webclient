@@ -36,7 +36,7 @@ const STORE_LOADERS: [() => any, string[]][] = [
     [useAlbumList, ['restart', 'clearStore']],
     [useArtistList, ['restart', 'clearStore']],
     [usePlaylistStore, ['fetchAll']],
-    [usePlaylistListStore, ['fetchAll', 'removePlaylist']],
+    [usePlaylistListStore, ['fetchAll', 'removePlaylist', 'savedMixesChanged']],
     [useWorkStore, ['fetchWork']],
     [useHomeStore, ['fetchAll']],
 ]

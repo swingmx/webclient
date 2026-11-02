@@ -31,6 +31,7 @@ import SaveFilledSvg from '@/assets/icons/bookmark.fill.svg'
 import { playSources } from '@/enums'
 import useAxios from '@/requests/useAxios'
 import { paths } from '@/config'
+import usePlaylistList from '@/stores/pages/playlists'
 
 const props = defineProps<{
     mix: FullMix
@@ -59,7 +60,10 @@ async function saveMix() {
 
     if (res.status !== 200) {
         props.mix.saved = initialState
+        return
     }
+
+    usePlaylistList().savedMixesChanged(props.mix.saved)
 }
 </script>
 
