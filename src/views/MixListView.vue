@@ -1,12 +1,18 @@
 <template>
-    <CardGridPage page="mix" :items="items" :show-no-items-component="false">
+    <CardGridPage
+        page="mix"
+        :items="items"
+        :show-no-items-component="false"
+        :fetch_callback="fetchMixes"
+        :more-items="more"
+    >
         <template #header>
             <GenericHeader>
                 <template #name>
                     <span class="headtext">{{ $route.params.type }} </span> {{ $t('Views.MixListView.mixes') }}
                 </template>
                 <template #description>
-                    {{ $t('Views.MixListView.MixesBasedOnListening', {n: items.length + savedItems.length}) }}
+                    {{ $t('Views.MixListView.MixesBasedOnListening', {n: total + savedItems.length}) }}
                 </template>
 
                 <template v-if="savedItems.length" #after>
@@ -27,15 +33,22 @@ import { useRoute } from 'vue-router'
 import CardGridPage from './SearchView/CardGridPage.vue'
 import GenericHeader from '@/components/shared/GenericHeader.vue'
 import { Mix } from '@/interfaces'
-import useAxios from '@/requests/useAxios'
-import { paths } from '@/config'
+import { getMixes } from '@/requests/mixes'
 
 import CardRow from '@/components/shared/CardRow.vue'
 import { maxAbumCards } from '@/stores/content-width'
 
+const PAGE_SIZE = 50
+
 const items = ref<Mix[]>([])
 const savedItems = ref<Mix[]>([])
+const total = ref(0)
+const more = ref(true)
 const route = useRoute()
+const type = `${route.params.type}s`
+
+let start = 0
+let loading = false
 
 const savedItemComponents = computed(() => {
     const maxCard = maxAbumCards.value
@@ -53,21 +66,24 @@ const savedItemComponents = computed(() => {
     return items
 })
 
-useAxios({
-    url: paths.api.mixes + `/${route.params.type}s`,
-    method: 'GET',
-}).then(res => {
-    const { saved, other } = res.data.reduce(
-        (acc: { saved: Mix[]; other: Mix[] }, mix: Mix) => {
-            acc[mix.saved ? 'saved' : 'other'].push(mix)
-            return acc
-        },
-        { saved: [], other: [] }
-    )
+/**
+ * Loads the next page of unsaved mixes, and the saved mixes with the first page
+ */
+async function fetchMixes() {
+    if (loading || !more.value) return
+    loading = true
 
-    savedItems.value = saved
-    items.value = other
-})
+    const res = await getMixes(type, start, PAGE_SIZE)
+    if (start === 0) savedItems.value = res.saved
+
+    items.value.push(...res.mixes)
+    total.value = res.total
+    start += PAGE_SIZE
+    more.value = start < res.total
+    loading = false
+}
+
+fetchMixes()
 </script>
 
 <style lang="scss">

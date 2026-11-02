@@ -3,6 +3,8 @@ import { Mix, Playlist } from "@/interfaces";
 import { getAllPlaylists } from "@/requests/playlists";
 import { getSavedMixes } from "@/requests/mixes";
 
+let savedMixesRequest: Promise<void> | null = null;
+
 export default defineStore("playlists", {
   state: () => ({
     playlists: <Playlist[]>[],
@@ -22,9 +24,18 @@ export default defineStore("playlists", {
     /**
      * Fetch the saved mixes if not loaded
      */
-    async fetchSavedMixes() {
+    fetchSavedMixes() {
       if (this.savedMixes) return;
-      this.savedMixes = await getSavedMixes();
+
+      savedMixesRequest ??= getSavedMixes()
+        .then((mixes) => {
+          this.savedMixes = mixes;
+        })
+        .finally(() => {
+          savedMixesRequest = null;
+        });
+
+      return savedMixesRequest;
     },
     /**
      * Updates the count after a mix is saved or unsaved and drops the loaded mixes
