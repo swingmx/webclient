@@ -8,7 +8,6 @@ import { FuseTrackOptions } from '@/enums'
 import { Artist, FuseResult, Playlist, Track } from '@/interfaces'
 import { getPlaylist, removeBannerImage } from '@/requests/playlists'
 import setColorsToStore from '@/utils/colortools/setColorsToStore'
-import { Routes, router } from '@/router'
 import { track_limit } from '../content-width'
 
 export default defineStore('playlist-tracks', {
@@ -28,6 +27,13 @@ export default defineStore('playlist-tracks', {
          * Fetches a single playlist information, and its tracks from the server
          * @param id The id of the playlist to fetch
          */
+        /**
+         * Loads a playlist from its first page, dropping any tracks from the last one opened.
+         */
+        async open(id: number) {
+            this.allTracks = []
+            return this.fetchAll(id)
+        },
         async fetchAll(id: number, no_tracks = false, fetchAll = false) {
             this.resetBannerPos()
             // if fetchAll, use -1 to fetch all tracks
@@ -126,12 +132,6 @@ export default defineStore('playlist-tracks', {
             } catch (e) {
                 /* empty */
             }
-        },
-        resetAll() {
-            setTimeout(() => {
-                if (router.currentRoute.value.name == Routes.playlist) return
-                this.allTracks = []
-            }, 1000)
         },
     },
     getters: {

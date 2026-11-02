@@ -4,7 +4,6 @@ import { getArtistAlbums, getArtistData, getSimilarArtists } from '@/requests/ar
 
 import { paths } from '@/config'
 import { Album, Artist, ClassicalPersonPage, Genre, Listening, StatItem, Track } from '@/interfaces'
-import { Routes, router } from '@/router'
 import { maxAbumCards } from '@/stores/content-width'
 import useSettingsStore from '@/stores/settings'
 import setColorsToStore from '@/utils/colortools/setColorsToStore'
@@ -85,15 +84,6 @@ export default defineStore('artistPage', {
         },
         resetSimilarArtists() {
             this.similar_artists = []
-        },
-        resetAll() {
-            setTimeout(() => {
-                if (router.currentRoute.value.name == Routes.artist) return
-                this.resetAlbums()
-                this.resetSimilarArtists()
-                this.fetched_similar_hash = ''
-                this.stats = []
-            }, 5000)
         },
         makeFavorite() {
             this.info.is_favorite = true

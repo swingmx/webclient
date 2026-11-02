@@ -168,14 +168,6 @@ export default defineStore('album', {
         removeFavorite() {
             this.info.is_favorite = false
         },
-        resetAll() {
-            setTimeout(() => {
-                if (router.currentRoute.value.name == Routes.album) return
-                this.resetAlbumArtists()
-                this.resetOtherVersions()
-                this.resetSimilarAlbums()
-            }, 5000)
-        },
     },
     getters: {
         filteredTracks(): ComputedRef<FuseResult[]> {

@@ -28,14 +28,14 @@ interface Visit {
 
 // actions that load a store from the server or wipe it, by store id
 const STORE_LOADERS: [() => any, string[]][] = [
-    [useAlbumStore, ['fetchTracksAndArtists', 'resetAll', 'resetAlbumArtists']],
-    [useArtistStore, ['getData', 'resetAll', 'resetAlbums']],
-    [useArtistDiscography, ['fetchAlbums', 'resetStore', 'resetAll']],
+    [useAlbumStore, ['fetchTracksAndArtists', 'resetAlbumArtists']],
+    [useArtistStore, ['getData', 'resetAlbums']],
+    [useArtistDiscography, ['fetchAlbums', 'resetStore']],
     [useCollection, ['fetchCollection', 'clearStore']],
-    [useFolderStore, ['fetchAll', 'resetAll']],
+    [useFolderStore, ['fetchAll']],
     [useAlbumList, ['restart', 'clearStore']],
     [useArtistList, ['restart', 'clearStore']],
-    [usePlaylistStore, ['fetchAll', 'resetAll']],
+    [usePlaylistStore, ['fetchAll']],
     [usePlaylistListStore, ['fetchAll']],
     [useWorkStore, ['fetchWork']],
     [useHomeStore, ['fetchAll']],

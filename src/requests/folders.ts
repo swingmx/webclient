@@ -1,6 +1,7 @@
 import { paths } from '@/config'
 import { Folder, Track } from '@/interfaces'
 import useAxios from './useAxios'
+import useFolder from '@/stores/pages/folder'
 
 export async function getFiles(
     path: string,
@@ -67,8 +68,15 @@ export async function openInFiles(path: string) {
 }
 
 export async function getTracksInPath(path: string) {
+    const folder = useFolder()
+    const query = new URLSearchParams({
+        path,
+        tracksortby: folder.trackSortBy,
+        tracksort_reverse: String(folder.trackSortReverse),
+    })
+
     const { data, error } = await useAxios({
-        url: paths.api.folder.base + '/tracks/all' + `?path=${path}`,
+        url: paths.api.folder.base + '/tracks/all?' + query.toString(),
         method: 'GET',
     })
 

@@ -77,7 +77,7 @@ const playlistView = {
         if (pageRestoring()) return
         state.loading.value = true
         await usePlaylistPageStore()
-            .fetchAll(to.params.pid)
+            .open(to.params.pid)
             .then(() => {
                 state.loading.value = false
             })
