@@ -1,7 +1,7 @@
 <template>
   <div class="tracktitle flex">
     <div class="thumbnail" @click.prevent="$emit('play')">
-      <img :src="imguri + track.image" class="album-art image rounded-sm" />
+      <img :src="imguri + track.image" :style="blurhashStyle(track.blurhash)" class="album-art image rounded-sm" />
       <div
         class="now-playing-track-indicator"
         :class="{ 'now-playing-track-indicator': is_current, last_played: !is_current_playing, active: is_current }"
@@ -44,6 +44,7 @@ import MasterFlag from "../MasterFlag.vue";
 import ExplicitIcon from "@/assets/icons/explicit.svg";
 
 import { paths } from "@/config";
+import blurhashStyle from "@/utils/blurhashStyle";
 
 defineProps<{
   track: Track;

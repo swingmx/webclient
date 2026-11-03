@@ -15,7 +15,7 @@
                     background: `linear-gradient(to top, ${album.color} 20%, transparent)`,
                 }"
             ></div>
-            <img class="shadow-lg" :src="imguri + album.image" alt="" />
+            <img class="shadow-lg" :src="imguri + album.image" :style="blurhashStyle(album.blurhash)" alt="" />
             <PlayBtn
                 :store="useAlbumStore"
                 :source="playSources.album"
@@ -68,6 +68,7 @@ import { playSources } from '@/enums'
 import useAlbumStore from '@/stores/pages/album'
 import { paths } from '../../config'
 import MasterFlag from './MasterFlag.vue'
+import blurhashStyle from '@/utils/blurhashStyle'
 import { showAlbumContextMenu } from '@/helpers/contextMenuHandler'
 
 const route = useRoute()

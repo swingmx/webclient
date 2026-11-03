@@ -1,5 +1,11 @@
 <template>
-    <img v-if="image && !failed" :src="paths.images.artist[size] + image" alt="" @error="failed = true" />
+    <img
+        v-if="image && !failed"
+        :src="paths.images.artist[size] + image"
+        :style="blurhashStyle(blurhash)"
+        alt=""
+        @error="failed = true"
+    />
     <div v-else class="person-initials" :style="composerTint(tint)">
         <span>{{ personInitials(name) }}</span>
     </div>
@@ -11,6 +17,7 @@ import { ref, watch } from 'vue'
 import { paths } from '@/config'
 import composerTint from '@/utils/composerTint'
 import personInitials from '@/utils/personInitials'
+import blurhashStyle from '@/utils/blurhashStyle'
 
 const props = withDefaults(
     defineProps<{
@@ -19,6 +26,7 @@ const props = withDefaults(
         // the composer's palette entry; neutral grey without one
         tint?: number | null
         size?: 'small' | 'medium' | 'large'
+        blurhash?: string | null
     }>(),
     { size: 'medium' }
 )

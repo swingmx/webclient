@@ -7,11 +7,11 @@
             },
         }"
         class="artist-card"
-        @contextmenu.prevent="showContextMenu"
         :class="{ 'context-menu-open': contextMenuFlag }"
+        @contextmenu.prevent="showContextMenu"
     >
         <div class="image circular">
-            <PersonImage class="artist-image circular" :image="artist.image" :name="artist.name" :tint="artist.tint" />
+            <PersonImage class="artist-image circular" :image="artist.image" :name="artist.name" :tint="artist.tint" :blurhash="artist.blurhash" />
             <div
                 class="overlay circular"
                 :style="{

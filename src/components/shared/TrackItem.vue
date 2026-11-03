@@ -17,7 +17,7 @@
             {{ movementNumber }}
         </div>
         <div v-else class="album-art">
-            <img :src="paths.images.thumb.small + track.image" />
+            <img :src="paths.images.thumb.small + track.image" :style="blurhashStyle(track.blurhash)" />
             <div
                 v-if="isCurrent"
                 class="now-playing-track-indicator image"
@@ -72,6 +72,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import useTracklist from '@/stores/queue/tracklist'
 
 import { paths } from '@/config'
+import blurhashStyle from '@/utils/blurhashStyle'
 import { favType } from '@/enums'
 import { showTrackContextMenu as showContext } from '@/helpers/contextMenuHandler'
 import favoriteHandler from '@/helpers/favoriteHandler'
