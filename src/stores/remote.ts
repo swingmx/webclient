@@ -4,6 +4,8 @@ import { computed, ref, watch } from 'vue'
 
 import { getBaseUrl, paths } from '@/config'
 import { Track } from '@/interfaces'
+import useColors from './colors'
+import useLyrics from './lyrics'
 import { audioSource, getUrl, usePlayer } from './player'
 import useQueue from './queue'
 import useTracklist, { From } from './queue/tracklist'
@@ -317,6 +319,12 @@ export default defineStore('remote', () => {
         queue.setPlaying(p.playing)
         queue.setDurationFromFile(queue.currenttrack.duration || 0)
         queue.setCurrentDuration(position())
+
+        const lyrics = useLyrics()
+        if (queue.currenttrack?.trackhash && lyrics.currentTrack !== queue.currenttrack.trackhash) {
+            lyrics.getLyrics()
+            useColors().setTheme1Color(paths.images.thumb.small + queue.currenttrack.image)
+        }
     }
 
     function position() {
