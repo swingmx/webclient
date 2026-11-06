@@ -406,7 +406,9 @@ export default defineStore('remote', () => {
             queue.setCurrentIndex(index)
 
             if (audioSource.playingSource.src.endsWith(url)) {
-                if (play !== queue.playing) queue.playPause()
+                audioSource.playingSource.currentTime = p.position_ms / 1000
+                queue.setPlaying(play)
+                play ? audioSource.playPlayingSource() : audioSource.pausePlayingSource()
                 return
             }
 
@@ -421,8 +423,6 @@ export default defineStore('remote', () => {
         local(() => {
             const audio = audioSource.playingSource
             audio.pause()
-            audio.removeAttribute('src')
-            audio.load()
             audioSource.standbySource.pause()
             usePlayer().clearNextAudio()
         })

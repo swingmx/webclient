@@ -9,7 +9,7 @@ import useQueue from './queue'
 import useTracklist from './queue/tracklist'
 import useSettings from './settings'
 import useTracker from './tracker'
-import { local } from './remote'
+import useRemote, { local } from './remote'
 
 import { getBaseUrl, paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
@@ -470,8 +470,8 @@ export const usePlayer = defineStore('player', () => {
 
     // Loader will misbehave on HMR because of multiple setInterval calls
     setInterval(() => {
-        // a Remote Control controller shows playback with no audio loaded
-        if (!queue.playing || !audio.src) {
+        const remote = useRemote()
+        if (!queue.playing || !audio.src || (remote.connected && !remote.isActive)) {
             buffering.value = false
             return
         }
