@@ -27,6 +27,7 @@ interface Device {
 interface State {
     version: number
     active_device_id: string | null
+    active_host_id: string | null
     active_reachable: boolean
     playhead: Playhead
     queue: { source: string; items: { uid: string; track: Track }[]; order: string[] | null; repeat: 'none' | 'all' | 'one' }
@@ -55,6 +56,15 @@ function getDeviceId() {
         // crypto.randomUUID needs a secure context
         id = Math.random().toString(36).slice(2) + Date.now().toString(36)
         sessionStorage.setItem('rc_device_id', id)
+    }
+    return id
+}
+
+function getHostId() {
+    let id = localStorage.getItem('rc_host_id')
+    if (!id) {
+        id = Math.random().toString(36).slice(2) + Date.now().toString(36)
+        localStorage.setItem('rc_host_id', id)
     }
     return id
 }
@@ -156,6 +166,8 @@ export default defineStore('remote', () => {
     const pickerOpen = ref(false)
     const offerPlayHere = ref(false)
     const deviceId = ref('')
+    const hostId = ref('')
+    const activeHostId = ref<string | null>(null)
 
     // queue item uids, aligned with tracklist.tracklist
     const uids: string[] = []
@@ -171,7 +183,7 @@ export default defineStore('remote', () => {
     const isActive = computed(() => connected.value && reachable.value && activeId.value === deviceId.value)
     const activeName = computed(() => {
         if (!reachable.value || activeId.value === deviceId.value) return ''
-        return devices.value.find(d => d.id === activeId.value)?.name || ''
+        return devices.value.find(d => d.id === activeHostId.value)?.name || ''
     })
 
     /** Whether store actions should go to the server instead of the local player. */
@@ -228,6 +240,8 @@ export default defineStore('remote', () => {
     function transfer(id: string, play = playhead.value.playing || offerPlayHere.value) {
         pickerOpen.value = false
         offerPlayHere.value = false
+        // the server plays this browser in its most recently used tab, so mark this one used
+        if (id === hostId.value && selectable.value) send('/devices', { selectable: true })
         return send('/transfer', { device_id: id, play })
     }
 
@@ -277,6 +291,7 @@ export default defineStore('remote', () => {
     function render(state: State, withActive = true) {
         if (withActive) {
             activeId.value = state.active_device_id
+            activeHostId.value = state.active_host_id
             reachable.value = state.active_reachable
             devices.value = state.devices
         }
@@ -396,6 +411,7 @@ export default defineStore('remote', () => {
     async function activate(p: Playhead, play: boolean) {
         activeEpoch++
         activeId.value = deviceId.value
+        activeHostId.value = hostId.value
         reachable.value = true
         if (p.uid && !uids.includes(p.uid)) await refresh()
 
@@ -448,6 +464,7 @@ export default defineStore('remote', () => {
             case 'active':
                 activeEpoch++
                 activeId.value = data.active_device_id
+                activeHostId.value = data.active_host_id
                 reachable.value = data.active_reachable
                 if (reachable.value) offerPlayHere.value = false
                 else if (playhead.value.playing) {
@@ -482,6 +499,7 @@ export default defineStore('remote', () => {
         const fresh = state.version === 0
         if (fresh || (playingHere && !state.active_reachable && state.active_device_id !== deviceId.value)) {
             activeId.value = state.active_device_id
+            activeHostId.value = state.active_host_id
             reachable.value = state.active_reachable
             devices.value = state.devices
             const replace = {
@@ -510,6 +528,7 @@ export default defineStore('remote', () => {
             name: getDeviceName(),
             type: 'web',
             selectable: String(selectable.value),
+            host_id: hostId.value,
         })
         es = new EventSource(`${getBaseUrl()}${paths.api.remote}/stream?${query}`, { withCredentials: true })
         es.onopen = sync
@@ -587,6 +606,7 @@ export default defineStore('remote', () => {
 
         available.value = true
         deviceId.value = await claimDeviceId()
+        hostId.value = getHostId()
 
         if (settings.use_remote_control) connect()
         document.addEventListener('click', onGesture, true)
@@ -620,6 +640,8 @@ export default defineStore('remote', () => {
         pickerOpen,
         offerPlayHere,
         deviceId,
+        hostId,
+        activeHostId,
         isActive,
         activeName,
         routes,

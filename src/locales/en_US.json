@@ -446,7 +446,7 @@
     "NoActiveDevice": "No device is playing right now",
     "PlayHere": "Play here",
     "PlayingOn": "Playing on {device}",
-    "ThisBrowser": "this browser"
+    "ThisBrowser": "This browser"
   },
   "RightSidebar": {
     "BackToQueue": "back to queue",

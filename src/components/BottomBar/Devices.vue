@@ -21,11 +21,10 @@
                 v-for="device in targets"
                 :key="device.id"
                 class="rc-device"
-                :class="{ active: device.id === rc.activeId }"
+                :class="{ active: device.id === rc.activeHostId }"
                 @click="rc.transfer(device.id)"
             >
-                {{ device.name }}
-                <span v-if="device.id === rc.deviceId">({{ $t('RemoteControl.ThisBrowser') }})</span>
+                {{ device.id === rc.hostId ? $t('RemoteControl.ThisBrowser') : device.name }}
             </button>
         </div>
     </div>
@@ -41,10 +40,7 @@ import useRemote from '@/stores/remote'
 const rc = useRemote()
 const root = ref<HTMLElement | null>(null)
 
-// this tab stays listed: picking it is the gesture that makes it selectable
-const targets = computed(() =>
-    rc.devices.filter(d => d.selectable || d.id === rc.activeId || d.id === rc.deviceId)
-)
+const targets = computed(() => rc.devices.filter(d => d.selectable || d.id === rc.activeHostId))
 
 onClickOutside(root, () => (rc.pickerOpen = false))
 </script>
