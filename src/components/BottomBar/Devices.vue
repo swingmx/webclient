@@ -31,7 +31,7 @@
                 </div>
             </template>
             <template v-if="others.length">
-                <div class="rc-heading">{{ $t(active ? 'RemoteControl.OtherDevices' : 'RemoteControl.Devices') }}</div>
+                <div class="rc-heading">{{ $t('RemoteControl.OtherDevices') }}</div>
                 <button
                     v-for="device in others"
                     :key="device.id"
@@ -86,7 +86,11 @@ const switching = ref<string | null>(null)
 const host = new URL(getBaseUrl() || location.origin, location.origin).host
 const volume = computed(() => Math.round(settings.volume * 100))
 
-const active = computed(() => (rc.reachable ? rc.devices.find(d => d.id === rc.activeHostId) : undefined))
+const active = computed(
+    () =>
+        (rc.reachable && rc.devices.find(d => d.id === rc.activeHostId)) ||
+        rc.devices.find(d => d.id === rc.hostId)
+)
 const controlling = computed(() => !!active.value && active.value.id !== rc.hostId)
 const others = computed(() =>
     rc.devices.filter(d => d.id !== active.value?.id && (d.selectable || d.id === rc.hostId))
