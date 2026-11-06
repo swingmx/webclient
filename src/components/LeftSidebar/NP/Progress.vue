@@ -7,7 +7,7 @@
         :max="time.full"
         step="0.1"
         :style="{
-            background: `#3a3a3c linear-gradient(90deg, white ${currentPercent}%, #48484a ${currentPercent}%, #48484a ${maxSeekPercent}%, #3a3a3c ${maxSeekPercent}%)`,
+            background: `#3a3a3c linear-gradient(90deg, white ${currentPercent}%, #48484a ${currentPercent}%, #48484a ${loadedPercent}%, #3a3a3c ${loadedPercent}%)`,
         }"
         @change="seek"
         @click="seek"
@@ -17,9 +17,14 @@
 <script setup lang="ts">
 import { maxSeekPercent } from '@/stores/player'
 import useQStore from '@/stores/queue'
+import useRemote from '@/stores/remote'
 import { computed } from 'vue'
 
 const q = useQStore()
+const remote = useRemote()
+
+// a Remote Control controller has no audio of its own, so nothing is loaded
+const loadedPercent = computed(() => (remote.connected && !remote.isActive ? 0 : maxSeekPercent.value))
 
 const { duration: time } = q
 
