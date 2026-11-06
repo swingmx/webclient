@@ -18,7 +18,7 @@
                 </button>
             </template>
             <button
-                v-for="device in rc.devices"
+                v-for="device in targets"
                 :key="device.id"
                 class="rc-device"
                 :class="{ active: device.id === rc.activeId }"
@@ -33,13 +33,18 @@
 
 <script setup lang="ts">
 import { onClickOutside } from '@vueuse/core'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import LaptopSvg from '@/assets/icons/laptop.svg'
 import useRemote from '@/stores/remote'
 
 const rc = useRemote()
 const root = ref<HTMLElement | null>(null)
+
+// this tab stays listed: picking it is the gesture that makes it selectable
+const targets = computed(() =>
+    rc.devices.filter(d => d.selectable || d.id === rc.activeId || d.id === rc.deviceId)
+)
 
 onClickOutside(root, () => (rc.pickerOpen = false))
 </script>

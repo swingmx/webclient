@@ -3,7 +3,6 @@
     <Modal v-if="!hideUI" />
     <Notification v-if="!hideUI" />
     <div id="drag-img" class="ellip2" style=""></div>
-    <div v-if="remote.otherTab" id="rc-other-tab">{{ $t('RemoteControl.OtherTab') }}</div>
     <section
         v-if="!hideUI"
         id="app-grid"
@@ -287,16 +286,6 @@ export default defineComponent({
 @import './assets/scss/mixins.scss';
 .r-sidebar {
     @include hideScrollbars;
-}
-
-#rc-other-tab {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: grid;
-    place-items: center;
-    background-color: $black;
-    font-weight: 500;
 }
 
 #noui {

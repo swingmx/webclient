@@ -9,7 +9,6 @@ import useQueue from './queue'
 import useTracklist, { From } from './queue/tracklist'
 import useSettings from './settings'
 import { getSource } from './tracker'
-import { readLocalStorage } from '@/utils/useLocalStorage'
 
 interface Playhead {
     uid: string | null
@@ -22,6 +21,7 @@ interface Device {
     id: string
     name: string
     type: string
+    selectable: boolean
 }
 
 interface State {
@@ -50,10 +50,11 @@ export function local<T>(fn: () => T): T {
 }
 
 function getDeviceId() {
-    let id = localStorage.getItem('rc_device_id')
+    let id = sessionStorage.getItem('rc_device_id')
     if (!id) {
-        id = crypto.randomUUID()
-        localStorage.setItem('rc_device_id', id)
+        // crypto.randomUUID needs a secure context
+        id = Math.random().toString(36).slice(2) + Date.now().toString(36)
+        sessionStorage.setItem('rc_device_id', id)
     }
     return id
 }
@@ -82,7 +83,7 @@ function getDeviceName() {
         : /Linux/.test(ua)
         ? 'Linux'
         : 'Web'
-    return `${browser} on ${os}`
+    return `Web Player (${browser} on ${os})`
 }
 
 function clearMediaSession() {
@@ -142,8 +143,8 @@ export default defineStore('remote', () => {
     const settings = useSettings()
 
     const available = ref(false)
-    /** another tab of this browser is the device */
-    const otherTab = ref(false)
+    /** both audio elements are unlocked, so this tab can play */
+    const selectable = ref(false)
     /** the stream is open and the server state is rendered */
     const connected = ref(false)
     const version = ref(0)
@@ -162,8 +163,7 @@ export default defineStore('remote', () => {
     let skew = 0
     let pending: { source: string; trackhashes: string[] } | null = null
     let es: EventSource | null = null
-    let releaseLock: (() => void) | null = null
-    let requested = false
+    let unlocking = false
     let chain: Promise<unknown> = Promise.resolve()
     // bumped by active-device events so older state responses don't override them
     let activeEpoch = 0
@@ -181,7 +181,7 @@ export default defineStore('remote', () => {
 
     // requests
 
-    async function send(path: string, body: object) {
+    async function send(path: string, body: object, retry = true): Promise<any> {
         const req = chain.then(() =>
             axios.post(paths.api.remote + path, { device_id: deviceId.value, ...body }, { withCredentials: true })
         )
@@ -191,6 +191,8 @@ export default defineStore('remote', () => {
             return (await req).data
         } catch (e: any) {
             const code = e.response?.data?.error
+            // the gesture that made this tab selectable may have been queued after this request
+            if (code === 'not_selectable' && retry && selectable.value && path !== '/queue') return send(path, body, false)
             if (code === 'unknown_uid') refresh()
             if (code === 'no_active_device' || code === 'active_unreachable') {
                 offerPlayHere.value = true
@@ -321,7 +323,8 @@ export default defineStore('remote', () => {
 
     function position() {
         const p = playhead.value
-        return p.position_ms / 1000 + (p.playing ? Math.max(Date.now() / 1000 + skew - p.at, 0) : 0)
+        const at = p.position_ms / 1000 + (p.playing ? Math.max(Date.now() / 1000 + skew - p.at, 0) : 0)
+        return Math.min(at, queue.currenttrack.duration || at)
     }
 
     function applyVolume(value: number) {
@@ -447,6 +450,9 @@ export default defineStore('remote', () => {
                 activeId.value = data.active_device_id
                 reachable.value = data.active_reachable
                 if (reachable.value) offerPlayHere.value = false
+                else if (playhead.value.playing) {
+                    renderPlayhead({ ...playhead.value, position_ms: Math.round(position() * 1000), playing: false })
+                }
                 break
             case 'volume':
                 applyVolume(data.value)
@@ -474,7 +480,7 @@ export default defineStore('remote', () => {
 
         // first use, or the server restarted, or this tab started playing before it joined
         const fresh = state.version === 0
-        if (fresh || (playingHere && state.active_device_id !== deviceId.value)) {
+        if (fresh || (playingHere && !state.active_reachable && state.active_device_id !== deviceId.value)) {
             activeId.value = state.active_device_id
             reachable.value = state.active_reachable
             devices.value = state.devices
@@ -499,7 +505,12 @@ export default defineStore('remote', () => {
     }
 
     function connect() {
-        const query = new URLSearchParams({ device_id: deviceId.value, name: getDeviceName(), type: 'web' })
+        const query = new URLSearchParams({
+            device_id: deviceId.value,
+            name: getDeviceName(),
+            type: 'web',
+            selectable: String(selectable.value),
+        })
         es = new EventSource(`${getBaseUrl()}${paths.api.remote}/stream?${query}`, { withCredentials: true })
         es.onopen = sync
         es.onmessage = e => {
@@ -510,17 +521,21 @@ export default defineStore('remote', () => {
             if (es?.readyState !== EventSource.CLOSED) return
             es = null
             connected.value = false
-            setTimeout(() => releaseLock && !es && connect(), 10000)
+            setTimeout(() => settings.use_remote_control && !es && connect(), 10000)
         }
     }
 
-    function disconnect() {
-        es?.close()
+    function leave() {
+        if (!es) return
+        es.close()
         es = null
+        const body = new Blob([JSON.stringify({ device_id: deviceId.value })], { type: 'application/json' })
+        navigator.sendBeacon(`${getBaseUrl()}${paths.api.remote}/leave`, body)
+    }
+
+    function disconnect() {
+        leave()
         connected.value = false
-        releaseLock?.()
-        releaseLock = null
-        requested = false
         pickerOpen.value = false
 
         local(() => {
@@ -529,66 +544,74 @@ export default defineStore('remote', () => {
         })
     }
 
-    async function onGesture() {
-        if (requested || releaseLock || !available.value || !settings.use_remote_control) return
-        requested = true
+    function onGesture() {
+        if (selectable.value || unlocking || !available.value || !settings.use_remote_control) return
+        unlocking = true
 
-        if (!(await unlockAudio())) {
-            requested = false
-            return
-        }
-
-        navigator.locks.request(
-            'rc',
-            () =>
-                new Promise<void>(resolve => {
-                    // another tab may have turned Remote Control off while this one waited
-                    if (readLocalStorage('settings')?.use_remote_control === false) return resolve()
-                    releaseLock = resolve
-                    otherTab.value = false
-                    connect()
-                })
-        )
-        checkOtherTab()
+        // queued on the request chain so the gesture's own routed action waits for it
+        const unlocked = unlockAudio()
+        chain = chain
+            .then(() => unlocked)
+            .then(ok => {
+                unlocking = false
+                if (!ok) return
+                selectable.value = true
+                if (es) return axios.post(paths.api.remote + '/devices', { device_id: deviceId.value, selectable: true }, { withCredentials: true })
+            })
+            .catch(() => {})
     }
 
-    async function checkOtherTab() {
-        if (releaseLock || !settings.use_remote_control) return (otherTab.value = false)
-        const { held } = await navigator.locks.query()
-        otherTab.value = !!held?.some(lock => lock.name === 'rc')
-        if (otherTab.value && queue.playing) local(() => queue.playPause())
+    /** Returns this tab's device id, replacing one a duplicated tab copied from a live tab. */
+    async function claimDeviceId() {
+        const id = getDeviceId()
+        const channel = new BroadcastChannel('rc_device_id')
+
+        const taken = await new Promise<boolean>(resolve => {
+            channel.onmessage = e => {
+                if (e.data.query && e.data.query === deviceId.value) channel.postMessage({ taken: e.data.query })
+                if (e.data.taken === id && !deviceId.value) resolve(true)
+            }
+            channel.postMessage({ query: id })
+            setTimeout(() => resolve(false), 100)
+        })
+
+        if (!taken) return id
+        sessionStorage.removeItem('rc_device_id')
+        return getDeviceId()
     }
 
-    /** Detects Remote Control and waits for a user gesture to join it. */
+    /** Detects Remote Control and joins it as a controller. */
     async function init() {
-        if (available.value || !navigator.locks || !window.crypto?.randomUUID) return
+        if (available.value) return
         if (!(await fetchState())) return
 
         available.value = true
-        deviceId.value = getDeviceId()
+        deviceId.value = await claimDeviceId()
 
-        checkOtherTab()
-        setInterval(checkOtherTab, 3000)
+        if (settings.use_remote_control) connect()
         document.addEventListener('click', onGesture, true)
         document.addEventListener('keydown', onGesture, true)
+        window.addEventListener('pagehide', leave)
     }
 
     function setEnabled(on: boolean) {
         if (!available.value) return
-        on ? onGesture() : disconnect()
+        if (!on) return disconnect()
+        if (!es) connect()
+        onGesture()
     }
 
     watch(() => [queue.currentindex, queue.playing], report)
     watch(isActive, (now, was) => was && !now && connected.value && becomeController())
     document.addEventListener('seeked', report, true)
-    setInterval(() => queue.playing && report(), 15000)
+    setInterval(() => queue.playing && report(), 5000)
     setInterval(() => {
         if (connected.value && !isActive.value && playhead.value.playing) queue.setCurrentDuration(position())
     }, 500)
 
     return {
         available,
-        otherTab,
+        selectable,
         connected,
         activeId,
         devices,

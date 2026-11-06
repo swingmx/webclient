@@ -444,7 +444,6 @@
   "RemoteControl": {
     "Devices": "Devices",
     "NoActiveDevice": "No device is playing right now",
-    "OtherTab": "Swing Music is active in another tab",
     "PlayHere": "Play here",
     "PlayingOn": "Playing on {device}",
     "ThisBrowser": "this browser"

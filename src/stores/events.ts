@@ -7,11 +7,12 @@ interface EventData {
 }
 
 class Events {
-    private worker: Worker
+    private worker: Worker | null = null
     private events: { [event: string]: (data: any) => any } = {}
 
-    constructor() {
-        console.log('Events constructor')
+    // opened on first subscribe, so only onboarding holds the /events connection
+    private connect() {
+        if (this.worker) return
         this.worker = new Worker(new URL('/workers/sse-events.js', import.meta.url))
         this.worker.postMessage({
             command: "connect",
@@ -36,6 +37,7 @@ class Events {
     }
 
     async subscribe(eventName: string, callback: (data: any) => any) {
+        this.connect()
         this.events[eventName] = callback
     }
 
