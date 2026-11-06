@@ -1,6 +1,6 @@
 import { router, Routes } from '@/router'
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 import useColors from './colors'
 import useLyrics from './lyrics'
@@ -143,7 +143,13 @@ let audio = audioSource.playingSource
 const buffering = ref(true)
 const maxSeekPercent = ref(0)
 
-export const currentAudioTimeMs = computed(() => Math.round(audio.currentTime * 1000))
+export const currentAudioTimeMs = {
+    get value() {
+        const remote = useRemote()
+        const seconds = remote.connected && !remote.isActive ? useQueue().duration.current : audio.currentTime
+        return Math.round(seconds * 1000)
+    },
+}
 
 export const usePlayer = defineStore('player', () => {
     const queue = useQueue()
@@ -530,6 +536,7 @@ export const usePlayer = defineStore('player', () => {
         setVolume,
         playCurrent: playCurrentTrack,
         clearNextAudio: clearNextAudioData,
+        updateLyricsPosition,
         clearMovingNextTimeout,
     }
 })

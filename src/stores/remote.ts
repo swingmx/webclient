@@ -335,8 +335,8 @@ export default defineStore('remote', () => {
     function report() {
         clearTimeout(reportTimer)
         reportTimer = setTimeout(() => {
-            if (!isActive.value) return
             const audio = audioSource.playingSource
+            if (!isActive.value || audio.readyState < HTMLMediaElement.HAVE_METADATA) return
             send('/playhead', {
                 uid: uids[queue.currentindex] ?? null,
                 position_ms: Math.round((audio.currentTime || 0) * 1000),
@@ -416,6 +416,7 @@ export default defineStore('remote', () => {
             queue.setPlaying(play)
             usePlayer().playCurrent()
             audioSource.playingSource.currentTime = p.position_ms / 1000
+            queue.setCurrentDuration(p.position_ms / 1000)
         })
         report()
     }
@@ -612,10 +613,13 @@ export default defineStore('remote', () => {
     for (const el of [audioSource.playingSource, audioSource.standbySource]) {
         el.addEventListener('playing', () => el === audioSource.playingSource && report())
         el.addEventListener('waiting', () => el === audioSource.playingSource && report())
+        el.addEventListener('loadedmetadata', () => el === audioSource.playingSource && report())
     }
     setInterval(() => {
-        if (connected.value && !isActive.value && playhead.value.playing) queue.setCurrentDuration(position())
-    }, 500)
+        if (!connected.value || isActive.value || !playhead.value.playing) return
+        queue.setCurrentDuration(position())
+        usePlayer().updateLyricsPosition()
+    }, 250)
 
     return {
         available,

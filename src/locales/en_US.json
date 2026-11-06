@@ -444,7 +444,7 @@
   "RemoteControl": {
     "App": "Swing Music for {platform}",
     "Connecting": "Connecting…",
-    "Controlling": "Controlling",
+    "Controlling": "Playing from",
     "Devices": "Devices",
     "Idle": "Idle",
     "NoOtherDevices": "No other devices",
