@@ -201,8 +201,10 @@ $master-orange: rgb(255, 153, 0);
 
     .rc-device {
         display: grid;
+        justify-content: stretch;
         gap: $small;
         width: 100% !important;
+        font-size: inherit !important;
         height: auto !important;
         padding: $small !important;
         border-radius: $medium !important;
