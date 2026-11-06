@@ -38,9 +38,6 @@ interface State {
 
 let localDepth = 0
 
-/**
- * Runs `fn` on the local player and queue, bypassing Remote Control routing.
- */
 export function local<T>(fn: () => T): T {
     localDepth++
     try {
@@ -108,9 +105,6 @@ function clearMediaSession() {
 const SILENCE = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='
 const HANDLERS = ['onplay', 'oncanplay', 'onended', 'onerror', 'ontimeupdate'] as const
 
-/**
- * Plays and pauses both audio elements inside a user gesture. Resolves whether autoplay is unlocked.
- */
 function unlockAudio() {
     const queue = useQueue()
     const settings = useSettings()
@@ -140,7 +134,6 @@ function unlockAudio() {
                         el.load()
                     }
                     el.muted = settings.mute
-                    // the gesture may have started playback and assigned fresh handlers
                     HANDLERS.forEach((key, i) => el[key] === null && ((el as any)[key] = saved[i]))
                 })
         })
@@ -153,9 +146,7 @@ export default defineStore('remote', () => {
     const settings = useSettings()
 
     const available = ref(false)
-    /** both audio elements are unlocked, so this tab can play */
     const selectable = ref(false)
-    /** the stream is open and the server state is rendered */
     const connected = ref(false)
     const version = ref(0)
     const activeId = ref<string | null>(null)
@@ -169,7 +160,6 @@ export default defineStore('remote', () => {
     const hostId = ref('')
     const activeHostId = ref<string | null>(null)
 
-    // queue item uids, aligned with tracklist.tracklist
     const uids: string[] = []
     let synced = false
     let skew = 0
@@ -177,7 +167,6 @@ export default defineStore('remote', () => {
     let es: EventSource | null = null
     let unlocking = false
     let chain: Promise<unknown> = Promise.resolve()
-    // bumped by active-device events so older state responses don't override them
     let activeEpoch = 0
 
     const isActive = computed(() => connected.value && reachable.value && activeId.value === deviceId.value)
@@ -186,12 +175,10 @@ export default defineStore('remote', () => {
         return devices.value.find(d => d.id === activeHostId.value)?.name || ''
     })
 
-    /** Whether store actions should go to the server instead of the local player. */
     function routes() {
         return connected.value && localDepth === 0
     }
 
-    // requests
 
     async function send(path: string, body: object, retry = true): Promise<any> {
         const req = chain.then(() =>
@@ -203,7 +190,6 @@ export default defineStore('remote', () => {
             return (await req).data
         } catch (e: any) {
             const code = e.response?.data?.error
-            // the gesture that made this tab selectable may have been queued after this request
             if (code === 'not_selectable' && retry && selectable.value && path !== '/queue') return send(path, body, false)
             if (code === 'unknown_uid') refresh()
             if (code === 'no_active_device' || code === 'active_unreachable') {
@@ -240,12 +226,10 @@ export default defineStore('remote', () => {
     function transfer(id: string, play = playhead.value.playing || offerPlayHere.value) {
         pickerOpen.value = false
         offerPlayHere.value = false
-        // the server plays this browser in its most recently used tab, so mark this one used
         if (id === hostId.value && selectable.value) send('/devices', { selectable: true })
         return send('/transfer', { device_id: id, play })
     }
 
-    // routed store actions
 
     function play(index: number) {
         if (pending) {
@@ -286,7 +270,6 @@ export default defineStore('remote', () => {
         volumeTimer = setTimeout(() => player('volume', { value }), 150)
     }
 
-    // rendering
 
     function render(state: State, withActive = true) {
         if (withActive) {
@@ -347,7 +330,6 @@ export default defineStore('remote', () => {
         usePlayer().setVolume(settings.volume_gain)
     }
 
-    // the active device
 
     let reportTimer: ReturnType<typeof setTimeout> | undefined
     function report() {
@@ -448,10 +430,12 @@ export default defineStore('remote', () => {
         renderPlayhead(playhead.value)
     }
 
-    // connection
 
     function handle(event: string, data: any) {
         switch (event) {
+            case 'heartbeat':
+                axios.post(paths.api.remote + '/alive', { device_id: deviceId.value }, { withCredentials: true }).catch(() => {})
+                break
             case 'queue':
                 if (data.version > version.value) refresh()
                 break
@@ -495,7 +479,6 @@ export default defineStore('remote', () => {
         synced = false
         connected.value = true
 
-        // first use, or the server restarted, or this tab started playing before it joined
         const fresh = state.version === 0
         if (fresh || (playingHere && !state.active_reachable && state.active_device_id !== deviceId.value)) {
             activeId.value = state.active_device_id
@@ -570,7 +553,6 @@ export default defineStore('remote', () => {
         if (selectable.value || unlocking || !available.value || !settings.use_remote_control) return
         unlocking = true
 
-        // queued on the request chain so the gesture's own routed action waits for it
         const unlocked = unlockAudio()
         chain = chain
             .then(() => unlocked)
@@ -583,7 +565,6 @@ export default defineStore('remote', () => {
             .catch(() => {})
     }
 
-    /** Returns this tab's device id, replacing one a duplicated tab copied from a live tab. */
     async function claimDeviceId() {
         const id = getDeviceId()
         const channel = new BroadcastChannel('rc_device_id')
@@ -602,7 +583,6 @@ export default defineStore('remote', () => {
         return getDeviceId()
     }
 
-    /** Detects Remote Control and joins it as a controller. */
     async function init() {
         if (available.value) return
         if (!(await fetchState())) return
@@ -642,6 +622,7 @@ export default defineStore('remote', () => {
         shuffled,
         pickerOpen,
         offerPlayHere,
+        reachable,
         deviceId,
         hostId,
         activeHostId,

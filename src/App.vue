@@ -31,6 +31,7 @@
         </div>
         <RightSideBar v-if="settings.use_sidebar && xl" />
         <BottomBar />
+        <RemoteStrip />
         <!-- <BubbleManager /> -->
     </section>
     <div v-else id="noui">
@@ -74,6 +75,7 @@ import Notification from '@/components/Notification.vue'
 
 // @app-grid-components
 import BottomBar from '@/components/BottomBar/BottomBar.vue'
+import RemoteStrip from '@/components/BottomBar/RemoteStrip.vue'
 import LeftSidebar from '@/components/LeftSidebar/index.vue'
 import NavBar from '@/components/nav/NavBar.vue'
 import RightSideBar from '@/components/RightSideBar/Main.vue'

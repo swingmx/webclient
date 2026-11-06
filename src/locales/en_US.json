@@ -442,10 +442,16 @@
     }
   },
   "RemoteControl": {
+    "App": "Swing Music for {platform}",
+    "Connecting": "Connecting…",
+    "Controlling": "Controlling",
     "Devices": "Devices",
-    "NoActiveDevice": "No device is playing right now",
-    "PlayHere": "Play here",
-    "PlayingOn": "Playing on {device}",
+    "Idle": "Idle",
+    "NoOtherDevices": "No other devices",
+    "NoOtherDevicesHelp": "Open Swing Music on your other devices and sign in with the same account you're using here.",
+    "OtherDevices": "Other devices",
+    "PlayingOn": "Playing on",
+    "PlayingOnDevice": "Playing on {device}",
     "ThisBrowser": "This browser"
   },
   "RightSidebar": {
