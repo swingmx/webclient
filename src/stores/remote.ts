@@ -531,7 +531,10 @@ export default defineStore('remote', () => {
             host_id: hostId.value,
         })
         es = new EventSource(`${getBaseUrl()}${paths.api.remote}/stream?${query}`, { withCredentials: true })
-        es.onopen = sync
+        es.onopen = () => {
+            if (selectable.value) send('/devices', { selectable: true })
+            sync()
+        }
         es.onmessage = e => {
             const message = JSON.parse(e.data)
             handle(message.event, message.data)
