@@ -54,7 +54,6 @@ function handlePlay() {
       const search = useSearchStore();
       const tracklist = useTracklist();
 
-      queue.clearQueue();
       tracklist.setFromSearch(search.query, [props.track]);
       queue.play();
       break;

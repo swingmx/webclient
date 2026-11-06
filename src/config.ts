@@ -57,6 +57,7 @@ export const paths = {
         },
         artist: '/artist',
         lyrics: '/lyrics',
+        remote: '/remote',
         plugins: '/plugins',
         get mixes() {
             return this.plugins + '/mixes'

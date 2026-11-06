@@ -3,6 +3,7 @@
     <Modal v-if="!hideUI" />
     <Notification v-if="!hideUI" />
     <div id="drag-img" class="ellip2" style=""></div>
+    <div v-if="remote.otherTab" id="rc-other-tab">{{ $t('RemoteControl.OtherTab') }}</div>
     <section
         v-if="!hideUI"
         id="app-grid"
@@ -60,6 +61,7 @@ import useTracklist from '@/stores/queue/tracklist'
 import useSettings from '@/stores/settings'
 import useTracker from '@/stores/tracker'
 import useInterface from '@/stores/interface'
+import useRemote from '@/stores/remote'
 
 // @utils
 import handleShortcuts from '@/helpers/useKeyboard'
@@ -91,6 +93,7 @@ const router = useRouter()
 const route = useRoute()
 const settings = useSettings()
 const UIStore = useInterface()
+const remote = useRemote()
 const { hideUI } = storeToRefs(UIStore)
 useTracker()
 
@@ -204,6 +207,7 @@ onMounted(async () => {
 
     settings.initializeVolume()
     handleRootDirsPrompt()
+    remote.init()
 
     getAllSettings()
         .then(({ settings: data }) => {
@@ -283,6 +287,16 @@ export default defineComponent({
 @import './assets/scss/mixins.scss';
 .r-sidebar {
     @include hideScrollbars;
+}
+
+#rc-other-tab {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    background-color: $black;
+    font-weight: 500;
 }
 
 #noui {

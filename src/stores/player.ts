@@ -9,6 +9,7 @@ import useQueue from './queue'
 import useTracklist from './queue/tracklist'
 import useSettings from './settings'
 import useTracker from './tracker'
+import { local } from './remote'
 
 import { getBaseUrl, paths } from '@/config'
 import updateMediaNotif from '@/helpers/mediaNotification'
@@ -237,7 +238,7 @@ export const usePlayer = defineStore('player', () => {
     const handlePlayErrors = (e: Event | string) => {
         if (e instanceof DOMException) {
             if (e.name === 'NotAllowedError') {
-                queue.playPause()
+                local(() => queue.playPause())
                 return toast.showNotification(
                     t('Stores.Player.AutoplayBlockedError'),
                     NotifType.Error
@@ -469,7 +470,8 @@ export const usePlayer = defineStore('player', () => {
 
     // Loader will misbehave on HMR because of multiple setInterval calls
     setInterval(() => {
-        if (!queue.playing) {
+        // a Remote Control controller shows playback with no audio loaded
+        if (!queue.playing || !audio.src) {
             buffering.value = false
             return
         }
@@ -501,7 +503,8 @@ export const usePlayer = defineStore('player', () => {
     const assignEventHandlers = (audioElem: HTMLAudioElement) => {
         audioElem.onerror = audio_onerror
         audioElem.oncanplay = onAudioCanPlay
-        audioElem.onended = onAudioEnded
+        // track ends advance this device's own queue, never a remote one
+        audioElem.onended = () => local(onAudioEnded)
         audioElem.onplay = onAudioPlay
         audioElem.ontimeupdate = onAudioTimeUpdateHandler
         tracker.reassignEventListener()

@@ -14,6 +14,7 @@ import useClassicalHome from '@/stores/classicalHome'
 import { router } from '@/router'
 import { LicenseInfo } from '@/interfaces'
 import { clamp, volumeToGain } from '@/utils/audio/volume'
+import useRemote from '@/stores/remote'
 
 export default defineStore('settings', {
     state: () => ({
@@ -49,6 +50,7 @@ export default defineStore('settings', {
         article_aware_sorting: false,
 
         // client
+        use_remote_control: true,
         useCircularArtistImg: true,
         nowPlayingTrackOnTabTitle: true,
         streaming_quality: 'original',
@@ -174,6 +176,12 @@ export default defineStore('settings', {
         },
         // repeat 👇
         toggleRepeatMode() {
+            const remote = useRemote()
+            if (remote.routes()) {
+                const mode = { all: 'one', one: 'none', none: 'all' }[this.repeat]
+                return remote.edit([{ type: 'repeat', mode }])
+            }
+
             if (this.repeat == 'all') {
                 this.repeat = 'one'
                 return
@@ -207,6 +215,10 @@ export default defineStore('settings', {
             const { setVolume } = usePlayer()
 
             this.volume = clamp(new_value)
+
+            const remote = useRemote()
+            if (remote.routes()) return remote.setVolume(this.volume)
+
             setVolume(this.volume_gain)
         },
         toggleMute() {
@@ -218,6 +230,10 @@ export default defineStore('settings', {
             const { setVolume, setMute } = usePlayer()
             setVolume(this.volume_gain)
             setMute(this.mute)
+        },
+        toggleRemoteControl() {
+            this.use_remote_control = !this.use_remote_control
+            useRemote().setEnabled(this.use_remote_control)
         },
         toggleUseCircularArtistImg() {
             this.useCircularArtistImg = !this.useCircularArtistImg

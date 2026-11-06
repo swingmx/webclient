@@ -5,6 +5,7 @@ import { NotifType, useToast } from '@/stores/notification'
 import { usePlayer } from '@/stores/player'
 import useQueue from '@/stores/queue'
 import useSettings from '@/stores/settings'
+import useRemote from '@/stores/remote'
 
 import { FromOptions } from '@/enums'
 import {
@@ -64,6 +65,9 @@ export default defineStore('tracklist', {
             }
         },
         setNewList(tracklist: Track[]) {
+            const remote = useRemote()
+            if (remote.routes()) remote.setList(tracklist, this.from)
+
             if (this.tracklist !== tracklist) {
                 this.tracklist = []
                 this.tracklist.push(...tracklist)
@@ -229,6 +233,9 @@ export default defineStore('tracklist', {
             Toast.showNotification(t("Stores.Tracklist.AddTrackToQueue", {n: tracks.length}, tracks.length), NotifType.Success)
         },
         insertAt(tracks: Track[], index: number) {
+            const remote = useRemote()
+            if (remote.routes()) return remote.insertAt(tracks, index)
+
             this.tracklist.splice(index, 0, ...tracks)
             this.indexMissingWorks(tracks)
 
@@ -240,6 +247,9 @@ export default defineStore('tracklist', {
             }
         },
         clearList() {
+            const remote = useRemote()
+            if (remote.routes()) return remote.clear()
+
             this.tracklist = []
             this.worklist = {}
             this.from = {} as From
@@ -248,6 +258,9 @@ export default defineStore('tracklist', {
             this.tracklist = shuffle(this.tracklist)
         },
         removeByIndex(index: number) {
+            const remote = useRemote()
+            if (remote.routes()) return remote.remove(index)
+
             const { currentindex, nextindex, playing, playNext, moveForward, setCurrentIndex } = useQueue()
             const player = usePlayer()
 
@@ -284,12 +297,17 @@ export default defineStore('tracklist', {
         },
         insertAfterCurrent(tracks: Track[], works?: ClassicalWork[]) {
             const { currentindex } = useQueue()
+            const remote = useRemote()
 
-            this.tracklist.splice(currentindex + 1, 0, ...tracks)
-            this.indexMissingWorks(tracks)
+            if (remote.routes()) {
+                remote.insert(tracks, 'next')
+            } else {
+                this.tracklist.splice(currentindex + 1, 0, ...tracks)
+                this.indexMissingWorks(tracks)
 
-            if (works?.length) {
-                this.indexWorks(works, tracks)
+                if (works?.length) {
+                    this.indexWorks(works, tracks)
+                }
             }
 
             const Toast = useToast()

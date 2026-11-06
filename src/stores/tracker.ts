@@ -23,7 +23,7 @@ function throttle(
   };
 }
 
-function getSource(source: From) {
+export function getSource(source: From) {
   switch (source.type) {
     case FromOptions.album:
       return `al:${source.albumhash}`;

@@ -441,6 +441,14 @@
       "Success": "Root directories configured"
     }
   },
+  "RemoteControl": {
+    "Devices": "Devices",
+    "NoActiveDevice": "No device is playing right now",
+    "OtherTab": "Swing Music is active in another tab",
+    "PlayHere": "Play here",
+    "PlayingOn": "Playing on {device}",
+    "ThisBrowser": "this browser"
+  },
   "RightSidebar": {
     "BackToQueue": "back to queue",
     "NoQueueDescription": "When you start playing songs, they will appear here.",
@@ -516,6 +524,10 @@
       },
       "Playback": "Playback",
       "PlaybackDesc": "Settings related to audio playback",
+      "RemoteControl": {
+        "Description": "Control playback on your other devices, and from them",
+        "Title": "Remote Control"
+      },
       "StreamingQuality": {
         "1024Flac": "High (1024kbps) (FLAC)",
         "128": "128kbps",

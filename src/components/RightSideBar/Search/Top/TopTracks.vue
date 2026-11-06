@@ -34,7 +34,6 @@ const queue = useQueueStore()
 const tracklist = useTracklist()
 
 function handlePlay(track: Track) {
-    queue.clearQueue()
     tracklist.setFromSearch(search.query, [track])
     queue.play(0)
 }

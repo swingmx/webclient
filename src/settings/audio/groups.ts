@@ -1,5 +1,6 @@
 import { Setting } from '@/interfaces/settings'
 import settings from '@/stores/settings'
+import useRemote from '@/stores/remote'
 import { SettingType } from '../enums'
 import { useT } from '@/i18n';
 
@@ -76,4 +77,13 @@ const transcoding: Setting = {
     premium: true,
 }
 
-export default [use_silence, use_crossfade, crossfade, transcoding]
+const remote_control: Setting = {
+    title: t('Settings.Audio.RemoteControl.Title'),
+    desc: t('Settings.Audio.RemoteControl.Description'),
+    type: SettingType.binary,
+    state: () => settings().use_remote_control,
+    action: () => settings().toggleRemoteControl(),
+    show_if: () => useRemote().available,
+}
+
+export default [use_silence, use_crossfade, crossfade, transcoding, remote_control]

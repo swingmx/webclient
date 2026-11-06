@@ -11,6 +11,7 @@ import useLyrics from './lyrics'
 import { NotifType, useToast } from './notification'
 import useTracklist from './queue/tracklist'
 import useSettings from './settings'
+import useRemote from './remote'
 import { useT } from '@/i18n'
 
 const { t } = useT();
@@ -44,6 +45,9 @@ export default defineStore('Queue', {
             this.currentindex = val
         },
         play(index: number = 0, manual = true) {
+            const remote = useRemote()
+            if (remote.routes()) return remote.play(index)
+
             const { tracklist } = useTracklist()
             if (tracklist.length === 0) return
 
@@ -60,6 +64,9 @@ export default defineStore('Queue', {
             focusCurrentInSidebar()
         },
         playPause() {
+            const remote = useRemote()
+            if (remote.routes()) return remote.player(this.playing ? 'pause' : 'play')
+
             if (audioSource.playingSource.src === '') {
                 this.play(this.currentindex)
                 return
@@ -108,9 +115,15 @@ export default defineStore('Queue', {
             !is_last ? this.play(this.currentindex + 1, false) : resetQueue()
         },
         playNext() {
+            const remote = useRemote()
+            if (remote.routes()) return remote.player('next')
+
             this.play(this.nextindex)
         },
         playPrev() {
+            const remote = useRemote()
+            if (remote.routes()) return remote.player('prev')
+
             const lyrics = useLyrics()
 
             if (audioSource.playingSource.currentTime > 3) {
@@ -126,6 +139,9 @@ export default defineStore('Queue', {
             this.currentindex = this.nextindex
         },
         seek(pos: number) {
+            const remote = useRemote()
+            if (remote.routes()) return remote.player('seek', { position_ms: Math.round(pos * 1000) })
+
             const lyrics = useLyrics()
 
             try {
@@ -165,6 +181,9 @@ export default defineStore('Queue', {
             this.currentindex = 0
         },
         shuffleQueue() {
+            const remote = useRemote()
+            if (remote.routes()) return remote.edit([{ type: 'shuffle', on: !remote.shuffled }])
+
             const { shuffleList } = useTracklist()
             const { focusCurrentInSidebar } = useInterface()
 
