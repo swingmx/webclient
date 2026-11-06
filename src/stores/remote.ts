@@ -336,10 +336,11 @@ export default defineStore('remote', () => {
         clearTimeout(reportTimer)
         reportTimer = setTimeout(() => {
             if (!isActive.value) return
+            const audio = audioSource.playingSource
             send('/playhead', {
                 uid: uids[queue.currentindex] ?? null,
-                position_ms: Math.round((audioSource.playingSource.currentTime || 0) * 1000),
-                playing: queue.playing,
+                position_ms: Math.round((audio.currentTime || 0) * 1000),
+                playing: queue.playing && !audio.paused && audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA,
             })
         }, 250)
     }
@@ -608,6 +609,10 @@ export default defineStore('remote', () => {
     watch(isActive, (now, was) => was && !now && connected.value && becomeController())
     document.addEventListener('seeked', report, true)
     setInterval(() => queue.playing && report(), 5000)
+    for (const el of [audioSource.playingSource, audioSource.standbySource]) {
+        el.addEventListener('playing', () => el === audioSource.playingSource && report())
+        el.addEventListener('waiting', () => el === audioSource.playingSource && report())
+    }
     setInterval(() => {
         if (connected.value && !isActive.value && playhead.value.playing) queue.setCurrentDuration(position())
     }, 500)
