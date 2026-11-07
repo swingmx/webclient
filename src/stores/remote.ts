@@ -465,7 +465,7 @@ export default defineStore('remote', () => {
                 reachable.value = data.active_reachable
                 if (reachable.value) offerPlayHere.value = false
                 else if (playhead.value.playing) {
-                    renderPlayhead({ ...playhead.value, position_ms: Math.round(position() * 1000), playing: false })
+                    renderPlayhead({ ...playhead.value, playing: false })
                 }
                 break
             case 'volume':

@@ -184,13 +184,7 @@ export default defineStore('Queue', {
             const remote = useRemote()
             if (remote.routes()) return remote.edit([{ type: 'shuffle', on: !remote.shuffled }])
 
-            const { shuffleList } = useTracklist()
-            const { focusCurrentInSidebar } = useInterface()
-
-            shuffleList()
-            this.currentindex = 0
-            this.play(this.currentindex)
-            focusCurrentInSidebar()
+            useTracklist().toggleShuffle(this.currentindex)
         },
     },
     getters: {

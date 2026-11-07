@@ -39,8 +39,8 @@ export type From =
     | fromMix
     | fromWork
 
-function shuffle(tracks: QueueItem[]) {
-    const shuffled = tracks.slice()
+function shuffle<T>(items: T[]) {
+    const shuffled = items.slice()
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1))
         ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
@@ -48,11 +48,31 @@ function shuffle(tracks: QueueItem[]) {
     return shuffled
 }
 
+/** Shuffles `tracks`, spreading tracks by the same artist apart (same as the iOS client and server). */
+function smartShuffle(tracks: QueueItem[]) {
+    const groups = new Map<string, QueueItem[]>()
+    for (const t of tracks) {
+        const key = (t.artists?.[0]?.name ?? t.trackhash).trim().toLowerCase()
+        groups.set(key, [...(groups.get(key) ?? []), t])
+    }
+    if (tracks.length <= 2 || groups.size < 2) return shuffle(tracks)
+
+    const placed: [number, QueueItem][] = []
+    for (const group of groups.values()) {
+        const n = group.length
+        const offset = Math.random() / n
+        shuffle(group).forEach((t, i) => placed.push([offset + i / n + ((Math.random() * 0.3 - 0.15) / n), t]))
+    }
+    return placed.sort((a, b) => a[0] - b[0]).map(p => p[1])
+}
+
 export default defineStore('tracklist', {
     state: () => ({
         from: {} as From,
         tracklist: <QueueItem[]>[],
         worklist: <{ [workhash: string]: QueueWork }>{},
+        shuffled: false,
+        baseOrder: <QueueItem[]>[],
     }),
     actions: {
         loadFromLocalStorage() {
@@ -72,6 +92,8 @@ export default defineStore('tracklist', {
                 this.tracklist = []
                 this.tracklist.push(...tracklist)
             }
+            this.shuffled = false
+            this.baseOrder = []
 
             this.worklist = {}
             this.indexMissingWorks(tracklist)
@@ -254,8 +276,22 @@ export default defineStore('tracklist', {
             this.worklist = {}
             this.from = {} as From
         },
-        shuffleList() {
-            this.tracklist = shuffle(this.tracklist)
+        /** Toggles shuffle: the current track and those before it stay; the upcoming ones are shuffled or restored. */
+        toggleShuffle(currentindex: number) {
+            const head = this.tracklist.slice(0, currentindex + 1)
+            const upcoming = this.tracklist.slice(currentindex + 1)
+
+            if (!this.shuffled) {
+                this.baseOrder = this.tracklist.slice()
+                this.tracklist = [...head, ...smartShuffle(upcoming)]
+            } else {
+                const played = new Set(head)
+                const base = new Set(this.baseOrder)
+                const restored = this.baseOrder.filter(t => !played.has(t) && upcoming.includes(t))
+                this.tracklist = [...head, ...restored, ...upcoming.filter(t => !base.has(t))]
+                this.baseOrder = []
+            }
+            this.shuffled = !this.shuffled
         },
         removeByIndex(index: number) {
             const remote = useRemote()

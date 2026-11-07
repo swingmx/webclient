@@ -14,7 +14,7 @@
         </button>
         <button
             class="shuffle"
-            :class="{ 'shuffle-off': rc.connected && !rc.shuffled }"
+            :class="{ 'shuffle-off': rc.connected ? !rc.shuffled : !tracklist.shuffled }"
             :title="$t('BottomBar.Shuffle')"
             @click="queue.shuffleQueue"
         >
@@ -33,6 +33,7 @@
 import useQueue from '@/stores/queue'
 import useSettings from '@/stores/settings'
 import useRemote from '@/stores/remote'
+import useTracklist from '@/stores/queue/tracklist'
 
 
 import RepeatOneSvg from '@/assets/icons/repeat-one.svg'
@@ -46,6 +47,7 @@ import Devices from './Devices.vue'
 const queue = useQueue()
 const settings = useSettings()
 const rc = useRemote()
+const tracklist = useTracklist()
 
 defineProps<{
     hideHeart?: boolean
