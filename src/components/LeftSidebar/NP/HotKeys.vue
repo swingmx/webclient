@@ -4,7 +4,7 @@
             <PrevSvg />
         </button>
         <button @click.prevent="queue.playPause">
-            <Spinner v-if="(buffering && queue.playing) || rc.handingOff" />
+            <Spinner v-if="(buffering && queue.playing) || rc.handingOff || (rc.connected && rc.playhead.loading)" />
             <PauseSvg v-else-if="queue.playing" />
             <PlaySvg class="playsvg" v-else />
         </button>

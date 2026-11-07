@@ -16,6 +16,7 @@ interface Playhead {
     uid: string | null
     position_ms: number
     playing: boolean
+    loading?: boolean
     at: number
 }
 
