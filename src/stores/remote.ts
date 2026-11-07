@@ -158,6 +158,7 @@ export default defineStore('remote', () => {
     const shuffled = ref(false)
     const pickerOpen = ref(false)
     const offerPlayHere = ref(false)
+    const handingOff = ref(false)
     const deviceId = ref('')
     const hostId = ref('')
     const activeHostId = ref<string | null>(null)
@@ -421,6 +422,7 @@ export default defineStore('remote', () => {
                 return
             }
 
+            handingOff.value = true
             queue.setPlaying(play)
             usePlayer().playCurrent()
             audioSource.playingSource.currentTime = p.position_ms / 1000
@@ -622,6 +624,9 @@ export default defineStore('remote', () => {
         el.addEventListener('playing', () => el === audioSource.playingSource && report())
         el.addEventListener('waiting', () => el === audioSource.playingSource && report())
         el.addEventListener('loadedmetadata', () => el === audioSource.playingSource && report())
+        for (const event of ['canplay', 'playing', 'error']) {
+            el.addEventListener(event, () => el === audioSource.playingSource && (handingOff.value = false))
+        }
     }
     setInterval(() => {
         if (!connected.value || isActive.value || !playhead.value.playing) return
@@ -640,6 +645,7 @@ export default defineStore('remote', () => {
         pickerOpen,
         offerPlayHere,
         reachable,
+        handingOff,
         deviceId,
         hostId,
         activeHostId,

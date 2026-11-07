@@ -4,7 +4,7 @@
             <PrevSvg />
         </button>
         <button @click.prevent="queue.playPause">
-            <Spinner v-if="buffering && queue.playing" />
+            <Spinner v-if="(buffering && queue.playing) || rc.handingOff" />
             <PauseSvg v-else-if="queue.playing" />
             <PlaySvg class="playsvg" v-else />
         </button>
@@ -17,6 +17,7 @@
 <script setup lang="ts">
 import { buffering } from '@/stores/player'
 import useQStore from '@/stores/queue'
+import useRemote from '@/stores/remote'
 
 import { default as NextSvg, default as PrevSvg } from '@/assets/icons/next.svg'
 import PauseSvg from '@/assets/icons/pause.svg'
@@ -24,6 +25,7 @@ import PlaySvg from '@/assets/icons/play.svg'
 import Spinner from '@/components/shared/Spinner.vue'
 
 const queue = useQStore()
+const rc = useRemote()
 </script>
 
 <style lang="scss">
