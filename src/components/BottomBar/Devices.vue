@@ -1,5 +1,5 @@
 <template>
-    <div v-if="rc.available" ref="root" class="rc-devices" :class="{ open: rc.pickerOpen }">
+    <div v-if="rc.available && settings.remote_control_enabled" ref="root" class="rc-devices" :class="{ open: rc.pickerOpen }">
         <button
             :class="{ elsewhere: rc.connected && rc.activeName, off: !rc.connected }"
             :aria-label="$t('RemoteControl.Devices')"

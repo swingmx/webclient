@@ -237,10 +237,11 @@ export default defineStore('settings', {
             this.use_remote_control = !this.use_remote_control
             useRemote().setEnabled(this.use_remote_control)
         },
+        // Set only once saved: turning it on reconnects, which the server must already allow.
         async toggleRemoteControlEnabled() {
-            const ok = await this.genericToggleSetting('remoteControlEnabled', !this.remote_control_enabled, 'remote_control_enabled')
-            if (ok && this.remote_control_enabled) useRemote().init()
-            return ok
+            const on = !this.remote_control_enabled
+            const res = await updateConfig('remoteControlEnabled', on)
+            if (res.status === 200) this.remote_control_enabled = on
         },
         toggleUseCircularArtistImg() {
             this.useCircularArtistImg = !this.useCircularArtistImg

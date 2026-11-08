@@ -175,6 +175,7 @@ export default defineStore('remote', () => {
     let started = false
     let retry = 0
     let refused = ''
+    let initing: Promise<void> | null = null
 
     const isActive = computed(() => connected.value && reachable.value && activeId.value === deviceId.value)
     const activeName = computed(() => {
@@ -543,11 +544,12 @@ export default defineStore('remote', () => {
             const message = JSON.parse(e.data)
             handle(message.event, message.data)
         }
-        es.onerror = () => {
+        es.onerror = async () => {
             if (es?.readyState !== EventSource.CLOSED) return
             es = null
             dropOut()
             clearTimeout(retry)
+            if (!(await fetchState()) && refused === 'disabled') return init()
             retry = window.setTimeout(init, 10000)
         }
     }
@@ -580,7 +582,7 @@ export default defineStore('remote', () => {
     }
 
     function onGesture() {
-        if (selectable.value || unlocking || !available.value || !settings.use_remote_control) return
+        if (selectable.value || unlocking || !usable() || !settings.use_remote_control) return
         unlocking = true
 
         const unlocked = unlockAudio()
@@ -613,17 +615,28 @@ export default defineStore('remote', () => {
         return getDeviceId()
     }
 
-    // Also re-checks a server that has Remote Control turned off, so turning it back on needs no reload.
-    async function init() {
+    function usable() {
+        return available.value && settings.remote_control_enabled
+    }
+
+    function init() {
+        return (initing ??= start().finally(() => (initing = null)))
+    }
+
+    async function start() {
         clearTimeout(retry)
         if (es) return
-        if (!(await fetchState())) {
+        const state = await fetchState()
+        if (!state && refused !== 'disabled') {
             available.value = false
-            if (refused === 'disabled' || refused === '') retry = window.setTimeout(recheck, refused ? 60000 : 10000)
+            if (!refused) retry = window.setTimeout(init, 10000)
             return
         }
 
         available.value = true
+        settings.remote_control_enabled = !!state
+        if (!state || !settings.use_remote_control) return
+
         if (!started) {
             started = true
             deviceId.value = await claimDeviceId()
@@ -633,20 +646,27 @@ export default defineStore('remote', () => {
             window.addEventListener('pagehide', leave)
         }
 
-        if (settings.use_remote_control) connect()
-    }
-
-    function recheck() {
-        if (!document.hidden) return init()
-        document.addEventListener('visibilitychange', init, { once: true })
+        connect()
     }
 
     function setEnabled(on: boolean) {
-        if (!available.value) return
+        if (!usable()) return
         if (!on) return disconnect()
-        if (!es) connect()
+        init()
         onGesture()
     }
+
+    watch(
+        () => settings.remote_control_enabled,
+        on => {
+            if (on) return init()
+            if (es) {
+                es.close()
+                es = null
+            }
+            dropOut()
+        }
+    )
 
     watch(() => [queue.currentindex, queue.playing], report)
     watch(isActive, (now, was) => was && !now && connected.value && becomeController())
