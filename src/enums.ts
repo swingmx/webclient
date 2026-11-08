@@ -123,4 +123,5 @@ export interface DBSettings {
   deviceId: string;
   licenseInfo: LicenseInfo | null;
   classicalEnabled: boolean
+  remoteControlEnabled: boolean
 }

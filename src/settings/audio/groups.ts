@@ -1,7 +1,7 @@
 import { Setting } from '@/interfaces/settings'
 import settings from '@/stores/settings'
-import useRemote from '@/stores/remote'
 import { SettingType } from '../enums'
+import { loggedInUserIsAdmin } from '../utils'
 import { useT } from '@/i18n';
 
 const { t } = useT();
@@ -81,9 +81,9 @@ const remote_control: Setting = {
     title: t('Settings.Audio.RemoteControl.Title'),
     desc: t('Settings.Audio.RemoteControl.Description'),
     type: SettingType.binary,
-    state: () => settings().use_remote_control,
-    action: () => settings().toggleRemoteControl(),
-    show_if: () => useRemote().available,
+    state: () => settings().remote_control_enabled,
+    action: () => settings().toggleRemoteControlEnabled(),
+    show_if: () => loggedInUserIsAdmin() && settings().has_premium,
 }
 
 export default [use_silence, use_crossfade, crossfade, transcoding, remote_control]

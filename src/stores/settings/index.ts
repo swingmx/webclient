@@ -51,6 +51,7 @@ export default defineStore('settings', {
 
         // client
         use_remote_control: true,
+        remote_control_enabled: true,
         useCircularArtistImg: true,
         nowPlayingTrackOnTabTitle: true,
         streaming_quality: 'original',
@@ -131,6 +132,7 @@ export default defineStore('settings', {
             this.device_id = settings.deviceId
             this.licenseInfo = settings.licenseInfo
             this.classical_enabled = settings.classicalEnabled
+            this.remote_control_enabled = settings.remoteControlEnabled ?? true
             this.syncClassicalAvailable()
         },
         setArtistSeparators(separators: string[]) {
@@ -234,6 +236,11 @@ export default defineStore('settings', {
         toggleRemoteControl() {
             this.use_remote_control = !this.use_remote_control
             useRemote().setEnabled(this.use_remote_control)
+        },
+        async toggleRemoteControlEnabled() {
+            const ok = await this.genericToggleSetting('remoteControlEnabled', !this.remote_control_enabled, 'remote_control_enabled')
+            if (ok && this.remote_control_enabled) useRemote().init()
+            return ok
         },
         toggleUseCircularArtistImg() {
             this.useCircularArtistImg = !this.useCircularArtistImg

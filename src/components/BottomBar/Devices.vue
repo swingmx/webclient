@@ -1,9 +1,30 @@
 <template>
-    <div v-if="rc.connected" ref="root" class="rc-devices" :class="{ open: rc.pickerOpen }">
-        <button :class="{ elsewhere: rc.activeName }" :aria-label="$t('RemoteControl.Devices')">
+    <div v-if="rc.available" ref="root" class="rc-devices" :class="{ open: rc.pickerOpen }">
+        <button
+            :class="{ elsewhere: rc.connected && rc.activeName, off: !rc.connected }"
+            :aria-label="$t('RemoteControl.Devices')"
+        >
             <component :is="controlling ? deviceIcon(active!) : LaptopSvg" />
         </button>
-        <div class="rc-picker">
+        <div v-if="!rc.connected" class="rc-picker">
+            <div class="rc-heading">{{ $t('RemoteControl.PlayingIndependently') }}</div>
+            <div class="rc-device current">
+                <div class="rc-row">
+                    <div class="rc-icon"><LaptopSvg /></div>
+                    <div class="rc-text">
+                        <div class="rc-name ellip">{{ $t('RemoteControl.ThisBrowser') }}</div>
+                        <div class="rc-detail ellip">{{ deviceDetail(self) }} · {{ $t('RemoteControl.NotConnected') }}</div>
+                    </div>
+                    <div class="rc-bars" :class="{ paused: !queue.playing }"><i /><i /><i /></div>
+                </div>
+            </div>
+            <div class="rc-offline">
+                <div class="rc-name">{{ $t('RemoteControl.DisconnectedTitle') }}</div>
+                <div class="rc-detail">{{ $t('RemoteControl.DisconnectedHelp') }}</div>
+                <button @click="settings.toggleRemoteControl()">{{ $t('RemoteControl.Reconnect') }}</button>
+            </div>
+        </div>
+        <div v-else class="rc-picker">
             <template v-if="active">
                 <div class="rc-heading">{{ $t(controlling ? 'RemoteControl.Controlling' : 'RemoteControl.PlayingOn') }}</div>
                 <div class="rc-device current">
@@ -60,8 +81,8 @@
                 <div class="rc-detail">{{ $t('RemoteControl.NoOtherDevicesHelp') }}</div>
             </div>
             <div class="rc-footer">
-                <ServerSvg />
-                <span class="ellip">{{ host }}</span>
+                <span class="ellip">{{ $t('RemoteControl.DevicesOnAccount') }}</span>
+                <button @click="settings.toggleRemoteControl()"><UnlinkSvg />{{ $t('RemoteControl.Disconnect') }}</button>
             </div>
         </div>
     </div>
@@ -71,19 +92,20 @@
 import { onClickOutside } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 
-import ServerSvg from '@/assets/icons/server.svg'
+import UnlinkSvg from '@/assets/icons/unlink.svg'
 import VolumeLowSvg from '@/assets/icons/volume-low.svg'
-import { getBaseUrl } from '@/config'
-import useRemote from '@/stores/remote'
+import useQueue from '@/stores/queue'
+import useRemote, { getDeviceName } from '@/stores/remote'
 import useSettings from '@/stores/settings'
 import { DesktopSvg, LaptopSvg, PhoneSvg, deviceDetail, deviceIcon, deviceTitle } from '@/utils/remoteDevices'
 
 const rc = useRemote()
 const settings = useSettings()
+const queue = useQueue()
 const root = ref<HTMLElement | null>(null)
 const switching = ref<string | null>(null)
 
-const host = new URL(getBaseUrl() || location.origin, location.origin).host
+const self = { id: '', name: getDeviceName(), type: 'web', selectable: true }
 const volume = computed(() => Math.round(settings.volume * 100))
 
 const active = computed(
@@ -127,6 +149,10 @@ $master-orange: rgb(255, 153, 0);
         svg {
             height: 1.35rem;
             width: 1.35rem;
+        }
+
+        &.off {
+            opacity: 0.5;
         }
 
         &.elsewhere {
@@ -277,6 +303,25 @@ $master-orange: rgb(255, 153, 0);
         }
     }
 
+    .rc-offline {
+        display: grid;
+        gap: $small;
+        justify-items: start;
+        padding: $medium $small $small;
+
+        .rc-detail {
+            line-height: 1.4;
+        }
+
+        button {
+            margin-top: $small;
+            padding: $small $medium;
+            border-radius: $small;
+            background-color: $gray5;
+            font-weight: 600;
+        }
+    }
+
     .rc-empty-icons {
         display: flex;
         gap: $medium;
@@ -352,6 +397,7 @@ $master-orange: rgb(255, 153, 0);
     .rc-footer {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: $small;
         margin-top: $small;
         padding: $medium $small $smaller;
@@ -359,8 +405,20 @@ $master-orange: rgb(255, 153, 0);
         font-size: 0.85rem;
         color: $gray1;
 
-        svg {
+        button {
+            display: flex;
+            align-items: center;
+            gap: $smaller;
             flex-shrink: 0;
+            height: auto !important;
+            padding: 0 !important;
+            background: none !important;
+            font-size: inherit !important;
+            font-weight: 600;
+            color: $white;
+        }
+
+        svg {
             height: 1rem;
             width: 1rem;
         }

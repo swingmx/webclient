@@ -69,7 +69,7 @@ function getHostId() {
     return id
 }
 
-function getDeviceName() {
+export function getDeviceName() {
     const ua = navigator.userAgent
     const browser = /Edg\//.test(ua)
         ? 'Edge'
@@ -172,6 +172,9 @@ export default defineStore('remote', () => {
     let unlocking = false
     let chain: Promise<unknown> = Promise.resolve()
     let activeEpoch = 0
+    let started = false
+    let retry = 0
+    let refused = ''
 
     const isActive = computed(() => connected.value && reachable.value && activeId.value === deviceId.value)
     const activeName = computed(() => {
@@ -207,8 +210,10 @@ export default defineStore('remote', () => {
         try {
             const res = await axios.get(paths.api.remote + '/state', { withCredentials: true })
             skew = res.data.now - Date.now() / 1000
+            refused = ''
             return res.data
-        } catch {
+        } catch (e: any) {
+            refused = e?.response ? e.response.data?.error ?? 'unavailable' : ''
             return null
         }
     }
@@ -541,8 +546,9 @@ export default defineStore('remote', () => {
         es.onerror = () => {
             if (es?.readyState !== EventSource.CLOSED) return
             es = null
-            connected.value = false
-            setTimeout(() => settings.use_remote_control && !es && connect(), 10000)
+            dropOut()
+            clearTimeout(retry)
+            retry = window.setTimeout(init, 10000)
         }
     }
 
@@ -554,15 +560,23 @@ export default defineStore('remote', () => {
         navigator.sendBeacon(`${getBaseUrl()}${paths.api.remote}/leave`, body)
     }
 
-    function disconnect() {
-        leave()
+    // The device playing keeps playing on its own; a controller has nothing to play.
+    function dropOut() {
+        if (!connected.value) return
+        const playingHere = isActive.value && queue.playing
         connected.value = false
         pickerOpen.value = false
+        if (playingHere) return
 
         local(() => {
             queue.setPlaying(false)
             audioSource.pausePlayingSource()
         })
+    }
+
+    function disconnect() {
+        leave()
+        dropOut()
     }
 
     function onGesture() {
@@ -599,18 +613,32 @@ export default defineStore('remote', () => {
         return getDeviceId()
     }
 
+    // Also re-checks a server that has Remote Control turned off, so turning it back on needs no reload.
     async function init() {
-        if (available.value) return
-        if (!(await fetchState())) return
+        clearTimeout(retry)
+        if (es) return
+        if (!(await fetchState())) {
+            available.value = false
+            if (refused === 'disabled' || refused === '') retry = window.setTimeout(recheck, refused ? 60000 : 10000)
+            return
+        }
 
         available.value = true
-        deviceId.value = await claimDeviceId()
-        hostId.value = getHostId()
+        if (!started) {
+            started = true
+            deviceId.value = await claimDeviceId()
+            hostId.value = getHostId()
+            document.addEventListener('click', onGesture, true)
+            document.addEventListener('keydown', onGesture, true)
+            window.addEventListener('pagehide', leave)
+        }
 
         if (settings.use_remote_control) connect()
-        document.addEventListener('click', onGesture, true)
-        document.addEventListener('keydown', onGesture, true)
-        window.addEventListener('pagehide', leave)
+    }
+
+    function recheck() {
+        if (!document.hidden) return init()
+        document.addEventListener('visibilitychange', init, { once: true })
     }
 
     function setEnabled(on: boolean) {
