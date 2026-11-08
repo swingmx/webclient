@@ -435,7 +435,8 @@ export default defineStore('remote', () => {
             queue.setCurrentIndex(index)
 
             if (audioSource.playingSource.src.endsWith(url)) {
-                audioSource.playingSource.currentTime = p.position_ms / 1000
+                const audio = audioSource.playingSource
+                if (Math.abs(audio.currentTime - p.position_ms / 1000) > 1) audio.currentTime = p.position_ms / 1000
                 queue.setPlaying(play)
                 play ? audioSource.playPlayingSource() : audioSource.pausePlayingSource()
                 return
@@ -502,6 +503,7 @@ export default defineStore('remote', () => {
         }
     }
 
+    // Playing here, or nothing on the server: this device's queue wins. Otherwise take the server's.
     async function sync() {
         const playingHere = queue.playing
         const state = await fetchState()
@@ -509,23 +511,27 @@ export default defineStore('remote', () => {
 
         synced = false
         connected.value = true
+        devices.value = state.devices
 
-        const fresh = state.version === 0
-        if (fresh || (playingHere && !state.active_reachable && state.active_device_id !== deviceId.value)) {
-            activeId.value = state.active_device_id
-            activeHostId.value = state.active_host_id
-            reachable.value = state.active_reachable
-            devices.value = state.devices
-            const replace = {
-                type: 'replace',
-                source: getSource(tracklist.from),
-                trackhashes: tracklist.tracklist.map(t => t.trackhash),
-                start_index: queue.currentindex,
-                play: playingHere,
+        if (tracklist.tracklist.length && (playingHere || !state.queue.items.length)) {
+            if (playingHere) {
+                activeId.value = deviceId.value
+                activeHostId.value = hostId.value
+                reachable.value = true
             }
-            edit(fresh ? [replace, { type: 'repeat', mode: settings.repeat }] : [replace])
-            if (fresh) player('volume', { value: settings.volume })
-            if (!isActive.value && (!playingHere || state.active_reachable)) becomeController()
+            player('volume', { value: settings.volume })
+            edit([
+                {
+                    type: 'replace',
+                    source: getSource(tracklist.from),
+                    trackhashes: tracklist.tracklist.map(t => t.trackhash),
+                    start_index: queue.currentindex,
+                    position_ms: Math.round(audioSource.playingSource.currentTime * 1000),
+                    play: playingHere,
+                    take: true,
+                },
+                { type: 'repeat', mode: settings.repeat },
+            ])
             return
         }
 
@@ -577,6 +583,10 @@ export default defineStore('remote', () => {
         const playingHere = isActive.value && queue.playing
         connected.value = false
         pickerOpen.value = false
+        synced = false
+        pending = null
+        uids.length = 0
+        version.value = 0
         if (playingHere) return
 
         local(() => {
