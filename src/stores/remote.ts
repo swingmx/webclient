@@ -466,6 +466,7 @@ export default defineStore('remote', () => {
     function handle(event: string, data: any) {
         switch (event) {
             case 'heartbeat':
+                if (data?.ack === false) break
                 axios.post(paths.api.remote + '/alive', { device_id: deviceId.value }, { withCredentials: true }).catch(() => {})
                 break
             case 'queue':
