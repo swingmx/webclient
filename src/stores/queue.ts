@@ -46,7 +46,7 @@ export default defineStore('Queue', {
         },
         play(index: number = 0, manual = true) {
             const remote = useRemote()
-            if (remote.routes()) return remote.play(index)
+            if (remote.routes() && (!remote.isActive || remote.hasNewList())) return remote.play(index)
 
             const { tracklist } = useTracklist()
             if (tracklist.length === 0) return
@@ -65,7 +65,7 @@ export default defineStore('Queue', {
         },
         playPause() {
             const remote = useRemote()
-            if (remote.routes()) return remote.player(this.playing ? 'pause' : 'play')
+            if (remote.controls()) return remote.player(this.playing ? 'pause' : 'play')
 
             if (audioSource.playingSource.src === '') {
                 this.play(this.currentindex)
@@ -116,13 +116,13 @@ export default defineStore('Queue', {
         },
         playNext() {
             const remote = useRemote()
-            if (remote.routes()) return remote.player('next')
+            if (remote.controls()) return remote.player('next')
 
             this.play(this.nextindex)
         },
         playPrev() {
             const remote = useRemote()
-            if (remote.routes()) return remote.player('prev')
+            if (remote.controls()) return remote.player('prev')
 
             const lyrics = useLyrics()
 
@@ -140,7 +140,7 @@ export default defineStore('Queue', {
         },
         seek(pos: number) {
             const remote = useRemote()
-            if (remote.routes()) return remote.player('seek', { position_ms: Math.round(pos * 1000) })
+            if (remote.controls()) return remote.player('seek', { position_ms: Math.round(pos * 1000) })
 
             const lyrics = useLyrics()
 

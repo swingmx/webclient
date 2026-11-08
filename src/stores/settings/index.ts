@@ -219,6 +219,7 @@ export default defineStore('settings', {
             this.volume = clamp(new_value)
 
             const remote = useRemote()
+            if (remote.isActive) setVolume(this.volume_gain)
             if (remote.routes()) return remote.setVolume(this.volume)
 
             setVolume(this.volume_gain)

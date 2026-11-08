@@ -187,6 +187,15 @@ export default defineStore('remote', () => {
         return connected.value && localDepth === 0
     }
 
+    // Player actions go through the server only from controllers; the playing device acts at once and reports.
+    function controls() {
+        return routes() && !isActive.value
+    }
+
+    function hasNewList() {
+        return pending !== null
+    }
+
 
     async function send(path: string, body: object, retry = true): Promise<any> {
         const req = chain.then(() =>
@@ -704,6 +713,8 @@ export default defineStore('remote', () => {
         isActive,
         activeName,
         routes,
+        controls,
+        hasNewList,
         init,
         setEnabled,
         edit,
