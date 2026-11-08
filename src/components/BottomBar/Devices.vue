@@ -21,7 +21,10 @@
             <div class="rc-offline">
                 <div class="rc-name">{{ $t('RemoteControl.DisconnectedTitle') }}</div>
                 <div class="rc-detail">{{ $t('RemoteControl.DisconnectedHelp') }}</div>
-                <button @click="settings.toggleRemoteControl()">{{ $t('RemoteControl.Reconnect') }}</button>
+                <button :disabled="reconnecting" @click="reconnect">
+                    {{ $t('RemoteControl.Reconnect') }}
+                    <div v-if="reconnecting" class="rc-spinner" />
+                </button>
             </div>
         </div>
         <div v-else class="rc-picker">
@@ -104,6 +107,7 @@ const settings = useSettings()
 const queue = useQueue()
 const root = ref<HTMLElement | null>(null)
 const switching = ref<string | null>(null)
+const reconnecting = ref(false)
 
 const self = { id: '', name: getDeviceName(), type: 'web', selectable: true }
 const volume = computed(() => Math.round(settings.volume * 100))
@@ -130,6 +134,17 @@ watch(
     id => {
         if (id === switching.value) switching.value = null
     }
+)
+
+function reconnect() {
+    reconnecting.value = true
+    settings.toggleRemoteControl()
+    setTimeout(() => (reconnecting.value = false), 10000)
+}
+
+watch(
+    () => rc.connected,
+    on => on && (reconnecting.value = false)
 )
 
 onClickOutside(root, () => (rc.pickerOpen = false))
@@ -314,11 +329,26 @@ $master-orange: rgb(255, 153, 0);
         }
 
         button {
+            display: flex;
+            align-items: center;
+            gap: $small;
             margin-top: $small;
-            padding: $small $medium;
+            width: auto !important;
+            height: auto !important;
+            padding: $small $medium !important;
             border-radius: $small;
-            background-color: $gray5;
+            background-color: $gray5 !important;
+            border: solid 1px transparent !important;
+            font-size: inherit !important;
             font-weight: 600;
+
+            &:hover:not(:disabled) {
+                background-color: $gray4 !important;
+            }
+
+            .rc-spinner {
+                margin-right: 0;
+            }
         }
     }
 
@@ -410,12 +440,19 @@ $master-orange: rgb(255, 153, 0);
             align-items: center;
             gap: $smaller;
             flex-shrink: 0;
+            width: auto !important;
             height: auto !important;
-            padding: 0 !important;
+            padding: $smaller $small !important;
+            border-radius: $small;
+            border: solid 1px transparent !important;
             background: none !important;
             font-size: inherit !important;
             font-weight: 600;
             color: $white;
+
+            &:hover {
+                background-color: $gray5 !important;
+            }
         }
 
         svg {
