@@ -46,6 +46,48 @@ export function getSource(source: From) {
   }
 }
 
+export type SourceInfo = {
+  name?: string;
+  image?: { type: "mix" | "track"; image: string };
+};
+
+// The inverse of getSource, with display data from the server.
+export function fromSource(source: string, info: SourceInfo, albumhash = ""): From {
+  const i = source.indexOf(":");
+  const kind = i < 0 ? source : source.slice(0, i);
+  const value = source.slice(i + 1);
+  const name = info.name ?? "";
+
+  switch (kind) {
+    case "al":
+      return { type: FromOptions.album, name, albumhash: value };
+    case "ar":
+      return { type: FromOptions.artist, artistname: name, artisthash: value };
+    case "fo":
+      return { type: FromOptions.folder, name, path: value };
+    case "pl":
+      return { type: FromOptions.playlist, name, id: Number(value) };
+    case "q":
+      return { type: FromOptions.search, query: value };
+    case "favorite":
+      return { type: FromOptions.favorite };
+    case "wk":
+      return { type: FromOptions.work, name, workhash: value, albumhash };
+    case "mix": {
+      const dot = value.lastIndexOf(".");
+      return {
+        type: FromOptions.mix,
+        name,
+        mixid: value.slice(0, dot),
+        sourcehash: value.slice(dot + 1),
+        image: info.image ?? { type: "track", image: "" },
+      };
+    }
+    default:
+      return {} as From;
+  }
+}
+
 export function sendLogData(
   trackhash: string,
   duration: number,

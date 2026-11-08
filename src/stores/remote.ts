@@ -10,7 +10,7 @@ import { audioSource, getUrl, usePlayer } from './player'
 import useQueue from './queue'
 import useTracklist, { From } from './queue/tracklist'
 import useSettings from './settings'
-import { getSource } from './tracker'
+import { SourceInfo, fromSource, getSource } from './tracker'
 
 interface Playhead {
     uid: string | null
@@ -33,7 +33,7 @@ interface State {
     active_host_id: string | null
     active_reachable: boolean
     playhead: Playhead
-    queue: { source: string; items: { uid: string; track: Track }[]; order: string[] | null; repeat: 'none' | 'all' | 'one' }
+    queue: { source: string; source_info: SourceInfo; items: { uid: string; track: Track }[]; order: string[] | null; repeat: 'none' | 'all' | 'one' }
     volume: number
     devices: Device[]
     now: number
@@ -304,7 +304,10 @@ export default defineStore('remote', () => {
             local(() => tracklist.setNewList(order.map(uid => tracks.get(uid)!)))
         }
 
-        if (getSource(tracklist.from) !== state.queue.source) tracklist.from = {} as From
+        if (getSource(tracklist.from) !== state.queue.source) {
+            const first = tracks.get(order[0])
+            tracklist.from = fromSource(state.queue.source, state.queue.source_info, first?.albumhash)
+        }
         placeIndex(current)
     }
 
