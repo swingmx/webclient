@@ -505,7 +505,8 @@ export default defineStore('remote', () => {
 
     // Playing here, or nothing on the server: this device's queue wins. Otherwise take the server's.
     async function sync() {
-        const playingHere = queue.playing
+        // A controller's queue.playing mirrors the active device; only count audio playing here.
+        const playingHere = queue.playing && (!connected.value || isActive.value)
         const state = await fetchState()
         if (!state) return
 

@@ -46,7 +46,10 @@ export default defineStore('Queue', {
         },
         play(index: number = 0, manual = true) {
             const remote = useRemote()
-            if (remote.routes() && (!remote.isActive || remote.hasNewList())) return remote.play(index)
+            if (remote.routes() && (!remote.isActive || remote.hasNewList())) {
+                if (remote.hasNewList()) this.currentindex = index
+                return remote.play(index)
+            }
 
             const { tracklist } = useTracklist()
             if (tracklist.length === 0) return
