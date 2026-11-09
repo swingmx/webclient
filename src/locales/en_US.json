@@ -211,6 +211,22 @@
   "DropDown": {
     "SortByUppercase": "SORT BY {title} {order}"
   },
+  "EditArtist": {
+    "Choose": "Choose image",
+    "DisplayName": "Display name",
+    "DisplayNameHint": "Shown on the artist page. Leave empty to use the default.",
+    "DropToUpload": "Drop to upload",
+    "EditArtist": "Edit artist",
+    "Image": "Image",
+    "ImageHint": "Choose, drop or paste an image",
+    "ImageTooLarge": "Image is larger than 15MB",
+    "ImageUpdated": "Artist image updated",
+    "NotAnImage": "That is not an image",
+    "ResetImage": "Restore default image",
+    "Save": "Save",
+    "Title": "Edit Artist",
+    "Zoom": "Zoom"
+  },
   "Favorites": {
     "Album": "Album"
   },

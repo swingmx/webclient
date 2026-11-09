@@ -131,3 +131,47 @@ export async function saveArtistAsPlaylist(name: string, hash: string) {
 
     return data
 }
+
+export interface ArtistImageInfo {
+    image: string
+    color: string
+    blurhash: string
+}
+
+/**
+ * Replaces the artist's image with a centered square of `image`.
+ */
+export async function updateArtistImage(hash: string, image: Blob) {
+    const form = new FormData()
+    form.append('image', image, 'image')
+
+    return await useAxios({
+        url: paths.api.artist + `/${hash}/image`,
+        method: 'PUT',
+        props: form,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    })
+}
+
+/**
+ * Restores the artist's downloaded image.
+ */
+export async function resetArtistImage(hash: string) {
+    return await useAxios({
+        url: paths.api.artist + `/${hash}/image`,
+        method: 'DELETE',
+    })
+}
+
+/**
+ * Sets the name shown on the artist's page. Null restores the default.
+ */
+export async function updateArtistDisplayName(hash: string, display_name: string | null) {
+    return await useAxios({
+        url: paths.api.artist + `/${hash}/display-name`,
+        method: 'PUT',
+        props: { display_name },
+    })
+}

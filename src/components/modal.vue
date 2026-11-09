@@ -44,6 +44,11 @@
             <SetRootDirs v-if="modal.component == modal.options.setRootDirs" @hideModal="hideModal" />
             <RootDirsPrompt v-if="modal.component == modal.options.rootDirsPrompt" @hideModal="hideModal" />
             <Settings v-if="modal.component == modal.options.settings" @set-title="setTitle" />
+            <EditArtist
+                v-if="modal.component == modal.options.editArtist"
+                @hideModal="hideModal"
+                @setTitle="setTitle"
+            />
         </div>
     </div>
 </template>
@@ -58,6 +63,7 @@ import { useRouter } from 'vue-router'
 import AuthLogin from './modals/AuthLogin.vue'
 import ConfirmModal from './modals/ConfirmModal.vue'
 import CrudPage from './modals/CrudPage.vue'
+import EditArtist from './modals/EditArtist.vue'
 import NewPlaylist from './modals/NewPlaylist.vue'
 import RootDirsPrompt from './modals/RootDirsPrompt.vue'
 import SetRootDirs from './modals/SetRootDirs.vue'

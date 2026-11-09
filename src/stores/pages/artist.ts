@@ -1,12 +1,29 @@
 import { defineStore } from 'pinia'
 
-import { getArtistAlbums, getArtistData, getSimilarArtists } from '@/requests/artists'
+import {
+    getArtistAlbums,
+    getArtistData,
+    getSimilarArtists,
+    resetArtistImage,
+    updateArtistDisplayName,
+    updateArtistImage,
+} from '@/requests/artists'
 
 import { paths } from '@/config'
 import { Album, Artist, ClassicalPersonPage, Genre, Listening, StatItem, Track } from '@/interfaces'
 import { maxAbumCards } from '@/stores/content-width'
 import useSettingsStore from '@/stores/settings'
 import setColorsToStore from '@/utils/colortools/setColorsToStore'
+import { NotifType, useToast } from '@/stores/notification'
+import { useT } from '@/i18n'
+
+const { t } = useT()
+
+export const MAX_ARTIST_IMAGE_BYTES = 15 * 1024 * 1024
+
+function showError(res: { data?: any }) {
+    useToast().showNotification(res.data?.msg || t('Common.NotificationError'), NotifType.Error)
+}
 
 export default defineStore('artistPage', {
     state: () => ({
@@ -84,6 +101,51 @@ export default defineStore('artistPage', {
         },
         resetSimilarArtists() {
             this.similar_artists = []
+        },
+        /**
+         * Uploads `image` as the artist's image. Returns whether it was saved.
+         */
+        async uploadImage(image: Blob) {
+            if (!image.type.startsWith('image/')) {
+                useToast().showNotification(t('EditArtist.NotAnImage'), NotifType.Error)
+                return false
+            }
+
+            if (image.size > MAX_ARTIST_IMAGE_BYTES) {
+                useToast().showNotification(t('EditArtist.ImageTooLarge'), NotifType.Error)
+                return false
+            }
+
+            const res = await updateArtistImage(this.info.artisthash, image)
+            if (res.status !== 200) {
+                showError(res)
+                return false
+            }
+
+            Object.assign(this.info, res.data)
+            this.extractColors()
+            useToast().showNotification(t('EditArtist.ImageUpdated'), NotifType.Success)
+            return true
+        },
+        async resetImage() {
+            const res = await resetArtistImage(this.info.artisthash)
+            if (res.status !== 200) return showError(res)
+
+            Object.assign(this.info, res.data)
+            this.extractColors()
+        },
+        /**
+         * Saves the artist's display name. Returns whether it was saved.
+         */
+        async setDisplayName(name: string | null) {
+            const res = await updateArtistDisplayName(this.info.artisthash, name)
+            if (res.status !== 200) {
+                showError(res)
+                return false
+            }
+
+            this.info.display_name = res.data.display_name
+            return true
         },
         makeFavorite() {
             this.info.is_favorite = true

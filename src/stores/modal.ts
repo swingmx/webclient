@@ -15,6 +15,7 @@ export enum ModalOptions {
     saveFolderAsPlaylist,
     login,
     settings,
+    editArtist,
 }
 
 export default defineStore('newModal', {
@@ -58,6 +59,9 @@ export default defineStore('newModal', {
                 playlist_name: name,
             }
             this.showModal(ModalOptions.newPlaylist, props)
+        },
+        showEditArtistModal() {
+            this.showModal(ModalOptions.editArtist)
         },
         showEditPlaylistModal() {
             this.showModal(ModalOptions.updatePlaylist)

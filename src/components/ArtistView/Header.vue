@@ -19,11 +19,30 @@
             <Info :artist="artist" :use-circular-image="useCircularImage" />
             <div
                 class="artist-img no-select"
+                :class="{ editable: canEdit, droptarget: dropping }"
                 :style="{
                     height: containerHeight,
                 }"
+                :tabindex="canEdit ? 0 : undefined"
+                @paste="onPaste"
+                @dragover="onDragOver"
+                @dragleave="dropping = false"
+                @drop="onDrop"
             >
-                <img id="artist-avatar" :src="paths.images.artist.large + artist.image" @load="store.setBgColor" />
+                <img
+                    id="artist-avatar"
+                    :src="paths.images.artist.large + artist.image"
+                    :style="blurhashStyle(artist.blurhash)"
+                    @load="store.setBgColor"
+                />
+                <button
+                    v-if="canEdit"
+                    class="edit-artist-btn"
+                    :title="$t('EditArtist.EditArtist')"
+                    @click.stop="modal.showEditArtistModal()"
+                >
+                    <PencilSvg />
+                </button>
             </div>
             <div
                 v-if="!useCircularImage"
@@ -46,10 +65,15 @@
 import useSettingsStore from '@/stores/settings'
 import { useElementSize } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import { Ref, computed, onMounted, ref } from 'vue'
+import { Ref, computed, onMounted, ref, watch } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 
+import PencilSvg from '@/assets/icons/pencil.svg'
 import { paths } from '@/config'
+import useAuthStore from '@/stores/auth'
+import useModalStore from '@/stores/modal'
+import blurhashStyle from '@/utils/blurhashStyle'
+import { firstImage } from '@/utils/imageFiles'
 import updatePageTitle from '@/utils/updatePageTitle'
 
 import { isSmall } from '@/stores/content-width'
@@ -67,10 +91,37 @@ const props = defineProps<{
 const { info: artist, colors } = storeToRefs(store)
 
 function updateTitle() {
-    props.on_sidebar ? () => {} : updatePageTitle(artist.value.name)
+    props.on_sidebar ? () => {} : updatePageTitle(artist.value.display_name || artist.value.name)
+}
+
+const auth = useAuthStore()
+const modal = useModalStore()
+const canEdit = computed(() => !props.on_sidebar && auth.is_admin)
+const dropping = ref(false)
+
+function onPaste(e: ClipboardEvent) {
+    const file = firstImage(e.clipboardData?.files)
+    if (!canEdit.value || !file) return
+    e.preventDefault()
+    store.uploadImage(file)
+}
+
+function onDragOver(e: DragEvent) {
+    if (!canEdit.value || !e.dataTransfer?.types.includes('Files')) return
+    e.preventDefault()
+    dropping.value = true
+}
+
+function onDrop(e: DragEvent) {
+    dropping.value = false
+    const file = firstImage(e.dataTransfer?.files)
+    if (!canEdit.value || !file) return
+    e.preventDefault()
+    store.uploadImage(file)
 }
 
 onMounted(() => updateTitle())
+watch(() => artist.value.display_name, () => updateTitle())
 onBeforeRouteUpdate(() => updateTitle())
 
 const artistheader: Ref<HTMLElement | null> = ref(null)
@@ -115,6 +166,41 @@ const containerHeight = computed(() => {
         display: flex;
         align-items: flex-end;
         order: 1;
+        position: relative;
+        outline: none;
+
+        .edit-artist-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 2;
+            display: grid;
+            place-items: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            padding: 0;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.55);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+
+            svg {
+                width: 1.1rem;
+                height: 1.1rem;
+            }
+        }
+
+        &.editable:hover .edit-artist-btn,
+        &.editable:focus-visible .edit-artist-btn,
+        .edit-artist-btn:focus-visible {
+            opacity: 1;
+        }
+
+        &.editable:focus-visible img,
+        &.droptarget img {
+            outline: 2px dashed $white;
+            outline-offset: -4px;
+        }
 
         img {
             height: 100%;
