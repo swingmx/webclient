@@ -30,7 +30,7 @@ const use_crossfade: Setting = {
     state: () => settings().use_crossfade,
     action: () => settings().toggleCrossfade(),
     // @ts-ignore
-    experimental: !window.chrome,
+    flag: !window.chrome ? 'experimental' : undefined,
 }
 
 const crossfade: Setting = {
@@ -74,7 +74,7 @@ const transcoding: Setting = {
     defaultAction: () => {},
     options: streaming_quality_options as any,
     inactive: () => !settings().has_premium,
-    premium: true,
+    flag: 'premium',
 }
 
 const remote_control: Setting = {
@@ -84,6 +84,7 @@ const remote_control: Setting = {
     state: () => settings().remote_control_enabled,
     action: () => settings().toggleRemoteControlEnabled(),
     show_if: () => loggedInUserIsAdmin() && settings().has_premium,
+    flag: 'beta',
 }
 
 export default [use_silence, use_crossfade, crossfade, transcoding, remote_control]

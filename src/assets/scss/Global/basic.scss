@@ -283,6 +283,12 @@ button {
     color: $pink;
 }
 
+// same colors as MasterFlag
+.badge.beta {
+    color: rgb(255, 153, 0);
+    background-color: rgba(184, 108, 21, 0.281);
+}
+
 .explicit-icon {
     width: 0.9rem;
     margin-left: $smaller;

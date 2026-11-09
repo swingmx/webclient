@@ -45,7 +45,7 @@ const trust_cloud_lyrics = <Setting>{
 
         return !(settings.use_lyrics_plugin && settings.has_premium)
     },
-    premium: true,
+    flag: 'premium',
 }
 
 export default [toggle_lyrics_plugin, auto_download_lyrics, auto_download_on_unsynced, trust_cloud_lyrics]

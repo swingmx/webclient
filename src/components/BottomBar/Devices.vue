@@ -6,8 +6,10 @@
         >
             <component :is="controlling ? deviceIcon(active!) : LaptopSvg" />
         </button>
-        <div v-if="!rc.connected" class="rc-picker">
-            <div class="rc-heading">{{ $t('RemoteControl.PlayingIndependently') }}</div>
+        <div class="rc-picker">
+            <span class="badge beta rc-beta">{{ $t('Common.beta') }}</span>
+            <template v-if="!rc.connected">
+            <div class="rc-heading">{{ $t('RemoteControl.PlayingOn') }}</div>
             <div class="rc-device current">
                 <div class="rc-row">
                     <div class="rc-icon"><LaptopSvg /></div>
@@ -21,13 +23,9 @@
             <div class="rc-offline">
                 <div class="rc-name">{{ $t('RemoteControl.DisconnectedTitle') }}</div>
                 <div class="rc-detail">{{ $t('RemoteControl.DisconnectedHelp') }}</div>
-                <button :disabled="reconnecting" @click="reconnect">
-                    {{ $t('RemoteControl.Reconnect') }}
-                    <div v-if="reconnecting" class="rc-spinner" />
-                </button>
             </div>
-        </div>
-        <div v-else class="rc-picker">
+            </template>
+            <template v-else>
             <template v-if="active">
                 <div class="rc-heading">{{ $t(controlling ? 'RemoteControl.Controlling' : 'RemoteControl.PlayingOn') }}</div>
                 <div class="rc-device current">
@@ -83,9 +81,18 @@
                 <div class="rc-name">{{ $t('RemoteControl.NoOtherDevices') }}</div>
                 <div class="rc-detail">{{ $t('RemoteControl.NoOtherDevicesHelp') }}</div>
             </div>
+            </template>
             <div class="rc-footer">
-                <span class="ellip">{{ $t('RemoteControl.DevicesOnAccount') }}</span>
-                <button @click="settings.toggleRemoteControl()"><UnlinkSvg />{{ $t('RemoteControl.Disconnect') }}</button>
+                <ServerSvg />
+                <span class="rc-host ellip">{{ host }}</span>
+                <button :disabled="reconnecting" @click="rc.connected ? settings.toggleRemoteControl() : reconnect()">
+                    <div v-if="reconnecting" class="rc-spinner" />
+                    <component :is="rc.connected ? UnlinkSvg : LinkSvg" v-else />
+                    <span class="rc-label">
+                        <span :class="{ off: !rc.connected }">{{ $t('RemoteControl.Disconnect') }}</span>
+                        <span :class="{ off: rc.connected }">{{ $t('RemoteControl.Reconnect') }}</span>
+                    </span>
+                </button>
             </div>
         </div>
     </div>
@@ -95,7 +102,10 @@
 import { onClickOutside } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 
+import LinkSvg from '@/assets/icons/link.svg'
+import ServerSvg from '@/assets/icons/server.svg'
 import UnlinkSvg from '@/assets/icons/unlink.svg'
+import { getBaseUrl } from '@/config'
 import VolumeLowSvg from '@/assets/icons/volume-low.svg'
 import useQueue from '@/stores/queue'
 import useRemote, { getDeviceName } from '@/stores/remote'
@@ -110,6 +120,7 @@ const switching = ref<string | null>(null)
 const reconnecting = ref(false)
 
 const self = { id: '', name: getDeviceName(), type: 'web', selectable: true }
+const host = new URL(getBaseUrl() || location.origin, location.origin).host
 const volume = computed(() => Math.round(settings.volume * 100))
 
 const active = computed(
@@ -231,7 +242,22 @@ $master-orange: rgb(255, 153, 0);
         visibility: visible;
     }
 
+    .rc-beta {
+        position: absolute;
+        top: calc(#{$small} + #{$medium});
+        right: calc(#{$small} * 2);
+        margin: 0;
+        height: 1rem;
+        padding: 0 5px;
+        border-radius: 4px;
+        font-size: 10px !important;
+        font-weight: 600;
+        line-height: 1rem;
+        text-transform: uppercase;
+    }
+
     .rc-heading {
+        line-height: 1rem;
         padding: $medium $small $small;
         font-size: 0.75rem;
         font-weight: 600;
@@ -268,6 +294,12 @@ $master-orange: rgb(255, 153, 0);
         align-items: center;
         gap: $medium;
         min-width: 0;
+
+        .rc-name {
+            font-size: inherit !important;
+            text-transform: inherit !important;
+            color: inherit !important;
+        }
     }
 
     .rc-volume {
@@ -318,6 +350,13 @@ $master-orange: rgb(255, 153, 0);
         }
     }
 
+    .rc-name {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: $gray1;
+        font-weight: 600;
+    }
+
     .rc-offline {
         display: grid;
         gap: $small;
@@ -326,29 +365,6 @@ $master-orange: rgb(255, 153, 0);
 
         .rc-detail {
             line-height: 1.4;
-        }
-
-        button {
-            display: flex;
-            align-items: center;
-            gap: $small;
-            margin-top: $small;
-            width: auto !important;
-            height: auto !important;
-            padding: $small $medium !important;
-            border-radius: $small;
-            background-color: $gray5 !important;
-            border: solid 1px transparent !important;
-            font-size: inherit !important;
-            font-weight: 600;
-
-            &:hover:not(:disabled) {
-                background-color: $gray4 !important;
-            }
-
-            .rc-spinner {
-                margin-right: 0;
-            }
         }
     }
 
@@ -381,10 +397,6 @@ $master-orange: rgb(255, 153, 0);
     .rc-text {
         flex: 1;
         min-width: 0;
-    }
-
-    .rc-name {
-        font-weight: 600;
     }
 
     .rc-detail {
@@ -427,7 +439,6 @@ $master-orange: rgb(255, 153, 0);
     .rc-footer {
         display: flex;
         align-items: center;
-        justify-content: space-between;
         gap: $small;
         margin-top: $small;
         padding: $medium $small $smaller;
@@ -453,9 +464,32 @@ $master-orange: rgb(255, 153, 0);
             &:hover {
                 background-color: $gray5 !important;
             }
+
+            .rc-spinner {
+                margin-right: 0;
+            }
+        }
+
+        .rc-host {
+            flex: 1;
+            min-width: 0;
+        }
+
+        // both labels share one cell so the button keeps the wider one's width
+        .rc-label {
+            display: grid;
+
+            > span {
+                grid-area: 1 / 1;
+            }
+
+            .off {
+                visibility: hidden;
+            }
         }
 
         svg {
+            flex-shrink: 0;
             height: 1rem;
             width: 1rem;
         }

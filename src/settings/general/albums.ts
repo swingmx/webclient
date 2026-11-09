@@ -43,7 +43,7 @@ export const classical_enabled: Setting = {
     state: () => settings().classical_on,
     action: () => settings().toggleClassicalEnabled(),
     inactive: () => !settings().has_premium,
-    premium: true,
+    flag: 'premium',
 }
 
 export default [clean_album_titles, merge_album_versions, show_albums_as_singles]

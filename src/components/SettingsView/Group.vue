@@ -14,14 +14,12 @@
                     <div class="title">
                         <span class="ellip">
                             {{ setting.title }}
-                            <span v-if="setting.experimental" class="badge experimental circular">
-                                {{ setting.experimental ? $t('Common.experimental') : '' }}
-                            </span>
-                            <span v-if="setting.new" class="badge new circular">
-                                {{ setting.new ? $t('Common.new') : '' }}
-                            </span>
-                            <span v-if="setting.premium && !settings.has_premium" class="badge premium circular">
-                                {{ $t('Common.premium') }}
+                            <span
+                                v-if="setting.flag && (setting.flag !== 'premium' || !settings.has_premium)"
+                                class="badge circular"
+                                :class="setting.flag"
+                            >
+                                {{ $t(`Common.${setting.flag}`) }}
                             </span>
                         </span>
                         <button v-if="setting.type == SettingType.root_dirs" @click="setting.action">

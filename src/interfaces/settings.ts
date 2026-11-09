@@ -16,9 +16,7 @@ export interface Setting {
   button_text?: () => string;
   defaultAction?: () => void;
   show_if?: () => boolean;
-  experimental?: boolean;
-  new?: boolean;
-  premium?: boolean;
+  flag?: "experimental" | "new" | "premium" | "beta";
 }
 
 export interface SettingGroup {

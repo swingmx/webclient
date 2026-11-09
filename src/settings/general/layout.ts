@@ -13,7 +13,7 @@ const use_alt_layout: Setting = {
   type: SettingType.binary,
   state: () => settings().is_alt_layout,
   action: () => settings().toggleLayout(),
-  new: true,
+  flag: "new",
 };
 
 export default [use_alt_layout];
