@@ -7,7 +7,6 @@
             <component :is="controlling ? deviceIcon(active!) : LaptopSvg" />
         </button>
         <div class="rc-picker">
-            <span class="badge beta rc-beta">{{ $t('Common.beta') }}</span>
             <template v-if="!rc.connected">
             <div class="rc-heading">{{ $t('RemoteControl.PlayingOn') }}</div>
             <div class="rc-device current">
@@ -15,7 +14,7 @@
                     <div class="rc-icon"><LaptopSvg /></div>
                     <div class="rc-text">
                         <div class="rc-name ellip">{{ $t('RemoteControl.ThisBrowser') }}</div>
-                        <div class="rc-detail ellip">{{ deviceDetail(self) }} · {{ $t('RemoteControl.NotConnected') }}</div>
+                        <div class="rc-detail ellip">{{ deviceDetail(self) }}</div>
                     </div>
                     <div class="rc-bars" :class="{ paused: !queue.playing }"><i /><i /><i /></div>
                 </div>
@@ -242,22 +241,7 @@ $master-orange: rgb(255, 153, 0);
         visibility: visible;
     }
 
-    .rc-beta {
-        position: absolute;
-        top: calc(#{$small} + #{$medium});
-        right: calc(#{$small} * 2);
-        margin: 0;
-        height: 1rem;
-        padding: 0 5px;
-        border-radius: 4px;
-        font-size: 10px !important;
-        font-weight: 600;
-        line-height: 1rem;
-        text-transform: uppercase;
-    }
-
     .rc-heading {
-        line-height: 1rem;
         padding: $medium $small $small;
         font-size: 0.75rem;
         font-weight: 600;
