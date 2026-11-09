@@ -60,8 +60,11 @@ export default defineStore('newModal', {
             }
             this.showModal(ModalOptions.newPlaylist, props)
         },
-        showEditArtistModal() {
-            this.showModal(ModalOptions.editArtist)
+        /**
+         * Opens the artist editor, straight in the crop step when given an image.
+         */
+        showEditArtistModal(image: File | null = null) {
+            this.showModal(ModalOptions.editArtist, { image })
         },
         showEditPlaylistModal() {
             this.showModal(ModalOptions.updatePlaylist)

@@ -430,6 +430,7 @@ export interface Artist {
     name: string
     // the stylized name shown on the artist page
     display_name?: string | null
+    has_custom_image?: boolean
     image: string
     artisthash: string
     trackcount: number

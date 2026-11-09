@@ -124,15 +124,21 @@ export default defineStore('artistPage', {
 
             Object.assign(this.info, res.data)
             this.extractColors()
-            useToast().showNotification(t('EditArtist.ImageUpdated'), NotifType.Success)
             return true
         },
+        /**
+         * Restores the artist's default image. Returns whether it was restored.
+         */
         async resetImage() {
             const res = await resetArtistImage(this.info.artisthash)
-            if (res.status !== 200) return showError(res)
+            if (res.status !== 200) {
+                showError(res)
+                return false
+            }
 
             Object.assign(this.info, res.data)
             this.extractColors()
+            return true
         },
         /**
          * Saves the artist's display name. Returns whether it was saved.

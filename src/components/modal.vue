@@ -8,13 +8,14 @@
             :class="{
                 settings: modal.component == modal.options.settings,
                 authlogin: modal.component == modal.options.login,
+                bare: modal.component == modal.options.editArtist,
             }"
             :style="{
                 maxWidth: modal.component == modal.options.setRootDirs ? '56rem' : '30rem',
             }"
         >
             <!-- TODO: MOVE MAX WIDTH TO CLASS -->
-            <div class="heading">{{ modal.title }}</div>
+            <div v-if="modal.component != modal.options.editArtist" class="heading">{{ modal.title }}</div>
             <AuthLogin v-if="modal.component == modal.options.login" />
             <NewPlaylist
                 v-if="modal.component == modal.options.newPlaylist"
@@ -44,11 +45,7 @@
             <SetRootDirs v-if="modal.component == modal.options.setRootDirs" @hideModal="hideModal" />
             <RootDirsPrompt v-if="modal.component == modal.options.rootDirsPrompt" @hideModal="hideModal" />
             <Settings v-if="modal.component == modal.options.settings" @set-title="setTitle" />
-            <EditArtist
-                v-if="modal.component == modal.options.editArtist"
-                @hideModal="hideModal"
-                @setTitle="setTitle"
-            />
+            <EditArtist v-if="modal.component == modal.options.editArtist" v-bind="modal.props" @hideModal="hideModal" />
         </div>
     </div>
 </template>
@@ -157,6 +154,13 @@ async function deletePlaylist() {
         @include allPhones {
             height: calc(100% - 2rem);
         }
+    }
+
+    .m-content.bare {
+        max-width: 500px !important;
+        width: calc(100% - 2rem);
+        padding: 0;
+        background-color: transparent;
     }
 
     .m-content.authlogin {

@@ -103,7 +103,7 @@ function onPaste(e: ClipboardEvent) {
     const file = firstImage(e.clipboardData?.files)
     if (!canEdit.value || !file) return
     e.preventDefault()
-    store.uploadImage(file)
+    modal.showEditArtistModal(file)
 }
 
 function onDragOver(e: DragEvent) {
@@ -117,7 +117,7 @@ function onDrop(e: DragEvent) {
     const file = firstImage(e.dataTransfer?.files)
     if (!canEdit.value || !file) return
     e.preventDefault()
-    store.uploadImage(file)
+    modal.showEditArtistModal(file)
 }
 
 onMounted(() => updateTitle())
