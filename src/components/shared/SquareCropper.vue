@@ -1,64 +1,55 @@
 <template>
     <div class="square-cropper">
-        <div
-            ref="viewport"
-            class="viewport rounded-sm"
-            :class="{ dragging }"
-            @pointerdown="startDrag"
-            @pointermove="drag"
-            @pointerup="endDrag"
-            @pointercancel="endDrag"
-            @wheel.prevent="onWheel"
-        >
-            <img
-                v-if="src"
-                :src="src"
-                draggable="false"
+        <div v-if="src" class="stage">
+            <img ref="imgEl" :src="src" draggable="false" @load="onLoad" />
+            <div
+                v-if="natural.width"
+                class="crop"
                 :style="{
-                    width: `${natural.width * scale}px`,
-                    height: `${natural.height * scale}px`,
-                    transform: `translate(${offset.x}px, ${offset.y}px)`,
+                    left: `${box.x * ratio}px`,
+                    top: `${box.y * ratio}px`,
+                    width: `${box.side * ratio}px`,
+                    height: `${box.side * ratio}px`,
                 }"
-                @load="onLoad"
-            />
-            <div class="mask"></div>
+                @pointerdown="startMove"
+            >
+                <div class="guide"></div>
+                <span
+                    v-for="corner in corners"
+                    :key="corner"
+                    class="handle"
+                    :class="corner"
+                    @pointerdown.stop="startResize($event, corner)"
+                ></span>
+            </div>
         </div>
-        <input
-            :value="zoom"
-            class="zoom"
-            type="range"
-            min="1"
-            max="4"
-            step="0.01"
-            :aria-label="$t('EditArtist.Zoom')"
-            :disabled="!src"
-            @input="setZoom(Number(($event.target as HTMLInputElement).value))"
-        />
     </div>
 </template>
 
 <script setup lang="ts">
+import { useElementSize } from '@vueuse/core'
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
+
+type Corner = 'nw' | 'ne' | 'sw' | 'se'
 
 const props = defineProps<{
     image: Blob | null
 }>()
 
 const OUTPUT_SIZE = 512
+const MIN_DISPLAY_SIDE = 64
+const corners: Corner[] = ['nw', 'ne', 'sw', 'se']
 
-const viewport = ref<HTMLElement>()
+const imgEl = ref<HTMLImageElement>()
 const src = ref('')
 const natural = reactive({ width: 0, height: 0 })
-const offset = reactive({ x: 0, y: 0 })
-const zoom = ref(1)
-const dragging = ref(false)
-let last = { x: 0, y: 0 }
+// the crop square in image pixels
+const box = reactive({ x: 0, y: 0, side: 0 })
 
-const size = () => viewport.value?.clientWidth || 1
-
-// the scale at which the image's shorter side fills the viewport
-const coverScale = computed(() => (natural.width ? size() / Math.min(natural.width, natural.height) : 1))
-const scale = computed(() => coverScale.value * zoom.value)
+const { width: displayWidth } = useElementSize(imgEl)
+// display pixels per image pixel
+const ratio = computed(() => (natural.width ? displayWidth.value / natural.width : 1))
+const minSide = computed(() => Math.min(MIN_DISPLAY_SIDE / (ratio.value || 1), natural.width, natural.height))
 
 watch(
     () => props.image,
@@ -73,80 +64,85 @@ watch(
 
 onBeforeUnmount(() => {
     if (src.value) URL.revokeObjectURL(src.value)
+    stopDrag()
 })
 
 function onLoad(e: Event) {
     const img = e.target as HTMLImageElement
     natural.width = img.naturalWidth
     natural.height = img.naturalHeight
-    zoom.value = 1
-    center()
+
+    box.side = Math.min(natural.width, natural.height)
+    box.x = (natural.width - box.side) / 2
+    box.y = (natural.height - box.side) / 2
 }
 
-function center() {
-    offset.x = (size() - natural.width * scale.value) / 2
-    offset.y = (size() - natural.height * scale.value) / 2
-}
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
 /**
- * Keeps the image covering the viewport.
+ * Returns the pointer position in image pixels.
  */
-function clamp() {
-    offset.x = Math.min(0, Math.max(size() - natural.width * scale.value, offset.x))
-    offset.y = Math.min(0, Math.max(size() - natural.height * scale.value, offset.y))
+function toImage(e: PointerEvent) {
+    const rect = imgEl.value!.getBoundingClientRect()
+    return { x: (e.clientX - rect.left) / ratio.value, y: (e.clientY - rect.top) / ratio.value }
+}
+
+let onDrag: ((e: PointerEvent) => void) | null = null
+
+function beginDrag(e: PointerEvent, handler: (e: PointerEvent) => void) {
+    e.preventDefault()
+    onDrag = handler
+    window.addEventListener('pointermove', handler)
+    window.addEventListener('pointerup', stopDrag)
+    window.addEventListener('pointercancel', stopDrag)
+}
+
+function stopDrag() {
+    if (onDrag) window.removeEventListener('pointermove', onDrag)
+    window.removeEventListener('pointerup', stopDrag)
+    window.removeEventListener('pointercancel', stopDrag)
+    onDrag = null
+}
+
+function startMove(e: PointerEvent) {
+    const start = toImage(e)
+    const from = { x: box.x, y: box.y }
+
+    beginDrag(e, ev => {
+        const p = toImage(ev)
+        box.x = clamp(from.x + p.x - start.x, 0, natural.width - box.side)
+        box.y = clamp(from.y + p.y - start.y, 0, natural.height - box.side)
+    })
 }
 
 /**
- * Sets the zoom, keeping the viewport center in place.
+ * Resizes the square from `corner`, keeping the opposite corner fixed.
  */
-function setZoom(next: number) {
-    const prev = scale.value
-    zoom.value = Math.min(4, Math.max(1, next))
+function startResize(e: PointerEvent, corner: Corner) {
+    const west = corner.includes('w')
+    const north = corner.includes('n')
+    const anchor = { x: west ? box.x + box.side : box.x, y: north ? box.y + box.side : box.y }
+    const room = Math.min(west ? anchor.x : natural.width - anchor.x, north ? anchor.y : natural.height - anchor.y)
 
-    const half = size() / 2
-    offset.x = half - ((half - offset.x) * scale.value) / prev
-    offset.y = half - ((half - offset.y) * scale.value) / prev
-    clamp()
-}
+    beginDrag(e, ev => {
+        const p = toImage(ev)
+        const side = clamp(Math.max(Math.abs(p.x - anchor.x), Math.abs(p.y - anchor.y)), minSide.value, room)
 
-function startDrag(e: PointerEvent) {
-    if (!src.value) return
-    dragging.value = true
-    last = { x: e.clientX, y: e.clientY }
-    viewport.value?.setPointerCapture(e.pointerId)
-}
-
-function drag(e: PointerEvent) {
-    if (!dragging.value) return
-    offset.x += e.clientX - last.x
-    offset.y += e.clientY - last.y
-    last = { x: e.clientX, y: e.clientY }
-    clamp()
-}
-
-function endDrag() {
-    dragging.value = false
-}
-
-function onWheel(e: WheelEvent) {
-    if (!src.value) return
-    setZoom(zoom.value - e.deltaY * 0.002)
+        box.side = side
+        box.x = west ? anchor.x - side : anchor.x
+        box.y = north ? anchor.y - side : anchor.y
+    })
 }
 
 /**
- * Returns the visible square as a png, or null when there is no image.
+ * Returns the cropped square as a png, or null when there is no image.
  */
 async function crop(): Promise<Blob | null> {
-    if (!src.value || !natural.width) return null
+    if (!imgEl.value || !natural.width) return null
 
-    const img = new Image()
-    img.src = src.value
-    await img.decode()
-
-    const side = size() / scale.value
-    const out = Math.min(OUTPUT_SIZE, Math.round(side))
+    const out = Math.min(OUTPUT_SIZE, Math.round(box.side))
     const canvas = Object.assign(document.createElement('canvas'), { width: out, height: out })
-    canvas.getContext('2d')!.drawImage(img, -offset.x / scale.value, -offset.y / scale.value, side, side, 0, 0, out, out)
+    canvas.getContext('2d')!.drawImage(imgEl.value, box.x, box.y, box.side, box.side, 0, 0, out, out)
 
     return await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
 }
@@ -157,42 +153,75 @@ defineExpose({ crop })
 <style lang="scss">
 .square-cropper {
     display: flex;
-    flex-direction: column;
-    gap: $small;
+    justify-content: center;
 
-    .viewport {
+    .stage {
         position: relative;
-        width: 100%;
-        aspect-ratio: 1;
         overflow: hidden;
-        background-color: $gray5;
-        cursor: grab;
-        touch-action: none;
+        line-height: 0;
         user-select: none;
-
-        &.dragging {
-            cursor: grabbing;
-        }
+        touch-action: none;
 
         img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            max-width: none;
-            transform-origin: 0 0;
+            display: block;
+            max-width: 100%;
+            max-height: 60vh;
             pointer-events: none;
-        }
-
-        .mask {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background: radial-gradient(circle closest-side, transparent 99%, rgba(0, 0, 0, 0.55) 100%);
         }
     }
 
-    .zoom {
-        width: 100%;
+    .crop {
+        position: absolute;
+        cursor: move;
+        outline: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
+
+        .guide {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px dashed rgba(255, 255, 255, 0.6);
+            pointer-events: none;
+        }
+
+        .handle {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background-color: #fff;
+            border-radius: 2px;
+
+            // a larger invisible hit area for touch
+            &::after {
+                content: '';
+                position: absolute;
+                inset: -10px;
+            }
+
+            &.nw {
+                top: 0;
+                left: 0;
+                cursor: nwse-resize;
+            }
+
+            &.ne {
+                top: 0;
+                right: 0;
+                cursor: nesw-resize;
+            }
+
+            &.sw {
+                bottom: 0;
+                left: 0;
+                cursor: nesw-resize;
+            }
+
+            &.se {
+                bottom: 0;
+                right: 0;
+                cursor: nwse-resize;
+            }
+        }
     }
 }
 </style>
