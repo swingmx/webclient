@@ -3,7 +3,6 @@
         ref="dialog"
         class="edit-artist-dialog"
         tabindex="-1"
-        @keydown.esc.stop.prevent="onEscape"
         @dragenter.prevent="onDragEnter"
         @dragover.prevent
         @dragleave="onDragLeave"
@@ -25,7 +24,7 @@
                 <div class="ea-image-row">
                     <button class="ea-thumb" :title="$t('EditArtist.Change')" @click="pickFile">
                         <CropView v-if="image.kind === 'new'" :crop="image.crop" :size="112" />
-                        <img v-else-if="image.kind === 'saved'" :src="savedImageUrl" />
+                        <img v-else-if="showCurrentImage" :src="savedImageUrl" @error="imageFailed = true" />
                         <div v-else class="ea-placeholder">{{ initial }}</div>
                         <div class="ea-thumb-hover">
                             <svg viewBox="0 0 24 24">
@@ -69,21 +68,19 @@
                     maxlength="200"
                     autocomplete="off"
                     :placeholder="store.info.name"
-                    @keydown.enter.prevent="save"
                 />
                 <div class="ea-help tertiary">{{ $t('EditArtist.DisplayNameHelp') }}</div>
             </section>
         </div>
 
         <div v-else-if="draft" class="ea-body crop">
-            <CropStage :crop="draft" />
+            <CropStage :crop="draft" autofocus />
         </div>
 
         <footer class="ea-footer">
-            <span v-if="justSaved" class="ea-saved">✓ {{ $t('EditArtist.Saved') }}</span>
             <template v-if="view === 'edit'">
                 <button class="ea-btn ghost" @click="close">{{ $t('EditArtist.Cancel') }}</button>
-                <button class="ea-btn primary" :disabled="!dirty || saving" @click="save">
+                <button class="ea-btn primary" :disabled="!dirty" @click="save">
                     {{ $t('EditArtist.Save') }}
                 </button>
             </template>
@@ -106,9 +103,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
-import { paths } from '@/config'
 import { useT } from '@/i18n'
-import useArtistStore from '@/stores/pages/artist'
+import useArtistStore, { ArtistEdits } from '@/stores/pages/artist'
 import { Crop, loadCrop, renderCrop } from '@/utils/crop'
 import { firstImage } from '@/utils/imageFiles'
 
@@ -140,12 +136,17 @@ const view = ref<'edit' | 'crop'>('edit')
 // the crop being edited in the crop view
 const draft = ref<Crop | null>(null)
 const saving = ref(false)
-const justSaved = ref(false)
 const dragging = ref(false)
 let dragDepth = 0
-let savedTimer: ReturnType<typeof setTimeout> | undefined
 
-const savedImageUrl = computed(() => paths.images.artist.large + store.info.image)
+const savedImageUrl = computed(() => store.imageUrl)
+const imageFailed = ref(false)
+// the current image is the custom one while a pending "Use default" is unsaved
+const showCurrentImage = computed(
+    () =>
+        !imageFailed.value &&
+        (image.value.kind === 'saved' || (image.value.kind === 'default' && !store.info.has_custom_image))
+)
 const initial = computed(() => (store.info.name || '?').trim().charAt(0).toUpperCase())
 
 const imageTitle = computed(() => {
@@ -248,48 +249,65 @@ function onDrop(e: DragEvent) {
     useFile(firstImage(e.dataTransfer?.files))
 }
 
-function onEscape() {
-    view.value === 'crop' ? back() : close()
+/**
+ * Enter runs the visible view's main action; Esc goes back from the crop view or closes.
+ */
+function onKeydown(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+        e.preventDefault()
+        e.stopPropagation()
+        view.value === 'crop' ? back() : close()
+        return
+    }
+
+    if (e.key !== 'Enter' || e.repeat || e.isComposing) return
+    if ((e.target as HTMLElement)?.closest('button')) return
+
+    e.preventDefault()
+    e.stopPropagation()
+    view.value === 'crop' ? applyCrop() : save()
 }
 
 function close() {
     emit('hideModal')
 }
 
+/**
+ * Hands the edits to the store, which shows them right away and saves them, then closes.
+ */
 async function save() {
     if (!dirty.value || saving.value) return
     saving.value = true
 
     try {
+        const edits: ArtistEdits = { artisthash: store.info.artisthash }
+
         if (image.value.kind === 'new') {
-            if (!(await store.uploadImage(await renderCrop(image.value.crop)))) return
-            setImage({ kind: 'saved' })
+            edits.image = await renderCrop(image.value.crop)
         } else if (imageDirty.value) {
-            if (!(await store.resetImage())) return
+            edits.image = 'default'
         }
 
-        if (nameDirty.value) {
-            if (!(await store.setDisplayName(name.value.trim() || null))) return
-            name.value = savedName()
-        }
+        if (nameDirty.value) edits.name = name.value.trim() || null
 
-        justSaved.value = true
-        clearTimeout(savedTimer)
-        savedTimer = setTimeout(() => (justSaved.value = false), 2000)
-    } finally {
+        store.applyEdits(edits)
+        close()
+    } catch {
         saving.value = false
     }
 }
 
 onMounted(() => {
     window.addEventListener('paste', onPaste)
+    // capture runs before the app's global shortcuts, which close any modal on Esc
+    window.addEventListener('keydown', onKeydown, true)
     dialog.value?.focus()
     useFile(props.image ?? null)
 })
 
 onBeforeUnmount(() => {
     window.removeEventListener('paste', onPaste)
-    clearTimeout(savedTimer)
+    window.removeEventListener('keydown', onKeydown, true)
     if (draft.value) URL.revokeObjectURL(draft.value.url)
     if (image.value.kind === 'new') URL.revokeObjectURL(image.value.crop.url)
 })
@@ -562,12 +580,6 @@ onBeforeUnmount(() => {
         gap: 8px;
         padding: 14px 20px;
         border-top: 1px solid #222226;
-    }
-
-    .ea-saved {
-        margin-right: auto;
-        font-size: 13px;
-        color: #8fd19e;
     }
 
     .ea-drop {

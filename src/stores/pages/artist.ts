@@ -19,7 +19,24 @@ import { useT } from '@/i18n'
 
 const { t } = useT()
 
-export const MAX_ARTIST_IMAGE_BYTES = 15 * 1024 * 1024
+export interface ArtistEdits {
+    artisthash: string
+    // a new image, 'default' to restore the downloaded one, or unset to keep it
+    image?: Blob | 'default'
+    // the display name, null for the default, or unset to keep it
+    name?: string | null
+}
+
+let saveQueue: Promise<void> = Promise.resolve()
+
+/**
+ * Resolves once `url` is loaded, or failed to load.
+ */
+function preloadImage(url: string) {
+    const img = new Image()
+    img.src = url
+    return img.decode().catch(() => {})
+}
 
 function showError(res: { data?: any }) {
     useToast().showNotification(res.data?.msg || t('Common.NotificationError'), NotifType.Error)
@@ -45,7 +62,14 @@ export default defineStore('artistPage', {
         fetched_similar_hash: '',
         stats: <StatItem[]>[],
         listening: <Listening | null>null,
+        // a local image shown until its upload is saved
+        imageOverride: <string | null>null,
     }),
+    getters: {
+        imageUrl(): string {
+            return this.imageOverride || paths.images.artist.large + this.info.image
+        },
+    },
     actions: {
         async getData(hash: string, query: Record<string, string> = {}) {
             const settings = useSettingsStore()
@@ -59,6 +83,7 @@ export default defineStore('artistPage', {
 
             this.type = 'artist'
             this.person = null
+            if (data.artist?.artisthash !== this.info.artisthash) this.imageOverride = null
             const { artist, tracks, stats, albums, listening } = data
             this.listening = listening ?? null
             this.info = artist
@@ -86,8 +111,7 @@ export default defineStore('artistPage', {
             this.similar_artists = await getSimilarArtists(this.info.artisthash, maxAbumCards.value)
         },
         extractColors() {
-            const url = paths.images.artist.large + this.info.image
-            setColorsToStore(this, url, true)
+            setColorsToStore(this, this.imageUrl, true)
         },
         setBgColor() {
             const colors = this.info.color
@@ -103,55 +127,81 @@ export default defineStore('artistPage', {
             this.similar_artists = []
         },
         /**
-         * Uploads `image` as the artist's image. Returns whether it was saved.
+         * Shows the edits on the page straight away, then saves them after any earlier edits.
+         * Each edit that fails to save is reverted.
          */
-        async uploadImage(image: Blob) {
-            if (!image.type.startsWith('image/')) {
-                useToast().showNotification(t('EditArtist.NotAnImage'), NotifType.Error)
-                return false
+        applyEdits(edits: ArtistEdits) {
+            const hash = edits.artisthash
+            const isCurrent = () => this.info.artisthash === hash
+            const before = {
+                image: this.info.image,
+                color: this.info.color,
+                blurhash: this.info.blurhash,
+                has_custom_image: this.info.has_custom_image,
+                display_name: this.info.display_name,
             }
 
-            if (image.size > MAX_ARTIST_IMAGE_BYTES) {
-                useToast().showNotification(t('EditArtist.ImageTooLarge'), NotifType.Error)
-                return false
+            let blobUrl: string | null = null
+
+            if (edits.image instanceof Blob) {
+                blobUrl = URL.createObjectURL(edits.image)
+                this.imageOverride = blobUrl
+                this.info.has_custom_image = true
+            } else if (edits.image === 'default') {
+                this.imageOverride = null
+                this.info.image = `${hash}.webp`
+                this.info.has_custom_image = false
             }
 
-            const res = await updateArtistImage(this.info.artisthash, image)
-            if (res.status !== 200) {
-                showError(res)
-                return false
+            if (edits.image) this.extractColors()
+            if (edits.name !== undefined) this.info.display_name = edits.name
+
+            // whether the page still shows what this edit set
+            const showsImage = () =>
+                isCurrent() &&
+                (blobUrl ? this.imageOverride === blobUrl : !this.imageOverride && this.info.image === `${hash}.webp`)
+            const showsName = () => isCurrent() && this.info.display_name === edits.name
+
+            const save = async () => {
+                if (edits.image) {
+                    const res =
+                        edits.image === 'default'
+                            ? await resetArtistImage(hash)
+                            : await updateArtistImage(hash, edits.image)
+
+                    if (res.status === 200) {
+                        await preloadImage(paths.images.artist.large + res.data.image)
+                        if (showsImage()) {
+                            Object.assign(this.info, res.data)
+                            this.imageOverride = null
+                            this.extractColors()
+                        }
+                    } else {
+                        showError(res)
+                        if (showsImage()) {
+                            Object.assign(this.info, before, { display_name: this.info.display_name })
+                            this.imageOverride = null
+                            this.extractColors()
+                        }
+                    }
+
+                    if (blobUrl && this.imageOverride !== blobUrl) URL.revokeObjectURL(blobUrl)
+                }
+
+                if (edits.name !== undefined) {
+                    const res = await updateArtistDisplayName(hash, edits.name)
+
+                    if (res.status !== 200) {
+                        showError(res)
+                        if (showsName()) this.info.display_name = before.display_name
+                    } else if (showsName()) {
+                        this.info.display_name = res.data.display_name
+                    }
+                }
             }
 
-            Object.assign(this.info, res.data)
-            this.extractColors()
-            return true
-        },
-        /**
-         * Restores the artist's default image. Returns whether it was restored.
-         */
-        async resetImage() {
-            const res = await resetArtistImage(this.info.artisthash)
-            if (res.status !== 200) {
-                showError(res)
-                return false
-            }
-
-            Object.assign(this.info, res.data)
-            this.extractColors()
-            return true
-        },
-        /**
-         * Saves the artist's display name. Returns whether it was saved.
-         */
-        async setDisplayName(name: string | null) {
-            const res = await updateArtistDisplayName(this.info.artisthash, name)
-            if (res.status !== 200) {
-                showError(res)
-                return false
-            }
-
-            this.info.display_name = res.data.display_name
-            return true
+            saveQueue = saveQueue.then(save, save)
+            return saveQueue
         },
         makeFavorite() {
             this.info.is_favorite = true

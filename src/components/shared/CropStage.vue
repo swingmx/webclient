@@ -1,8 +1,11 @@
 <template>
     <div class="crop-stage-wrap">
         <div
+            ref="stage"
             class="crop-stage"
             :class="{ dragging }"
+            tabindex="0"
+            @keydown="onKeydown"
             @pointerdown="startDrag"
             @pointermove="drag"
             @pointerup="endDrag"
@@ -40,14 +43,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { Crop, MAX_ZOOM, MIN_ZOOM, SQUARE, clampCrop, zoomCrop } from '@/utils/crop'
 import CropView, { imageStyle } from './CropView.vue'
 
 const props = defineProps<{
     crop: Crop
+    autofocus?: boolean
 }>()
+
+const stage = ref<HTMLElement>()
+
+onMounted(() => {
+    if (props.autofocus) stage.value?.focus()
+})
+
+/**
+ * Arrow keys move the image, by 10px with Shift; + and - zoom.
+ */
+function onKeydown(e: KeyboardEvent) {
+    const step = e.shiftKey ? 10 : 1
+    const moves: Record<string, [number, number]> = {
+        ArrowLeft: [-step, 0],
+        ArrowRight: [step, 0],
+        ArrowUp: [0, -step],
+        ArrowDown: [0, step],
+    }
+
+    if (moves[e.key]) {
+        props.crop.x += moves[e.key][0]
+        props.crop.y += moves[e.key][1]
+        clampCrop(props.crop)
+    } else if (e.key === '+' || e.key === '=') {
+        zoomCrop(props.crop, props.crop.zoom + 0.1)
+    } else if (e.key === '-' || e.key === '_') {
+        zoomCrop(props.crop, props.crop.zoom - 0.1)
+    } else {
+        return
+    }
+
+    // keeps the app's arrow key shortcuts from also running
+    e.preventDefault()
+    e.stopPropagation()
+}
 
 const dragging = ref(false)
 let last = { x: 0, y: 0 }
@@ -90,6 +129,12 @@ function endDrag() {
     cursor: grab;
     touch-action: none;
     user-select: none;
+    outline: none;
+
+    &:focus-visible {
+        outline: 2px solid #5a5a62;
+        outline-offset: -2px;
+    }
 
     &.dragging {
         cursor: grabbing;
@@ -213,7 +258,7 @@ function endDrag() {
     }
 
     .preview {
-        border-radius: 8px;
+        border-radius: 50%;
         box-shadow: 0 0 0 1px #2e2e33;
     }
 }

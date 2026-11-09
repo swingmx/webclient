@@ -23,18 +23,28 @@
                 :style="{
                     height: containerHeight,
                 }"
-                :tabindex="canEdit ? 0 : undefined"
-                @paste="onPaste"
+                @click="pasteTarget?.focus()"
                 @dragover="onDragOver"
                 @dragleave="dropping = false"
                 @drop="onDrop"
             >
                 <img
                     id="artist-avatar"
-                    :src="paths.images.artist.large + artist.image"
+                    :src="store.imageUrl"
                     :style="blurhashStyle(artist.blurhash)"
                     @load="store.setBgColor"
                 />
+                <!-- an editable target, since browsers only fire paste where text can be typed -->
+                <textarea
+                    v-if="canEdit"
+                    ref="pasteTarget"
+                    class="paste-target"
+                    inputmode="none"
+                    :aria-label="$t('EditArtist.PasteTarget')"
+                    @paste="onPaste"
+                    @input="clearPasteTarget"
+                    @keydown.enter.prevent="modal.showEditArtistModal()"
+                ></textarea>
                 <button
                     v-if="canEdit"
                     class="edit-artist-btn"
@@ -69,7 +79,6 @@ import { Ref, computed, onMounted, ref, watch } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 
 import PencilSvg from '@/assets/icons/pencil.svg'
-import { paths } from '@/config'
 import useAuthStore from '@/stores/auth'
 import useModalStore from '@/stores/modal'
 import blurhashStyle from '@/utils/blurhashStyle'
@@ -98,6 +107,11 @@ const auth = useAuthStore()
 const modal = useModalStore()
 const canEdit = computed(() => !props.on_sidebar && auth.is_admin)
 const dropping = ref(false)
+const pasteTarget = ref<HTMLTextAreaElement>()
+
+function clearPasteTarget() {
+    if (pasteTarget.value) pasteTarget.value.value = ''
+}
 
 function onPaste(e: ClipboardEvent) {
     const file = firstImage(e.clipboardData?.files)
@@ -190,16 +204,31 @@ const containerHeight = computed(() => {
             }
         }
 
+        .paste-target {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            border: 0;
+            opacity: 0;
+            resize: none;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
         &.editable:hover .edit-artist-btn,
-        &.editable:focus-visible .edit-artist-btn,
-        .edit-artist-btn:focus-visible {
+        &.editable:focus-within .edit-artist-btn {
             opacity: 1;
         }
 
-        &.editable:focus-visible img,
+        &.editable:focus-within img {
+            outline: 2px solid $gray5;
+            outline-offset: -6px;
+        }
+
         &.droptarget img {
-            outline: 2px dashed $white;
-            outline-offset: -4px;
+            outline: 2px dashed $gray1;
+            outline-offset: -6px;
         }
 
         img {
@@ -224,6 +253,12 @@ const containerHeight = computed(() => {
                 height: calc(100% - 0rem);
                 width: unset;
                 aspect-ratio: 1;
+            }
+
+            // the round image has room around it for the outline
+            &.editable:focus-within img,
+            &.droptarget img {
+                outline-offset: 4px;
             }
         }
     }
