@@ -284,12 +284,13 @@
     "en_US": "English",
     "it_IT": "Italiano",
     "ko": "한국어",
-    "zh_CN": "中文（简体）"
+    "zh_CN": "中文（简体）",
+    "pt_BR": "Português (Brasil)"
   },
   "LeftSidebar": {
     "FileTypeBitrate": "file type • bitrate",
     "NavItems": {
-        "Classical": "Classical",
+      "Classical": "Classical",
       "Favorites": "Favorites",
       "Folder": "Folders",
       "Home": "Home",
@@ -302,8 +303,7 @@
     "MasterAudioBitrate": "Master audio bitrate - {bitrate} Kbps"
   },
   "Menus": {
-    "Album": {
-    },
+    "Album": {},
     "Artist": {
       "ThisIsPlaylist": "This is {artist}",
       "PlayNext": "Play next"
@@ -1002,8 +1002,7 @@
       "Searching": "Searching...",
       "Unsynced": "unsynced"
     },
-    "MixLisView": {
-    },
+    "MixLisView": {},
     "MixListView": {
       "MixesBasedOnListening": "{n} mixes • Based on artists you have been listening to",
       "OtherMixes": "Other {type} mixes",
