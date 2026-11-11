@@ -176,6 +176,7 @@ export default defineStore('remote', () => {
     let retry = 0
     let refused = ''
     let initing: Promise<void> | null = null
+    let heard = 0
 
     const isActive = computed(() => connected.value && reachable.value && activeId.value === deviceId.value)
     const activeName = computed(() => {
@@ -187,9 +188,16 @@ export default defineStore('remote', () => {
         return connected.value && localDepth === 0
     }
 
-    // Player actions go through the server only from controllers; the playing device acts at once and reports.
+    // Player actions go through the server only while another reachable device plays; otherwise this tab plays at once and reports.
     function controls() {
-        return routes() && !isActive.value
+        return routes() && reachable.value && !isActive.value
+    }
+
+    // Nothing reachable is playing: pick up the paused session here, at its position.
+    function resume() {
+        if (!uids.includes(playhead.value.uid ?? '')) return false
+        activate(playhead.value, true)
+        return true
     }
 
     function hasNewList() {
@@ -254,7 +262,8 @@ export default defineStore('remote', () => {
         if (pending) {
             const p = pending
             pending = null
-            return edit([{ type: 'replace', ...p, start_index: index, play: true }])
+            // When this tab already plays the list, the server only needs the queue and this tab as the player.
+            return edit([{ type: 'replace', ...p, start_index: index, play: true, take: !controls() }])
         }
 
         const uid = uids[index]
@@ -364,9 +373,13 @@ export default defineStore('remote', () => {
         clearTimeout(reportTimer)
         reportTimer = setTimeout(() => {
             const audio = audioSource.playingSource
-            if (!isActive.value || audio.readyState < HTMLMediaElement.HAVE_METADATA) return
+            const uid = uids[queue.currentindex]
+            // A tab playing while no other device is reachable reports too; the server makes it active.
+            const claims = connected.value && !audio.paused && !controls()
+            if (!(isActive.value || claims) || audio.readyState < HTMLMediaElement.HAVE_METADATA) return
+            if (uid === undefined && tracklist.tracklist.length) return
             send('/playhead', {
-                uid: uids[queue.currentindex] ?? null,
+                uid: uid ?? null,
                 position_ms: Math.round((audio.currentTime || 0) * 1000),
                 playing: queue.playing && !audio.paused && audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA,
             })
@@ -553,22 +566,29 @@ export default defineStore('remote', () => {
             host_id: hostId.value,
         })
         es = new EventSource(`${getBaseUrl()}${paths.api.remote}/stream?${query}`, { withCredentials: true })
+        heard = Date.now()
         es.onopen = () => {
+            heard = Date.now()
             if (selectable.value) send('/devices', { selectable: true })
             sync()
         }
         es.onmessage = e => {
+            heard = Date.now()
             const message = JSON.parse(e.data)
             handle(message.event, message.data)
         }
-        es.onerror = async () => {
-            if (es?.readyState !== EventSource.CLOSED) return
-            es = null
-            dropOut()
-            clearTimeout(retry)
-            if (!(await fetchState()) && refused === 'disabled') return init()
-            retry = window.setTimeout(init, 10000)
+        es.onerror = () => {
+            if (es?.readyState === EventSource.CLOSED) lost()
         }
+    }
+
+    async function lost() {
+        es?.close()
+        es = null
+        dropOut()
+        clearTimeout(retry)
+        if (!(await fetchState()) && refused === 'disabled') return init()
+        retry = window.setTimeout(init, 10000)
     }
 
     function leave() {
@@ -582,7 +602,7 @@ export default defineStore('remote', () => {
     // The device playing keeps playing on its own; a controller has nothing to play.
     function dropOut() {
         if (!connected.value) return
-        const playingHere = isActive.value && queue.playing
+        const playingHere = !audioSource.playingSource.paused
         connected.value = false
         pickerOpen.value = false
         synced = false
@@ -692,6 +712,8 @@ export default defineStore('remote', () => {
     watch(() => [queue.currentindex, queue.playing], report)
     watch(isActive, (now, was) => was && !now && connected.value && becomeController())
     document.addEventListener('seeked', report, true)
+    // Heartbeats arrive every 5s; a stream that stays quiet longer is dead even if the browser hasn't noticed.
+    setInterval(() => es && Date.now() - heard > 15000 && lost(), 5000)
     setInterval(() => queue.playing && report(), 5000)
     for (const el of [audioSource.playingSource, audioSource.standbySource]) {
         el.addEventListener('playing', () => el === audioSource.playingSource && report())
@@ -727,6 +749,7 @@ export default defineStore('remote', () => {
         routes,
         controls,
         hasNewList,
+        resume,
         init,
         setEnabled,
         edit,

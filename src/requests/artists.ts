@@ -156,16 +156,6 @@ export async function updateArtistImage(hash: string, image: Blob) {
 }
 
 /**
- * Restores the artist's downloaded image.
- */
-export async function resetArtistImage(hash: string) {
-    return await useAxios({
-        url: paths.api.artist + `/${hash}/image`,
-        method: 'DELETE',
-    })
-}
-
-/**
  * Sets the name shown on the artist's page. Null restores the default.
  */
 export async function updateArtistDisplayName(hash: string, display_name: string | null) {

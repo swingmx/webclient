@@ -24,7 +24,7 @@
                 <div class="ea-image-row">
                     <button class="ea-thumb" :title="$t('EditArtist.Change')" @click="pickFile">
                         <CropView v-if="image.kind === 'new'" :crop="image.crop" :size="112" />
-                        <img v-else-if="showCurrentImage" :src="savedImageUrl" @error="imageFailed = true" />
+                        <img v-else-if="!imageFailed" :src="store.imageUrl" @error="imageFailed = true" />
                         <div v-else class="ea-placeholder">{{ initial }}</div>
                         <div class="ea-thumb-hover">
                             <svg viewBox="0 0 24 24">
@@ -48,9 +48,6 @@
                             <button v-if="image.kind === 'new'" class="ea-btn secondary" @click="openCrop(image.crop)">
                                 <svg viewBox="0 0 16 16"><path d="M4 1.5V12h10.5M1.5 4H12v10.5" /></svg>
                                 {{ $t('EditArtist.Crop') }}
-                            </button>
-                            <button v-if="image.kind !== 'default'" class="ea-btn ghost" @click="useDefault">
-                                {{ $t('EditArtist.UseDefault') }}
                             </button>
                         </div>
                     </div>
@@ -111,7 +108,7 @@ import { firstImage } from '@/utils/imageFiles'
 import CropStage from '../shared/CropStage.vue'
 import CropView from '../shared/CropView.vue'
 
-type ImageState = { kind: 'default' } | { kind: 'saved' } | { kind: 'new'; crop: Crop }
+type ImageState = { kind: 'current' } | { kind: 'new'; crop: Crop }
 
 const props = defineProps<{
     image?: File | null
@@ -127,10 +124,9 @@ const store = useArtistStore()
 const dialog = ref<HTMLElement>()
 const fileInput = ref<HTMLInputElement>()
 
-const savedImage = (): ImageState => ({ kind: store.info.has_custom_image ? 'saved' : 'default' })
 const savedName = () => store.info.display_name || ''
 
-const image = ref<ImageState>(savedImage())
+const image = ref<ImageState>({ kind: 'current' })
 const name = ref(savedName())
 const view = ref<'edit' | 'crop'>('edit')
 // the crop being edited in the crop view
@@ -139,32 +135,12 @@ const saving = ref(false)
 const dragging = ref(false)
 let dragDepth = 0
 
-const savedImageUrl = computed(() => store.imageUrl)
 const imageFailed = ref(false)
-// the current image is the custom one while a pending "Use default" is unsaved
-const showCurrentImage = computed(
-    () =>
-        !imageFailed.value &&
-        (image.value.kind === 'saved' || (image.value.kind === 'default' && !store.info.has_custom_image))
-)
 const initial = computed(() => (store.info.name || '?').trim().charAt(0).toUpperCase())
+const imageTitle = computed(() => t(image.value.kind === 'new' ? 'EditArtist.NewImage' : 'EditArtist.CurrentImage'))
 
-const imageTitle = computed(() => {
-    switch (image.value.kind) {
-        case 'new':
-            return t('EditArtist.NewImage')
-        case 'saved':
-            return t('EditArtist.CustomImage')
-        default:
-            return t('EditArtist.DefaultImage')
-    }
-})
-
-const imageDirty = computed(
-    () => image.value.kind === 'new' || (image.value.kind === 'default' && !!store.info.has_custom_image)
-)
 const nameDirty = computed(() => name.value.trim() !== savedName())
-const dirty = computed(() => imageDirty.value || nameDirty.value)
+const dirty = computed(() => image.value.kind === 'new' || nameDirty.value)
 
 // object urls still referenced by `image` or `draft`
 function revokeUnused(url?: string) {
@@ -209,10 +185,6 @@ function applyCrop() {
     setImage({ kind: 'new', crop })
     view.value = 'edit'
     dialog.value?.focus()
-}
-
-function useDefault() {
-    setImage({ kind: 'default' })
 }
 
 function pickFile() {
@@ -282,11 +254,7 @@ async function save() {
     try {
         const edits: ArtistEdits = { artisthash: store.info.artisthash }
 
-        if (image.value.kind === 'new') {
-            edits.image = await renderCrop(image.value.crop)
-        } else if (imageDirty.value) {
-            edits.image = 'default'
-        }
+        if (image.value.kind === 'new') edits.image = await renderCrop(image.value.crop)
 
         if (nameDirty.value) edits.name = name.value.trim() || null
 

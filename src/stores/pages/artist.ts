@@ -4,7 +4,6 @@ import {
     getArtistAlbums,
     getArtistData,
     getSimilarArtists,
-    resetArtistImage,
     updateArtistDisplayName,
     updateArtistImage,
 } from '@/requests/artists'
@@ -21,8 +20,8 @@ const { t } = useT()
 
 export interface ArtistEdits {
     artisthash: string
-    // a new image, 'default' to restore the downloaded one, or unset to keep it
-    image?: Blob | 'default'
+    // a new image, or unset to keep the current one
+    image?: Blob
     // the display name, null for the default, or unset to keep it
     name?: string | null
 }
@@ -137,37 +136,24 @@ export default defineStore('artistPage', {
                 image: this.info.image,
                 color: this.info.color,
                 blurhash: this.info.blurhash,
-                has_custom_image: this.info.has_custom_image,
                 display_name: this.info.display_name,
             }
 
-            let blobUrl: string | null = null
+            const blobUrl = edits.image ? URL.createObjectURL(edits.image) : null
 
-            if (edits.image instanceof Blob) {
-                blobUrl = URL.createObjectURL(edits.image)
+            if (blobUrl) {
                 this.imageOverride = blobUrl
-                this.info.has_custom_image = true
-            } else if (edits.image === 'default') {
-                this.imageOverride = null
-                this.info.image = `${hash}.webp`
-                this.info.has_custom_image = false
+                this.extractColors()
             }
-
-            if (edits.image) this.extractColors()
             if (edits.name !== undefined) this.info.display_name = edits.name
 
             // whether the page still shows what this edit set
-            const showsImage = () =>
-                isCurrent() &&
-                (blobUrl ? this.imageOverride === blobUrl : !this.imageOverride && this.info.image === `${hash}.webp`)
+            const showsImage = () => isCurrent() && this.imageOverride === blobUrl
             const showsName = () => isCurrent() && this.info.display_name === edits.name
 
             const save = async () => {
-                if (edits.image) {
-                    const res =
-                        edits.image === 'default'
-                            ? await resetArtistImage(hash)
-                            : await updateArtistImage(hash, edits.image)
+                if (edits.image && blobUrl) {
+                    const res = await updateArtistImage(hash, edits.image)
 
                     if (res.status === 200) {
                         await preloadImage(paths.images.artist.large + res.data.image)
@@ -185,7 +171,7 @@ export default defineStore('artistPage', {
                         }
                     }
 
-                    if (blobUrl && this.imageOverride !== blobUrl) URL.revokeObjectURL(blobUrl)
+                    if (this.imageOverride !== blobUrl) URL.revokeObjectURL(blobUrl)
                 }
 
                 if (edits.name !== undefined) {

@@ -46,10 +46,11 @@ export default defineStore('Queue', {
         },
         play(index: number = 0, manual = true) {
             const remote = useRemote()
-            if (remote.routes() && (!remote.isActive || remote.hasNewList())) {
+            if (remote.controls()) {
                 if (remote.hasNewList()) this.currentindex = index
                 return remote.play(index)
             }
+            if (remote.hasNewList()) remote.play(index)
 
             const { tracklist } = useTracklist()
             if (tracklist.length === 0) return
@@ -69,6 +70,7 @@ export default defineStore('Queue', {
         playPause() {
             const remote = useRemote()
             if (remote.controls()) return remote.player(this.playing ? 'pause' : 'play')
+            if (remote.routes() && !remote.isActive && !this.playing && remote.resume()) return
 
             if (audioSource.playingSource.src === '') {
                 this.play(this.currentindex)
