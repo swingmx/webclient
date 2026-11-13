@@ -24,7 +24,7 @@ const q = useQStore()
 const remote = useRemote()
 
 // a Remote Control controller has no audio of its own, so nothing is loaded
-const loadedPercent = computed(() => (remote.connected && !remote.isActive ? 0 : maxSeekPercent.value))
+const loadedPercent = computed(() => (remote.elsewhere() ? 0 : maxSeekPercent.value))
 
 const { duration: time } = q
 

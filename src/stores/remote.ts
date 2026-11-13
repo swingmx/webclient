@@ -18,6 +18,7 @@ interface Playhead {
     playing: boolean
     loading?: boolean
     at: number
+    played_at?: number
 }
 
 interface Device {
@@ -36,6 +37,8 @@ interface State {
     queue: { source: string; source_info: SourceInfo; items: { uid: string; track: Track }[]; order: string[] | null; repeat: 'none' | 'all' | 'one' }
     volume: number
     devices: Device[]
+    played_at?: number
+    idle_seconds?: number
     now: number
 }
 
@@ -177,6 +180,12 @@ export default defineStore('remote', () => {
     let refused = ''
     let initing: Promise<void> | null = null
     let heard = 0
+    let idleSeconds = 0
+    // Server queue (hashes, shuffle, repeat) last applied here, so it isn't pushed straight back.
+    let serverKey = ''
+    let dirty = false
+    let inflight = 0
+    let pushTimer: ReturnType<typeof setTimeout> | undefined
 
     const isActive = computed(() => connected.value && reachable.value && activeId.value === deviceId.value)
     const activeName = computed(() => {
@@ -188,9 +197,25 @@ export default defineStore('remote', () => {
         return connected.value && localDepth === 0
     }
 
-    // Player actions go through the server only while another reachable device plays; otherwise this tab plays at once and reports.
+    // Another reachable device is active and hasn't sat idle: player and queue actions go to it.
+    function elsewhere() {
+        return connected.value && reachable.value && !isActive.value && !idle()
+    }
+
+    // Otherwise this tab acts at once and the server takes a copy.
     function controls() {
-        return routes() && reachable.value && !isActive.value
+        return localDepth === 0 && elsewhere()
+    }
+
+    function idle() {
+        const p = playhead.value
+        return (
+            idleSeconds > 0 &&
+            activeHostId.value !== hostId.value &&
+            !p.playing &&
+            !p.loading &&
+            Date.now() / 1000 + skew - (p.played_at ?? 0) > idleSeconds
+        )
     }
 
     // Nothing reachable is playing: pick up the paused session here, at its position.
@@ -262,8 +287,7 @@ export default defineStore('remote', () => {
         if (pending) {
             const p = pending
             pending = null
-            // When this tab already plays the list, the server only needs the queue and this tab as the player.
-            return edit([{ type: 'replace', ...p, start_index: index, play: true, take: !controls() }])
+            return edit([{ type: 'replace', ...p, start_index: index, play: true }])
         }
 
         const uid = uids[index]
@@ -307,19 +331,41 @@ export default defineStore('remote', () => {
             devices.value = state.devices
         }
         applyVolume(state.volume)
+        idleSeconds = state.idle_seconds ?? 0
 
         if (state.version > 0 && state.version >= version.value) renderQueue(state)
         if (state.playhead.at >= playhead.value.at) renderPlayhead(state.playhead)
     }
 
     function renderQueue(state: State) {
+        const tracks = new Map(state.queue.items.map(i => [i.uid, i.track]))
+        const order = state.queue.order ?? state.queue.items.map(i => i.uid)
+
+        if (!elsewhere()) {
+            // This tab's queue is the truth; a pending push of its own wins over what the server has.
+            if (dirty || inflight) return
+            version.value = state.version
+            shuffled.value = state.queue.order !== null
+            const hashes = order.map(uid => tracks.get(uid)!.trackhash)
+            serverKey = [hashes.join(), shuffled.value, state.queue.repeat].join('|')
+            settings.repeat = state.queue.repeat
+            if (hashes.join() !== tracklist.tracklist.map(t => t.trackhash).join()) {
+                const current = queue.currenttrack?.trackhash
+                local(() => tracklist.setNewList(order.map(uid => tracks.get(uid)!)))
+                const index = current ? hashes.indexOf(current) : -1
+                index >= 0 ? queue.setCurrentIndex(index) : placeIndex(undefined, order)
+            }
+            tracklist.shuffled = shuffled.value
+            synced = true
+            pending = null
+            uids.splice(0, uids.length, ...order)
+            renderSource(state, tracks, order)
+            return report()
+        }
+
         version.value = state.version
         shuffled.value = state.queue.order !== null
         settings.repeat = state.queue.repeat
-
-        const tracks = new Map(state.queue.items.map(i => [i.uid, i.track]))
-        const order = state.queue.order ?? state.queue.items.map(i => i.uid)
-        const current = isActive.value ? uids[queue.currentindex] : undefined
 
         if (!synced || order.join() !== uids.join()) {
             synced = true
@@ -328,21 +374,23 @@ export default defineStore('remote', () => {
             local(() => tracklist.setNewList(order.map(uid => tracks.get(uid)!)))
         }
 
-        if (getSource(tracklist.from) !== state.queue.source) {
-            const first = tracks.get(order[0])
-            tracklist.from = fromSource(state.queue.source, state.queue.source_info, first?.albumhash)
-        }
-        placeIndex(current)
+        renderSource(state, tracks, order)
+        placeIndex()
     }
 
-    function placeIndex(uid?: string) {
-        const index = uids.indexOf(uid ?? playhead.value.uid ?? '')
+    function renderSource(state: State, tracks: Map<string, Track>, order: string[]) {
+        if (getSource(tracklist.from) === state.queue.source) return
+        tracklist.from = fromSource(state.queue.source, state.queue.source_info, tracks.get(order[0])?.albumhash)
+    }
+
+    function placeIndex(uid?: string, list = uids) {
+        const index = list.indexOf(uid ?? playhead.value.uid ?? '')
         if (index >= 0) queue.setCurrentIndex(index)
     }
 
     function renderPlayhead(p: Playhead) {
         playhead.value = p
-        if (isActive.value) return
+        if (isActive.value || !audioSource.playingSource.paused) return
 
         placeIndex()
         queue.setPlaying(p.playing)
@@ -367,6 +415,39 @@ export default defineStore('remote', () => {
         usePlayer().setVolume(settings.volume_gain)
     }
 
+
+    // This tab changed its own queue: it already plays it, so the server just takes a copy.
+    function changed(key: string) {
+        if (!connected.value || elsewhere() || key === serverKey) return
+        dirty = true
+        uids.length = 0
+        clearTimeout(pushTimer)
+        pushTimer = setTimeout(() => push(), 300)
+    }
+
+    function push(played_at?: number) {
+        dirty = false
+        inflight++
+        const audio = audioSource.playingSource
+        return edit([
+            {
+                type: 'replace',
+                source: getSource(tracklist.from),
+                trackhashes: tracklist.tracklist.map(t => t.trackhash),
+                start_index: queue.currentindex,
+                position_ms: Math.round((audio.currentTime || 0) * 1000),
+                play: queue.playing && !audio.paused,
+                take: true,
+                shuffled: tracklist.shuffled,
+                ...(played_at ? { played_at } : {}),
+            },
+            { type: 'repeat', mode: settings.repeat },
+        ]).finally(() => --inflight === 0 && !dirty && refresh())
+    }
+
+    function markPlayed() {
+        if (!elsewhere()) localStorage.setItem('rc_played_at', String(Date.now() / 1000))
+    }
 
     let reportTimer: ReturnType<typeof setTimeout> | undefined
     function report() {
@@ -527,26 +608,20 @@ export default defineStore('remote', () => {
         synced = false
         connected.value = true
         devices.value = state.devices
+        idleSeconds = state.idle_seconds ?? 0
 
-        if (tracklist.tracklist.length && (playingHere || !state.queue.items.length)) {
-            if (playingHere) {
+        const playedAt = Number(localStorage.getItem('rc_played_at')) || 0
+        // Never over a device that is playing right now, and only against a server that reports played_at.
+        const newer = playedAt > 0 && !state.playhead.playing && state.played_at !== undefined && playedAt + skew > state.played_at
+        if (tracklist.tracklist.length && (playingHere || !state.queue.items.length || newer)) {
+            if (selectable.value) {
                 activeId.value = deviceId.value
                 activeHostId.value = hostId.value
                 reachable.value = true
             }
             player('volume', { value: settings.volume })
-            edit([
-                {
-                    type: 'replace',
-                    source: getSource(tracklist.from),
-                    trackhashes: tracklist.tracklist.map(t => t.trackhash),
-                    start_index: queue.currentindex,
-                    position_ms: Math.round(audioSource.playingSource.currentTime * 1000),
-                    play: playingHere,
-                    take: true,
-                },
-                { type: 'repeat', mode: settings.repeat },
-            ])
+            uids.length = 0
+            push(playedAt ? playedAt + skew : undefined)
             return
         }
 
@@ -607,6 +682,8 @@ export default defineStore('remote', () => {
         pickerOpen.value = false
         synced = false
         pending = null
+        dirty = false
+        clearTimeout(pushTimer)
         uids.length = 0
         version.value = 0
         if (playingHere) return
@@ -714,9 +791,18 @@ export default defineStore('remote', () => {
     document.addEventListener('seeked', report, true)
     // Heartbeats arrive every 5s; a stream that stays quiet longer is dead even if the browser hasn't noticed.
     setInterval(() => es && Date.now() - heard > 15000 && lost(), 5000)
-    setInterval(() => queue.playing && report(), 5000)
+    setInterval(() => {
+        if (!queue.playing) return
+        report()
+        if (!audioSource.playingSource.paused) markPlayed()
+    }, 5000)
+    watch(
+        () => [tracklist.tracklist.map(t => t.trackhash).join(), tracklist.shuffled, settings.repeat].join('|'),
+        changed
+    )
     for (const el of [audioSource.playingSource, audioSource.standbySource]) {
         el.addEventListener('playing', () => el === audioSource.playingSource && report())
+        el.addEventListener('pause', () => el === audioSource.playingSource && markPlayed())
         el.addEventListener('waiting', () => el === audioSource.playingSource && report())
         el.addEventListener('loadedmetadata', () => el === audioSource.playingSource && report())
         for (const event of ['canplay', 'playing', 'error']) {
@@ -724,7 +810,7 @@ export default defineStore('remote', () => {
         }
     }
     setInterval(() => {
-        if (!connected.value || isActive.value || !playhead.value.playing) return
+        if (!elsewhere() || !playhead.value.playing) return
         queue.setCurrentDuration(position())
         usePlayer().updateLyricsPosition()
     }, 250)
@@ -748,6 +834,7 @@ export default defineStore('remote', () => {
         activeName,
         routes,
         controls,
+        elsewhere,
         hasNewList,
         resume,
         init,

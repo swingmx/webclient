@@ -86,7 +86,7 @@ export default defineStore('tracklist', {
         },
         setNewList(tracklist: Track[]) {
             const remote = useRemote()
-            if (remote.routes()) remote.setList(tracklist, this.from)
+            if (remote.controls()) remote.setList(tracklist, this.from)
 
             if (this.tracklist !== tracklist) {
                 this.tracklist = []
@@ -256,7 +256,7 @@ export default defineStore('tracklist', {
         },
         insertAt(tracks: Track[], index: number) {
             const remote = useRemote()
-            if (remote.routes()) return remote.insertAt(tracks, index)
+            if (remote.controls()) return remote.insertAt(tracks, index)
 
             this.tracklist.splice(index, 0, ...tracks)
             this.indexMissingWorks(tracks)
@@ -270,7 +270,7 @@ export default defineStore('tracklist', {
         },
         clearList() {
             const remote = useRemote()
-            if (remote.routes()) return remote.clear()
+            if (remote.controls()) return remote.clear()
 
             this.tracklist = []
             this.worklist = {}
@@ -295,7 +295,7 @@ export default defineStore('tracklist', {
         },
         removeByIndex(index: number) {
             const remote = useRemote()
-            if (remote.routes()) return remote.remove(index)
+            if (remote.controls()) return remote.remove(index)
 
             const { currentindex, nextindex, playing, playNext, moveForward, setCurrentIndex } = useQueue()
             const player = usePlayer()
@@ -335,7 +335,7 @@ export default defineStore('tracklist', {
             const { currentindex } = useQueue()
             const remote = useRemote()
 
-            if (remote.routes()) {
+            if (remote.controls()) {
                 remote.insert(tracks, 'next')
             } else {
                 this.tracklist.splice(currentindex + 1, 0, ...tracks)

@@ -146,7 +146,7 @@ const maxSeekPercent = ref(0)
 export const currentAudioTimeMs = {
     get value() {
         const remote = useRemote()
-        const seconds = remote.connected && !remote.isActive ? useQueue().duration.current : audio.currentTime
+        const seconds = remote.elsewhere() ? useQueue().duration.current : audio.currentTime
         return Math.round(seconds * 1000)
     },
 }
@@ -477,7 +477,7 @@ export const usePlayer = defineStore('player', () => {
     // Loader will misbehave on HMR because of multiple setInterval calls
     setInterval(() => {
         const remote = useRemote()
-        if (!queue.playing || !audio.src || (remote.connected && !remote.isActive)) {
+        if (!queue.playing || !audio.src || remote.elsewhere()) {
             buffering.value = false
             return
         }

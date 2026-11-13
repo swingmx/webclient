@@ -14,7 +14,7 @@
         </button>
         <button
             class="shuffle"
-            :class="{ 'shuffle-off': rc.connected ? !rc.shuffled : !tracklist.shuffled }"
+            :class="{ 'shuffle-off': rc.elsewhere() ? !rc.shuffled : !tracklist.shuffled }"
             :title="$t('BottomBar.Shuffle')"
             @click="queue.shuffleQueue"
         >

@@ -50,7 +50,6 @@ export default defineStore('Queue', {
                 if (remote.hasNewList()) this.currentindex = index
                 return remote.play(index)
             }
-            if (remote.hasNewList()) remote.play(index)
 
             const { tracklist } = useTracklist()
             if (tracklist.length === 0) return
@@ -187,7 +186,7 @@ export default defineStore('Queue', {
         },
         shuffleQueue() {
             const remote = useRemote()
-            if (remote.routes()) return remote.edit([{ type: 'shuffle', on: !remote.shuffled }])
+            if (remote.controls()) return remote.edit([{ type: 'shuffle', on: !remote.shuffled }])
 
             useTracklist().toggleShuffle(this.currentindex)
         },

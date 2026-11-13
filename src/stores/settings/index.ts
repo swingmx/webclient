@@ -179,7 +179,7 @@ export default defineStore('settings', {
         // repeat 👇
         toggleRepeatMode() {
             const remote = useRemote()
-            if (remote.routes()) {
+            if (remote.controls()) {
                 const mode = { all: 'one', one: 'none', none: 'all' }[this.repeat]
                 return remote.edit([{ type: 'repeat', mode }])
             }
@@ -220,7 +220,7 @@ export default defineStore('settings', {
 
             const remote = useRemote()
             if (!remote.controls()) setVolume(this.volume_gain)
-            if (remote.routes()) remote.setVolume(this.volume)
+            if (remote.controls() || remote.isActive) remote.setVolume(this.volume)
         },
         toggleMute() {
             this.mute = !this.mute
