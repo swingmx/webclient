@@ -77,6 +77,9 @@ export default defineStore('artistPage', {
             if (data && data.type !== 'artist') {
                 this.type = data.type
                 this.person = data
+                // the artist editor works on `info`, so it edits this person rather than the last artist
+                if (data.artisthash !== this.info.artisthash) this.imageOverride = null
+                this.info = <Artist>{ artisthash: data.artisthash, name: data.name, image: data.image ?? '' }
                 return
             }
 

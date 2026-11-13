@@ -43,7 +43,7 @@
                             min="0"
                             max="1"
                             step="0.01"
-                            :value="settings.volume"
+                            :value="rc.volume"
                             :style="{ backgroundSize: `${volume}% 100%` }"
                             @input="settings.setVolume(parseFloat(($event.target as HTMLInputElement).value))"
                         />
@@ -120,7 +120,7 @@ const reconnecting = ref(false)
 
 const self = { id: '', name: getDeviceName(), type: 'web', selectable: true }
 const host = new URL(getBaseUrl() || location.origin, location.origin).host
-const volume = computed(() => Math.round(settings.volume * 100))
+const volume = computed(() => Math.round(rc.volume * 100))
 
 const active = computed(
     () =>

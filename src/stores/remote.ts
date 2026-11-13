@@ -166,6 +166,8 @@ export default defineStore('remote', () => {
     const deviceId = ref('')
     const hostId = ref('')
     const activeHostId = ref<string | null>(null)
+    // the active device's volume; this tab's own is `settings.volume`, which only follows it while this tab plays
+    const volume = ref(1)
 
     const uids: string[] = []
     let synced = false
@@ -318,6 +320,7 @@ export default defineStore('remote', () => {
 
     let volumeTimer: ReturnType<typeof setTimeout> | undefined
     function setVolume(value: number) {
+        volume.value = value
         clearTimeout(volumeTimer)
         volumeTimer = setTimeout(() => player('volume', { value }), 150)
     }
@@ -330,7 +333,9 @@ export default defineStore('remote', () => {
             reachable.value = state.active_reachable
             devices.value = state.devices
         }
-        applyVolume(state.volume)
+        volume.value = state.volume
+        // the active device sets the volume; a stale one from the last device isn't applied here
+        if (isActive.value && state.volume !== settings.volume) setVolume(settings.volume)
         idleSeconds = state.idle_seconds ?? 0
 
         if (state.version > 0 && state.version >= version.value) renderQueue(state)
@@ -411,6 +416,8 @@ export default defineStore('remote', () => {
     }
 
     function applyVolume(value: number) {
+        volume.value = value
+        if (!isActive.value) return
         settings.volume = value
         usePlayer().setVolume(settings.volume_gain)
     }
@@ -787,7 +794,11 @@ export default defineStore('remote', () => {
     )
 
     watch(() => [queue.currentindex, queue.playing], report)
-    watch(isActive, (now, was) => was && !now && connected.value && becomeController())
+    watch(isActive, (now, was) => {
+        if (was && !now && connected.value) becomeController()
+        // playback moved here: this tab plays at its own volume and tells the others
+        if (now && !was) setVolume(settings.volume)
+    })
     document.addEventListener('seeked', report, true)
     // Heartbeats arrive every 5s; a stream that stays quiet longer is dead even if the browser hasn't noticed.
     setInterval(() => es && Date.now() - heard > 15000 && lost(), 5000)
@@ -849,5 +860,6 @@ export default defineStore('remote', () => {
         remove,
         clear,
         setVolume,
+        volume,
     }
 })

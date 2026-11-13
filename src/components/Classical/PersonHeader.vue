@@ -1,7 +1,22 @@
 <template>
     <div class="person-header">
-        <div class="portrait circular shadow-lg">
-            <PersonImage class="circular" size="large" :image="page.image" :name="page.name" :tint="page.tint" />
+        <div
+            class="portrait circular shadow-lg"
+            :class="{ editable: canEdit, droptarget: dropping }"
+            @click="pasteTarget?.focus()"
+            @dragover="onDragOver"
+            @dragleave="dropping = false"
+            @drop="onDrop"
+        >
+            <img v-if="store.imageOverride" :src="store.imageOverride" alt="" />
+            <PersonImage v-else class="circular" size="large" :image="image" :name="page.name" :tint="page.tint" />
+            <PasteTarget
+                v-if="canEdit"
+                ref="pasteTarget"
+                :label="$t('EditArtist.PasteTarget')"
+                @image="file => modal.showEditArtistModal(file)"
+                @enter="modal.showEditArtistModal()"
+            />
         </div>
         <div class="info">
             <div class="kicker">
@@ -44,9 +59,14 @@
 import { favType } from '@/enums'
 import favoriteHandler from '@/helpers/favoriteHandler'
 import { ClassicalPersonPage } from '@/interfaces'
+import useAuthStore from '@/stores/auth'
+import useModalStore from '@/stores/modal'
 import useArtistStore from '@/stores/pages/artist'
+import { firstImage } from '@/utils/imageFiles'
+import { computed, ref } from 'vue'
 
 import HeartSvg from '@/components/shared/HeartSvg.vue'
+import PasteTarget from '@/components/shared/PasteTarget.vue'
 import PersonImage from '@/components/shared/PersonImage.vue'
 
 import PlaySvg from '@/assets/icons/play.svg'
@@ -59,6 +79,29 @@ defineEmits<{
     // eslint-disable-next-line no-unused-vars
     (event: 'play', shuffle: boolean): void
 }>()
+
+const store = useArtistStore()
+const modal = useModalStore()
+const auth = useAuthStore()
+const canEdit = computed(() => auth.is_admin)
+const pasteTarget = ref<InstanceType<typeof PasteTarget>>()
+const dropping = ref(false)
+// a saved edit updates `info`, which holds this person's image from then on
+const image = computed(() => (store.info.artisthash === props.page.artisthash ? store.info.image : props.page.image))
+
+function onDragOver(e: DragEvent) {
+    if (!canEdit.value || !e.dataTransfer?.types.includes('Files')) return
+    e.preventDefault()
+    dropping.value = true
+}
+
+function onDrop(e: DragEvent) {
+    dropping.value = false
+    const file = firstImage(e.dataTransfer?.files)
+    if (!canEdit.value || !file) return
+    e.preventDefault()
+    modal.showEditArtistModal(file)
+}
 
 function toggleFavorite() {
     const store = useArtistStore()
@@ -92,6 +135,18 @@ function capitalize(text: string) {
         height: 14rem;
         background-color: $gray4;
         overflow: hidden;
+        position: relative;
+        outline: 2px solid transparent;
+        outline-offset: 4px;
+
+        // focused, the portrait takes a pasted image
+        &.editable:focus-within {
+            outline-color: $gray5;
+        }
+
+        &.droptarget {
+            outline: 2px dashed $gray1;
+        }
 
         img {
             width: 100%;

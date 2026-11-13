@@ -6,6 +6,8 @@
         autocomplete="off"
         @submit.prevent="update_playlist"
     >
+        <ImageCrop v-if="cropFile" :file="cropFile" @done="onCropped" @cancel="cropFile = null" />
+        <template v-else>
         <label for="name">{{ $t('UpdatePlaylist.Name') }}</label>
         <input
             id="modal-playlist-name-input"
@@ -65,6 +67,7 @@
         <button type="submit">
             {{ clicked ? $t('Common.Saving') : $t('Common.Update') }}
         </button>
+        </template>
     </form>
 </template>
 
@@ -79,8 +82,14 @@ import DeleteIcon from '@/assets/icons/delete.svg'
 import ExpandSvg from '@/assets/icons/expand.svg'
 import ImageIcon from '@/assets/icons/image.svg'
 
+import ImageCrop from '../shared/ImageCrop.vue'
 import Switch from '../SettingsView/Components/Switch.vue'
+import { firstImage } from '@/utils/imageFiles'
 import { useT } from '@/i18n.js'
+
+const props = defineProps<{
+    image?: File | null
+}>()
 
 const { t } = useT()
 const pStore = usePStore()
@@ -88,9 +97,11 @@ const { info: playlist } = storeToRefs(pStore)
 
 const pname = ref(playlist.value.name)
 const image: Ref<any> = ref(null)
+// an image waiting to be cropped before it becomes the cover; one pasted on the header opens straight in the crop
+const cropFile = ref<File | null>(props.image ?? null)
 
 onMounted(() => {
-    ;(document.getElementById('modal-playlist-name-input') as HTMLElement).focus()
+    ;(document.getElementById('modal-playlist-name-input') as HTMLElement | null)?.focus()
 })
 
 const emit = defineEmits<{
@@ -108,24 +119,16 @@ function selectFiles() {
 function handleUpload() {
     const input = document.getElementById('update-pl-image-upload') as HTMLInputElement
 
-    if (input.files) {
-        handleFile(input.files[0])
-    }
+    cropFile.value = firstImage(input.files)
+    input.value = ''
 }
 
-function handleFile(file: File) {
-    if (!file || !file.type.startsWith('image/')) {
-        return
-    }
-
-    const preview = document.getElementById('update-pl-img-preview')
-    const obj_url = URL.createObjectURL(file)
-
-    if (preview) {
-        pStore.setImage(obj_url)
-        pStore.setInitialBannerPos()
-    }
-
+// A cropped cover is square, so the playlist switches to a square cover.
+function onCropped(file: File) {
+    cropFile.value = null
+    pStore.setImage(URL.createObjectURL(file))
+    pStore.setInitialBannerPos()
+    if (!playlist.value.settings.square_img) pStore.toggleSquareImage()
     image.value = file
 }
 
@@ -157,12 +160,11 @@ function update_playlist(e: Event) {
     }
 }
 
-// Future TODO: Implement drag and drop for images here
 </script>
 
 <style lang="scss">
 #playlist-update-modal {
-    input {
+    input:not([type='range']) {
         height: 3rem !important;
     }
 }

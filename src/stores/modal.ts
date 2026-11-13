@@ -66,8 +66,11 @@ export default defineStore('newModal', {
         showEditArtistModal(image: File | null = null) {
             this.showModal(ModalOptions.editArtist, { image })
         },
-        showEditPlaylistModal() {
-            this.showModal(ModalOptions.updatePlaylist)
+        /**
+         * Opens the playlist editor, straight in the crop step when given an image.
+         */
+        showEditPlaylistModal(image: File | null = null) {
+            this.showModal(ModalOptions.updatePlaylist, { image })
         },
         showDeletePlaylistModal(pid: number) {
             const props = {

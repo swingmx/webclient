@@ -1,7 +1,16 @@
 <template>
     <div class="profilesettings">
+        <ImageCrop v-if="cropFile" :file="cropFile" @done="onCropped" @cancel="cropFile = null" />
+        <template v-else>
         <div class="profileavatar">
-            <div class="avatarwrapper">
+            <div
+                class="avatarwrapper"
+                :class="{ editable: canEditImage, droptarget: dropping }"
+                @click="pasteTarget?.focus()"
+                @dragover="onDragOver"
+                @dragleave="dropping = false"
+                @drop="onDrop"
+            >
                 <Avatar :name="username || auth.user.username" :image="adding_user ? null : auth.user.image" />
                 <div v-if="canEditImage" class="avataractions">
                     <button
@@ -23,6 +32,13 @@
                     </button>
                 </div>
                 <input ref="fileInput" type="file" accept="image/*" hidden @change="handleImage" />
+                <PasteTarget
+                    v-if="canEditImage"
+                    ref="pasteTarget"
+                    :label="$t('Profile.ChangeImage')"
+                    @image="file => (cropFile = file)"
+                    @enter="fileInput?.click()"
+                />
             </div>
             <div class="name">
                 {{ adding_user ? username : $t('Profile.HiUser', {user: auth.user.username}) }}
@@ -51,6 +67,7 @@
                 {{ adding_user ? $t('Profile.AddUser') : $t('Common.Update') }}
             </button>
         </form>
+        </template>
     </div>
 </template>
 
@@ -61,6 +78,9 @@ import { useI18n } from 'vue-i18n'
 import DeleteSvg from '@/assets/icons/delete.svg'
 import PencilSvg from '@/assets/icons/pencil.svg'
 import Avatar from '@/components/shared/Avatar.vue'
+import ImageCrop from '@/components/shared/ImageCrop.vue'
+import PasteTarget from '@/components/shared/PasteTarget.vue'
+import { firstImage } from '@/utils/imageFiles'
 import Input from '@/components/shared/Input.vue'
 import { User } from '@/interfaces'
 import useAuth from '@/stores/auth'
@@ -78,6 +98,10 @@ const emit = defineEmits<{
 const auth = useAuth()
 
 const fileInput = ref<HTMLInputElement>()
+const pasteTarget = ref<InstanceType<typeof PasteTarget>>()
+// an image waiting to be cropped before it becomes the avatar
+const cropFile = ref<File | null>(null)
+const dropping = ref(false)
 const canEditImage = computed(() => !props.adding_user && auth.user.roles && !auth.user.roles.includes('guest'))
 
 const username = ref('')
@@ -139,15 +163,31 @@ async function handleSubmit() {
     await updateProfile()
 }
 
-async function handleImage(e: Event) {
+function handleImage(e: Event) {
     const input = e.target as HTMLInputElement
-    const file = input.files?.[0]
+    cropFile.value = firstImage(input.files)
     input.value = ''
-
-    if (file) {
-        await auth.updateImage(file)
-    }
 }
+
+async function onCropped(file: File) {
+    cropFile.value = null
+    await auth.updateImage(file)
+}
+
+function onDragOver(e: DragEvent) {
+    if (!canEditImage.value || !e.dataTransfer?.types.includes('Files')) return
+    e.preventDefault()
+    dropping.value = true
+}
+
+function onDrop(e: DragEvent) {
+    dropping.value = false
+    const file = firstImage(e.dataTransfer?.files)
+    if (!canEditImage.value || !file) return
+    e.preventDefault()
+    cropFile.value = file
+}
+
 
 async function updateProfile() {
     const success = await auth.updateProfile(payload.value)
@@ -176,6 +216,24 @@ onMounted(async () => {
 
         .avatarwrapper {
             position: relative;
+            border-radius: 50%;
+            outline: none;
+
+            > :first-child {
+                display: block;
+                border-radius: 50%;
+                outline: 2px solid transparent;
+                outline-offset: 4px;
+            }
+
+            // focused, the avatar takes a pasted image
+            &.editable:focus-within > :first-child {
+                outline-color: $gray5;
+            }
+
+            &.droptarget > :first-child {
+                outline: 2px dashed $gray1;
+            }
         }
 
         .avataractions {

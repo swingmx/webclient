@@ -32,10 +32,26 @@
     </div>
 
     <div v-if="!isSmallPhone && info.has_image" class="gradient rounded-lg"></div>
-    <div v-if="info.has_image && useSqrImg" class="sqr_img">
-      <img :src="(playlist.info.image as string)" class="rounded-sm" />
+    <div
+      v-if="useSqrImg && (info.has_image || playlist.info.count)"
+      class="sqr_img cover"
+      :class="{ editable: canEdit, droptarget: dropping }"
+      :style="{ '--cover-outline': textColor || '#ffffff' }"
+      @click="pasteTarget?.focus()"
+      @dragover="onDragOver"
+      @dragleave="dropping = false"
+      @drop="onDrop"
+    >
+      <img v-if="info.has_image" :src="(playlist.info.image as string)" class="rounded-sm" />
+      <BannerImages v-else class="rounded-sm" />
+      <PasteTarget
+        v-if="canEdit"
+        ref="pasteTarget"
+        :label="$t('PlaylistView.Edit')"
+        @image="file => modal.showEditPlaylistModal(file)"
+        @enter="modal.showEditPlaylistModal()"
+      />
     </div>
-    <BannerImages v-if="playlist.info.count && !info.has_image && useSqrImg" class="sqr_img rounded-sm" />
     <Info :text-color="textColor" :btn_color="colors.btn" />
     <LastUpdated />
   </div>
@@ -43,7 +59,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 import { pinUnpinPlaylist } from "@/requests/playlists";
 import { isSmallPhone } from "@/stores/content-width";
@@ -52,6 +68,9 @@ import { getTextColor } from "@/utils/colortools/shift";
 
 import PinFillSvg from "@/assets/icons/pin.fill.svg";
 import PinSvg from "@/assets/icons/pin.svg";
+import PasteTarget from "@/components/shared/PasteTarget.vue";
+import useModalStore from "@/stores/modal";
+import { firstImage } from "@/utils/imageFiles";
 import BannerImages from "./Header/BannerImages.vue";
 import Info from "./Header/Info.vue";
 import LastUpdated from "./Header/LastUpdated.vue";
@@ -59,6 +78,25 @@ import LastUpdated from "./Header/LastUpdated.vue";
 const playlist = usePStore();
 
 const { info, colors } = storeToRefs(playlist);
+
+const modal = useModalStore();
+const canEdit = computed(() => Number.isInteger(playlist.info.id));
+const pasteTarget = ref<InstanceType<typeof PasteTarget>>();
+const dropping = ref(false);
+
+function onDragOver(e: DragEvent) {
+  if (!canEdit.value || !e.dataTransfer?.types.includes("Files")) return;
+  e.preventDefault();
+  dropping.value = true;
+}
+
+function onDrop(e: DragEvent) {
+  dropping.value = false;
+  const file = firstImage(e.dataTransfer?.files);
+  if (!canEdit.value || !file) return;
+  e.preventDefault();
+  modal.showEditPlaylistModal(file);
+}
 
 const bg = computed(() => {
   // hide background on small screen
@@ -160,11 +198,29 @@ function pinPlaylist(pid: number) {
     width: 16rem;
     z-index: 100;
     margin-left: 1rem;
+    position: relative;
 
     img {
       height: 100%;
       width: 100%;
       object-fit: cover;
+    }
+
+    // transparent at rest, so focusing doesn't animate the outline in from the text colour
+    > :first-child {
+      height: 100%;
+      width: 100%;
+      outline: 2px solid transparent;
+      outline-offset: 4px;
+    }
+
+    // focused, the cover takes a pasted image; the outline follows the header's text colour
+    &.editable:focus-within > :first-child {
+      outline-color: color-mix(in srgb, var(--cover-outline) 45%, transparent);
+    }
+
+    &.droptarget > :first-child {
+      outline: 2px dashed var(--cover-outline);
     }
   }
 

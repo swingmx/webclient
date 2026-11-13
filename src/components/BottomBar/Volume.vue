@@ -1,9 +1,9 @@
 <template>
     <button class="speaker" @wheel.passive="handleMouseWheel">
         <div class="icon" @click="settings.toggleMute">
-            <VolumeMuteSvg v-if="settings.mute || settings.volume == 0.0" />
-            <VolumeMidSvg v-else-if="settings.volume > 0.75" />
-            <VolumeLowSvg v-else-if="settings.volume > 0" />
+            <VolumeMuteSvg v-if="settings.mute || shown == 0.0" />
+            <VolumeMidSvg v-else-if="shown > 0.75" />
+            <VolumeLowSvg v-else-if="shown > 0" />
         </div>
         <div class="dialog rounded-sm pad-sm">
             <input
@@ -13,7 +13,7 @@
                 max="1"
                 min="0"
                 step="0.01"
-                :value="settings.volume"
+                :value="shown"
                 :aria-label="$t('BottomBar.VolumeLabel', { percent: volume_percent })"
                 :aria-valuetext="`${volume_percent}%`"
                 :style="{
@@ -32,13 +32,17 @@ import { computed } from 'vue'
 import VolumeLowSvg from '@/assets/icons/volume-low.svg'
 import VolumeMidSvg from '@/assets/icons/volume-mid.svg'
 import VolumeMuteSvg from '@/assets/icons/volume-mute.svg'
+import useRemote from '@/stores/remote'
 import useSettingsStore from '@/stores/settings'
 import { clamp } from '@/utils/audio/volume'
 
 const settings = useSettingsStore()
+const rc = useRemote()
 
+// while controlling another device the slider is that device's volume
+const shown = computed(() => (rc.elsewhere() ? rc.volume : settings.volume))
 // a slider position, not an amplitude — the taper is applied in `settings.volume_gain`
-const volume_percent = computed(() => Math.round(settings.volume * 100))
+const volume_percent = computed(() => Math.round(shown.value * 100))
 
 // how much of the slider a single wheel notch covers
 const WHEEL_STEP = 0.02
@@ -64,7 +68,7 @@ const handleMouseWheel = (event: WheelEvent) => {
     if (change === 0) return
 
     wheel_remainder -= change
-    settings.setVolume(Math.round((settings.volume + change) * 100) / 100)
+    settings.setVolume(Math.round((shown.value + change) * 100) / 100)
 }
 </script>
 

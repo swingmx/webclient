@@ -214,13 +214,13 @@ export default defineStore('settings', {
         // volume 👇
         // takes a slider position, 0 to 1
         setVolume(new_value: number) {
-            const { setVolume } = usePlayer()
+            const remote = useRemote()
+            // controlling another device moves its volume, not this tab's
+            if (remote.controls()) return remote.setVolume(clamp(new_value))
 
             this.volume = clamp(new_value)
-
-            const remote = useRemote()
-            if (!remote.controls()) setVolume(this.volume_gain)
-            if (remote.controls() || remote.isActive) remote.setVolume(this.volume)
+            usePlayer().setVolume(this.volume_gain)
+            if (remote.isActive) remote.setVolume(this.volume)
         },
         toggleMute() {
             this.mute = !this.mute
