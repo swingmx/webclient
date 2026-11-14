@@ -2,6 +2,7 @@
     <ContextMenu v-if="!hideUI" />
     <Modal v-if="!hideUI" />
     <Notification v-if="!hideUI" />
+    <CommandPalette v-if="!hideUI" />
     <div id="drag-img" class="ellip2" style=""></div>
     <section
         v-if="!hideUI"
@@ -61,6 +62,7 @@ import useSettings from '@/stores/settings'
 import useTracker from '@/stores/tracker'
 import useInterface from '@/stores/interface'
 import useRemote from '@/stores/remote'
+import useCommandPalette from '@/stores/commandPalette'
 
 // @utils
 import handleShortcuts from '@/helpers/useKeyboard'
@@ -71,6 +73,7 @@ import { xl, xxl } from './composables/useBreakpoints'
 import ContextMenu from '@/components/ContextMenu.vue'
 import Modal from '@/components/modal.vue'
 import Notification from '@/components/Notification.vue'
+import CommandPalette from '@/components/CommandPalette.vue'
 
 // @app-grid-components
 import BottomBar from '@/components/BottomBar/BottomBar.vue'
@@ -207,6 +210,7 @@ onMounted(async () => {
     settings.initializeVolume()
     handleRootDirsPrompt()
     remote.init()
+    setTimeout(() => useCommandPalette().load(), 1000)
 
     getAllSettings()
         .then(({ settings: data }) => {

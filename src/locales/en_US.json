@@ -84,6 +84,21 @@
     "ChartsDescription": "Your top artists, albums, and tracks",
     "ChartsTitle": "Charts"
   },
+  "CommandPalette": {
+    "AlbumCount": "{n} album | {n} albums",
+    "Albums": "Albums",
+    "AlbumsBy": "Albums · {name}",
+    "Artist": "Artist",
+    "Artists": "Artists",
+    "Label": "Jump to an artist or album",
+    "Loading": "Loading…",
+    "Move": "move",
+    "NoMatches": "No matches",
+    "Open": "open",
+    "Or": "or",
+    "Placeholder": "Search artists and albums…",
+    "Play": "play"
+  },
   "Common": {
     "Activate": "Activate",
     "Album": "Album | Albums",

@@ -112,6 +112,9 @@ export const paths = {
             get load() {
                 return this.base + '/loadmore'
             },
+            get index() {
+                return this.base + '/index'
+            },
         },
         logger: {
             base: '/logger',

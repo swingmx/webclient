@@ -2,6 +2,7 @@ import useQueue from "@/stores/queue";
 import useModal from "@/stores/modal";
 import useContextMenu from "@/stores/context";
 import useSettings from "@/stores/settings";
+import useCommandPalette from "@/stores/commandPalette";
 
 let key_down_fired = "";
 
@@ -42,6 +43,12 @@ export default function (queue: typeof useQueue, modal: typeof useModal) {
     function triggerSeek() {
       if (shiftKey) return false;
       if (ctrlKey) return true;
+    }
+
+    if ((e.metaKey || ctrlKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      useCommandPalette().toggle();
+      return;
     }
 
     if (focusedOnInput()) {
