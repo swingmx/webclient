@@ -164,8 +164,6 @@ onMounted(() => {
         margin-top: .75rem;
         color: rgba(255, 255, 255, 0.314);
         cursor: pointer;
-        text-align: center;
-        width: fit-content;
         opacity: 1;
         transition:
             opacity 2s ease-in-out,
@@ -175,7 +173,6 @@ onMounted(() => {
             color: white;
         }
 
-        // fast hover fade; scoped so it can't clobber the transform leg mid-animation
         &:not(.flip-animating):hover {
             transition-duration: 2s, 200ms;
         }
