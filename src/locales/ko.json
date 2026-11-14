@@ -255,7 +255,8 @@
     "en_US": "English",
     "it_IT": "Italiano",
     "ko": "한국어",
-    "zh_CN": "中文（简体）"
+    "zh_CN": "中文（简体）",
+    "pt_BR": "Português (Brasil)"
   },
   "LeftSidebar": {
     "FileTypeBitrate": "파일 형식 • 비트레이트",

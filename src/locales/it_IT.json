@@ -255,7 +255,8 @@
     "en_US": "English",
     "it_IT": "Italiano",
     "ko": "한국어",
-    "zh_CN": "中文（简体）"
+    "zh_CN": "中文（简体）",
+    "pt_BR": "Português (Brasil)"
   },
   "LeftSidebar": {
     "FileTypeBitrate": "tipo file • bitrate",
@@ -871,8 +872,7 @@
       "Searching": "Cercando...",
       "Unsynced": "non sincronizzata"
     },
-    "MixLisView": {
-    },
+    "MixLisView": {},
     "MixListView": {
       "MixesBasedOnListening": "{n} mixes • In base agli artisti che hai ascoltato ultimamente",
       "OtherMixes": "Altri mixes di {type}",
