@@ -11,6 +11,7 @@ export enum playSources {
   recentlyAdded,
   recentlyPlayed,
   mix,
+  library,
 }
 
 export enum NotifType {
@@ -32,6 +33,7 @@ export enum FromOptions {
   albumCard = "albumCard",
   favorite = "favorite",
   work = "work",
+  library = "library",
 }
 
 export enum ContextSrc {

@@ -814,7 +814,8 @@
     "PlayingFrom": {
       "FavoriteTracks": "즐겨찾는 트랙",
       "NoSource": "👻 소스 없음",
-      "SearchFrom": "검색: \"{source}\""
+      "SearchFrom": "검색: \"{source}\"",
+      "YourLibrary": "내 라이브러리"
     }
   },
   "Views": {

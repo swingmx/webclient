@@ -10,6 +10,7 @@ import {
   playFromAlbumCard,
   playFromArtistCard,
   playFromFavorites,
+  playFromLibrary,
   playFromFolderCard,
   playFromPlaylist,
 } from "@/helpers/usePlayFrom";
@@ -60,6 +61,9 @@ function handlePlay() {
     }
     case playSources.favorite:
       playFromFavorites(props.track);
+      break;
+    case playSources.library:
+      playFromLibrary();
       break;
     case playSources.playlist:
       playFromPlaylist(props.playlist as string);

@@ -814,7 +814,8 @@
     "PlayingFrom": {
       "FavoriteTracks": "收藏的曲目",
       "NoSource": "👻 无来源",
-      "SearchFrom": "搜索：“{source}”"
+      "SearchFrom": "搜索：“{source}”",
+      "YourLibrary": "你的音乐库"
     }
   },
   "Views": {

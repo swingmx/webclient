@@ -862,7 +862,8 @@
     "PlayingFrom": {
       "FavoriteTracks": "Favorite tracks",
       "NoSource": "👻 No source",
-      "SearchFrom": "Search for: \"{source}\""
+      "SearchFrom": "Search for: \"{source}\"",
+      "YourLibrary": "Your Library"
     }
   },
   "Views": {

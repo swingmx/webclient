@@ -99,6 +99,7 @@ function getComponent(type: string) {
         case 'playlist':
             return PlaylistCard
         case 'favorite':
+        case 'library':
             return FavoritesCard
         case 'mix':
             return MixCard
@@ -141,6 +142,11 @@ function getProps(item: { type: string; item?: any; with_helptext?: boolean }) {
         case 'favorite':
             return {
                 item: item.item,
+            }
+        case 'library':
+            return {
+                item: item.item,
+                library: true,
             }
         case 'mix':
             return {

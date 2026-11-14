@@ -25,6 +25,8 @@ function getQueueName(from: From) {
       return t('Menus.Queue.SearchName', {query: from.query});
     case FromOptions.favorite:
       return t('Menus.Queue.FavoritesName');
+    case FromOptions.library:
+      return t('Utils.PlayingFrom.YourLibrary');
     case FromOptions.work:
       return from.name;
     default:

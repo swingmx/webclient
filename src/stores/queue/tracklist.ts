@@ -15,6 +15,7 @@ import {
     fromArtist,
     fromFav,
     fromFolder,
+    fromLibrary,
     fromMix,
     fromPlaylist,
     fromSearch,
@@ -38,6 +39,7 @@ export type From =
     | fromFav
     | fromMix
     | fromWork
+    | fromLibrary
 
 function shuffle<T>(items: T[]) {
     const shuffled = items.slice()
@@ -233,6 +235,10 @@ export default defineStore('tracklist', {
             if (works?.length) {
                 this.indexWorks(works, tracks)
             }
+        },
+        setFromLibrary(tracks: Track[]) {
+            this.from = <fromLibrary>{ type: FromOptions.library }
+            this.setNewList(tracks)
         },
         setFromFav(tracks: Track[]) {
             this.from = <fromFav>{

@@ -11,6 +11,7 @@ import ArtistSvg from '@/assets/icons/artist.svg'
 import FolderSvg from '@/assets/icons/folder.svg'
 import HeartSvg from '@/assets/icons/heart.fill.svg'
 import PlaylistSvg from '@/assets/icons/playlist.svg'
+import QueueSvg from '@/assets/icons/queue.svg'
 import SearchSvg from '@/assets/icons/search.svg'
 import RadioSvg from '@/assets/icons/radio.svg'
 import { useT } from '@/i18n'
@@ -101,6 +102,14 @@ export default (source: From): PlayingFrom => {
                 location: {
                     name: Routes.favoriteTracks,
                 },
+                image: '',
+            }
+
+        case FromOptions.library:
+            return {
+                name: t('Utils.PlayingFrom.YourLibrary'),
+                icon: QueueSvg,
+                location: { name: Routes.Home },
                 image: '',
             }
 

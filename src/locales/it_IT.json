@@ -814,7 +814,8 @@
     "PlayingFrom": {
       "FavoriteTracks": "Tracce preferite",
       "NoSource": "👻 Nessuna sorgente",
-      "SearchFrom": "Cerca per: \"{source}\""
+      "SearchFrom": "Cerca per: \"{source}\"",
+      "YourLibrary": "La tua libreria"
     }
   },
   "Views": {

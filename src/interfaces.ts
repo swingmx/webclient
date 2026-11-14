@@ -553,6 +553,10 @@ export interface fromFav {
     type: FromOptions.favorite
 }
 
+export interface fromLibrary {
+    type: FromOptions.library
+}
+
 export interface fromWork {
     type: FromOptions.work
     name: string

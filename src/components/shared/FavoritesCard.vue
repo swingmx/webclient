@@ -1,11 +1,22 @@
 <template>
-    <RouterLink :to="{ name: Routes.favoriteTracks }" class="favoritescard rounded">
+    <component
+        :is="library ? 'div' : RouterLink"
+        :to="library ? undefined : { name: Routes.favoriteTracks }"
+        class="favoritescard rounded"
+        :class="{ library }"
+        @click="library && playFromLibrary()"
+    >
         <div class="img">
-            <div class="blur" :style="{ backgroundImage: `url(${paths.images.thumb.small + item.image})` }"></div>
+            <div
+                class="blur"
+                :style="item.image ? { backgroundImage: `url(${paths.images.thumb.small + item.image})` } : {}"
+            ></div>
         </div>
         <div class="overlay">
-            <PlayBtn :source="playSources.favorite" />
+            <PlayBtn :source="library ? playSources.library : playSources.favorite" />
+            <QueueSvg v-if="library" class="heart" />
             <svg
+                v-else
                 class="heart"
                 width="100"
                 height="100"
@@ -24,26 +35,31 @@
                 <span class="help">{{ $t('FavoritesCard.PlaylistUpper') }}</span>
                 <span class="time">{{ item.time }}</span>
             </div>
-            <div class="title">{{ $t('FavoritesCard.FavoriteTracks') }}</div>
+            <div class="title">{{ library ? $t('Utils.PlayingFrom.YourLibrary') : $t('FavoritesCard.FavoriteTracks') }}</div>
             <div v-if="showCount" class="fcount">
                 <b>{{ $t('Common.TrackCount', {count: item.count}, item.count) }}</b>
             </div>
         </div>
-    </RouterLink>
+    </component>
 </template>
 
 <script setup lang="ts">
 import { paths } from '@/config'
 import { Routes } from '@/router'
 import { playSources } from '@/enums'
+import { RouterLink } from 'vue-router'
+import QueueSvg from '@/assets/icons/queue.svg'
+import { playFromLibrary } from '@/helpers/usePlayFrom'
 import PlayBtn from '../shared/PlayBtn.vue'
 
 defineProps<{
     item: {
         time: string
         count: number
-        image: string
+        image?: string
     }
+    // the whole library, played as a shuffled playlist, instead of favorite tracks
+    library?: boolean
     // The track count is shown only where a view asks for it, as with ArtistCard's showTrackcount.
     showCount?: boolean
 }>()
@@ -93,6 +109,16 @@ defineProps<{
 
     .heart {
         color: $pink;
+    }
+
+    &.library {
+        cursor: pointer;
+
+        .heart {
+            color: $white;
+            width: 100px;
+            height: 100px;
+        }
     }
 
     .play-btn {

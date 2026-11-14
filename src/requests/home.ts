@@ -1,5 +1,6 @@
 import { paths } from '@/config'
 import useAxios from './useAxios'
+import { Track } from '@/interfaces'
 
 export async function getRecents(path: string, limit: number) {
     const { data } = await useAxios({
@@ -25,4 +26,13 @@ export async function getHomePageData(limit: number) {
     })
 
     return data
+}
+
+export async function getRandomTracks(limit = 1000): Promise<Track[]> {
+    const { data } = await useAxios({
+        url: `/track/random?limit=${limit}`,
+        method: 'GET',
+    })
+
+    return data?.tracks ?? []
 }

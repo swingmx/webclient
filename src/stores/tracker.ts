@@ -37,6 +37,8 @@ export function getSource(source: From) {
       return `q:${source.query}`;
     case FromOptions.favorite:
       return `favorite`;
+    case FromOptions.library:
+      return `library`;
     case FromOptions.mix:
       return `mix:${source.mixid}.${source.sourcehash}`;
     case FromOptions.work:
@@ -71,6 +73,8 @@ export function fromSource(source: string, info: SourceInfo, albumhash = ""): Fr
       return { type: FromOptions.search, query: value };
     case "favorite":
       return { type: FromOptions.favorite };
+    case "library":
+      return { type: FromOptions.library };
     case "wk":
       return { type: FromOptions.work, name, workhash: value, albumhash };
     case "mix": {

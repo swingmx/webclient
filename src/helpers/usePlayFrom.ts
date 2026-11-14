@@ -13,6 +13,7 @@ import { getAlbumTracks, normalizeAlbumTracks } from '@/requests/album'
 import { getArtistTracks } from '@/requests/artists'
 import { getFavTracks } from '@/requests/favorite'
 import { getFiles } from '@/requests/folders'
+import { getRandomTracks } from '@/requests/home'
 import { getPlaylist } from '@/requests/playlists'
 import { useT } from '@/i18n'
 
@@ -105,6 +106,14 @@ export async function playFromFavorites(track: Track | undefined, kind: FavTrack
     }
 
     queue.play(index)
+}
+
+export async function playFromLibrary() {
+    const tracks = await getRandomTracks()
+    if (!tracks.length) return
+
+    useTracklist().setFromLibrary(tracks)
+    useQueue().play(0)
 }
 
 export async function playFromPlaylist(id: string, track?: Track) {
