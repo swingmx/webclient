@@ -9,7 +9,7 @@
             @drop="onDrop"
         >
             <img v-if="store.imageOverride" :src="store.imageOverride" alt="" />
-            <PersonImage v-else class="circular" size="large" :image="image" :name="page.name" :tint="page.tint" />
+            <PersonImage v-else class="circular" size="large" :image="image" :name="page.name" :tint="page.tint" :blurhash="page.blurhash" />
             <PasteTarget
                 v-if="canEdit"
                 ref="pasteTarget"

@@ -345,6 +345,7 @@ export interface ClassicalPersonPage {
     listening?: Listening | null
     name: string
     image: string | null
+    blurhash?: string | null
     tint?: number | null
     // the parts after the person's kind, the chips before the counts, and the life years
     kicker: string[]
