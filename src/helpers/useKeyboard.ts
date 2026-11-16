@@ -118,6 +118,13 @@ export default function (queue: typeof useQueue, modal: typeof useModal) {
 
         break;
 
+      case "/": {
+        if (ctrlKey || e.metaKey) return;
+        e.preventDefault();
+        document.getElementById("globalsearch")?.focus();
+        break;
+      }
+
       case "f": {
         if (!ctrlKey) return;
         e.preventDefault();

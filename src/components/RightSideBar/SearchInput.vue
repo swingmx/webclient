@@ -32,11 +32,15 @@
             >
                 <CancelSvg />
             </div>
+            <button class="cmdk-keys" :title="$t('CommandPalette.Label')" @click.prevent="openPalette">
+                <kbd>{{ isMac ? '⌘' : 'Ctrl' }}</kbd><kbd>K</kbd>
+            </button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import useCommandPalette from '@/stores/commandPalette'
 import useSearch from '@/stores/search'
 import useSettings from '@/stores/settings'
 import useTabStore from '@/stores/tabs'
@@ -57,6 +61,12 @@ const tabs = useTabStore()
 const search = useSearch()
 const settings = useSettings()
 const route = useRoute()
+
+const isMac = /Mac|iPhone|iPad/.test(navigator.platform)
+
+function openPalette() {
+    useCommandPalette().open()
+}
 
 // the spinner shows only for a search running longer than 200ms
 const showSpinner = ref(false)
@@ -135,6 +145,36 @@ function handleButton() {
 .gsearch-input {
     display: grid;
     grid-template-columns: 1fr max-content;
+
+    kbd {
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        min-width: 1.4rem;
+        height: 1.4rem;
+        padding: 0 5px;
+        display: inline-grid;
+        place-items: center;
+        border-radius: 6px;
+        border: 1px solid #3a3a3e;
+        background-color: #2a2a2e;
+        color: $white;
+    }
+
+    #ginner .cmdk-keys {
+        display: flex;
+        gap: 4px;
+        width: auto;
+        height: auto;
+        margin: 0 10px 0 0;
+        padding: 0 0 0 10px;
+        border-left: 1px solid $gray3;
+        border-radius: 0;
+
+        &:hover {
+            background: transparent;
+        }
+    }
 
     #ginner {
         width: 100%;
