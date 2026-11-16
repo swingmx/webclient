@@ -7,6 +7,7 @@ import { useDebounce } from '@vueuse/core'
 
 
 import useTabs from './tabs'
+import useCommandPalette from './commandPalette'
 import useLoader from './loader'
 import useSettings from './settings'
 import { maxAbumCards } from './content-width'
@@ -82,29 +83,9 @@ export default defineStore('search', () => {
     })
 
     /**
-     * The hash of the artist, composer or performer named exactly by the
-     * query, from the top result or the artist results.
-     */
-    function exactArtist(res: typeof top_results, query: string) {
-        // letters and digits only, without case or accents: "yoyoma" names "Yo-Yo Ma"
-        const norm = (text?: string | null) =>
-            (text ?? '')
-                .normalize('NFD')
-                .replace(/\p{M}/gu, '')
-                .toLowerCase()
-                .replace(/[^\p{L}\p{N}]/gu, '')
-        const want = norm(query)
-        if (!want) return null
-        const top = res.top_result as Artist | ClassicalTopResult
-        if (['artist', 'composer', 'performer'].includes(top?.type ?? '') && top.artisthash && norm(top.name) === want) {
-            return top.artisthash
-        }
-        return res.artists?.find(artist => norm(artist.name) === want)?.artisthash ?? null
-    }
-
-    /**
-     * Run the top search from outside the search page, then open the artist
-     * the query names exactly, else the search page with the results loaded.
+     * From outside the search page: open the artist the query clearly names
+     * in the command palette index, else run the top search and open the
+     * search page with the results loaded.
      */
     async function submit(query: string) {
         query = query.trim()
@@ -114,6 +95,13 @@ export default defineStore('search', () => {
         currentTab.value = 'top'
         searching.value = true
         try {
+            const artist = settings.jump_to_artist ? await useCommandPalette().match(query) : null
+            if (id !== latest) return
+            if (artist) {
+                router.push({ name: Routes.artist, params: { hash: artist.hash } })
+                return
+            }
+
             const res = await searchTopResults(query, maxAbumCards.value)
             if (id !== latest) return
             top_results.top_result = res.top_result
@@ -122,13 +110,7 @@ export default defineStore('search', () => {
             top_results.albums = res.albums
             top_results.artists = res.artists
             top_results.query = query
-
-            const hash = settings.jump_to_artist ? exactArtist(top_results, query) : null
-            if (hash) {
-                router.push({ name: Routes.artist, params: { hash } })
-            } else {
-                router.push({ name: Routes.search, params: { page: 'top' }, query: { q: query } })
-            }
+            router.push({ name: Routes.search, params: { page: 'top' }, query: { q: query } })
         } catch {
             if (id !== latest) return
             router.push({ name: Routes.search, params: { page: 'top' }, query: { q: query } })

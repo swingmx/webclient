@@ -39,6 +39,8 @@ let worker: Worker | null = null
 let artists: PaletteArtist[] = []
 let albums: PaletteAlbum[] = []
 let searchId = 0
+let matchId = 0
+const matches = new Map<number, (artist: PaletteArtist | null) => void>()
 
 const RELOAD_AFTER = 5 * 60 * 1000
 let loadedAt = 0
@@ -94,6 +96,11 @@ export default defineStore('commandPalette', {
                 if (this.visible) this.search('')
             }
 
+            if (data.type === 'match') {
+                matches.get(data.id)?.(data.artist === null ? null : artists[data.artist])
+                matches.delete(data.id)
+            }
+
             // drop answers to queries already typed past
             if (data.type === 'results' && data.id === searchId) {
                 this.results = markRaw(data.hits.map(([kind, i]) => (kind === 0 ? artists[i] : albums[i])))
@@ -106,6 +113,17 @@ export default defineStore('commandPalette', {
                 return
             }
             this.post({ type: 'search', id: searchId, q: q.trim() })
+        },
+        /**
+         * The artist the query clearly names, or null; null too before the index loads.
+         */
+        match(q: string): Promise<PaletteArtist | null> {
+            if (!this.ready || !q.trim()) return Promise.resolve(null)
+            const id = ++matchId
+            return new Promise(resolve => {
+                matches.set(id, resolve)
+                this.post({ type: 'match', id, q: q.trim() })
+            })
         },
         open() {
             this.visible = true
