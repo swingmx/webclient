@@ -703,9 +703,15 @@ export default defineStore('remote', () => {
     }
 
     function becomeController() {
+        handingOff.value = false
         local(() => {
             const audio = audioSource.playingSource
             audio.pause()
+            if (audio.readyState < HTMLMediaElement.HAVE_FUTURE_DATA && audio.getAttribute('src')) {
+                HANDLERS.forEach(key => ((audio as any)[key] = null))
+                audio.removeAttribute('src')
+                audio.load()
+            }
             audioSource.standbySource.pause()
             usePlayer().clearNextAudio()
         })
