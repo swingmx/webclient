@@ -178,25 +178,9 @@ export default defineStore('settings', {
         },
         // repeat 👇
         toggleRepeatMode() {
+            this.repeat = ({ all: 'one', one: 'none', none: 'all' } as const)[this.repeat]
             const remote = useRemote()
-            if (remote.controls()) {
-                const mode = { all: 'one', one: 'none', none: 'all' }[this.repeat]
-                return remote.edit([{ type: 'repeat', mode }])
-            }
-
-            if (this.repeat == 'all') {
-                this.repeat = 'one'
-                return
-            }
-
-            if (this.repeat == 'one') {
-                this.repeat = 'none'
-                return
-            }
-
-            if (this.repeat == 'none') {
-                this.repeat = 'all'
-            }
+            if (remote.routes()) remote.repeatChanged()
         },
         setRootDirs(dirs: string[]) {
             this.root_dirs = dirs

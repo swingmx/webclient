@@ -88,7 +88,7 @@ export default defineStore('tracklist', {
         },
         setNewList(tracklist: Track[]) {
             const remote = useRemote()
-            if (remote.controls()) remote.setList(tracklist, this.from)
+            if (remote.routes()) remote.newList(tracklist, this.from)
 
             if (this.tracklist !== tracklist) {
                 this.tracklist = []
@@ -262,9 +262,9 @@ export default defineStore('tracklist', {
         },
         insertAt(tracks: Track[], index: number) {
             const remote = useRemote()
-            if (remote.controls()) return remote.insertAt(tracks, index)
 
             this.tracklist.splice(index, 0, ...tracks)
+            if (remote.routes()) remote.inserted(tracks, index)
             this.indexMissingWorks(tracks)
 
             const player = usePlayer()
@@ -276,14 +276,15 @@ export default defineStore('tracklist', {
         },
         clearList() {
             const remote = useRemote()
-            if (remote.controls()) return remote.clear()
 
             this.tracklist = []
             this.worklist = {}
             this.from = {} as From
+            if (remote.routes()) remote.cleared()
         },
         /** Toggles shuffle: the current track and those before it stay; the upcoming ones are shuffled or restored. */
         toggleShuffle(currentindex: number) {
+            const before = this.tracklist.slice()
             const head = this.tracklist.slice(0, currentindex + 1)
             const upcoming = this.tracklist.slice(currentindex + 1)
 
@@ -298,10 +299,12 @@ export default defineStore('tracklist', {
                 this.baseOrder = []
             }
             this.shuffled = !this.shuffled
+            const remote = useRemote()
+            if (remote.routes()) remote.reordered(before)
         },
         removeByIndex(index: number) {
             const remote = useRemote()
-            if (remote.controls()) return remote.remove(index)
+            const controls = remote.controls()
 
             const { currentindex, nextindex, playing, playNext, moveForward, setCurrentIndex } = useQueue()
             const player = usePlayer()
@@ -310,7 +313,7 @@ export default defineStore('tracklist', {
                 return this.clearList()
             }
 
-            if (index == currentindex) {
+            if (index == currentindex && !controls) {
                 if (playing) {
                     playNext()
                 } else {
@@ -325,8 +328,9 @@ export default defineStore('tracklist', {
             }
 
             this.tracklist.splice(index, 1)
+            if (remote.routes()) remote.removed(index)
 
-            if (index == nextindex) {
+            if (index == nextindex && !controls) {
                 player.clearNextAudio()
             }
         },
@@ -341,15 +345,12 @@ export default defineStore('tracklist', {
             const { currentindex } = useQueue()
             const remote = useRemote()
 
-            if (remote.controls()) {
-                remote.insert(tracks, 'next')
-            } else {
-                this.tracklist.splice(currentindex + 1, 0, ...tracks)
-                this.indexMissingWorks(tracks)
+            this.tracklist.splice(currentindex + 1, 0, ...tracks)
+            if (remote.routes()) remote.inserted(tracks, currentindex + 1)
+            this.indexMissingWorks(tracks)
 
-                if (works?.length) {
-                    this.indexWorks(works, tracks)
-                }
+            if (works?.length) {
+                this.indexWorks(works, tracks)
             }
 
             const Toast = useToast()

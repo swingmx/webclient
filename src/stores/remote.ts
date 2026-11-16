@@ -28,13 +28,39 @@ interface Device {
     selectable: boolean
 }
 
+interface QueueState {
+    version: number
+    source: string
+    source_info: SourceInfo
+    items: { uid: string; track: Track }[]
+    order: string[] | null
+    repeat: 'none' | 'all' | 'one'
+}
+
+type QueueOp =
+    | { type: 'replace' }
+    | { type: 'insert'; uids: string[]; tracks: Track[]; after: string | null }
+    | { type: 'remove'; uids: string[] }
+    | { type: 'move'; uid: string; after: string | null }
+    | { type: 'order'; uids: string[]; shuffled: boolean }
+    | { type: 'repeat'; mode: 'none' | 'all' | 'one' }
+
+interface QueueEvent {
+    version: number
+    base: number
+    by: string
+    batch: string | null
+    ops: QueueOp[]
+    sum: number
+}
+
 interface State {
     version: number
     active_device_id: string | null
     active_host_id: string | null
     active_reachable: boolean
     playhead: Playhead
-    queue: { source: string; source_info: SourceInfo; items: { uid: string; track: Track }[]; order: string[] | null; repeat: 'none' | 'all' | 'one' }
+    queue: Omit<QueueState, 'version'>
     volume: number
     devices: Device[]
     played_at?: number
@@ -43,6 +69,17 @@ interface State {
 }
 
 let localDepth = 0
+let uidCount = 0
+
+function newUid() {
+    return Math.random().toString(36).slice(2, 10) + (++uidCount).toString(36)
+}
+
+export function orderSum(uids: string[]) {
+    let h = 0x811c9dc5
+    for (const b of new TextEncoder().encode(uids.join(','))) h = Math.imul(h ^ b, 0x01000193) >>> 0
+    return h
+}
 
 export function local<T>(fn: () => T): T {
     localDepth++
@@ -172,7 +209,7 @@ export default defineStore('remote', () => {
     const uids: string[] = []
     let synced = false
     let skew = 0
-    let pending: { source: string; trackhashes: string[] } | null = null
+    let pending: { source: string; trackhashes: string[]; uids: string[] } | null = null
     let es: EventSource | null = null
     let unlocking = false
     let chain: Promise<unknown> = Promise.resolve()
@@ -183,11 +220,8 @@ export default defineStore('remote', () => {
     let initing: Promise<void> | null = null
     let heard = 0
     let idleSeconds = 0
-    // Server queue (hashes, shuffle, repeat) last applied here, so it isn't pushed straight back.
-    let serverKey = ''
-    let dirty = false
-    let inflight = 0
-    let pushTimer: ReturnType<typeof setTimeout> | undefined
+    const batches = new Set<string>()
+    let stale = false
 
     const isActive = computed(() => connected.value && reachable.value && activeId.value === deviceId.value)
     const activeName = computed(() => {
@@ -243,7 +277,7 @@ export default defineStore('remote', () => {
         } catch (e: any) {
             const code = e.response?.data?.error
             if (code === 'not_selectable' && retry && selectable.value && path !== '/queue') return send(path, body, false)
-            if (code === 'unknown_uid') refresh()
+            if (code === 'unknown_uid') catchUp(-1)
             if (code === 'no_active_device' || code === 'active_unreachable') {
                 offerPlayHere.value = true
                 pickerOpen.value = true
@@ -263,14 +297,158 @@ export default defineStore('remote', () => {
         }
     }
 
-    async function refresh() {
-        const epoch = activeEpoch
-        const state = await fetchState()
-        if (state) render(state, epoch === activeEpoch)
+    async function catchUp(since: number) {
+        try {
+            const res = await axios.get(paths.api.remote + '/queue', { params: { version: since }, withCredentials: true })
+            if (res.status === 204 || !connected.value) return
+            if (batches.size) {
+                stale = true
+                return
+            }
+            renderQueue(res.data)
+        } catch {}
     }
 
     function edit(ops: object[]) {
-        return send('/queue', { ops })
+        const batch = newUid()
+        batches.add(batch)
+        return send('/queue', { ops, batch }).then(res => {
+            settle(batch)
+            if (res === undefined) catchUp(-1)
+            return res
+        })
+    }
+
+    function settle(batch: string | null) {
+        if (!batch || !batches.delete(batch) || batches.size || !stale) return
+        stale = false
+        catchUp(-1)
+    }
+
+    function onQueue(e: QueueEvent) {
+        if (e.version <= version.value) return
+        if (e.by === deviceId.value) {
+            if (e.base !== version.value) return catchUp(version.value)
+            version.value = e.version
+            settle(e.batch)
+        } else if (e.base !== version.value || e.ops.some(op => op.type === 'replace')) {
+            return catchUp(version.value)
+        } else if (applyOps(e.ops)) {
+            version.value = e.version
+        } else {
+            return catchUp(-1)
+        }
+        if (!batches.size && orderSum(uids) !== e.sum) catchUp(-1)
+    }
+
+    function applyOps(ops: QueueOp[]) {
+        const list = tracklist.tracklist.slice()
+        const ids = uids.slice()
+        if (ids.length !== list.length) return false
+        const current = uids[queue.currentindex]
+        const added: Track[] = []
+        let shuffle = tracklist.shuffled
+        let baseOrder = tracklist.baseOrder
+
+        const position = (after: string | null) => (after === null ? 0 : ids.indexOf(after) + 1)
+        for (const op of ops) {
+            switch (op.type) {
+                case 'insert': {
+                    const i = position(op.after)
+                    if (i === 0 && op.after !== null) return false
+                    list.splice(i, 0, ...op.tracks)
+                    ids.splice(i, 0, ...op.uids)
+                    added.push(...op.tracks)
+                    break
+                }
+                case 'remove':
+                    for (const uid of op.uids) {
+                        const i = ids.indexOf(uid)
+                        if (i < 0) continue
+                        list.splice(i, 1)
+                        ids.splice(i, 1)
+                    }
+                    break
+                case 'move': {
+                    const from = ids.indexOf(op.uid)
+                    if (from < 0) return false
+                    const [track] = list.splice(from, 1)
+                    ids.splice(from, 1)
+                    const to = position(op.after)
+                    if (to === 0 && op.after !== null) return false
+                    list.splice(to, 0, track)
+                    ids.splice(to, 0, op.uid)
+                    break
+                }
+                case 'order': {
+                    const byUid = new Map(ids.map((uid, i) => [uid, list[i]]))
+                    if (op.uids.length !== ids.length || op.uids.some(uid => !byUid.has(uid))) return false
+                    if (op.shuffled !== shuffle) baseOrder = op.shuffled ? list.slice() : []
+                    list.splice(0, list.length, ...op.uids.map(uid => byUid.get(uid)!))
+                    ids.splice(0, ids.length, ...op.uids)
+                    shuffle = op.shuffled
+                    break
+                }
+                case 'repeat':
+                    settings.repeat = op.mode
+                    break
+            }
+        }
+
+        local(() => {
+            tracklist.tracklist = list
+            tracklist.shuffled = shuffle
+            tracklist.baseOrder = baseOrder
+            shuffled.value = shuffle
+        })
+        uids.splice(0, uids.length, ...ids)
+        const index = current ? ids.indexOf(current) : -1
+        index >= 0 ? queue.setCurrentIndex(index) : placeIndex()
+        if (added.length) tracklist.indexMissingWorks(added)
+        if (!elsewhere()) usePlayer().clearNextAudio()
+        return true
+    }
+
+    function realign() {
+        if (uids.length === tracklist.tracklist.length) return true
+        controls() ? catchUp(-1) : push()
+        return false
+    }
+
+    function newList(tracks: Track[], from: From) {
+        uids.splice(0, uids.length, ...tracks.map(newUid))
+        pending = { source: getSource(from), trackhashes: tracks.map(t => t.trackhash), uids: uids.slice() }
+        synced = true
+        if (!controls()) Promise.resolve().then(() => pending && push())
+    }
+
+    function inserted(tracks: Track[], index: number) {
+        const at = index >= uids.length ? 'end' : { after: index > 0 ? uids[index - 1] : null }
+        const ids = tracks.map(newUid)
+        uids.splice(index, 0, ...ids)
+        if (realign()) edit([{ type: 'insert', trackhashes: tracks.map(t => t.trackhash), uids: ids, at }])
+    }
+
+    function removed(index: number) {
+        const [uid] = uids.splice(index, 1)
+        if (realign() && uid) edit([{ type: 'remove', uids: [uid] }])
+    }
+
+    function cleared() {
+        uids.length = 0
+        pending = null
+        controls() ? edit([{ type: 'replace', source: '', trackhashes: [], uids: [], start_index: 0, play: false }]) : push()
+    }
+
+    function reordered(before: Track[]) {
+        const pool = new Map<Track, string[]>()
+        before.forEach((t, i) => pool.set(t, [...(pool.get(t) ?? []), uids[i]]))
+        uids.splice(0, uids.length, ...tracklist.tracklist.map(t => pool.get(t)?.shift() ?? newUid()))
+        if (realign()) edit([{ type: 'order', uids: uids.slice(), shuffled: tracklist.shuffled }])
+    }
+
+    function repeatChanged() {
+        edit([{ type: 'repeat', mode: settings.repeat }])
     }
 
     function player(action: string, args: object = {}) {
@@ -296,27 +474,6 @@ export default defineStore('remote', () => {
         if (uid) player('jump', { uid })
     }
 
-    function setList(tracks: Track[], from: From) {
-        pending = { source: getSource(from), trackhashes: tracks.map(t => t.trackhash) }
-        uids.length = 0
-        synced = false
-    }
-
-    function insert(tracks: Track[], at: string | { after: string }) {
-        return edit([{ type: 'insert', trackhashes: tracks.map(t => t.trackhash), at }])
-    }
-
-    function insertAt(tracks: Track[], index: number) {
-        return insert(tracks, index > 0 && index < uids.length ? { after: uids[index - 1] } : 'end')
-    }
-
-    function remove(index: number) {
-        if (uids[index]) edit([{ type: 'remove', uids: [uids[index]] }])
-    }
-
-    function clear() {
-        edit([{ type: 'replace', source: '', trackhashes: [], start_index: 0, play: false }])
-    }
 
     let volumeTimer: ReturnType<typeof setTimeout> | undefined
     function setVolume(value: number) {
@@ -338,22 +495,23 @@ export default defineStore('remote', () => {
         if (isActive.value && state.volume !== settings.volume) setVolume(settings.volume)
         idleSeconds = state.idle_seconds ?? 0
 
-        if (state.version > 0 && state.version >= version.value) renderQueue(state)
+        if (state.version > 0 && state.version >= version.value) renderQueue({ ...state.queue, version: state.version })
         if (state.playhead.at >= playhead.value.at) renderPlayhead(state.playhead)
     }
 
-    function renderQueue(state: State) {
-        const tracks = new Map(state.queue.items.map(i => [i.uid, i.track]))
-        const order = state.queue.order ?? state.queue.items.map(i => i.uid)
+    function renderQueue(state: QueueState) {
+        const tracks = new Map(state.items.map(i => [i.uid, i.track]))
+        const order = state.order ?? state.items.map(i => i.uid)
 
         if (!elsewhere()) {
-            // This tab's queue is the truth; a pending push of its own wins over what the server has.
-            if (dirty || inflight) return
+            if (batches.size) {
+                stale = true
+                return
+            }
             version.value = state.version
-            shuffled.value = state.queue.order !== null
+            shuffled.value = state.order !== null
             const hashes = order.map(uid => tracks.get(uid)!.trackhash)
-            serverKey = [hashes.join(), shuffled.value, state.queue.repeat].join('|')
-            settings.repeat = state.queue.repeat
+            settings.repeat = state.repeat
             if (hashes.join() !== tracklist.tracklist.map(t => t.trackhash).join()) {
                 const current = queue.currenttrack?.trackhash
                 local(() => tracklist.setNewList(order.map(uid => tracks.get(uid)!)))
@@ -369,8 +527,8 @@ export default defineStore('remote', () => {
         }
 
         version.value = state.version
-        shuffled.value = state.queue.order !== null
-        settings.repeat = state.queue.repeat
+        shuffled.value = state.order !== null
+        settings.repeat = state.repeat
 
         if (!synced || order.join() !== uids.join()) {
             synced = true
@@ -383,9 +541,9 @@ export default defineStore('remote', () => {
         placeIndex()
     }
 
-    function renderSource(state: State, tracks: Map<string, Track>, order: string[]) {
-        if (getSource(tracklist.from) === state.queue.source) return
-        tracklist.from = fromSource(state.queue.source, state.queue.source_info, tracks.get(order[0])?.albumhash)
+    function renderSource(state: QueueState, tracks: Map<string, Track>, order: string[]) {
+        if (getSource(tracklist.from) === state.source) return
+        tracklist.from = fromSource(state.source, state.source_info, tracks.get(order[0])?.albumhash)
     }
 
     function placeIndex(uid?: string, list = uids) {
@@ -423,24 +581,16 @@ export default defineStore('remote', () => {
     }
 
 
-    // This tab changed its own queue: it already plays it, so the server just takes a copy.
-    function changed(key: string) {
-        if (!connected.value || elsewhere() || key === serverKey) return
-        dirty = true
-        uids.length = 0
-        clearTimeout(pushTimer)
-        pushTimer = setTimeout(() => push(), 300)
-    }
-
     function push(played_at?: number) {
-        dirty = false
-        inflight++
+        pending = null
+        if (uids.length !== tracklist.tracklist.length) uids.splice(0, uids.length, ...tracklist.tracklist.map(newUid))
         const audio = audioSource.playingSource
         return edit([
             {
                 type: 'replace',
                 source: getSource(tracklist.from),
                 trackhashes: tracklist.tracklist.map(t => t.trackhash),
+                uids: uids.slice(),
                 start_index: queue.currentindex,
                 position_ms: Math.round((audio.currentTime || 0) * 1000),
                 play: queue.playing && !audio.paused,
@@ -449,7 +599,7 @@ export default defineStore('remote', () => {
                 ...(played_at ? { played_at } : {}),
             },
             { type: 'repeat', mode: settings.repeat },
-        ]).finally(() => --inflight === 0 && !dirty && refresh())
+        ])
     }
 
     function markPlayed() {
@@ -475,7 +625,7 @@ export default defineStore('remote', () => {
     }
 
     async function command(c: { action: string; uid?: string | null; play?: boolean; position_ms?: number }) {
-        if (c.action === 'jump' && c.uid && !uids.includes(c.uid)) await refresh()
+        if (c.action === 'jump' && c.uid && !uids.includes(c.uid)) await catchUp(-1)
 
         local(() => {
             switch (c.action) {
@@ -525,7 +675,7 @@ export default defineStore('remote', () => {
         activeId.value = deviceId.value
         activeHostId.value = hostId.value
         reachable.value = true
-        if (p.uid && !uids.includes(p.uid)) await refresh()
+        if (p.uid && !uids.includes(p.uid)) await catchUp(-1)
 
         local(() => {
             const index = uids.indexOf(p.uid ?? '')
@@ -571,7 +721,7 @@ export default defineStore('remote', () => {
                 axios.post(paths.api.remote + '/alive', { device_id: deviceId.value }, { withCredentials: true }).catch(() => {})
                 break
             case 'queue':
-                if (data.version > version.value) refresh()
+                onQueue(data)
                 break
             case 'playhead':
                 renderPlayhead(data)
@@ -627,6 +777,7 @@ export default defineStore('remote', () => {
                 reachable.value = true
             }
             player('volume', { value: settings.volume })
+            version.value = state.version
             uids.length = 0
             push(playedAt ? playedAt + skew : undefined)
             return
@@ -689,8 +840,8 @@ export default defineStore('remote', () => {
         pickerOpen.value = false
         synced = false
         pending = null
-        dirty = false
-        clearTimeout(pushTimer)
+        batches.clear()
+        stale = false
         uids.length = 0
         version.value = 0
         if (playingHere) return
@@ -807,10 +958,6 @@ export default defineStore('remote', () => {
         report()
         if (!audioSource.playingSource.paused) markPlayed()
     }, 5000)
-    watch(
-        () => [tracklist.tracklist.map(t => t.trackhash).join(), tracklist.shuffled, settings.repeat].join('|'),
-        changed
-    )
     for (const el of [audioSource.playingSource, audioSource.standbySource]) {
         el.addEventListener('playing', () => el === audioSource.playingSource && report())
         el.addEventListener('pause', () => el === audioSource.playingSource && markPlayed())
@@ -854,11 +1001,12 @@ export default defineStore('remote', () => {
         player,
         transfer,
         play,
-        setList,
-        insert,
-        insertAt,
-        remove,
-        clear,
+        newList,
+        inserted,
+        removed,
+        cleared,
+        reordered,
+        repeatChanged,
         setVolume,
         volume,
     }

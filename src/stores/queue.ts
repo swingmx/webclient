@@ -185,9 +185,6 @@ export default defineStore('Queue', {
             this.currentindex = 0
         },
         shuffleQueue() {
-            const remote = useRemote()
-            if (remote.controls()) return remote.edit([{ type: 'shuffle', on: !remote.shuffled }])
-
             useTracklist().toggleShuffle(this.currentindex)
         },
     },
