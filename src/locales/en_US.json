@@ -471,6 +471,7 @@
       "TrackAlreadyPresent": "Track already exists in playlist",
       "TrackRemoved": "Tracks removed",
       "TrackRemovedError": "Unable to remove tracks",
+      "TrackMoveError": "Unable to move track",
       "Updated": "Playlist updated!"
     },
     "RootDirs": {

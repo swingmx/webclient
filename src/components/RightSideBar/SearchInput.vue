@@ -144,7 +144,7 @@ function handleButton() {
 
 .gsearch-input {
     display: grid;
-    grid-template-columns: 1fr max-content;
+    grid-template-columns: minmax(0, 1fr) max-content;
 
     kbd {
         font-family: inherit;
@@ -163,6 +163,7 @@ function handleButton() {
 
     #ginner .cmdk-keys {
         display: flex;
+        flex-shrink: 0;
         gap: 4px;
         width: auto;
         height: auto;
@@ -214,6 +215,7 @@ function handleButton() {
 
         input {
             width: 100%;
+            min-width: 0;
             border: none;
             line-height: 2.25rem;
             color: inherit;

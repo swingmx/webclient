@@ -266,6 +266,18 @@ export async function removeTracks(pid: number, tracks: { trackhash: string; ind
     new Notification(t('Requests.Playlists.TrackRemovedError'), NotifType.Error)
 }
 
+export async function movePlaylistTrack(pid: number, trackhash: string, before: string | null) {
+    const { status } = await useAxios({
+        url: paths.api.playlist.base + `/${pid}/move`,
+        props: { trackhash, before },
+    })
+
+    if (status === 200) return true
+
+    new Notification(t('Requests.Playlists.TrackMoveError'), NotifType.Error)
+    return false
+}
+
 export async function removeBannerImage(playlistid: number) {
     const { data, status } = await useAxios({
         url: paths.api.playlist.base + `/${playlistid}/remove-img`,

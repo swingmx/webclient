@@ -1,33 +1,38 @@
 <template>
     <div class="folder-view v-scroll-page" style="height: 100%" :class="{ isSmall, isMedium }">
-        <DynamicScroller
+        <VirtualList
             id="contentscroller"
-            :items="scrollerItems"
-            :min-item-size="64"
-            class="scroller"
+            :model-value="scrollerItems"
+            data-key="id"
+            :size="64"
+            class="scroller vue-recycle-scroller"
             style="height: 100%"
+            draggable=".playlist-track"
+            lock-axis="x"
+            append-to-body
+            :class="{ dragging }"
+            ghost-class="playlist-drag-ghost"
+            placeholder-class="playlist-drag-placeholder"
+            :ghost-style="{ opacity: '1' }"
+            @drag="dragging = true"
+            @drop="onDrop"
         >
-            <template #default="{ item, index, active }">
-                <DynamicScrollerItem
-                    :item="item"
-                    :active="active"
-                    :size-dependencies="[item.props]"
-                    :data-index="index"
-                >
+            <template #item="{ item }">
+                <div :class="{ 'playlist-track': item.isTrack && !playlist.query }">
                     <component
                         :is="item.component"
-                        :key="index"
                         v-bind="item.props"
                         @playThis="playFromPlaylistPage(item.props.index - 1)"
                     ></component>
-                </DynamicScrollerItem>
+                </div>
             </template>
-        </DynamicScroller>
+        </VirtualList>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, markRaw, ref } from 'vue'
+import VirtualList from 'vue-virtual-sortable'
 import { onMounted, onUpdated } from 'vue'
 
 import { isMedium, isSmall, isSmallPhone, track_limit } from '@/stores/content-width'
@@ -48,15 +53,19 @@ import { useT } from '@/i18n'
 
 const { t } = useT()
 
+;[Header, AfterHeader, SongItem, NoItems, AlbumsFetcher].forEach(markRaw)
+
 const queue = useQueue()
 const tracklist = useTracklist()
 const playlist = usePlaylistStore()
+const dragging = ref(false)
 
 interface ScrollerItem {
-    id: string | number
+    id: string
     component: typeof Header | typeof SongItem | typeof NoItems | typeof AlbumsFetcher
     size: number
     props?: {}
+    isTrack?: boolean
 }
 
 const getNoItemsComponent = () =>
@@ -89,6 +98,7 @@ const scrollerItems = computed(() => {
         return {
             id: track.filepath,
             component: SongItem,
+            isTrack: true,
             props: {
                 track: track,
                 index: track.index + 1,
@@ -104,7 +114,7 @@ const scrollerItems = computed(() => {
 
     if (playlist.tracks.length >= track_limit.value) {
         body.push({
-            id: Math.random(),
+            id: 'fetcher',
             size: 1,
             component: AlbumsFetcher,
             props: {
@@ -115,6 +125,16 @@ const scrollerItems = computed(() => {
 
     return [header, afterHeader, ...body]
 })
+
+function onDrop({ item, list, newIndex, changed }: { item: ScrollerItem; list: ScrollerItem[]; newIndex: number; changed: boolean }) {
+    dragging.value = false
+    if (!changed || playlist.query) return
+
+    const next = list.slice(newIndex + 1).find(i => i.isTrack)
+    if (!next && playlist.allTracks.length < playlist.info.count) return
+
+    playlist.moveTrack((item.props as any).track.trackhash, next ? (next.props as any).track.trackhash : null)
+}
 
 async function playFromPlaylistPage(index: number) {
     const { name, id } = playlist.info
@@ -135,6 +155,25 @@ async function playFromPlaylistPage(index: number) {
 </script>
 
 <style lang="scss">
+.playlist-drag-ghost {
+    z-index: 100000 !important;
+    background-color: $gray4;
+    border-radius: $small;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
+
+    .songlist-item {
+        background-color: transparent !important;
+    }
+}
+
+.playlist-drag-placeholder {
+    visibility: hidden;
+}
+
+.dragging [role='item'] > * {
+    pointer-events: none;
+}
+
 .playlist-virtual-scroller {
     .nothing {
         height: 25rem;

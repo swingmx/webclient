@@ -15,17 +15,20 @@
             style="height: 100%"
             :model-value="scrollerItems"
             data-key="id"
-            handle=".drag-handle"
+            :handle="grip ? '.drag-handle' : undefined"
             :size="itemHeight"
             lock-axis="x"
             append-to-body
+            :class="{ dragging }"
             ghost-class="queue-drag-ghost"
-            chosen-class="queue-drag-chosen"
+            placeholder-class="queue-drag-placeholder"
+            :ghost-style="{ opacity: '1' }"
+            @drag="dragging = true"
             @drop="onDrop"
         >
             <template #item="{ item }">
-                <div class="queue-row" :class="{ 'gap-above': item.gapAbove }">
-                    <div class="drag-handle">
+                <div class="queue-row" :class="{ 'gap-above': item.gapAbove, grip }">
+                    <div v-if="grip" class="drag-handle">
                         <svg viewBox="0 0 10 16" width="10" height="16" fill="currentColor">
                             <circle cx="2" cy="2" r="1.5" />
                             <circle cx="8" cy="2" r="1.5" />
@@ -57,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, markRaw, onBeforeUnmount, onMounted, ref } from 'vue'
 import VirtualList from 'vue-virtual-sortable'
 
 import { ClassicalMovement } from '@/interfaces'
@@ -73,6 +76,8 @@ import QueueWorkHead from '@/components/Classical/QueueWorkHead.vue'
 import QueueSvg from '@/assets/icons/queue.svg'
 import PlayingFrom from '../NowPlaying/PlayingFrom.vue'
 
+defineProps<{ grip?: boolean }>()
+
 interface QueueScrollerItem {
     id: string
     component: typeof TrackItem | typeof QueueWorkHead | typeof QueueMovement
@@ -87,11 +92,14 @@ interface QueueScrollerItem {
     gapAbove?: boolean
 }
 
+;[TrackItem, QueueWorkHead, QueueMovement].forEach(markRaw)
+
 const itemHeight = 64
 
 const queue = useQStore()
 const store = useTracklist()
 const mouseover = ref(false)
+const dragging = ref(false)
 const scroller = ref<any>(null)
 
 const { focusCurrentInSidebar, setScrollFunction } = useInterface()
@@ -177,6 +185,7 @@ function workRun(start: number, workhash: string) {
 }
 
 function onDrop({ item, list, newIndex, changed }: { item: QueueScrollerItem; list: QueueScrollerItem[]; newIndex: number; changed: boolean }) {
+    dragging.value = false
     if (!changed) return
 
     const from = item.isHeader ? item.playIndex! : item.trackIndex!
@@ -285,7 +294,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
-.queue-row {
+.queue-row.grip {
     display: grid;
     grid-template-columns: 1rem minmax(0, 1fr);
     align-items: center;
@@ -318,18 +327,27 @@ onBeforeUnmount(() => {
 }
 
 .queue-drag-ghost {
+    z-index: 100000 !important;
     background-color: $gray4;
     border-radius: $small;
     box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
-    opacity: 0.95;
+
+    .track-item,
+    .row {
+        background-color: transparent !important;
+    }
 
     .drag-handle {
         opacity: 1;
     }
 }
 
-.queue-drag-chosen:not(.queue-drag-ghost) {
+.queue-drag-placeholder {
     visibility: hidden;
+}
+
+.dragging [role='item'] > * {
+    pointer-events: none;
 }
 
 .queue-virtual-scroller {

@@ -43,16 +43,16 @@ const tabs = useTabStore()
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-right: 1rem;
+        padding-right: 1.25rem;
     }
 
     .gsearch-input {
         height: 2.5rem;
-        margin: 1rem;
+        margin: 1rem 1rem 1rem 1.25rem;
         width: 100%;
 
         #ginner {
-            button {
+            button:not(.cmdk-keys) {
                 width: 2rem;
                 height: 2rem;
                 margin-left: 4px;
@@ -77,6 +77,12 @@ const tabs = useTabStore()
 
         .r-search {
             height: 100%;
+            padding: 0 0.25rem;
+
+            &,
+            * {
+                @include hideScrollbars;
+            }
         }
 
         .r-dash {
@@ -92,11 +98,20 @@ const tabs = useTabStore()
         }
 
         #queue-scrollable {
-            padding: 0 1rem 2rem 0;
+            padding: 0 0.75rem 2rem 0.75rem;
+            scrollbar-gutter: auto;
+            @include hideScrollbars;
         }
 
         .now-playing-top {
-            margin: 0 1.375rem 0 2rem;
+            margin: 0 1.25rem;
+            scrollbar-gutter: auto;
+        }
+
+        .track-item.currentInQueue,
+        .queue-movement .row.current,
+        .queue-work-head .row.current {
+            background-color: $gray5;
         }
     }
 

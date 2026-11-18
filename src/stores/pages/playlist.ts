@@ -6,7 +6,7 @@ import { useFuse } from '@/utils'
 import { paths } from '@/config'
 import { FuseTrackOptions } from '@/enums'
 import { Artist, FuseResult, Playlist, Track } from '@/interfaces'
-import { getPlaylist, removeBannerImage } from '@/requests/playlists'
+import { getPlaylist, movePlaylistTrack, removeBannerImage } from '@/requests/playlists'
 import setColorsToStore from '@/utils/colortools/setColorsToStore'
 import { track_limit } from '../content-width'
 
@@ -123,6 +123,17 @@ export default defineStore('playlist-tracks', {
 
             this.extractColors(this.info.image)
             this.info.has_image = true
+        },
+        async moveTrack(trackhash: string, before: string | null) {
+            const from = this.allTracks.findIndex(t => t.trackhash === trackhash)
+            if (from < 0) return
+
+            const previous = this.allTracks.slice()
+            const [track] = this.allTracks.splice(from, 1)
+            const to = before === null ? this.allTracks.length : this.allTracks.findIndex(t => t.trackhash === before)
+            this.allTracks.splice(to < 0 ? this.allTracks.length : to, 0, track)
+
+            if (!(await movePlaylistTrack(this.info.id, trackhash, before))) this.allTracks = previous
         },
         removeTrackByIndex(index: number) {
             this.allTracks.splice(index, 1)

@@ -61,7 +61,7 @@ function showContextMenu(e: MouseEvent) {
     scrollbar-gutter: stable;
     justify-content: space-between;
     align-items: center;
-    margin: 0 1.875rem 0 $small;
+    margin: 0 0.5rem 0 $small;
 
     @include largePhones {
         margin: 0 1.5rem;

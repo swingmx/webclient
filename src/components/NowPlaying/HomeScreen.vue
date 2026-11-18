@@ -4,7 +4,7 @@
         <div class="queuetracks">
             <div></div>
             <div class="queue-content">
-                <Queue />
+                <Queue grip />
             </div>
             <div></div>
         </div>
@@ -70,7 +70,7 @@ onMounted(() => updatePageTitle(t('Common.NowPlaying')))
     }
 
     #queue-scrollable {
-        padding: 32px 1.5rem 64px 0 !important;
+        padding: 32px 0.5rem 64px 0 !important;
         mask-image: linear-gradient(to bottom, transparent, #000 32px, #000 calc(100% - 64px), transparent);
         -webkit-mask-image: linear-gradient(to bottom, transparent, #000 32px, #000 calc(100% - 64px), transparent);
 
