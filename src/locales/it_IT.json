@@ -429,7 +429,8 @@
       "TrackAlreadyPresent": "La traccia è gia presente nella playlist",
       "TrackRemoved": "Traccie rimosse",
       "TrackRemovedError": "Non riesco a rimuovere le tracce",
-      "Updated": "Playlist aggiornata!"
+      "Updated": "Playlist aggiornata!",
+      "TrackMoveError": "Non riesco a spostare la traccia"
     },
     "RootDirs": {
       "ErrorAdding": "Errore aggiungendo le cartelle radici",
@@ -533,6 +534,10 @@
       "UseSilence": {
         "Description": "Salta automaticante il silenzio audio tra le tracce",
         "Title": "Rimozione del silenzio tra le tracce"
+      },
+      "RemoteControl": {
+        "Description": "Controlla la riproduzione sugli altri tuoi dispositivi, e da essi",
+        "Title": "Controllo remoto"
       }
     },
     "Backup": {
@@ -993,5 +998,62 @@
       "Plays": "{n} riproduzione | {n} riproduzioni",
       "Today": "oggi"
     }
+  },
+  "CommandPalette": {
+    "AlbumCount": "{n} album | {n} album",
+    "Albums": "Album",
+    "AlbumsBy": "Album · {name}",
+    "Artist": "Artista",
+    "Artists": "Artisti",
+    "Label": "Vai a un artista o un album",
+    "Loading": "Caricamento…",
+    "Move": "sposta",
+    "NoMatches": "Nessun risultato",
+    "Open": "apri",
+    "Or": "o",
+    "Placeholder": "Vai a un artista o un album",
+    "Play": "riproduci"
+  },
+  "EditArtist": {
+    "ApplyCrop": "Applica ritaglio",
+    "Back": "Indietro",
+    "Cancel": "Annulla",
+    "Change": "Cambia",
+    "Crop": "Ritaglia",
+    "CurrentImage": "Immagine attuale",
+    "CropSubtitle": "Quadrato, 1:1",
+    "CropTitle": "Ritaglia immagine",
+    "DisplayName": "Nome visualizzato",
+    "DisplayNameHelp": "Mostrato solo nella pagina dell'artista. Lascia vuoto per usare quello predefinito.",
+    "DragToReposition": "Trascina per riposizionare",
+    "DropSubtitle": "Poi la ritaglierai in un quadrato",
+    "DropTitle": "Rilascia per usarla come immagine dell'artista",
+    "EditArtist": "Modifica artista",
+    "Image": "Immagine",
+    "ImageHelp": "Trascina o incolla un'immagine in qualsiasi punto di questa finestra.",
+    "NewImage": "Nuova immagine",
+    "PasteTarget": "Incolla un'immagine per sostituire quella dell'artista",
+    "Save": "Salva",
+    "Title": "Modifica artista",
+    "Unsaved": "Non salvato",
+    "Upload": "Carica",
+    "Zoom": "Zoom"
+  },
+  "RemoteControl": {
+    "App": "Swing Music per {platform}",
+    "Connecting": "Connessione…",
+    "Controlling": "In riproduzione da",
+    "Devices": "Dispositivi",
+    "Disconnect": "Disconnetti",
+    "DisconnectedHelp": "Questo browser riproduce per conto suo. Gli altri tuoi dispositivi non possono vederlo né controllarlo.",
+    "DisconnectedTitle": "DISCONNESSO",
+    "Idle": "Inattivo",
+    "NoOtherDevices": "Nessun altro dispositivo",
+    "NoOtherDevicesHelp": "Apri Swing Music sugli altri tuoi dispositivi e accedi con lo stesso account che usi qui.",
+    "OtherDevices": "Altri dispositivi",
+    "NotConnected": "Non connesso",
+    "PlayingOn": "In riproduzione su",
+    "Reconnect": "Riconnetti",
+    "ThisBrowser": "Questo browser"
   }
 }

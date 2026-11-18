@@ -19,6 +19,7 @@
                         :key="index"
                         v-bind="item.props"
                         @playThis="handlePlay(item.props.index ? item.props.index - 1 : 0)"
+                        @shuffle="handlePlay(0, true)"
                     ></component>
                 </DynamicScrollerItem>
             </template>
@@ -60,7 +61,7 @@ interface ScrollerItem {
     props?: {}
 }
 
-function handlePlay(index: number) {
+function handlePlay(index: number, shuffle = false) {
     tracklist.setFromMix(
         mix.extra.type === 'artist' ? mix.title : t('Mixes.RadioName', { title: mix.title }),
         mix.id,
@@ -70,6 +71,7 @@ function handlePlay(index: number) {
             ? { type: 'mix', image: mix.extra.image?.image || '' }
             : { type: 'track', image: mix.extra.images?.[0]?.image || '' }
     )
+    if (shuffle) tracklist.toggleShuffle(-1)
     queue.play(index)
 }
 

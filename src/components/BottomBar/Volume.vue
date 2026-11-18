@@ -1,11 +1,11 @@
 <template>
-    <button class="speaker" @wheel.passive="handleMouseWheel">
-        <div class="icon" @click="settings.toggleMute">
+    <button class="speaker" @click="settings.toggleMute" @wheel.passive="handleMouseWheel">
+        <div class="icon">
             <VolumeMuteSvg v-if="settings.mute || shown == 0.0" />
             <VolumeMidSvg v-else-if="shown > 0.75" />
             <VolumeLowSvg v-else-if="shown > 0" />
         </div>
-        <div class="dialog rounded-sm pad-sm">
+        <div class="dialog rounded-sm pad-sm" @click.stop>
             <input
                 id="volume"
                 type="range"

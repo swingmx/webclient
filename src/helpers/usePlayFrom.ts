@@ -19,7 +19,7 @@ import { useT } from '@/i18n'
 
 const { t } = useT()
 
-export async function utilPlayFromArtist(index: number = 0) {
+export async function utilPlayFromArtist(index: number = 0, shuffle = false) {
     const queue = useQueue()
     const artist = useArtist()
     const tracklist = useTracklist()
@@ -30,6 +30,7 @@ export async function utilPlayFromArtist(index: number = 0) {
 
     if (artist.info.trackcount <= settings.artist_top_tracks_count) {
         tracklist.setFromArtist(artist.info.artisthash, artist.info.name, artist.tracks)
+        if (shuffle) tracklist.toggleShuffle(-1)
         queue.play()
         return
     }
@@ -37,6 +38,7 @@ export async function utilPlayFromArtist(index: number = 0) {
     const { tracks, works } = await getArtistTracks(artist.info.artisthash)
 
     tracklist.setFromArtist(artist.info.artisthash, artist.info.name, tracks, works)
+    if (shuffle) tracklist.toggleShuffle(-1)
     queue.play(index)
 }
 
@@ -88,16 +90,19 @@ export async function playFromFolderCard(folderpath: string) {
 // the kind of favorite tracks the queue was last filled with
 let favoritesKind: FavTrackKind = 'all'
 
-export async function playFromFavorites(track: Track | undefined, kind: FavTrackKind = 'all') {
+export async function playFromFavorites(track: Track | undefined, kind: FavTrackKind = 'all', shuffle = false) {
     const queue = useQueue()
     const tracklist = useTracklist()
 
     // fetch the favorites when the queue does not hold this kind of them
-    if (tracklist.from.type !== FromOptions.favorite || favoritesKind !== kind) {
+    if (shuffle || (!track && tracklist.shuffled) || tracklist.from.type !== FromOptions.favorite || favoritesKind !== kind) {
         const res = await getFavTracks(0, -1, kind)
         tracklist.setFromFav(res.tracks)
         favoritesKind = kind
     }
+
+    // -1: no current track, so the whole list is shuffled
+    if (shuffle) tracklist.toggleShuffle(-1)
 
     let index = 0
 
@@ -135,7 +140,7 @@ export async function playFromPlaylist(id: string, track?: Track) {
     }
 }
 
-export const playFrom = async (source: playSources) => {
+export const playFrom = async (source: playSources, shuffle = false) => {
     const queue = useQueue()
     const tracklist = useTracklist()
 
@@ -149,6 +154,7 @@ export const playFrom = async (source: playSources) => {
                 album.srcTracks,
                 album.info.is_classical ? album.works : undefined
             )
+            if (shuffle) tracklist.toggleShuffle(-1)
             queue.play()
             break
         }
@@ -162,12 +168,13 @@ export const playFrom = async (source: playSources) => {
                 await playlist.fetchAll(playlist.info.id, false, true)
             }
             tracklist.setFromPlaylist(playlist.info.name, playlist.info.id, playlist.tracks)
+            if (shuffle) tracklist.toggleShuffle(-1)
             queue.play()
 
             break
         }
 
         case playSources.artist:
-            utilPlayFromArtist(0)
+            utilPlayFromArtist(0, shuffle)
     }
 }

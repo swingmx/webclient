@@ -15,7 +15,6 @@
             style="height: 100%"
             :model-value="scrollerItems"
             data-key="id"
-            :handle="grip ? '.drag-handle' : undefined"
             :size="itemHeight"
             lock-axis="x"
             append-to-body

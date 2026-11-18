@@ -1,6 +1,7 @@
 <template>
   <div class="album-buttons">
     <PlayBtnRect :source="playSources.album" :bg_color="colors.btn" />
+    <ShuffleBtn :source="playSources.album" :style="{ color: textColor }" />
 
     <HeartSvg
       :state="album.is_favorite"
@@ -31,6 +32,7 @@ import useAlbumStore from "@/stores/pages/album";
 import MoreSvg from "@/assets/icons/more.svg";
 import HeartSvg from "@/components/shared/HeartSvg.vue";
 import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";
+import ShuffleBtn from "@/components/shared/ShuffleBtn.vue";
 import favoriteHandler from "@/helpers/favoriteHandler";
 import { showAlbumContextMenu } from "@/helpers/contextMenuHandler";
 

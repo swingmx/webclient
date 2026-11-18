@@ -12,6 +12,7 @@
             </div>
             <div class="buttons">
                 <PlayBtnRect :source="playSources.mix" :bg_color="'#fff'" @click.prevent="$emit('playThis')" />
+                <ShuffleBtn @click="$emit('shuffle')" />
                 <button class="savebtn" :title="mix.saved ? $t('Mixes.SavedMix') : $t('Mixes.SaveMix')" @click="saveMix">
                     <SaveFilledSvg v-if="mix.saved" />
                     <SaveSvg v-else />
@@ -26,6 +27,7 @@ import mixTypeLabel from '@/utils/mixTypeLabel'
 import { FullMix } from '@/interfaces'
 import MixImage from './MixImage.vue'
 import PlayBtnRect from '../shared/PlayBtnRect.vue'
+import ShuffleBtn from '../shared/ShuffleBtn.vue'
 import SaveSvg from '@/assets/icons/bookmark.svg'
 import SaveFilledSvg from '@/assets/icons/bookmark.fill.svg'
 import { playSources } from '@/enums'
@@ -39,6 +41,7 @@ const props = defineProps<{
 
 defineEmits<{
     (e: 'playThis'): void
+    (e: 'shuffle'): void
 }>()
 
 async function saveMix() {

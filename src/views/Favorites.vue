@@ -5,6 +5,15 @@
             <template #description>{{
                 $t('Views.Favorites.CountStats', { tra: count.tracks, alb: count.albums, art: count.artists })
             }}</template>
+            <template v-if="count.tracks" #right>
+                <div class="fav-buttons">
+                    <ShuffleBtn @click="playFromFavorites(undefined, 'all', true)" />
+                    <button v-wave class="playbtn circular" @click="playFromFavorites(undefined)">
+                        <PlaySvg />
+                        {{ $t('Common.Play') }}
+                    </button>
+                </div>
+            </template>
         </GenericHeader>
         <CardScroller
             v-if="recentFavs.length"
@@ -93,11 +102,13 @@ import { Routes } from '@/router'
 import updatePageTitle from '@/utils/updatePageTitle'
 
 import HeartSvg from '@/assets/icons/heart-no-color.svg'
+import PlaySvg from '@/assets/icons/play.svg'
 import TopTracks from '@/components/ArtistView/TopTracks.vue'
 import WorkList from '@/components/Classical/WorkList.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
 import GenericHeader from '@/components/shared/GenericHeader.vue'
 import NoItems from '@/components/shared/NoItems.vue'
+import ShuffleBtn from '@/components/shared/ShuffleBtn.vue'
 import { useT } from '@/i18n'
 
 const { t } = useT()
@@ -186,6 +197,38 @@ function handlePlay(index: number) {
 
     .recent-favs {
         padding-top: 1rem;
+    }
+
+    .generichead {
+        .before {
+            padding-bottom: 1.5rem;
+            border-bottom: solid 0.5px $gray5;
+        }
+
+        .right {
+            align-items: flex-end;
+        }
+
+        .after {
+            margin-top: 1rem;
+        }
+    }
+
+    .fav-buttons {
+        display: flex;
+        gap: $small;
+
+        .playbtn {
+            gap: $smaller;
+            padding: 0 1.5rem;
+            background-color: $white;
+            color: $black;
+            width: 7rem;
+
+            svg {
+                height: 1.5rem;
+            }
+        }
     }
 
     .nothing h3 {

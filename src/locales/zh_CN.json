@@ -429,7 +429,8 @@
       "TrackAlreadyPresent": "曲目已在播放列表中",
       "TrackRemoved": "曲目已移除",
       "TrackRemovedError": "无法移除曲目",
-      "Updated": "播放列表已更新！"
+      "Updated": "播放列表已更新！",
+      "TrackMoveError": "无法移动曲目"
     },
     "RootDirs": {
       "ErrorAdding": "添加根目录时出错",
@@ -533,6 +534,10 @@
       "UseSilence": {
         "Description": "自动跳过曲目之间的静音",
         "Title": "移除静音填充"
+      },
+      "RemoteControl": {
+        "Description": "在其他设备上控制播放，也可由它们控制",
+        "Title": "远程控制"
       }
     },
     "Backup": {
@@ -991,5 +996,62 @@
       "Plays": "播放 {n} 次",
       "Today": "至今"
     }
+  },
+  "CommandPalette": {
+    "AlbumCount": "{n} 张专辑",
+    "Albums": "专辑",
+    "AlbumsBy": "专辑 · {name}",
+    "Artist": "艺术家",
+    "Artists": "艺术家",
+    "Label": "跳转到艺术家或专辑",
+    "Loading": "加载中…",
+    "Move": "移动",
+    "NoMatches": "没有匹配结果",
+    "Open": "打开",
+    "Or": "或",
+    "Placeholder": "跳转到艺术家或专辑",
+    "Play": "播放"
+  },
+  "EditArtist": {
+    "ApplyCrop": "应用裁剪",
+    "Back": "返回",
+    "Cancel": "取消",
+    "Change": "更换",
+    "Crop": "裁剪",
+    "CurrentImage": "当前图片",
+    "CropSubtitle": "正方形，1:1",
+    "CropTitle": "裁剪图片",
+    "DisplayName": "显示名称",
+    "DisplayNameHelp": "仅在艺术家页面显示。留空则使用默认名称。",
+    "DragToReposition": "拖动以调整位置",
+    "DropSubtitle": "接下来会将其裁剪为正方形",
+    "DropTitle": "松开以用作艺术家图片",
+    "EditArtist": "编辑艺术家",
+    "Image": "图片",
+    "ImageHelp": "在此对话框中任意位置拖放或粘贴图片。",
+    "NewImage": "新图片",
+    "PasteTarget": "粘贴图片以替换艺术家图片",
+    "Save": "保存",
+    "Title": "编辑艺术家",
+    "Unsaved": "未保存",
+    "Upload": "上传",
+    "Zoom": "缩放"
+  },
+  "RemoteControl": {
+    "App": "Swing Music {platform} 版",
+    "Connecting": "连接中…",
+    "Controlling": "正在播放的设备",
+    "Devices": "设备",
+    "Disconnect": "断开连接",
+    "DisconnectedHelp": "此浏览器独立播放。你的其他设备无法看到或控制它。",
+    "DisconnectedTitle": "已断开",
+    "Idle": "空闲",
+    "NoOtherDevices": "没有其他设备",
+    "NoOtherDevicesHelp": "在你的其他设备上打开 Swing Music，并使用与此处相同的账户登录。",
+    "OtherDevices": "其他设备",
+    "NotConnected": "未连接",
+    "PlayingOn": "正在播放于",
+    "Reconnect": "重新连接",
+    "ThisBrowser": "此浏览器"
   }
 }

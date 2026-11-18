@@ -7,6 +7,7 @@
   >
     <div class="btns">
       <PlayBtnRect :source="playSources.playlist" :bg_color="btn_color" />
+      <ShuffleBtn :source="playSources.playlist" />
     </div>
     <div class="duration">
       {{ playlist.info.count.toLocaleString() }} {{ $t('Common.Track', playlist.info.count) }}
@@ -28,6 +29,7 @@ import { playSources } from "@/enums";
 import { formatSeconds } from "@/utils";
 
 import PlayBtnRect from "@/components/shared/PlayBtnRect.vue";
+import ShuffleBtn from "@/components/shared/ShuffleBtn.vue";
 import usePStore from "@/stores/pages/playlist";
 import { balanceText } from "@/utils/balanceText";
 import { Ref, ref } from "vue";

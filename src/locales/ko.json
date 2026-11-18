@@ -429,7 +429,8 @@
       "TrackAlreadyPresent": "이미 재생 목록에 있는 트랙이에요",
       "TrackRemoved": "트랙이 제거되었어요",
       "TrackRemovedError": "트랙을 제거할 수 없어요",
-      "Updated": "재생 목록이 업데이트되었어요!"
+      "Updated": "재생 목록이 업데이트되었어요!",
+      "TrackMoveError": "트랙을 옮길 수 없어요"
     },
     "RootDirs": {
       "ErrorAdding": "루트 디렉토리 추가 중 오류가 발생했어요",
@@ -533,6 +534,10 @@
       "UseSilence": {
         "Description": "트랙 사이의 무음 구간을 자동으로 건너뛰어요",
         "Title": "무음 구간 제거"
+      },
+      "RemoteControl": {
+        "Description": "다른 기기의 재생을 제어하고, 다른 기기에서도 제어할 수 있어요",
+        "Title": "원격 제어"
       }
     },
     "Backup": {
@@ -991,5 +996,62 @@
       "Plays": "{n}회 재생",
       "Today": "현재"
     }
+  },
+  "CommandPalette": {
+    "AlbumCount": "앨범 {n}개",
+    "Albums": "앨범",
+    "AlbumsBy": "앨범 · {name}",
+    "Artist": "아티스트",
+    "Artists": "아티스트",
+    "Label": "아티스트나 앨범으로 이동",
+    "Loading": "불러오는 중…",
+    "Move": "이동",
+    "NoMatches": "일치하는 항목이 없어요",
+    "Open": "열기",
+    "Or": "또는",
+    "Placeholder": "아티스트나 앨범으로 이동",
+    "Play": "재생"
+  },
+  "EditArtist": {
+    "ApplyCrop": "자르기 적용",
+    "Back": "뒤로",
+    "Cancel": "취소",
+    "Change": "변경",
+    "Crop": "자르기",
+    "CurrentImage": "현재 이미지",
+    "CropSubtitle": "정사각형, 1:1",
+    "CropTitle": "이미지 자르기",
+    "DisplayName": "표시 이름",
+    "DisplayNameHelp": "아티스트 페이지에만 표시돼요. 기본값을 쓰려면 비워 두세요.",
+    "DragToReposition": "드래그해서 위치 조정",
+    "DropSubtitle": "다음 단계에서 정사각형으로 자르게 돼요",
+    "DropTitle": "놓아서 아티스트 이미지로 사용",
+    "EditArtist": "아티스트 편집",
+    "Image": "이미지",
+    "ImageHelp": "이 창 아무 곳에나 이미지를 놓거나 붙여 넣으세요.",
+    "NewImage": "새 이미지",
+    "PasteTarget": "이미지를 붙여 넣어 아티스트 이미지를 바꾸세요",
+    "Save": "저장",
+    "Title": "아티스트 편집",
+    "Unsaved": "저장 안 됨",
+    "Upload": "업로드",
+    "Zoom": "확대/축소"
+  },
+  "RemoteControl": {
+    "App": "{platform}용 Swing Music",
+    "Connecting": "연결 중…",
+    "Controlling": "재생 중인 기기",
+    "Devices": "기기",
+    "Disconnect": "연결 해제",
+    "DisconnectedHelp": "이 브라우저는 단독으로 재생해요. 다른 기기에서 이 브라우저를 보거나 제어할 수 없어요.",
+    "DisconnectedTitle": "연결 끊김",
+    "Idle": "대기 중",
+    "NoOtherDevices": "다른 기기가 없어요",
+    "NoOtherDevicesHelp": "다른 기기에서 Swing Music을 열고 여기서 쓰는 계정과 같은 계정으로 로그인하세요.",
+    "OtherDevices": "다른 기기",
+    "NotConnected": "연결되지 않음",
+    "PlayingOn": "재생 기기",
+    "Reconnect": "다시 연결",
+    "ThisBrowser": "이 브라우저"
   }
 }
