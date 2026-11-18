@@ -274,6 +274,30 @@ export default defineStore('tracklist', {
                 player.clearNextAudio()
             }
         },
+        moveTracks(from: number, count: number, to: number) {
+            if (to >= from && to <= from + count) return
+
+            const queue = useQueue()
+            const before = this.tracklist.slice()
+            const next = before[queue.nextindex]
+
+            const moved = this.tracklist.splice(from, count)
+            const dest = to > from ? to - count : to
+            this.tracklist.splice(dest, 0, ...moved)
+
+            const cur = queue.currentindex
+            if (cur >= from && cur < from + count) {
+                queue.setCurrentIndex(dest + cur - from)
+            } else {
+                const shifted = cur >= from + count ? cur - count : cur
+                queue.setCurrentIndex(shifted >= dest ? shifted + count : shifted)
+            }
+
+            if (this.tracklist[queue.nextindex] !== next) usePlayer().clearNextAudio()
+
+            const remote = useRemote()
+            if (remote.routes()) remote.reordered(before)
+        },
         clearList() {
             const remote = useRemote()
 

@@ -5399,6 +5399,11 @@ sortable-dnd@0.2.7:
   resolved "https://registry.yarnpkg.com/sortable-dnd/-/sortable-dnd-0.2.7.tgz#36038039cd365725d8710d4c8e4a21d208f5f0be"
   integrity sha512-hpQDkdGTSLQN5OnxVOyFVmMuTEfYZdKTztEgvPiyC9LAUCHSm9DOY6UXWxjBoyCY+9LVZvJ1yMC+oEi96rTl5Q==
 
+sortable-dnd@^0.7.3:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/sortable-dnd/-/sortable-dnd-0.7.4.tgz#25c1fc355bd96b50affad80c6f02d854cbee7d89"
+  integrity sha512-FK6noRlKhmZj7KYeP1YMS+vThVRhXIDoMx+8xR96+iYMidYCu6WtC6tr9NCmN35iqNSaGFAgvspOY45jAxq88w==
+
 "source-map-js@>=0.6.2 <2.0.0", source-map-js@^1.0.1, source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
@@ -6088,6 +6093,13 @@ vue-virtual-scroller@^2.0.0-beta.7:
     mitt "^2.1.0"
     vue-observe-visibility "^2.0.0-alpha.1"
     vue-resize "^2.0.0-alpha.1"
+
+vue-virtual-sortable@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/vue-virtual-sortable/-/vue-virtual-sortable-3.2.0.tgz#8e7857ccb84b6180b7277e194527c6dd9b82eaaa"
+  integrity sha512-eB7CMmYdLocEXhJK4mel4DM2AwuDJd+SwV+0w/Akv+C7mSBqNc3JG+XP7HyACFbWNQ/4b3ZmUtkiOnCF7TvqLw==
+  dependencies:
+    sortable-dnd "^0.7.3"
 
 vue-wrap-balancer@^1.0.0:
   version "1.0.0"

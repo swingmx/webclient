@@ -57,9 +57,11 @@ function showContextMenu(e: MouseEvent) {
 <style lang="scss">
 .now-playing-top {
     display: flex;
+    overflow: hidden;
+    scrollbar-gutter: stable;
     justify-content: space-between;
     align-items: center;
-    margin: 0 2.75rem 0 $small;
+    margin: 0 1.875rem 0 $small;
 
     @include largePhones {
         margin: 0 1.5rem;

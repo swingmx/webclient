@@ -92,11 +92,11 @@ const tabs = useTabStore()
         }
 
         #queue-scrollable {
-            padding: 0 1rem 2rem $small;
+            padding: 0 1rem 2rem 0;
         }
 
         .now-playing-top {
-            margin: 0 1rem;
+            margin: 0 1.375rem 0 2rem;
         }
     }
 

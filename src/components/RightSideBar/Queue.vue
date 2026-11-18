@@ -8,21 +8,33 @@
             :description="$t('RightSidebar.NoQueueDescription')"
             :icon="QueueSvg"
         />
-        <DynamicScroller
+        <VirtualList
             id="queue-scrollable"
             ref="scroller"
             class="scroller"
             style="height: 100%"
-            :items="scrollerItems"
-            :min-item-size="itemHeight"
+            :model-value="scrollerItems"
+            data-key="id"
+            handle=".drag-handle"
+            :size="itemHeight"
+            lock-axis="x"
+            append-to-body
+            ghost-class="queue-drag-ghost"
+            chosen-class="queue-drag-chosen"
+            @drop="onDrop"
         >
-            <template #default="{ item, index, active }">
-                <DynamicScrollerItem
-                    :item="item"
-                    :active="active"
-                    :size-dependencies="[item.props]"
-                    :data-index="index"
-                >
+            <template #item="{ item }">
+                <div class="queue-row" :class="{ 'gap-above': item.gapAbove }">
+                    <div class="drag-handle">
+                        <svg viewBox="0 0 10 16" width="10" height="16" fill="currentColor">
+                            <circle cx="2" cy="2" r="1.5" />
+                            <circle cx="8" cy="2" r="1.5" />
+                            <circle cx="2" cy="8" r="1.5" />
+                            <circle cx="8" cy="8" r="1.5" />
+                            <circle cx="2" cy="14" r="1.5" />
+                            <circle cx="8" cy="14" r="1.5" />
+                        </svg>
+                    </div>
                     <component
                         :is="item.component"
                         v-if="item.isHeader"
@@ -30,23 +42,23 @@
                         :is-current="item.trackIndex !== undefined && item.trackIndex === queue.currentindex"
                         @playThis="playFromQueue(item.playIndex)"
                     />
-                    <div v-else :class="{ 'gap-above': item.gapAbove }">
-                        <component
-                            :is="item.component"
-                            v-bind="item.props"
-                            :is-current="item.trackIndex === queue.currentindex"
-                            :is-current-playing="item.trackIndex === queue.currentindex && queue.playing"
-                            @playThis="playFromQueue(item.trackIndex)"
-                        ></component>
-                    </div>
-                </DynamicScrollerItem>
+                    <component
+                        :is="item.component"
+                        v-else
+                        v-bind="item.props"
+                        :is-current="item.trackIndex === queue.currentindex"
+                        :is-current-playing="item.trackIndex === queue.currentindex && queue.playing"
+                        @playThis="playFromQueue(item.trackIndex)"
+                    ></component>
+                </div>
             </template>
-        </DynamicScroller>
+        </VirtualList>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import VirtualList from 'vue-virtual-sortable'
 
 import { ClassicalMovement } from '@/interfaces'
 import useQStore from '@/stores/queue'
@@ -62,7 +74,7 @@ import QueueSvg from '@/assets/icons/queue.svg'
 import PlayingFrom from '../NowPlaying/PlayingFrom.vue'
 
 interface QueueScrollerItem {
-    id: string | number
+    id: string
     component: typeof TrackItem | typeof QueueWorkHead | typeof QueueMovement
     props: any
     // tracklist index for track/movement rows and single-movement heads,
@@ -102,7 +114,7 @@ const scrollerItems = computed(() => {
         // degrade to plain track rows
         if (!work) {
             items.push({
-                id: index,
+                id: `t-${index}`,
                 component: TrackItem,
                 trackIndex: index,
                 gapAbove: prevWorkhash !== null,
@@ -135,7 +147,7 @@ const scrollerItems = computed(() => {
         }
 
         items.push({
-            id: index,
+            id: `t-${index}`,
             component: QueueMovement,
             trackIndex: index,
             workhash: work.workhash,
@@ -164,6 +176,17 @@ function workRun(start: number, workhash: string) {
     return run
 }
 
+function onDrop({ item, list, newIndex, changed }: { item: QueueScrollerItem; list: QueueScrollerItem[]; newIndex: number; changed: boolean }) {
+    if (!changed) return
+
+    const from = item.isHeader ? item.playIndex! : item.trackIndex!
+    const count = item.isHeader ? item.props.count : 1
+    const next = list[newIndex + 1]
+    const to = next ? (next.isHeader ? next.playIndex! : next.trackIndex!) : store.tracklist.length
+
+    store.moveTracks(from, count, to)
+}
+
 function playFromQueue(index?: number) {
     if (index === undefined) return
     queue.play(index)
@@ -171,11 +194,10 @@ function playFromQueue(index?: number) {
 
 const show_above = 1 // the number of tracks to show above the current track
 
-// measured row heights from the DynamicScroller (keyed by item id),
+// measured row heights from the VirtualList (keyed by item id),
 // falling back to min-item-size for rows not measured yet
 function getItemSize(item: QueueScrollerItem): number {
-    const sizes = scroller.value?.vscrollData?.sizes ?? {}
-    const size = Number(sizes[item.id])
+    const size = Number(scroller.value?.getSize(item.id))
     return size > 0 ? size : itemHeight
 }
 
@@ -263,9 +285,60 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
+.queue-row {
+    display: grid;
+    grid-template-columns: 1rem minmax(0, 1fr);
+    align-items: center;
+    gap: $small;
+
+    &:hover .drag-handle {
+        opacity: 0.6;
+    }
+}
+
+.drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 2rem;
+    cursor: grab;
+    opacity: 0;
+    color: $white;
+    transition: opacity 0.2s ease-out;
+    touch-action: none;
+
+    &:hover {
+        opacity: 1 !important;
+    }
+
+    @media (hover: none) {
+        opacity: 0.4;
+    }
+}
+
+.queue-drag-ghost {
+    background-color: $gray4;
+    border-radius: $small;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
+    opacity: 0.95;
+
+    .drag-handle {
+        opacity: 1;
+    }
+}
+
+.queue-drag-chosen:not(.queue-drag-ghost) {
+    visibility: hidden;
+}
+
 .queue-virtual-scroller {
     height: 100%;
     overflow: hidden;
+
+    #queue-scrollable {
+        scrollbar-gutter: stable;
+    }
 
     .gap-above {
         padding-top: 1.5rem;

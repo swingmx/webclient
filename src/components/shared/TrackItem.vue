@@ -45,21 +45,9 @@
             @showMenu="showMenu"
             @toggleFav="() => addToFav(track.trackhash)"
         />
-        <div class="float-buttons flex">
-            <!-- <div
-                v-if="!isClassicalTrack"
-                class="fav-icon"
-                :title="is_fav ? $t('TrackItem.AddToFavorites') : $t('TrackItem.RemoveFromFavorites')"
-                @click.stop="() => addToFav(track.trackhash)"
-            >
-                <HeartSvg :state="is_fav" :no_emit="true" />
-            </div> -->
-            <div
-                v-if="isQueueTrack"
-                class="remove-track"
-                :title="$t('TrackItem.RemoveFromQueue')"
-                @click.stop="player.removeByIndex(index)"
-            >
+        <div v-if="isQueueTrack" class="queue-end">
+            <span class="duration">{{ formatSeconds(track.duration ?? 0) }}</span>
+            <div class="remove-track" :title="$t('TrackItem.RemoveFromQueue')" @click.stop="player.removeByIndex(index)">
                 <DelSvg />
             </div>
         </div>
@@ -73,6 +61,7 @@ import useTracklist from '@/stores/queue/tracklist'
 
 import { paths } from '@/config'
 import blurhashStyle from '@/utils/blurhashStyle'
+import formatSeconds from '@/utils/useFormatSeconds'
 import { favType } from '@/enums'
 import { showTrackContextMenu as showContext } from '@/helpers/contextMenuHandler'
 import favoriteHandler from '@/helpers/favoriteHandler'
@@ -204,37 +193,29 @@ onBeforeUnmount(() => {
         }
     }
 
-    .float-buttons {
-        opacity: 0;
-        gap: $small;
+    .queue-end {
+        display: grid;
+        place-items: center end;
 
         & > * {
-            cursor: pointer;
+            grid-area: 1 / 1;
+            transition: opacity 0.2s ease-out;
         }
 
-        .heart-button {
-            width: 1.75rem;
-            height: 1.75rem;
-            padding: 0;
-            border: none;
-            background-color: transparent;
+        .duration {
+            font-size: 12px;
+            font-variant-numeric: tabular-nums;
+            color: $gray1;
         }
 
         .remove-track {
+            opacity: 0;
             transform: rotate(45deg);
             height: 1.75rem;
             width: 1.75rem;
-
             display: grid;
             place-items: center;
-
-            &:hover {
-                border-radius: 1rem;
-            }
-        }
-
-        &:hover {
-            opacity: 1 !important;
+            cursor: pointer;
         }
     }
 
@@ -242,12 +223,12 @@ onBeforeUnmount(() => {
         background-color: $gray5;
         color: $white !important;
 
-        .float-buttons {
-            opacity: 1;
+        .queue-end .duration {
+            opacity: 0;
         }
 
-        .remove-track {
-            transform: translateY(0) rotate(45deg);
+        .queue-end .remove-track {
+            opacity: 1;
         }
 
         .heart-button {

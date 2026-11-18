@@ -64,39 +64,15 @@ onMounted(() => updatePageTitle(t('Common.NowPlaying')))
             opacity: 0.6;
         }
 
-        .track-item {
-            .float-buttons {
-                opacity: 1;
-
-                .heart-button {
-                    opacity: 0;
-                }
-
-                .remove-track {
-                    opacity: 0.5;
-
-                    svg {
-                        color: #fff;
-                    }
-                }
-
-                .favorited {
-                    opacity: 1 !important;
-                }
-            }
-
-            &:hover {
-                .heart-button {
-                    opacity: 1 !important;
-                }
-            }
+        .queue-virtual-scroller {
+            margin-left: calc(-1rem - #{$small});
         }
     }
 
     #queue-scrollable {
-        padding: 1rem 1.5rem 64px 0 !important;
-        mask-image: linear-gradient(to bottom, #000 calc(100% - 64px), transparent);
-        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 64px), transparent);
+        padding: 32px 1.5rem 64px 0 !important;
+        mask-image: linear-gradient(to bottom, transparent, #000 32px, #000 calc(100% - 64px), transparent);
+        -webkit-mask-image: linear-gradient(to bottom, transparent, #000 32px, #000 calc(100% - 64px), transparent);
 
         @include largePhones {
             padding: 1rem 1rem 64px 1rem !important;
