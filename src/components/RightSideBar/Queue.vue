@@ -179,6 +179,17 @@ function getItemSize(item: QueueScrollerItem): number {
     return size > 0 ? size : itemHeight
 }
 
+function scrollToPos(pos: number) {
+    const elem = document.getElementById('queue-scrollable')
+    if (!elem) return
+
+    let top = 0
+    for (let i = 0; i < pos; i++) top += getItemSize(scrollerItems.value[i])
+
+    const near = Math.abs(top - elem.scrollTop) <= elem.clientHeight * 2
+    elem.scroll({ top, behavior: near ? 'smooth' : 'auto' })
+}
+
 function scrollToCurrent() {
     const items = scrollerItems.value
     const currentPos = items.findIndex(item => item.trackIndex === queue.currentindex)
@@ -200,7 +211,7 @@ function scrollToCurrent() {
 
     if (headerPos < 0) {
         // normal tracks: one row above the current track
-        scroller.value?.scrollToItem(Math.max(currentPos - show_above, 0))
+        scrollToPos(Math.max(currentPos - show_above, 0))
         return
     }
 
@@ -237,7 +248,7 @@ function scrollToCurrent() {
         elem?.scroll({ top: headerTop, behavior: 'smooth' })
     } else {
         // anomaly (work taller than the viewport): focus the current movement
-        scroller.value?.scrollToItem(Math.max(currentPos - show_above, 0))
+        scrollToPos(Math.max(currentPos - show_above, 0))
     }
 }
 

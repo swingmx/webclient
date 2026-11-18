@@ -94,10 +94,12 @@ onMounted(() => updatePageTitle(t('Common.NowPlaying')))
     }
 
     #queue-scrollable {
-        padding: 1rem 1.5rem 0rem 0 !important;
+        padding: 1rem 1.5rem 64px 0 !important;
+        mask-image: linear-gradient(to bottom, #000 calc(100% - 64px), transparent);
+        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 64px), transparent);
 
         @include largePhones {
-            padding: 1rem 1rem 0 1rem !important;
+            padding: 1rem 1rem 64px 1rem !important;
             @include hideScrollbars;
         }
     }

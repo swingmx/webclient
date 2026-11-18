@@ -39,7 +39,6 @@
             class="row"
             :class="{ 'no-year': showComposer, 'rounded-sm': compact }"
         >
-            <div v-if="!showComposer && !compact" class="year">{{ work.year_composed ?? '' }}</div>
             <div class="main">
                 <div v-if="showComposer && work.composer" class="composer ellip">{{ work.composer }}</div>
                 <div class="name ellip">
@@ -49,8 +48,9 @@
                 <div class="meta ellip">{{ meta(work) }}</div>
             </div>
             <template v-if="!compact">
-                <div class="recordings">{{ rightLabel(work) }}</div>
                 <div class="duration">{{ work.duration ? formatSeconds(work.duration) : '' }}</div>
+                <div class="recordings">{{ rightLabel(work) }}</div>
+                <div v-if="!showComposer" class="year">{{ work.year_composed ?? '' }}</div>
             </template>
         </RouterLink>
         </div>
@@ -206,7 +206,7 @@ function meta(work: WorkRow) {
 
     .row {
         display: grid;
-        grid-template-columns: 5rem 1fr max-content 4.5rem;
+        grid-template-columns: 1fr 4rem 6rem 3.75rem;
         align-items: center;
         gap: 1rem;
         padding: 1rem 0.75rem;
@@ -220,7 +220,7 @@ function meta(work: WorkRow) {
         }
 
         &.no-year {
-            grid-template-columns: 1fr max-content 4.5rem;
+            grid-template-columns: 1fr 4rem 6rem;
         }
     }
 
@@ -257,9 +257,18 @@ function meta(work: WorkRow) {
         margin-top: $smaller;
     }
 
-    .duration {
+    .recordings {
+        text-align: center;
+    }
+
+    .year {
         text-align: right;
         font-variant-numeric: tabular-nums;
+    }
+
+    .duration {
+        font-variant-numeric: tabular-nums;
+        font-size: 0.85rem;
     }
 
     @include for-desktop-down {

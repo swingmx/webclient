@@ -21,7 +21,7 @@
                 </div>
             </div>
         </router-link>
-        <button class="options" @click="showContextMenu">
+        <button class="options" :class="{ active: context_showing }" @click="showContextMenu">
             <MoreSvg />
         </button>
     </div>
@@ -59,7 +59,7 @@ function showContextMenu(e: MouseEvent) {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0 2rem 0 $small;
+    margin: 0 2.75rem 0 $small;
 
     @include largePhones {
         margin: 0 1.5rem;
@@ -69,9 +69,24 @@ function showContextMenu(e: MouseEvent) {
         width: 2rem;
         height: 2.5rem;
         padding: 0;
+        background: transparent;
+        opacity: 0.7;
+        transition: opacity 0.2s ease-out, background-color 0.2s ease-out;
+
+        &:hover,
+        &:focus-visible,
+        &.active {
+            opacity: 1;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        &:focus-visible {
+            outline: solid 2px rgba(255, 255, 255, 0.5);
+            outline-offset: 2px;
+        }
 
         svg {
-            transform: rotate(90deg) scale(1.25);
+            transform: scale(1.25);
         }
     }
 }
