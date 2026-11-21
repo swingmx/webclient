@@ -209,7 +209,7 @@ export default defineStore('remote', () => {
     const uids: string[] = []
     let synced = false
     let skew = 0
-    let pending: { source: string; trackhashes: string[]; uids: string[] } | null = null
+    let pending: { source: string; trackhashes: string[]; uids: string[]; shuffled?: boolean } | null = null
     let es: EventSource | null = null
     let unlocking = false
     let chain: Promise<unknown> = Promise.resolve()
@@ -444,6 +444,16 @@ export default defineStore('remote', () => {
         const pool = new Map<Track, string[]>()
         before.forEach((t, i) => pool.set(t, [...(pool.get(t) ?? []), uids[i]]))
         uids.splice(0, uids.length, ...tracklist.tracklist.map(t => pool.get(t)?.shift() ?? newUid()))
+        // the server doesn't have this list yet, so its replace carries the new order
+        if (pending) {
+            pending = {
+                ...pending,
+                trackhashes: tracklist.tracklist.map(t => t.trackhash),
+                uids: uids.slice(),
+                shuffled: tracklist.shuffled,
+            }
+            return
+        }
         if (realign()) edit([{ type: 'order', uids: uids.slice(), shuffled: tracklist.shuffled }])
     }
 

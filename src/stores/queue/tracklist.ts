@@ -306,23 +306,31 @@ export default defineStore('tracklist', {
             this.from = {} as From
             if (remote.routes()) remote.cleared()
         },
-        /** Toggles shuffle: the current track and those before it stay; the upcoming ones are shuffled or restored. */
+        /**
+         * Toggles shuffle. On: the current track moves to the top and every other track is shuffled behind it.
+         * Off: the tracks go back to their order from before the shuffle, with ones added since at the end.
+         */
         toggleShuffle(currentindex: number) {
             const before = this.tracklist.slice()
-            const head = this.tracklist.slice(0, currentindex + 1)
-            const upcoming = this.tracklist.slice(currentindex + 1)
+            const current = this.tracklist[currentindex]
 
             if (!this.shuffled) {
-                this.baseOrder = this.tracklist.slice()
-                this.tracklist = [...head, ...smartShuffle(upcoming)]
+                const rest = before.filter((_, i) => i !== currentindex)
+                this.baseOrder = before
+                this.tracklist = current ? [current, ...smartShuffle(rest)] : smartShuffle(rest)
             } else {
-                const played = new Set(head)
-                const base = new Set(this.baseOrder)
-                const restored = this.baseOrder.filter(t => !played.has(t) && upcoming.includes(t))
-                this.tracklist = [...head, ...restored, ...upcoming.filter(t => !base.has(t))]
+                // matched by trackhash: a reloaded page holds copies of the saved tracks, not the same objects
+                const pool = new Map<string, QueueItem[]>()
+                before.forEach(t => pool.set(t.trackhash, [...(pool.get(t.trackhash) ?? []), t]))
+                const restored = this.baseOrder.flatMap(t => pool.get(t.trackhash)?.shift() ?? [])
+                const placed = new Set(restored)
+                this.tracklist = [...restored, ...before.filter(t => !placed.has(t))]
                 this.baseOrder = []
             }
             this.shuffled = !this.shuffled
+            if (current) useQueue().setCurrentIndex(this.tracklist.indexOf(current))
+            usePlayer().clearNextAudio()
+
             const remote = useRemote()
             if (remote.routes()) remote.reordered(before)
         },
