@@ -81,6 +81,21 @@ export function orderSum(uids: string[]) {
     return h
 }
 
+/**
+ * Whether another device holds the session and is playing, so a device that (re)connects while playing
+ * its own queue gives way instead of pushing it. The server refuses such a push for the same reason.
+ */
+export function busyElsewhere(
+    state: { active_device_id: string | null; active_reachable: boolean; playhead: { playing: boolean; loading?: boolean } },
+    deviceId: string
+) {
+    return (
+        state.active_reachable &&
+        state.active_device_id !== deviceId &&
+        (state.playhead.playing || !!state.playhead.loading)
+    )
+}
+
 export function local<T>(fn: () => T): T {
     localDepth++
     try {
@@ -786,7 +801,8 @@ export default defineStore('remote', () => {
         const playedAt = Number(localStorage.getItem('rc_played_at')) || 0
         // Never over a device that is playing right now, and only against a server that reports played_at.
         const newer = playedAt > 0 && !state.playhead.playing && state.played_at !== undefined && playedAt + skew > state.played_at
-        if (tracklist.tracklist.length && (playingHere || !state.queue.items.length || newer)) {
+        const yields = busyElsewhere(state, deviceId.value)
+        if (tracklist.tracklist.length && !yields && (playingHere || !state.queue.items.length || newer)) {
             if (selectable.value) {
                 activeId.value = deviceId.value
                 activeHostId.value = hostId.value
@@ -969,10 +985,19 @@ export default defineStore('remote', () => {
     document.addEventListener('seeked', report, true)
     // Heartbeats arrive every 5s; a stream that stays quiet longer is dead even if the browser hasn't noticed.
     setInterval(() => es && Date.now() - heard > 15000 && lost(), 5000)
+    let lastClock = -1
     setInterval(() => {
         if (!queue.playing) return
+        const audio = audioSource.playingSource
+        // Not paused, yet the clock has not moved since the last check: the system has suspended audio
+        // output (a closed laptop lid). Pause, so other devices stop seeing this one as playing.
+        const stalled =
+            !audio.paused && audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA && audio.currentTime === lastClock
+        lastClock = audio.currentTime
+        if (stalled) return local(() => queue.playPause())
+
         report()
-        if (!audioSource.playingSource.paused) markPlayed()
+        if (!audio.paused) markPlayed()
     }, 5000)
     for (const el of [audioSource.playingSource, audioSource.standbySource]) {
         el.addEventListener('playing', () => el === audioSource.playingSource && report())
