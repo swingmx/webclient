@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia'
 
 import {
+    ArtistEditData,
+    editArtist,
     getArtistAlbums,
     getArtistData,
     getSimilarArtists,
-    updateArtistDisplayName,
-    updateArtistImage,
 } from '@/requests/artists'
+import useCommandPalette from '@/stores/commandPalette'
 
+import { dropPage } from '@/composables/pageCache'
 import { paths } from '@/config'
 import { Album, Artist, ClassicalPersonPage, Genre, Listening, StatItem, Track } from '@/interfaces'
 import { maxAbumCards } from '@/stores/content-width'
@@ -155,42 +157,69 @@ export default defineStore('artistPage', {
             const showsName = () => isCurrent() && this.info.display_name === edits.name
 
             const save = async () => {
-                if (edits.image && blobUrl) {
-                    const res = await updateArtistImage(hash, edits.image)
+                const data = edits.name === undefined ? {} : { display_name: edits.name }
+                const res = await editArtist(hash, data, edits.image)
+                const saved = res.status === 200
 
-                    if (res.status === 200) {
-                        await preloadImage(paths.images.artist.large + res.data.image)
-                        if (showsImage()) {
-                            Object.assign(this.info, res.data)
-                            this.imageOverride = null
-                            this.extractColors()
-                        }
-                    } else {
-                        showError(res)
-                        if (showsImage()) {
-                            Object.assign(this.info, before, { display_name: this.info.display_name })
-                            this.imageOverride = null
-                            this.extractColors()
-                        }
+                if (!saved) showError(res)
+
+                if (blobUrl) {
+                    if (saved) await preloadImage(paths.images.artist.large + res.data.image)
+
+                    if (showsImage()) {
+                        const { image, color, blurhash } = saved ? res.data : before
+                        Object.assign(this.info, { image, color, blurhash })
+                        this.imageOverride = null
+                        this.extractColors()
                     }
 
                     if (this.imageOverride !== blobUrl) URL.revokeObjectURL(blobUrl)
                 }
 
-                if (edits.name !== undefined) {
-                    const res = await updateArtistDisplayName(hash, edits.name)
-
-                    if (res.status !== 200) {
-                        showError(res)
-                        if (showsName()) this.info.display_name = before.display_name
-                    } else if (showsName()) {
-                        this.info.display_name = res.data.display_name
-                    }
+                if (edits.name !== undefined && showsName()) {
+                    this.info.display_name = saved ? res.data.display_name : before.display_name
                 }
             }
 
             saveQueue = saveQueue.then(save, save)
             return saveQueue
+        },
+        /**
+         * Creates, edits or deletes a collective, then updates the open artist page to match.
+         * Returns whether it was saved.
+         */
+        async saveCollective(hash: string, data: ArtistEditData, image?: Blob) {
+            const res = await editArtist(hash, data, image)
+
+            if (res.status !== 200) {
+                showError(res)
+                return false
+            }
+
+            useCommandPalette().load()
+
+            const saved = res.data
+            const members: string[] = saved.members ?? []
+            const before = this.info.artisthash === hash ? (this.info.members ?? []).map(m => m.artisthash) : []
+
+            // cached pages of old and new members would come back with a stale collective pill
+            for (const member of new Set([...before, ...members])) dropPage(`/artists/${member}`)
+
+            if (this.info.artisthash === hash) {
+                if (saved.deleted) return true
+                // the collective's own tracks and albums changed with its members
+                this.imageOverride = null
+                await this.getData(hash)
+            } else if (!this.info.members) {
+                // an artist's page is open: add, update or remove this collective's pill in place
+                const others = (this.info.collectives ?? []).filter(c => c.artisthash !== hash)
+                const pill = <Artist>{ artisthash: hash, name: saved.name, image: saved.image }
+                const collectives = members.includes(this.info.artisthash) ? [...others, pill] : others
+
+                this.info.collectives = collectives.length ? collectives : undefined
+            }
+
+            return true
         },
         makeFavorite() {
             this.info.is_favorite = true

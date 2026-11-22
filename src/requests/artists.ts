@@ -138,15 +138,25 @@ export interface ArtistImageInfo {
     blurhash: string
 }
 
+export interface ArtistEditData {
+    // the display name, or a collective's name; null restores an artist's default
+    display_name?: string | null
+    // a collective's artist hashes; an empty list deletes it
+    members?: string[]
+    // replace a collective's custom image with its member grid
+    use_grid?: boolean
+}
+
 /**
- * Replaces the artist's image with a centered square of `image`.
+ * Edits an artist, or creates, edits or deletes a collective. `image` is cropped to a centered square.
  */
-export async function updateArtistImage(hash: string, image: Blob) {
+export async function editArtist(hash: string, data: ArtistEditData, image?: Blob) {
     const form = new FormData()
-    form.append('image', image, 'image')
+    form.append('data', JSON.stringify(data))
+    if (image) form.append('image', image, 'image')
 
     return await useAxios({
-        url: paths.api.artist + `/${hash}/image`,
+        url: paths.api.artist + `/${hash}`,
         method: 'PUT',
         props: form,
         headers: {
@@ -156,9 +166,6 @@ export async function updateArtistImage(hash: string, image: Blob) {
 }
 
 /**
- * Sets the name shown on the artist's page. Null restores the default.
- */
-/**
  * Merges an artist into another, for good.
  */
 export async function mergeArtist(hash: string, into: string) {
@@ -166,13 +173,5 @@ export async function mergeArtist(hash: string, into: string) {
         url: paths.api.artist + `/${hash}/merge`,
         method: 'POST',
         props: { into },
-    })
-}
-
-export async function updateArtistDisplayName(hash: string, display_name: string | null) {
-    return await useAxios({
-        url: paths.api.artist + `/${hash}/display-name`,
-        method: 'PUT',
-        props: { display_name },
     })
 }

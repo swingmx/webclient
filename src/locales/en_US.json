@@ -31,7 +31,14 @@
       "None": "No repeat",
       "One": "Repeat one"
     },
-    "Title": "Artist"
+    "Title": "Artist",
+    "Collective": "Collective",
+    "Members": "Members",
+    "EditCollective": "EDIT COLLECTIVE",
+    "GoToArtist": "Go to Artist",
+    "ArtistCount": "Artist | Artists",
+    "AddedToCollective": "Added to {name}",
+    "PartOf": "Part of"
   },
   "AuthLogin": {
     "Back": "Back",
@@ -227,28 +234,44 @@
     "SortByUppercase": "SORT BY {title} {order}"
   },
   "EditArtist": {
+    "Add": "Add",
+    "AddArtist": "Search for an artist to add",
+    "AddArtists": "Add artists",
     "ApplyCrop": "Apply crop",
+    "ArtistCount": "{n} artist | {n} artists",
+    "Artists": "Artists",
     "Back": "Back",
     "Cancel": "Cancel",
     "Change": "Change",
+    "CollectiveImageHelp": "Drop or paste an image anywhere in this dialog to replace the current image.",
+    "CollectiveTitle": "Edit collective",
+    "ConfirmDelete": "Click again to delete",
+    "Create": "Create",
     "Crop": "Crop",
-    "CurrentImage": "Current image",
     "CropSubtitle": "Square, 1:1",
     "CropTitle": "Crop image",
+    "CurrentImage": "Current image",
+    "DeleteCollective": "Delete collective",
     "DisplayName": "Display name",
     "DisplayNameHelp": "Shown only on the artist page. Leave empty to use the default.",
     "DragToReposition": "Drag to reposition",
     "DropSubtitle": "You'll crop it to a square next",
     "DropTitle": "Drop to use as artist image",
     "EditArtist": "Edit artist",
+    "GridImage": "Member grid",
     "Image": "Image",
     "ImageHelp": "Drop or paste an image anywhere in this dialog.",
+    "Name": "Name",
+    "NewCollectiveTitle": "New collective",
     "NewImage": "New image",
+    "NoArtists": "No artists found",
     "PasteTarget": "Paste an image to replace the artist image",
+    "RemoveArtist": "Remove {artist}",
     "Save": "Save",
     "Title": "Edit artist",
     "Unsaved": "Unsaved",
     "Upload": "Upload",
+    "UseGrid": "Use member grid",
     "Zoom": "Zoom"
   },
   "Favorites": {
@@ -300,7 +323,7 @@
   "LeftSidebar": {
     "FileTypeBitrate": "file type • bitrate",
     "NavItems": {
-        "Classical": "Classical",
+      "Classical": "Classical",
       "Favorites": "Favorites",
       "Folder": "Folders",
       "Home": "Home",
@@ -313,12 +336,13 @@
     "MasterAudioBitrate": "Master audio bitrate - {bitrate} Kbps"
   },
   "Menus": {
-    "Album": {
-    },
+    "Album": {},
     "Artist": {
       "ThisIsPlaylist": "This is {artist}",
       "PlayNext": "Play next",
-      "MergeInto": "Merge into"
+      "MergeInto": "Merge into",
+      "AddToCollective": "Add to Collective",
+      "NewCollective": "New Collective"
     },
     "Common": {
       "AddToCollection": "Add to Collection",
@@ -1024,8 +1048,7 @@
       "Searching": "Searching...",
       "Unsynced": "unsynced"
     },
-    "MixLisView": {
-    },
+    "MixLisView": {},
     "MixListView": {
       "MixesBasedOnListening": "{n} mixes • Based on artists you have been listening to",
       "OtherMixes": "Other {type} mixes",

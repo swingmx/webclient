@@ -41,6 +41,7 @@ import { getArtistTracks } from '@/requests/artists'
 import GenreBanner from '@/components/AlbumView/GenreBanner.vue'
 import ArtistAlbumsFetcher from '@/components/ArtistView/AlbumsFetcher.vue'
 import Header from '@/components/ArtistView/Header.vue'
+import Members from '@/components/ArtistView/Members.vue'
 import ClassicalPerson from './ClassicalPerson.vue'
 import TopTracks from '@/components/ArtistView/TopTracks.vue'
 import CardScroller from '@/components/shared/CardScroller.vue'
@@ -145,7 +146,7 @@ function createAbumComponent(title: AlbumType, albums: Album[], show_date = true
             child_props: {
                 show_date,
                 artist_page: true,
-                hide_artists: !(AlbumType.APPEARANCES === title),
+                hide_artists: !(AlbumType.APPEARANCES === title || store.info.members),
             },
             route: `/artists/${store.info.artisthash}/discography/${albumType}?artist=${store.info.name}`,
         },
@@ -199,6 +200,10 @@ const scrollerItems = computed(() => {
     if (store.appearances.length > 0) {
         const appearances = createAbumComponent(AlbumType.APPEARANCES, store.appearances, false)
         components.push(appearances)
+    }
+
+    if (store.info.members) {
+        components.push({ id: 'collective-members', component: Members, props: { members: store.info.members } })
     }
 
     components = [...components, genreBanner]

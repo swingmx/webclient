@@ -1,6 +1,9 @@
 import { Routes, router } from '@/router'
 
 import useAuth from '@/stores/auth'
+import { collectives } from '@/stores/commandPalette'
+import { NotifType, useToast } from '@/stores/notification'
+import useArtist from '@/stores/pages/artist'
 import useModal from '@/stores/modal'
 import useCollection from '@/stores/pages/collections'
 import useTracklist from '@/stores/queue/tracklist'
@@ -11,7 +14,7 @@ import { addArtistToPlaylist } from '@/requests/playlists'
 
 import { AddToQueueIcon, DeleteIcon, MergeIcon, PlayNextIcon, PlusIcon } from '@/icons'
 import { Artist, Collection, Option, Playlist } from '@/interfaces'
-import { getAddToCollectionOptions, getAddToPlaylistOptions, get_find_on_social } from './utils'
+import { getAddToCollectionOptions, getAddToPlaylistOptions, get_find_on_social, separator } from './utils'
 import { useT } from '@/i18n'
 
 const { t } = useT()
@@ -102,12 +105,41 @@ export default async (artisthash: string, artistname: string) => {
         icon: MergeIcon,
     }
 
+    const add_to_collective: Option = {
+        label: t('Menus.Artist.AddToCollective'),
+        children: async () => [
+            {
+                label: t('Menus.Artist.NewCollective'),
+                action: () => useModal().showNewCollectiveModal({ hash: artisthash, name: artistname }),
+            },
+            ...(collectives().length ? [separator] : []),
+            ...collectives().map(collective => ({
+                label: collective.name,
+                action: async () => {
+                    const members = [...new Set([...(collective.members ?? []), artisthash])]
+                    const saved = await useArtist().saveCollective(collective.hash, { members })
+
+                    if (saved) {
+                        useToast().showNotification(
+                            t('ArtistView.AddedToCollective', { name: collective.name }),
+                            NotifType.Success
+                        )
+                    }
+                },
+            })),
+        ],
+        icon: PlusIcon,
+    }
+
+    const is_collective = collectives().some(c => c.hash === artisthash)
+    const admin_options = is_collective ? [] : [add_to_collective, merge_into]
+
     return [
         play_next,
         add_to_queue,
         add_to_playlist,
         ...[router.currentRoute.value.name === Routes.Page ? remove_from_collection : add_to_page],
-        ...(useAuth().is_admin ? [merge_into] : []),
+        ...(useAuth().is_admin ? admin_options : []),
         get_find_on_social('artist'),
     ]
 }

@@ -6,11 +6,14 @@
         }"
     >
         <section class="text">
-            <div class="card-title">{{ $t('ArtistView.Title') }}</div>
+            <div class="card-title">{{ $t(artist.members ? 'ArtistView.Collective' : 'ArtistView.Title') }}</div>
             <div class="artist-name" :class="`${useCircularImage ? 'ellip' : 'ellip2'}`" :title="artist.name">
                 {{ artist.display_name || artist.name }}
             </div>
             <div class="stats">
+                <span v-if="artist.members">
+                    {{ artist.members.length }} {{ `${ $t('ArtistView.ArtistCount', artist.members.length) } • ` }}
+                </span>
                 <span v-if="artist.trackcount">
                     {{ artist.trackcount.toLocaleString() }} {{ `${ $t('Common.Track', artist.trackcount) } • `}}
                 </span>

@@ -10,8 +10,10 @@
     >
         <header class="ea-header">
             <div>
-                <div class="ea-title">{{ view === 'crop' ? $t('EditArtist.CropTitle') : $t('EditArtist.Title') }}</div>
-                <div class="ea-subtitle">{{ view === 'crop' ? $t('EditArtist.CropSubtitle') : store.info.name }}</div>
+                <div class="ea-title">
+                    {{ view === 'crop' ? $t('EditArtist.CropTitle') : $t(title) }}
+                </div>
+                <div class="ea-subtitle">{{ view === 'crop' ? $t('EditArtist.CropSubtitle') : creating ? '' : store.info.name }}</div>
             </div>
             <button class="ea-close" :aria-label="$t('EditArtist.Cancel')" @click="close">
                 <svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" /></svg>
@@ -24,7 +26,7 @@
                 <div class="ea-image-row">
                     <button class="ea-thumb" :title="$t('EditArtist.Change')" @click="pickFile">
                         <CropView v-if="image.kind === 'new'" :crop="image.crop" :size="112" />
-                        <img v-else-if="!imageFailed" :src="store.imageUrl" @error="imageFailed = true" />
+                        <img v-else-if="!creating && !imageFailed" :src="store.imageUrl" @error="imageFailed = true" />
                         <div v-else class="ea-placeholder">{{ initial }}</div>
                         <div class="ea-thumb-hover">
                             <svg viewBox="0 0 24 24">
@@ -39,7 +41,9 @@
                             {{ imageTitle }}
                             <span v-if="image.kind === 'new'" class="ea-unsaved">{{ $t('EditArtist.Unsaved') }}</span>
                         </div>
-                        <div class="ea-help">{{ $t('EditArtist.ImageHelp') }}</div>
+                        <div class="ea-help">
+                            {{ $t(collective ? 'EditArtist.CollectiveImageHelp' : 'EditArtist.ImageHelp') }}
+                        </div>
                         <div class="ea-actions">
                             <button class="ea-btn secondary" @click="pickFile">
                                 <svg viewBox="0 0 16 16"><path d="M8 11V3M4.5 6.5 8 3l3.5 3.5M3 13h10" /></svg>
@@ -49,24 +53,93 @@
                                 <svg viewBox="0 0 16 16"><path d="M4 1.5V12h10.5M1.5 4H12v10.5" /></svg>
                                 {{ $t('EditArtist.Crop') }}
                             </button>
+                            <button
+                                v-if="collective && !creating"
+                                class="ea-btn secondary"
+                                :disabled="useGrid && image.kind === 'current'"
+                                @click="resetToGrid"
+                            >
+                                {{ $t('EditArtist.UseGrid') }}
+                            </button>
                         </div>
                     </div>
                 </div>
             </section>
 
             <section>
-                <label class="ea-label" for="ea-display-name">{{ $t('EditArtist.DisplayName') }}</label>
+                <label class="ea-label" for="ea-display-name">
+                    {{ $t(collective ? 'EditArtist.Name' : 'EditArtist.DisplayName') }}
+                </label>
                 <input
                     id="ea-display-name"
+                    ref="nameInput"
                     v-model="name"
                     class="ea-input"
                     type="text"
                     spellcheck="false"
                     maxlength="200"
                     autocomplete="off"
-                    :placeholder="store.info.name"
+                    :placeholder="creating ? '' : store.info.name"
                 />
-                <div class="ea-help tertiary">{{ $t('EditArtist.DisplayNameHelp') }}</div>
+                <div v-if="!collective" class="ea-help tertiary">{{ $t('EditArtist.DisplayNameHelp') }}</div>
+            </section>
+
+            <section v-if="collective">
+                <div class="ea-label ea-members-label">
+                    {{ $t('EditArtist.Artists') }}
+                    <span>{{ $t('EditArtist.ArtistCount', { n: members.length }, members.length) }}</span>
+                </div>
+                <div class="ea-members">
+                    <div v-for="member in members" :key="member.hash" class="ea-member">
+                        <PersonImage class="ea-avatar" :image="member.image" :name="member.name" size="small" />
+                        <span class="ea-member-name ellip">{{ member.name }}</span>
+                        <span v-if="member.trackcount" class="ea-member-count">
+                            {{ $t('Common.TrackCount', { count: member.trackcount }, member.trackcount) }}
+                        </span>
+                        <button
+                            class="ea-close"
+                            :disabled="members.length === 1"
+                            :aria-label="$t('EditArtist.RemoveArtist', { artist: member.name })"
+                            @click="members = members.filter(m => m.hash !== member.hash)"
+                        >
+                            <svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section v-if="collective">
+                <div class="ea-label">{{ $t('EditArtist.AddArtists') }}</div>
+                <label class="ea-member-search">
+                    <svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5" /><path d="M10.5 10.5 14 14" /></svg>
+                    <input
+                        v-model="query"
+                        type="text"
+                        autocomplete="off"
+                        spellcheck="false"
+                        :placeholder="$t('EditArtist.AddArtist')"
+                        :aria-label="$t('EditArtist.AddArtist')"
+                        @keydown.enter.stop.prevent="candidates[0] && addMember(candidates[0])"
+                    />
+                </label>
+                <div class="ea-members ea-results">
+                    <div v-if="!candidates.length" class="ea-results-empty">
+                        {{ $t(query.trim() ? 'EditArtist.NoArtists' : 'EditArtist.AddArtist') }}
+                    </div>
+                    <div v-for="artist in candidates" :key="artist.hash" class="ea-member">
+                        <PersonImage
+                            class="ea-avatar"
+                            :image="paletteImage(artist)"
+                            :name="artist.name"
+                            :blurhash="artist.blurhash"
+                            size="small"
+                        />
+                        <span class="ea-member-name ellip">{{ artist.name }}</span>
+                        <button class="ea-btn primary ea-add" @click="addMember(artist)">
+                            {{ $t('EditArtist.Add') }}
+                        </button>
+                    </div>
+                </div>
             </section>
         </div>
 
@@ -76,9 +149,12 @@
 
         <footer class="ea-footer">
             <template v-if="view === 'edit'">
+                <button v-if="collective && !creating" class="ea-btn danger" :disabled="saving" @click="deleteCollective">
+                    {{ $t(confirmingDelete ? 'EditArtist.ConfirmDelete' : 'EditArtist.DeleteCollective') }}
+                </button>
                 <button class="ea-btn ghost" @click="close">{{ $t('EditArtist.Cancel') }}</button>
                 <button class="ea-btn primary" :disabled="!dirty" @click="save">
-                    {{ $t('EditArtist.Save') }}
+                    {{ $t(creating ? 'EditArtist.Create' : 'EditArtist.Save') }}
                 </button>
             </template>
             <template v-else>
@@ -98,20 +174,27 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { useT } from '@/i18n'
+import { ArtistEditData } from '@/requests/artists'
+import { Routes } from '@/router'
+import useCommandPalette, { PaletteArtist } from '@/stores/commandPalette'
 import useArtistStore, { ArtistEdits } from '@/stores/pages/artist'
 import { Crop, loadCrop, renderCrop } from '@/utils/crop'
 import { firstImage } from '@/utils/imageFiles'
 
 import CropStage from '../shared/CropStage.vue'
 import CropView from '../shared/CropView.vue'
+import PersonImage from '../shared/PersonImage.vue'
 
 type ImageState = { kind: 'current' } | { kind: 'new'; crop: Crop }
 
 const props = defineProps<{
     image?: File | null
+    // the first artist of a collective to create; nothing is saved until the form is
+    firstMember?: { hash: string; name: string }
 }>()
 
 const emit = defineEmits<{
@@ -123,8 +206,61 @@ const store = useArtistStore()
 
 const dialog = ref<HTMLElement>()
 const fileInput = ref<HTMLInputElement>()
+const nameInput = ref<HTMLInputElement>()
 
-const savedName = () => store.info.display_name || ''
+const router = useRouter()
+const palette = useCommandPalette()
+
+// a collective edits its own name and members; an artist only its display name
+const creating = computed(() => !!props.firstMember)
+const collective = computed(() => creating.value || !!store.info.members)
+const title = computed(() =>
+    creating.value ? 'EditArtist.NewCollectiveTitle' : collective.value ? 'EditArtist.CollectiveTitle' : 'EditArtist.Title'
+)
+
+const savedName = () => {
+    if (creating.value) return ''
+    return collective.value ? store.info.name : store.info.display_name || ''
+}
+
+interface Member {
+    hash: string
+    name: string
+    image: string
+    trackcount?: number
+}
+
+const savedMembers = (): Member[] =>
+    props.firstMember
+        ? [{ ...props.firstMember, image: `${props.firstMember.hash}.webp` }]
+        : (store.info.members ?? []).map(m => ({ hash: m.artisthash, name: m.name, image: m.image, trackcount: m.trackcount }))
+
+const members = ref<Member[]>(savedMembers())
+const query = ref('')
+const useGrid = ref(false)
+const confirmingDelete = ref(false)
+
+const paletteImage = (artist: PaletteArtist) => `${artist.hash}.webp${artist.image ? `?${artist.image}` : ''}`
+
+// the command palette's artists, without collectives and current members
+const candidates = computed(() => {
+    if (!query.value.trim()) return []
+    const taken = new Set(members.value.map(m => m.hash))
+
+    return palette.results
+        .filter((r): r is PaletteArtist => r.type === 'artist' && !r.members && !taken.has(r.hash))
+        .slice(0, 20)
+})
+
+watch(query, q => palette.search(q))
+
+function addMember(artist: PaletteArtist) {
+    members.value = [...members.value, { hash: artist.hash, name: artist.name, image: paletteImage(artist) }]
+}
+
+const membersDirty = computed(
+    () => creating.value || members.value.map(m => m.hash).join() !== savedMembers().map(m => m.hash).join()
+)
 
 const image = ref<ImageState>({ kind: 'current' })
 const name = ref(savedName())
@@ -136,11 +272,45 @@ const dragging = ref(false)
 let dragDepth = 0
 
 const imageFailed = ref(false)
-const initial = computed(() => (store.info.name || '?').trim().charAt(0).toUpperCase())
-const imageTitle = computed(() => t(image.value.kind === 'new' ? 'EditArtist.NewImage' : 'EditArtist.CurrentImage'))
+const initial = computed(() => ((creating.value ? name.value : store.info.name) || '?').trim().charAt(0).toUpperCase())
+const imageTitle = computed(() => {
+    if (image.value.kind === 'new') return t('EditArtist.NewImage')
+    return t(creating.value ? 'EditArtist.GridImage' : 'EditArtist.CurrentImage')
+})
 
 const nameDirty = computed(() => name.value.trim() !== savedName())
-const dirty = computed(() => image.value.kind === 'new' || nameDirty.value)
+const dirty = computed(() => {
+    if (collective.value && !name.value.trim()) return false
+    return image.value.kind === 'new' || nameDirty.value || membersDirty.value || useGrid.value
+})
+
+function resetToGrid() {
+    setImage({ kind: 'current' })
+    useGrid.value = true
+}
+
+// a new collective's hash: 16 hex characters, like an artist's
+const randomHash = () =>
+    Array.from(crypto.getRandomValues(new Uint8Array(8)), b => b.toString(16).padStart(2, '0')).join('')
+
+/**
+ * Deletes the collective on the second click and leaves its page.
+ */
+async function deleteCollective() {
+    if (!confirmingDelete.value) {
+        confirmingDelete.value = true
+        return
+    }
+
+    saving.value = true
+    const deleted = await store.saveCollective(store.info.artisthash, { members: [] })
+    saving.value = false
+
+    if (deleted) {
+        close()
+        router.replace({ name: Routes.ArtistList })
+    }
+}
 
 // object urls still referenced by `image` or `draft`
 function revokeUnused(url?: string) {
@@ -252,6 +422,26 @@ async function save() {
     saving.value = true
 
     try {
+        if (collective.value) {
+            const data: ArtistEditData = {}
+            if (nameDirty.value) data.display_name = name.value.trim()
+            if (membersDirty.value) data.members = members.value.map(m => m.hash)
+            if (useGrid.value && image.value.kind === 'current') data.use_grid = true
+
+            const blob = image.value.kind === 'new' ? await renderCrop(image.value.crop) : undefined
+            const hash = creating.value ? randomHash() : store.info.artisthash
+            const saved = await store.saveCollective(hash, data, blob)
+
+            if (!saved) {
+                saving.value = false
+                return
+            }
+
+            close()
+            if (creating.value) router.push({ name: Routes.artist, params: { hash } })
+            return
+        }
+
         const edits: ArtistEdits = { artisthash: store.info.artisthash }
 
         if (image.value.kind === 'new') edits.image = await renderCrop(image.value.crop)
@@ -269,7 +459,7 @@ onMounted(() => {
     window.addEventListener('paste', onPaste)
     // capture runs before the app's global shortcuts, which close any modal on Esc
     window.addEventListener('keydown', onKeydown, true)
-    dialog.value?.focus()
+    creating.value ? nameInput.value?.focus() : dialog.value?.focus()
     useFile(props.image ?? null)
 })
 
@@ -494,6 +684,22 @@ onBeforeUnmount(() => {
             }
         }
 
+        &.danger {
+            margin-right: auto;
+            padding-left: 4px;
+            background-color: transparent;
+            color: #f0524a;
+
+            &:hover {
+                color: #ff7a72;
+            }
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
         &.ghost {
             background-color: transparent;
             color: #a1a1a8;
@@ -538,6 +744,105 @@ onBeforeUnmount(() => {
         &:focus {
             border-color: #5a5a62;
             box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+        }
+    }
+
+    .ea-members-label {
+        display: flex;
+        justify-content: space-between;
+
+        span {
+            font-weight: 400;
+            color: #8a8a91;
+        }
+    }
+
+    // members scroll past 4.5 rows, search results past 3.5; a row is 49px
+    .ea-members {
+        max-height: 221px;
+        overflow-y: auto;
+        // a visible scrollbar narrows the rows only when the list overflows
+        @include hideScrollbars;
+        border: 1px solid #2e2e33;
+        border-radius: 9px;
+
+        &.ea-results {
+            height: 172px;
+        }
+    }
+
+    .ea-member,
+    .ea-member-search {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        height: auto;
+        padding: 8px 10px 8px 12px;
+        border-bottom: 1px solid #26262b;
+        background: transparent;
+        color: inherit;
+        font-size: 14px;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    .ea-results-empty {
+        height: 100%;
+        display: grid;
+        place-items: center;
+        font-size: 13px;
+        color: #6b6b72;
+    }
+
+    .ea-add {
+        padding: 5px 12px;
+    }
+
+    .ea-avatar {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        object-fit: cover;
+        font-size: 12px;
+    }
+
+    .ea-member-name {
+        flex: 1;
+        min-width: 0;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    .ea-member-count {
+        font-size: 12px;
+        color: #8a8a91;
+    }
+
+    .ea-member-search {
+        border: 1px solid #2e2e33 !important;
+        border-radius: 9px;
+        color: #8a8a91;
+
+        svg {
+            width: 16px;
+            height: 16px;
+            margin: 0 8px;
+            flex-shrink: 0;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            padding: 6px 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #ededed;
+            font-size: 14px;
         }
     }
 

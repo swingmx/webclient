@@ -445,6 +445,10 @@ export interface Artist {
     type?: string
     // a composer's palette entry, for the initials tile when there is no image
     tint?: number | null
+    // the artists a collective combines; only collectives have it
+    members?: Artist[]
+    // the collectives an artist is a member of
+    collectives?: Artist[]
 
     // available in charts
     trend?: {

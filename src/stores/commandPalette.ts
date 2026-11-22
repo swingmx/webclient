@@ -7,10 +7,11 @@ import type { WorkerRequest, WorkerResponse } from '@/workers/commandPalette'
 /**
  * The server's compact search index.
  * artists: [hash, name, display name, blurhash, image query, album positions in artist page order]
+ * A collective's row ends with its member hashes.
  * albums: [hash, title, first version, year, blurhash, album artist positions]
  */
 export interface SearchIndex {
-    artists: [string, string, string, string, string, number[]][]
+    artists: [string, string, string, string, string, number[], string[]?][]
     albums: [string, string, string, number, string, number[]][]
 }
 
@@ -21,6 +22,7 @@ export interface PaletteArtist {
     blurhash: string
     image: string
     albums: PaletteAlbum[]
+    members?: string[]
 }
 
 export interface PaletteAlbum {
@@ -35,6 +37,11 @@ export interface PaletteAlbum {
 
 export type PaletteItem = PaletteArtist | PaletteAlbum
 
+/**
+ * The collectives in the loaded index.
+ */
+export const collectives = () => artists.filter(a => a.members)
+
 let worker: Worker | null = null
 let artists: PaletteArtist[] = []
 let albums: PaletteAlbum[] = []
@@ -46,13 +53,14 @@ const RELOAD_AFTER = 5 * 60 * 1000
 let loadedAt = 0
 
 function toItems(index: SearchIndex) {
-    artists = index.artists.map(([hash, name, displayName, blurhash, image]) => ({
+    artists = index.artists.map(([hash, name, displayName, blurhash, image, , members]) => ({
         type: 'artist' as const,
         hash,
         name: displayName || name,
         blurhash,
         image,
         albums: [],
+        members,
     }))
 
     albums = index.albums.map(([hash, name, version, year, blurhash, owners]) => ({

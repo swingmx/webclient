@@ -67,6 +67,12 @@ export default defineStore('newModal', {
         showEditArtistModal(image: File | null = null) {
             this.showModal(ModalOptions.editArtist, { image })
         },
+        /**
+         * Opens the artist editor as a form for a new collective starting with `member`.
+         */
+        showNewCollectiveModal(member: { hash: string; name: string }) {
+            this.showModal(ModalOptions.editArtist, { firstMember: member })
+        },
         showMergeArtistModal(artisthash: string, artistname: string) {
             this.showModal(ModalOptions.mergeArtist, { artisthash, artistname })
         },
