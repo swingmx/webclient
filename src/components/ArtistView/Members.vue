@@ -3,9 +3,11 @@
         <div class="rinfo">
             <div class="rtitle">
                 <b>{{ $t('ArtistView.Members') }}</b>
-                <button v-if="auth.is_admin" class="see-all" @click="modal.showEditArtistModal()">
-                    <b>{{ $t('ArtistView.EditCollective') }}</b>
-                </button>
+                <span v-if="auth.is_admin" class="see-all">
+                    <a href="#" @click.prevent="modal.showEditArtistModal()">
+                        <b>{{ $t('ArtistView.EditCollective') }}</b>
+                    </a>
+                </span>
             </div>
         </div>
         <div class="cm-grid">
@@ -53,17 +55,6 @@ const modal = useModal()
 
 <style lang="scss">
 .collective-members {
-    button.see-all {
-        height: auto;
-        padding: 0;
-        background: transparent;
-        cursor: pointer;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-
     .cm-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
