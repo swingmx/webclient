@@ -158,6 +158,17 @@ export async function updateArtistImage(hash: string, image: Blob) {
 /**
  * Sets the name shown on the artist's page. Null restores the default.
  */
+/**
+ * Merges an artist into another, for good.
+ */
+export async function mergeArtist(hash: string, into: string) {
+    return await useAxios({
+        url: paths.api.artist + `/${hash}/merge`,
+        method: 'POST',
+        props: { into },
+    })
+}
+
 export async function updateArtistDisplayName(hash: string, display_name: string | null) {
     return await useAxios({
         url: paths.api.artist + `/${hash}/display-name`,

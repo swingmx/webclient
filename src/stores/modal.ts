@@ -16,6 +16,7 @@ export enum ModalOptions {
     login,
     settings,
     editArtist,
+    mergeArtist,
 }
 
 export default defineStore('newModal', {
@@ -65,6 +66,9 @@ export default defineStore('newModal', {
          */
         showEditArtistModal(image: File | null = null) {
             this.showModal(ModalOptions.editArtist, { image })
+        },
+        showMergeArtistModal(artisthash: string, artistname: string) {
+            this.showModal(ModalOptions.mergeArtist, { artisthash, artistname })
         },
         /**
          * Opens the playlist editor, straight in the crop step when given an image.

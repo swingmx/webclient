@@ -1,5 +1,7 @@
 import { Routes, router } from '@/router'
 
+import useAuth from '@/stores/auth'
+import useModal from '@/stores/modal'
 import useCollection from '@/stores/pages/collections'
 import useTracklist from '@/stores/queue/tracklist'
 
@@ -7,7 +9,7 @@ import { getArtistTracks } from '@/requests/artists'
 import { addOrRemoveItemFromCollection } from '@/requests/collections'
 import { addArtistToPlaylist } from '@/requests/playlists'
 
-import { AddToQueueIcon, DeleteIcon, PlayNextIcon, PlusIcon } from '@/icons'
+import { AddToQueueIcon, DeleteIcon, MergeIcon, PlayNextIcon, PlusIcon } from '@/icons'
 import { Artist, Collection, Option, Playlist } from '@/interfaces'
 import { getAddToCollectionOptions, getAddToPlaylistOptions, get_find_on_social } from './utils'
 import { useT } from '@/i18n'
@@ -94,11 +96,18 @@ export default async (artisthash: string, artistname: string) => {
         icon: DeleteIcon,
     }
 
+    const merge_into: Option = {
+        label: t('Menus.Artist.MergeInto'),
+        action: () => useModal().showMergeArtistModal(artisthash, artistname),
+        icon: MergeIcon,
+    }
+
     return [
         play_next,
         add_to_queue,
         add_to_playlist,
         ...[router.currentRoute.value.name === Routes.Page ? remove_from_collection : add_to_page],
+        ...(useAuth().is_admin ? [merge_into] : []),
         get_find_on_social('artist'),
     ]
 }

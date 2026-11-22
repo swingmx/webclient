@@ -8,14 +8,14 @@
             :class="{
                 settings: modal.component == modal.options.settings,
                 authlogin: modal.component == modal.options.login,
-                bare: modal.component == modal.options.editArtist,
+                bare,
             }"
             :style="{
                 maxWidth: modal.component == modal.options.setRootDirs ? '56rem' : '30rem',
             }"
         >
             <!-- TODO: MOVE MAX WIDTH TO CLASS -->
-            <div v-if="modal.component != modal.options.editArtist" class="heading">{{ modal.title }}</div>
+            <div v-if="!bare" class="heading">{{ modal.title }}</div>
             <AuthLogin v-if="modal.component == modal.options.login" />
             <NewPlaylist
                 v-if="modal.component == modal.options.newPlaylist"
@@ -46,11 +46,14 @@
             <RootDirsPrompt v-if="modal.component == modal.options.rootDirsPrompt" @hideModal="hideModal" />
             <Settings v-if="modal.component == modal.options.settings" @set-title="setTitle" />
             <EditArtist v-if="modal.component == modal.options.editArtist" v-bind="modal.props" @hideModal="hideModal" />
+            <MergeArtist v-if="modal.component == modal.options.mergeArtist" v-bind="modal.props" @hideModal="hideModal" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import { dropPage } from '@/composables/pageCache'
 import { deletePlaylist as delPlaylist } from '@/requests/playlists'
 import useModalStore, { ModalOptions } from '@/stores/modal'
@@ -61,6 +64,7 @@ import AuthLogin from './modals/AuthLogin.vue'
 import ConfirmModal from './modals/ConfirmModal.vue'
 import CrudPage from './modals/CrudPage.vue'
 import EditArtist from './modals/EditArtist.vue'
+import MergeArtist from './modals/MergeArtist.vue'
 import NewPlaylist from './modals/NewPlaylist.vue'
 import RootDirsPrompt from './modals/RootDirsPrompt.vue'
 import SetRootDirs from './modals/SetRootDirs.vue'
@@ -69,6 +73,8 @@ import UpdatePlaylist from './modals/updatePlaylist.vue'
 
 const modal = useModalStore()
 const router = useRouter()
+// dialogs that draw their own frame and header
+const bare = computed(() => [ModalOptions.editArtist, ModalOptions.mergeArtist].includes(modal.component))
 
 function setTitle(title: string) {
     modal.setTitle(title)

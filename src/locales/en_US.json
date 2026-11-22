@@ -317,7 +317,8 @@
     },
     "Artist": {
       "ThisIsPlaylist": "This is {artist}",
-      "PlayNext": "Play next"
+      "PlayNext": "Play next",
+      "MergeInto": "Merge into"
     },
     "Common": {
       "AddToCollection": "Add to Collection",
@@ -366,6 +367,14 @@
   },
   "Modal": {
     "DeletePlaylist": "Are you sure you want to permanently delete this playlist?",
+    "MergeArtist": {
+      "Title": "Merge artist",
+      "Search": "Search artists",
+      "Hint": "Search for the artist you want to merge into.",
+      "Pick": "Pick the artist to merge into",
+      "Merge": "Merge",
+      "Done": "Merged {source} into {target}"
+    },
     "UpdatePlaylist": "Update Playlist"
   },
   "Nav": {
