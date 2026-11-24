@@ -112,6 +112,7 @@ export default function (queue: typeof useQueue, modal: typeof useModal) {
 
       case " ": // space
         {
+          if (target.closest(".modal button")) break;
           e.preventDefault();
           q.playPause();
         }

@@ -1,11 +1,12 @@
 <template>
-  <div class="root-dirs-prompt">
-    <h3 class="t-center">{{ $t('RootDirsPrompt.WhereToLook') }}</h3>
-    <div class="options-group">
-      <div v-for="option in options" :key="option.id" v-motion-slide-bottom class="option" @click="option.action()">
-        <b>{{ option.title }}</b>
-        <div class="info">{{ option.info }}</div>
-      </div>
+  <div class="m-dialog root-dirs-prompt">
+    <div class="m-body">
+      <section>
+        <div v-for="option in options" :key="option.id" v-motion-slide-bottom class="option" @click="option.action()">
+          <b>{{ option.title }}</b>
+          <div class="info">{{ option.info }}</div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -62,22 +63,20 @@ onMounted(() => {
 <style lang="scss">
 .root-dirs-prompt {
   .option {
-    padding: 1.25rem;
-    border-radius: $small;
-    position: relative;
-    background-color: #4e4b4b3f;
-    margin-top: 1.25rem;
+    padding: 14px 16px;
+    border: 1px solid $gray5;
+    border-radius: 12px;
     cursor: pointer;
     transition: background-color 0.2s ease-out;
 
     &:hover {
-      background-color: $darkblue;
+      background-color: $gray5;
     }
 
     .info {
       margin-top: $smaller;
-      font-size: small;
-      font-weight: 500;
+      font-size: 13px;
+      color: $gray1;
     }
   }
 }

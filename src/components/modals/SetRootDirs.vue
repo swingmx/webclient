@@ -1,33 +1,36 @@
 <template>
-  <br /><br />
-  <div style="position: relative">
-    <div id="bread-nav" class="bread-nav rounded-sm">
-      &nbsp;&nbsp;<span @click="fetchDirs('$root')">$root</span>&nbsp;&nbsp;<BreadCrumbNav
-        :sub-paths="subPaths"
-        @navigate="fetchDirs"
-      />
-    </div>
-    <div class="set-root-dirs-browser">
-      <h4 v-if="no_more_dirs">
-        <span class="folder_icon">📂</span> {{ $t('SetRootDirs.NoSubFolders') }}
-      </h4>
-      <div class="scrollable">
-        <div class="content">
-          <FolderItem
-            v-for="dir in dirs"
-            :key="dir.name"
-            :folder="dir"
-            :is_checked="selected.filter((p) => p == dir.path).length > 0 ? true : false"
-            @navigate="fetchDirs(dir.path)"
-            @check="handleCheck(dir.path)"
-          />
+  <div class="m-dialog set-root-dirs">
+    <div class="m-body">
+      <div id="bread-nav" class="bread-nav rounded-sm">
+        &nbsp;&nbsp;<span @click="fetchDirs('$root')">$root</span>&nbsp;&nbsp;<BreadCrumbNav
+          :sub-paths="subPaths"
+          @navigate="fetchDirs"
+        />
+      </div>
+      <div class="set-root-dirs-browser">
+        <h4 v-if="no_more_dirs">
+          <span class="folder_icon">📂</span> {{ $t('SetRootDirs.NoSubFolders') }}
+        </h4>
+        <div class="scrollable">
+          <div class="content">
+            <FolderItem
+              v-for="dir in dirs"
+              :key="dir.name"
+              :folder="dir"
+              :is_checked="selected.filter((p) => p == dir.path).length > 0 ? true : false"
+              @navigate="fetchDirs(dir.path)"
+              @check="handleCheck(dir.path)"
+            />
+          </div>
         </div>
       </div>
-      <div class="buttons">
-        <button class="btn-active select-here" @click="selectHere"> {{ $t('SetRootDirs.SelectThisFolder') }} </button>
-        <button class="btn-active finish" @click="submitFolders"> {{ $t('SetRootDirs.AddAllChecked') }} ({{ getNewDirs().length }})</button>
-      </div>
     </div>
+    <footer class="m-footer">
+      <button class="m-btn secondary" @click="selectHere">{{ $t('SetRootDirs.SelectThisFolder') }}</button>
+      <button class="m-btn primary" @click="submitFolders">
+        {{ $t('SetRootDirs.AddAllChecked') }} ({{ getNewDirs().length }})
+      </button>
+    </footer>
   </div>
 </template>
 
@@ -122,51 +125,39 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.bread-nav {
-  background-color: $gray4;
-  padding: $smaller;
-  padding-right: 0;
-  width: max-content;
-  margin-bottom: 1rem;
-  position: absolute;
-  top: -3.25rem;
-  max-width: calc(100% - 2rem);
-  max-width: 100%;
-  overflow: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-
-  display: flex;
-  align-items: center;
-
-  span {
-    cursor: pointer;
+.set-root-dirs {
+  .m-body {
+    gap: 12px;
   }
-}
 
-.bread-nav {
-  scrollbar-width: none;
+  .bread-nav {
+    background-color: $gray5;
+    padding: $smaller;
+    padding-right: 0;
+    width: max-content;
+    max-width: 100%;
+    overflow: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
 
-  &::-webkit-scrollbar {
-    display: none;
+    display: flex;
+    align-items: center;
+
+    span {
+      cursor: pointer;
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
-}
-
-.bottom-text {
-  position: absolute;
-  font-size: small;
-  bottom: -1.25rem;
-  width: 100%;
-  opacity: 0.5;
 }
 
 .set-root-dirs-browser {
   height: 27rem;
-  margin-right: -1rem;
-
-  display: grid;
-  grid-template-rows: 1fr max-content;
-  gap: 1.25rem;
+  display: flex;
+  flex-direction: column;
 
   .folder_icon {
     vertical-align: 2px;
@@ -174,9 +165,9 @@ onMounted(() => {
   }
 
   .scrollable {
+    flex: 1;
+    min-height: 0;
     overflow-x: hidden;
-    height: 100%;
-    padding-right: 1rem;
     padding: 1rem 1rem 1rem 0;
 
     .content {
@@ -189,26 +180,6 @@ onMounted(() => {
     overflow-y: auto;
     scrollbar-gutter: stable;
     -webkit-overflow-scrolling: touch;
-  }
-
-  .buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: $medium;
-    margin-right: 1rem;
-    margin-bottom: -$medium;
-
-    & > * {
-      cursor: pointer;
-      margin: 0;
-    }
-
-    button {
-      font-weight: 500;
-      padding: 0 1rem;
-      font-variant-numeric: tabular-nums;
-    }
   }
 
   .f-item {
@@ -225,7 +196,7 @@ onMounted(() => {
   }
 
   .f-item.selected {
-    background-color: #234ece;
+    background-color: $darkestblue;
   }
 
   .f-item.selected > svg {

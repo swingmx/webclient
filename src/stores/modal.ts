@@ -22,16 +22,18 @@ export enum ModalOptions {
 export default defineStore('newModal', {
     state: () => ({
         title: '',
+        subtitle: '',
         options: ModalOptions,
         component: <any>null,
         props: <any>{},
         visible: false,
     }),
     actions: {
-        showModal(modalOption: ModalOptions, props: any = {}) {
+        showModal(modalOption: ModalOptions, props: any = {}, title = '') {
             this.component = modalOption
             this.visible = true
             this.props = props
+            if (title) this.setTitle(title)
         },
         showNewPlaylistModal(props: any = {}) {
             this.showModal(ModalOptions.newPlaylist, props)
@@ -74,7 +76,7 @@ export default defineStore('newModal', {
             this.showModal(ModalOptions.editArtist, { firstMember: member })
         },
         showMergeArtistModal(artisthash: string, artistname: string) {
-            this.showModal(ModalOptions.mergeArtist, { artisthash, artistname })
+            this.showModal(ModalOptions.mergeArtist, { artisthash, artistname }, t('Modal.MergeArtist.Title'))
         },
         /**
          * Opens the playlist editor, straight in the crop step when given an image.
@@ -86,16 +88,16 @@ export default defineStore('newModal', {
             const props = {
                 pid: pid,
             }
-            this.showModal(ModalOptions.deletePlaylist, props)
+            this.showModal(ModalOptions.deletePlaylist, props, t('Modal.DeletePlaylistTitle'))
         },
         showSetIPModal() {
             this.showModal(ModalOptions.SetIP)
         },
         showRootDirsPromptModal() {
-            this.showModal(ModalOptions.rootDirsPrompt)
+            this.showModal(ModalOptions.rootDirsPrompt, {}, t('RootDirsPrompt.WhereToLook'))
         },
         showSetRootDirsModal() {
-            this.showModal(ModalOptions.setRootDirs)
+            this.showModal(ModalOptions.setRootDirs, {}, t('Settings.RootDirs.Title'))
         },
         showLoginModal() {
             if (useUI().hideUI) {
@@ -113,12 +115,14 @@ export default defineStore('newModal', {
             this.visible = false
             this.setTitle('')
         },
-        setTitle(new_title: string) {
+        setTitle(new_title: string, subtitle = '') {
             this.title = new_title
+            this.subtitle = subtitle
         },
         resetModal() {
             this.visible = false
             this.title = ''
+            this.subtitle = ''
             this.props = {}
             this.component = null
         },

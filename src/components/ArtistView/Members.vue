@@ -67,7 +67,7 @@ const modal = useModal()
         align-items: center;
         gap: 1rem;
         padding: 1rem;
-        background-color: $gray5;
+        background-color: $gray;
 
         &:hover {
             background-color: $gray4;
@@ -101,7 +101,7 @@ const modal = useModal()
     .cm-go {
         font-size: small;
         font-weight: 600;
-        color: $darkblue;
+        color: $orange;
     }
 }
 </style>

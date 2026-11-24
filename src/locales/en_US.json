@@ -391,6 +391,7 @@
   },
   "Modal": {
     "DeletePlaylist": "Are you sure you want to permanently delete this playlist?",
+    "DeletePlaylistTitle": "Delete playlist",
     "MergeArtist": {
       "Title": "Merge artist",
       "Search": "Search artists",

@@ -1,28 +1,8 @@
 <template>
-    <div
-        ref="dialog"
-        class="edit-artist-dialog"
-        tabindex="-1"
-        @dragenter.prevent="onDragEnter"
-        @dragover.prevent
-        @dragleave="onDragLeave"
-        @drop.prevent="onDrop"
-    >
-        <header class="ea-header">
-            <div>
-                <div class="ea-title">
-                    {{ view === 'crop' ? $t('EditArtist.CropTitle') : $t(title) }}
-                </div>
-                <div class="ea-subtitle">{{ view === 'crop' ? $t('EditArtist.CropSubtitle') : creating ? '' : store.info.name }}</div>
-            </div>
-            <button class="ea-close" :aria-label="$t('EditArtist.Cancel')" @click="close">
-                <svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" /></svg>
-            </button>
-        </header>
-
-        <div v-if="view === 'edit'" class="ea-body">
+    <div ref="dialog" class="m-dialog edit-artist-dialog" tabindex="-1">
+        <div v-if="view === 'edit'" class="m-body">
             <section>
-                <div class="ea-label">{{ $t('EditArtist.Image') }}</div>
+                <div class="m-label">{{ $t('EditArtist.Image') }}</div>
                 <div class="ea-image-row">
                     <button class="ea-thumb" :title="$t('EditArtist.Change')" @click="pickFile">
                         <CropView v-if="image.kind === 'new'" :crop="image.crop" :size="112" />
@@ -45,17 +25,17 @@
                             {{ $t(collective ? 'EditArtist.CollectiveImageHelp' : 'EditArtist.ImageHelp') }}
                         </div>
                         <div class="ea-actions">
-                            <button class="ea-btn secondary" @click="pickFile">
+                            <button class="m-btn secondary" @click="pickFile">
                                 <svg viewBox="0 0 16 16"><path d="M8 11V3M4.5 6.5 8 3l3.5 3.5M3 13h10" /></svg>
                                 {{ $t('EditArtist.Upload') }}
                             </button>
-                            <button v-if="image.kind === 'new'" class="ea-btn secondary" @click="openCrop(image.crop)">
+                            <button v-if="image.kind === 'new'" class="m-btn secondary" @click="openCrop(image.crop)">
                                 <svg viewBox="0 0 16 16"><path d="M4 1.5V12h10.5M1.5 4H12v10.5" /></svg>
                                 {{ $t('EditArtist.Crop') }}
                             </button>
                             <button
                                 v-if="collective && !creating"
-                                class="ea-btn secondary"
+                                class="m-btn secondary"
                                 :disabled="useGrid && image.kind === 'current'"
                                 @click="resetToGrid"
                             >
@@ -67,14 +47,14 @@
             </section>
 
             <section>
-                <label class="ea-label" for="ea-display-name">
+                <label class="m-label" for="ea-display-name">
                     {{ $t(collective ? 'EditArtist.Name' : 'EditArtist.DisplayName') }}
                 </label>
                 <input
                     id="ea-display-name"
                     ref="nameInput"
                     v-model="name"
-                    class="ea-input"
+                    class="m-input"
                     type="text"
                     spellcheck="false"
                     maxlength="200"
@@ -85,7 +65,7 @@
             </section>
 
             <section v-if="collective">
-                <div class="ea-label ea-members-label">
+                <div class="m-label ea-members-label">
                     {{ $t('EditArtist.Artists') }}
                     <span>{{ $t('EditArtist.ArtistCount', { n: members.length }, members.length) }}</span>
                 </div>
@@ -97,7 +77,7 @@
                             {{ $t('Common.TrackCount', { count: member.trackcount }, member.trackcount) }}
                         </span>
                         <button
-                            class="ea-close"
+                            class="m-close"
                             :disabled="members.length === 1"
                             :aria-label="$t('EditArtist.RemoveArtist', { artist: member.name })"
                             @click="members = members.filter(m => m.hash !== member.hash)"
@@ -109,7 +89,7 @@
             </section>
 
             <section v-if="collective">
-                <div class="ea-label">{{ $t('EditArtist.AddArtists') }}</div>
+                <div class="m-label">{{ $t('EditArtist.AddArtists') }}</div>
                 <label class="ea-member-search">
                     <svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5" /><path d="M10.5 10.5 14 14" /></svg>
                     <input
@@ -135,7 +115,7 @@
                             size="small"
                         />
                         <span class="ea-member-name ellip">{{ artist.name }}</span>
-                        <button class="ea-btn primary ea-add" @click="addMember(artist)">
+                        <button class="m-btn primary ea-add" @click="addMember(artist)">
                             {{ $t('EditArtist.Add') }}
                         </button>
                     </div>
@@ -143,23 +123,23 @@
             </section>
         </div>
 
-        <div v-else-if="draft" class="ea-body crop">
+        <div v-else-if="draft" class="m-body crop">
             <CropStage :crop="draft" autofocus />
         </div>
 
-        <footer class="ea-footer">
+        <footer class="m-footer">
             <template v-if="view === 'edit'">
-                <button v-if="collective && !creating" class="ea-btn danger" :disabled="saving" @click="deleteCollective">
+                <button v-if="collective && !creating" class="m-btn danger" :disabled="saving" @click="deleteCollective">
                     {{ $t(confirmingDelete ? 'EditArtist.ConfirmDelete' : 'EditArtist.DeleteCollective') }}
                 </button>
-                <button class="ea-btn ghost" @click="close">{{ $t('EditArtist.Cancel') }}</button>
-                <button class="ea-btn primary" :disabled="!dirty" @click="save">
+                <button class="m-btn ghost" @click="close">{{ $t('EditArtist.Cancel') }}</button>
+                <button class="m-btn primary" :disabled="!dirty" @click="save">
                     {{ $t(creating ? 'EditArtist.Create' : 'EditArtist.Save') }}
                 </button>
             </template>
             <template v-else>
-                <button class="ea-btn ghost" @click="back">{{ $t('EditArtist.Back') }}</button>
-                <button class="ea-btn primary" @click="applyCrop">{{ $t('EditArtist.ApplyCrop') }}</button>
+                <button class="m-btn ghost" @click="back">{{ $t('EditArtist.Back') }}</button>
+                <button class="m-btn primary" @click="applyCrop">{{ $t('EditArtist.ApplyCrop') }}</button>
             </template>
         </footer>
 
@@ -174,13 +154,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { useT } from '@/i18n'
 import { ArtistEditData } from '@/requests/artists'
 import { Routes } from '@/router'
 import useCommandPalette, { PaletteArtist } from '@/stores/commandPalette'
+import useModalStore from '@/stores/modal'
 import useArtistStore, { ArtistEdits } from '@/stores/pages/artist'
 import { Crop, loadCrop, renderCrop } from '@/utils/crop'
 import { firstImage } from '@/utils/imageFiles'
@@ -203,6 +184,7 @@ const emit = defineEmits<{
 
 const { t } = useT()
 const store = useArtistStore()
+const modal = useModalStore()
 
 const dialog = ref<HTMLElement>()
 const fileInput = ref<HTMLInputElement>()
@@ -276,6 +258,11 @@ const initial = computed(() => ((creating.value ? name.value : store.info.name) 
 const imageTitle = computed(() => {
     if (image.value.kind === 'new') return t('EditArtist.NewImage')
     return t(creating.value ? 'EditArtist.GridImage' : 'EditArtist.CurrentImage')
+})
+
+watchEffect(() => {
+    if (view.value === 'crop') return modal.setTitle(t('EditArtist.CropTitle'), t('EditArtist.CropSubtitle'))
+    modal.setTitle(t(title.value), creating.value ? '' : store.info.name)
 })
 
 const nameDirty = computed(() => name.value.trim() !== savedName())
@@ -375,6 +362,7 @@ function onPaste(e: ClipboardEvent) {
 }
 
 function onDragEnter(e: DragEvent) {
+    e.preventDefault()
     if (!e.dataTransfer?.types.includes('Files')) return
     dragDepth++
     dragging.value = true
@@ -386,6 +374,7 @@ function onDragLeave() {
 }
 
 function onDrop(e: DragEvent) {
+    e.preventDefault()
     dragDepth = 0
     dragging.value = false
     useFile(firstImage(e.dataTransfer?.files))
@@ -409,6 +398,16 @@ function onKeydown(e: KeyboardEvent) {
     e.stopPropagation()
     view.value === 'crop' ? applyCrop() : save()
 }
+
+// the whole frame takes drops, the shell's header included
+const dragEvents = {
+    dragenter: onDragEnter,
+    dragover: (e: DragEvent) => e.preventDefault(),
+    dragleave: onDragLeave,
+    drop: onDrop,
+}
+const dragNames = ['dragenter', 'dragover', 'dragleave', 'drop'] as const
+let frame: HTMLElement | null = null
 
 function close() {
     emit('hideModal')
@@ -459,6 +458,8 @@ onMounted(() => {
     window.addEventListener('paste', onPaste)
     // capture runs before the app's global shortcuts, which close any modal on Esc
     window.addEventListener('keydown', onKeydown, true)
+    frame = dialog.value!.parentElement
+    dragNames.forEach(name => frame?.addEventListener(name, dragEvents[name]))
     creating.value ? nameInput.value?.focus() : dialog.value?.focus()
     useFile(props.image ?? null)
 })
@@ -466,6 +467,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
     window.removeEventListener('paste', onPaste)
     window.removeEventListener('keydown', onKeydown, true)
+    dragNames.forEach(name => frame?.removeEventListener(name, dragEvents[name]))
     if (draft.value) URL.revokeObjectURL(draft.value.url)
     if (image.value.kind === 'new') URL.revokeObjectURL(image.value.crop.url)
 })
@@ -473,15 +475,7 @@ onBeforeUnmount(() => {
 
 <style lang="scss">
 .edit-artist-dialog {
-    position: relative;
-    width: 100%;
-    background-color: #18181b;
-    border: 1px solid #2a2a2f;
-    border-radius: 16px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
-    color: #ededed;
     outline: none;
-    text-align: left;
 
     svg {
         fill: none;
@@ -491,66 +485,8 @@ onBeforeUnmount(() => {
         stroke-linejoin: round;
     }
 
-    .ea-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 20px 20px 4px 24px;
-    }
-
-    .ea-title {
-        font-size: 18px;
-        font-weight: 700;
-    }
-
-    .ea-subtitle {
-        margin-top: 2px;
-        font-size: 13px;
-        color: #8a8a91;
-    }
-
-    .ea-close {
-        display: grid;
-        place-items: center;
-        width: 30px;
-        height: 30px;
-        padding: 0;
-        border-radius: 8px;
-        background: transparent;
-        color: #8a8a91;
-
-        &:hover {
-            background-color: #26262b;
-            color: #ededed;
-        }
-
-        svg {
-            width: 16px;
-            height: 16px;
-        }
-    }
-
-    .ea-body {
-        display: flex;
-        flex-direction: column;
-        gap: 22px;
-        padding: 18px 24px 24px;
-
-        &.crop {
-            padding: 16px 24px 22px;
-        }
-
-        section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-    }
-
-    .ea-label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #d6d6db;
+    .m-body.crop {
+        padding: 16px 24px 22px;
     }
 
     .ea-image-row {
@@ -588,10 +524,10 @@ onBeforeUnmount(() => {
         height: 100%;
         display: grid;
         place-items: center;
-        background: linear-gradient(135deg, #3a3a42, #1e1e23);
+        background: linear-gradient(135deg, $gray4, $gray);
         font-size: 40px;
         font-weight: 700;
-        color: #6b6b72;
+        color: $gray2;
     }
 
     .ea-thumb-hover {
@@ -603,7 +539,7 @@ onBeforeUnmount(() => {
         justify-content: center;
         gap: 4px;
         background-color: rgba(0, 0, 0, 0.55);
-        color: #ededed;
+        color: $white;
         font-size: 12px;
         font-weight: 600;
         opacity: 0;
@@ -636,18 +572,18 @@ onBeforeUnmount(() => {
         font-weight: 700;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: #e8a54a;
-        border: 1px solid #4a3a22;
+        color: $orange;
+        border: 1px solid rgba($orange, 0.3);
         border-radius: 5px;
     }
 
     .ea-help {
         font-size: 12px;
         line-height: 1.45;
-        color: #8a8a91;
+        color: $gray1;
 
         &.tertiary {
-            color: #6b6b72;
+            color: $gray2;
         }
     }
 
@@ -657,103 +593,13 @@ onBeforeUnmount(() => {
         gap: 8px;
     }
 
-    .ea-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        height: auto;
-        padding: 8px 14px;
-        border-radius: 8px;
-        // overrides the global button font size
-        font-size: 13px !important;
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-
-        svg {
-            width: 14px;
-            height: 14px;
-        }
-
-        &.secondary {
-            background-color: #26262b;
-            color: #ededed;
-
-            &:hover {
-                background-color: #303036;
-            }
-        }
-
-        &.danger {
-            margin-right: auto;
-            padding-left: 4px;
-            background-color: transparent;
-            color: #f0524a;
-
-            &:hover {
-                color: #ff7a72;
-            }
-        }
-
-        &:disabled {
-            opacity: 0.5;
-            cursor: default;
-        }
-
-        &.ghost {
-            background-color: transparent;
-            color: #a1a1a8;
-
-            &:hover {
-                background-color: #222226;
-                color: #ededed;
-            }
-        }
-
-        &.primary {
-            background-color: #ededed;
-            color: #0b0b0c;
-
-            &:hover {
-                background-color: #fff;
-            }
-
-            &:disabled {
-                opacity: 1;
-                background-color: #2a2a2e;
-                color: #5f5f66;
-                cursor: default;
-            }
-        }
-    }
-
-    .ea-input {
-        width: 100%;
-        padding: 11px 12px;
-        font-size: 15px;
-        color: #ededed;
-        background-color: #141416;
-        border: 1px solid #2e2e33;
-        border-radius: 9px;
-        outline: none;
-
-        &::placeholder {
-            color: #5f5f66;
-        }
-
-        &:focus {
-            border-color: #5a5a62;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
-        }
-    }
-
     .ea-members-label {
         display: flex;
         justify-content: space-between;
 
         span {
             font-weight: 400;
-            color: #8a8a91;
+            color: $gray1;
         }
     }
 
@@ -763,7 +609,7 @@ onBeforeUnmount(() => {
         overflow-y: auto;
         // a visible scrollbar narrows the rows only when the list overflows
         @include hideScrollbars;
-        border: 1px solid #2e2e33;
+        border: 1px solid $gray5;
         border-radius: 9px;
 
         &.ea-results {
@@ -779,7 +625,7 @@ onBeforeUnmount(() => {
         width: 100%;
         height: auto;
         padding: 8px 10px 8px 12px;
-        border-bottom: 1px solid #26262b;
+        border-bottom: 1px solid $gray5;
         background: transparent;
         color: inherit;
         font-size: 14px;
@@ -794,10 +640,10 @@ onBeforeUnmount(() => {
         display: grid;
         place-items: center;
         font-size: 13px;
-        color: #6b6b72;
+        color: $gray2;
     }
 
-    .ea-add {
+    .m-btn.ea-add {
         padding: 5px 12px;
     }
 
@@ -819,13 +665,13 @@ onBeforeUnmount(() => {
 
     .ea-member-count {
         font-size: 12px;
-        color: #8a8a91;
+        color: $gray1;
     }
 
     .ea-member-search {
-        border: 1px solid #2e2e33 !important;
+        border: 1px solid $gray5 !important;
         border-radius: 9px;
-        color: #8a8a91;
+        color: $gray1;
 
         svg {
             width: 16px;
@@ -841,18 +687,9 @@ onBeforeUnmount(() => {
             border: none;
             outline: none;
             background: transparent;
-            color: #ededed;
+            color: $white;
             font-size: 14px;
         }
-    }
-
-    .ea-footer {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 8px;
-        padding: 14px 20px;
-        border-top: 1px solid #222226;
     }
 
     .ea-drop {
@@ -864,9 +701,9 @@ onBeforeUnmount(() => {
         align-items: center;
         justify-content: center;
         gap: 6px;
-        border: 2px dashed #8a8a91;
+        border: 2px dashed $gray1;
         border-radius: 12px;
-        background-color: rgba(24, 24, 27, 0.94);
+        background-color: rgba($black, 0.94);
         pointer-events: none;
 
         svg {
@@ -883,7 +720,7 @@ onBeforeUnmount(() => {
 
     .ea-drop-sub {
         font-size: 12px;
-        color: #8a8a91;
+        color: $gray1;
     }
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
-    <div class="confirm-modal">
-        <div class="t-center" style="padding: 0 4rem">{{ text }}</div>
-        <div class="buttons">
-            <button class="cancel" @click="cancelAction">{{ $t('ConfirmModal.Cancel') }}</button>
-            <button class="confirm" @click="confirmAction">{{ $t('ConfirmModal.Delete') }}</button>
-        </div>
+    <div class="m-dialog">
+        <div class="m-body">{{ text }}</div>
+        <footer class="m-footer">
+            <button class="m-btn ghost" @click="cancelAction">{{ $t('ConfirmModal.Cancel') }}</button>
+            <button class="m-btn destructive" @click="confirmAction">{{ $t('ConfirmModal.Delete') }}</button>
+        </footer>
     </div>
 </template>
 
@@ -16,22 +16,3 @@ defineProps<{
     cancelAction: () => void
 }>()
 </script>
-
-<style lang="scss">
-.confirm-modal {
-    .t-center {
-        font-weight: 500;
-    }
-
-    .buttons {
-        margin-top: 2rem;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-    }
-
-    .confirm {
-        background: $red;
-    }
-}
-</style>

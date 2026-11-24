@@ -1,13 +1,6 @@
 <template>
-    <div class="merge-artist-dialog">
-        <header class="ma-header">
-            <div class="ma-title">{{ $t('Modal.MergeArtist.Title') }}</div>
-            <button class="ma-close" :aria-label="$t('ConfirmModal.Cancel')" @click="$emit('hideModal')">
-                <svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" /></svg>
-            </button>
-        </header>
-
-        <div class="ma-body">
+    <div class="m-dialog merge-artist-dialog">
+        <div class="m-body">
             <div class="ma-source">
                 <PersonImage class="ma-avatar" :image="sourceImage" :name="artistname" size="small" />
                 <div class="ma-source-text">
@@ -55,12 +48,12 @@
             </div>
         </div>
 
-        <footer class="ma-footer">
+        <footer class="m-footer">
             <div class="ma-pick">{{ target ? '' : $t('Modal.MergeArtist.Pick') }}</div>
-            <button class="ma-btn ghost" :disabled="merging" @click="$emit('hideModal')">
+            <button class="m-btn ghost" :disabled="merging" @click="$emit('hideModal')">
                 {{ $t('ConfirmModal.Cancel') }}
             </button>
-            <button class="ma-btn primary" :disabled="!target || merging" @click="merge">
+            <button class="m-btn primary" :disabled="!target || merging" @click="merge">
                 {{ $t('Modal.MergeArtist.Merge') }}
             </button>
         </footer>
@@ -150,47 +143,8 @@ async function merge() {
 
 <style lang="scss">
 .merge-artist-dialog {
-    width: 100%;
-    background-color: #18181b;
-    border: 1px solid #2a2a2f;
-    border-radius: 16px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
-    color: #ededed;
-    text-align: left;
-
-    .ma-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 18px 20px 12px;
-    }
-
-    .ma-title {
-        font-size: 1.15rem;
-        font-weight: 700;
-    }
-
-    .ma-close {
-        width: 2rem;
-        padding: 0;
-        background-color: transparent;
-        color: #8a8a91;
-
-        svg {
-            width: 1rem;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 1.5;
-        }
-
-        &:hover {
-            background-color: #26262b;
-            color: #ededed;
-        }
-    }
-
-    .ma-body {
-        padding: 0 20px;
+    .m-body {
+        gap: 0;
     }
 
     .ma-source,
@@ -202,7 +156,7 @@ async function merge() {
 
     .ma-source {
         padding: 10px 12px;
-        border: 1px solid #26262b;
+        border: 1px solid $gray5;
         border-radius: 12px;
     }
 
@@ -228,7 +182,7 @@ async function merge() {
     .ma-pick,
     .ma-hint {
         font-size: 0.85rem;
-        color: #8a8a91;
+        color: $gray1;
     }
 
     .ma-search {
@@ -238,12 +192,12 @@ async function merge() {
         margin-top: 12px;
         padding: 0 12px;
         height: 2.75rem;
-        border: 1px solid #2e2e33;
+        border: 1px solid $gray5;
         border-radius: 10px;
-        color: #8a8a91;
+        color: $gray1;
 
         &:focus-within {
-            border-color: #5a5a62;
+            border-color: $gray2;
         }
 
         svg {
@@ -257,7 +211,7 @@ async function merge() {
             border: none;
             outline: none;
             background-color: transparent;
-            color: #ededed;
+            color: $white;
             font-size: 1rem;
         }
     }
@@ -290,7 +244,7 @@ async function merge() {
         }
 
         &:hover {
-            background-color: #1f1f23;
+            background-color: $gray5;
         }
 
         &.picked {
@@ -305,7 +259,7 @@ async function merge() {
         place-items: center;
         width: 1.25rem;
         height: 1.25rem;
-        border: 1.5px solid #4a4a52;
+        border: 1.5px solid $gray3;
         border-radius: 50%;
 
         svg {
@@ -323,43 +277,8 @@ async function merge() {
         background-color: $darkblue;
     }
 
-    .ma-footer {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 12px;
-        padding: 14px 20px;
-        border-top: 1px solid #222226;
-    }
-
     .ma-pick {
         flex: 1;
-    }
-
-    .ma-btn {
-        height: 2.25rem;
-        padding: 0 1rem;
-        border-radius: 8px;
-        font-weight: 600;
-
-        &.ghost {
-            background-color: transparent;
-
-            &:hover {
-                background-color: #222226;
-            }
-        }
-
-        &.primary {
-            background-color: $darkblue;
-            color: $white;
-
-            &:disabled {
-                opacity: 1;
-                background-color: #2a2a2e;
-                color: #5f5f66;
-            }
-        }
     }
 }
 </style>

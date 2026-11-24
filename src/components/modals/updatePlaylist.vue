@@ -1,73 +1,86 @@
 <template>
     <form
         id="playlist-update-modal"
-        class="playlist-modal"
+        class="m-dialog playlist-modal"
         enctype="multipart/form-data"
         autocomplete="off"
         @submit.prevent="update_playlist"
     >
-        <ImageCrop v-if="cropFile" :file="cropFile" @done="onCropped" @cancel="cropFile = null" />
-        <template v-else>
-        <label for="name">{{ $t('UpdatePlaylist.Name') }}</label>
-        <input
-            id="modal-playlist-name-input"
-            v-model="pname"
-            type="search"
-            class="rounded-sm"
-            name="name"
-            spellcheck="false"
-            @keypress.enter.prevent="update_playlist"
-        />
+        <div class="m-body">
+            <ImageCrop v-if="cropFile" :file="cropFile" @done="onCropped" @cancel="cropFile = null" />
+            <template v-else>
+                <section>
+                    <label class="m-label" for="modal-playlist-name-input">{{ $t('UpdatePlaylist.Name') }}</label>
+                    <input
+                        id="modal-playlist-name-input"
+                        v-model="pname"
+                        class="m-input"
+                        type="text"
+                        name="name"
+                        spellcheck="false"
+                        @keypress.enter.prevent="update_playlist"
+                    />
+                </section>
 
-        <label for="image">{{ $t('Common.Image') }}</label>
-        <input
-            id="update-pl-image-upload"
-            ref="dropZoneRef"
-            type="file"
-            accept="image/*"
-            name="image"
-            style="display: none"
-            @change="handleUpload"
-        />
-        <div id="upload" class="boxed rounded-sm">
-            <div class="clickable" tabindex="0" @click="selectFiles" @keydown.space.enter.stop="selectFiles">
-                <ImageIcon />
-                {{ $t('UpdatePlaylist.CoverAction', {action: playlist.has_image ? $t('Common.update') : $t('Common.upload')}) }}
-            </div>
-            <div
-                id="update-pl-img-preview"
-                class="image"
-                :style="{
-                    backgroundImage: `url(${playlist.image})`,
-                }"
-                tabindex="0"
-            >
-                <div v-if="!image && playlist.has_image" class="delete-icon" @click="pStore.removeBanner()">
-                    <DeleteIcon />
-                </div>
-            </div>
-        </div>
-        <label v-if="playlist.has_image && !playlist.settings.square_img">{{ $t('Common.Settings') }}</label>
-        <div v-if="image || playlist.has_image" class="banner-settings rounded-sm">
-            <div>{{ $t('UpdatePlaylist.SquareCover') }}</div>
-            <Switch :state="playlist.settings.square_img || false" @click="pStore.toggleSquareImage" />
-        </div>
-        <div v-if="playlist.has_image && !playlist.settings.square_img" class="boxed banner-position-adjust rounded-sm">
-            <div class="t-center">{{ $t('UpdatePlaylist.ImagePosition', {pos: pStore.info.settings.banner_pos }) }}</div>
-            <div class="buttons">
-                <button @click.stop.prevent="pStore.minusBannerPos">
-                    <ExpandSvg />
-                </button>
-                <button @click.stop.prevent="pStore.plusBannerPos">
-                    <ExpandSvg />
-                </button>
-            </div>
-        </div>
+                <section>
+                    <label class="m-label" for="update-pl-image-upload">{{ $t('Common.Image') }}</label>
+                    <input
+                        id="update-pl-image-upload"
+                        ref="dropZoneRef"
+                        type="file"
+                        accept="image/*"
+                        name="image"
+                        style="display: none"
+                        @change="handleUpload"
+                    />
+                    <div id="upload" class="boxed">
+                        <div class="clickable" tabindex="0" @click="selectFiles" @keydown.space.enter.stop="selectFiles">
+                            <ImageIcon />
+                            {{ $t('UpdatePlaylist.CoverAction', {action: playlist.has_image ? $t('Common.update') : $t('Common.upload')}) }}
+                        </div>
+                        <div
+                            id="update-pl-img-preview"
+                            class="image"
+                            :style="{
+                                backgroundImage: `url(${playlist.image})`,
+                            }"
+                            tabindex="0"
+                        >
+                            <div v-if="!image && playlist.has_image" class="delete-icon" @click="pStore.removeBanner()">
+                                <DeleteIcon />
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-        <button type="submit">
-            {{ clicked ? $t('Common.Saving') : $t('Common.Update') }}
-        </button>
-        </template>
+                <section v-if="image || playlist.has_image">
+                    <label v-if="playlist.has_image && !playlist.settings.square_img" class="m-label">
+                        {{ $t('Common.Settings') }}
+                    </label>
+                    <div class="boxed banner-settings">
+                        <div>{{ $t('UpdatePlaylist.SquareCover') }}</div>
+                        <Switch :state="playlist.settings.square_img || false" @click="pStore.toggleSquareImage" />
+                    </div>
+                    <div v-if="playlist.has_image && !playlist.settings.square_img" class="boxed banner-position-adjust">
+                        <div class="t-center">{{ $t('UpdatePlaylist.ImagePosition', {pos: pStore.info.settings.banner_pos }) }}</div>
+                        <div class="buttons">
+                            <button @click.stop.prevent="pStore.minusBannerPos">
+                                <ExpandSvg />
+                            </button>
+                            <button @click.stop.prevent="pStore.plusBannerPos">
+                                <ExpandSvg />
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </template>
+        </div>
+        <footer v-if="!cropFile" class="m-footer">
+            <button type="button" class="m-btn ghost" @click="emit('hideModal')">{{ $t('ConfirmModal.Cancel') }}</button>
+            <button type="submit" class="m-btn primary">
+                {{ clicked ? $t('Common.Saving') : $t('Common.Update') }}
+            </button>
+        </footer>
     </form>
 </template>
 
@@ -163,18 +176,10 @@ function update_playlist(e: Event) {
 </script>
 
 <style lang="scss">
-#playlist-update-modal {
-    input:not([type='range']) {
-        height: 3rem !important;
-    }
-}
 .playlist-modal {
-    #modal-playlist-name-input {
-        margin-bottom: 1rem;
-    }
-
     .boxed {
-        border: solid 2px $gray4;
+        border: solid 1px $gray5;
+        border-radius: 9px;
         color: $gray1;
         place-items: center;
         display: grid;
@@ -183,13 +188,9 @@ function update_playlist(e: Event) {
 
     .banner-settings {
         font-weight: 500;
-        padding: 1rem;
-        background-color: $gray5;
-        display: grid;
-        grid-template-columns: 1fr max-content;
-        align-items: center;
+        padding: 12px;
         gap: $small;
-        margin: $small 0 1rem 0;
+        justify-items: start;
     }
 
     #upload {
@@ -197,7 +198,6 @@ function update_playlist(e: Event) {
         display: grid;
         gap: $small;
         border: none;
-        margin: $small 0 1rem 0;
 
         svg {
             height: 2rem;
@@ -220,8 +220,8 @@ function update_playlist(e: Event) {
             gap: $smaller;
             place-items: center;
             place-content: center;
-            border-radius: $small;
-            border: dashed 1px $gray4;
+            border-radius: 9px;
+            border: dashed 1px $gray5;
             cursor: pointer;
             padding: $medium;
 
@@ -262,8 +262,7 @@ function update_playlist(e: Event) {
 
     .banner-position-adjust {
         gap: 1rem;
-        padding: $small 1rem;
-        margin-bottom: 1rem;
+        padding: $small 12px;
 
         .t-center {
             position: relative;

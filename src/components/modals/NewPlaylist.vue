@@ -1,17 +1,23 @@
 <template>
-  <form class="playlist-modal" @submit="create">
-    <label for="name">{{ $t('NewPlaylist.PlaylistName') }}</label>
-    <br />
-    <input
-      id="modal-playlist-name-input"
-      type="search"
-      class="rounded-sm"
-      name="name"
-      :placeholder="$t('NewPlaylist.NamePlaceholder')"
-      spellcheck="false"
-    />
-    <br /><br />
-    <button type="submit">{{ $t('NewPlaylist.CreateButton') }}</button>
+  <form class="m-dialog" @submit="create">
+    <div class="m-body">
+      <section>
+        <label class="m-label" for="modal-playlist-name-input">{{ $t('NewPlaylist.PlaylistName') }}</label>
+        <input
+          id="modal-playlist-name-input"
+          class="m-input"
+          type="text"
+          name="name"
+          :placeholder="$t('NewPlaylist.NamePlaceholder')"
+          spellcheck="false"
+          autocomplete="off"
+        />
+      </section>
+    </div>
+    <footer class="m-footer">
+      <button type="button" class="m-btn ghost" @click="emit('hideModal')">{{ $t('ConfirmModal.Cancel') }}</button>
+      <button type="submit" class="m-btn primary">{{ $t('NewPlaylist.CreateButton') }}</button>
+    </footer>
   </form>
 </template>
 
@@ -154,34 +160,3 @@ function create(e: Event) {
   createEmptyPlaylist();
 }
 </script>
-
-<style lang="scss">
-.playlist-modal {
-  grid-gap: 1rem;
-  margin-top: 1rem;
-
-  label {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: $gray1;
-  }
-
-  .submit {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  button {
-    margin: 0 auto;
-    width: 8rem;
-    padding: 1.25rem;
-    // font-weight: normal;
-    background-color: $white;
-    color: $black;
-
-    &:hover {
-      color: $white;
-    }
-  }
-}
-</style>

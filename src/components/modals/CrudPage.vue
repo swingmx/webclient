@@ -1,20 +1,34 @@
 <template>
-    <form action="" v-if="delete">
-        <br>
-        <div>{{ $t('CrudPage.DeleteDescription') }}</div>
-        <br />
-        <button @click.prevent="submit" class="critical">{{ $t('CrudPage.DeleteButton') }}</button>
+    <form v-if="delete" class="m-dialog" @submit.prevent="submit">
+        <div class="m-body">{{ $t('CrudPage.DeleteDescription') }}</div>
+        <footer class="m-footer">
+            <button type="button" class="m-btn ghost" @click="emit('hideModal')">{{ $t('ConfirmModal.Cancel') }}</button>
+            <button type="submit" class="m-btn destructive">{{ $t('CrudPage.DeleteButton') }}</button>
+        </footer>
     </form>
-    <form class="playlist-modal" @submit.prevent="submit" v-else>
-        <label for="name">{{ $t('CrudPage.CollectionName') }}</label>
-        <br />
-        <input type="search" class="rounded-sm" id="name" :value="collection?.name" />
-        <br />
-        <label for="description">{{ $t('CrudPage.Description') }}</label>
-        <br />
-        <input type="search" class="rounded-sm" id="description" :value="collection?.extra.description" />
-        <br /><br />
-        <button type="submit">{{ collection ? $t('CrudPage.Update') : $t('CrudPage.Create') }}</button>
+    <form v-else class="m-dialog" @submit.prevent="submit">
+        <div class="m-body">
+            <section>
+                <label class="m-label" for="name">{{ $t('CrudPage.CollectionName') }}</label>
+                <input id="name" class="m-input" type="text" autocomplete="off" :value="collection?.name" />
+            </section>
+            <section>
+                <label class="m-label" for="description">{{ $t('CrudPage.Description') }}</label>
+                <input
+                    id="description"
+                    class="m-input"
+                    type="text"
+                    autocomplete="off"
+                    :value="collection?.extra.description"
+                />
+            </section>
+        </div>
+        <footer class="m-footer">
+            <button type="button" class="m-btn ghost" @click="emit('hideModal')">{{ $t('ConfirmModal.Cancel') }}</button>
+            <button type="submit" class="m-btn primary">
+                {{ collection ? $t('CrudPage.Update') : $t('CrudPage.Create') }}
+            </button>
+        </footer>
     </form>
 </template>
 
