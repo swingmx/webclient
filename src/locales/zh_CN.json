@@ -449,13 +449,6 @@
     "Shuffle": "随机播放",
     "SimilarTracks": "相似曲目"
   },
-  "RootDirsPrompt": {
-    "HomeDir": "主目录",
-    "HomeDirInfo": "扫描主目录中的所有文件夹。",
-    "SpecificDir": "指定目录",
-    "SpecificDirInfo": "选择要扫描音乐的文件夹。",
-    "WhereToLook": "你希望在哪里查找音乐？"
-  },
   "Search": {
     "BackToQueue": "返回队列",
     "GoToSearch": "前往搜索",
@@ -475,11 +468,6 @@
   "SearchInput": {
     "BackToQueue": "返回队列",
     "GoToSearch": "前往搜索"
-  },
-  "SetRootDirs": {
-    "AddAllChecked": "添加所有已勾选项",
-    "NoSubFolders": "这里没有文件夹。点击下方的“添加此文件夹”按钮以选择此位置。",
-    "SelectThisFolder": "添加此文件夹"
   },
   "Settings": {
     "About": {

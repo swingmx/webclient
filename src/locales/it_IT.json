@@ -449,13 +449,6 @@
     "Shuffle": "Shuffle",
     "SimilarTracks": "Tracce simili"
   },
-  "RootDirsPrompt": {
-    "HomeDir": "Cartella home",
-    "HomeDirInfo": "Scansiona tutte le cartelle nella tua home.",
-    "SpecificDir": "Cartella specifica",
-    "SpecificDirInfo": "Seleziona le cartelle contententi la musica da scansionare.",
-    "WhereToLook": "Dove vuoi cercare la tua musica?"
-  },
   "Search": {
     "BackToQueue": "Ritorna alla coda",
     "GoToSearch": "Vai alla ricerca",
@@ -475,11 +468,6 @@
   "SearchInput": {
     "BackToQueue": "torna alla coda",
     "GoToSearch": "vai alla ricerca"
-  },
-  "SetRootDirs": {
-    "AddAllChecked": "Aggiungi tutte le cartelle spuntate",
-    "NoSubFolders": "Nessuna cartella qua. Clicca \"aggiungi questa cartella\" per aggiungere la posizione attuale.",
-    "SelectThisFolder": "Aggiungi questa cartella"
   },
   "Settings": {
     "About": {
@@ -877,8 +865,7 @@
       "Searching": "Cercando...",
       "Unsynced": "non sincronizzata"
     },
-    "MixLisView": {
-    },
+    "MixLisView": {},
     "MixListView": {
       "MixesBasedOnListening": "{n} mixes • In base agli artisti che hai ascoltato ultimamente",
       "OtherMixes": "Altri mixes di {type}",

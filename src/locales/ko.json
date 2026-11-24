@@ -449,13 +449,6 @@
     "Shuffle": "셔플",
     "SimilarTracks": "유사한 트랙"
   },
-  "RootDirsPrompt": {
-    "HomeDir": "홈 디렉토리",
-    "HomeDirInfo": "홈 디렉토리의 모든 폴더를 스캔해요.",
-    "SpecificDir": "특정 디렉토리",
-    "SpecificDirInfo": "음악을 스캔할 폴더를 선택하세요.",
-    "WhereToLook": "어디에서 음악을 찾을까요?"
-  },
   "Search": {
     "BackToQueue": "대기열로 돌아가기",
     "GoToSearch": "검색으로 이동",
@@ -475,11 +468,6 @@
   "SearchInput": {
     "BackToQueue": "대기열로 돌아가기",
     "GoToSearch": "검색으로 이동"
-  },
-  "SetRootDirs": {
-    "AddAllChecked": "선택한 항목 모두 추가",
-    "NoSubFolders": "여기에는 폴더가 없어요. 이 위치를 선택하려면 아래의 \"이 폴더 추가\" 버튼을 누르세요.",
-    "SelectThisFolder": "이 폴더 추가"
   },
   "Settings": {
     "About": {

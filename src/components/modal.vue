@@ -7,7 +7,6 @@
             class="m-content"
             :class="{
                 settings: modal.component == modal.options.settings,
-                wide: modal.component == modal.options.setRootDirs,
             }"
         >
             <header v-if="!headless" class="m-header">
@@ -44,8 +43,6 @@
                 :cancel-action="modal.hideModal"
                 :confirm-action="deletePlaylist"
             />
-            <SetRootDirs v-if="modal.component == modal.options.setRootDirs" @hideModal="hideModal" />
-            <RootDirsPrompt v-if="modal.component == modal.options.rootDirsPrompt" @hideModal="hideModal" />
             <Settings v-if="modal.component == modal.options.settings" @set-title="setTitle" />
             <EditArtist v-if="modal.component == modal.options.editArtist" v-bind="modal.props" @hideModal="hideModal" />
             <MergeArtist v-if="modal.component == modal.options.mergeArtist" v-bind="modal.props" @hideModal="hideModal" />
@@ -68,8 +65,6 @@ import CrudPage from './modals/CrudPage.vue'
 import EditArtist from './modals/EditArtist.vue'
 import MergeArtist from './modals/MergeArtist.vue'
 import NewPlaylist from './modals/NewPlaylist.vue'
-import RootDirsPrompt from './modals/RootDirsPrompt.vue'
-import SetRootDirs from './modals/SetRootDirs.vue'
 import Settings from './modals/Settings.vue'
 import UpdatePlaylist from './modals/updatePlaylist.vue'
 
@@ -139,9 +134,6 @@ async function deletePlaylist() {
             max-height: calc(100% - 2rem);
         }
 
-        &.wide {
-            max-width: 56rem;
-        }
     }
 
     // one height for every settings tab; long tabs scroll inside it

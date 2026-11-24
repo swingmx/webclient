@@ -89,7 +89,6 @@ import { getLoggedInUser } from './requests/auth'
 const appcontent: Ref<HTMLLegendElement | null> = ref(null)
 const auth = useAuth()
 const queue = useQueue()
-const modal = useModal()
 const lyrics = useLyrics()
 const router = useRouter()
 const route = useRoute()
@@ -137,7 +136,7 @@ function updateContentElemSize({ width, height }: { width: number; height: numbe
 function handleRootDirsPrompt() {
     getRootDirs().then(dirs => {
         if (dirs.length === 0) {
-            modal.showRootDirsPromptModal()
+            router.push({ path: '/manconfig/dirconfig' })
         } else {
             settings.setRootDirs(dirs)
         }

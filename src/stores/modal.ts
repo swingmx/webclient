@@ -10,8 +10,6 @@ export enum ModalOptions {
     updatePlaylist,
     deletePlaylist,
     SetIP,
-    rootDirsPrompt,
-    setRootDirs,
     saveFolderAsPlaylist,
     login,
     settings,
@@ -92,12 +90,6 @@ export default defineStore('newModal', {
         },
         showSetIPModal() {
             this.showModal(ModalOptions.SetIP)
-        },
-        showRootDirsPromptModal() {
-            this.showModal(ModalOptions.rootDirsPrompt, {}, t('RootDirsPrompt.WhereToLook'))
-        },
-        showSetRootDirsModal() {
-            this.showModal(ModalOptions.setRootDirs, {}, t('Settings.RootDirs.Title'))
         },
         showLoginModal() {
             if (useUI().hideUI) {

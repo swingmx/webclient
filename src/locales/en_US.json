@@ -542,13 +542,6 @@
     "Shuffle": "Shuffle",
     "SimilarTracks": "Similar Tracks"
   },
-  "RootDirsPrompt": {
-    "HomeDir": "Home directory",
-    "HomeDirInfo": "Scan all folders in your home directory.",
-    "SpecificDir": "Specific directories",
-    "SpecificDirInfo": "Select folders to scan for music.",
-    "WhereToLook": "Where do you want to look for music?"
-  },
   "Search": {
     "BackToQueue": "Back to Queue",
     "GoToSearch": "Go to Search",
@@ -568,11 +561,6 @@
   "SearchInput": {
     "BackToQueue": "back to queue",
     "GoToSearch": "go to search"
-  },
-  "SetRootDirs": {
-    "AddAllChecked": "Add all checked",
-    "NoSubFolders": "No folders here. Click the \"Add this folder\" button below to select this location.",
-    "SelectThisFolder": "Add this folder"
   },
   "Settings": {
     "About": {
