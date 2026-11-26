@@ -4,9 +4,10 @@ import en from './locales/en_US.json';
 import it from './locales/it_IT.json';
 import ko from './locales/ko.json';
 import zh from './locales/zh_CN.json';
+import pt from './locales/pt_BR.json';
 import { readLocalStorage } from "./utils/useLocalStorage";
 
-export const supportedLocales = ['en_US', 'it_IT', 'ko', 'zh_CN'];
+export const supportedLocales = ['en_US', 'it_IT', 'ko', 'zh_CN', 'pt_BR'];
 const fallbackLocale = 'en_US';
 
 function detectBrowserLocale(): string {
